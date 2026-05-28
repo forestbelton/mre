@@ -29,6 +29,16 @@ ENDM
 
 ; --- Multi-byte opcodes ---
 
+; SCRIPT_OPEN_TEXTBOX <tilemap_pos>, <width>, <height> :
+; Set up the dialog box position and extents. Stored at $D614/$D615
+; (anchor, also duplicated into the cursor at $D616/$D617), $D618, and
+; $D619. NPCs invoke this once at script entry. (5 bytes — $01 lo hi w h)
+MACRO SCRIPT_OPEN_TEXTBOX
+    db $01
+    dw \1
+    db \2, \3
+ENDM
+
 ; SCRIPT_GOTO <target> : same-bank jump (3 bytes — $06 lo hi)
 MACRO SCRIPT_GOTO
     db $06

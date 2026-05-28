@@ -6,7 +6,7 @@
 ;
 ; Entry points (in linear bytecode order):
 ;
-;   $7183  NajiScript      4 state-gated jumps + IF-FIRST-TIME intro
+;   $717E  NajiScript      textbox setup + state-gated jumps + IF-FIRST-TIME intro
 ;   $733D  NajiCycler      cyclic round-robin of 4 greetings
 ;   $73E0  NajiProgress    'you made it half-way' message
 ;   $7483  NajiMenu        'What are your plans?' prompt + render + dispatch
@@ -22,10 +22,17 @@
 
 INCLUDE "script.inc"
 
-SECTION "naji_063183", ROMX[$7183], BANK[$18]
-
+SECTION "naji_06317e", ROMX[$717e], BANK[$18]
 
 NajiScript:
+    ; Dialog box at BG tilemap $9982, 16 tiles wide × 4 tiles tall.
+    ; Every NPC script starts with this $01 textbox-setup opcode.
+    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+
+    ; Branch on Naji's NPC state. $D0DD progresses 0 -> 1 (after first
+    ; intro) -> 2 (mid-quest "made it half-way" message available once)
+    ; -> 4 (end-game). $C2D7 is a separate story flag. The fall-through
+    ; is the long first-visit intro below.
     SCRIPT_IF_EQ $d0dd, $04, NajiCycler
     SCRIPT_IF_EQ $c2d7, $01, NajiCycler
     SCRIPT_IF_EQ $d0dd, $02, NajiProgress
