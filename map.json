@@ -50,6 +50,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"naji.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	407910,
+					"len":	3,
+					"label":	"NajiAskStop"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"analyzed.asm",
 			"sections":	[{
 					"type":	"data",
@@ -4962,7 +4971,7 @@
 				}, {
 					"type":	"data",
 					"addr":	407195,
-					"len":	718
+					"len":	715
 				}, {
 					"type":	"data",
 					"addr":	409599,
