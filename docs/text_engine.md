@@ -35,7 +35,7 @@ based on how many bytes seem to follow before text resumes.
 - `$02` (1?) — appears between menu-option calls; possibly "end of option list" or "begin menu" marker
 - `$08` (5?) — `$08 ff d5 0f xx xx` likely a conditional jump on WRAM `$D5FF`, same shape as `$0A`
 - `$09` (5?) — `$09 dc d0 01 xx xx` likely a conditional jump on WRAM `$D0DC` (e.g., guarding the "Pashute returned" / "Verde returned" branches in the ranch welcome)
-- `$10` (?) — only seen once (in the "save data" script, `$10 78`)
+- `$10` (?) — `$10 $78` seen between "Do not remove / Game Pak." and the next "Finished signing the guest book!" message. The user's pseudocode says step 16 is `Z80_CALL SAVE` — so `$10 $78` may be either a `Z80_CALL`-shaped opcode using `$10` (different from `$07`?) or a 1-byte short-call into a SAVE routine selected by `$78`. Needs more data.
 
 #### `$0A` — conditional jump (confirmed)
 
@@ -71,7 +71,70 @@ flag block.
 To confirm `$08` and `$09`'s exact compare semantics, a live analyzer
 trace through each branch would resolve it.
 
-## Script layout
+## Script model
+
+A script is conceptually a labeled sequence of **steps** with branch
+operations between them. The encoded byte stream is just one long
+linear sequence; "steps" and "labels" are abstractions over byte
+offsets within that stream.
+
+Each step is one of:
+
+| Pseudo-op | Bytes | Notes |
+|---|---|---|
+| `<text>\e` | ASCII chars + `$04` | Display one message, wait for A button. |
+| `<text>\n<text>\e` | ASCII + `$0D` + ASCII + `$04` | `$0D` is an in-message newline. |
+| `MENU <option> <addr>` | (list-menu construct, multiple options grouped) | Open a "list menu" (Sign / Confirm / Exit style — rendered with special menu tiles). Each option dispatches to a different label. **Encoding still partially unknown** — the menu options' target addresses don't appear as bare 2-byte LE pointers in the bytes; selection is probably written to a WRAM byte by the menu UI code and then read back via `$08` / `$0A` conditional jumps. |
+| `YESNO <Yes/No> <addr>` | (yes/no menu construct — different from list menus) | Open a "Y/N menu" rendered in the **same** font/tiles as text (not the menu-special tiles). Likely encoded as `$07` → bank-31 `$58D7` (Y/N UI) followed by `$08`-style conditional branch on the result. The target addresses aren't direct script pointers either. |
+| `Z80_CALL <routine>` | `$07 lo hi bank` | Call a Z80 routine. Used for menu rendering, SAVE, LOAD, post-screen cleanup, etc. Distinguished from `$0E` (which calls a *script*). |
+| `DONE` | `$FF` | End of script. |
+
+Conditional jumps (`$0A` confirmed, `$08`/`$09` very likely) implement
+"if WRAM flag = value, jump to step X" — used to thread alternate
+greetings, post-save-state branches, and probably menu-result
+dispatch.
+
+The user's pseudocode for the guest-book lady (verbatim, with the
+note that the actual ROM script likely reuses subscripts like
+"Need to do something else?" rather than inlining them twice):
+
+```basic
+00 Welcome.
+01 What do you want to do?
+02 MENU Sign 10
+03 MENU Confirm 21
+04 MENU Exit 98
+10 Want to sign the guest book?
+11 ... ... ... ... Okay. It's ready
+12 Replace previous saved data?
+13 YESNO Yes 15
+14 YESNO No 01
+15 Do not remove the Game Pak.
+16 Z80_CALL SAVE
+17 Finished signing the guest book!
+18 Need to do something else?
+19 YESNO Yes 01
+20 YESNO No 98
+21 Want to check the guest book?
+22 ... ... ... ... Okay. It's ready
+23 Previous data will be loaded.
+24 YESNO Yes 26
+25 YESNO No 01
+26 Do not remove the Game Pak.
+27 Z80_CALL LOAD
+28 Done checking the guest book!
+29 Need to do something else?
+30 YESNO Yes 01
+31 YESNO No 98
+98 Okay. Be careful.
+99 DONE
+```
+
+**ROM verification**: "Need to do something else?" occurs exactly once
+in the ROM (at `$0644e9`) — so steps 18–20 and 29–31 collapse to one
+shared subscript call site in practice.
+
+## Script byte layout
 
 Each dialogue tree is one byte stream terminated by `$FF`. A typical
 flow:
@@ -114,9 +177,10 @@ unknown menu construct (the `$07 / $08 / $0A` cluster).
 Within the script we see the `$09 dc d0 01` pattern twice — likely a
 "flag is set" precondition guarding the "Pashute"/"Verde" branches.
 
-### Runtime flow (recorded from gameplay)
+### Runtime flow (from user's pseudocode)
 
-The flow downstream of "What do you want to do?" is:
+This is the same state machine as the pseudocode above, drawn as a
+tree so the menu/Y-N branching is easier to see:
 
 ```
 "Welcome ... / What do you want to do?\e"
