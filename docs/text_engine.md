@@ -38,7 +38,7 @@ characters `$0D` for newline are handled by the text path); if
 | `$0B lo hi val tlo thi` | 5 | `$3AE7` | **Jump if `[$hi lo] != val`** — else fall through. (Same operand layout as `$0A`; differs only in the `jr z`/`jr nz` polarity inside the handler.) |
 | `$0C count` | 1 | `$3AFC` | **Cyclic counter** — `[$D60D] = ([$D60D] + 1) mod count`. Deterministic round-robin, not random. The "RAND" terminology was wrong; the followup is always an `$08` jump table reading `[$D60D]`. |
 | `$0D` | 0 | `$3BAD` | **Newline** — advances the text cursor `[$D616/$D617]` to the column anchor in `[$D614]` and adds `$40` (one tilemap row × 2 bytes per tile). Implements the in-message line break that scripts write inline between text fragments. |
-| `$0E lo hi bank` | 3 | `$3B0C` | **Set text-renderer config** — stores the 3 bytes verbatim at `$D61E/$D61F/$D620`. Was previously called "far call to script"; it isn't a call, it just configures which routine `$3C77`/`$3CF3`/`$0BF1` use for the following text. Different NPCs/contexts use different renderers (e.g. Naji has two: `bank-24 $6C9F` and `bank-24 $6C27`; the lady uses `bank-25 $408B`). |
+| `$0E lo hi bank` | 3 | `$3B0C` | **Set text-renderer config** — stores the 3 bytes verbatim at `$D61E/$D61F/$D620`. Was previously called "far call to script"; it isn't a call, it just configures which routine `$3C77`/`$3CF3`/`$0BF1` use for the following text. Different NPCs/contexts use different renderers (e.g. Naji has two: `bank-24 $6C9F` and `bank-24 $6C27`; Toamuna uses `bank-25 $408B`). |
 | `$0F lo hi` | 2 | `$3B1B` | **Print `[$hi lo]` as decimal** — reads the WRAM byte, BCD-splits it into `$D5FB/$D5FC`, prints the high digit if non-zero then the low digit. This is the `[X]` substitution. |
 | `$10 N` | 1 | `$3B3E` | **Repeat text-print N times** — pulls a count, then calls `$02E6 / $3CF3 / $0BF1` N times. |
 | `$11 lo hi` | 2 | `$3B53` | **Print indexed string** — reads `[$hi lo]` as an index, looks up `$3B75 + 2*idx` to get a string pointer, prints the null-terminated string at that pointer. |
@@ -91,7 +91,7 @@ Conditional jumps (`$0A` if-equal, `$0B` if-not-equal) implement
 greetings, post-save-state branches, and probably menu-result
 dispatch.
 
-The user's pseudocode for the guest-book lady (verbatim, with the
+The user's pseudocode for Toamuna (verbatim, with the
 note that the actual ROM script likely reuses subscripts like
 "Need to do something else?" rather than inlining them twice):
 
@@ -504,12 +504,12 @@ and identify concrete routines we can disassemble later.
 | `HOME:$3ACF` | **Script-engine `$09` (WRITE-WRAM) handler** | Originally logged as `$18:$3ACF` (Naji) and `$19:$3ACF` (lady). The PC is below `$4000`, so the code lives in HOME (always-mapped) — the bank prefix in the watch log is the currently-mapped *data* bank, not the code bank. Two NPCs in different banks hitting the same address confirms the interpreter is global HOME code. |
 | `HOME:$3B09` | **Script-engine `$0C` (cyclic) handler** | Same correction — HOME code, runs from any data-bank context. Sits 58 bytes after the `$09` handler; the dispatch table at `$39F0` plus handlers `$3A14-$3B72` are now fully read out. |
 | `$1F:$5AC9` | **Naji** main-menu init: zeros `$D5FF` | Fires on every Naji main-menu open. |
-| `$1F:$596D` | **Guest-book lady** main-menu init: zeros `$D5FF` | Fires on the lady's main-menu open. Same register as Naji's main menu but a different init routine — the engine has multiple menu UI variants (4-option grid for Naji, 3-option vertical list for the lady). |
-| `$1F:$5861` | **Cursor move** (any menu, shared) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). Shared across Naji's menu, Naji's submenu, and the lady's menu. |
+| `$1F:$596D` | **Toamuna** main-menu init: zeros `$D5FF` | Fires on Toamuna's main-menu open. Same register as Naji's main menu but a different init routine — the engine has multiple menu UI variants (4-option grid for Naji, 3-option vertical list for Toamuna). |
+| `$1F:$5861` | **Cursor move** (any menu, shared) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). Shared across Naji's menu, Naji's submenu, and Toamuna's menu. |
 | `$1F:$5874` | Cursor move opposite direction | Same as `$5861` but the symmetric pair. |
-| `$1F:$5AE9` | **Naji** main-menu confirm: writes dispatch index | Cursor → dispatch lookup happens here. Picking Ask (cursor 1) wrote `$03`; picking Leave (cursor 2) wrote `$04`; picking Climb (cursor 0) wrote `$01`. The lady's menu has **no equivalent confirm-PC observed** — likely dispatches off the live cursor value (like Naji's Ask submenu). |
+| `$1F:$5AE9` | **Naji** main-menu confirm: writes dispatch index | Cursor → dispatch lookup happens here. Picking Ask (cursor 1) wrote `$03`; picking Leave (cursor 2) wrote `$04`; picking Climb (cursor 0) wrote `$01`. Toamuna's menu has **no equivalent confirm-PC observed** — likely dispatches off the live cursor value (like Naji's Ask submenu). |
 | `$1F:$5D83` | Ask-submenu init: zeros `$D600` | Fires on every Ask-submenu open. The Ask submenu has **no separate confirm-PC** — dispatch reads the live cursor value. |
-| `$1F:$58ED` | **Y/N-menu init** (shared): zeros `$D5FE` | Global Y/N UI infrastructure (called by anyone via `$07 $D7 $58 $1F`). Shared across Naji and the lady. |
+| `$1F:$58ED` | **Y/N-menu init** (shared): zeros `$D5FE` | Global Y/N UI infrastructure (called by anyone via `$07 $D7 $58 $1F`). Shared across Naji and Toamuna. |
 | `$1F:$591A` | **Y/N-menu confirm** (shared): writes selection to `$D5FE` | `$00` = Yes, `$01` = No. The script's `$0A $FE $D5 $01 ...` then reads "if user picked No, GOTO menu" — so the YES case is the fall-through. |
 | `$19:$4023` | **"Save exists?" check** inside the bank-25 `$4018` routine | Writes `$D5FE = $01` if a save record is present in the cart RAM (or `$00` if not). Called via `$07 $18 $40 $19` from the ranch-welcome script. Means `$D5FE` is dual-purpose: Y/N result (via `$58ED/$591A`) AND save-exists flag (via `$4023`). |
 
@@ -520,7 +520,7 @@ and identify concrete routines we can disassemble later.
 - **`$D600`** is the Ask-submenu cursor, read live by dispatch.
 - **`$D0DD`** is Naji's NPC-state byte: 0 at boot, →1 after the first-time intro completes (written by the `$09` handler at HOME `$3ACF`).
 - **`$D60D`** is the `$0C` cycle-counter byte, written by the `$0C` handler at HOME `$3B09` only when a `$0C` actually fires. Same address fires from both Naji's bank-24 cycler and the ranch-welcome's bank-25 cycler — confirming it's global engine state, not NPC-specific.
-- **`$D0DC`** is *both* an area-presence flag (set `$01` by the area-init at `$12:$0314` on entering the ranch) *and* a script-write target (the four `$09 $DC $D0 $01` opcodes in the ranch welcome each write `$01`). Live trace confirms one of those script-writes fires during the lady's first-time intro. The two writes are redundant on the same value — probably defensive, or `$D0DC` accumulates two unrelated semantics that happen to coexist on `$01`.
+- **`$D0DC`** is *both* an area-presence flag (set `$01` by the area-init at `$12:$0314` on entering the ranch) *and* a script-write target (the four `$09 $DC $D0 $01` opcodes in the ranch welcome each write `$01`). Live trace confirms one of those script-writes fires during Toamuna's first-time intro. The two writes are redundant on the same value — probably defensive, or `$D0DC` accumulates two unrelated semantics that happen to coexist on `$01`.
 - **The cursor-to-dispatch lookup** in the main menu maps the visible-cursor positions to the dispatch table, skipping hidden options. With Restart hidden (first-time path, `$CFF0=0`), cursor {0,1,2} → dispatch {1,3,4}; this was confirmed across three picks (Climb cursor 0 → dispatch 1, Ask cursor 1 → dispatch 3, Leave cursor 2 → dispatch 4). Dispatch index 2 (`$75BC`) stays unreachable from the menu cursor regardless.
 - **`$0A` operand layout and equality semantics** confirmed again on Naji's Climb-No path: `$0A $FE $D5 $01 $83 $74` fired iff `$D5FE==$01`, jumping to `$7483`.
 
