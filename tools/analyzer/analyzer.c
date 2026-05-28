@@ -417,6 +417,34 @@ static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
     return entry;
 }
 
+/* Sibling structure to "files": every contiguous run of bytes that
+ * was both PC-visited AND read-as-data (REGION_CONFLICT) is emitted
+ * here with its (addr, len). These bytes are also still represented in
+ * the analyzed.asm sections (as `data`, per the defensive rule) so the
+ * disassembly round-trips byte-exact; this array exists purely as an
+ * index for investigation — usually the trigger is OAM DMA from a low
+ * source page bleeding over executed code. */
+static cJSON *build_conflict_array(const uint8_t *snapshot) {
+    cJSON *arr = cJSON_CreateArray();
+    uint32_t i = 0;
+    while (i < g.rom_size) {
+        if (g.covered[i] || snapshot[i] != REGION_CONFLICT) {
+            i++;
+            continue;
+        }
+        uint32_t start = i;
+        while (i < g.rom_size && !g.covered[i] &&
+               snapshot[i] == REGION_CONFLICT) {
+            i++;
+        }
+        cJSON *e = cJSON_CreateObject();
+        cJSON_AddNumberToObject(e, "addr", (double)start);
+        cJSON_AddNumberToObject(e, "len",  (double)(i - start));
+        cJSON_AddItemToArray(arr, e);
+    }
+    return arr;
+}
+
 static int write_json_atomic(const char *path, cJSON *root) {
     char *out = cJSON_Print(root);
     if (!out) return -1;
@@ -457,6 +485,10 @@ static void perform_save(void) {
 
     cJSON *entry = build_analyzed_entry(snap);
     cJSON_AddItemToArray(files, entry);
+
+    /* Replace any previous "conflicts" sibling with a fresh snapshot. */
+    cJSON_DeleteItemFromObject(root, "conflicts");
+    cJSON_AddItemToObject(root, "conflicts", build_conflict_array(snap));
 
     if (write_json_atomic(g.map_path, root) != 0)
         fprintf(stderr, "error: failed to write %s: %s\n",
