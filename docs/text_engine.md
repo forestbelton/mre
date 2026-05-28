@@ -179,8 +179,32 @@ The script presents one of several greetings based on game state:
 Then the menu prompt: `"What do you\nwant to do?"` followed by an
 unknown menu construct (the `$07 / $08 / $0A` cluster).
 
-Within the script we see the `$09 dc d0 01` pattern twice — likely a
-"flag is set" precondition guarding the "Pashute"/"Verde" branches.
+Re-reading the raw bytes: `$09 $DC $D0 $01` actually appears **four**
+times in this script (`$06437A`, `$06442B`, `$064457`, `$0644A0`),
+each in the same shape:
+
+```
+... <intro-text> $04   $09 $DC $D0 $01   $06 $A7 $44   ...
+```
+
+= "after this intro variant ends, write `$D0DC = $01` then GOTO
+`$44A7`" (the shared "What do you want to do?" menu prompt). So
+the four state-specific intros all converge on the menu via this
+tail. The writes ARE legitimate `$09` opcodes — but they write the
+same `$01` that the area-init at `$12:$0314` already wrote on entry,
+so they're redundant with it. Likely `$D0DC` accumulates multiple
+meanings ("in-ranch" set by init, "lady-welcomed" set by script) that
+happen to use the same value.
+
+Also visible at `$064381` immediately after the first such tail:
+
+```
+064381  $0C $04 $08 $0D $D6   $8E $43  $B7 $43  $C7 $43  $E9 $43
+```
+
+— a `$0C` RAND with 4 targets reading `$D60D`, *identical in shape*
+to Naji's RAND. So `$0C` / `$D60D` are global engine infrastructure,
+not NPC-specific.
 
 ### Runtime flow (from user's pseudocode)
 
@@ -472,13 +496,15 @@ and identify concrete routines we can disassemble later.
 | `$12:$0314` | Bulk zero of `$CFF0` / `$CFF2` / `$D0DD` on area entry | All three written from the same instruction when entering Naji's area. This is the "clear NPC/local state" routine. |
 | `$18:$3ACF` | **Script-engine `$09` (WRITE-WRAM) handler** | Fires when the script byte `$09 $DD $D0 $01` executes after Naji's first-time intro. Anchor for the bank-24 script interpreter. |
 | `$18:$3B09` | **Script-engine `$0C` (RAND) handler** | Fires when the script byte `$0C` executes on a non-first-time Naji visit (writes the chosen index to the RAND result byte `$D60D`). Sits 58 bytes after the `$09` handler — the bank-24 interpreter is a per-opcode dispatch table laid out around `$3A?? / $3B??`. |
-| `$1F:$5AC9` | Main-menu init: zeros `$D5FF` | Fires on every main-menu open. |
-| `$1F:$5861` | Cursor move (any menu) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). |
+| `$1F:$5AC9` | **Naji** main-menu init: zeros `$D5FF` | Fires on every Naji main-menu open. |
+| `$1F:$596D` | **Guest-book lady** main-menu init: zeros `$D5FF` | Fires on the lady's main-menu open. Same register as Naji's main menu but a different init routine — the engine has multiple menu UI variants (4-option grid for Naji, 3-option vertical list for the lady). |
+| `$1F:$5861` | **Cursor move** (any menu, shared) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). Shared across Naji's menu, Naji's submenu, and the lady's menu. |
 | `$1F:$5874` | Cursor move opposite direction | Same as `$5861` but the symmetric pair. |
-| `$1F:$5AE9` | **Main-menu confirm**: writes the dispatch index | Cursor → dispatch lookup happens here. Picking Ask (cursor 1) wrote `$03`; picking Leave (cursor 2) wrote `$04`; picking Climb (cursor 0) wrote `$01`. |
+| `$1F:$5AE9` | **Naji** main-menu confirm: writes dispatch index | Cursor → dispatch lookup happens here. Picking Ask (cursor 1) wrote `$03`; picking Leave (cursor 2) wrote `$04`; picking Climb (cursor 0) wrote `$01`. The lady's menu has **no equivalent confirm-PC observed** — likely dispatches off the live cursor value (like Naji's Ask submenu). |
 | `$1F:$5D83` | Ask-submenu init: zeros `$D600` | Fires on every Ask-submenu open. The Ask submenu has **no separate confirm-PC** — dispatch reads the live cursor value. |
-| `$1F:$58ED` | **Y/N-menu init**: zeros `$D5FE` | Fires when the Y/N UI (`$07 $D7 $58 $1F` = bank 31 `$58D7`) opens — initial cursor on "Yes". |
-| `$1F:$591A` | **Y/N-menu confirm**: writes selection to `$D5FE` | `$00` = Yes, `$01` = No. The script's `$0A $FE $D5 $01 $83 $74` then reads "if user picked No, GOTO menu" — so the YES case is the fall-through (e.g., into ENTER_DUNGEON), which matches Climb's branch shape. |
+| `$1F:$58ED` | **Y/N-menu init** (shared): zeros `$D5FE` | Global Y/N UI infrastructure (called by anyone via `$07 $D7 $58 $1F`). Shared across Naji and the lady. |
+| `$1F:$591A` | **Y/N-menu confirm** (shared): writes selection to `$D5FE` | `$00` = Yes, `$01` = No. The script's `$0A $FE $D5 $01 ...` then reads "if user picked No, GOTO menu" — so the YES case is the fall-through. |
+| `$19:$4023` | **"Save exists?" check** inside the bank-25 `$4018` routine | Writes `$D5FE = $01` if a save record is present in the cart RAM (or `$00` if not). Called via `$07 $18 $40 $19` from the ranch-welcome script. Means `$D5FE` is dual-purpose: Y/N result (via `$58ED/$591A`) AND save-exists flag (via `$4023`). |
 
 ### What this nails down
 
@@ -487,6 +513,7 @@ and identify concrete routines we can disassemble later.
 - **`$D600`** is the Ask-submenu cursor, read live by dispatch.
 - **`$D0DD`** is Naji's NPC-state byte: 0 at boot, →1 after the first-time intro completes (written by the `$09` handler at `$18:$3ACF`).
 - **`$D60D`** is the `$0C` (RAND) result byte, written by the `$0C` handler at `$18:$3B09` only when RAND actually fires (i.e., subsequent-visit Naji, not the first-time path).
+- **`$D0DC` is an area-presence flag**, not a script state byte — set to `$01` by the area-init at `$12:$0314` on entering the ranch. The original "Pashute returned / Verde returned" hypothesis (made before `$09` was decoded as WRITE-WRAM) is wrong; whether the ranch-welcome bytes actually contain `$09 $DC $D0 $01` should be re-checked, because writing `$01` would be redundant with the init.
 - **The cursor-to-dispatch lookup** in the main menu maps the visible-cursor positions to the dispatch table, skipping hidden options. With Restart hidden (first-time path, `$CFF0=0`), cursor {0,1,2} → dispatch {1,3,4}; this was confirmed across three picks (Climb cursor 0 → dispatch 1, Ask cursor 1 → dispatch 3, Leave cursor 2 → dispatch 4). Dispatch index 2 (`$75BC`) stays unreachable from the menu cursor regardless.
 - **`$0A` operand layout and equality semantics** confirmed again on Naji's Climb-No path: `$0A $FE $D5 $01 $83 $74` fired iff `$D5FE==$01`, jumping to `$7483`.
 
