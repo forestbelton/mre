@@ -37,7 +37,35 @@ MonsterNamePointers:
 
 SECTION "names_003b83", ROM0[$3b83]
 
-MonsterNames:
-	db $54, $69, $67, $65, $72, $00, $4d, $6f, $63, $63, $68, $69, $00, $48, $61, $72
-	db $65, $00, $47, $61, $6c, $69, $00, $47, $6f, $6c, $65, $6d, $00, $53, $75, $65
-	db $7a, $6f, $00, $50, $68, $65, $6e, $69, $78, $00
+Name_Tiger:
+	db "Tiger", 0
+
+SECTION "names_003b89", ROM0[$3b89]
+
+Name_Mocchi:
+	db "Mocchi", 0
+
+SECTION "names_003b90", ROM0[$3b90]
+
+Name_Hare:
+	db "Hare", 0
+
+SECTION "names_003b95", ROM0[$3b95]
+
+Name_Gali:
+	db "Gali", 0
+
+SECTION "names_003b9a", ROM0[$3b9a]
+
+Name_Golem:
+	db "Golem", 0
+
+SECTION "names_003ba0", ROM0[$3ba0]
+
+Name_Suezo:
+	db "Suezo", 0
+
+SECTION "names_003ba6", ROM0[$3ba6]
+
+Name_Phenix:
+	db "Phenix", 0

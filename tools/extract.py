@@ -29,6 +29,27 @@ BANK_SIZE = 0x4000
 DEFAULT_INCLUDE_DIR = "include"
 HARDWARE_INC = "hardware.inc"
 
+# Section types accepted in `sections[]`. Each maps to one of the two
+# coverage flavors the rest of the pipeline cares about:
+#   - "code"  : treat as disassembled instructions; labels at instruction
+#               boundaries only.
+#   - "data"  : treat as a span of bytes; labels at any byte position.
+# `ascii` and `asciz` are emitted as RGBASM string literals but are
+# coverage-equivalent to `data` (any byte is a valid label position).
+SECTION_TYPES = {"code", "data", "ascii", "asciz"}
+DATA_LIKE_TYPES = {"data", "ascii", "asciz"}
+
+
+def section_coverage_kind(stype: str) -> str:
+    """Map a section's semantic type to its coverage kind ("code" / "data")."""
+    return "code" if stype == "code" else "data"
+
+
+# Files the extractor always owns and always regenerates. Every other
+# code file in map.json is treated as user-editable after first emission:
+# extract.py won't overwrite it on subsequent runs.
+AUTO_MANAGED_FILES = {"header.asm", "main.asm", "analyzed.asm"}
+
 
 # ---------------------------------------------------------------------------
 # hardware.inc parsing
@@ -451,8 +472,11 @@ def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, st
                 raise MapError(f"{name}: code files require a non-empty 'sections' list")
             for si, sec in enumerate(secs):
                 stype = sec.get("type")
-                if stype not in ("code", "data"):
-                    raise MapError(f"{name} sections[{si}]: type must be 'code' or 'data'")
+                if stype not in SECTION_TYPES:
+                    raise MapError(
+                        f"{name} sections[{si}]: type must be one of "
+                        f"{sorted(SECTION_TYPES)} (got {stype!r})"
+                    )
                 _check_range(f"{name} sections[{si}]", sec["addr"], sec["len"], rom_size)
                 _validate_label(sec.get("label"), f"{name} sections[{si}]", labels_seen)
                 intervals.append(
@@ -527,7 +551,16 @@ def build_section_index(
     for f in spec.get("files", []):
         if f.get("type") == "code":
             for s in f.get("sections", []):
-                out.append((s["addr"], s["addr"] + s["len"], s["type"], "code-file"))
+                kind = section_coverage_kind(s["type"])
+                # ascii/asciz spans render as one RGBASM string literal,
+                # so we can't slot a label in mid-span — same constraint
+                # as an INCBIN'd top-level data file. Mark the owner
+                # accordingly so build_labels only accepts a label at
+                # the section's start.
+                owner = ("string-section"
+                         if s["type"] in ("ascii", "asciz")
+                         else "code-file")
+                out.append((s["addr"], s["addr"] + s["len"], kind, owner))
         elif f.get("type") == "data":
             out.append((f["addr"], f["addr"] + f["len"], "data", "data-file"))
     out.append((HEADER_START, HEADER_END, "header", "header"))
@@ -633,7 +666,7 @@ def build_labels(
     for f in spec.get("files", []):
         if f.get("type") == "code":
             for s in f.get("sections", []):
-                assign(s["addr"], s["type"], s.get("label"))
+                assign(s["addr"], section_coverage_kind(s["type"]), s.get("label"))
         elif f.get("type") == "data":
             assign(f["addr"], "data", f.get("label"))
 
@@ -651,7 +684,7 @@ def build_labels(
         sec_start, _sec_end, sec_kind, owner = sec
         if owner == "header":
             continue
-        if owner == "data-file":
+        if owner in ("data-file", "string-section"):
             if flat != sec_start:
                 continue
         elif owner == "code-file":
@@ -700,6 +733,119 @@ def _db_lines(data: bytes, indent: str = "\t") -> list[str]:
     return lines
 
 
+def _format_ascii_db(data: bytes, indent: str = "\t",
+                    trailing_terminator: bool = False) -> list[str]:
+    """Render `data` as RGBASM `db` lines using string literals where
+    possible. Printable bytes ($20-$7E) collapse into "..." segments;
+    `"` and `\\` get backslash-escaped; non-printable bytes break out
+    as numeric `$xx` between string segments.
+
+    If `trailing_terminator` is set, the last byte of `data` must be
+    `$00` and is rendered as `, 0` after the string (used for asciz).
+    """
+    if trailing_terminator:
+        if not data or data[-1] != 0:
+            raise ValueError(
+                "asciz section: last byte must be $00 "
+                f"(got ${data[-1]:02x})" if data else "asciz section is empty"
+            )
+        body = data[:-1]
+    else:
+        body = data
+
+    parts: list[str] = []
+    cur = ""
+    for b in body:
+        if 0x20 <= b <= 0x7E:
+            ch = chr(b)
+            if ch in ('"', '\\'):
+                ch = "\\" + ch
+            cur += ch
+        else:
+            if cur:
+                parts.append(f'"{cur}"')
+                cur = ""
+            parts.append(f"${b:02x}")
+    if cur:
+        parts.append(f'"{cur}"')
+    if trailing_terminator:
+        parts.append("0")
+    if not parts:
+        return []
+    return [indent + "db " + ", ".join(parts)]
+
+
+_SECTION_DIRECTIVE_RE = re.compile(r'^\s*SECTION\s+"([^"]+)"', re.MULTILINE)
+
+
+def _existing_section_names(path: Path) -> set[str]:
+    """Scan an existing .asm file for SECTION "<name>" directives.
+    Returns the set of names already declared in the file."""
+    if not path.exists():
+        return set()
+    return set(_SECTION_DIRECTIVE_RE.findall(path.read_text()))
+
+
+def _build_section_lines(
+    sec: dict[str, Any],
+    sec_name: str,
+    file_name: str,
+    rom: bytes,
+    labels: dict[int, str],
+    hw_symbols: dict[int, str],
+) -> list[str]:
+    """Render one section in a code file. Returns the list of lines
+    (including the SECTION directive at the top)."""
+    offset = sec["addr"]
+    length = sec["len"]
+    stype = sec["type"]
+    sec_bank, mem_addr = rom_offset_to_bank_addr(offset)
+
+    lines: list[str] = [section_directive(sec_name, offset), ""]
+    chunk = rom[offset:offset + length]
+    fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank)
+
+    if stype == "code":
+        i = 0
+        while i < length:
+            flat = offset + i
+            if flat in labels:
+                lines.append(f"{labels[flat]}:")
+            pc = (mem_addr + i) & 0xFFFF
+            mnem, n = decode(chunk, i, pc, fmt_target, fmt_io)
+            lines.append(f"\t{mnem}")
+            i += n
+    elif stype in ("ascii", "asciz"):
+        # Render the whole span as one RGBASM string literal (with break-
+        # outs for non-printable bytes). Mid-section labels aren't
+        # supported — see build_labels' "string-section" handling.
+        if offset in labels:
+            lines.append(f"{labels[offset]}:")
+        try:
+            lines.extend(_format_ascii_db(
+                chunk, indent="\t",
+                trailing_terminator=(stype == "asciz"),
+            ))
+        except ValueError as e:
+            raise MapError(f"{file_name} section at ${offset:06x}: {e}") from None
+    else:
+        # Data subsection: emit `db` lines, breaking at any label position
+        # so addresses referenced from elsewhere can resolve.
+        i = 0
+        while i < length:
+            flat = offset + i
+            if flat in labels:
+                lines.append(f"{labels[flat]}:")
+            end = min(i + 16, length)
+            for j in range(i + 1, end):
+                if (offset + j) in labels:
+                    end = j
+                    break
+            lines.append("\tdb " + ", ".join(f"${b:02x}" for b in chunk[i:end]))
+            i = end
+    return lines
+
+
 def emit_code_file(
     file_spec: dict[str, Any],
     rom: bytes,
@@ -707,55 +853,60 @@ def emit_code_file(
     labels: dict[int, str],
     hw_symbols: dict[int, str],
 ) -> Path:
+    """Emit (or update) a code file.
+
+    Auto-managed files (header.asm, main.asm, analyzed.asm) always
+    full-regen — user hand-edits to those are NOT preserved.
+
+    Every other code file is append-only: if it already exists, scan for
+    SECTION "..." directives already present in the file and skip those.
+    Append any sections from map.json that aren't there yet at the end.
+    This lets the user edit the file freely (whitespace, macros, RAM
+    decls, custom labels) and still pull new sections into it on later
+    extracts. To force one section to refresh, delete that SECTION block
+    from the file; to force a full refresh, delete the whole file.
+    """
     name = file_spec["name"]
     stem = Path(name).stem
     sections = sorted(file_spec["sections"], key=lambda s: s["addr"])
-
-    lines: list[str] = [GENERATED_BANNER, ""]
-
-    for sec in sections:
-        offset = sec["addr"]
-        length = sec["len"]
-        stype = sec["type"]
-        sec_bank, mem_addr = rom_offset_to_bank_addr(offset)
-
-        sec_name = f"{stem}_{offset:06x}"
-        lines.append(section_directive(sec_name, offset))
-        lines.append("")
-
-        chunk = rom[offset:offset + length]
-        fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank)
-
-        if stype == "code":
-            i = 0
-            while i < length:
-                flat = offset + i
-                if flat in labels:
-                    lines.append(f"{labels[flat]}:")
-                pc = (mem_addr + i) & 0xFFFF
-                mnem, n = decode(chunk, i, pc, fmt_target, fmt_io)
-                lines.append(f"\t{mnem}")
-                i += n
-        else:
-            # Data subsection: emit `db` lines, breaking at any label
-            # position so addresses referenced from elsewhere can resolve.
-            i = 0
-            while i < length:
-                flat = offset + i
-                if flat in labels:
-                    lines.append(f"{labels[flat]}:")
-                end = min(i + 16, length)
-                for j in range(i + 1, end):
-                    if (offset + j) in labels:
-                        end = j
-                        break
-                lines.append("\tdb " + ", ".join(f"${b:02x}" for b in chunk[i:end]))
-                i = end
-        lines.append("")
-
     out_path = output_dir / name
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text("\n".join(lines))
+
+    is_auto = name in AUTO_MANAGED_FILES
+    existing = set() if is_auto else _existing_section_names(out_path)
+
+    if existing and not is_auto:
+        # Append-only update: leave existing SECTION blocks alone.
+        new_blocks: list[str] = []
+        appended: list[str] = []
+        for sec in sections:
+            sec_name = f"{stem}_{sec['addr']:06x}"
+            if sec_name in existing:
+                continue
+            block = "\n".join(_build_section_lines(
+                sec, sec_name, name, rom, labels, hw_symbols))
+            new_blocks.append(block)
+            appended.append(sec_name)
+        if new_blocks:
+            text = out_path.read_text()
+            if not text.endswith("\n"):
+                text += "\n"
+            out_path.write_text(text + "\n" + "\n\n".join(new_blocks) + "\n")
+            print(f"  {name}: appended {len(appended)} section(s): "
+                  f"{', '.join(appended)}", file=sys.stderr)
+        else:
+            print(f"  {name}: up to date ({len(existing)} section(s) already present)",
+                  file=sys.stderr)
+        return out_path
+
+    # Fresh emit — either an auto-managed file or first-time generation.
+    all_lines: list[str] = [GENERATED_BANNER, ""]
+    for sec in sections:
+        sec_name = f"{stem}_{sec['addr']:06x}"
+        all_lines.extend(_build_section_lines(
+            sec, sec_name, name, rom, labels, hw_symbols))
+        all_lines.append("")
+    out_path.write_text("\n".join(all_lines))
     return out_path
 
 

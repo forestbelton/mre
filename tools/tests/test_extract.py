@@ -518,5 +518,237 @@ class TestBuildLabels(unittest.TestCase):
         self.assertNotIn(0x201, labels)      # mid-instruction
 
 
+# ----------------------------------------------------------------------
+# ascii / asciz section types
+# ----------------------------------------------------------------------
+
+class TestAsciiFormat(unittest.TestCase):
+    def test_printable_collapse_to_string(self):
+        self.assertEqual(extract._format_ascii_db(b"Hello"), ['\tdb "Hello"'])
+
+    def test_escape_quote_and_backslash(self):
+        # "Say \"hi\\\""  →  "Say \"hi\\\""  → bytes: Say "hi\""
+        raw = b'Say "hi\\"'
+        # Rendered with backslash-escapes inside the literal.
+        # Each `"` becomes `\"`, each `\` becomes `\\`.
+        # raw = S a y  " h i \ "
+        # escaped = S a y \" h i \\ \"
+        self.assertEqual(extract._format_ascii_db(raw),
+                         ['\tdb "Say \\"hi\\\\\\""'])
+
+    def test_non_printable_break_out(self):
+        # "He" + $00 + "lo"
+        self.assertEqual(extract._format_ascii_db(b"He\x00lo"),
+                         ['\tdb "He", $00, "lo"'])
+
+    def test_empty_data(self):
+        self.assertEqual(extract._format_ascii_db(b""), [])
+
+    def test_all_non_printable(self):
+        self.assertEqual(extract._format_ascii_db(b"\x01\x02\x03"),
+                         ['\tdb $01, $02, $03'])
+
+
+class TestAscizFormat(unittest.TestCase):
+    def test_simple(self):
+        self.assertEqual(extract._format_ascii_db(b"Hi\x00", trailing_terminator=True),
+                         ['\tdb "Hi", 0'])
+
+    def test_with_break_out(self):
+        self.assertEqual(extract._format_ascii_db(b"H\x07i\x00", trailing_terminator=True),
+                         ['\tdb "H", $07, "i", 0'])
+
+    def test_only_null(self):
+        # Just the terminator: no string body before the trailing 0.
+        self.assertEqual(extract._format_ascii_db(b"\x00", trailing_terminator=True),
+                         ['\tdb 0'])
+
+    def test_missing_terminator_raises(self):
+        with self.assertRaises(ValueError):
+            extract._format_ascii_db(b"Hi", trailing_terminator=True)
+
+    def test_empty_raises(self):
+        with self.assertRaises(ValueError):
+            extract._format_ascii_db(b"", trailing_terminator=True)
+
+
+class TestAsciiAscizValidation(unittest.TestCase):
+    ROM_SIZE = 0x10000
+
+    def test_ascii_section_accepted(self):
+        extract.validate_map({"files": [
+            {"type": "code", "name": "x.asm", "sections": [
+                {"type": "ascii", "addr": 0x200, "len": 5}
+            ]}
+        ]}, self.ROM_SIZE)
+
+    def test_asciz_section_accepted(self):
+        extract.validate_map({"files": [
+            {"type": "code", "name": "x.asm", "sections": [
+                {"type": "asciz", "addr": 0x200, "len": 6}
+            ]}
+        ]}, self.ROM_SIZE)
+
+    def test_unknown_section_type(self):
+        with self.assertRaises(extract.MapError):
+            extract.validate_map({"files": [
+                {"type": "code", "name": "x.asm", "sections": [
+                    {"type": "utf8", "addr": 0x200, "len": 4}
+                ]}
+            ]}, self.ROM_SIZE)
+
+
+class TestAsciiSectionIndex(unittest.TestCase):
+    def test_ascii_is_string_section_owner(self):
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "ascii", "addr": 0x200, "len": 4}
+        ]}]}
+        index = extract.build_section_index(spec)
+        by_start = {s[0]: s for s in index}
+        # (start, end, kind, owner) — kind collapses to "data", owner is "string-section"
+        self.assertEqual(by_start[0x200][2], "data")
+        self.assertEqual(by_start[0x200][3], "string-section")
+
+    def test_label_not_assigned_mid_string(self):
+        # A string at $0200 len 5. A reference to $0202 (mid-string)
+        # must NOT define a label there — the emitter renders the
+        # whole span as one db "..." literal.
+        rom = bytearray(0x10000)
+        rom[0x200:0x205] = b"Hello"
+        rom[0x300:0x303] = bytes.fromhex("c30202")  # jp $0202
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "ascii", "addr": 0x200, "len": 5},
+            {"type": "code",  "addr": 0x300, "len": 3},
+        ]}]}
+        sec_index = extract.build_section_index(spec)
+        boundaries = extract.compute_insn_boundaries(bytes(rom), spec)
+        refs = extract.collect_refs(bytes(rom), spec)
+        labels = extract.build_labels(refs, sec_index, boundaries, spec)
+        self.assertIn(0x200, labels)
+        self.assertNotIn(0x202, labels)
+
+    def test_custom_label_at_string_start(self):
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "asciz", "addr": 0x200, "len": 6, "label": "Greeting"}
+        ]}]}
+        sec_index = extract.build_section_index(spec)
+        boundaries = extract.compute_insn_boundaries(bytes(0x10000), spec)
+        labels = extract.build_labels([], sec_index, boundaries, spec)
+        self.assertEqual(labels[0x200], "Greeting")
+
+
+# ----------------------------------------------------------------------
+# Append-only emission for user-edited files
+# ----------------------------------------------------------------------
+
+class TestAppendOnlyEmission(unittest.TestCase):
+    """Verify emit_code_file's behavior on already-existing files:
+      - User hand-edits to the file survive re-extract.
+      - Existing SECTION blocks are NOT re-emitted (user owns them).
+      - New sections from map.json get appended at the end.
+      - Auto-managed files (header.asm, main.asm, analyzed.asm) always
+        full-regen.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.rom = bytes(0x10000)
+        # Put something at $0200 so SECTION emission is deterministic.
+        rom = bytearray(self.rom)
+        rom[0x0200:0x0203] = bytes.fromhex("c9c9c9")  # 3 x ret
+        rom[0x0300:0x0303] = bytes.fromhex("c9c9c9")
+        self.rom = bytes(rom)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _spec_with_sections(self, *addrs_and_lens):
+        sections = [{"type": "code", "addr": a, "len": l} for a, l in addrs_and_lens]
+        return {
+            "files": [{"type": "code", "name": "engine.asm", "sections": sections}]
+        }
+
+    def _emit(self, spec):
+        sec_index = extract.build_section_index(spec)
+        boundaries = extract.compute_insn_boundaries(self.rom, spec)
+        refs = extract.collect_refs(self.rom, spec)
+        labels = extract.build_labels(refs, sec_index, boundaries, spec)
+        f = spec["files"][0]
+        return extract.emit_code_file(f, self.rom, self.dir, labels, {})
+
+    def test_first_extract_emits_fresh(self):
+        spec = self._spec_with_sections((0x0200, 3))
+        out = self._emit(spec)
+        text = out.read_text()
+        self.assertIn('SECTION "engine_000200"', text)
+        self.assertIn("Auto-generated", text)  # banner present
+
+    def test_existing_file_user_edits_survive(self):
+        spec = self._spec_with_sections((0x0200, 3))
+        out = self._emit(spec)
+        # Simulate the user adding a comment after the SECTION block.
+        user_text = out.read_text() + "\n; --- user comment ---\nMyMacro: MACRO\n\tnop\nENDM\n"
+        out.write_text(user_text)
+        # Re-extract with the same map.json — file already has engine_000200.
+        self._emit(spec)
+        # User comment survives; we don't re-emit the existing section.
+        final = out.read_text()
+        self.assertIn("--- user comment ---", final)
+        self.assertIn("MyMacro: MACRO", final)
+        # Only one banner (no duplicate emission).
+        self.assertEqual(final.count("Auto-generated by tools/extract.py"), 1)
+        # Only one SECTION directive for $0200.
+        self.assertEqual(final.count('SECTION "engine_000200"'), 1)
+
+    def test_new_section_gets_appended(self):
+        # Start with engine.asm containing only $0200.
+        spec1 = self._spec_with_sections((0x0200, 3))
+        out = self._emit(spec1)
+        # User adds a comment.
+        out.write_text(out.read_text() + "\n; user content\n")
+        # Now map.json grows to include $0300 as well.
+        spec2 = self._spec_with_sections((0x0200, 3), (0x0300, 3))
+        self._emit(spec2)
+        final = out.read_text()
+        # Both sections present.
+        self.assertIn('SECTION "engine_000200"', final)
+        self.assertIn('SECTION "engine_000300"', final)
+        # User content survives.
+        self.assertIn("; user content", final)
+        # $0300 was appended AFTER user content (since user content sat
+        # at the end of the previous file).
+        self.assertLess(final.index("; user content"),
+                        final.index('SECTION "engine_000300"'))
+
+    def test_section_block_deleted_gets_rebuilt(self):
+        # User deletes the SECTION engine_000200 block (just removes the
+        # directive line). On re-extract, that section gets appended back.
+        spec = self._spec_with_sections((0x0200, 3))
+        out = self._emit(spec)
+        cleaned = "\n".join(l for l in out.read_text().splitlines()
+                            if 'SECTION "engine_000200"' not in l)
+        out.write_text(cleaned)
+        self._emit(spec)
+        # Re-emit happened because the directive name was no longer found.
+        text = out.read_text()
+        self.assertEqual(text.count('SECTION "engine_000200"'), 1)
+
+    def test_auto_managed_full_regen(self):
+        # analyzed.asm always full-regens regardless of existing content.
+        spec = {
+            "files": [{"type": "code", "name": "analyzed.asm", "sections": [
+                {"type": "code", "addr": 0x0200, "len": 3}
+            ]}]
+        }
+        out = self._emit(spec)
+        # Simulate stale user content in analyzed.asm.
+        out.write_text("STALE_CONTENT_SHOULD_BE_OVERWRITTEN\n")
+        self._emit(spec)
+        final = out.read_text()
+        self.assertNotIn("STALE_CONTENT", final)
+        self.assertIn('SECTION "analyzed_000200"', final)
+
+
 if __name__ == "__main__":
     unittest.main()

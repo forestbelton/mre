@@ -8323,10 +8323,46 @@
           "label": "MonsterNamePointers"
         },
         {
-          "type": "data",
+          "type": "asciz",
           "addr": 15235,
-          "len": 42,
-          "label": "MonsterNames"
+          "len": 6,
+          "label": "Name_Tiger"
+        },
+        {
+          "type": "asciz",
+          "addr": 15241,
+          "len": 7,
+          "label": "Name_Mocchi"
+        },
+        {
+          "type": "asciz",
+          "addr": 15248,
+          "len": 5,
+          "label": "Name_Hare"
+        },
+        {
+          "type": "asciz",
+          "addr": 15253,
+          "len": 5,
+          "label": "Name_Gali"
+        },
+        {
+          "type": "asciz",
+          "addr": 15258,
+          "len": 6,
+          "label": "Name_Golem"
+        },
+        {
+          "type": "asciz",
+          "addr": 15264,
+          "len": 6,
+          "label": "Name_Suezo"
+        },
+        {
+          "type": "asciz",
+          "addr": 15270,
+          "len": 7,
+          "label": "Name_Phenix"
         }
       ]
     }
