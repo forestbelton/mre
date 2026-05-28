@@ -18,13 +18,73 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 HEADER_START = 0x0100
 HEADER_END = 0x0150  # exclusive
 BANK_SIZE = 0x4000
+DEFAULT_INCLUDE_DIR = "include"
+HARDWARE_INC = "hardware.inc"
+
+
+# ---------------------------------------------------------------------------
+# hardware.inc parsing
+# ---------------------------------------------------------------------------
+
+_EQU_RE = re.compile(
+    r"^\s*def\s+(\w+)\s+equ\s+(.+?)\s*(?:;.*)?$",
+    re.IGNORECASE,
+)
+
+
+def parse_hw_symbols(path: Path) -> dict[int, str]:
+    """Parse a hardware.inc-style file. Return {addr: canonical_name} for
+    addresses inside the I/O + HRAM range (0xFF00-0xFFFF).
+
+    Handles two forms of definition:
+        def rLCDC   equ $FF40           ; direct hex literal
+        def rNR52   equ rAUDENA         ; alias of another symbol
+
+    Aliases are resolved transitively; the *first* name that maps to a
+    given address wins (hardware.inc lists canonical names before aliases).
+    """
+    if not path.exists():
+        return {}
+    direct: dict[str, int] = {}    # name -> address
+    alias: dict[str, str] = {}     # name -> referenced name
+    for line in path.read_text().splitlines():
+        m = _EQU_RE.match(line)
+        if not m:
+            continue
+        name, value = m.group(1), m.group(2).strip()
+        if value.startswith("$"):
+            try:
+                direct[name] = int(value[1:], 16)
+            except ValueError:
+                pass
+        elif value.isidentifier():
+            alias[name] = value
+
+    # Resolve aliases to their ultimate direct address.
+    for name, ref in alias.items():
+        if name in direct:
+            continue
+        seen: set[str] = set()
+        cur = ref
+        while cur in alias and cur not in seen:
+            seen.add(cur)
+            cur = alias[cur]
+        if cur in direct:
+            direct[name] = direct[cur]
+
+    addr_to_name: dict[int, str] = {}
+    for name, addr in direct.items():
+        if 0xFF00 <= addr <= 0xFFFF and addr not in addr_to_name:
+            addr_to_name[addr] = name
+    return addr_to_name
 
 
 # ---------------------------------------------------------------------------
@@ -50,13 +110,37 @@ def _signed_byte(b: int) -> int:
     return b if b < 0x80 else b - 0x100
 
 
-def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
+FmtTarget = Callable[[str, int], str]
+FmtIO = Callable[[int], str]
+
+
+def _default_fmt_target(kind: str, target: int) -> str:
+    return f"${target:04x}"
+
+
+def _default_fmt_io(io_addr: int) -> str:
+    return f"${io_addr:04x}"
+
+
+def decode(
+    data: bytes,
+    pos: int,
+    addr: int,
+    fmt_target: FmtTarget = _default_fmt_target,
+    fmt_io: FmtIO = _default_fmt_io,
+) -> tuple[str, int]:
     """Decode one GBZ80 instruction.
 
     Args:
         data: byte buffer.
         pos: index into `data` of the opcode.
         addr: memory address corresponding to `data[pos]` (after banking).
+        fmt_target: called with `(kind, target_addr)` for every 16-bit
+            operand that names a code (`'code'`) or data (`'data'`) address.
+            Returns the string to substitute in the mnemonic. Defaults to
+            `$XXXX` hex formatting.
+        fmt_io: called with the full 16-bit address (`$ff00 + n`) for every
+            8-bit LDH operand. Defaults to `$XXXX` hex formatting.
 
     Returns:
         (rgbasm_mnemonic, n_bytes_consumed). For truncated or invalid
@@ -84,7 +168,7 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
             if y == 1:
                 nn = imm16()
                 if nn is None: return (f"db ${op:02x}", 1)
-                return (f"ld [${nn:04x}], sp", 3)
+                return (f"ld [{fmt_target('data', nn)}], sp", 3)
             if y == 2:
                 # `stop` is officially `stop $00` — the opcode is `$10 $00`.
                 # rgbasm assembles bare `stop` as `10 00`, so we can only emit
@@ -98,13 +182,13 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
                 e = imm8()
                 if e is None: return (f"db ${op:02x}", 1)
                 t = _signed_offset(e, addr + 2)
-                return (f"jr ${t:04x}", 2)
+                return (f"jr {fmt_target('code', t)}", 2)
             # y in 4..7
             cc = COND[y - 4]
             e = imm8()
             if e is None: return (f"db ${op:02x}", 1)
             t = _signed_offset(e, addr + 2)
-            return (f"jr {cc}, ${t:04x}", 2)
+            return (f"jr {cc}, {fmt_target('code', t)}", 2)
 
         if z == 1:
             if q == 0:
@@ -158,7 +242,7 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
         if y == 4:
             n = imm8()
             if n is None: return (f"db ${op:02x}", 1)
-            return (f"ldh [${0xFF00 + n:04x}], a", 2)
+            return (f"ldh [{fmt_io(0xFF00 + n)}], a", 2)
         if y == 5:
             n = imm8()
             if n is None: return (f"db ${op:02x}", 1)
@@ -167,7 +251,7 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
         if y == 6:
             n = imm8()
             if n is None: return (f"db ${op:02x}", 1)
-            return (f"ldh a, [${0xFF00 + n:04x}]", 2)
+            return (f"ldh a, [{fmt_io(0xFF00 + n)}]", 2)
         # y == 7
         n = imm8()
         if n is None: return (f"db ${op:02x}", 1)
@@ -188,23 +272,23 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
         if y < 4:
             nn = imm16()
             if nn is None: return (f"db ${op:02x}", 1)
-            return (f"jp {COND[y]}, ${nn:04x}", 3)
+            return (f"jp {COND[y]}, {fmt_target('code', nn)}", 3)
         if y == 4: return ("ldh [c], a", 1)
         if y == 5:
             nn = imm16()
             if nn is None: return (f"db ${op:02x}", 1)
-            return (f"ld [${nn:04x}], a", 3)
+            return (f"ld [{fmt_target('data', nn)}], a", 3)
         if y == 6: return ("ldh a, [c]", 1)
         # y == 7
         nn = imm16()
         if nn is None: return (f"db ${op:02x}", 1)
-        return (f"ld a, [${nn:04x}]", 3)
+        return (f"ld a, [{fmt_target('data', nn)}]", 3)
 
     if z == 3:
         if y == 0:
             nn = imm16()
             if nn is None: return (f"db ${op:02x}", 1)
-            return (f"jp ${nn:04x}", 3)
+            return (f"jp {fmt_target('code', nn)}", 3)
         if y == 1:
             # CB prefix
             if remaining < 2: return (f"db ${op:02x}", 1)
@@ -227,7 +311,7 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
         if y < 4:
             nn = imm16()
             if nn is None: return (f"db ${op:02x}", 1)
-            return (f"call {COND[y]}, ${nn:04x}", 3)
+            return (f"call {COND[y]}, {fmt_target('code', nn)}", 3)
         return (f"db ${op:02x}", 1)
 
     if z == 5:
@@ -236,7 +320,7 @@ def decode(data: bytes, pos: int, addr: int) -> tuple[str, int]:
         if p == 0:
             nn = imm16()
             if nn is None: return (f"db ${op:02x}", 1)
-            return (f"call ${nn:04x}", 3)
+            return (f"call {fmt_target('code', nn)}", 3)
         return (f"db ${op:02x}", 1)
 
     if z == 6:
@@ -270,6 +354,28 @@ def section_directive(name: str, offset: int) -> str:
     if bank == 0:
         return f'SECTION "{name}", ROM0[${addr:04x}]'
     return f'SECTION "{name}", ROMX[${addr:04x}], BANK[${bank:02x}]'
+
+
+def resolve_target_to_flat(source_bank: int, target_addr: int) -> int | None:
+    """Map a 16-bit code/data target into a flat ROM offset.
+
+    For $0000-$3FFF the bank is always 0. For $4000-$7FFF we assume the
+    currently-loaded bank is `source_bank` — the same bank as the code
+    that issued the reference. This is a heuristic; cross-bank dispatch
+    through a fixed-bank trampoline isn't recognized.
+
+    The exception is bank 0 calling into $4000-$7FFF: bank 0 has no
+    high-bank area of its own, so this is unambiguously a call into
+    *some other* bank that was switched in. We can't tell which from
+    the instruction alone, so we leave it unresolved (hex literal).
+    """
+    if target_addr < 0x4000:
+        return target_addr
+    if target_addr < 0x8000:
+        if source_bank == 0:
+            return None
+        return source_bank * BANK_SIZE + (target_addr - BANK_SIZE)
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -370,6 +476,183 @@ def find_gaps(intervals: list[tuple[int, int, str]], rom_size: int) -> list[tupl
 
 
 # ---------------------------------------------------------------------------
+# Reference discovery + label assignment
+# ---------------------------------------------------------------------------
+
+import bisect
+
+
+def build_section_index(
+    spec: dict[str, Any],
+) -> list[tuple[int, int, str, str]]:
+    """Sorted list of (start, end_exclusive, kind, owner) intervals.
+
+    `kind` is "code", "data", or "header" (the section's own type).
+    `owner` is:
+      - "code-file"  — a subsection inside a code .asm; inline `db` for
+                       data subsections, so any byte can take a label.
+      - "data-file"  — a top-level .bin; only the section *start* is a
+                       valid label position (the body is INCBIN'd).
+      - "header"     — the cartridge header; off-limits.
+    """
+    out: list[tuple[int, int, str, str]] = []
+    for f in spec.get("files", []):
+        if f.get("type") == "code":
+            for s in f.get("sections", []):
+                out.append((s["addr"], s["addr"] + s["len"], s["type"], "code-file"))
+        elif f.get("type") == "data":
+            out.append((f["addr"], f["addr"] + f["len"], "data", "data-file"))
+    out.append((HEADER_START, HEADER_END, "header", "header"))
+    out.sort()
+    return out
+
+
+def section_at(
+    index: list[tuple[int, int, str, str]], flat: int,
+) -> tuple[int, int, str, str] | None:
+    """Return the section containing `flat`, or None."""
+    starts = [s[0] for s in index]
+    i = bisect.bisect_right(starts, flat) - 1
+    if i < 0:
+        return None
+    s = index[i]
+    return s if s[0] <= flat < s[1] else None
+
+
+def compute_insn_boundaries(rom: bytes, spec: dict[str, Any]) -> set[int]:
+    """For each code subsection, find every byte that starts an instruction
+    when the section is disassembled linearly. Labels are only emitted at
+    these positions in code sections — putting one mid-instruction would
+    refuse to assemble."""
+    boundaries: set[int] = set()
+    for f in spec.get("files", []):
+        if f.get("type") != "code":
+            continue
+        for s in f.get("sections", []):
+            if s.get("type") != "code":
+                continue
+            offset = s["addr"]
+            length = s["len"]
+            chunk = rom[offset:offset + length]
+            _, mem_start = rom_offset_to_bank_addr(offset)
+            i = 0
+            while i < length:
+                boundaries.add(offset + i)
+                _, n = decode(chunk, i, (mem_start + i) & 0xFFFF)
+                i += n
+    return boundaries
+
+
+def collect_refs(rom: bytes, spec: dict[str, Any]) -> list[tuple[str, int, int]]:
+    """Pass 1. Returns a list of (kind, source_bank, target_addr) tuples,
+    where `kind` is "code" or "data" and target_addr is the raw 16-bit
+    operand from the instruction."""
+    refs: list[tuple[str, int, int]] = []
+    for f in spec.get("files", []):
+        if f.get("type") != "code":
+            continue
+        for s in f.get("sections", []):
+            if s.get("type") != "code":
+                continue
+            offset = s["addr"]
+            length = s["len"]
+            chunk = rom[offset:offset + length]
+            sec_bank, mem_start = rom_offset_to_bank_addr(offset)
+
+            def record_target(kind: str, target: int, _bank: int = sec_bank) -> str:
+                refs.append((kind, _bank, target))
+                return f"${target:04x}"
+
+            def record_io(io_addr: int) -> str:
+                return f"${io_addr:04x}"
+
+            i = 0
+            while i < length:
+                pc = (mem_start + i) & 0xFFFF
+                _, n = decode(chunk, i, pc, record_target, record_io)
+                i += n
+    return refs
+
+
+def build_labels(
+    refs: list[tuple[str, int, int]],
+    sec_index: list[tuple[int, int, str]],
+    insn_boundaries: set[int],
+    spec: dict[str, Any],
+) -> dict[int, str]:
+    """Pass 2. Build {flat_offset: label_name}.
+
+    A reference target gets a label only when it resolves to a position
+    inside a section we own AND the position is a valid emission point
+    (instruction boundary in a code section, any byte in a data section).
+    All explicit subsection starts also get a label so they're navigable
+    even when nothing references them.
+    """
+    labels: dict[int, str] = {}
+
+    def assign(flat: int, kind: str) -> None:
+        if flat in labels:
+            return
+        bank, mem_addr = rom_offset_to_bank_addr(flat)
+        prefix = "Func" if kind == "code" else "Data"
+        labels[flat] = f"{prefix}_{bank:02x}_{mem_addr:04x}"
+
+    # Section starts always labeled.
+    for f in spec.get("files", []):
+        if f.get("type") == "code":
+            for s in f.get("sections", []):
+                assign(s["addr"], s["type"])
+        elif f.get("type") == "data":
+            assign(f["addr"], "data")
+
+    # Referenced positions, validated against the section index. A label
+    # is only "definable" where the emitter actually walks byte-by-byte —
+    # instruction boundaries in code subsections, anywhere in inline-`db`
+    # data subsections, and only the very first byte of an INCBIN'd .bin.
+    for kind, src_bank, target in refs:
+        flat = resolve_target_to_flat(src_bank, target)
+        if flat is None:
+            continue
+        sec = section_at(sec_index, flat)
+        if sec is None:
+            continue
+        sec_start, _sec_end, sec_kind, owner = sec
+        if owner == "header":
+            continue
+        if owner == "data-file":
+            if flat != sec_start:
+                continue
+        elif owner == "code-file":
+            if sec_kind == "code" and flat not in insn_boundaries:
+                continue
+            # data subsection inside a code file: any byte is fine
+        assign(flat, kind)
+
+    return labels
+
+
+def make_resolver(
+    hw_symbols: dict[int, str],
+    labels: dict[int, str],
+    sec_bank: int,
+) -> tuple[FmtTarget, FmtIO]:
+    """Build (fmt_target, fmt_io) closures bound to a section's bank
+    context so address resolution sees the right ROMX bank for $4000+."""
+    def fmt_target(kind: str, target: int) -> str:
+        flat = resolve_target_to_flat(sec_bank, target)
+        if flat is not None and flat in labels:
+            return labels[flat]
+        if 0xFF00 <= target <= 0xFFFF and target in hw_symbols:
+            return hw_symbols[target]
+        return f"${target:04x}"
+
+    def fmt_io(io_addr: int) -> str:
+        return hw_symbols.get(io_addr, f"${io_addr:04x}")
+
+    return fmt_target, fmt_io
+
+
+# ---------------------------------------------------------------------------
 # Emitters
 # ---------------------------------------------------------------------------
 
@@ -385,7 +668,13 @@ def _db_lines(data: bytes, indent: str = "\t") -> list[str]:
     return lines
 
 
-def emit_code_file(file_spec: dict[str, Any], rom: bytes, output_dir: Path) -> Path:
+def emit_code_file(
+    file_spec: dict[str, Any],
+    rom: bytes,
+    output_dir: Path,
+    labels: dict[int, str],
+    hw_symbols: dict[int, str],
+) -> Path:
     name = file_spec["name"]
     stem = Path(name).stem
     sections = sorted(file_spec["sections"], key=lambda s: s["addr"])
@@ -396,23 +685,40 @@ def emit_code_file(file_spec: dict[str, Any], rom: bytes, output_dir: Path) -> P
         offset = sec["addr"]
         length = sec["len"]
         stype = sec["type"]
-        _, mem_addr = rom_offset_to_bank_addr(offset)
+        sec_bank, mem_addr = rom_offset_to_bank_addr(offset)
 
         sec_name = f"{stem}_{offset:06x}"
         lines.append(section_directive(sec_name, offset))
         lines.append("")
-        lines.append(f"Section_{offset:06x}:")
 
         chunk = rom[offset:offset + length]
+        fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank)
 
         if stype == "code":
             i = 0
             while i < length:
-                mnem, n = decode(chunk, i, (mem_addr + i) & 0xFFFF)
+                flat = offset + i
+                if flat in labels:
+                    lines.append(f"{labels[flat]}:")
+                pc = (mem_addr + i) & 0xFFFF
+                mnem, n = decode(chunk, i, pc, fmt_target, fmt_io)
                 lines.append(f"\t{mnem}")
                 i += n
         else:
-            lines.extend(_db_lines(chunk))
+            # Data subsection: emit `db` lines, breaking at any label
+            # position so addresses referenced from elsewhere can resolve.
+            i = 0
+            while i < length:
+                flat = offset + i
+                if flat in labels:
+                    lines.append(f"{labels[flat]}:")
+                end = min(i + 16, length)
+                for j in range(i + 1, end):
+                    if (offset + j) in labels:
+                        end = j
+                        break
+                lines.append("\tdb " + ", ".join(f"${b:02x}" for b in chunk[i:end]))
+                i = end
         lines.append("")
 
     out_path = output_dir / name
@@ -431,7 +737,12 @@ def emit_data_file(file_spec: dict[str, Any], rom: bytes, output_dir: Path) -> P
     return out_path
 
 
-def emit_header(rom: bytes, output_dir: Path) -> Path:
+def emit_header(
+    rom: bytes,
+    output_dir: Path,
+    labels: dict[int, str],
+    hw_symbols: dict[int, str],
+) -> Path:
     """Emit `header.asm` covering 0x100-0x14F, with the entry point
     disassembled and the rest laid out as labeled byte fields."""
     data = rom[HEADER_START:HEADER_END]
@@ -442,10 +753,11 @@ def emit_header(rom: bytes, output_dir: Path) -> Path:
         "",
         "EntryPoint:",
     ]
+    fmt_target, fmt_io = make_resolver(hw_symbols, labels, 0)
     # Entry point: bytes at $0100-$0103. Usually `nop; jp $0150`.
     i = 0
     while i < 4:
-        mnem, n = decode(data, i, 0x0100 + i)
+        mnem, n = decode(data, i, 0x0100 + i, fmt_target, fmt_io)
         # Don't overshoot the 4-byte entry-point slot.
         if i + n > 4:
             for j in range(i, 4):
@@ -483,15 +795,19 @@ def emit_header(rom: bytes, output_dir: Path) -> Path:
 def emit_main(
     code_asms: list[str],
     data_bins: list[tuple[str, int]],
+    labels: dict[int, str],
     output_dir: Path,
 ) -> Path:
     """Emit `main.asm` — the single translation unit fed to rgbasm.
 
-    INCLUDEs every code .asm and wraps every data .bin in its own SECTION
-    + INCBIN at the correct bank/address. Assembling main.asm and linking
-    the result produces the complete ROM.
+    Pulls in `hardware.inc` so generated code can reference `rLCDC` etc.,
+    INCLUDEs every code .asm, then wraps every data .bin in its own
+    SECTION + INCBIN at the correct bank/address (with a label so the
+    section's start address resolves symbolically from elsewhere).
     """
     lines: list[str] = [GENERATED_BANNER, ""]
+    lines.append('INCLUDE "hardware.inc"')
+    lines.append("")
     lines.append('INCLUDE "header.asm"')
     for asm in sorted(code_asms):
         lines.append(f'INCLUDE "{asm}"')
@@ -500,6 +816,8 @@ def emit_main(
     for name, offset in sorted(data_bins, key=lambda x: x[1]):
         sec_name = Path(name).stem
         lines.append(section_directive(sec_name, offset))
+        if offset in labels:
+            lines.append(f"{labels[offset]}:")
         lines.append(f'\tINCBIN "{name}"')
         lines.append("")
 
@@ -517,6 +835,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--rom", required=True, help="path to ROM file")
     p.add_argument("--map", dest="map_file", required=True, help="path to map JSON")
     p.add_argument("--output", default="src/", help="output directory (default: src/)")
+    p.add_argument(
+        "--include-dir",
+        default=DEFAULT_INCLUDE_DIR,
+        help=f"path to assembly includes (default: {DEFAULT_INCLUDE_DIR})",
+    )
     args = p.parse_args(argv)
 
     rom_path = Path(args.rom)
@@ -534,30 +857,44 @@ def main(argv: list[str] | None = None) -> int:
 
     gaps = find_gaps(intervals, len(rom))
 
+    # Fold gap regions into the spec as implicit data files so they get
+    # labels assigned during the discovery pass. The on-disk emission is
+    # still controlled separately below.
+    gap_files: list[dict[str, Any]] = []
+    for gap_addr, gap_len in gaps:
+        gap_files.append({
+            "type": "data",
+            "name": f"data_{gap_addr:06x}.bin",
+            "addr": gap_addr,
+            "len": gap_len,
+        })
+    label_spec = {"files": list(spec.get("files", [])) + gap_files}
+
+    hw_symbols = parse_hw_symbols(Path(args.include_dir) / HARDWARE_INC)
+    refs = collect_refs(rom, label_spec)
+    insn_boundaries = compute_insn_boundaries(rom, label_spec)
+    sec_index = build_section_index(label_spec)
+    labels = build_labels(refs, sec_index, insn_boundaries, label_spec)
+
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    written: list[Path] = [emit_header(rom, output_dir)]
+    written: list[Path] = [emit_header(rom, output_dir, labels, hw_symbols)]
     code_asms: list[str] = []
     data_bins: list[tuple[str, int]] = []
 
     for f in spec["files"]:
         if f["type"] == "code":
-            written.append(emit_code_file(f, rom, output_dir))
+            written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols))
             code_asms.append(f["name"])
         else:
             written.append(emit_data_file(f, rom, output_dir))
             data_bins.append((f["name"], f["addr"]))
 
-    for gap_addr, gap_len in gaps:
-        gap_spec = {
-            "name": f"data_{gap_addr:06x}.bin",
-            "addr": gap_addr,
-            "len": gap_len,
-        }
-        written.append(emit_data_file(gap_spec, rom, output_dir))
-        data_bins.append((gap_spec["name"], gap_addr))
+    for gf in gap_files:
+        written.append(emit_data_file(gf, rom, output_dir))
+        data_bins.append((gf["name"], gf["addr"]))
 
-    written.append(emit_main(code_asms, data_bins, output_dir))
+    written.append(emit_main(code_asms, data_bins, labels, output_dir))
 
     for path in sorted(written):
         print(path)

@@ -4,7 +4,7 @@ SECTION "Header", ROM0[$0100]
 
 EntryPoint:
 	nop
-	jp $0150
+	jp Func_00_0150
 
 ; Nintendo logo ($0104-$0133)
 	db $ce, $ed, $66, $66, $cc, $0d, $00, $0b, $03, $73, $00, $83, $00, $0c, $00, $0d

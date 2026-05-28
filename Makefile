@@ -63,7 +63,7 @@ verify: $(OUT)
 rom: $(OUT)
 
 $(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
-	$(RGBASM) -i $(SRC_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
+	$(RGBASM) -i $(SRC_DIR)/ -i include/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -o $@ $(BUILD_DIR)/main.o
 
 extract: $(EXTRACT_STAMP)
