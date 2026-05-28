@@ -32,15 +32,44 @@ haven't been confirmed. The numbers in parentheses are best guesses
 based on how many bytes seem to follow before text resumes.
 
 - `$03` (?) — seen once before "Replace previous" prompt
-- `$08` (3?) — `$08 ff d5 0f` seen after `$02` in the menu region; possibly a state-clear or condition with a WRAM `$D5FF` argument
-- `$09` (3?) — `$09 dc d0 01` seen between branches of the same dialogue tree; addresses a WRAM byte at `$D0DC` — likely "read flag at $D0DC"
-- `$0A` (3?) — `$0A fe d5 01` follows the menu question in the ranch-welcome script; addresses WRAM `$D5FE`; likely a state-check tied to the menu state machine
-- `$02` (1?) — appears between menu-option calls; possibly "begin a menu", "end of option list", or some short opcode without operands
+- `$02` (1?) — appears between menu-option calls; possibly "end of option list" or "begin menu" marker
+- `$08` (5?) — `$08 ff d5 0f xx xx` likely a conditional jump on WRAM `$D5FF`, same shape as `$0A`
+- `$09` (5?) — `$09 dc d0 01 xx xx` likely a conditional jump on WRAM `$D0DC` (e.g., guarding the "Pashute returned" / "Verde returned" branches in the ranch welcome)
 - `$10` (?) — only seen once (in the "save data" script, `$10 78`)
 
-Working theory: `$08`/`$09`/`$0A` are **WRAM byte reads** (operand = address + size in a 3-byte payload). They guard branches inside the same script (so a single dialogue tree can present different content based on game state without dispatching to a separate script). `$02` may be an end-of-options or menu-confirm marker.
+#### `$0A` — conditional jump (confirmed)
 
-To pin these down we'd need to run the analyzer through the ranch-menu interaction and watch which bytes get read in what order, plus inspect the `$D5FE`/`$D0DC`/`$D5FF` WRAM locations.
+5 operand bytes, 6 bytes total. Shape:
+
+```
+$0A  addr_lo addr_hi  value  target_lo target_hi
+     └── 2-byte addr ──┘ └─1B─┘ └────── 2-byte ──────┘
+```
+
+Semantics: **if `byte at $addr_hi addr_lo` equals `value`, jump to `$target_hi target_lo` within the current script**.
+
+Caught in two places that pin down the operand layout:
+
+1. In the **save flow** at `$06454c`:
+   ```
+   "Okay. It's ready" $04 $07 $18 $40 $19  $0A $FE $D5 $01 $7A $45  "Current data\rwill be saved." ...
+   ```
+   `$7A $45` decodes as `$457A`, which is exactly the script address of `"Replace previous / saved data?"`. So this reads: *if WRAM `$D5FE` (an "existing save" flag) is `$01`, branch to the Replace prompt; otherwise fall through into the "Current data will be saved." path.*
+
+2. In the **welcome script** at `$0644c6`:
+   ```
+   "What do you / want to do?" $07 $18 $40 $19  $0A $FE $D5 $01 $D3 $44  ...
+   ```
+   Same pattern — reads `$D5FE`, jumps to `$44D3` (which contains a `$07 $60 $59 $1F` — call to the bank-31 "Confirm" menu code).
+
+`$08` and `$09` almost certainly share this 6-byte conditional-jump
+shape (differing only in *what* they read or *how* they compare —
+not-equal vs equal, perhaps). The WRAM addresses they reference are
+all in the `$D0DC` / `$D5FE` / `$D5FF` neighborhood — the game-state
+flag block.
+
+To confirm `$08` and `$09`'s exact compare semantics, a live analyzer
+trace through each branch would resolve it.
 
 ## Script layout
 
@@ -94,17 +123,19 @@ The flow downstream of "What do you want to do?" is:
 └─ menu (3 options: Sign, Confirm, Exit)   ← labels NOT in script (tile-rendered by $07 handlers)
    ├─ "Sign"
    │  └─ "Want to sign the / guest book?\e" + Yes/No
-   │     ├─ Yes → "... ... ... ... / Okay. It's ready\e"
-   │     │      → (state: existing save?)
-   │     │        ├─ no save  → "Current data / will be saved.\e"
-   │     │        └─ existing → "Replace previous / saved data?\e" + Yes/No
-   │     │                       ├─ Yes → "Do not remove / Game Pak."
-   │     │                       │       (save routine runs)
-   │     │                       │       → "Finished signing the / guest book!\e"
-   │     │                       │       → "Need to do / something else?\e" + Yes/No
-   │     │                       │          ├─ Yes → back to "What do you want to do?"
-   │     │                       │          └─ No  → "Okay. / Be careful.\e" + exit
-   │     │                       └─ No  → "What do you want to do?" (back to main)
+   │     ├─ Yes → "... ... ... ... / Okay. It's ready\e"   ← unconditional
+   │     │      → $0A $FE $D5 $01 → if $D5FE == $01:
+   │     │        ├─ existing save → "Replace previous / saved data?\e" + Yes/No
+   │     │        │                   ├─ Yes → "Do not remove / Game Pak."
+   │     │        │                   │       (save routine runs)
+   │     │        │                   │       → "Finished signing the / guest book!\e"
+   │     │        │                   │       → "Need to do / something else?\e" + Yes/No
+   │     │        │                   │          ├─ Yes → back to "What do you want to do?"
+   │     │        │                   │          └─ No  → "Okay. / Be careful.\e" + exit
+   │     │        │                   └─ No  → "What do you want to do?" (back to main)
+   │     │        └─ no save (fallthrough) → "Current data / will be saved.\e"
+   │     │                                  → (save routine runs)
+   │     │                                  → "Finished signing the / guest book!\e" ...
    │     └─ No  → "What do you want to do?" (back to main)
    ├─ "Confirm"
    │  └─ "Want to check / the guest book?\e" + Yes/No
