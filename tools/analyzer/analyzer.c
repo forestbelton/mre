@@ -53,6 +53,29 @@ enum {
 /* Max screen we ever need to back: SGB border is 256x224. */
 #define MAX_SCREEN_PIXELS         (256 * 224)
 
+/* Minimal CGB boot stub.
+ *
+ * SameBoy requires a boot ROM to be loaded — without one, gb->boot_rom is
+ * zero, gb->boot_rom_finished stays false, and the CPU executes NOPs from
+ * $0000 forever (white screen). Real boot ROMs are large and licensed
+ * (Nintendo's) or have build dependencies (SameBoy's own, which needs a
+ * compressed-logo blob). For analysis we don't need the Nintendo-logo
+ * scroll or the CGB title-checksum colorization — we just need the
+ * cartridge to start running with A = $11 (CGB hardware indicator) and
+ * the boot ROM unmapped.
+ *
+ * Bytes laid out at $0000-$00FF, with the unmap instruction sitting at
+ * $00FE-$00FF so PC naturally falls through to $0100 (cart entry) after
+ * the write to $FF50. */
+static const uint8_t cgb_boot_stub[0x100] = {
+    [0x00] = 0x31, 0xfe, 0xff,  /* ld sp, $FFFE              */
+    [0x03] = 0x3e, 0x91,        /* ld a, $91                 */
+    [0x05] = 0xe0, 0x40,        /* ldh [$40], a    ; LCDC=$91 */
+    [0x07] = 0x3e, 0x11,        /* ld a, $11       ; CGB hw   */
+    /* 0x09-0xFD: NOPs ($00, the array's default) */
+    [0xfe] = 0xe0, 0x50,        /* ldh [$50], a    ; unmap    */
+};
+
 /* SM83 instruction length, indexed by first opcode byte. CB-prefixed
  * instructions are uniformly 2 bytes (the $CB entry). Illegal opcodes
  * are listed as 1 — SameBoy doesn't define their behavior. */
@@ -153,9 +176,14 @@ static void mark_data(uint32_t flat) {
 
 /* execution_callback fires after the opcode byte is read but before
  * operand reads / opcode execution. PC has just been incremented past
- * the opcode (so gb->pc == pc + 1 here). */
+ * the opcode (so gb->pc == pc + 1 here).
+ *
+ * While the boot ROM is mapped, $0000-$00FF (and $0200-$08FF on CGB) is
+ * boot ROM territory, not cart ROM — even though our resolve_rom_addr
+ * happily maps those addresses to flat offsets. Gate on
+ * boot_rom_finished so we don't mistake stub instructions for cart code. */
 static void on_execution(GB_gameboy_t *gb, uint16_t pc, uint8_t opcode) {
-    (void)gb;
+    if (!gb->boot_rom_finished) return;
     uint32_t flat = resolve_rom_addr(pc);
     if (flat == UINT32_MAX || flat >= g.rom_size) return;
     mark_code(flat, sm83_length_table[opcode]);
@@ -169,7 +197,8 @@ static void on_execution(GB_gameboy_t *gb, uint16_t pc, uint8_t opcode) {
  * skip fetches and only mark genuine data accesses (LD A,[HL], DMA
  * source reads, etc.). */
 static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
-    if (addr >= 0x8000) return data; /* outside cart ROM region */
+    if (!gb->boot_rom_finished) return data; /* don't analyze the boot stub */
+    if (addr >= 0x8000) return data;          /* outside cart ROM region */
 
     GB_registers_t *regs = GB_get_registers(gb);
     if (addr == (uint16_t)(regs->pc - 1)) return data; /* fetch read */
@@ -528,6 +557,7 @@ int main(int argc, char **argv) {
     GB_init(&g.gb, GB_MODEL_CGB_E);
     GB_set_log_callback(&g.gb, on_log);
     GB_load_rom_from_buffer(&g.gb, g.rom_data, g.rom_size);
+    GB_load_boot_rom_from_buffer(&g.gb, cgb_boot_stub, sizeof(cgb_boot_stub));
     GB_set_rgb_encode_callback(&g.gb, rgb_encode);
     GB_set_pixels_output(&g.gb, g.framebuffer);
     GB_set_vblank_callback(&g.gb, on_vblank);
