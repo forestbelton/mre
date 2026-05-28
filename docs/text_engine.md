@@ -29,7 +29,7 @@ characters `$0D` for newline are handled by the text path); if
 | `$02` | 0 | `$3A7D` | **Render prep**: copies the 16-bit pointer at `$D614/$D615` into `$D616/$D617`, calls `$3C55`. Used immediately before `$08` to re-anchor the renderer at a fixed cursor. |
 | `$03` | 0 | `$3A33` | **Wait + render prep**: `call $3A39` (wait-for-input core) then tail-call `$02`'s handler. Hence the `$03` cue seen before every Y/N menu. |
 | `$04` | 0 | `$3A2D` | **Wait for A button** (end-of-message). |
-| `$05` | ? | `$3A93` | Still undecoded. |
+| `$05` | 4 | `$3A93` | **Set text-state v2** — reads 4 script bytes into DE+BC, then `call $3BD3` (helper stores BC at `$D621/$D622` and continues with DE). Parallels `$01` but writes a different state slot. |
 | `$06 lo hi` | 2 | `$3AA1` | **GOTO** within the engine — `HL = {hi:lo}`. Was previously called "local call"; the handler is just `ld a,[hl+]; ld h,[hl]; ld l,a; jp $39C5` — pure jump, no return stack. |
 | `$07 lo hi bank` | 3 | `$3ABA` | **Far call** to Z80 code. Calls `$042E` with `A = bank`, `HL = {hi:lo}`; on return resumes the script. |
 | `$08 wlo whi t₁lo t₁hi … tNlo tNhi` | 2 + 2·N | `$3AA7` | **Jump table indexed by WRAM byte.** Reads `[$whi wlo]`, multiplies by 2, adds to HL (which now points at the table), loads new HL from that entry. This is the *actual* dispatcher used by every menu and by `$0C`'s cyclic counter — what I was calling "MENU dispatch" was really `$02 $08 …`. The table is inline; the number of entries `N` is implicit (any byte the WRAM source can return). |
@@ -37,7 +37,7 @@ characters `$0D` for newline are handled by the text path); if
 | `$0A lo hi val tlo thi` | 5 | `$3AD2` | **Jump if `[$hi lo] == val`** — else fall through. |
 | `$0B lo hi val tlo thi` | 5 | `$3AE7` | **Jump if `[$hi lo] != val`** — else fall through. (Same operand layout as `$0A`; differs only in the `jr z`/`jr nz` polarity inside the handler.) |
 | `$0C count` | 1 | `$3AFC` | **Cyclic counter** — `[$D60D] = ([$D60D] + 1) mod count`. Deterministic round-robin, not random. The "RAND" terminology was wrong; the followup is always an `$08` jump table reading `[$D60D]`. |
-| `$0D` | ? | `$3BAD` | Still undecoded. |
+| `$0D` | 0 | `$3BAD` | **Newline** — advances the text cursor `[$D616/$D617]` to the column anchor in `[$D614]` and adds `$40` (one tilemap row × 2 bytes per tile). Implements the in-message line break that scripts write inline between text fragments. |
 | `$0E lo hi bank` | 3 | `$3B0C` | **Set text-renderer config** — stores the 3 bytes verbatim at `$D61E/$D61F/$D620`. Was previously called "far call to script"; it isn't a call, it just configures which routine `$3C77`/`$3CF3`/`$0BF1` use for the following text. Different NPCs/contexts use different renderers (e.g. Naji has two: `bank-24 $6C9F` and `bank-24 $6C27`; the lady uses `bank-25 $408B`). |
 | `$0F lo hi` | 2 | `$3B1B` | **Print `[$hi lo]` as decimal** — reads the WRAM byte, BCD-splits it into `$D5FB/$D5FC`, prints the high digit if non-zero then the low digit. This is the `[X]` substitution. |
 | `$10 N` | 1 | `$3B3E` | **Repeat text-print N times** — pulls a count, then calls `$02E6 / $3CF3 / $0BF1` N times. |
@@ -531,11 +531,11 @@ and identify concrete routines we can disassemble later.
 
 ## Open questions
 
-1. **`$05` and `$0D` handlers** — both have valid entries in the dispatch table (`$3A93` and `$3BAD`) but neither was reached in the play sessions. Need to disasm those addresses to round out the opcode set.
-2. **How does Tower/Item content "GOTO 28" (back to Ask menu)?** Each submenu handler ends with `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF`. Now that `$FF` is confirmed as a plain dispatcher-return (`ret z` in `$39C5`), the unwind must be in the Z80 routines `$1F:$4094` and `$18:$6BB7` — they presumably restore HL to the menu's wait loop. Worth disassembling.
-3. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
-4. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
-5. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+1. **How does Tower/Item content "GOTO 28" (back to Ask menu)?** Each submenu handler ends with `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF`. Now that `$FF` is confirmed as a plain dispatcher-return (`ret z` in `$39C5`), the unwind must be in the Z80 routines `$1F:$4094` and `$18:$6BB7` — they presumably restore HL to the menu's wait loop. Worth disassembling.
+2. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
+3. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
+4. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+5. **`$05`'s exact use.** The handler is decoded but the field isn't bytecode-flush yet — we haven't seen it in any extracted script. Could be a windowed-text or alternate text-frame opcode used by NPCs we haven't traced.
 
 ### Resolved by this disassembly pass
 
@@ -552,9 +552,10 @@ and identify concrete routines we can disassemble later.
 The encoding is now well-understood enough that a real script-aware
 disassembler could be written. The full opcode set ($01-$11, $1F,
 $FF) is now decoded against the actual HOME-bank handler bodies at
-`$3A14-$3B72` — the only narrow gaps left are `$05` (handler `$3A93`)
-and `$0D` (handler `$3BAD`), neither of which has shown up in any
-script we've inspected.
+`$3A14-$3BD2`. `$0D` is the engine's newline; `$05` is a 4-byte
+text-state setter (parallels `$01`) — both confirmed by reading the
+handler bodies even though they haven't shown up in the extracted
+scripts so far.
 
 What's missing on the extractor side:
 
