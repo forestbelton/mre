@@ -6,6 +6,7 @@ INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "names.asm"
 INCLUDE "scripts/naji.asm"
+INCLUDE "scripts/toamuna.asm"
 
 SECTION "data_000005", ROM0[$0005]
 Data_00_0005:
@@ -4650,14 +4651,6 @@ Data_18_6d63:
 SECTION "data_063969", ROMX[$7969], BANK[$18]
 Data_18_7969:
 	INCBIN "data_063969.bin"
-
-SECTION "data_064408", ROMX[$4408], BANK[$19]
-Data_19_4408:
-	INCBIN "data_064408.bin"
-
-SECTION "data_064693", ROMX[$4693], BANK[$19]
-Data_19_4693:
-	INCBIN "data_064693.bin"
 
 SECTION "data_06687b", ROMX[$687b], BANK[$19]
 Data_19_687b:

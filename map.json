@@ -59,6 +59,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"scripts/toamuna.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	409821,
+					"len":	1517,
+					"label":	"ToamunaScript"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"analyzed.asm",
 			"sections":	[{
 					"type":	"data",
@@ -4962,16 +4971,8 @@
 					"len":	221
 				}, {
 					"type":	"data",
-					"addr":	409821,
-					"len":	811
-				}, {
-					"type":	"data",
-					"addr":	410791,
-					"len":	492
-				}, {
-					"type":	"data",
-					"addr":	411316,
-					"len":	8647
+					"addr":	411338,
+					"len":	8625
 				}, {
 					"type":	"data",
 					"addr":	419973,
