@@ -479,6 +479,10 @@ static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
         if (!kind) { i++; continue; }
         uint32_t start = i;
         while (i < g.rom_size && !g.covered[i]) {
+            /* Break at bank boundaries (every 0x4000 bytes) — each
+             * rgbasm SECTION must live in a single bank, so a run that
+             * would cross from bank N into bank N+1 has to be split. */
+            if (i > start && (i & 0x3FFF) == 0) break;
             const char *k = section_kind(snapshot[i]);
             if (!k || strcmp(k, kind) != 0) break;
             i++;
@@ -510,6 +514,7 @@ static cJSON *build_conflict_array(const uint8_t *snapshot) {
         uint32_t start = i;
         while (i < g.rom_size && !g.covered[i] &&
                snapshot[i] == REGION_CONFLICT) {
+            if (i > start && (i & 0x3FFF) == 0) break;  /* bank boundary */
             i++;
         }
         cJSON *e = cJSON_CreateObject();

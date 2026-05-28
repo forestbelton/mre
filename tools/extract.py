@@ -397,6 +397,31 @@ def _check_range(label: str, addr: int, length: int, rom_size: int) -> None:
         )
 
 
+_LABEL_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+
+def _validate_label(value: Any, where: str, seen: dict[str, str]) -> str | None:
+    """Validate an optional `label` field. Returns the label (a string)
+    if present and well-formed, or None if missing. Raises MapError on
+    bad input or a duplicate. `seen` maps label -> where it was defined,
+    for nice duplicate-detection messages."""
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value:
+        raise MapError(f"{where}: 'label' must be a non-empty string")
+    if not _LABEL_RE.match(value):
+        raise MapError(
+            f"{where}: 'label' {value!r} must match {_LABEL_RE.pattern} "
+            "(RGBASM identifier)"
+        )
+    if value in seen:
+        raise MapError(
+            f"{where}: duplicate label {value!r}, already defined at {seen[value]}"
+        )
+    seen[value] = where
+    return value
+
+
 def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, str]]:
     """Validate the map; return sorted list of (start, end, label) intervals
     including the reserved header region."""
@@ -405,6 +430,7 @@ def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, st
 
     intervals: list[tuple[int, int, str]] = []
     names: set[str] = set()
+    labels_seen: dict[str, str] = {}
 
     for fi, f in enumerate(spec["files"]):
         if not isinstance(f, dict):
@@ -428,11 +454,13 @@ def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, st
                 if stype not in ("code", "data"):
                     raise MapError(f"{name} sections[{si}]: type must be 'code' or 'data'")
                 _check_range(f"{name} sections[{si}]", sec["addr"], sec["len"], rom_size)
+                _validate_label(sec.get("label"), f"{name} sections[{si}]", labels_seen)
                 intervals.append(
                     (sec["addr"], sec["addr"] + sec["len"], f"{name}[{si}]")
                 )
         elif ftype == "data":
             _check_range(name, f["addr"], f["len"], rom_size)
+            _validate_label(f.get("label"), name, labels_seen)
             intervals.append((f["addr"], f["addr"] + f["len"], name))
         else:
             raise MapError(f"{name}: unknown type {ftype!r} (expected 'code' or 'data')")
@@ -590,20 +618,24 @@ def build_labels(
     """
     labels: dict[int, str] = {}
 
-    def assign(flat: int, kind: str) -> None:
+    def assign(flat: int, kind: str, override: str | None = None) -> None:
         if flat in labels:
+            return
+        if override:
+            labels[flat] = override
             return
         bank, mem_addr = rom_offset_to_bank_addr(flat)
         prefix = "Func" if kind == "code" else "Data"
         labels[flat] = f"{prefix}_{bank:02x}_{mem_addr:04x}"
 
-    # Section starts always labeled.
+    # Section starts always labeled. A user-provided "label" field on a
+    # section (or top-level data file) overrides the auto-generated name.
     for f in spec.get("files", []):
         if f.get("type") == "code":
             for s in f.get("sections", []):
-                assign(s["addr"], s["type"])
+                assign(s["addr"], s["type"], s.get("label"))
         elif f.get("type") == "data":
-            assign(f["addr"], "data")
+            assign(f["addr"], "data", f.get("label"))
 
     # Referenced positions, validated against the section index. A label
     # is only "definable" where the emitter actually walks byte-by-byte —
