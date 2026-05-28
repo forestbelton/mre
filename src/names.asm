@@ -19,18 +19,16 @@ PrintIndexedName:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-Func_00_3b67:
+.PutChar:
 	ld a, [hl+]
 	or a
-	jr z, Func_00_3b71
+	jr z, .PutCharDone
 	ld c, a
 	call Func_00_3c77
-	jr Func_00_3b67
-Func_00_3b71:
+	jr .PutChar
+.PutCharDone:
 	pop hl
 	jp Func_00_39c5
-
-SECTION "names_003b75", ROM0[$3b75]
 
 MonsterNamePointers:
 	dw Name_Tiger
