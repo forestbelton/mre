@@ -480,6 +480,34 @@ def emit_header(rom: bytes, output_dir: Path) -> Path:
     return out_path
 
 
+def emit_main(
+    code_asms: list[str],
+    data_bins: list[tuple[str, int]],
+    output_dir: Path,
+) -> Path:
+    """Emit `main.asm` — the single translation unit fed to rgbasm.
+
+    INCLUDEs every code .asm and wraps every data .bin in its own SECTION
+    + INCBIN at the correct bank/address. Assembling main.asm and linking
+    the result produces the complete ROM.
+    """
+    lines: list[str] = [GENERATED_BANNER, ""]
+    lines.append('INCLUDE "header.asm"')
+    for asm in sorted(code_asms):
+        lines.append(f'INCLUDE "{asm}"')
+    lines.append("")
+
+    for name, offset in sorted(data_bins, key=lambda x: x[1]):
+        sec_name = Path(name).stem
+        lines.append(section_directive(sec_name, offset))
+        lines.append(f'\tINCBIN "{name}"')
+        lines.append("")
+
+    out_path = output_dir / "main.asm"
+    out_path.write_text("\n".join(lines))
+    return out_path
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
@@ -509,12 +537,16 @@ def main(argv: list[str] | None = None) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     written: list[Path] = [emit_header(rom, output_dir)]
+    code_asms: list[str] = []
+    data_bins: list[tuple[str, int]] = []
 
     for f in spec["files"]:
         if f["type"] == "code":
             written.append(emit_code_file(f, rom, output_dir))
+            code_asms.append(f["name"])
         else:
             written.append(emit_data_file(f, rom, output_dir))
+            data_bins.append((f["name"], f["addr"]))
 
     for gap_addr, gap_len in gaps:
         gap_spec = {
@@ -523,6 +555,9 @@ def main(argv: list[str] | None = None) -> int:
             "len": gap_len,
         }
         written.append(emit_data_file(gap_spec, rom, output_dir))
+        data_bins.append((gap_spec["name"], gap_addr))
+
+    written.append(emit_main(code_asms, data_bins, output_dir))
 
     for path in sorted(written):
         print(path)

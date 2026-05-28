@@ -1,0 +1,51 @@
+# Monster Rancher Explorer disassembly — build orchestration.
+#
+# Targets:
+#   verify   (default) — build the ROM and compare its sha256 to rom.gbc
+#   rom               — assemble and link build/rom.gbc from src/
+#   extract           — run tools/extract.py to (re)populate src/ from rom.gbc + map.json
+#   clean             — remove build artifacts (does not touch src/)
+
+ROM       := rom.gbc
+MAP       := map.json
+SRC_DIR   := src
+BUILD_DIR := build
+OUT       := $(BUILD_DIR)/rom.gbc
+
+EXTRACTOR     := tools/extract.py
+EXTRACT_STAMP := $(BUILD_DIR)/.extract.stamp
+
+PYTHON  := python3
+RGBASM  := rgbasm
+RGBLINK := rgblink
+
+.PHONY: verify rom extract clean
+
+verify: $(OUT)
+	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
+	rom_sum=$$(sha256sum $(ROM)  | awk '{print $$1}'); \
+	if [ "$$built_sum" = "$$rom_sum" ]; then \
+		printf 'verify: OK — sha256 %s\n' "$$built_sum"; \
+	else \
+		printf 'verify: FAIL\n  built (%s): %s\n  rom   (%s): %s\n' \
+			$(OUT) "$$built_sum" $(ROM) "$$rom_sum"; \
+		exit 1; \
+	fi
+
+rom: $(OUT)
+
+$(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
+	$(RGBASM) -i $(SRC_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
+	$(RGBLINK) -p 0 -o $@ $(BUILD_DIR)/main.o
+
+extract: $(EXTRACT_STAMP)
+
+$(EXTRACT_STAMP): $(EXTRACTOR) $(MAP) $(ROM) | $(BUILD_DIR)
+	$(PYTHON) $(EXTRACTOR) --rom $(ROM) --map $(MAP) --output $(SRC_DIR)/ > /dev/null
+	@touch $@
+
+$(BUILD_DIR):
+	@mkdir -p $@
+
+clean:
+	rm -rf $(BUILD_DIR)
