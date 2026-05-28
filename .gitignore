@@ -1,4 +1,5 @@
 rom.gbc
+*.sav
 src/*.bin
 build/
 tools/analyzer/analyzer

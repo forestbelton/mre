@@ -125,6 +125,7 @@ typedef struct {
     /* CLI */
     const char *rom_path;
     const char *map_path;
+    char       *battery_path;  /* "<rom_path>.sav", malloc'd */
     uint32_t    save_interval_sec;
 
     /* Writer thread */
@@ -558,6 +559,17 @@ int main(int argc, char **argv) {
     GB_set_log_callback(&g.gb, on_log);
     GB_load_rom_from_buffer(&g.gb, g.rom_data, g.rom_size);
     GB_load_boot_rom_from_buffer(&g.gb, cgb_boot_stub, sizeof(cgb_boot_stub));
+
+    /* Battery save file: <rom>.sav alongside the ROM. Silently skip the
+     * load if it doesn't exist yet (first run). */
+    {
+        size_t rlen = strlen(g.rom_path);
+        g.battery_path = malloc(rlen + 5);
+        snprintf(g.battery_path, rlen + 5, "%s.sav", g.rom_path);
+        if (GB_load_battery(&g.gb, g.battery_path) == 0)
+            printf("loaded battery save from %s\n", g.battery_path);
+    }
+
     GB_set_rgb_encode_callback(&g.gb, rgb_encode);
     GB_set_pixels_output(&g.gb, g.framebuffer);
     GB_set_vblank_callback(&g.gb, on_vblank);
@@ -622,6 +634,12 @@ int main(int argc, char **argv) {
     pthread_mutex_unlock(&g.writer_mtx);
     pthread_join(g.writer_thread, NULL);
 
+    /* Persist cart RAM so the next session resumes where we left off.
+     * Done from the main thread (after the loop) so there's no race with
+     * the emulator writing to MBC RAM. */
+    if (GB_save_battery(&g.gb, g.battery_path) == 0)
+        printf("saved battery to %s\n", g.battery_path);
+
     printf("[exit] %llu frames, %llu instructions, %u saves\n",
            (unsigned long long)g.total_frames,
            (unsigned long long)g.total_instructions,
@@ -638,5 +656,6 @@ int main(int argc, char **argv) {
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
+    free(g.battery_path);
     return 0;
 }
