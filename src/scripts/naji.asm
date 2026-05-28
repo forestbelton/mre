@@ -26,344 +26,344 @@ SECTION "naji_063183", ROMX[$7183], BANK[$18]
 
 
 NajiScript:
-    script_if_eq $d0dd, $04, NajiCycler
-    script_if_eq $c2d7, $01, NajiCycler
-    script_if_eq $d0dd, $02, NajiProgress
-    script_if_eq $d0dd, $01, NajiCycler
-    script_renderer $6c27, $18
+    SCRIPT_IF_EQ $d0dd, $04, NajiCycler
+    SCRIPT_IF_EQ $c2d7, $01, NajiCycler
+    SCRIPT_IF_EQ $d0dd, $02, NajiProgress
+    SCRIPT_IF_EQ $d0dd, $01, NajiCycler
+    SCRIPT_RENDERER $6c27, $18
     db "Did you come to"
-    script_newline
+    SCRIPT_NEWLINE
     db "climb the tower?"
-    script_wait
+    SCRIPT_WAIT
     db "I'm Naji. The"
-    script_newline
+    SCRIPT_NEWLINE
     db "guard here. But"
-    script_wait
+    SCRIPT_WAIT
     db "I'm on vacation"
-    script_newline
+    SCRIPT_NEWLINE
     db "right now. It's"
-    script_wait
+    SCRIPT_WAIT
     db "useless to guard"
-    script_newline
+    SCRIPT_NEWLINE
     db "a place no one"
-    script_wait
+    SCRIPT_WAIT
     db "dares to come."
-    script_wait
+    SCRIPT_WAIT
     db "Village people"
-    script_newline
+    SCRIPT_NEWLINE
     db "tried to rid the"
-    script_wait
+    SCRIPT_WAIT
     db "problem, but no"
-    script_newline
+    SCRIPT_NEWLINE
     db "one has returned"
-    script_wait
+    SCRIPT_WAIT
     db "Since one can't"
-    script_newline
+    SCRIPT_NEWLINE
     db "do much, I've"
-    script_wait
+    SCRIPT_WAIT
     db "stayed behind to"
-    script_newline
+    SCRIPT_NEWLINE
     db "the brave young"
-    script_wait
+    SCRIPT_WAIT
     db "like you. But I"
-    script_newline
+    SCRIPT_NEWLINE
     db "have no strength"
-    script_wait
+    SCRIPT_WAIT
     db "left to fight"
-    script_newline
+    SCRIPT_NEWLINE
     db "Nada. You have"
-    script_wait
+    SCRIPT_WAIT
     db "wits and courage"
-    script_newline
+    SCRIPT_NEWLINE
     db "to fight Nada."
-    script_wait
+    SCRIPT_WAIT
     db "Help us? I am"
-    script_newline
+    SCRIPT_NEWLINE
     db "the best guide."
-    script_wait
+    SCRIPT_WAIT
     db "Please help!"
-    script_wait
-    script_write_wram $d0dd, $01
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $d0dd, $01
+    SCRIPT_GOTO NajiMenu
 
 NajiCycler:
-    script_cycle 4
-    script_jump_table $d60d, naji_734a, naji_736d, naji_7394, naji_73bc
+    SCRIPT_CYCLE 4
+    SCRIPT_JUMP_TABLE $d60d, naji_734a, naji_736d, naji_7394, naji_73bc
 
 naji_734a:
-    script_renderer $6c9f, $18
+    SCRIPT_RENDERER $6c9f, $18
     db "Oh, you're here."
-    script_newline
+    SCRIPT_NEWLINE
     db "Good luck."
-    script_wait
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiMenu
 
 naji_736d:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "It's you. Good"
-    script_newline
+    SCRIPT_NEWLINE
     db "luck, my friend."
-    script_wait
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiMenu
 
 naji_7394:
-    script_renderer $6c9f, $18
+    SCRIPT_RENDERER $6c9f, $18
     db "It's you. We're"
-    script_newline
+    SCRIPT_NEWLINE
     db "counting on you."
-    script_wait
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiMenu
 
 naji_73bc:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "Hey. It's you!"
-    script_newline
+    SCRIPT_NEWLINE
     db "Take it easy!"
-    script_wait
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiMenu
 
 NajiProgress:
-    script_renderer $6c9f, $18
+    SCRIPT_RENDERER $6c9f, $18
     db "Oh, it's you"
-    script_newline
+    SCRIPT_NEWLINE
     db "again. You made"
-    script_wait
+    SCRIPT_WAIT
     db "it half-way up."
-    script_newline
+    SCRIPT_NEWLINE
     db "I wasn't wrong"
-    script_wait
+    SCRIPT_WAIT
     db "in counting on"
-    script_newline
+    SCRIPT_NEWLINE
     db "you. Some of our"
-    script_wait
+    SCRIPT_WAIT
     db "villagers got"
-    script_newline
+    SCRIPT_NEWLINE
     db "back, but don't"
-    script_wait
+    SCRIPT_WAIT
     db "get careless."
-    script_newline
+    SCRIPT_NEWLINE
     db "It gets harder."
-    script_wait
-    script_write_wram $d0dd, $01
-    script_goto NajiMenu
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $d0dd, $01
+    SCRIPT_GOTO NajiMenu
 
 NajiMenu:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "What are your"
-    script_newline
+    SCRIPT_NEWLINE
     db "plans this time?"
-    script_if_eq $d0e2, $01, .checkAsk
-    script_if_neq $cff0, $00, .renderClimb
-    script_far_call $5abc, $1f
-    script_goto .menuFinalize
+    SCRIPT_IF_EQ $d0e2, $01, .checkAsk
+    SCRIPT_IF_NEQ $cff0, $00, .renderClimb
+    SCRIPT_FAR_CALL $5abc, $1f
+    SCRIPT_GOTO .menuFinalize
 .renderClimb:
-    script_far_call $5b42, $1f
-    script_goto .menuFinalize
+    SCRIPT_FAR_CALL $5b42, $1f
+    SCRIPT_GOTO .menuFinalize
 .checkAsk:
-    script_if_neq $cff0, $00, .renderLeave
-    script_far_call $5bcb, $1f
-    script_goto .menuFinalize
+    SCRIPT_IF_NEQ $cff0, $00, .renderLeave
+    SCRIPT_FAR_CALL $5bcb, $1f
+    SCRIPT_GOTO .menuFinalize
 .renderLeave:
-    script_far_call $5c54, $1f
+    SCRIPT_FAR_CALL $5c54, $1f
 .menuFinalize:
-    script_far_call $6c1b, $18
-    script_anchor
-    script_jump_table $d5ff, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
+    SCRIPT_FAR_CALL $6c1b, $18
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d5ff, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
 NajiRestart:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "You've climbed"
-    script_newline
+    SCRIPT_NEWLINE
     db "till Level "
-    script_decimal $cff2
-    script_wait
+    SCRIPT_DECIMAL $cff2
+    SCRIPT_WAIT
     db "Want to"
-    script_newline
+    SCRIPT_NEWLINE
     db "start there?"
-    script_yn_cue
-    script_far_call $58d7, $1f
-    script_if_eq $d5fe, $01, NajiMenu
-    script_far_call $4094, $1f
-    script_far_call $6ba6, $18
-    script_end
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_FAR_CALL $4094, $1f
+    SCRIPT_FAR_CALL $6ba6, $18
+    SCRIPT_END
 
 NajiClimb:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "I understand."
-    script_newline
+    SCRIPT_NEWLINE
     db "I'll open the"
-    script_wait
+    SCRIPT_WAIT
     db "door. But,"
-    script_newline
+    SCRIPT_NEWLINE
     db "are you ready?"
-    script_yn_cue
-    script_far_call $58d7, $1f
-    script_if_eq $d5fe, $01, NajiMenu
-    script_far_call $4094, $1f
-    script_far_call $6b95, $18
-    script_end
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_FAR_CALL $4094, $1f
+    SCRIPT_FAR_CALL $6b95, $18
+    SCRIPT_END
 
 NajiAskMenu:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "What do you"
-    script_newline
+    SCRIPT_NEWLINE
     db "want to know?"
-    script_far_call $5d76, $1f
-    script_far_call $6c1b, $18
-    script_anchor
-    script_jump_table $d600, NajiAskTower, NajiAskItem, NajiAskStop
+    SCRIPT_FAR_CALL $5d76, $1f
+    SCRIPT_FAR_CALL $6c1b, $18
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d600, NajiAskTower, NajiAskItem, NajiAskStop
 
 NajiLeave:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "See you later."
-    script_wait
-    script_end
+    SCRIPT_WAIT
+    SCRIPT_END
 
 NajiTowerLong:
-    script_if_eq $d0df, $01, NajiTowerShort
-    script_renderer $6c27, $18
+    SCRIPT_IF_EQ $d0df, $01, NajiTowerShort
+    SCRIPT_RENDERER $6c27, $18
     db "10 underground"
-    script_newline
+    SCRIPT_NEWLINE
     db "levels here. The"
-    script_wait
+    SCRIPT_WAIT
     db "true legend must"
-    script_newline
+    SCRIPT_NEWLINE
     db "be hidden here."
-    script_wait
+    SCRIPT_WAIT
     db "Don't misjudge."
-    script_wait
-    script_write_wram $d0df, $01
-    script_far_call $4094, $1f
-    script_far_call $6bb7, $18
-    script_end
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $d0df, $01
+    SCRIPT_FAR_CALL $4094, $1f
+    SCRIPT_FAR_CALL $6bb7, $18
+    SCRIPT_END
 
 NajiTowerShort:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "You again! Going"
-    script_newline
+    SCRIPT_NEWLINE
     db "to try again?"
-    script_wait
+    SCRIPT_WAIT
     db "Persistence is"
-    script_newline
+    SCRIPT_NEWLINE
     db "the shortcut to"
-    script_wait
+    SCRIPT_WAIT
     db "the legend. I'll"
-    script_newline
+    SCRIPT_NEWLINE
     db "show you the way"
-    script_yn_cue
-    script_far_call $58d7, $1f
-    script_if_eq $d5fe, $01, NajiMenu
-    script_far_call $4094, $1f
-    script_far_call $6bb7, $18
-    script_end
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_FAR_CALL $4094, $1f
+    SCRIPT_FAR_CALL $6bb7, $18
+    SCRIPT_END
 
 NajiAskTower:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "Find the golden"
-    script_newline
+    SCRIPT_NEWLINE
     db "key in each"
-    script_wait
+    SCRIPT_WAIT
     db "room. It will"
-    script_newline
+    SCRIPT_NEWLINE
     db "open the door,"
-    script_wait
+    SCRIPT_WAIT
     db "and you can exit"
-    script_newline
+    SCRIPT_NEWLINE
     db "from that room."
-    script_wait
+    SCRIPT_WAIT
     db "Flying lights"
-    script_newline
+    SCRIPT_NEWLINE
     db "are hints of"
-    script_wait
+    SCRIPT_WAIT
     db "where the key"
-    script_newline
+    SCRIPT_NEWLINE
     db "and door hides."
-    script_wait
+    SCRIPT_WAIT
     db "Let me explain"
-    script_newline
+    SCRIPT_NEWLINE
     db "about Life."
-    script_wait
+    SCRIPT_WAIT
     db "You start with"
-    script_newline
+    SCRIPT_NEWLINE
     db "three lives."
-    script_wait
+    SCRIPT_WAIT
     db "If you lose all"
-    script_newline
+    SCRIPT_NEWLINE
     db "lives or leave"
-    script_wait
+    SCRIPT_WAIT
     db "the tower,"
-    script_newline
+    SCRIPT_NEWLINE
     db "you will lose"
-    script_wait
+    SCRIPT_WAIT
     db "all effects of"
-    script_newline
+    SCRIPT_NEWLINE
     db "items."
-    script_wait
+    SCRIPT_WAIT
     db "But don't worry."
-    script_newline
+    SCRIPT_NEWLINE
     db "You won't lose"
-    script_wait
+    SCRIPT_WAIT
     db "your Holy items."
-    script_newline
+    SCRIPT_NEWLINE
     db "That's all I"
-    script_wait
+    SCRIPT_WAIT
     db "know."
-    script_newline
+    SCRIPT_NEWLINE
     db "Good luck!"
-    script_wait
-    script_goto NajiAskMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiAskMenu
 
 NajiAskItem:
-    script_renderer $6c27, $18
+    SCRIPT_RENDERER $6c27, $18
     db "Let me explain."
-    script_newline
+    SCRIPT_NEWLINE
     db "There are over"
-    script_wait
+    SCRIPT_WAIT
     db "300 items hidden"
-    script_newline
+    SCRIPT_NEWLINE
     db "in this tower."
-    script_wait
+    SCRIPT_WAIT
     db "They're hard to"
-    script_newline
+    SCRIPT_NEWLINE
     db "find, but try"
-    script_wait
+    SCRIPT_WAIT
     db "making boxes and"
-    script_newline
+    SCRIPT_NEWLINE
     db "just break them."
-    script_wait
+    SCRIPT_WAIT
     db "The most"
-    script_newline
+    SCRIPT_NEWLINE
     db "important item"
-    script_wait
+    SCRIPT_WAIT
     db "is a saucer"
-    script_newline
+    SCRIPT_NEWLINE
     db "stone fragment."
-    script_wait
+    SCRIPT_WAIT
     db "4 fragments"
-    script_newline
+    SCRIPT_NEWLINE
     db "will make one"
-    script_wait
+    SCRIPT_WAIT
     db "saucer stone."
-    script_newline
+    SCRIPT_NEWLINE
     db "You can seal a"
-    script_wait
+    SCRIPT_WAIT
     db "good monster"
-    script_newline
+    SCRIPT_NEWLINE
     db "inside it."
-    script_wait
+    SCRIPT_WAIT
     db "I'm sorry, but"
-    script_newline
+    SCRIPT_NEWLINE
     db "this is all I"
-    script_wait
+    SCRIPT_WAIT
     db "know. The priest"
-    script_newline
+    SCRIPT_NEWLINE
     db "in the tower"
-    script_wait
+    SCRIPT_WAIT
     db "will tell you"
-    script_newline
+    SCRIPT_NEWLINE
     db "more. Bye!"
-    script_wait
-    script_goto NajiAskMenu
+    SCRIPT_WAIT
+    SCRIPT_GOTO NajiAskMenu
 
 NajiAskStop:
-    script_goto NajiMenu
+    SCRIPT_GOTO NajiMenu

@@ -3,5 +3,5 @@ rom.gbc
 src/*.bin
 build/
 tools/analyzer/analyzer
-tools/__pycache__/
+__pycache__/
 *.swp
