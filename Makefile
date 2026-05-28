@@ -6,6 +6,7 @@
 #   extract           — run tools/extract.py to (re)populate src/ from rom.gbc + map.json
 #   analyzer          — build the runtime analyzer binary
 #   analyze           — run the analyzer against rom.gbc, merging into map.json
+#   test              — run unit tests under tools/tests/
 #   clean             — remove build artifacts (does not touch src/)
 
 ROM       := rom.gbc
@@ -47,7 +48,7 @@ SAMEBOY_CFLAGS := -std=gnu11 -D_GNU_SOURCE \
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS   := $(shell pkg-config --libs sdl2)
 
-.PHONY: verify rom extract analyzer analyze clean
+.PHONY: verify rom extract analyzer analyze test clean
 
 verify: $(OUT)
 	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
@@ -82,6 +83,9 @@ $(ANALYZER_BIN): $(ANALYZER_SRCS) $(ANALYZER_HDRS)
 
 analyze: $(ANALYZER_BIN)
 	$(ANALYZER_BIN) --rom $(ROM) --map $(MAP)
+
+test:
+	$(PYTHON) -m unittest discover -s tools/tests
 
 clean:
 	rm -rf $(BUILD_DIR) $(ANALYZER_BIN)
