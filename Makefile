@@ -17,16 +17,33 @@ OUT       := $(BUILD_DIR)/rom.gbc
 EXTRACTOR     := tools/extract.py
 EXTRACT_STAMP := $(BUILD_DIR)/.extract.stamp
 
-ANALYZER_DIR  := tools/analyzer
-ANALYZER_BIN  := $(ANALYZER_DIR)/analyzer
-ANALYZER_SRCS := $(ANALYZER_DIR)/analyzer.c $(ANALYZER_DIR)/cJSON.c
-ANALYZER_HDRS := $(ANALYZER_DIR)/cJSON.h $(ANALYZER_DIR)/peanut_gb.h
+ANALYZER_DIR     := tools/analyzer
+ANALYZER_BIN     := $(ANALYZER_DIR)/analyzer
+SAMEBOY_DIR      := $(ANALYZER_DIR)/sameboy
+# Build every SameBoy Core .c except the ones excluded by the standard
+# GB_DISABLE_* defines below.
+SAMEBOY_EXCLUDE  := rewind.c debugger.c sm83_disassembler.c symbol_hash.c cheats.c cheat_search.c
+SAMEBOY_SRCS     := $(filter-out $(addprefix $(SAMEBOY_DIR)/,$(SAMEBOY_EXCLUDE)),$(wildcard $(SAMEBOY_DIR)/*.c))
+ANALYZER_SRCS    := $(ANALYZER_DIR)/analyzer.c $(ANALYZER_DIR)/cJSON.c $(SAMEBOY_SRCS)
+ANALYZER_HDRS    := $(ANALYZER_DIR)/cJSON.h $(wildcard $(SAMEBOY_DIR)/*.h)
+
+# SameBoy reads its VERSION from version.mk.
+SAMEBOY_VERSION  := $(shell sed -n 's/^VERSION *:= *//p' $(SAMEBOY_DIR)/version.mk)
 
 PYTHON   := python3
 RGBASM   := rgbasm
 RGBLINK  := rgblink
 CC       := cc
-CFLAGS   := -O2 -Wall -Wextra -Wno-unused-parameter
+CFLAGS   := -O2 -Wall -Wno-unused-parameter -Wno-multichar
+SAMEBOY_CFLAGS := -std=gnu11 -D_GNU_SOURCE \
+                  -DGB_VERSION='"$(SAMEBOY_VERSION)"' \
+                  -DGB_INTERNAL \
+                  -DGB_DISABLE_TIMEKEEPING \
+                  -DGB_DISABLE_REWIND \
+                  -DGB_DISABLE_DEBUGGER \
+                  -DGB_DISABLE_CHEATS \
+                  -DGB_DISABLE_CHEAT_SEARCH \
+                  -I$(ANALYZER_DIR) -I$(SAMEBOY_DIR)
 SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
 SDL_LIBS   := $(shell pkg-config --libs sdl2)
 
@@ -61,7 +78,7 @@ $(BUILD_DIR):
 analyzer: $(ANALYZER_BIN)
 
 $(ANALYZER_BIN): $(ANALYZER_SRCS) $(ANALYZER_HDRS)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ $(ANALYZER_SRCS) $(SDL_LIBS) -lpthread -lm
+	$(CC) $(CFLAGS) $(SAMEBOY_CFLAGS) $(SDL_CFLAGS) -o $@ $(ANALYZER_SRCS) $(SDL_LIBS) -lpthread -lm
 
 analyze: $(ANALYZER_BIN)
 	$(ANALYZER_BIN) --rom $(ROM) --map $(MAP)

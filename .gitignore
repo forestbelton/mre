@@ -2,3 +2,4 @@ rom.gbc
 src/*.bin
 build/
 tools/analyzer/analyzer
+*.swp

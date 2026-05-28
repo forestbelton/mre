@@ -1,19 +1,18 @@
 /*
  * Runtime ROM analyzer for the Monster Rancher Explorer disassembly.
  *
- * Plays the ROM in an SDL window through Peanut-GB while classifying every
- * ROM byte as code (PC visited) or data (read non-fetch). Bytes that hit
- * both criteria are defensively marked as data.
+ * Plays the ROM in an SDL window using SameBoy's Core (CGB-correct), while
+ * classifying every ROM byte as code (PC visited) or data (read non-fetch).
+ * Bytes that hit both criteria are defensively recorded as data.
  *
  * Findings are merged into the project's map.json under a single auto-
- * managed file entry named `analyzed.asm`. User-curated entries in the
- * map (anything else) and the reserved header at 0x100-0x14F are never
- * touched.
+ * managed file entry named `analyzed.asm`. User-curated entries and the
+ * reserved header at 0x100-0x14F are never touched.
  *
  * Threads:
- *   main    SDL render, gb_run_frame, input
+ *   main    SDL render, GB_run_frame, input
  *   writer  every --save-interval seconds (default 10) and once on exit,
- *           snapshots the per-byte map and rewrites map.json
+ *           snapshots the per-byte map and rewrites map.json atomically
  *
  * Usage:
  *   analyzer --rom rom.gbc --map map.json [--save-interval 10]
@@ -23,9 +22,7 @@
  */
 
 #include <errno.h>
-#include <fcntl.h>
 #include <pthread.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -37,8 +34,9 @@
 #include <SDL2/SDL.h>
 
 #include "cJSON.h"
+#include "sameboy/gb.h"
 
-/* ---------------- ROM byte annotations ---------------- */
+/* ---------------- Constants ---------------- */
 
 enum {
     REGION_UNKNOWN  = 0,
@@ -47,75 +45,17 @@ enum {
     REGION_CONFLICT = 3, /* both observed — emitted as data */
 };
 
-/* ---------------- Globals & forward decls ---------------- */
-
-#define GB_SCREEN_W 160
-#define GB_SCREEN_H 144
-#define WINDOW_SCALE 3
 #define DEFAULT_SAVE_INTERVAL_SEC 10
+#define WINDOW_SCALE              3
+#define ANALYZED_FILE_NAME        "analyzed.asm"
+#define HEADER_START              0x0100
+#define HEADER_END                0x0150  /* exclusive */
+/* Max screen we ever need to back: SGB border is 256x224. */
+#define MAX_SCREEN_PIXELS         (256 * 224)
 
-static const uint32_t dmg_palette[4] = {
-    0xFFE0F8D0, 0xFF88C070, 0xFF346856, 0xFF081820,
-};
-
-typedef struct {
-    /* ROM */
-    uint8_t  *rom_data;
-    uint32_t  rom_size;
-
-    /* Per-byte annotation arrays, both rom_size long.
-       Single-byte stores from emulator thread; writer thread memcpys a
-       snapshot before serializing — torn reads on a per-byte array
-       can't tear since each location is one byte. */
-    uint8_t  *rom_map;
-    /* covered[i] = 1 if byte i is owned by a user-curated entry in
-       map.json (or by the reserved header). The analyzer pre-marks these
-       so it never emits a section that overlaps user-curated content. */
-    uint8_t  *covered;
-
-    /* Cart RAM (battery-backed save data, etc.). 128 KiB covers MBC5. */
-    uint8_t  *cart_ram;
-    uint32_t  cart_ram_size;
-
-    /* Current instruction tracking (set by pre_step_hook, consumed by
-       rom_read to distinguish opcode fetches from data reads). */
-    uint32_t  current_insn_flat_pc;
-    uint8_t   current_insn_len;
-
-    /* Runtime stats */
-    uint64_t  total_instructions;
-    uint64_t  total_frames;
-
-    /* SDL */
-    SDL_Window   *window;
-    SDL_Renderer *renderer;
-    SDL_Texture  *texture;
-    uint32_t      framebuffer[GB_SCREEN_W * GB_SCREEN_H];
-
-    /* Run state */
-    volatile int running;
-    bool         fast_forward;
-
-    /* CLI */
-    const char *rom_path;
-    const char *map_path;
-    uint32_t    save_interval_sec;
-
-    /* Writer thread */
-    pthread_t       writer_thread;
-    pthread_mutex_t writer_mtx;
-    pthread_cond_t  writer_cv;
-    int             writer_should_stop;
-    uint32_t        saves_done;
-} analyzer_t;
-
-static analyzer_t g;
-
-/* ---------------- SM83 instruction length table ----------------
- * Length of a single GBZ80 (a.k.a. SM83) instruction in bytes,
- * indexed by the first opcode byte.  $CB-prefixed instructions are
- * uniformly 2 bytes (entry $CB is 2).  Illegal opcodes are listed as
- * 1 byte — Peanut-GB will trap them via the error callback. */
+/* SM83 instruction length, indexed by first opcode byte. CB-prefixed
+ * instructions are uniformly 2 bytes (the $CB entry). Illegal opcodes
+ * are listed as 1 — SameBoy doesn't define their behavior. */
 static const uint8_t sm83_length_table[256] = {
     /*       0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F */
     /* 00 */ 1, 3, 1, 1, 1, 1, 2, 1, 3, 1, 1, 1, 1, 1, 2, 1,
@@ -136,15 +76,65 @@ static const uint8_t sm83_length_table[256] = {
     /* F0 */ 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 3, 1, 1, 1, 2, 1,
 };
 
-static inline uint8_t sm83_insn_length(uint8_t op) {
-    return sm83_length_table[op];
+/* ---------------- Globals ---------------- */
+
+typedef struct {
+    /* ROM and per-byte annotations. */
+    uint8_t  *rom_data;
+    uint32_t  rom_size;
+    uint8_t  *rom_map;
+    uint8_t  *covered;
+
+    /* SameBoy instance + framebuffer big enough for SGB border. */
+    GB_gameboy_t gb;
+    uint32_t     framebuffer[MAX_SCREEN_PIXELS];
+
+    /* SDL */
+    SDL_Window   *window;
+    SDL_Renderer *renderer;
+    SDL_Texture  *texture;
+    unsigned      screen_w, screen_h;
+
+    /* Run state */
+    volatile int running;
+    bool         fast_forward;
+
+    /* CLI */
+    const char *rom_path;
+    const char *map_path;
+    uint32_t    save_interval_sec;
+
+    /* Writer thread */
+    pthread_t       writer_thread;
+    pthread_mutex_t writer_mtx;
+    pthread_cond_t  writer_cv;
+    int             writer_should_stop;
+    uint32_t        saves_done;
+
+    /* Stats */
+    uint64_t total_instructions;
+    uint64_t total_frames;
+} analyzer_t;
+
+static analyzer_t g;
+
+/* ---------------- Bank/address helpers ---------------- */
+
+/* Resolve a 16-bit CPU address into a flat ROM offset, or UINT32_MAX if
+ * the address isn't in the cart ROM region ($0000-$7FFF). For $4000-$7FFF
+ * the SameBoy MBC's current high bank is used. */
+static uint32_t resolve_rom_addr(uint16_t addr) {
+    if (addr < 0x4000) return addr;
+    if (addr < 0x8000)
+        return (uint32_t)g.gb.mbc_rom_bank * 0x4000 + (addr - 0x4000);
+    return UINT32_MAX;
 }
 
 /* ---------------- mark code / data ---------------- */
 
-static void mark_code(uint32_t addr, uint8_t len) {
+static void mark_code(uint32_t flat, uint8_t len) {
     for (uint8_t i = 0; i < len; i++) {
-        uint32_t a = addr + i;
+        uint32_t a = flat + i;
         if (a >= g.rom_size || g.covered[a]) continue;
         uint8_t cur = g.rom_map[a];
         if (cur == REGION_DATA)         g.rom_map[a] = REGION_CONFLICT;
@@ -152,103 +142,63 @@ static void mark_code(uint32_t addr, uint8_t len) {
     }
 }
 
-static void mark_data(uint32_t addr) {
-    if (addr >= g.rom_size || g.covered[addr]) return;
-    uint8_t cur = g.rom_map[addr];
-    if (cur == REGION_CODE)         g.rom_map[addr] = REGION_CONFLICT;
-    else if (cur == REGION_UNKNOWN) g.rom_map[addr] = REGION_DATA;
+static void mark_data(uint32_t flat) {
+    if (flat >= g.rom_size || g.covered[flat]) return;
+    uint8_t cur = g.rom_map[flat];
+    if (cur == REGION_CODE)         g.rom_map[flat] = REGION_CONFLICT;
+    else if (cur == REGION_UNKNOWN) g.rom_map[flat] = REGION_DATA;
 }
 
-/* ---------------- Peanut-GB hook + config ---------------- */
+/* ---------------- SameBoy callbacks ---------------- */
 
-struct gb_s; /* forward — completed by peanut_gb.h */
-static void pre_step_hook(struct gb_s *gb);
-
-#define PEANUT_GB_PRE_STEP_HOOK(gb) pre_step_hook(gb)
-#define ENABLE_LCD 1
-#define ENABLE_SOUND 0
-#define PEANUT_GB_HIGH_LCD_ACCURACY 0
-#include "peanut_gb.h"
-
-/* ---------------- ROM banking ---------------- */
-
-static uint32_t resolve_rom_addr(struct gb_s *gb, uint16_t addr) {
-    if (addr <= 0x3FFF) return addr;
-    if (addr <= 0x7FFF)
-        return (uint32_t)gb->selected_rom_bank * 0x4000 + (addr - 0x4000);
-    return addr; /* WRAM/HRAM — not in ROM */
-}
-
-/* ---------------- Pre-instruction hook ---------------- */
-
-static void pre_step_hook(struct gb_s *gb) {
-    uint16_t pc = gb->cpu_reg.pc.reg;
-    uint32_t flat = resolve_rom_addr(gb, pc);
-
-    if (pc >= 0x8000 || flat >= g.rom_size) {
-        g.current_insn_flat_pc = UINT32_MAX;
-        g.current_insn_len     = 0;
-        return;
-    }
-
-    uint8_t opcode = g.rom_data[flat];
-    uint8_t ilen   = sm83_insn_length(opcode);
-    mark_code(flat, ilen);
-
-    g.current_insn_flat_pc = flat;
-    g.current_insn_len     = ilen;
+/* execution_callback fires after the opcode byte is read but before
+ * operand reads / opcode execution. PC has just been incremented past
+ * the opcode (so gb->pc == pc + 1 here). */
+static void on_execution(GB_gameboy_t *gb, uint16_t pc, uint8_t opcode) {
+    (void)gb;
+    uint32_t flat = resolve_rom_addr(pc);
+    if (flat == UINT32_MAX || flat >= g.rom_size) return;
+    mark_code(flat, sm83_length_table[opcode]);
     g.total_instructions++;
 }
 
-/* ---------------- Peanut-GB callbacks ---------------- */
+/* read_memory_callback fires on every memory read. All fetch reads
+ * (opcode + operands) in SameBoy's CPU are of the form
+ *     cycle_read(gb, gb->pc++)
+ * which means at callback time, `addr == gb->pc - 1`. We use that to
+ * skip fetches and only mark genuine data accesses (LD A,[HL], DMA
+ * source reads, etc.). */
+static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
+    if (addr >= 0x8000) return data; /* outside cart ROM region */
 
-static uint8_t rom_read(struct gb_s *gb, const uint_fast32_t addr) {
-    (void)gb;
-    if (addr >= g.rom_size) return 0xFF;
-    /* A read outside the current instruction's bytes is a data access. */
-    uint32_t flat = g.current_insn_flat_pc;
-    uint8_t  ilen = g.current_insn_len;
-    if (ilen == 0 || addr < flat || addr >= (uint32_t)(flat + ilen))
-        mark_data((uint32_t)addr);
-    return g.rom_data[addr];
+    GB_registers_t *regs = GB_get_registers(gb);
+    if (addr == (uint16_t)(regs->pc - 1)) return data; /* fetch read */
+
+    uint32_t flat = resolve_rom_addr(addr);
+    if (flat != UINT32_MAX && flat < g.rom_size)
+        mark_data(flat);
+    return data;
 }
 
-static uint8_t cart_ram_read(struct gb_s *gb, const uint_fast32_t addr) {
+static uint32_t rgb_encode(GB_gameboy_t *gb, uint8_t r, uint8_t gr, uint8_t b) {
     (void)gb;
-    if (g.cart_ram && addr < g.cart_ram_size) return g.cart_ram[addr];
-    return 0xFF;
+    return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)gr << 8) | b;
 }
 
-static void cart_ram_write(struct gb_s *gb, const uint_fast32_t addr,
-                           const uint8_t val) {
-    (void)gb;
-    if (g.cart_ram && addr < g.cart_ram_size) g.cart_ram[addr] = val;
+static void on_vblank(GB_gameboy_t *gb, GB_vblank_type_t type) {
+    (void)gb; (void)type;
+    g.total_frames++;
 }
 
-static void error_handler(struct gb_s *gb, const enum gb_error_e err,
-                          const uint16_t addr) {
-    (void)gb;
-    const char *msg;
-    switch (err) {
-        case GB_INVALID_OPCODE: msg = "invalid opcode"; break;
-        case GB_INVALID_READ:   msg = "invalid read";   break;
-        case GB_INVALID_WRITE:  msg = "invalid write";  break;
-        default:                msg = "unknown error";  break;
-    }
-    fprintf(stderr, "peanut-gb: %s at $%04X\n", msg, addr);
-}
-
-static void lcd_draw_line_cb(struct gb_s *gb, const uint8_t *pixels,
-                             const uint_fast8_t line) {
-    (void)gb;
-    if (line >= GB_SCREEN_H) return;
-    uint32_t *row = &g.framebuffer[line * GB_SCREEN_W];
-    for (int x = 0; x < GB_SCREEN_W; x++) row[x] = dmg_palette[pixels[x] & 3];
+static void on_log(GB_gameboy_t *gb, const char *string,
+                   GB_log_attributes_t attributes) {
+    (void)gb; (void)attributes;
+    fputs(string, stderr);
 }
 
 /* ---------------- SDL input ---------------- */
 
-static void handle_input(struct gb_s *gb) {
+static void handle_input(void) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
         if (ev.type == SDL_QUIT) { g.running = 0; return; }
@@ -262,26 +212,23 @@ static void handle_input(struct gb_s *gb) {
             if (key == SDLK_TAB)    { g.fast_forward = !g.fast_forward; continue; }
         }
 
-        uint8_t mask = 0;
+        GB_key_t gb_key;
         switch (key) {
-            case SDLK_z:         mask = JOYPAD_A;      break;
-            case SDLK_x:         mask = JOYPAD_B;      break;
-            case SDLK_BACKSPACE: mask = JOYPAD_SELECT; break;
-            case SDLK_RETURN:    mask = JOYPAD_START;  break;
-            case SDLK_RIGHT:     mask = JOYPAD_RIGHT;  break;
-            case SDLK_LEFT:      mask = JOYPAD_LEFT;   break;
-            case SDLK_UP:        mask = JOYPAD_UP;     break;
-            case SDLK_DOWN:      mask = JOYPAD_DOWN;   break;
-            default: break;
+            case SDLK_z:         gb_key = GB_KEY_A;      break;
+            case SDLK_x:         gb_key = GB_KEY_B;      break;
+            case SDLK_BACKSPACE: gb_key = GB_KEY_SELECT; break;
+            case SDLK_RETURN:    gb_key = GB_KEY_START;  break;
+            case SDLK_RIGHT:     gb_key = GB_KEY_RIGHT;  break;
+            case SDLK_LEFT:      gb_key = GB_KEY_LEFT;   break;
+            case SDLK_UP:        gb_key = GB_KEY_UP;     break;
+            case SDLK_DOWN:      gb_key = GB_KEY_DOWN;   break;
+            default: continue;
         }
-        if (!mask) continue;
-        /* Peanut-GB joypad is active-low */
-        if (pressed) gb->direct.joypad &= ~mask;
-        else         gb->direct.joypad |=  mask;
+        GB_set_key_state(&g.gb, gb_key, pressed);
     }
 }
 
-/* ---------------- File I/O ---------------- */
+/* ---------------- File I/O helpers ---------------- */
 
 static uint8_t *load_file(const char *path, uint32_t *size_out) {
     FILE *f = fopen(path, "rb");
@@ -300,7 +247,6 @@ static uint8_t *load_file(const char *path, uint32_t *size_out) {
     return buf;
 }
 
-/* Read entire text file into a malloc'd, NUL-terminated string. */
 static char *read_text_file(const char *path) {
     FILE *f = fopen(path, "rb");
     if (!f) return NULL;
@@ -318,11 +264,7 @@ static char *read_text_file(const char *path) {
     return buf;
 }
 
-/* ---------------- map.json: load (mark covered bytes) ---------------- */
-
-#define ANALYZED_FILE_NAME "analyzed.asm"
-#define HEADER_START 0x0100
-#define HEADER_END   0x0150  /* exclusive */
+/* ---------------- map.json: load + merge ---------------- */
 
 static void cover_range(uint32_t start, uint32_t len) {
     if (start >= g.rom_size) return;
@@ -331,8 +273,6 @@ static void cover_range(uint32_t start, uint32_t len) {
     memset(g.covered + start, 1, end - start);
 }
 
-/* Returns the cJSON root (caller frees). On parse failure or missing file
- * builds an empty {"files": []} document. */
 static cJSON *load_map_json_root(const char *path) {
     char *text = read_text_file(path);
     cJSON *root = NULL;
@@ -344,17 +284,13 @@ static cJSON *load_map_json_root(const char *path) {
         root = cJSON_CreateObject();
         cJSON_AddArrayToObject(root, "files");
     }
-    if (!cJSON_GetObjectItem(root, "files")) {
+    if (!cJSON_GetObjectItem(root, "files"))
         cJSON_AddArrayToObject(root, "files");
-    }
     return root;
 }
 
-/* Walk the existing map and mark covered bytes for everything EXCEPT the
- * analyzed.asm entry (which we own and will overwrite). Also reserves the
- * cartridge header. */
 static void mark_covered_from_map(cJSON *root) {
-    /* Header is always reserved by extract.py — don't touch it. */
+    /* Header is reserved by extract.py — keep our hands off it. */
     cover_range(HEADER_START, HEADER_END - HEADER_START);
 
     cJSON *files = cJSON_GetObjectItem(root, "files");
@@ -386,10 +322,6 @@ static void mark_covered_from_map(cJSON *root) {
     }
 }
 
-/* ---------------- map.json: serialize merged result ---------------- */
-
-/* Map an annotation byte to "code"/"data" or NULL if unknown. Adjacent
- * runs of the same returned string get merged into a single section. */
 static const char *section_kind(uint8_t v) {
     switch (v) {
         case REGION_CODE:     return "code";
@@ -399,9 +331,6 @@ static const char *section_kind(uint8_t v) {
     }
 }
 
-/* Build the analyzed.asm file entry from `snapshot` (per-byte annotations).
- * Sections cover only bytes where covered[i] is false. Adjacent same-kind
- * runs are merged. */
 static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
     cJSON *entry = cJSON_CreateObject();
     cJSON_AddStringToObject(entry, "type", "code");
@@ -428,34 +357,25 @@ static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
     return entry;
 }
 
-/* Atomically replace `path` with the serialized JSON. Writes to `path.tmp`
- * then rename()s into place so a crash mid-write can't truncate the file. */
 static int write_json_atomic(const char *path, cJSON *root) {
     char *out = cJSON_Print(root);
     if (!out) return -1;
-
     size_t plen = strlen(path);
     char *tmp = malloc(plen + 5);
     if (!tmp) { free(out); return -1; }
     snprintf(tmp, plen + 5, "%s.tmp", path);
-
     FILE *f = fopen(tmp, "w");
     if (!f) { free(out); free(tmp); return -1; }
     fputs(out, f);
     fputc('\n', f);
     fclose(f);
     free(out);
-
     int rc = rename(tmp, path);
     free(tmp);
     return rc;
 }
 
-/* Take a snapshot, build the merged document, write atomically. Called
- * from the writer thread only. */
 static void perform_save(void) {
-    /* Snapshot rom_map. Each byte is independently written by the
-     * emulator thread, so per-byte snapshot reads are coherent. */
     uint8_t *snap = malloc(g.rom_size);
     if (!snap) return;
     memcpy(snap, g.rom_map, g.rom_size);
@@ -463,7 +383,6 @@ static void perform_save(void) {
     cJSON *root = load_map_json_root(g.map_path);
     cJSON *files = cJSON_GetObjectItem(root, "files");
 
-    /* Drop the previous analyzed.asm entry (we own it). */
     int idx = 0;
     cJSON *file;
     cJSON_ArrayForEach(file, files) {
@@ -542,8 +461,8 @@ static void print_usage(const char *prog) {
     fprintf(stderr,
         "Usage: %s --rom <rom.gbc> --map <map.json> [--save-interval N]\n"
         "\n"
-        "Plays the ROM in an SDL window and merges discovered code/data\n"
-        "sections into map.json under the auto-managed `analyzed.asm` entry.\n"
+        "Plays the ROM in an SDL window (SameBoy Core, CGB-correct) and merges\n"
+        "discovered code/data sections into map.json under `analyzed.asm`.\n"
         "\n"
         "Controls:\n"
         "  Arrows     D-pad\n"
@@ -576,7 +495,7 @@ static int parse_args(int argc, char **argv) {
         print_usage(argv[0]);
         return 1;
     }
-    return -1; /* continue */
+    return -1;
 }
 
 /* ---------------- Main ---------------- */
@@ -591,14 +510,8 @@ int main(int argc, char **argv) {
 
     g.rom_map = calloc(g.rom_size, 1);
     g.covered = calloc(g.rom_size, 1);
-    g.cart_ram_size = 0x20000;
-    g.cart_ram = calloc(g.cart_ram_size, 1);
-    if (!g.rom_map || !g.covered || !g.cart_ram) {
-        fprintf(stderr, "out of memory\n");
-        return 1;
-    }
+    if (!g.rom_map || !g.covered) { fprintf(stderr, "out of memory\n"); return 1; }
 
-    /* Cover bytes already claimed by the existing map and the header. */
     {
         cJSON *root = load_map_json_root(g.map_path);
         mark_covered_from_map(root);
@@ -610,10 +523,24 @@ int main(int argc, char **argv) {
         fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
         return 1;
     }
+
+    /* SameBoy — initialize as CGB-E (the standard CGB revision). */
+    GB_init(&g.gb, GB_MODEL_CGB_E);
+    GB_set_log_callback(&g.gb, on_log);
+    GB_load_rom_from_buffer(&g.gb, g.rom_data, g.rom_size);
+    GB_set_rgb_encode_callback(&g.gb, rgb_encode);
+    GB_set_pixels_output(&g.gb, g.framebuffer);
+    GB_set_vblank_callback(&g.gb, on_vblank);
+    GB_set_execution_callback(&g.gb, on_execution);
+    GB_set_read_memory_callback(&g.gb, on_read_memory);
+
+    g.screen_w = GB_get_screen_width(&g.gb);
+    g.screen_h = GB_get_screen_height(&g.gb);
+
     g.window = SDL_CreateWindow(
         "Monster Rancher Explorer — analyzer",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        GB_SCREEN_W * WINDOW_SCALE, GB_SCREEN_H * WINDOW_SCALE,
+        g.screen_w * WINDOW_SCALE, g.screen_h * WINDOW_SCALE,
         SDL_WINDOW_SHOWN);
     if (!g.window) { fprintf(stderr, "SDL_CreateWindow: %s\n", SDL_GetError()); return 1; }
 
@@ -624,19 +551,8 @@ int main(int argc, char **argv) {
     if (!g.renderer) { fprintf(stderr, "SDL_CreateRenderer: %s\n", SDL_GetError()); return 1; }
 
     g.texture = SDL_CreateTexture(g.renderer, SDL_PIXELFORMAT_ARGB8888,
-        SDL_TEXTUREACCESS_STREAMING, GB_SCREEN_W, GB_SCREEN_H);
+        SDL_TEXTUREACCESS_STREAMING, g.screen_w, g.screen_h);
     if (!g.texture) { fprintf(stderr, "SDL_CreateTexture: %s\n", SDL_GetError()); return 1; }
-
-    /* Peanut-GB */
-    struct gb_s gb;
-    enum gb_init_error_e init_err = gb_init(&gb, rom_read, cart_ram_read,
-                                            cart_ram_write, error_handler, &g);
-    if (init_err != GB_INIT_NO_ERROR) {
-        fprintf(stderr, "gb_init failed (code %d)\n", init_err);
-        return 1;
-    }
-    gb_init_lcd(&gb, lcd_draw_line_cb);
-    gb.direct.joypad = 0xFF;
 
     /* Writer thread */
     pthread_mutex_init(&g.writer_mtx, NULL);
@@ -644,23 +560,22 @@ int main(int argc, char **argv) {
     g.writer_should_stop = 0;
     pthread_create(&g.writer_thread, NULL, writer_main, NULL);
 
-    printf("ready. saving map.json every %u s. esc/close to quit.\n",
+    printf("ready (CGB-E). saving map.json every %u s. esc/close to quit.\n",
            g.save_interval_sec);
 
     /* Main loop */
     g.running = 1;
     uint32_t frame_start = SDL_GetTicks();
     while (g.running) {
-        gb_run_frame(&gb);
-        g.total_frames++;
+        GB_run_frame(&g.gb);
 
         SDL_UpdateTexture(g.texture, NULL, g.framebuffer,
-                          GB_SCREEN_W * sizeof(uint32_t));
+                          g.screen_w * sizeof(uint32_t));
         SDL_RenderClear(g.renderer);
         SDL_RenderCopy(g.renderer, g.texture, NULL, NULL);
         SDL_RenderPresent(g.renderer);
 
-        handle_input(&gb);
+        handle_input();
 
         if (!g.fast_forward) {
             uint32_t now = SDL_GetTicks();
@@ -670,7 +585,7 @@ int main(int argc, char **argv) {
         frame_start = SDL_GetTicks();
     }
 
-    /* Signal writer to do a final save and exit. */
+    /* Shutdown */
     pthread_mutex_lock(&g.writer_mtx);
     g.writer_should_stop = 1;
     pthread_cond_signal(&g.writer_cv);
@@ -682,16 +597,16 @@ int main(int argc, char **argv) {
            (unsigned long long)g.total_instructions,
            g.saves_done);
 
-    /* Cleanup */
     SDL_DestroyTexture(g.texture);
     SDL_DestroyRenderer(g.renderer);
     SDL_DestroyWindow(g.window);
     SDL_Quit();
+
+    GB_free(&g.gb);
     pthread_mutex_destroy(&g.writer_mtx);
     pthread_cond_destroy(&g.writer_cv);
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
-    free(g.cart_ram);
     return 0;
 }
