@@ -4,6 +4,7 @@ INCLUDE "hardware.inc"
 
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "names.asm"
 
 SECTION "data_000005", ROM0[$0005]
 Data_00_0005:
@@ -876,10 +877,6 @@ Data_00_3af7:
 SECTION "data_003b1b", ROM0[$3b1b]
 Data_00_3b1b:
 	INCBIN "data_003b1b.bin"
-
-SECTION "data_003b53", ROM0[$3b53]
-Data_00_3b53:
-	INCBIN "data_003b53.bin"
 
 SECTION "data_003c69", ROM0[$3c69]
 Data_00_3c69:

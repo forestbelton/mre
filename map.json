@@ -8305,6 +8305,30 @@
           "len": 1
         }
       ]
+    },
+    {
+      "type": "code",
+      "name": "names.asm",
+      "sections": [
+        {
+          "type": "code",
+          "addr": 15187,
+          "len": 34,
+          "label": "PrintIndexedName"
+        },
+        {
+          "type": "data",
+          "addr": 15221,
+          "len": 14,
+          "label": "MonsterNamePointers"
+        },
+        {
+          "type": "data",
+          "addr": 15235,
+          "len": 42,
+          "label": "MonsterNames"
+        }
+      ]
     }
   ]
 }
