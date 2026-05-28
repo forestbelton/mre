@@ -382,6 +382,81 @@ static void mark_covered_from_map(cJSON *root) {
     }
 }
 
+/* Restore the previous analyzer state from map.json so coverage and
+ * conflict observations accumulate across sessions instead of starting
+ * blank every launch. Reads:
+ *   - the analyzed.asm entry's sections → CODE / DATA per `type`
+ *   - the top-level "conflicts" array    → CONFLICT
+ *
+ * Bytes already in `covered` (a user-curated section or the header)
+ * are skipped — those are off-limits and rom_map for them is unused
+ * anyway. Returns counts purely for the load-time log. */
+static void load_prior_rom_map(cJSON *root) {
+    uint32_t code_n = 0, data_n = 0, conflict_n = 0;
+
+    cJSON *files = cJSON_GetObjectItem(root, "files");
+    if (cJSON_IsArray(files)) {
+        cJSON *file;
+        cJSON_ArrayForEach(file, files) {
+            cJSON *jname = cJSON_GetObjectItem(file, "name");
+            if (!cJSON_IsString(jname)) continue;
+            if (strcmp(jname->valuestring, ANALYZED_FILE_NAME) != 0) continue;
+            cJSON *secs = cJSON_GetObjectItem(file, "sections");
+            if (!cJSON_IsArray(secs)) continue;
+            cJSON *s;
+            cJSON_ArrayForEach(s, secs) {
+                cJSON *jt = cJSON_GetObjectItem(s, "type");
+                cJSON *ja = cJSON_GetObjectItem(s, "addr");
+                cJSON *jl = cJSON_GetObjectItem(s, "len");
+                if (!cJSON_IsString(jt) || !cJSON_IsNumber(ja) || !cJSON_IsNumber(jl))
+                    continue;
+                uint8_t kind;
+                if (strcmp(jt->valuestring, "code") == 0)      kind = REGION_CODE;
+                else if (strcmp(jt->valuestring, "data") == 0) kind = REGION_DATA;
+                else continue;
+                uint32_t a = (uint32_t)ja->valuedouble;
+                uint32_t l = (uint32_t)jl->valuedouble;
+                for (uint32_t i = 0; i < l && (a + i) < g.rom_size; i++) {
+                    if (g.covered[a + i]) continue;
+                    g.rom_map[a + i] = kind;
+                    if (kind == REGION_CODE) code_n++; else data_n++;
+                }
+            }
+        }
+    }
+
+    /* CONFLICT overrides DATA from analyzed.asm (those bytes are stored
+     * as data in the file entry per the defensive rule, but tagged
+     * separately here so we don't lose the "both observed" fact). */
+    cJSON *conflicts = cJSON_GetObjectItem(root, "conflicts");
+    if (cJSON_IsArray(conflicts)) {
+        cJSON *e;
+        cJSON_ArrayForEach(e, conflicts) {
+            cJSON *ja = cJSON_GetObjectItem(e, "addr");
+            cJSON *jl = cJSON_GetObjectItem(e, "len");
+            if (!cJSON_IsNumber(ja) || !cJSON_IsNumber(jl)) continue;
+            uint32_t a = (uint32_t)ja->valuedouble;
+            uint32_t l = (uint32_t)jl->valuedouble;
+            for (uint32_t i = 0; i < l && (a + i) < g.rom_size; i++) {
+                if (g.covered[a + i]) continue;
+                /* Restoring CONFLICT — the byte was both code- and data-
+                 * observed in a previous session; without this we'd come
+                 * back as just DATA (per analyzed.asm) and forget the
+                 * code observation. */
+                if (g.rom_map[a + i] == REGION_DATA) data_n--;
+                else if (g.rom_map[a + i] == REGION_CODE) code_n--;
+                g.rom_map[a + i] = REGION_CONFLICT;
+                conflict_n++;
+            }
+        }
+    }
+
+    if (code_n || data_n || conflict_n) {
+        printf("restored prior state: code %u, data %u, conflict %u bytes\n",
+               code_n, data_n, conflict_n);
+    }
+}
+
 static const char *section_kind(uint8_t v) {
     switch (v) {
         case REGION_CODE:     return "code";
@@ -619,6 +694,7 @@ int main(int argc, char **argv) {
     {
         cJSON *root = load_map_json_root(g.map_path);
         mark_covered_from_map(root);
+        load_prior_rom_map(root);
         cJSON_Delete(root);
     }
 
