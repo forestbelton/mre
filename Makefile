@@ -4,6 +4,8 @@
 #   verify   (default) — build the ROM and compare its sha256 to rom.gbc
 #   rom               — assemble and link build/rom.gbc from src/
 #   extract           — run tools/extract.py to (re)populate src/ from rom.gbc + map.json
+#   analyzer          — build the runtime analyzer binary
+#   analyze           — run the analyzer against rom.gbc, merging into map.json
 #   clean             — remove build artifacts (does not touch src/)
 
 ROM       := rom.gbc
@@ -15,11 +17,20 @@ OUT       := $(BUILD_DIR)/rom.gbc
 EXTRACTOR     := tools/extract.py
 EXTRACT_STAMP := $(BUILD_DIR)/.extract.stamp
 
-PYTHON  := python3
-RGBASM  := rgbasm
-RGBLINK := rgblink
+ANALYZER_DIR  := tools/analyzer
+ANALYZER_BIN  := $(ANALYZER_DIR)/analyzer
+ANALYZER_SRCS := $(ANALYZER_DIR)/analyzer.c $(ANALYZER_DIR)/cJSON.c
+ANALYZER_HDRS := $(ANALYZER_DIR)/cJSON.h $(ANALYZER_DIR)/peanut_gb.h
 
-.PHONY: verify rom extract clean
+PYTHON   := python3
+RGBASM   := rgbasm
+RGBLINK  := rgblink
+CC       := cc
+CFLAGS   := -O2 -Wall -Wextra -Wno-unused-parameter
+SDL_CFLAGS := $(shell pkg-config --cflags sdl2)
+SDL_LIBS   := $(shell pkg-config --libs sdl2)
+
+.PHONY: verify rom extract analyzer analyze clean
 
 verify: $(OUT)
 	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
@@ -47,5 +58,13 @@ $(EXTRACT_STAMP): $(EXTRACTOR) $(MAP) $(ROM) | $(BUILD_DIR)
 $(BUILD_DIR):
 	@mkdir -p $@
 
+analyzer: $(ANALYZER_BIN)
+
+$(ANALYZER_BIN): $(ANALYZER_SRCS) $(ANALYZER_HDRS)
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -o $@ $(ANALYZER_SRCS) $(SDL_LIBS) -lpthread -lm
+
+analyze: $(ANALYZER_BIN)
+	$(ANALYZER_BIN) --rom $(ROM) --map $(MAP)
+
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(ANALYZER_BIN)
