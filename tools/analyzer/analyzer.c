@@ -107,6 +107,14 @@ typedef struct {
     uint32_t  rom_size;
     uint8_t  *rom_map;
     uint8_t  *covered;
+    /* insn_byte[i] = 1 if byte i is part of an instruction that has been
+     * executed (the opcode byte or one of its operand bytes). Used to
+     * suppress data marks against bytes that genuinely belong to a known
+     * instruction — OAM DMA from a low-address source page would
+     * otherwise read VBlank/RST vector operand bytes and fragment the
+     * map (CODE -> CONFLICT -> emitted as data, breaking the
+     * disassembly into 1-byte slivers). */
+    uint8_t  *insn_byte;
 
     /* SameBoy instance + framebuffer big enough for SGB border. */
     GB_gameboy_t gb;
@@ -168,6 +176,12 @@ static void mark_code(uint32_t flat, uint8_t len) {
 
 static void mark_data(uint32_t flat) {
     if (flat >= g.rom_size || g.covered[flat]) return;
+    /* If the CPU has executed an instruction that covers this byte, it
+     * is unambiguously code (opcode or operand). Don't let a later
+     * data-bus read — OAM DMA from a low-address source page, indirect
+     * prefetch, etc. — downgrade it; that's what fragments multi-byte
+     * instructions into "Func_X: db $c3" stumps. */
+    if (g.insn_byte[flat]) return;
     uint8_t cur = g.rom_map[flat];
     if (cur == REGION_CODE)         g.rom_map[flat] = REGION_CONFLICT;
     else if (cur == REGION_UNKNOWN) g.rom_map[flat] = REGION_DATA;
@@ -187,7 +201,14 @@ static void on_execution(GB_gameboy_t *gb, uint16_t pc, uint8_t opcode) {
     if (!gb->boot_rom_finished) return;
     uint32_t flat = resolve_rom_addr(pc);
     if (flat == UINT32_MAX || flat >= g.rom_size) return;
-    mark_code(flat, sm83_length_table[opcode]);
+    uint8_t ilen = sm83_length_table[opcode];
+    mark_code(flat, ilen);
+    /* Note every byte of this instruction as belonging to an executed
+     * instruction, so future mark_data on operand bytes is a no-op. */
+    for (uint8_t i = 0; i < ilen; i++) {
+        uint32_t a = flat + i;
+        if (a < g.rom_size) g.insn_byte[a] = 1;
+    }
     g.total_instructions++;
 }
 
@@ -538,9 +559,13 @@ int main(int argc, char **argv) {
     if (!g.rom_data) return 1;
     printf("loaded %s (%u bytes)\n", g.rom_path, g.rom_size);
 
-    g.rom_map = calloc(g.rom_size, 1);
-    g.covered = calloc(g.rom_size, 1);
-    if (!g.rom_map || !g.covered) { fprintf(stderr, "out of memory\n"); return 1; }
+    g.rom_map   = calloc(g.rom_size, 1);
+    g.covered   = calloc(g.rom_size, 1);
+    g.insn_byte = calloc(g.rom_size, 1);
+    if (!g.rom_map || !g.covered || !g.insn_byte) {
+        fprintf(stderr, "out of memory\n");
+        return 1;
+    }
 
     {
         cJSON *root = load_map_json_root(g.map_path);
@@ -656,6 +681,7 @@ int main(int argc, char **argv) {
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
+    free(g.insn_byte);
     free(g.battery_path);
     return 0;
 }
