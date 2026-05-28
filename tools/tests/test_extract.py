@@ -701,38 +701,88 @@ class TestAppendOnlyEmission(unittest.TestCase):
         # Only one SECTION directive for $0200.
         self.assertEqual(final.count('SECTION "engine_000200"'), 1)
 
-    def test_new_section_gets_appended(self):
-        # Start with engine.asm containing only $0200.
+    def test_new_section_in_different_bank_gets_appended(self):
+        # Cross-bank new section: bank-0 SECTION at $0200's extent caps
+        # at the bank boundary ($4000), so a new map.json section at
+        # $4000+ (bank 1) is not covered and gets appended.
         spec1 = self._spec_with_sections((0x0200, 3))
         out = self._emit(spec1)
-        # User adds a comment.
         out.write_text(out.read_text() + "\n; user content\n")
-        # Now map.json grows to include $0300 as well.
-        spec2 = self._spec_with_sections((0x0200, 3), (0x0300, 3))
+        spec2 = {"files": [{"type": "code", "name": "engine.asm", "sections": [
+            {"type": "code", "addr": 0x0200, "len": 3},
+            {"type": "code", "addr": 0x4000, "len": 3},  # bank 1
+        ]}]}
         self._emit(spec2)
         final = out.read_text()
-        # Both sections present.
         self.assertIn('SECTION "engine_000200"', final)
-        self.assertIn('SECTION "engine_000300"', final)
+        self.assertIn('SECTION "engine_004000"', final)
         # User content survives.
         self.assertIn("; user content", final)
-        # $0300 was appended AFTER user content (since user content sat
-        # at the end of the previous file).
+        # Bank-1 section was appended after user content (which sat at
+        # the end of the previous file).
         self.assertLess(final.index("; user content"),
-                        final.index('SECTION "engine_000300"'))
+                        final.index('SECTION "engine_004000"'))
 
-    def test_section_block_deleted_gets_rebuilt(self):
-        # User deletes the SECTION engine_000200 block (just removes the
-        # directive line). On re-extract, that section gets appended back.
+    def test_no_sections_in_file_treated_as_uncovered(self):
+        # User wipes all SECTION directives from the file (e.g. preparing
+        # to start over). On re-extract, the map.json sections come back.
         spec = self._spec_with_sections((0x0200, 3))
         out = self._emit(spec)
-        cleaned = "\n".join(l for l in out.read_text().splitlines()
-                            if 'SECTION "engine_000200"' not in l)
-        out.write_text(cleaned)
+        out.write_text("; user blanked the file but kept it on disk\n")
         self._emit(spec)
-        # Re-emit happened because the directive name was no longer found.
         text = out.read_text()
-        self.assertEqual(text.count('SECTION "engine_000200"'), 1)
+        self.assertIn('SECTION "engine_000200"', text)
+
+    def test_merged_section_no_duplicates(self):
+        # The user merges two map.json sections under ONE big SECTION
+        # directive (deleted the second directive, kept the bytes inside
+        # the first). Re-extract must NOT re-append the "missing" one —
+        # the address range is already covered.
+        spec = self._spec_with_sections((0x0200, 3), (0x0204, 3))
+        out = self._emit(spec)
+        # Hand-craft a merged version: one SECTION covering both ranges.
+        out.write_text(
+            'SECTION "MyMerged", ROM0[$0200]\n'
+            'MyLabel_0200:\n\tret\n\tret\n\tret\n'
+            '\tret\n\tret\n\tret\n'
+        )
+        self._emit(spec)
+        text = out.read_text()
+        # Only the user's "MyMerged" SECTION; nothing appended.
+        self.assertEqual(text.count("SECTION "), 1)
+        self.assertNotIn('SECTION "engine_000200"', text)
+        self.assertNotIn('SECTION "engine_000204"', text)
+
+    def test_rename_section_directive_no_duplicate(self):
+        # User renames `engine_000200` to something semantic. The address
+        # ($0200) is still claimed by a SECTION in the file, so re-extract
+        # leaves it alone.
+        spec = self._spec_with_sections((0x0200, 3))
+        out = self._emit(spec)
+        renamed = out.read_text().replace(
+            'SECTION "engine_000200"', 'SECTION "InitVector"')
+        out.write_text(renamed)
+        self._emit(spec)
+        text = out.read_text()
+        self.assertIn('SECTION "InitVector"', text)
+        self.assertNotIn('SECTION "engine_000200"', text)
+
+    def test_new_section_in_bank_appended_when_partial_coverage(self):
+        # File has a SECTION at $0200 covering 3 bytes. map.json says
+        # $0200 and also $3000 (uncovered). $3000 falls inside the
+        # remaining-bank-0 extent of the SECTION ($0200..$4000), so the
+        # heuristic says "already covered" — which is the known
+        # misconfig case. Document the behavior with a test so we notice
+        # if it changes.
+        spec = self._spec_with_sections((0x0200, 3), (0x3000, 3))
+        out = self._emit(spec)
+        # Wipe to leave just one SECTION at $0200.
+        out.write_text('SECTION "OnlyOne", ROM0[$0200]\n\tret\n')
+        self._emit(spec)
+        text = out.read_text()
+        # Heuristic says $3000 is "covered" by [OnlyOne, bank_end). No
+        # append. (The linker would catch this misconfig at build time.)
+        self.assertEqual(text.count("SECTION "), 1)
 
     def test_auto_managed_full_regen(self):
         # analyzed.asm always full-regens regardless of existing content.

@@ -9,7 +9,7 @@ PrintIndexedName:
 	inc hl
 	push hl
 	ld a, [de]
-	ld hl, $3b75
+	ld hl, MonsterNamePointers
 	sla a
 	add a, l
 	ld l, a
@@ -33,39 +33,18 @@ Func_00_3b71:
 SECTION "names_003b75", ROM0[$3b75]
 
 MonsterNamePointers:
-	db $83, $3b, $89, $3b, $90, $3b, $95, $3b, $9a, $3b, $a0, $3b, $a6, $3b
+	dw Name_Tiger
+	dw Name_Mocchi
+	dw Name_Hare
+	dw Name_Gali
+	dw Name_Golem
+	dw Name_Suezo
+	dw Name_Phenix
 
-SECTION "names_003b83", ROM0[$3b83]
-
-Name_Tiger:
-	db "Tiger", 0
-
-SECTION "names_003b89", ROM0[$3b89]
-
-Name_Mocchi:
-	db "Mocchi", 0
-
-SECTION "names_003b90", ROM0[$3b90]
-
-Name_Hare:
-	db "Hare", 0
-
-SECTION "names_003b95", ROM0[$3b95]
-
-Name_Gali:
-	db "Gali", 0
-
-SECTION "names_003b9a", ROM0[$3b9a]
-
-Name_Golem:
-	db "Golem", 0
-
-SECTION "names_003ba0", ROM0[$3ba0]
-
-Name_Suezo:
-	db "Suezo", 0
-
-SECTION "names_003ba6", ROM0[$3ba6]
-
-Name_Phenix:
-	db "Phenix", 0
+Name_Tiger:  db "Tiger", 0
+Name_Mocchi: db "Mocchi", 0
+Name_Hare:   db "Hare", 0
+Name_Gali:   db "Gali", 0
+Name_Golem:  db "Golem", 0
+Name_Suezo:  db "Suezo", 0
+Name_Phenix: db "Phenix", 0

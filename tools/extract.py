@@ -775,15 +775,60 @@ def _format_ascii_db(data: bytes, indent: str = "\t",
     return [indent + "db " + ", ".join(parts)]
 
 
-_SECTION_DIRECTIVE_RE = re.compile(r'^\s*SECTION\s+"([^"]+)"', re.MULTILINE)
+# Parses a SECTION directive into its declared address. Two forms:
+#   SECTION "name", ROM0[$XXXX]
+#   SECTION "name", ROMX[$YYYY], BANK[$ZZ]
+# The name (group 1) is ignored — section identity is the address, not
+# whatever string the user picked for the directive. Whitespace inside
+# the directive is permissive.
+_SECTION_DIRECTIVE_RE = re.compile(
+    r'^\s*SECTION\s+"[^"]+"\s*,\s*'
+    r'(?:ROM0\[\s*\$([0-9a-fA-F]+)\s*\]'
+    r'|ROMX\[\s*\$([0-9a-fA-F]+)\s*\]\s*,\s*BANK\[\s*\$([0-9a-fA-F]+)\s*\])',
+    re.MULTILINE,
+)
 
 
-def _existing_section_names(path: Path) -> set[str]:
-    """Scan an existing .asm file for SECTION "<name>" directives.
-    Returns the set of names already declared in the file."""
+def _existing_section_extents(path: Path) -> list[tuple[int, int]]:
+    """Parse SECTION directives in an existing .asm file and return their
+    implicit coverage: a sorted list of (flat_start, flat_end) ranges
+    where `flat_end` is the next SECTION's start in the same file or
+    the bank boundary, whichever comes first.
+
+    Section IDENTITY is the address. Names, labels, and inline content
+    are deliberately ignored — the user can rename, merge, or split
+    directives without confusing the extractor.
+    """
     if not path.exists():
-        return set()
-    return set(_SECTION_DIRECTIVE_RE.findall(path.read_text()))
+        return []
+    starts: list[int] = []
+    for m in _SECTION_DIRECTIVE_RE.finditer(path.read_text()):
+        if m.group(1) is not None:  # ROM0
+            flat = int(m.group(1), 16)
+        else:  # ROMX, BANK
+            addr = int(m.group(2), 16)
+            bank = int(m.group(3), 16)
+            flat = bank * BANK_SIZE + (addr - BANK_SIZE)
+        starts.append(flat)
+    starts.sort()
+    # Compute extent: each section extends to the next section's start
+    # or the bank boundary, whichever comes first. rgbasm SECTIONs can't
+    # straddle banks anyway.
+    extents: list[tuple[int, int]] = []
+    for i, s in enumerate(starts):
+        bank_end = ((s // BANK_SIZE) + 1) * BANK_SIZE
+        nxt = starts[i + 1] if i + 1 < len(starts) else bank_end
+        extents.append((s, min(nxt, bank_end)))
+    return extents
+
+
+def _range_covered(extents: list[tuple[int, int]], addr: int, length: int) -> bool:
+    """True iff [addr, addr+length) lies entirely inside some extent."""
+    end = addr + length
+    for s, e in extents:
+        if s <= addr and end <= e:
+            return True
+    return False
 
 
 def _build_section_lines(
@@ -873,16 +918,20 @@ def emit_code_file(
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     is_auto = name in AUTO_MANAGED_FILES
-    existing = set() if is_auto else _existing_section_names(out_path)
+    extents = [] if is_auto else _existing_section_extents(out_path)
 
-    if existing and not is_auto:
-        # Append-only update: leave existing SECTION blocks alone.
+    if extents and not is_auto:
+        # Append-only update keyed on address coverage. For each map.json
+        # section, if its [addr, addr+len) lies inside any existing
+        # SECTION's implicit extent (the user may have one big SECTION
+        # claiming the whole range, or several small ones — both work),
+        # leave it alone. Otherwise append.
         new_blocks: list[str] = []
         appended: list[str] = []
         for sec in sections:
-            sec_name = f"{stem}_{sec['addr']:06x}"
-            if sec_name in existing:
+            if _range_covered(extents, sec["addr"], sec["len"]):
                 continue
+            sec_name = f"{stem}_{sec['addr']:06x}"
             block = "\n".join(_build_section_lines(
                 sec, sec_name, name, rom, labels, hw_symbols))
             new_blocks.append(block)
@@ -895,7 +944,8 @@ def emit_code_file(
             print(f"  {name}: appended {len(appended)} section(s): "
                   f"{', '.join(appended)}", file=sys.stderr)
         else:
-            print(f"  {name}: up to date ({len(existing)} section(s) already present)",
+            print(f"  {name}: up to date ({len(extents)} SECTION directive(s) in file "
+                  f"cover all {len(sections)} map.json section(s))",
                   file=sys.stderr)
         return out_path
 
