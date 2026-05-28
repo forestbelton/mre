@@ -244,16 +244,27 @@ static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
 /* write_memory_callback fires on every CPU write. Used for --watch-write:
  * if `addr` is in the watch set, log the writing instruction's PC (the
  * post-fetch CPU PC, i.e., one past the end of the instruction) and the
- * value being written. Always returns true (allow the write). */
+ * value being written. Always returns true (allow the write).
+ *
+ * The bank we print is the *code* bank: HOME ($0000-$3FFF) is always
+ * mapped from ROM bank 0 regardless of the current MBC high-bank
+ * selection, so print 0 for PCs below $4000. Otherwise mbc_rom_bank is
+ * the bank holding the executing code. (Earlier versions printed
+ * mbc_rom_bank unconditionally, which was misleading for HOME PCs — the
+ * script interpreter lives in HOME but ran while NPC-data banks 24/25
+ * were mapped, so the same handler showed up as both "$18:$3ACF" and
+ * "$19:$3ACF" in those logs.) */
 static bool on_write_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
     if (!g.watch_any) return true;
     if (!gb->boot_rom_finished) return true;
     if (!g.watch_write[addr]) return true;
     GB_registers_t *regs = GB_get_registers(gb);
+    unsigned code_bank = (regs->pc < 0x4000) ? 0u
+                                             : (unsigned)g.gb.mbc_rom_bank;
     fprintf(g.watch_log,
         "[watch] $%04X <- $%02X  PC $%02X:$%04X  frame %llu\n",
         addr, data,
-        (unsigned)g.gb.mbc_rom_bank, regs->pc,
+        code_bank, regs->pc,
         (unsigned long long)g.total_frames);
     fflush(g.watch_log);
     return true;

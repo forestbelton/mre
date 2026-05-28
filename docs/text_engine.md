@@ -494,8 +494,8 @@ and identify concrete routines we can disassemble later.
 |---|---|---|
 | `$05:$4656` / `$05:$4659` | Init clear of `$CFF0` / `$CFF2` at boot | Same PC writes both within one frame — a `xor a; ld [hl+], a; ld [hl], a` pattern over the engine block. |
 | `$12:$0314` | Bulk zero of `$CFF0` / `$CFF2` / `$D0DD` on area entry | All three written from the same instruction when entering Naji's area. This is the "clear NPC/local state" routine. |
-| `$18:$3ACF` | **Script-engine `$09` (WRITE-WRAM) handler** | Fires when the script byte `$09 $DD $D0 $01` executes after Naji's first-time intro. Anchor for the bank-24 script interpreter. |
-| `$18:$3B09` | **Script-engine `$0C` (RAND) handler** | Fires when the script byte `$0C` executes on a non-first-time Naji visit (writes the chosen index to the RAND result byte `$D60D`). Sits 58 bytes after the `$09` handler — the bank-24 interpreter is a per-opcode dispatch table laid out around `$3A?? / $3B??`. |
+| `HOME:$3ACF` | **Script-engine `$09` (WRITE-WRAM) handler** | Originally logged as `$18:$3ACF` (Naji) and `$19:$3ACF` (lady). The PC is below `$4000`, so the code lives in HOME (always-mapped) — the bank prefix in the watch log is the currently-mapped *data* bank, not the code bank. Two NPCs in different banks hitting the same address confirms the interpreter is global HOME code. |
+| `HOME:$3B09` | **Script-engine `$0C` (RAND) handler** | Same correction — HOME code, runs from any data-bank context. Sits 58 bytes after the `$09` handler; the opcode dispatch table likely spans roughly `$3A??-$3C??` in HOME and is now the top-priority target for static disassembly. |
 | `$1F:$5AC9` | **Naji** main-menu init: zeros `$D5FF` | Fires on every Naji main-menu open. |
 | `$1F:$596D` | **Guest-book lady** main-menu init: zeros `$D5FF` | Fires on the lady's main-menu open. Same register as Naji's main menu but a different init routine — the engine has multiple menu UI variants (4-option grid for Naji, 3-option vertical list for the lady). |
 | `$1F:$5861` | **Cursor move** (any menu, shared) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). Shared across Naji's menu, Naji's submenu, and the lady's menu. |
@@ -511,9 +511,9 @@ and identify concrete routines we can disassemble later.
 - **`$D5FF`** is the main-menu dispatch register, written by `$5AE9` on confirm.
 - **`$D5FE`** is the Y/N result register: 0 = Yes, 1 = No. Init at `$1F:$58ED`, confirm at `$1F:$591A`.
 - **`$D600`** is the Ask-submenu cursor, read live by dispatch.
-- **`$D0DD`** is Naji's NPC-state byte: 0 at boot, →1 after the first-time intro completes (written by the `$09` handler at `$18:$3ACF`).
-- **`$D60D`** is the `$0C` (RAND) result byte, written by the `$0C` handler at `$18:$3B09` only when RAND actually fires (i.e., subsequent-visit Naji, not the first-time path).
-- **`$D0DC` is an area-presence flag**, not a script state byte — set to `$01` by the area-init at `$12:$0314` on entering the ranch. The original "Pashute returned / Verde returned" hypothesis (made before `$09` was decoded as WRITE-WRAM) is wrong; whether the ranch-welcome bytes actually contain `$09 $DC $D0 $01` should be re-checked, because writing `$01` would be redundant with the init.
+- **`$D0DD`** is Naji's NPC-state byte: 0 at boot, →1 after the first-time intro completes (written by the `$09` handler at HOME `$3ACF`).
+- **`$D60D`** is the `$0C` (RAND) result byte, written by the `$0C` handler at HOME `$3B09` only when RAND actually fires. Same address fires from both Naji's bank-24 RAND and the ranch-welcome's bank-25 RAND.
+- **`$D0DC`** is *both* an area-presence flag (set `$01` by the area-init at `$12:$0314` on entering the ranch) *and* a script-write target (the four `$09 $DC $D0 $01` opcodes in the ranch welcome each write `$01`). Live trace confirms one of those script-writes fires during the lady's first-time intro. The two writes are redundant on the same value — probably defensive, or `$D0DC` accumulates two unrelated semantics that happen to coexist on `$01`.
 - **The cursor-to-dispatch lookup** in the main menu maps the visible-cursor positions to the dispatch table, skipping hidden options. With Restart hidden (first-time path, `$CFF0=0`), cursor {0,1,2} → dispatch {1,3,4}; this was confirmed across three picks (Climb cursor 0 → dispatch 1, Ask cursor 1 → dispatch 3, Leave cursor 2 → dispatch 4). Dispatch index 2 (`$75BC`) stays unreachable from the menu cursor regardless.
 - **`$0A` operand layout and equality semantics** confirmed again on Naji's Climb-No path: `$0A $FE $D5 $01 $83 $74` fired iff `$D5FE==$01`, jumping to `$7483`.
 
