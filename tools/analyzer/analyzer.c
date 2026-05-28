@@ -261,7 +261,15 @@ static void handle_input(void) {
 
         if (pressed) {
             if (key == SDLK_ESCAPE) { g.running = 0; return; }
-            if (key == SDLK_TAB)    { g.fast_forward = !g.fast_forward; continue; }
+            if (key == SDLK_TAB) {
+                g.fast_forward = !g.fast_forward;
+                /* The manual frame-pacing SDL_Delay alone isn't enough —
+                 * the renderer is created with PRESENTVSYNC, so
+                 * SDL_RenderPresent blocks until the next display refresh
+                 * (~60 Hz). Toggle vsync off when fast-forwarding. */
+                SDL_RenderSetVSync(g.renderer, g.fast_forward ? 0 : 1);
+                continue;
+            }
         }
 
         GB_key_t gb_key;
