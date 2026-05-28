@@ -21,8 +21,9 @@ control bytes:
 | `$04` | — | End of message. The text engine waits for an A-button press, then continues with the next byte. |
 | `$0D` | — | Newline within a message. Equivalent to the player-facing line break inside a single text bubble. |
 | `$FF` | — | End of script. Terminates a whole dialogue tree. The bytes immediately after `$FF` are usually another script (or unrelated data — e.g., the tile lookup at `$4c884`). |
-| `$06 lo hi` | 2 | **Local call**. Calls a subscript at address `$hilo` in the *same* bank. Often paired with a `$0E` immediately afterwards (see below). The exact semantics aren't pinned down — could be a state-update before the actual subscript dispatch. |
-| `$0E lo hi bank` | 3 | **Far call**. Calls a subscript at address `$hilo` in bank `bank` (decimal). Example: `$0E 8B 40 19` calls bank-25 `$408B` — that address is presumably the engine's main text-display routine. |
+| `$06 lo hi` | 2 | **Local call to script** at address `$hilo` in the *same* bank. Often paired with a `$0E` immediately afterwards (see below). The exact semantics aren't pinned down — could be a state-update before the actual subscript dispatch. |
+| `$0E lo hi bank` | 3 | **Far call to script**. Calls a subscript at address `$hilo` in bank `bank` (decimal). Example: `$0E 8B 40 19` calls bank-25 `$408B` — almost certainly the engine's main text-display routine, given how often other scripts call into it. |
+| `$07 lo hi bank` | 3 | **Far call to Z80 code**. Distinct from `$0E`: the target is not a script byte stream but real machine code. All four `$07` targets in the ranch-welcome script disassemble cleanly as Z80 (e.g., `bank25 $4018` → `ld a, $12; ld hl, $4BB3; call $042E; ld a, ($D5FE); ret; ...`). Used to invoke handler routines that render menu items, perform saves, etc. The menu labels ("Sign", "Confirm", "Exit", "Yes", "No") are **not in the script bytes at all** — they're tile-blitted by the code these calls reach. |
 
 ### Control bytes still unknown
 
@@ -31,13 +32,15 @@ haven't been confirmed. The numbers in parentheses are best guesses
 based on how many bytes seem to follow before text resumes.
 
 - `$03` (?) — seen once before "Replace previous" prompt
-- `$07` (2-3?) — appears frequently around menu prompts; clusters with `$08`/`$0A`
-- `$08` (?) — same neighborhood as `$07`
-- `$09` (3?) — `$09 dc d0 01` seen between branches of the same dialogue tree
-- `$0A` (3?) — `$0A fe d5 01` follows the menu question in the ranch-welcome script
+- `$08` (3?) — `$08 ff d5 0f` seen after `$02` in the menu region; possibly a state-clear or condition with a WRAM `$D5FF` argument
+- `$09` (3?) — `$09 dc d0 01` seen between branches of the same dialogue tree; addresses a WRAM byte at `$D0DC` — likely "read flag at $D0DC"
+- `$0A` (3?) — `$0A fe d5 01` follows the menu question in the ranch-welcome script; addresses WRAM `$D5FE`; likely a state-check tied to the menu state machine
+- `$02` (1?) — appears between menu-option calls; possibly "begin a menu", "end of option list", or some short opcode without operands
 - `$10` (?) — only seen once (in the "save data" script, `$10 78`)
 
-Working theory: `$07`/`$08`/`$0A` together form a menu construct (option pointer + condition + handler), and `$09` is a state-check ("if flag X then take this branch"). To pin them down we'd need to run the analyzer through the ranch-welcome screen and watch the bytes that get read.
+Working theory: `$08`/`$09`/`$0A` are **WRAM byte reads** (operand = address + size in a 3-byte payload). They guard branches inside the same script (so a single dialogue tree can present different content based on game state without dispatching to a separate script). `$02` may be an end-of-options or menu-confirm marker.
+
+To pin these down we'd need to run the analyzer through the ranch-menu interaction and watch which bytes get read in what order, plus inspect the `$D5FE`/`$D0DC`/`$D5FF` WRAM locations.
 
 ## Script layout
 
@@ -81,6 +84,67 @@ unknown menu construct (the `$07 / $08 / $0A` cluster).
 
 Within the script we see the `$09 dc d0 01` pattern twice — likely a
 "flag is set" precondition guarding the "Pashute"/"Verde" branches.
+
+### Runtime flow (recorded from gameplay)
+
+The flow downstream of "What do you want to do?" is:
+
+```
+"Welcome ... / What do you want to do?\e"
+└─ menu (3 options: Sign, Confirm, Exit)   ← labels NOT in script (tile-rendered by $07 handlers)
+   ├─ "Sign"
+   │  └─ "Want to sign the / guest book?\e" + Yes/No
+   │     ├─ Yes → "... ... ... ... / Okay. It's ready\e"
+   │     │      → (state: existing save?)
+   │     │        ├─ no save  → "Current data / will be saved.\e"
+   │     │        └─ existing → "Replace previous / saved data?\e" + Yes/No
+   │     │                       ├─ Yes → "Do not remove / Game Pak."
+   │     │                       │       (save routine runs)
+   │     │                       │       → "Finished signing the / guest book!\e"
+   │     │                       │       → "Need to do / something else?\e" + Yes/No
+   │     │                       │          ├─ Yes → back to "What do you want to do?"
+   │     │                       │          └─ No  → "Okay. / Be careful.\e" + exit
+   │     │                       └─ No  → "What do you want to do?" (back to main)
+   │     └─ No  → "What do you want to do?" (back to main)
+   ├─ "Confirm"
+   │  └─ "Want to check / the guest book?\e" + Yes/No
+   │     ├─ Yes → "... ... ... ... / Okay. It's ready\e"
+   │     │      → "Previous data / will be loaded.\e"
+   │     │      → (load routine)
+   │     └─ No  → "What do you want to do?" (back to main)
+   └─ "Exit"
+      └─ "Okay. / Be careful.\e"
+```
+
+The four `$07` calls in the menu region most likely correspond to:
+the three menu options (Sign, Confirm, Exit) plus the menu-builder
+or default-cursor routine. Confirming which is which is best done
+with a live trace.
+
+### Confirmed handler locations
+
+These were found by searching for the dialogue strings the player
+sees in each branch, then converting to flat ROM offsets:
+
+| Handler | ROM offset | First message |
+|---|---|---|
+| Sign | `$64513` (bank 25 `$4513`) | `"Want to sign the / guest book?"` |
+| Confirm | `$645d4` (bank 25 `$45d4`) | `"Want to check / the guest book?"` |
+| Exit | `$646be` (bank 25 `$46be`) | `"Be careful."` |
+| Post-save loop | `$644d7` (bank 25 `$44d7`) | `"Need to do / something else?"` |
+
+The `$07` targets in the main menu point at code addresses, not at
+these script offsets:
+
+| `$07` operand | Target | Notes |
+|---|---|---|
+| `$07 18 40 19` | bank 25 `$4018` | Z80 code (sets up menu palette / cursor — opens with `ld a, $12; ld hl, $4BB3; call $042E`) |
+| `$07 d3 59 1f` | bank 31 `$59D3` | Z80 code (handler entry — almost identical to `$5960` below) |
+| `$07 60 59 1f` | bank 31 `$5960` | Z80 code (handler entry) |
+| `$07 7f 40 19` | bank 25 `$407F` | Z80 code (post-action — `ld hl, $5880; ld a, $1A; ld de, $9800; call $3942; ret`) |
+
+These code routines presumably read further script bytes via the
+text engine to render the chosen branch.
 
 ## Discovered script regions
 
@@ -148,10 +212,12 @@ location for ranch / save / town interactions.
 ## Open questions
 
 1. **What does `$06 lo hi` actually do?** Always immediately followed by a `$0E ... 19` (bank 25 call) — so the local call could be loading a parameter that the bank-25 routine reads. The `lo hi` operand is some address within the current bank.
-2. **`$07 / $08 / $09 / $0A` widths.** The menu prompt structure is critical for understanding script flow but the operand widths aren't yet pinned down. A live trace via the analyzer over the ranch-menu interaction would resolve this.
-3. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
-4. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
-5. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+2. **`$08` / `$02` / `$10` operand widths.** Best guesses are above but unconfirmed.
+3. **What WRAM bytes do `$09 $DCD0` / `$0A $D5FE` / `$08 $D5FF` track?** Likely game-state flags (Pashute returned, Verde returned, currently-signing flag, etc.). A live read-watchpoint via the analyzer on those addresses while playing through the relevant interactions would identify them.
+4. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
+5. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
+6. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+7. **What's `$04 $FF` at the end of the Exit handler do?** `Be careful.` ends with `$04` (wait for A) immediately followed by `$FF` (end-script) — so the engine waits for A, then unwinds. This is the standard "exit-message" pattern and probably what every leaf script ends with.
 
 ## Why we're not extracting these yet
 
