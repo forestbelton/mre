@@ -135,6 +135,7 @@ typedef struct {
     const char *map_path;
     char       *battery_path;  /* "<rom_path>.sav", malloc'd */
     uint32_t    save_interval_sec;
+    bool        no_save;       /* --no-save: skip battery load and save */
 
     /* Writer thread */
     pthread_t       writer_thread;
@@ -510,10 +511,16 @@ static void *writer_main(void *arg) {
 
 static void print_usage(const char *prog) {
     fprintf(stderr,
-        "Usage: %s --rom <rom.gbc> --map <map.json> [--save-interval N]\n"
+        "Usage: %s --rom <rom.gbc> --map <map.json> [options]\n"
         "\n"
         "Plays the ROM in an SDL window (SameBoy Core, CGB-correct) and merges\n"
         "discovered code/data sections into map.json under `analyzed.asm`.\n"
+        "\n"
+        "Options:\n"
+        "  --save-interval N   Checkpoint map.json every N seconds (default 10).\n"
+        "  --no-save           Don't load or write the battery save (<rom>.sav).\n"
+        "                      Use for headless smoke tests so a real session's\n"
+        "                      save can't be clobbered.\n"
         "\n"
         "Controls:\n"
         "  Arrows     D-pad\n"
@@ -534,6 +541,8 @@ static int parse_args(int argc, char **argv) {
         } else if (strcmp(argv[i], "--save-interval") == 0 && i + 1 < argc) {
             g.save_interval_sec = (uint32_t)atoi(argv[++i]);
             if (g.save_interval_sec == 0) g.save_interval_sec = 1;
+        } else if (strcmp(argv[i], "--no-save") == 0) {
+            g.no_save = true;
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             print_usage(argv[0]);
             return 0;
@@ -586,13 +595,17 @@ int main(int argc, char **argv) {
     GB_load_boot_rom_from_buffer(&g.gb, cgb_boot_stub, sizeof(cgb_boot_stub));
 
     /* Battery save file: <rom>.sav alongside the ROM. Silently skip the
-     * load if it doesn't exist yet (first run). */
-    {
+     * load if it doesn't exist yet (first run). --no-save bypasses both
+     * the load and the save-on-exit so headless / scratch runs can't
+     * clobber a real session's save. */
+    if (!g.no_save) {
         size_t rlen = strlen(g.rom_path);
         g.battery_path = malloc(rlen + 5);
         snprintf(g.battery_path, rlen + 5, "%s.sav", g.rom_path);
         if (GB_load_battery(&g.gb, g.battery_path) == 0)
             printf("loaded battery save from %s\n", g.battery_path);
+    } else {
+        printf("battery save disabled (--no-save)\n");
     }
 
     GB_set_rgb_encode_callback(&g.gb, rgb_encode);
@@ -662,7 +675,8 @@ int main(int argc, char **argv) {
     /* Persist cart RAM so the next session resumes where we left off.
      * Done from the main thread (after the loop) so there's no race with
      * the emulator writing to MBC RAM. */
-    if (GB_save_battery(&g.gb, g.battery_path) == 0)
+    if (!g.no_save && g.battery_path &&
+        GB_save_battery(&g.gb, g.battery_path) == 0)
         printf("saved battery to %s\n", g.battery_path);
 
     printf("[exit] %llu frames, %llu instructions, %u saves\n",
