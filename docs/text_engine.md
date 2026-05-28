@@ -16,62 +16,54 @@ A "script" is a stream of bytes interleaving ASCII text with
 single-byte control opcodes (some of which take operands). Confirmed
 control bytes:
 
-| Byte | Operand bytes | Meaning |
-|---|---|---|
-| `$04` | — | End of message. The text engine waits for an A-button press, then continues with the next byte. |
-| `$0D` | — | Newline within a message. Equivalent to the player-facing line break inside a single text bubble. |
-| `$FF` | — | End of script. Terminates a whole dialogue tree. The bytes immediately after `$FF` are usually another script (or unrelated data — e.g., the tile lookup at `$4c884`). |
-| `$06 lo hi` | 2 | **GOTO (same-bank jump)** to script at `$hilo`. **Confirmed JMP, not CALL** — Naji's Ask/Stop branch at `$7966` is *literally just* `$06 $83 $74` followed by trailing `$00`s, exactly matching pseudocode "MENU Stop 14" (GOTO step 14 = `$7483` = "What are your plans?"). The previous "local call + $0E pair" reading was wrong: `$06` is the GOTO, the `$0E` after it is dead unless reached separately. |
-| `$0E lo hi bank` | 3 | **Far call to script**. Calls a subscript at address `$hilo` in bank `bank` (decimal). Example: `$0E 8B 40 19` calls bank-25 `$408B` — almost certainly the engine's main text-display routine, given how often other scripts call into it. |
-| `$07 lo hi bank` | 3 | **Far call to Z80 code**. Distinct from `$0E`: the target is not a script byte stream but real machine code. All four `$07` targets in the ranch-welcome script disassemble cleanly as Z80 (e.g., `bank25 $4018` → `ld a, $12; ld hl, $4BB3; call $042E; ld a, ($D5FE); ret; ...`). Used to invoke handler routines that render menu items, perform saves, etc. The menu labels ("Sign", "Confirm", "Exit", "Yes", "No", "Restart", "Climb", "Ask", "Leave") are **not in the script bytes at all** — they're tile-blitted by the code these calls reach. Some menu-render `$07` calls are followed by 3 bytes of inline argument data (e.g., `$07 $bc $5a $1f $06 $d0 $74`); the called Z80 routine reads its args and advances the script PC past them. |
-| `$09 lo hi val` | 3 | **Write to WRAM**. Stores byte `val` at WRAM address `$hilo`. Used to update NPC-state flags. Example: `$09 $dd $d0 $01` writes `$01` to `$D0DD`. Naji writes `$D0DD = $01` after both the first-time intro and the "progress" greeting, so subsequent visits fall into the RAND-greeting branch. |
-| `$0F lo hi` | 2 | **Insert WRAM byte as text**. Reads byte at WRAM `$hilo` and renders it in place — the `[X]` substitution in the user's pseudocode. Example: `"till Level " $0F $F2 $CF " "` inside the Restart prompt reads `$CFF2` (current tower floor) and prints it as a number. |
-| `$0A lo hi val tlo thi` | 5 | **Conditional jump (equal)**. If `[$hilo] == val`, jump to `$thi tlo`; else fall through. Confirmed via the save flow and the welcome menu (see `$0A` section below). |
-| `$0B lo hi val tlo thi` | 5 | **Conditional jump** with the same shape as `$0A`. Empirically used to skip optional menu items: in Naji's menu, `$0B $F0 $CF $00 $B8 $74` and `$0B $F0 $CF $00 $CC $74` skip past the Restart/Ask render calls when `[$CFF0] == $00`. Whether `$0B` and `$0A` differ in side-effects or compare operator isn't yet pinned down. |
-| `$0C count flag wlo whi tlo₁ thi₁ … tloₙ thiₙ` | 4 + 2·count | **RAND**. Picks one of `count` targets at random, using `[$whi wlo]` as the source/state. `flag` is `$08` in every sample so far. Example: `$0C $04 $08 $0D $D6  $4A $73 $6D $73 $94 $73 $BC $73` = "random of 4 greetings, source `$D60D`, targets `$734A / $736D / $7394 / $73BC`". Each RAND target tail-jumps (`$06`) back to the shared follow-up — so the laid-out byte stream looks like the 4 options run sequentially, but at runtime only one fires. |
-| `$02 flag wlo whi tlo₁ thi₁ … tloₙ thiₙ` | 4 + 2·N | **MENU dispatch**. After the option-render `$07`s have populated the menu UI and the player has picked a slot, the menu code writes the result to WRAM `[$whi wlo]` and `$02` indexes into the inline jump table. `flag` is `$08` in every sample so far. Example: Naji's main menu is `$02 $08 $FF $D5  $E2 $74  $2C $75  $BC $75  $79 $75  $A8 $75` — reads `$D5FF`, dispatches to one of 5 targets (Restart / Climb / Tower-content / Ask / Leave). The Ask submenu uses the same shape with `[$D600]` and 3 targets. |
+All opcodes are **dispatched from a HOME-bank table at `$39F0`** (one
+2-byte LE handler address per opcode). The dispatcher at `$39C5`
+reads `C = [HL+]`; if `C >= $20` it's text (printable char + control
+characters `$0D` for newline are handled by the text path); if
+`C == $FF` it returns out of the engine; otherwise it indexes
+`$39F0 + 2*C` to fetch a handler.
 
-### Control bytes still unknown
+| Byte | Operand bytes | Handler | Meaning |
+|---|---|---|---|
+| `$01` | 4 | `$3A14` | **Init text-state**: stores 4 script bytes into `$D614 / $D615 / $D618 / $D619` (and duplicates `$D614/$D615` into `$D616/$D617`). |
+| `$02` | 0 | `$3A7D` | **Render prep**: copies the 16-bit pointer at `$D614/$D615` into `$D616/$D617`, calls `$3C55`. Used immediately before `$08` to re-anchor the renderer at a fixed cursor. |
+| `$03` | 0 | `$3A33` | **Wait + render prep**: `call $3A39` (wait-for-input core) then tail-call `$02`'s handler. Hence the `$03` cue seen before every Y/N menu. |
+| `$04` | 0 | `$3A2D` | **Wait for A button** (end-of-message). |
+| `$05` | ? | `$3A93` | Still undecoded. |
+| `$06 lo hi` | 2 | `$3AA1` | **GOTO** within the engine — `HL = {hi:lo}`. Was previously called "local call"; the handler is just `ld a,[hl+]; ld h,[hl]; ld l,a; jp $39C5` — pure jump, no return stack. |
+| `$07 lo hi bank` | 3 | `$3ABA` | **Far call** to Z80 code. Calls `$042E` with `A = bank`, `HL = {hi:lo}`; on return resumes the script. |
+| `$08 wlo whi t₁lo t₁hi … tNlo tNhi` | 2 + 2·N | `$3AA7` | **Jump table indexed by WRAM byte.** Reads `[$whi wlo]`, multiplies by 2, adds to HL (which now points at the table), loads new HL from that entry. This is the *actual* dispatcher used by every menu and by `$0C`'s cyclic counter — what I was calling "MENU dispatch" was really `$02 $08 …`. The table is inline; the number of entries `N` is implicit (any byte the WRAM source can return). |
+| `$09 lo hi val` | 3 | `$3AC9` | **Write to WRAM**: stores `val` at `[$hi lo]`. |
+| `$0A lo hi val tlo thi` | 5 | `$3AD2` | **Jump if `[$hi lo] == val`** — else fall through. |
+| `$0B lo hi val tlo thi` | 5 | `$3AE7` | **Jump if `[$hi lo] != val`** — else fall through. (Same operand layout as `$0A`; differs only in the `jr z`/`jr nz` polarity inside the handler.) |
+| `$0C count` | 1 | `$3AFC` | **Cyclic counter** — `[$D60D] = ([$D60D] + 1) mod count`. Deterministic round-robin, not random. The "RAND" terminology was wrong; the followup is always an `$08` jump table reading `[$D60D]`. |
+| `$0D` | ? | `$3BAD` | Still undecoded. |
+| `$0E lo hi bank` | 3 | `$3B0C` | **Set text-renderer config** — stores the 3 bytes verbatim at `$D61E/$D61F/$D620`. Was previously called "far call to script"; it isn't a call, it just configures which routine `$3C77`/`$3CF3`/`$0BF1` use for the following text. Different NPCs/contexts use different renderers (e.g. Naji has two: `bank-24 $6C9F` and `bank-24 $6C27`; the lady uses `bank-25 $408B`). |
+| `$0F lo hi` | 2 | `$3B1B` | **Print `[$hi lo]` as decimal** — reads the WRAM byte, BCD-splits it into `$D5FB/$D5FC`, prints the high digit if non-zero then the low digit. This is the `[X]` substitution. |
+| `$10 N` | 1 | `$3B3E` | **Repeat text-print N times** — pulls a count, then calls `$02E6 / $3CF3 / $0BF1` N times. |
+| `$11 lo hi` | 2 | `$3B53` | **Print indexed string** — reads `[$hi lo]` as an index, looks up `$3B75 + 2*idx` to get a string pointer, prints the null-terminated string at that pointer. |
+| `$1F` | 0 | `$3A39` | Helper, not normally a top-level opcode — invoked by `$03`/`$04` for the input-wait core. Showing up in the table at all is incidental. |
+| `$FF` | 0 | (dispatcher) | **End of script** — the dispatcher returns. |
 
-These bytes appear in scripts but their operand widths and semantics
-haven't been confirmed. The numbers in parentheses are best guesses
-based on how many bytes seem to follow before text resumes.
+### Worked references back into the bytecode
 
-- `$03` (0?) — appears as a 1-byte marker immediately before every Y/N menu setup: `"...?" $03 $07 $D7 $58 $1F $0A $FE $D5 ...`. Seen in the guest-book lady (before "Replace previous"), in Naji's Restart confirmation, and in Naji's Climb confirmation. Possibly a "switch text-box mode to Y/N indicator" cue, or just visual spacing.
-- `$08` (5?) — `$08 ff d5 0f xx xx` shape suggests a 6-byte conditional like `$0A`, comparing against `$D5FF`. Still needs a confirmed example.
-- `$10` (?) — `$10 $78` seen between "Do not remove / Game Pak." and the next "Finished signing the guest book!" message. The user's pseudocode says step 16 is `Z80_CALL SAVE` — so `$10 $78` may be either a `Z80_CALL`-shaped opcode using `$10` (different from `$07`?) or a 1-byte short-call into a SAVE routine selected by `$78`. Needs more data.
+Examples of how this table reads the canonical sequences we've seen:
 
-#### `$0A` — conditional jump (confirmed)
+- **Naji's "RAND" greeting**:
+  `$0C $04   $08 $0D $D6   $4A $73 $6D $73 $94 $73 $BC $73`
+  = `$0C` cycle-counter (mod 4) → updates `[$D60D]` → `$08` jumps via 4-entry table at the next 8 bytes, indexed by `[$D60D]`. Round-robin, not random.
 
-5 operand bytes, 6 bytes total. Shape:
+- **Naji's main menu dispatch**:
+  `$02   $08 $FF $D5   $E2 $74 $2C $75 $BC $75 $79 $75 $A8 $75`
+  = `$02` resets the render anchor → `$08` jumps via the 5-entry table indexed by `[$D5FF]` (the cursor / confirm result).
 
-```
-$0A  addr_lo addr_hi  value  target_lo target_hi
-     └── 2-byte addr ──┘ └─1B─┘ └────── 2-byte ──────┘
-```
+- **The save Y/N pattern**:
+  `…? $04   $07 $18 $40 $19   $0A $FE $D5 $01 $7A $45   …`
+  = wait → far-call `bank-25 $4018` (sets `[$D5FE]` to save-exists flag, or to Y/N result from `bank-31 $58D7`) → if `[$D5FE]==$01`, jump to `$457A`. Confirmed by traces.
 
-Semantics: **if `byte at $addr_hi addr_lo` equals `value`, jump to `$target_hi target_lo` within the current script**.
-
-Caught in two places that pin down the operand layout:
-
-1. In the **save flow** at `$06454c`:
-   ```
-   "Okay. It's ready" $04 $07 $18 $40 $19  $0A $FE $D5 $01 $7A $45  "Current data\rwill be saved." ...
-   ```
-   `$7A $45` decodes as `$457A`, which is exactly the script address of `"Replace previous / saved data?"`. So this reads: *if WRAM `$D5FE` (an "existing save" flag) is `$01`, branch to the Replace prompt; otherwise fall through into the "Current data will be saved." path.*
-
-2. In the **welcome script** at `$0644c6`:
-   ```
-   "What do you / want to do?" $07 $18 $40 $19  $0A $FE $D5 $01 $D3 $44  ...
-   ```
-   Same pattern — reads `$D5FE`, jumps to `$44D3` (which contains a `$07 $60 $59 $1F` — call to the bank-31 "Confirm" menu code).
-
-`$0B` confirmed shares this 6-byte shape (see Naji's menu, where
-`$0B $F0 $CF $00 …` skips renderers when `[$CFF0]==$00`). `$09`
-turned out to be 4 bytes total (WRITE to WRAM), *not* a conditional —
-the docs originally guessed wrong because `$09 $DD $D0 $01` looked
-like the start of a `$0A`-shaped op. `$08` is still tentatively a
-6-byte conditional, but needs a confirmed example.
+- **Naji's "till Level [X]"**:
+  `"till Level " $0F $F2 $CF   " " $04 …`
+  = print `[$CFF2]` as a decimal number in place. Confirmed.
 
 ## Script model
 
@@ -90,11 +82,11 @@ Each step is one of:
 | `GOTO <addr>` | `$06 lo hi` | Same-bank tail jump. The byte stream after a `$06` is "dead" unless reached by another jump. |
 | `MENU` group | render `$07`s + `$02` dispatch | The block is: (optional `$0B` guards to hide options) → N × menu-render `$07` calls (with inline arg bytes) → finalize `$07` → `$02 $08 wlo whi t₁lo t₁hi … tNlo tNhi` dispatch table. Menu labels are tile glyphs blitted by the bank-31 routines; they never appear as text in the script. |
 | `YESNO Yes A No B` | `$03 $07 $D7 $58 $1F $0A $FE $D5 $01 <B-lo> <B-hi>` | Show Y/N prompt. The `$03` is a 1-byte cue. The `$07` calls the bank-31 Y/N menu UI. The `$0A` reads result from `$D5FE`: if 1 (No), jump to B; else fall through to A. |
-| `RAND` group | `$0C count $08 wlo whi t₁lo t₁hi … tNlo tNhi` | Random branch among N targets. Each target's tail GOTOs the shared follow-up via `$06`. |
+| `RAND`-style group | `$0C count` then `$08 wlo whi t₁lo t₁hi … tNlo tNhi` | Cyclic round-robin across N targets. `$0C` advances `[$D60D]` mod N; `$08` then dispatches via the inline jump table reading `[$D60D]`. Each target's tail GOTOs the shared follow-up via `$06`. **Not actually random** — the "RAND" framing in the source pseudocode was a player-side observation; the engine is deterministic. |
 | `Z80_CALL <routine>` | `$07 lo hi bank` | Call a Z80 routine. Used for menu rendering, SAVE, LOAD, ENTER_DUNGEON, post-screen cleanup, etc. Distinguished from `$0E` (which calls a *script*). |
 | `DONE` | `$FF` | End of script. |
 
-Conditional jumps (`$0A` confirmed, `$08`/`$09` very likely) implement
+Conditional jumps (`$0A` if-equal, `$0B` if-not-equal) implement
 "if WRAM flag = value, jump to step X" — used to thread alternate
 greetings, post-save-state branches, and probably menu-result
 dispatch.
@@ -202,9 +194,9 @@ Also visible at `$064381` immediately after the first such tail:
 064381  $0C $04 $08 $0D $D6   $8E $43  $B7 $43  $C7 $43  $E9 $43
 ```
 
-— a `$0C` RAND with 4 targets reading `$D60D`, *identical in shape*
-to Naji's RAND. So `$0C` / `$D60D` are global engine infrastructure,
-not NPC-specific.
+— `$0C` cycle-counter + a `$08` jump table with 4 targets reading
+`[$D60D]`, *identical in shape* to Naji's "RAND" pair. `$0C` / `$08`
+/ `$D60D` are global engine infrastructure shared across NPCs.
 
 ### Runtime flow (from user's pseudocode)
 
@@ -256,10 +248,10 @@ decodes cleanly against the bytes.
 
 ```
 063180  99 10 04                                   ; trailing bytes of prior script
-063183  0A DD D0 04  3D 73                          ; if [$D0DD]==$04 -> $733D (RAND)
-063189  0A D7 C2 01  3D 73                          ; if [$C2D7]==$01 -> $733D (RAND)
+063183  0A DD D0 04  3D 73                          ; if [$D0DD]==$04 -> $733D (greeting cycler)
+063189  0A D7 C2 01  3D 73                          ; if [$C2D7]==$01 -> $733D (greeting cycler)
 06318F  0A DD D0 02  E0 73                          ; if [$D0DD]==$02 -> $73E0 (progress)
-063195  0A DD D0 01  3D 73                          ; if [$D0DD]==$01 -> $733D (RAND)
+063195  0A DD D0 01  3D 73                          ; if [$D0DD]==$01 -> $733D (greeting cycler)
 06319B  0E 27 6C 18                                 ; far-call text engine (IF FIRST TIME)
 06319F  "Did you come to..."                        ; pseudocode steps 00-13
 063335  04                                          ; end of "Please help!"
@@ -271,21 +263,23 @@ So `$D0DD` is Naji's NPC-state byte:
 `0` = unseen, `1` = greeted, `2` = mid-quest progress, `4` = end state.
 `$C2D7` is some separate global story flag.
 
-**RAND greeting** (`$06333D` = bank-24 `$733D`):
+**Cyclic greeting** (`$06333D` = bank-24 `$733D`):
 
 ```
-06333D  0C 04 08 0D D6                              ; RAND of 4, source $D60D
-063342  4A 73  6D 73  94 73  BC 73                  ; targets $734A/$736D/$7394/$73BC
-06334A  0E 9F 6C 18 "Oh, you're here..." 04         ; option 1
+06333D  0C 04                                       ; advance [$D60D] mod 4
+06333F  08 0D D6                                    ; jump table dispatcher, reads [$D60D]
+063342  4A 73  6D 73  94 73  BC 73                  ; 4 targets $734A/$736D/$7394/$73BC
+06334A  0E 9F 6C 18 "Oh, you're here..." 04         ; option 0
 06335C  06 83 74                                    ; GOTO $7483 (menu)
-06335F  0E 27 6C 18 "It's you. Good luck..." 04     ; option 2
+06335F  0E 27 6C 18 "It's you. Good luck..." 04     ; option 1
 ...
-0633BC  0E 27 6C 18 "Hey. It's you!..." 04          ; option 4
+0633BC  0E 27 6C 18 "Hey. It's you!..." 04          ; option 3
 0633DD  06 83 74                                    ; GOTO $7483 (menu)
 ```
 
 Each option's tail is `$06 $83 $74` — they all GOTO the same menu.
-The 4 messages laid out linearly, but only one runs per visit.
+The 4 messages laid out linearly, but only one runs per visit, in
+deterministic round-robin order.
 
 **Progress greeting** (`$0633E0` = bank-24 `$73E0`):
 
@@ -297,31 +291,44 @@ The 4 messages laid out linearly, but only one runs per visit.
 ```
 
 Note the same `$09 DD D0 01` reset: after Naji's "you made it half-way
-up" speech, he demotes back to plain RAND-greeting state.
+up" speech, he demotes back to plain cyclic-greeting state.
 
-**Menu prompt + render + dispatch** (`$063483` = bank-24 `$7483`):
+**Menu prompt + state-specific render + dispatch** (`$063483` = bank-24 `$7483`):
 
 ```
 063483  0E 27 6C 18 "What are your plans this time?"
-0634A5  0A E2 D0 01 BF 74                          ; if [$D0E2]==1 -> $74BF (already rendered?)
-0634AB  0B F0 CF 00 B8 74                          ; if [$CFF0]==0 -> $74B8 (skip Restart)
-0634B1  07 BC 5A 1F  06 D0 74                       ; render slot 1 (Restart label)
-0634B8  07 42 5B 1F  06 D0 74                       ; render slot 2 (Climb label)
-0634BF  0B F0 CF 00 CC 74                          ; if [$CFF0]==0 -> $74CC (skip Ask)
-0634C5  07 CB 5B 1F  06 D0 74                       ; render slot 3 (Ask label)
-0634CC  07 54 5C 1F                                 ; render slot 4 (Leave label)
-0634D0  07 1B 6C 18                                 ; finalize menu (Z80)
-0634D4  02 08 FF D5                                 ; dispatch table header (reads $D5FF)
-0634D8  E2 74  2C 75  BC 75  79 75  A8 75           ; 5 targets
+0634A5  0A E2 D0 01 BF 74           ; if [$D0E2]==1 -> $74BF (skip Restart+Climb renderers)
+0634AB  0B F0 CF 00 B8 74           ; if [$CFF0]!=0 -> $74B8 (skip Restart-only renderer)
+0634B1  07 BC 5A 1F                 ; renderer A (bank-31 $5ABC) — draws this state's menu
+0634B5  06 D0 74                    ; GOTO $74D0 (finalize/dispatch)
+0634B8  07 42 5B 1F                 ; renderer B (bank-31 $5B42)  <-- $74B8
+0634BC  06 D0 74                    ; GOTO $74D0
+0634BF  0B F0 CF 00 CC 74           ; if [$CFF0]!=0 -> $74CC      <-- $74BF
+0634C5  07 CB 5B 1F                 ; renderer C (bank-31 $5BCB)
+0634C9  06 D0 74                    ; GOTO $74D0
+0634CC  07 54 5C 1F                 ; renderer D (bank-31 $5C54)  <-- $74CC
+0634D0  07 1B 6C 18                 ; finalize (bank-24 $6C1B)    <-- $74D0
+0634D4  02                          ; render prep
+0634D5  08 FF D5                    ; jump table dispatcher, reads [$D5FF]
+0634D8  E2 74  2C 75  BC 75  79 75  A8 75   ; 5 dispatch targets
 ```
 
-Each render-`$07` is followed by 3 bytes of inline argument data
-(`$06 $D0 $74` = the menu-dispatcher address `$74D0`); the bank-31
-routine reads its args and bumps the script PC past them.
+Each `$07 ... $1F` is a **complete renderer** — it draws the entire
+menu for one game-state. The four renderers (`$5ABC / $5B42 / $5BCB
+/ $5C54`) represent four state-specific menu layouts (e.g. 3 options
+when no progress, 4 options after first climb). The `$0A`/`$0B`
+guards pick exactly one based on `[$D0E2]` and `[$CFF0]`; that
+renderer runs, then the immediate `$06 $D0 $74` GOTO falls through
+to the shared finalize at `$74D0`. So only one renderer fires per
+menu open — there are no "per-option label calls" in the script.
 
-`$CFF0` controls whether Restart and Ask render — when it's 0 (no
-tower progress yet), only Climb and Leave appear. That matches the
-expected first-visit menu state.
+After finalize, `$02` resets the render anchor and `$08 $FF $D5 …`
+dispatches via 5-entry table indexed by `[$D5FF]`. The renderer
+chose which cursor positions are visible; the dispatch table is the
+same shape regardless. That's why the same dispatch indices `{1,3,4}`
+were observed for the 3-visible-options first-time state — the
+renderer (probably `$5ABC`) only let the cursor visit slots that map
+to those three table entries.
 
 **Dispatch targets** (jump-table indices 0-4):
 
@@ -495,7 +502,7 @@ and identify concrete routines we can disassemble later.
 | `$05:$4656` / `$05:$4659` | Init clear of `$CFF0` / `$CFF2` at boot | Same PC writes both within one frame — a `xor a; ld [hl+], a; ld [hl], a` pattern over the engine block. |
 | `$12:$0314` | Bulk zero of `$CFF0` / `$CFF2` / `$D0DD` on area entry | All three written from the same instruction when entering Naji's area. This is the "clear NPC/local state" routine. |
 | `HOME:$3ACF` | **Script-engine `$09` (WRITE-WRAM) handler** | Originally logged as `$18:$3ACF` (Naji) and `$19:$3ACF` (lady). The PC is below `$4000`, so the code lives in HOME (always-mapped) — the bank prefix in the watch log is the currently-mapped *data* bank, not the code bank. Two NPCs in different banks hitting the same address confirms the interpreter is global HOME code. |
-| `HOME:$3B09` | **Script-engine `$0C` (RAND) handler** | Same correction — HOME code, runs from any data-bank context. Sits 58 bytes after the `$09` handler; the opcode dispatch table likely spans roughly `$3A??-$3C??` in HOME and is now the top-priority target for static disassembly. |
+| `HOME:$3B09` | **Script-engine `$0C` (cyclic) handler** | Same correction — HOME code, runs from any data-bank context. Sits 58 bytes after the `$09` handler; the dispatch table at `$39F0` plus handlers `$3A14-$3B72` are now fully read out. |
 | `$1F:$5AC9` | **Naji** main-menu init: zeros `$D5FF` | Fires on every Naji main-menu open. |
 | `$1F:$596D` | **Guest-book lady** main-menu init: zeros `$D5FF` | Fires on the lady's main-menu open. Same register as Naji's main menu but a different init routine — the engine has multiple menu UI variants (4-option grid for Naji, 3-option vertical list for the lady). |
 | `$1F:$5861` | **Cursor move** (any menu, shared) | Writes the new cursor value to `$D5FF` (main) or `$D600` (sub). Shared across Naji's menu, Naji's submenu, and the lady's menu. |
@@ -512,7 +519,7 @@ and identify concrete routines we can disassemble later.
 - **`$D5FE`** is the Y/N result register: 0 = Yes, 1 = No. Init at `$1F:$58ED`, confirm at `$1F:$591A`.
 - **`$D600`** is the Ask-submenu cursor, read live by dispatch.
 - **`$D0DD`** is Naji's NPC-state byte: 0 at boot, →1 after the first-time intro completes (written by the `$09` handler at HOME `$3ACF`).
-- **`$D60D`** is the `$0C` (RAND) result byte, written by the `$0C` handler at HOME `$3B09` only when RAND actually fires. Same address fires from both Naji's bank-24 RAND and the ranch-welcome's bank-25 RAND.
+- **`$D60D`** is the `$0C` cycle-counter byte, written by the `$0C` handler at HOME `$3B09` only when a `$0C` actually fires. Same address fires from both Naji's bank-24 cycler and the ranch-welcome's bank-25 cycler — confirming it's global engine state, not NPC-specific.
 - **`$D0DC`** is *both* an area-presence flag (set `$01` by the area-init at `$12:$0314` on entering the ranch) *and* a script-write target (the four `$09 $DC $D0 $01` opcodes in the ranch welcome each write `$01`). Live trace confirms one of those script-writes fires during the lady's first-time intro. The two writes are redundant on the same value — probably defensive, or `$D0DC` accumulates two unrelated semantics that happen to coexist on `$01`.
 - **The cursor-to-dispatch lookup** in the main menu maps the visible-cursor positions to the dispatch table, skipping hidden options. With Restart hidden (first-time path, `$CFF0=0`), cursor {0,1,2} → dispatch {1,3,4}; this was confirmed across three picks (Climb cursor 0 → dispatch 1, Ask cursor 1 → dispatch 3, Leave cursor 2 → dispatch 4). Dispatch index 2 (`$75BC`) stays unreachable from the menu cursor regardless.
 - **`$0A` operand layout and equality semantics** confirmed again on Naji's Climb-No path: `$0A $FE $D5 $01 $83 $74` fired iff `$D5FE==$01`, jumping to `$7483`.
@@ -524,23 +531,30 @@ and identify concrete routines we can disassemble later.
 
 ## Open questions
 
-1. **`$0A` vs `$0B` — same compare or different?** Both are 6-byte equality-shape jumps. `$0B` is used to *skip* optional menu items when a state byte is zero; `$0A` is the catch-all conditional everywhere else. They may differ in compare operator (eq vs neq) or in some side-effect like marking a "rendered" flag. A pair of analyzer breakpoints would settle it. (The Naji trace did **not** resolve this — see "What's still open" above.)
-2. **`$02` and `$0C` second byte — always `$08`?** Every menu dispatch and every RAND header observed so far has its second byte = `$08`. Could be a "table format" tag, a "default-cursor index", or the number of bits used for the result. Worth checking against a wider sample.
-3. **`$0C`'s WRAM source.** Naji's RAND reads `$D60D`. Is that the engine's shared RNG byte, or NPC-specific state? A trace would tell.
-4. ~~**Why does Naji's main menu have 5 dispatch entries but only 4 pseudocode options?**~~ **Resolved by trace** — the menu UI has a cursor→dispatch lookup that maps cursor {0,1,2,3} → dispatch {0,1,3,4}; dispatch index 2 (`$75BC`) is not reachable from the cursor.
-5. **How does Tower/Item content "GOTO 28" (back to Ask menu)?** Each submenu handler ends with `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF`. The two `$07` calls plus `$FF` must unwind back into the Ask menu's wait-loop. Probably the bank-31 `$4094` and bank-24 `$6BB7` routines manipulate the script PC / return stack.
-6. **`$08` / `$10` operand widths.** Best guesses are above but unconfirmed.
-7. ~~**What WRAM bytes do `$D5FE` / `$D5FF` / `$D600` track?**~~ **Resolved by traces** — `$D5FF` = main-menu dispatch register (written by `$1F:$5AE9` on confirm); `$D5FE` = Y/N result (0=Yes, 1=No, written by `$1F:$591A`); `$D600` = Ask-submenu cursor (read live, no confirm write).
-8. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
-9. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
-10. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+1. **`$05` and `$0D` handlers** — both have valid entries in the dispatch table (`$3A93` and `$3BAD`) but neither was reached in the play sessions. Need to disasm those addresses to round out the opcode set.
+2. **How does Tower/Item content "GOTO 28" (back to Ask menu)?** Each submenu handler ends with `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF`. Now that `$FF` is confirmed as a plain dispatcher-return (`ret z` in `$39C5`), the unwind must be in the Z80 routines `$1F:$4094` and `$18:$6BB7` — they presumably restore HL to the menu's wait loop. Worth disassembling.
+3. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
+4. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
+5. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+
+### Resolved by this disassembly pass
+
+- ~~`$0A` vs `$0B` — same compare?~~ **No, opposite polarities.** `$0A` = jump if equal, `$0B` = jump if NOT equal.
+- ~~`$02`/`$0C` second byte always `$08`?~~ **It's not a second byte — `$08` is its own opcode** (the inline jump-table dispatcher). The "$02 $08 …" / "$0C N $08 …" runs were two opcodes back-to-back.
+- ~~`$0C`'s WRAM source~~ **Confirmed `$D60D`, fixed in the handler.** And `$0C` is a deterministic cyclic counter, not RAND.
+- ~~`$08` operand width~~ **2-byte WRAM addr + inline jump table.**
+- ~~`$10` semantics~~ **Repeat the text-render call N times.**
+- ~~Y/N register~~ **`$D5FE`, written by `$1F:$591A` (Y/N confirm) and by `$19:$4023` (save-exists check).**
+- ~~5-entries-vs-N-visible options~~ **Resolved differently from earlier framing**: the dispatch table is 5 entries because the engine reserves one per possible state-handler; per-state renderers (the bank-31 routines) decide which cursor positions are visible, and the cursor-to-dispatch index mapping is determined by the renderer.
 
 ## Why we're not extracting these yet
 
 The encoding is now well-understood enough that a real script-aware
-disassembler could be written. The remaining unknowns (`$08`, `$10`,
-the `$0A`/`$0B` distinction, the GOTO-28 unwind mechanism) are
-narrow enough that they no longer block a first-pass extractor.
+disassembler could be written. The full opcode set ($01-$11, $1F,
+$FF) is now decoded against the actual HOME-bank handler bodies at
+`$3A14-$3B72` — the only narrow gaps left are `$05` (handler `$3A93`)
+and `$0D` (handler `$3BAD`), neither of which has shown up in any
+script we've inspected.
 
 What's missing on the extractor side:
 
@@ -550,9 +564,10 @@ What's missing on the extractor side:
 2. A label model that lets script targets (`$734A`, `$74E2`, …)
    become real RGBASM labels so cross-references resolve cleanly
    inside `analyzed.asm`.
-3. A pass that classifies `$07` targets as either Z80 code (so the
-   analyzer can pick them up) or script (so they extend the script
-   coverage further).
+3. A pass that picks up `$07` and `$0E` targets — `$07` is straight
+   Z80 code, `$0E` is a text-renderer (still Z80 code, just used
+   differently). Either way, marking these as code extends analyzer
+   coverage and removes the "uncovered script call" sub-region.
 
 Once those exist, bank-19 (Nox flashback / Letter from Cox) and the
 unmapped bank-25 scripts can be extracted with their full structure
