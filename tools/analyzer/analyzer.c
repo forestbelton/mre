@@ -137,6 +137,15 @@ typedef struct {
     uint32_t    save_interval_sec;
     bool        no_save;       /* --no-save: skip battery load and save */
 
+    /* --watch-write: every cart-bus write to a flagged 16-bit address is
+     * logged with the writing PC, so a play session can correlate menu
+     * selections, RNG ticks, etc. with the script-engine WRAM bytes that
+     * back them. Per-address bool keeps the hot path branch-free. */
+    bool        watch_write[0x10000];
+    bool        watch_any;
+    const char *watch_log_path;  /* --watch-log <path>; NULL -> stderr */
+    FILE       *watch_log;
+
     /* Writer thread */
     pthread_t       writer_thread;
     pthread_mutex_t writer_mtx;
@@ -230,6 +239,24 @@ static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
     if (flat != UINT32_MAX && flat < g.rom_size)
         mark_data(flat);
     return data;
+}
+
+/* write_memory_callback fires on every CPU write. Used for --watch-write:
+ * if `addr` is in the watch set, log the writing instruction's PC (the
+ * post-fetch CPU PC, i.e., one past the end of the instruction) and the
+ * value being written. Always returns true (allow the write). */
+static bool on_write_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
+    if (!g.watch_any) return true;
+    if (!gb->boot_rom_finished) return true;
+    if (!g.watch_write[addr]) return true;
+    GB_registers_t *regs = GB_get_registers(gb);
+    fprintf(g.watch_log,
+        "[watch] $%04X <- $%02X  PC $%02X:$%04X  frame %llu\n",
+        addr, data,
+        (unsigned)g.gb.mbc_rom_bank, regs->pc,
+        (unsigned long long)g.total_frames);
+    fflush(g.watch_log);
+    return true;
 }
 
 static uint32_t rgb_encode(GB_gameboy_t *gb, uint8_t r, uint8_t gr, uint8_t b) {
@@ -641,6 +668,12 @@ static void print_usage(const char *prog) {
         "  --no-save           Don't load or write the battery save (<rom>.sav).\n"
         "                      Use for headless smoke tests so a real session's\n"
         "                      save can't be clobbered.\n"
+        "  --watch-write LIST  Log every CPU write to any address in LIST. LIST is\n"
+        "                      a comma-separated set of 16-bit addresses (hex,\n"
+        "                      optionally prefixed with $ or 0x). Each log line\n"
+        "                      prints the value written and the PC bank:addr.\n"
+        "                      Example: --watch-write $D5FF,$D600,$CFF0\n"
+        "  --watch-log PATH    Write --watch-write lines to PATH (default stderr).\n"
         "\n"
         "Controls:\n"
         "  Arrows     D-pad\n"
@@ -649,6 +682,32 @@ static void print_usage(const char *prog) {
         "  Tab        Toggle fast-forward\n"
         "  Esc        Quit\n",
         prog);
+}
+
+/* Parse a comma-separated list of 16-bit hex addresses into g.watch_write.
+ * Accepts `$`, `0x`, or bare hex per item. Returns 0 on success. */
+static int parse_watch_list(const char *spec) {
+    const char *p = spec;
+    while (*p) {
+        while (*p == ',' || *p == ' ' || *p == '\t') p++;
+        if (!*p) break;
+        if (*p == '$') p++;
+        else if (p[0] == '0' && (p[1] == 'x' || p[1] == 'X')) p += 2;
+        char *end;
+        unsigned long v = strtoul(p, &end, 16);
+        if (end == p) {
+            fprintf(stderr, "error: bad watch address in '%s'\n", spec);
+            return -1;
+        }
+        if (v > 0xFFFF) {
+            fprintf(stderr, "error: watch address $%lx out of CPU range\n", v);
+            return -1;
+        }
+        g.watch_write[v] = true;
+        g.watch_any = true;
+        p = end;
+    }
+    return 0;
 }
 
 static int parse_args(int argc, char **argv) {
@@ -663,6 +722,10 @@ static int parse_args(int argc, char **argv) {
             if (g.save_interval_sec == 0) g.save_interval_sec = 1;
         } else if (strcmp(argv[i], "--no-save") == 0) {
             g.no_save = true;
+        } else if (strcmp(argv[i], "--watch-write") == 0 && i + 1 < argc) {
+            if (parse_watch_list(argv[++i]) != 0) return 1;
+        } else if (strcmp(argv[i], "--watch-log") == 0 && i + 1 < argc) {
+            g.watch_log_path = argv[++i];
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             print_usage(argv[0]);
             return 0;
@@ -734,6 +797,27 @@ int main(int argc, char **argv) {
     GB_set_vblank_callback(&g.gb, on_vblank);
     GB_set_execution_callback(&g.gb, on_execution);
     GB_set_read_memory_callback(&g.gb, on_read_memory);
+    GB_set_write_memory_callback(&g.gb, on_write_memory);
+
+    g.watch_log = stderr;
+    if (g.watch_log_path) {
+        FILE *wf = fopen(g.watch_log_path, "w");
+        if (!wf) {
+            fprintf(stderr, "warning: cannot open %s for watch log (%s); "
+                            "falling back to stderr\n",
+                    g.watch_log_path, strerror(errno));
+        } else {
+            g.watch_log = wf;
+            printf("watch log -> %s\n", g.watch_log_path);
+        }
+    }
+    if (g.watch_any) {
+        printf("watching writes to:");
+        for (int wa = 0; wa < 0x10000; wa++) {
+            if (g.watch_write[wa]) printf(" $%04X", wa);
+        }
+        printf("\n");
+    }
 
     g.screen_w = GB_get_screen_width(&g.gb);
     g.screen_h = GB_get_screen_height(&g.gb);
@@ -813,6 +897,7 @@ int main(int argc, char **argv) {
     GB_free(&g.gb);
     pthread_mutex_destroy(&g.writer_mtx);
     pthread_cond_destroy(&g.writer_cv);
+    if (g.watch_log && g.watch_log != stderr) fclose(g.watch_log);
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
