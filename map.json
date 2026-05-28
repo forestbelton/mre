@@ -53,9 +53,9 @@
 			"name":	"naji.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	407910,
-					"len":	3,
-					"label":	"NajiAskStop"
+					"addr":	405891,
+					"len":	2022,
+					"label":	"NajiScript"
 				}]
 		}, {
 			"type":	"code",
@@ -4955,23 +4955,7 @@
 				}, {
 					"type":	"data",
 					"addr":	405886,
-					"len":	610
-				}, {
-					"type":	"data",
-					"addr":	406659,
-					"len":	60
-				}, {
-					"type":	"data",
-					"addr":	406736,
-					"len":	12
-				}, {
-					"type":	"data",
-					"addr":	406750,
-					"len":	222
-				}, {
-					"type":	"data",
-					"addr":	407195,
-					"len":	715
+					"len":	5
 				}, {
 					"type":	"data",
 					"addr":	409599,

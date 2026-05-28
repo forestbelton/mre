@@ -4647,22 +4647,6 @@ SECTION "data_062d63", ROMX[$6d63], BANK[$18]
 Data_18_6d63:
 	INCBIN "data_062d63.bin"
 
-SECTION "data_0633e0", ROMX[$73e0], BANK[$18]
-Data_18_73e0:
-	INCBIN "data_0633e0.bin"
-
-SECTION "data_0634bf", ROMX[$74bf], BANK[$18]
-Data_18_74bf:
-	INCBIN "data_0634bf.bin"
-
-SECTION "data_0634dc", ROMX[$74dc], BANK[$18]
-Data_18_74dc:
-	INCBIN "data_0634dc.bin"
-
-SECTION "data_0635bc", ROMX[$75bc], BANK[$18]
-Data_18_75bc:
-	INCBIN "data_0635bc.bin"
-
 SECTION "data_063969", ROMX[$7969], BANK[$18]
 Data_18_7969:
 	INCBIN "data_063969.bin"

@@ -531,7 +531,7 @@ and identify concrete routines we can disassemble later.
 
 ## Open questions
 
-1. **How does Tower/Item content "GOTO 28" (back to Ask menu)?** Each submenu handler ends with `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF`. Now that `$FF` is confirmed as a plain dispatcher-return (`ret z` in `$39C5`), the unwind must be in the Z80 routines `$1F:$4094` and `$18:$6BB7` — they presumably restore HL to the menu's wait loop. Worth disassembling.
+1. ~~**How does Tower/Item content "GOTO 28" (back to Ask menu)?**~~ **Resolved by Naji's full disassembly** (`src/naji.asm`): the *Ask submenu's* Tower and Item handlers (`$769B` and `$7809`) end with a plain `$06` GOTO back to `$7579` (`NajiAskMenu`). The complex `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF` tail I'd been chasing belongs to `NajiTowerLong` at `$75BC` — a *different* handler reachable only from main-menu dispatch entry 2 (the unreachable one). So `$FF` really is plain end-of-script, and Tower/Item content reaches the Ask menu via ordinary script-level GOTO.
 2. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
 3. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
 4. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
