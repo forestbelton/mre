@@ -5,31 +5,46 @@
     IF !DEF(SCRIPT_INC)
 DEF SCRIPT_INC EQU 1
 
-; --- Single-byte opcodes (use inline as `db DB_WAIT` etc.) ---
-DEF DB_WAIT    EQU $04    ; wait for A — end of message
-DEF DB_YN_CUE  EQU $03    ; cue placed before every Y/N menu setup
-DEF DB_NEWLINE EQU $0D    ; in-message newline
-DEF DB_ANCHOR  EQU $02    ; reset render anchor (used before a jump_table)
-DEF DB_END     EQU $FF    ; end of script — dispatcher returns
+; --- Single-byte opcodes ---
 
-; --- Multi-byte opcodes (macros to keep argument syntax clean) ---
+MACRO script_anchor
+    db $02      ; reset render anchor (used before script_jump_table)
+ENDM
 
-; db_goto <target> : same-bank jump (3 bytes — $06 lo hi)
-MACRO db_goto
+MACRO script_yn_cue
+    db $03      ; cue placed before every Y/N menu setup
+ENDM
+
+MACRO script_wait
+    db $04      ; wait for A — end of message
+ENDM
+
+MACRO script_newline
+    db $0D      ; in-message newline
+ENDM
+
+MACRO script_end
+    db $FF      ; end of script — dispatcher returns
+ENDM
+
+; --- Multi-byte opcodes ---
+
+; script_goto <target> : same-bank jump (3 bytes — $06 lo hi)
+MACRO script_goto
     db $06
     dw \1
 ENDM
 
-; db_far_call <addr>, <bank> : far Z80 call (4 bytes — $07 lo hi bank)
-MACRO db_far_call
+; script_far_call <addr>, <bank> : far Z80 call (4 bytes — $07 lo hi bank)
+MACRO script_far_call
     db $07
     dw \1
     db \2
 ENDM
 
-; db_jump_table <wram_addr>, <t1>, <t2>, ... : dispatcher (3 + 2N bytes)
+; script_jump_table <wram_addr>, <t1>, <t2>, ... : dispatcher (3 + 2N bytes)
 ; Reads byte at [wram_addr], multiplies by 2, indexes the inline table.
-MACRO db_jump_table
+MACRO script_jump_table
     db $08
     dw \1
     SHIFT
@@ -39,55 +54,55 @@ MACRO db_jump_table
     ENDR
 ENDM
 
-; db_write_wram <wram_addr>, <value> : write val to [addr] (4 bytes — $09 lo hi val)
-MACRO db_write_wram
+; script_write_wram <wram_addr>, <value> : write val to [addr] (4 bytes — $09 lo hi val)
+MACRO script_write_wram
     db $09
     dw \1
     db \2
 ENDM
 
-; db_if_eq <wram_addr>, <value>, <target> : GOTO target if [addr]==val (6 bytes)
-MACRO db_if_eq
+; script_if_eq <wram_addr>, <value>, <target> : GOTO target if [addr]==val (6 bytes)
+MACRO script_if_eq
     db $0A
     dw \1
     db \2
     dw \3
 ENDM
 
-; db_if_neq <wram_addr>, <value>, <target> : GOTO target if [addr]!=val (6 bytes)
-MACRO db_if_neq
+; script_if_neq <wram_addr>, <value>, <target> : GOTO target if [addr]!=val (6 bytes)
+MACRO script_if_neq
     db $0B
     dw \1
     db \2
     dw \3
 ENDM
 
-; db_cycle <count> : advance [$D60D] mod count (2 bytes — $0C N)
-MACRO db_cycle
+; script_cycle <count> : advance [$D60D] mod count (2 bytes — $0C N)
+MACRO script_cycle
     db $0C, \1
 ENDM
 
-; db_renderer <addr>, <bank> : set text-renderer to {bank,addr}, stored
+; script_renderer <addr>, <bank> : set text-renderer to {bank,addr}, stored
 ; at $D61E/$D61F/$D620. Following text bytes use this renderer. (4 bytes)
-MACRO db_renderer
+MACRO script_renderer
     db $0E
     dw \1
     db \2
 ENDM
 
-; db_decimal <wram_addr> : print [addr] as a 1- or 2-digit decimal (3 bytes — $0F lo hi)
-MACRO db_decimal
+; script_decimal <wram_addr> : print [addr] as a 1- or 2-digit decimal (3 bytes — $0F lo hi)
+MACRO script_decimal
     db $0F
     dw \1
 ENDM
 
-; db_repeat_char <count> : print the next text-char N times (2 bytes — $10 N)
-MACRO db_repeat_char
+; script_repeat_char <count> : print the next text-char N times (2 bytes — $10 N)
+MACRO script_repeat_char
     db $10, \1
 ENDM
 
-; db_indexed_str <wram_addr> : print indexed string via table at $3B75 (3 bytes — $11 lo hi)
-MACRO db_indexed_str
+; script_indexed_str <wram_addr> : print indexed string via table at $3B75 (3 bytes — $11 lo hi)
+MACRO script_indexed_str
     db $11
     dw \1
 ENDM

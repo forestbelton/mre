@@ -4,8 +4,8 @@ INCLUDE "hardware.inc"
 
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
-INCLUDE "naji.asm"
 INCLUDE "names.asm"
+INCLUDE "scripts/naji.asm"
 
 SECTION "data_000005", ROM0[$0005]
 Data_00_0005:
