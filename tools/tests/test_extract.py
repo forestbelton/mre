@@ -572,6 +572,113 @@ class TestAscizFormat(unittest.TestCase):
             extract._format_ascii_db(b"", trailing_terminator=True)
 
 
+class TestParseWramSymbols(unittest.TestCase):
+    def _write(self, body, tmpdir):
+        path = Path(tmpdir) / "wram.inc"
+        path.write_text(body)
+        return path
+
+    def test_basic_section_and_labels(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = self._write("""\
+SECTION "wram_npc_state", WRAMX[$D0DC], BANK[1]
+
+wRanchProgress::    ds 1
+wNajiState::        ds 1
+                    ds 1
+wTowerExplained::   ds 1
+""", td)
+            sym = extract.parse_wram_symbols(path)
+            self.assertEqual(sym[0xD0DC], "wRanchProgress")
+            self.assertEqual(sym[0xD0DD], "wNajiState")
+            self.assertNotIn(0xD0DE, sym)        # anonymous ds advances cursor
+            self.assertEqual(sym[0xD0DF], "wTowerExplained")
+
+    def test_wram0_section(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = self._write("""\
+SECTION "wram_floor_state", WRAM0[$CFF0]
+wCFF0::             ds 1
+                    ds 1
+wCurrentFloor::     ds 1
+""", td)
+            sym = extract.parse_wram_symbols(path)
+            self.assertEqual(sym[0xCFF0], "wCFF0")
+            self.assertEqual(sym[0xCFF2], "wCurrentFloor")
+
+    def test_multibyte_ds_advances_cursor(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = self._write("""\
+SECTION "wram_text", WRAMX[$D614], BANK[1]
+wTextAnchor::       ds 2
+wTextCursor::       ds 2
+wTextWidth::        ds 1
+""", td)
+            sym = extract.parse_wram_symbols(path)
+            self.assertEqual(sym[0xD614], "wTextAnchor")
+            self.assertEqual(sym[0xD616], "wTextCursor")
+            self.assertEqual(sym[0xD618], "wTextWidth")
+
+    def test_comments_dont_confuse_parser(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = self._write("""\
+; this is a comment about ds 99 and label::
+SECTION "wram_x", WRAMX[$D000], BANK[1]
+wX::                ds 1    ; another comment mentioning ds 5
+""", td)
+            sym = extract.parse_wram_symbols(path)
+            self.assertEqual(sym, {0xD000: "wX"})
+
+    def test_addresses_outside_wram_dropped(self):
+        # Sanity: an SRAM-style address would be ignored even if someone
+        # accidentally declared one with WRAM0/WRAMX syntax.
+        with tempfile.TemporaryDirectory() as td:
+            path = self._write("""\
+SECTION "x", WRAMX[$E000], BANK[1]
+shouldBeDropped::   ds 1
+""", td)
+            sym = extract.parse_wram_symbols(path)
+            self.assertEqual(sym, {})
+
+    def test_missing_file_is_empty(self):
+        with tempfile.TemporaryDirectory() as td:
+            sym = extract.parse_wram_symbols(Path(td) / "absent.inc")
+            self.assertEqual(sym, {})
+
+
+class TestResolverWithWramSymbols(unittest.TestCase):
+    def test_wram_target_resolves_to_symbol(self):
+        fmt_target, _ = extract.make_resolver(
+            hw_symbols={}, labels={}, sec_bank=0,
+            wram_symbols={0xD617: "wTextCursorHi"},
+        )
+        self.assertEqual(fmt_target("data", 0xD617), "wTextCursorHi")
+
+    def test_wram_miss_falls_back_to_hex(self):
+        fmt_target, _ = extract.make_resolver(
+            hw_symbols={}, labels={}, sec_bank=0,
+            wram_symbols={0xD617: "wTextCursorHi"},
+        )
+        # Address inside WRAM range but no symbol registered for it.
+        self.assertEqual(fmt_target("data", 0xD618), "$d618")
+
+    def test_hw_symbols_still_take_priority_in_ff_range(self):
+        # The $FF00+ branch comes before the WRAM branch in make_resolver,
+        # so an IO register name resolves even if a junk WRAM entry exists.
+        fmt_target, _ = extract.make_resolver(
+            hw_symbols={0xFF40: "rLCDC"}, labels={}, sec_bank=0,
+            wram_symbols={},
+        )
+        self.assertEqual(fmt_target("data", 0xFF40), "rLCDC")
+
+    def test_resolver_works_without_wram_symbols_argument(self):
+        # Backwards-compat: omit the new wram_symbols arg entirely.
+        fmt_target, _ = extract.make_resolver(
+            hw_symbols={}, labels={}, sec_bank=0,
+        )
+        self.assertEqual(fmt_target("data", 0xD617), "$d617")
+
+
 class TestUserLabels(unittest.TestCase):
     """Top-level `labels` array in map.json overrides auto-generated names."""
 

@@ -28,6 +28,7 @@ HEADER_END = 0x0150  # exclusive
 BANK_SIZE = 0x4000
 DEFAULT_INCLUDE_DIR = "include"
 HARDWARE_INC = "hardware.inc"
+WRAM_INC     = "wram.inc"
 
 # Section types accepted in `sections[]`. Each maps to one of the two
 # coverage flavors the rest of the pipeline cares about:
@@ -105,6 +106,52 @@ def parse_hw_symbols(path: Path) -> dict[int, str]:
     for name, addr in direct.items():
         if 0xFF00 <= addr <= 0xFFFF and addr not in addr_to_name:
             addr_to_name[addr] = name
+    return addr_to_name
+
+
+# A wram.inc-style file uses RGBASM SECTION/ds layout, not equ. Track a
+# running cursor as each line declares storage.
+_WRAM_SECTION_RE = re.compile(
+    r'^\s*SECTION\s+"[^"]+"\s*,\s*WRAM[X0]\s*\[\s*\$([0-9A-Fa-f]+)\s*\]'
+)
+_WRAM_LABEL_RE = re.compile(r'^\s*(\w+):{1,2}\s*ds\s+(\d+)')
+_WRAM_GAP_RE = re.compile(r'^\s*ds\s+(\d+)')
+
+
+def parse_wram_symbols(path: Path) -> dict[int, str]:
+    """Parse a wram.inc-style file. Return {addr: canonical_name} for
+    addresses inside the WRAM range (0xC000-0xDFFF).
+
+    Each `SECTION "...", WRAM0[$xxxx]` or `SECTION "...", WRAMX[$xxxx], BANK[N]`
+    line resets the cursor; subsequent `label:: ds N` lines record the
+    label at the cursor and advance by N; anonymous `ds N` lines just
+    advance. Comments are stripped before pattern-matching.
+    """
+    if not path.exists():
+        return {}
+    addr_to_name: dict[int, str] = {}
+    cursor: int | None = None
+    for raw in path.read_text().splitlines():
+        # Strip line-end comments (`; ...`) so they don't get pattern-
+        # matched as labels or gaps if a comment happens to contain `ds`.
+        line = raw.split(";", 1)[0]
+        m = _WRAM_SECTION_RE.match(line)
+        if m:
+            cursor = int(m.group(1), 16)
+            continue
+        if cursor is None:
+            continue
+        m = _WRAM_LABEL_RE.match(line)
+        if m:
+            name = m.group(1)
+            length = int(m.group(2))
+            if 0xC000 <= cursor < 0xE000 and cursor not in addr_to_name:
+                addr_to_name[cursor] = name
+            cursor += length
+            continue
+        m = _WRAM_GAP_RE.match(line)
+        if m:
+            cursor += int(m.group(1))
     return addr_to_name
 
 
@@ -933,15 +980,24 @@ def make_resolver(
     hw_symbols: dict[int, str],
     labels: dict[int, str],
     sec_bank: int,
+    wram_symbols: dict[int, str] | None = None,
 ) -> tuple[FmtTarget, FmtIO]:
     """Build (fmt_target, fmt_io) closures bound to a section's bank
-    context so address resolution sees the right ROMX bank for $4000+."""
+    context so address resolution sees the right ROMX bank for $4000+.
+
+    wram_symbols maps WRAM addresses ($C000-$DFFF) to label names from
+    a wram.inc-style include — when provided, absolute references inside
+    that range resolve to the symbolic name instead of the raw hex.
+    """
+    wram = wram_symbols or {}
     def fmt_target(kind: str, target: int) -> str:
         flat = resolve_target_to_flat(sec_bank, target)
         if flat is not None and flat in labels:
             return labels[flat]
         if 0xFF00 <= target <= 0xFFFF and target in hw_symbols:
             return hw_symbols[target]
+        if 0xC000 <= target < 0xE000 and target in wram:
+            return wram[target]
         return f"${target:04x}"
 
     def fmt_io(io_addr: int) -> str:
@@ -1071,6 +1127,7 @@ def _build_section_lines(
     rom: bytes,
     labels: dict[int, str],
     hw_symbols: dict[int, str],
+    wram_symbols: dict[int, str] | None = None,
 ) -> list[str]:
     """Render one section in a code file. Returns the list of lines
     (including the SECTION directive at the top)."""
@@ -1081,7 +1138,7 @@ def _build_section_lines(
 
     lines: list[str] = [section_directive(sec_name, offset), ""]
     chunk = rom[offset:offset + length]
-    fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank)
+    fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank, wram_symbols)
 
     if stype == "code":
         i = 0
@@ -1130,6 +1187,7 @@ def emit_code_file(
     output_dir: Path,
     labels: dict[int, str],
     hw_symbols: dict[int, str],
+    wram_symbols: dict[int, str] | None = None,
 ) -> Path:
     """Emit (or update) a code file.
 
@@ -1174,7 +1232,7 @@ def emit_code_file(
                 continue
             sec_name = f"{stem}_{sec['addr']:06x}"
             block = "\n".join(_build_section_lines(
-                sec, sec_name, name, rom, labels, hw_symbols))
+                sec, sec_name, name, rom, labels, hw_symbols, wram_symbols))
             new_blocks.append(block)
             appended.append(sec_name)
         if new_blocks:
@@ -1195,7 +1253,7 @@ def emit_code_file(
     for sec in sections:
         sec_name = f"{stem}_{sec['addr']:06x}"
         all_lines.extend(_build_section_lines(
-            sec, sec_name, name, rom, labels, hw_symbols))
+            sec, sec_name, name, rom, labels, hw_symbols, wram_symbols))
         all_lines.append("")
     out_path.write_text("\n".join(all_lines))
     return out_path
@@ -1216,6 +1274,7 @@ def emit_header(
     output_dir: Path,
     labels: dict[int, str],
     hw_symbols: dict[int, str],
+    wram_symbols: dict[int, str] | None = None,
 ) -> Path:
     """Emit `header.asm` covering 0x100-0x14F, with the entry point
     disassembled and the rest laid out as labeled byte fields."""
@@ -1227,7 +1286,7 @@ def emit_header(
         "",
         "EntryPoint:",
     ]
-    fmt_target, fmt_io = make_resolver(hw_symbols, labels, 0)
+    fmt_target, fmt_io = make_resolver(hw_symbols, labels, 0, wram_symbols)
     # Entry point: bytes at $0100-$0103. Usually `nop; jp $0150`.
     i = 0
     while i < 4:
@@ -1356,6 +1415,7 @@ def main(argv: list[str] | None = None) -> int:
     }
 
     hw_symbols = parse_hw_symbols(Path(args.include_dir) / HARDWARE_INC)
+    wram_symbols = parse_wram_symbols(Path(args.include_dir) / WRAM_INC)
     refs = collect_refs(rom, label_spec)
     insn_boundaries = compute_insn_boundaries(rom, label_spec)
     sec_index = build_section_index(label_spec)
@@ -1363,13 +1423,13 @@ def main(argv: list[str] | None = None) -> int:
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    written: list[Path] = [emit_header(rom, output_dir, labels, hw_symbols)]
+    written: list[Path] = [emit_header(rom, output_dir, labels, hw_symbols, wram_symbols)]
     code_asms: list[str] = []
     data_bins: list[tuple[str, int]] = []
 
     for f in spec["files"]:
         if f["type"] == "code":
-            written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols))
+            written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols, wram_symbols))
             code_asms.append(f["name"])
         else:
             written.append(emit_data_file(f, rom, output_dir))

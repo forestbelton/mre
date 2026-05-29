@@ -3442,7 +3442,7 @@ Func_00_3508:
 	call Func_00_0a63
 	pop af
 	call Func_00_1863
-	ld a, [$c2d7]
+	ld a, [wC2D7]
 	cp $00
 	jr nz, Func_00_3572
 
@@ -3827,9 +3827,9 @@ Func_00_397a:
 	call Func_00_3913
 	xor a
 	ld [$d61b], a
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld [$d61f], a
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld [$d61a], a
 	ret
 	ld a, $00
@@ -3893,15 +3893,15 @@ SECTION "analyzed_003a14", ROM0[$3a14]
 
 ScriptOpcode01Handler_InitTextState:
 	ld a, [hl+]
-	ld [$d614], a
-	ld [$d616], a
+	ld [wTextAnchor], a
+	ld [wTextCursor], a
 	ld a, [hl+]
 	ld [$d615], a
 	ld [$d617], a
 	ld a, [hl+]
-	ld [$d618], a
+	ld [wTextWidth], a
 	ld a, [hl+]
-	ld [$d619], a
+	ld [wTextHeight], a
 	jp ScriptDispatcherNext
 ScriptOpcode04Handler_WaitForInput:
 	call ScriptWaitInputCore
@@ -3938,7 +3938,7 @@ Func_00_3a51:
 	ld h, [hl]
 	ld l, a
 	ld a, l
-	ld [$d616], a
+	ld [wTextCursor], a
 	ld a, h
 	ld [$d617], a
 	call WaitForNextFrame
@@ -3953,7 +3953,7 @@ ScriptOpcode02Handler_RenderAnchor:
 	ld h, [hl]
 	ld l, a
 	ld a, l
-	ld [$d616], a
+	ld [wTextCursor], a
 	ld a, h
 	ld [$d617], a
 	call Func_00_3c55
@@ -4046,21 +4046,21 @@ Func_00_3af9:
 ScriptOpcode0CHandler_CycleCounter:
 	ld c, [hl]
 	inc hl
-	ld a, [$d60d]
+	ld a, [wCycleCounter]
 	inc a
 	cp c
 	jr c, Func_00_3b06
 	xor a
 Func_00_3b06:
-	ld [$d60d], a
+	ld [wCycleCounter], a
 	jp ScriptDispatcherNext
 ScriptOpcode0EHandler_SetRenderer:
 	ld a, [hl+]
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, [hl+]
 	ld [$d61f], a
 	ld a, [hl+]
-	ld [$d620], a
+	ld [wRendererBank], a
 	jp ScriptDispatcherNext
 ScriptOpcode0FHandler_PrintDecimal:
 	ld e, [hl]
@@ -4071,14 +4071,14 @@ ScriptOpcode0FHandler_PrintDecimal:
 	ld a, [de]
 	ld c, a
 	call Func_00_3e42
-	ld a, [$d5fc]
+	ld a, [wBcdHigh]
 	or a
 	jr z, Func_00_3b31
 
 SECTION "analyzed_003b31", ROM0[$3b31]
 
 Func_00_3b31:
-	ld a, [$d5fb]
+	ld a, [wBcdLow]
 	add a, $30
 	ld c, a
 	call PrintCharacterAtCursor
@@ -4104,12 +4104,12 @@ SECTION "analyzed_003bad", ROM0[$3bad]
 ScriptOpcode0DHandler_Newline:
 	ld a, [$d617]
 	ld d, a
-	ld a, [$d616]
+	ld a, [wTextCursor]
 	ld e, a
 	ld a, e
 	and $e0
 	ld e, a
-	ld a, [$d614]
+	ld a, [wTextAnchor]
 	and $1f
 	add a, e
 	ld e, a
@@ -4120,7 +4120,7 @@ ScriptOpcode0DHandler_Newline:
 	adc a, $00
 	ld d, a
 	ld a, e
-	ld [$d616], a
+	ld [wTextCursor], a
 	ld a, d
 	ld [$d617], a
 	jp ScriptDispatcherNext
@@ -4129,7 +4129,7 @@ ScriptOpcode05Helper:
 	ld a, b
 	ld [$d622], a
 	ld a, c
-	ld [$d621], a
+	ld [wTextStateV2], a
 	ld hl, $d627
 	ld a, l
 	ld [$d623], a
@@ -4145,7 +4145,7 @@ ScriptOpcode05Helper:
 	ld c, $86
 	ld de, $0686
 	call Func_00_3c46
-	ld a, [$d621]
+	ld a, [wTextStateV2]
 	sub $02
 Func_00_3c03:
 	push af
@@ -4162,7 +4162,7 @@ Func_00_3c03:
 	ld c, $78
 	ld de, $7e7b
 	call Func_00_3c46
-	ld a, [$d621]
+	ld a, [wTextStateV2]
 	sub $02
 Func_00_3c28:
 	push af
@@ -4216,7 +4216,7 @@ PrintCharacterAtCursor:
 	jr z, Data_00_3c98
 	ld a, [$d617]
 	ld d, a
-	ld a, [$d616]
+	ld a, [wTextCursor]
 	ld e, a
 	call PrintCharacterAtCursor_Helper1
 	ld a, c
@@ -4291,7 +4291,7 @@ SECTION "analyzed_003cf3", ROM0[$3cf3]
 DispatchTextRenderer:
 	ld a, [$7fff]
 	push af
-	ld a, [$d620]
+	ld a, [wRendererBank]
 	ld [$2fff], a
 	ld hl, $3d0b
 	push hl
@@ -4410,9 +4410,9 @@ Func_00_3e42:
 	ld [$d5fd], a
 	ld hl, $3e69
 	call Func_00_3e59
-	ld [$d5fc], a
+	ld [wBcdHigh], a
 	ld a, c
-	ld [$d5fb], a
+	ld [wBcdLow], a
 	ret
 Func_00_3e59:
 	ld e, $00
@@ -5244,7 +5244,7 @@ Func_01_45d6:
 	cp $3c
 	ret z
 	inc a
-	ld [$cff0], a
+	ld [wCFF0], a
 	ld a, $00
 	ld [$cff1], a
 	call Func_01_4987
@@ -5260,14 +5260,14 @@ SECTION "analyzed_00460e", ROMX[$460e], BANK[$01]
 
 Func_01_460e:
 	ld a, $01
-	ld [$cff0], a
+	ld [wCFF0], a
 	ld a, $02
 	ld [$cff1], a
 	call Func_01_4987
 	ret
 Func_01_461c:
 	ld a, $02
-	ld [$cff0], a
+	ld [wCFF0], a
 	ld a, $02
 	ld [$cff1], a
 	call Func_01_4987
@@ -5462,18 +5462,18 @@ Func_01_4970:
 Func_01_497a:
 	ld [$cff1], a
 	ld a, [$c2c0]
-	ld [$cff0], a
+	ld [wCFF0], a
 	call Func_01_4987
 	ret
 Func_01_4987:
 	ld a, [$cff1]
 	cp $02
 	jr z, Func_01_4995
-	ld a, [$cff0]
-	ld [$cff2], a
+	ld a, [wCFF0]
+	ld [wCurrentFloor], a
 	ret
 Func_01_4995:
-	ld a, [$cff0]
+	ld a, [wCFF0]
 	cp $01
 	jr z, Func_01_49ad
 	cp $02
@@ -5483,11 +5483,11 @@ SECTION "analyzed_0049ad", ROMX[$49ad], BANK[$01]
 
 Func_01_49ad:
 	ld a, $0a
-	ld [$cff2], a
+	ld [wCurrentFloor], a
 	ret
 Func_01_49b3:
 	ld a, $14
-	ld [$cff2], a
+	ld [wCurrentFloor], a
 	ret
 
 SECTION "analyzed_0049cb", ROMX[$49cb], BANK[$01]
@@ -5517,7 +5517,7 @@ Func_01_49e0:
 	ld [$c2e5], a
 	ld [$cf7f], a
 	ld a, $00
-	ld [$c2d7], a
+	ld [wC2D7], a
 	ld hl, $cf77
 	ld [hl+], a
 	ld [hl+], a
@@ -20029,8 +20029,8 @@ Func_05_463a:
 	ld a, $03
 	ld [$c2a9], a
 	xor a
-	ld [$cff0], a
-	ld [$cff2], a
+	ld [wCFF0], a
+	ld [wCurrentFloor], a
 	ld [$cfef], a
 	ld [$cff3], a
 	ld [$cfed], a
@@ -20155,7 +20155,7 @@ Func_05_4785:
 	ld [$c2ab], a
 	ld a, [$cff1]
 	ld [$c2c1], a
-	ld a, [$cff0]
+	ld a, [wCFF0]
 	ld [$c2c0], a
 	ret
 
@@ -20712,7 +20712,7 @@ Func_0f_427b:
 	ld a, $02
 	ld [$c2d6], a
 	ld a, $04
-	ld [$c2d7], a
+	ld [wC2D7], a
 	ld a, $01
 	ld [$c2ac], a
 	ret
@@ -26929,11 +26929,11 @@ Func_18_4144:
 	ret
 Func_18_4150:
 	ld a, $50
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $41
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1b
 	ld [$c100], a
 	ld hl, $5afb
@@ -26989,11 +26989,11 @@ Func_18_41cc:
 	call Func_00_0c09
 	ret
 	ld a, $e1
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $41
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1b
 	ld [$c100], a
 	ld hl, $5afb
@@ -27014,11 +27014,11 @@ Func_18_41cc:
 	call Func_00_0c09
 	ret
 	ld a, $25
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $42
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1b
 	ld [$c100], a
 	ld hl, $5afb
@@ -27123,11 +27123,11 @@ Func_18_6013:
 	ret
 Func_18_601f:
 	ld a, $1f
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $60
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $33
 	ld [$c100], a
 	ld hl, $d610
@@ -27195,7 +27195,7 @@ Func_18_6b71:
 	call Func_18_6bc8
 	ld hl, $717e
 	call ScriptDispatcherEnterAfterCall
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $04
 	jp z, Func_00_3957
 	ret
@@ -27257,11 +27257,11 @@ Func_18_6c1b:
 	ret
 Func_18_6c27:
 	ld a, $27
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $6c
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1a
 	ld [$c100], a
 	ld hl, $75d3
@@ -27306,11 +27306,11 @@ Func_18_6c8a:
 	call Func_00_0c09
 	ret
 	ld a, $9f
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $6c
 	ld [$d61f], a
 	ld a, $18
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1a
 	ld [$c100], a
 	ld hl, $75eb
@@ -27354,17 +27354,17 @@ Func_19_4000:
 	ld a, $12
 	ld hl, $4b8e
 	call CallBankedHL
-	ld [$d5fe], a
+	ld [wYNResult], a
 	ret
 	ld a, $12
 	ld hl, $4b67
 	call CallBankedHL
-	ld [$d5fe], a
+	ld [wYNResult], a
 	ret
 	ld a, $12
 	ld hl, $4bb3
 	call CallBankedHL
-	ld [$d5fe], a
+	ld [wYNResult], a
 	ret
 	call Func_00_0822
 	call Func_00_0bd7
@@ -27408,11 +27408,11 @@ Func_19_407f:
 	ret
 Func_19_408b:
 	ld a, $8b
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $40
 	ld [$d61f], a
 	ld a, $19
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1a
 	ld [$c100], a
 	ld hl, $5a56
@@ -27424,11 +27424,11 @@ Func_19_408b:
 	call Func_00_3942
 	ret
 	ld a, $b4
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $40
 	ld [$d61f], a
 	ld a, $19
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1a
 	ld [$c100], a
 	ld hl, $5aab
@@ -29997,11 +29997,11 @@ Func_1f_4201:
 	ret
 Func_1f_4234:
 	ld a, $34
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $42
 	ld [$d61f], a
 	ld a, $1f
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $1d
 	ld [$c100], a
 	ld hl, $5b07
@@ -30124,11 +30124,11 @@ Func_1f_4497:
 	ret
 Func_1f_44ca:
 	ld a, $ca
-	ld [$d61e], a
+	ld [wRendererAddr], a
 	ld a, $44
 	ld [$d61f], a
 	ld a, $1f
-	ld [$d620], a
+	ld [wRendererBank], a
 	ld a, $35
 	ld [$c100], a
 	ld hl, $6508
@@ -30256,7 +30256,7 @@ Func_1f_58d7:
 	ld de, $9990
 	call Func_00_0b4e
 	xor a
-	ld [$d5fe], a
+	ld [wYNResult], a
 Func_1f_58ed:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30290,7 +30290,7 @@ Func_1f_5921:
 	jp Func_1f_58ed
 Func_1f_592a:
 	ld bc, $7478
-	ld a, [$d5fe]
+	ld a, [wYNResult]
 	sla a
 	sla a
 	sla a
@@ -30315,7 +30315,7 @@ Func_1f_5960:
 	ld bc, $0904
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 Func_1f_596d:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30333,7 +30333,7 @@ Func_1f_5985:
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $59cd
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	sla a
 	add a, l
 	ld l, a
@@ -30349,13 +30349,13 @@ Func_1f_5985:
 	call HideUnusedOamSprites
 	jp Func_1f_596d
 Func_1f_59ae:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_59bb
 	ld bc, $4858
 	call Func_1f_65ec
 Func_1f_59bb:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $02
 	jr z, Func_1f_59c8
 	ld bc, $4898
@@ -30377,7 +30377,7 @@ Func_1f_59d3:
 	ld bc, $0904
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 Func_1f_59e0:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30386,14 +30386,14 @@ Func_1f_59e0:
 	bit 0, a
 	jr z, Func_1f_5a08
 	ld hl, $5a54
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	add a, l
 	ld l, a
 	ld a, h
 	adc a, $00
 	ld h, a
 	ld a, [hl]
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
 	call Func_00_0a85
@@ -30404,7 +30404,7 @@ Func_1f_5a08:
 	ld bc, $0100
 	call Func_1f_5855
 	ld hl, $5a50
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	sla a
 	add a, l
 	ld l, a
@@ -30420,14 +30420,14 @@ Func_1f_5a08:
 	call HideUnusedOamSprites
 	jp Func_1f_59e0
 Func_1f_5a31:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_5a3e
 
 SECTION "analyzed_07da3e", ROMX[$5a3e], BANK[$1f]
 
 Func_1f_5a3e:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $01
 	jr z, Func_1f_5a4b
 	ld bc, $4898
@@ -30465,7 +30465,7 @@ Func_1f_5abc:
 	ld bc, $0804
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 Func_1f_5ac9:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30474,14 +30474,14 @@ Func_1f_5ac9:
 	bit 0, a
 	jr z, Func_1f_5af1
 	ld hl, $5b3f
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	add a, l
 	ld l, a
 	ld a, h
 	adc a, $00
 	ld h, a
 	ld a, [hl]
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
 	call Func_00_0a85
@@ -30492,7 +30492,7 @@ Func_1f_5af1:
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5b39
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	sla a
 	add a, l
 	ld l, a
@@ -30508,13 +30508,13 @@ Func_1f_5af1:
 	call HideUnusedOamSprites
 	jp Func_1f_5ac9
 Func_1f_5b1a:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_5b27
 	ld bc, $4a68
 	call Func_1f_65ec
 Func_1f_5b27:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $02
 	jr z, Func_1f_5b34
 	ld bc, $4aa0
@@ -30536,7 +30536,7 @@ Func_1f_5b42:
 	ld bc, $0804
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 Func_1f_5b4f:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30545,14 +30545,14 @@ Func_1f_5b4f:
 	bit 0, a
 	jr z, Func_1f_5b77
 	ld hl, $5bc7
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	add a, l
 	ld l, a
 	ld a, h
 	adc a, $00
 	ld h, a
 	ld a, [hl]
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
 	call Func_00_0a85
@@ -30563,7 +30563,7 @@ Func_1f_5b77:
 	ld bc, $0300
 	call Func_1f_5855
 	ld hl, $5bbf
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	sla a
 	add a, l
 	ld l, a
@@ -30579,13 +30579,13 @@ Func_1f_5b77:
 	call HideUnusedOamSprites
 	jp Func_1f_5b4f
 Func_1f_5ba0:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_5bad
 	ld bc, $4a68
 	call Func_1f_65ec
 Func_1f_5bad:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $03
 	jr z, Func_1f_5bba
 	ld bc, $4aa0
@@ -30628,7 +30628,7 @@ Func_1f_5d76:
 	ld bc, $0804
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d600], a
+	ld [wSubMenuCursor], a
 Func_1f_5d83:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30646,7 +30646,7 @@ Func_1f_5d9b:
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5de3
-	ld a, [$d600]
+	ld a, [wSubMenuCursor]
 	sla a
 	add a, l
 	ld l, a
@@ -30662,13 +30662,13 @@ Func_1f_5d9b:
 	call HideUnusedOamSprites
 	jp Func_1f_5d83
 Func_1f_5dc4:
-	ld a, [$d600]
+	ld a, [wSubMenuCursor]
 	cp $00
 	jr z, Func_1f_5dd1
 	ld bc, $4a68
 	call Func_1f_65ec
 Func_1f_5dd1:
-	ld a, [$d600]
+	ld a, [wSubMenuCursor]
 	cp $02
 	jr z, Func_1f_5dde
 	ld bc, $4aa0
@@ -30709,7 +30709,7 @@ Func_1f_5f50:
 	ld bc, $0804
 	call ScriptOpcode05Helper
 	xor a
-	ld [$d5ff], a
+	ld [wMainMenuResult], a
 Func_1f_5f5d:
 	call WaitForNextFrame
 	call Func_00_0252
@@ -30727,7 +30727,7 @@ Func_1f_5f75:
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5fbd
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	sla a
 	add a, l
 	ld l, a
@@ -30743,13 +30743,13 @@ Func_1f_5f75:
 	call HideUnusedOamSprites
 	jp Func_1f_5f5d
 Func_1f_5f9e:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_5fab
 	ld bc, $4868
 	call Func_1f_65ec
 Func_1f_5fab:
-	ld a, [$d5ff]
+	ld a, [wMainMenuResult]
 	cp $02
 	jr z, Func_1f_5fb8
 	ld bc, $48a0
