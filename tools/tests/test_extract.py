@@ -572,6 +572,95 @@ class TestAscizFormat(unittest.TestCase):
             extract._format_ascii_db(b"", trailing_terminator=True)
 
 
+class TestReconcileAnalyzedSections(unittest.TestCase):
+    """Auto-split of analyzed.asm sections around user-curated entries."""
+
+    @staticmethod
+    def _build(user_intervals, analyzed_sections):
+        files = []
+        for i, (a, l) in enumerate(user_intervals):
+            files.append({
+                "type": "code",
+                "name": f"user_{i}.asm",
+                "sections": [{"type": "data", "addr": a, "len": l, "label": f"L{i}"}],
+            })
+        files.append({
+            "type": "code",
+            "name": "analyzed.asm",
+            "sections": [{"type": s[0], "addr": s[1], "len": s[2]} for s in analyzed_sections],
+        })
+        return {"files": files}
+
+    def _analyzed(self, spec):
+        a = next(f for f in spec["files"] if f["name"] == "analyzed.asm")
+        return [(s["type"], s["addr"], s["len"]) for s in a["sections"]]
+
+    def test_no_overlap_unchanged(self):
+        spec = self._build([(0x500, 0x100)], [("data", 0x100, 0x200), ("code", 0x800, 0x100)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec),
+                         [("data", 0x100, 0x200), ("code", 0x800, 0x100)])
+
+    def test_full_containment_removes_section(self):
+        spec = self._build([(0x200, 0x400)], [("data", 0x300, 0x100)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec), [])
+
+    def test_left_overlap_shrinks_right(self):
+        spec = self._build([(0x200, 0x100)], [("data", 0x280, 0x200)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec), [("data", 0x300, 0x180)])
+
+    def test_right_overlap_shrinks_left(self):
+        spec = self._build([(0x400, 0x100)], [("data", 0x300, 0x200)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec), [("data", 0x300, 0x100)])
+
+    def test_middle_overlap_splits_into_two(self):
+        spec = self._build([(0x300, 0x100)], [("data", 0x200, 0x400)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec),
+                         [("data", 0x200, 0x100), ("data", 0x400, 0x200)])
+
+    def test_multiple_overlaps_in_one_section(self):
+        spec = self._build([(0x300, 0x100), (0x500, 0x100)],
+                           [("data", 0x200, 0x500)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec),
+                         [("data", 0x200, 0x100),
+                          ("data", 0x400, 0x100),
+                          ("data", 0x600, 0x100)])
+
+    def test_preserves_extra_fields(self):
+        # Sections carry through `type` and any other keys when split.
+        spec = self._build([(0x300, 0x100)], [("code", 0x200, 0x400)])
+        extract.reconcile_analyzed_sections(spec)
+        # 'code' type preserved on both pieces.
+        types = [s[0] for s in self._analyzed(spec)]
+        self.assertEqual(types, ["code", "code"])
+
+    def test_idempotent(self):
+        spec = self._build([(0x300, 0x100)], [("data", 0x200, 0x400)])
+        extract.reconcile_analyzed_sections(spec)
+        first = self._analyzed(spec)
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec), first)
+
+    def test_no_user_intervals_unchanged(self):
+        spec = self._build([], [("data", 0x100, 0x200)])
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(self._analyzed(spec), [("data", 0x100, 0x200)])
+
+    def test_no_analyzed_asm_is_noop(self):
+        # If there's no analyzed.asm entry at all, nothing to do.
+        spec = {"files": [
+            {"type": "code", "name": "u.asm",
+             "sections": [{"type": "data", "addr": 0x200, "len": 0x100, "label": "U"}]},
+        ]}
+        extract.reconcile_analyzed_sections(spec)
+        self.assertEqual(spec["files"][0]["sections"][0]["addr"], 0x200)
+
+
 class TestAsciiAscizValidation(unittest.TestCase):
     ROM_SIZE = 0x10000
 

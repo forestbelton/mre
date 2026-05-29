@@ -443,6 +443,86 @@ def _validate_label(value: Any, where: str, seen: dict[str, str]) -> str | None:
     return value
 
 
+ANALYZED_FILE_NAME = "analyzed.asm"
+
+
+def reconcile_analyzed_sections(spec: dict[str, Any]) -> None:
+    """In-memory split of analyzed.asm sections around user-curated ranges.
+
+    The analyzer is the only thing that ever rewrites analyzed.asm's section
+    list, so when the user adds a new file entry to map.json the analyzed
+    sections still cover the bytes the new entry now claims. Rather than
+    making the user re-run the analyzer just to trim, we trim here.
+
+    For every section in analyzed.asm: if any user-curated interval (any
+    file entry except analyzed.asm itself) overlaps it, replace that one
+    section with the gap pieces before and after the overlap. Sections
+    fully covered by user intervals disappear. The mutation is in-memory
+    only; the on-disk map.json keeps its old section list until the
+    analyzer next snapshots.
+
+    Idempotent: re-running on an already-reconciled spec is a no-op.
+    """
+    user_intervals: list[tuple[int, int]] = []
+    for f in spec.get("files", []):
+        if not isinstance(f, dict):
+            continue
+        if f.get("name") == ANALYZED_FILE_NAME:
+            continue
+        ftype = f.get("type")
+        if ftype == "code":
+            for s in f.get("sections", []) or []:
+                if isinstance(s, dict) and "addr" in s and "len" in s:
+                    user_intervals.append((int(s["addr"]), int(s["addr"]) + int(s["len"])))
+        elif ftype == "data":
+            if "addr" in f and "len" in f:
+                user_intervals.append((int(f["addr"]), int(f["addr"]) + int(f["len"])))
+    if not user_intervals:
+        return
+    user_intervals.sort()
+
+    analyzed = next(
+        (f for f in spec.get("files", []) if isinstance(f, dict) and f.get("name") == ANALYZED_FILE_NAME),
+        None,
+    )
+    if analyzed is None:
+        return
+    secs = analyzed.get("sections")
+    if not isinstance(secs, list):
+        return
+
+    new_secs: list[dict[str, Any]] = []
+    for sec in secs:
+        if not isinstance(sec, dict) or "addr" not in sec or "len" not in sec:
+            new_secs.append(sec)
+            continue
+        s_start = int(sec["addr"])
+        s_end = s_start + int(sec["len"])
+        # Collect overlaps with this section.
+        overlaps = [
+            (us, ue) for us, ue in user_intervals
+            if us < s_end and ue > s_start
+        ]
+        if not overlaps:
+            new_secs.append(sec)
+            continue
+        # Walk the section, emitting gap pieces between overlaps.
+        cursor = s_start
+        for us, ue in overlaps:
+            if cursor < us:
+                piece = dict(sec)
+                piece["addr"] = cursor
+                piece["len"] = us - cursor
+                new_secs.append(piece)
+            cursor = max(cursor, ue)
+        if cursor < s_end:
+            piece = dict(sec)
+            piece["addr"] = cursor
+            piece["len"] = s_end - cursor
+            new_secs.append(piece)
+    analyzed["sections"] = new_secs
+
+
 def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, str]]:
     """Validate the map; return sorted list of (start, end, label) intervals
     including the reserved header region."""
@@ -1081,6 +1161,8 @@ def main(argv: list[str] | None = None) -> int:
 
     rom = rom_path.read_bytes()
     spec = json.loads(map_path.read_text())
+
+    reconcile_analyzed_sections(spec)
 
     try:
         intervals = validate_map(spec, len(rom))

@@ -61,8 +61,9 @@ def main():
                     help='ROM image (default: rom.gbc)')
     ap.add_argument('--start', required=True,
                     help='Start flat ROM offset (hex $XXXX, 0xXXXX, or decimal)')
-    ap.add_argument('--end', required=True,
-                    help='End flat ROM offset (exclusive)')
+    ap.add_argument('--end', default=None,
+                    help='End flat ROM offset (exclusive); default: '
+                         'auto-detect via reachability scan from --start')
     ap.add_argument('--prefix', required=True,
                     help='Auto-label prefix for unnamed targets (e.g. "pashute")')
     ap.add_argument('--section-name', required=True,
@@ -75,9 +76,13 @@ def main():
 
     rom = open(args.rom, 'rb').read()
     start = parse_int(args.start)
-    end = parse_int(args.end)
     bank = start >> 14
     bank_base = bank * 0x4000
+    # `end` is finalised after the reachability scan below, since the
+    # natural script end isn't known until then. The provided --end is
+    # used as a hard upper bound; if omitted, we use the bank boundary.
+    provided_end = parse_int(args.end) if args.end is not None \
+        else bank_base + 0x4000
 
     def to_bank_addr(flat):
         return (flat - bank_base) + (0x4000 if bank > 0 else 0)
@@ -124,13 +129,77 @@ def main():
                 ei = rom[ts + 2 * i] | (rom[ts + 2 * i + 1] << 8)
                 if to_flat(ei) == table_end:
                     return n
-        # Fallback for tables with no fall-through entry (e.g. menus that
-        # always dispatch). Try N=2..8 and pick the smallest that lands on
-        # a plausible byte after the table.
+        # No fall-through entry. Try N=2..8 in order, preferring N values
+        # where the post-table byte is an actual control opcode — text
+        # bytes are also "plausible" but happen to also be plausible just
+        # inside a table whose real size is larger. Naji's Ask submenu
+        # ($0635A2, N=3) is the canonical case: ROM[$0635A6] = $66 ('f',
+        # text) so N=2 looks plausible too; ROM[$0635A8] = $0E (renderer),
+        # which is a real opcode, so N=3 wins.
+        for n in (2, 3, 4, 5, 6, 7, 8):
+            te = ts + 2 * n
+            if te < len(rom) and rom[te] in OP_LEN:
+                return n
         for n in (2, 3, 4, 5, 6, 7, 8):
             if plausible_opcode(ts + 2 * n):
                 return n
         return None
+
+    # Reachability scan: walk from `start` following all control flow,
+    # stopping at $FF/$06 (no fall-through). The max byte address we
+    # consume is the natural end of the script. Bytes after it inside
+    # provided_end are usually trailing Z80 helpers from $07 FAR_CALLs.
+    def reachable_max_byte():
+        visited = set()
+        wl = [start]
+        max_byte = start
+        while wl:
+            pc = wl.pop()
+            while pc < provided_end and pc < len(rom) and pc not in visited:
+                visited.add(pc)
+                b = rom[pc]
+                # Match the engine dispatcher's order: $FF first (terminates),
+                # then text ($20+), then $08 special, then table opcodes.
+                # Doing >=$20 before checking $FF would treat $FF as text and
+                # walk straight past every END marker in the script.
+                if b == 0xFF:
+                    max_byte = max(max_byte, pc); break
+                if b >= 0x20:
+                    max_byte = max(max_byte, pc); pc += 1; continue
+                if b == 0x08:
+                    ts = pc + 3
+                    n = size_table(ts)
+                    if n is None:
+                        max_byte = max(max_byte, pc); break
+                    for i in range(n):
+                        e = rom[ts + 2 * i] | (rom[ts + 2 * i + 1] << 8)
+                        wl.append(to_flat(e))
+                    max_byte = max(max_byte, ts + 2 * n - 1)
+                    break  # unconditional dispatch
+                if b not in OP_LEN:
+                    break
+                # OP_LEN[b] is *operand* bytes; total instruction size is 1 + operands.
+                size = 1 + OP_LEN[b]
+                max_byte = max(max_byte, pc + size - 1)
+                if b == 0x06:
+                    t = rom[pc + 1] | (rom[pc + 2] << 8)
+                    wl.append(to_flat(t)); break
+                if b in (0x0A, 0x0B):
+                    t = rom[pc + 4] | (rom[pc + 5] << 8)
+                    wl.append(to_flat(t))
+                pc += size
+        return max_byte
+
+    # If the user passed --end, honour it; otherwise auto-detect via
+    # reachability from --start. The auto-detect stops at the first $FF
+    # reached with an empty worklist, so NPCs with multiple independently-
+    # dispatched sub-scripts (e.g. Kalum's pre/win/lose bytecode trio
+    # share a contiguous ROM region but have no script-level path between
+    # them) need an explicit --end.
+    if args.end is not None:
+        end = parse_int(args.end)
+    else:
+        end = reachable_max_byte() + 1
 
     targets = {start}
     items = []
