@@ -146,6 +146,18 @@
 		},
 		{
 			"type": "code",
+			"name": "scripts/tempest.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 510862,
+					"len": 472,
+					"label": "TempestScript"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{

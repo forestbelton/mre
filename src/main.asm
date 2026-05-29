@@ -10,6 +10,7 @@ INCLUDE "scripts/mistral.asm"
 INCLUDE "scripts/naji.asm"
 INCLUDE "scripts/pashute.asm"
 INCLUDE "scripts/rafaga.asm"
+INCLUDE "scripts/tempest.asm"
 INCLUDE "scripts/toamuna.asm"
 INCLUDE "scripts/tradehouse.asm"
 
@@ -4668,6 +4669,10 @@ Data_1f_4749:
 SECTION "data_07ca74", ROMX[$4a74], BANK[$1f]
 Data_1f_4a74:
 	INCBIN "data_07ca74.bin"
+
+SECTION "data_07cd66", ROMX[$4d66], BANK[$1f]
+Data_1f_4d66:
+	INCBIN "data_07cd66.bin"
 
 SECTION "data_07d87c", ROMX[$587c], BANK[$1f]
 Data_1f_587c:
