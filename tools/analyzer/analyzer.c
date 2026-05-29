@@ -298,7 +298,22 @@ static void handle_input(void) {
         SDL_Keycode key = ev.key.keysym.sym;
 
         if (pressed) {
-            if (key == SDLK_ESCAPE) { g.running = 0; return; }
+            if (key == SDLK_ESCAPE) {
+                /* Double-tap to quit. Easy to hit ESC by accident and
+                 * lose a long play session, so require two presses within
+                 * ~1.5s; the first press just arms the second. */
+                static uint32_t esc_armed_at = 0;
+                const uint32_t ESC_WINDOW_MS = 1500;
+                uint32_t now = SDL_GetTicks();
+                if (esc_armed_at && now - esc_armed_at <= ESC_WINDOW_MS) {
+                    g.running = 0;
+                    return;
+                }
+                esc_armed_at = now;
+                printf("press ESC again within %u ms to quit\n", ESC_WINDOW_MS);
+                fflush(stdout);
+                continue;
+            }
             if (key == SDLK_TAB) {
                 g.fast_forward = !g.fast_forward;
                 /* The manual frame-pacing SDL_Delay alone isn't enough —
@@ -691,7 +706,7 @@ static void print_usage(const char *prog) {
         "  Z          A         X      B\n"
         "  Enter      Start     Bksp   Select\n"
         "  Tab        Toggle fast-forward\n"
-        "  Esc        Quit\n",
+        "  Esc        Quit (press twice within 1.5s)\n",
         prog);
 }
 
