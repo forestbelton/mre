@@ -46,7 +46,7 @@ enum {
 };
 
 #define DEFAULT_SAVE_INTERVAL_SEC 10
-#define WINDOW_SCALE              3
+#define WINDOW_SCALE              9
 #define ANALYZED_FILE_NAME        "analyzed.asm"
 #define HEADER_START              0x0100
 #define HEADER_END                0x0150  /* exclusive */
