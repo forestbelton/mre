@@ -9099,5 +9099,103 @@
 			"addr": 765,
 			"len": 1
 		}
+	],
+	"labels": [
+		{
+			"addr": 14784,
+			"name": "ScriptDispatcherEnterAfterCall"
+		},
+		{
+			"addr": 14789,
+			"name": "ScriptDispatcherNext"
+		},
+		{
+			"addr": 14818,
+			"name": "ScriptTextOutputPath"
+		},
+		{
+			"addr": 14832,
+			"name": "ScriptOpcodeTable"
+		},
+		{
+			"addr": 14868,
+			"name": "ScriptOpcode01Handler_InitTextState"
+		},
+		{
+			"addr": 14893,
+			"name": "ScriptOpcode04Handler_WaitForInput"
+		},
+		{
+			"addr": 14899,
+			"name": "ScriptOpcode03Handler_WaitAndRenderPrep"
+		},
+		{
+			"addr": 14905,
+			"name": "ScriptWaitInputCore"
+		},
+		{
+			"addr": 14973,
+			"name": "ScriptOpcode02Handler_RenderAnchor"
+		},
+		{
+			"addr": 14995,
+			"name": "ScriptOpcode05Handler_InitTextStateV2"
+		},
+		{
+			"addr": 15009,
+			"name": "ScriptOpcode06Handler_Goto"
+		},
+		{
+			"addr": 15015,
+			"name": "ScriptOpcode08Handler_JumpTable"
+		},
+		{
+			"addr": 15034,
+			"name": "ScriptOpcode07Handler_FarCall"
+		},
+		{
+			"addr": 15049,
+			"name": "ScriptOpcode09Handler_WriteWram"
+		},
+		{
+			"addr": 15058,
+			"name": "ScriptOpcode0AHandler_JumpIfEqual"
+		},
+		{
+			"addr": 15079,
+			"name": "ScriptOpcode0BHandler_JumpIfNotEqual"
+		},
+		{
+			"addr": 15100,
+			"name": "ScriptOpcode0CHandler_CycleCounter"
+		},
+		{
+			"addr": 15116,
+			"name": "ScriptOpcode0EHandler_SetRenderer"
+		},
+		{
+			"addr": 15131,
+			"name": "ScriptOpcode0FHandler_PrintDecimal"
+		},
+		{
+			"addr": 15166,
+			"name": "ScriptOpcode10Handler_RepeatChar"
+		},
+		{
+			"addr": 15187,
+			"name": "ScriptOpcode11Handler_PrintIndexedString"
+		},
+		{
+			"addr": 15221,
+			"name": "ScriptIndexedStringTable"
+		},
+		{
+			"addr": 15277,
+			"name": "ScriptOpcode0DHandler_Newline"
+		},
+		{
+			"addr": 15315,
+			"name": "ScriptOpcode05Helper"
+		}
 	]
 }

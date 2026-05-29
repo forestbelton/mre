@@ -3843,18 +3843,18 @@ Func_00_39bb:
 	dec c
 	jr nz, Func_00_39bb
 	ret
-Func_00_39c0:
+ScriptDispatcherEnterAfterCall:
 	push hl
 	call Func_00_02e6
 	pop hl
-Func_00_39c5:
+ScriptDispatcherNext:
 	ld c, [hl]
 	inc hl
 	ld a, c
 	cp $ff
 	ret z
 	cp $20
-	jr nc, Func_00_39e2
+	jr nc, ScriptTextOutputPath
 	sla a
 	ld de, $39f0
 	add a, e
@@ -3870,13 +3870,13 @@ Func_00_39c5:
 	ld b, a
 	push bc
 	ret
-Func_00_39e2:
+ScriptTextOutputPath:
 	call Func_00_3c77
 	push hl
 	call Func_00_3cf3
 	call Func_00_0bf1
 	pop hl
-	jp Func_00_39c0
+	jp ScriptDispatcherEnterAfterCall
 
 SECTION "analyzed_0039f2", ROM0[$39f2]
 
@@ -3891,7 +3891,7 @@ Data_00_39fc:
 
 SECTION "analyzed_003a14", ROM0[$3a14]
 
-Func_00_3a14:
+ScriptOpcode01Handler_InitTextState:
 	ld a, [hl+]
 	ld [$d614], a
 	ld [$d616], a
@@ -3902,12 +3902,14 @@ Func_00_3a14:
 	ld [$d618], a
 	ld a, [hl+]
 	ld [$d619], a
-	jp Func_00_39c5
-	call Func_00_3a39
-	jp Func_00_3a7d
-	call Func_00_3a39
-	jp Func_00_39c5
-Func_00_3a39:
+	jp ScriptDispatcherNext
+ScriptOpcode04Handler_WaitForInput:
+	call ScriptWaitInputCore
+	jp ScriptOpcode02Handler_RenderAnchor
+ScriptOpcode03Handler_WaitAndRenderPrep:
+	call ScriptWaitInputCore
+	jp ScriptDispatcherNext
+ScriptWaitInputCore:
 	push hl
 Func_00_3a3a:
 	call Func_00_02e6
@@ -3944,7 +3946,7 @@ Func_00_3a51:
 	call Func_00_0bf1
 	pop hl
 	ret
-Func_00_3a7d:
+ScriptOpcode02Handler_RenderAnchor:
 	push hl
 	ld hl, $d614
 	ld a, [hl+]
@@ -3956,15 +3958,16 @@ Func_00_3a7d:
 	ld [$d617], a
 	call Func_00_3c55
 	pop hl
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
 
 SECTION "analyzed_003aa1", ROM0[$3aa1]
 
-Func_00_3aa1:
+ScriptOpcode06Handler_Goto:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode08Handler_JumpTable:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
@@ -3979,7 +3982,8 @@ Func_00_3aa1:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode07Handler_FarCall:
 	ld c, [hl]
 	inc hl
 	ld b, [hl]
@@ -3990,14 +3994,16 @@ Func_00_3aa1:
 	pop hl
 	call Func_00_042e
 	pop hl
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode09Handler_WriteWram:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
 	inc hl
 	ld a, [hl+]
 	ld [de], a
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode0AHandler_JumpIfEqual:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
@@ -4016,7 +4022,8 @@ Func_00_3aa1:
 	push bc
 	pop hl
 Func_00_3ae4:
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode0BHandler_JumpIfNotEqual:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
@@ -4035,7 +4042,8 @@ Func_00_3ae4:
 	push bc
 	pop hl
 Func_00_3af9:
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode0CHandler_CycleCounter:
 	ld c, [hl]
 	inc hl
 	ld a, [$d60d]
@@ -4045,14 +4053,16 @@ Func_00_3af9:
 	xor a
 Func_00_3b06:
 	ld [$d60d], a
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode0EHandler_SetRenderer:
 	ld a, [hl+]
 	ld [$d61e], a
 	ld a, [hl+]
 	ld [$d61f], a
 	ld a, [hl+]
 	ld [$d620], a
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode0FHandler_PrintDecimal:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
@@ -4073,7 +4083,8 @@ Func_00_3b31:
 	ld c, a
 	call Func_00_3c77
 	pop hl
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
+ScriptOpcode10Handler_RepeatChar:
 	ld c, [hl]
 	inc hl
 	push hl
@@ -4086,11 +4097,11 @@ Func_00_3b41:
 	dec c
 	jr nz, Func_00_3b41
 	pop hl
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
 
 SECTION "analyzed_003bad", ROM0[$3bad]
 
-Func_00_3bad:
+ScriptOpcode0DHandler_Newline:
 	ld a, [$d617]
 	ld d, a
 	ld a, [$d616]
@@ -4112,8 +4123,8 @@ Func_00_3bad:
 	ld [$d616], a
 	ld a, d
 	ld [$d617], a
-	jp Func_00_39c5
-Func_00_3bd3:
+	jp ScriptDispatcherNext
+ScriptOpcode05Helper:
 	push hl
 	ld a, b
 	ld [$d622], a
@@ -26872,7 +26883,7 @@ SECTION "analyzed_060097", ROMX[$4097], BANK[$18]
 
 Func_18_4097:
 	ld hl, $4272
-	call Func_00_39c0
+	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
 
 SECTION "analyzed_0600f3", ROMX[$40f3], BANK[$18]
@@ -27034,7 +27045,7 @@ SECTION "analyzed_061dfa", ROMX[$5dfa], BANK[$18]
 
 Func_18_5dfa:
 	ld hl, $608c
-	call Func_00_39c0
+	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
 
 SECTION "analyzed_061f6e", ROMX[$5f6e], BANK[$18]
@@ -27175,14 +27186,14 @@ SECTION "analyzed_062b71", ROMX[$6b71], BANK[$18]
 Func_18_6b71:
 	call Func_18_6bc8
 	ld hl, $6ce3
-	call Func_00_39c0
+	call ScriptDispatcherEnterAfterCall
 	ld a, $1f
 	ld hl, $4094
 	call Func_00_042e
 	ret
 	call Func_18_6bc8
 	ld hl, $717e
-	call Func_00_39c0
+	call ScriptDispatcherEnterAfterCall
 	ld a, [$d5ff]
 	cp $04
 	jp z, Func_00_3957
@@ -27386,7 +27397,7 @@ Func_19_4000:
 	call Func_00_0a63
 	pop af
 	ld hl, $40dd
-	call Func_00_39c0
+	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
 Func_19_407f:
 	ld hl, $5880
@@ -29945,7 +29956,7 @@ Func_1f_417b:
 	pop af
 	call Func_1f_4008
 	ld hl, $42b1
-	jp Func_00_39c0
+	jp ScriptDispatcherEnterAfterCall
 Func_1f_41da:
 	ld de, $4000
 	ld hl, $c101
@@ -30084,7 +30095,7 @@ Func_1f_441f:
 	pop af
 	call Func_1f_4008
 	ld hl, $45a5
-	jp Func_00_39c0
+	jp ScriptDispatcherEnterAfterCall
 	call Func_1f_4497
 	call Func_1f_41e6
 	jp Func_1f_40d9
@@ -30239,7 +30250,7 @@ SECTION "analyzed_07d8d7", ROMX[$58d7], BANK[$1f]
 Func_1f_58d7:
 	ld de, $996d
 	ld bc, $0707
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	ld hl, $5942
 	ld de, $9990
 	call Func_00_0b4e
@@ -30301,7 +30312,7 @@ SECTION "analyzed_07d960", ROMX[$5960], BANK[$1f]
 Func_1f_5960:
 	ld de, $98ca
 	ld bc, $0904
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d5ff], a
 Func_1f_596d:
@@ -30363,7 +30374,7 @@ SECTION "analyzed_07d9d3", ROMX[$59d3], BANK[$1f]
 Func_1f_59d3:
 	ld de, $98ca
 	ld bc, $0904
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d5ff], a
 Func_1f_59e0:
@@ -30451,7 +30462,7 @@ SECTION "analyzed_07dabc", ROMX[$5abc], BANK[$1f]
 Func_1f_5abc:
 	ld de, $98cc
 	ld bc, $0804
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d5ff], a
 Func_1f_5ac9:
@@ -30522,7 +30533,7 @@ SECTION "analyzed_07db42", ROMX[$5b42], BANK[$1f]
 Func_1f_5b42:
 	ld de, $98cc
 	ld bc, $0804
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d5ff], a
 Func_1f_5b4f:
@@ -30614,7 +30625,7 @@ SECTION "analyzed_07dd76", ROMX[$5d76], BANK[$1f]
 Func_1f_5d76:
 	ld de, $98cc
 	ld bc, $0804
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d600], a
 Func_1f_5d83:
@@ -30695,7 +30706,7 @@ SECTION "analyzed_07df50", ROMX[$5f50], BANK[$1f]
 Func_1f_5f50:
 	ld de, $98cc
 	ld bc, $0804
-	call Func_00_3bd3
+	call ScriptOpcode05Helper
 	xor a
 	ld [$d5ff], a
 Func_1f_5f5d:

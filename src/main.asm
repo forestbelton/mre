@@ -828,7 +828,7 @@ Data_00_37cc:
 	INCBIN "data_0037cc.bin"
 
 SECTION "data_0039f0", ROM0[$39f0]
-Data_00_39f0:
+ScriptOpcodeTable:
 	INCBIN "data_0039f0.bin"
 
 SECTION "data_0039fa", ROM0[$39fa]
@@ -844,7 +844,7 @@ Data_00_3a4e:
 	INCBIN "data_003a4e.bin"
 
 SECTION "data_003a93", ROM0[$3a93]
-Data_00_3a93:
+ScriptOpcode05Handler_InitTextStateV2:
 	INCBIN "data_003a93.bin"
 
 SECTION "data_003b2b", ROM0[$3b2b]

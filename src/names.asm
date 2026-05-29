@@ -28,7 +28,7 @@ PrintIndexedName:
 	jr .PutChar
 .PutCharDone:
 	pop hl
-	jp Func_00_39c5
+	jp ScriptDispatcherNext
 
 MonsterNamePointers:
 	dw Name_Tiger

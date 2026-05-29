@@ -572,6 +572,62 @@ class TestAscizFormat(unittest.TestCase):
             extract._format_ascii_db(b"", trailing_terminator=True)
 
 
+class TestUserLabels(unittest.TestCase):
+    """Top-level `labels` array in map.json overrides auto-generated names."""
+
+    def _build(self, user_labels, sections):
+        return {
+            "files": [{"type": "code", "name": "x.asm", "sections": sections}],
+            "labels": user_labels,
+        }
+
+    def test_user_label_replaces_func_default(self):
+        spec = self._build(
+            user_labels=[{"addr": 0x3a14, "name": "ScriptOpcode01_InitTextState"}],
+            sections=[{"type": "code", "addr": 0x3a14, "len": 0x10}],
+        )
+        labels = extract.build_labels([], [], set(), spec)
+        self.assertEqual(labels[0x3a14], "ScriptOpcode01_InitTextState")
+
+    def test_user_label_wins_over_section_label_field(self):
+        spec = self._build(
+            user_labels=[{"addr": 0x3a14, "name": "UserWins"}],
+            sections=[{"type": "code", "addr": 0x3a14, "len": 0x10, "label": "SectionWins"}],
+        )
+        labels = extract.build_labels([], [], set(), spec)
+        self.assertEqual(labels[0x3a14], "UserWins")
+
+    def test_user_label_at_unknown_addr_still_recorded(self):
+        # An override at an address that isn't a section start is fine —
+        # the label only emits if something references that byte, but the
+        # mapping is still in the dict for downstream lookups.
+        spec = self._build(
+            user_labels=[{"addr": 0x4000, "name": "RandomLabel"}],
+            sections=[{"type": "code", "addr": 0x3a14, "len": 0x10}],
+        )
+        labels = extract.build_labels([], [], set(), spec)
+        self.assertEqual(labels[0x4000], "RandomLabel")
+
+    def test_missing_labels_field_is_noop(self):
+        labels = extract.build_labels([], [], set(), {"files": []})
+        self.assertEqual(labels, {})
+
+    def test_malformed_entries_silently_skipped(self):
+        # Non-dict entries, missing addr/name — all just dropped, no crash.
+        spec = {
+            "files": [],
+            "labels": [
+                "not a dict",
+                {"addr": 0x100},                       # missing name
+                {"name": "OnlyName"},                  # missing addr
+                {"addr": "not-int", "name": "X"},      # bad type
+                {"addr": 0x200, "name": "GoodOne"},    # this one should land
+            ],
+        }
+        labels = extract.build_labels([], [], set(), spec)
+        self.assertEqual(labels, {0x200: "GoodOne"})
+
+
 class TestPaddingSections(unittest.TestCase):
     def test_padding_type_accepted_by_validate_map(self):
         # Just a structural check — validate_map shouldn't reject padding.

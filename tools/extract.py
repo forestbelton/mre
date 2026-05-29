@@ -882,6 +882,18 @@ def build_labels(
         prefix = "Func" if kind == "code" else "Data"
         labels[flat] = f"{prefix}_{bank:02x}_{mem_addr:04x}"
 
+    # User-provided overrides (top-level `labels` array in map.json) win over
+    # auto-generated names *and* over section-start auto-labels. Each entry is
+    # `{"addr": <flat>, "name": "..."}`. The analyzer never touches this field
+    # so the names survive across analyzer runs and section-list rebuilds.
+    for entry in spec.get("labels", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        try:
+            assign(int(entry["addr"]), "code", override=str(entry["name"]))
+        except (KeyError, TypeError, ValueError):
+            continue
+
     # Section starts always labeled. A user-provided "label" field on a
     # section (or top-level data file) overrides the auto-generated name.
     for f in spec.get("files", []):
@@ -1338,7 +1350,10 @@ def main(argv: list[str] | None = None) -> int:
             "addr": gap_addr,
             "len": gap_len,
         })
-    label_spec = {"files": list(spec.get("files", [])) + gap_files}
+    label_spec = {
+        "files": list(spec.get("files", [])) + gap_files,
+        "labels": spec.get("labels", []),
+    }
 
     hw_symbols = parse_hw_symbols(Path(args.include_dir) / HARDWARE_INC)
     refs = collect_refs(rom, label_spec)
