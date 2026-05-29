@@ -170,6 +170,18 @@
 		},
 		{
 			"type": "code",
+			"name": "scripts/verde.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 398581,
+					"len": 2286,
+					"label": "VerdeScript"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{

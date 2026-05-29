@@ -14,6 +14,7 @@ INCLUDE "scripts/rafaga.asm"
 INCLUDE "scripts/tempest.asm"
 INCLUDE "scripts/toamuna.asm"
 INCLUDE "scripts/tradehouse.asm"
+INCLUDE "scripts/verde.asm"
 
 SECTION "data_000005", ROM0[$0005]
 Data_00_0005:
@@ -4566,6 +4567,10 @@ Data_18_40a0:
 SECTION "data_061321", ROMX[$5321], BANK[$18]
 Data_18_5321:
 	INCBIN "data_061321.bin"
+
+SECTION "data_061de3", ROMX[$5de3], BANK[$18]
+Data_18_5de3:
+	INCBIN "data_061de3.bin"
 
 SECTION "data_061e03", ROMX[$5e03], BANK[$18]
 Data_18_5e03:
