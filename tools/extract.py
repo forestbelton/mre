@@ -585,6 +585,108 @@ def validate_map(spec: dict[str, Any], rom_size: int) -> list[tuple[int, int, st
     return intervals
 
 
+# Coverage-stats categories. Order matters for the print summary, and the
+# fill priority below (later wins) is what assigns each ROM byte to exactly
+# one category when more than one claim overlaps.
+_COV_CATEGORIES = [
+    ("user_code",     "user-curated code"),
+    ("user_data",     "user-curated data"),
+    ("user_ascii",    "user-curated ascii"),
+    ("user_asciz",    "user-curated asciz"),
+    ("analyzed_code", "analyzer code"),
+    ("analyzed_data", "analyzer data"),
+    ("conflict",      "conflict bytes"),
+    ("header",        "cartridge header"),
+    ("uncovered",     "uncovered (gap-fill .bin)"),
+]
+
+
+def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
+    """Return a {category_key: byte_count} dict summarising the map.
+
+    Every ROM byte is assigned to exactly one category. The priority order
+    (later wins, so user-curated entries take precedence over the analyzer's
+    view, and the header always wins) is:
+      analyzer (code, data) <- conflicts <- user-curated <- header
+    """
+    keys = [k for k, _ in _COV_CATEGORIES]
+    cat_id = {k: i for i, k in enumerate(keys)}
+    marks = bytearray(rom_size)  # default 0 == uncovered (last category)
+    # Use a 0-byte default that does NOT map to one of the real category ids,
+    # then re-label it as 'uncovered' at the end. Simpler: pick an "unmarked"
+    # sentinel and translate it.
+    UNMARKED = 0xFF
+    for i in range(rom_size):
+        marks[i] = UNMARKED
+
+    def fill(start: int, length: int, kind: str) -> None:
+        cid = cat_id[kind]
+        end = min(start + length, rom_size)
+        for i in range(max(start, 0), end):
+            marks[i] = cid
+
+    # Lowest priority first.
+    for f in spec.get("files", []):
+        if not isinstance(f, dict):
+            continue
+        if f.get("name") == ANALYZED_FILE_NAME and f.get("type") == "code":
+            for s in f.get("sections", []) or []:
+                t = s.get("type")
+                if t == "code":
+                    fill(s["addr"], s["len"], "analyzed_code")
+                elif t == "data":
+                    fill(s["addr"], s["len"], "analyzed_data")
+
+    # Conflicts overlay any analyzed range.
+    for c in spec.get("conflicts", []) or []:
+        if isinstance(c, dict) and "addr" in c and "len" in c:
+            fill(c["addr"], c["len"], "conflict")
+
+    # User-curated entries beat analyzer/conflict.
+    for f in spec.get("files", []):
+        if not isinstance(f, dict):
+            continue
+        if f.get("name") == ANALYZED_FILE_NAME:
+            continue
+        ftype = f.get("type")
+        if ftype == "code":
+            for s in f.get("sections", []) or []:
+                t = s.get("type")
+                if t == "code":
+                    fill(s["addr"], s["len"], "user_code")
+                elif t == "data":
+                    fill(s["addr"], s["len"], "user_data")
+                elif t == "ascii":
+                    fill(s["addr"], s["len"], "user_ascii")
+                elif t == "asciz":
+                    fill(s["addr"], s["len"], "user_asciz")
+        elif ftype == "data":
+            fill(f["addr"], f["len"], "user_data")
+
+    # Header always wins.
+    fill(HEADER_START, HEADER_END - HEADER_START, "header")
+
+    counts: dict[str, int] = {k: 0 for k in keys}
+    for b in marks:
+        if b == UNMARKED:
+            counts["uncovered"] += 1
+        else:
+            counts[keys[b]] += 1
+    return counts
+
+
+def print_coverage_stats(counts: dict[str, int], rom_size: int, *, stream=sys.stderr) -> None:
+    """Print a one-block coverage summary."""
+    print("", file=stream)
+    print(f"  coverage of {rom_size} ROM bytes:", file=stream)
+    for key, label in _COV_CATEGORIES:
+        n = counts.get(key, 0)
+        if n == 0 and key != "uncovered":
+            continue
+        pct = 100.0 * n / rom_size if rom_size else 0.0
+        print(f"    {label:<28}  {n:>8}  {pct:5.1f}%", file=stream)
+
+
 def find_gaps(intervals: list[tuple[int, int, str]], rom_size: int) -> list[tuple[int, int]]:
     """Compute uncovered (start, len) regions, each clipped to a single bank."""
     gaps: list[tuple[int, int]] = []
@@ -1213,6 +1315,8 @@ def main(argv: list[str] | None = None) -> int:
 
     for path in sorted(written):
         print(path)
+
+    print_coverage_stats(compute_coverage(spec, len(rom)), len(rom))
     return 0
 
 

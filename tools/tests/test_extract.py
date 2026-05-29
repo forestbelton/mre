@@ -572,6 +572,74 @@ class TestAscizFormat(unittest.TestCase):
             extract._format_ascii_db(b"", trailing_terminator=True)
 
 
+class TestComputeCoverage(unittest.TestCase):
+    ROM = 0x10000
+
+    def test_uncovered_when_empty(self):
+        c = extract.compute_coverage({"files": []}, self.ROM)
+        # Header is always fenced off.
+        self.assertEqual(c["header"], extract.HEADER_END - extract.HEADER_START)
+        self.assertEqual(c["uncovered"], self.ROM - c["header"])
+        self.assertEqual(c["user_code"], 0)
+        self.assertEqual(c["analyzed_code"], 0)
+
+    def test_user_curated_wins_over_analyzer(self):
+        # Same byte range claimed by both; user wins.
+        spec = {"files": [
+            {"type": "code", "name": "x.asm", "sections": [
+                {"type": "code", "addr": 0x500, "len": 0x100}
+            ]},
+            {"type": "code", "name": "analyzed.asm", "sections": [
+                {"type": "data", "addr": 0x500, "len": 0x100}
+            ]},
+        ]}
+        c = extract.compute_coverage(spec, self.ROM)
+        self.assertEqual(c["user_code"], 0x100)
+        self.assertEqual(c["analyzed_data"], 0)
+
+    def test_conflict_overlays_analyzed(self):
+        spec = {
+            "files": [{"type": "code", "name": "analyzed.asm", "sections": [
+                {"type": "data", "addr": 0x500, "len": 0x100}
+            ]}],
+            "conflicts": [{"addr": 0x540, "len": 0x10}],
+        }
+        c = extract.compute_coverage(spec, self.ROM)
+        # 0x540..0x54F (16 bytes) become conflict; the rest of $500..$5FF stays
+        # tagged as analyzer data.
+        self.assertEqual(c["conflict"], 0x10)
+        self.assertEqual(c["analyzed_data"], 0x100 - 0x10)
+
+    def test_all_section_types_counted(self):
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "code",  "addr": 0x200, "len": 4},
+            {"type": "data",  "addr": 0x300, "len": 8},
+            {"type": "ascii", "addr": 0x400, "len": 5},
+            {"type": "asciz", "addr": 0x500, "len": 6},
+        ]}]}
+        c = extract.compute_coverage(spec, self.ROM)
+        self.assertEqual(c["user_code"], 4)
+        self.assertEqual(c["user_data"], 8)
+        self.assertEqual(c["user_ascii"], 5)
+        self.assertEqual(c["user_asciz"], 6)
+
+    def test_counts_sum_to_rom_size(self):
+        spec = {
+            "files": [
+                {"type": "code", "name": "x.asm", "sections": [
+                    {"type": "code", "addr": 0x200, "len": 0x100, "label": "X"}
+                ]},
+                {"type": "code", "name": "analyzed.asm", "sections": [
+                    {"type": "data", "addr": 0x1000, "len": 0x200},
+                    {"type": "code", "addr": 0x2000, "len": 0x100},
+                ]},
+            ],
+            "conflicts": [{"addr": 0x1100, "len": 0x40}],
+        }
+        c = extract.compute_coverage(spec, self.ROM)
+        self.assertEqual(sum(c.values()), self.ROM)
+
+
 class TestReconcileAnalyzedSections(unittest.TestCase):
     """Auto-split of analyzed.asm sections around user-curated entries."""
 
