@@ -685,6 +685,9 @@ def print_coverage_stats(counts: dict[str, int], rom_size: int, *, stream=sys.st
             continue
         pct = 100.0 * n / rom_size if rom_size else 0.0
         print(f"    {label:<28}  {n:>8}  {pct:5.1f}%", file=stream)
+    covered = rom_size - counts.get("uncovered", 0)
+    cov_pct = 100.0 * covered / rom_size if rom_size else 0.0
+    print(f"    {'covered total':<28}  {covered:>8}  {cov_pct:5.1f}%", file=stream)
 
 
 def find_gaps(intervals: list[tuple[int, int, str]], rom_size: int) -> list[tuple[int, int]]:
