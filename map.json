@@ -122,6 +122,18 @@
 		},
 		{
 			"type": "code",
+			"name": "scripts/mistral.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 509361,
+					"len": 408,
+					"label": "MistralScript"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{

@@ -6,6 +6,7 @@ INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "names.asm"
 INCLUDE "scripts/kalum.asm"
+INCLUDE "scripts/mistral.asm"
 INCLUDE "scripts/naji.asm"
 INCLUDE "scripts/pashute.asm"
 INCLUDE "scripts/toamuna.asm"
@@ -4659,9 +4660,9 @@ SECTION "data_07c416", ROMX[$4416], BANK[$1f]
 Data_1f_4416:
 	INCBIN "data_07c416.bin"
 
-SECTION "data_07c6b6", ROMX[$46b6], BANK[$1f]
-Data_1f_46b6:
-	INCBIN "data_07c6b6.bin"
+SECTION "data_07c749", ROMX[$4749], BANK[$1f]
+Data_1f_4749:
+	INCBIN "data_07c749.bin"
 
 SECTION "data_07d87c", ROMX[$587c], BANK[$1f]
 Data_1f_587c:
