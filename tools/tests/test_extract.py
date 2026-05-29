@@ -572,6 +572,56 @@ class TestAscizFormat(unittest.TestCase):
             extract._format_ascii_db(b"", trailing_terminator=True)
 
 
+class TestPaddingSections(unittest.TestCase):
+    def test_padding_type_accepted_by_validate_map(self):
+        # Just a structural check — validate_map shouldn't reject padding.
+        extract.validate_map({"files": [
+            {"type": "code", "name": "p.asm", "sections": [
+                {"type": "padding", "addr": 0x4000, "len": 0x100, "label": "P"}
+            ]}
+        ]}, rom_size=0x8000)
+
+    def test_validate_padding_accepts_zero_bytes(self):
+        rom = bytes(0x1000)
+        extract.validate_padding_sections({"files": [
+            {"type": "code", "name": "p.asm", "sections": [
+                {"type": "padding", "addr": 0x200, "len": 0x100, "label": "P"}
+            ]}
+        ]}, rom)
+
+    def test_validate_padding_rejects_nonzero(self):
+        rom = bytearray(0x1000)
+        rom[0x250] = 0x42  # poisoned byte inside the claimed padding range
+        with self.assertRaises(extract.MapError) as ctx:
+            extract.validate_padding_sections({"files": [
+                {"type": "code", "name": "p.asm", "sections": [
+                    {"type": "padding", "addr": 0x200, "len": 0x100, "label": "P"}
+                ]}
+            ]}, bytes(rom))
+        # Caller should see the address of the offending byte.
+        self.assertIn("$000250", str(ctx.exception))
+        self.assertIn("$42", str(ctx.exception))
+
+    def test_validate_padding_ignores_non_padding(self):
+        # A code or data section with non-zero bytes is fine; only padding
+        # sections trigger the zero-check.
+        rom = bytes([0x42] * 0x1000)
+        extract.validate_padding_sections({"files": [
+            {"type": "code", "name": "p.asm", "sections": [
+                {"type": "data", "addr": 0x200, "len": 0x100, "label": "D"}
+            ]}
+        ]}, rom)
+
+    def test_padding_counted_as_user_padding(self):
+        spec = {"files": [{"type": "code", "name": "p.asm", "sections": [
+            {"type": "padding", "addr": 0x200, "len": 0x100, "label": "P"}
+        ]}]}
+        c = extract.compute_coverage(spec, 0x10000)
+        self.assertEqual(c["user_padding"], 0x100)
+        # And not double-counted as uncovered.
+        self.assertEqual(c["uncovered"], 0x10000 - 0x100 - (extract.HEADER_END - extract.HEADER_START))
+
+
 class TestComputeCoverage(unittest.TestCase):
     ROM = 0x10000
 

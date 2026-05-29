@@ -200,6 +200,666 @@
 		},
 		{
 			"type": "code",
+			"name": "padding.asm",
+			"sections": [
+				{
+					"type": "padding",
+					"addr": 16117,
+					"len": 266,
+					"label": "Padding_003ef5"
+				},
+				{
+					"type": "padding",
+					"addr": 31925,
+					"len": 842,
+					"label": "Padding_007cb5"
+				},
+				{
+					"type": "padding",
+					"addr": 41792,
+					"len": 7359,
+					"label": "Padding_00a340"
+				},
+				{
+					"type": "padding",
+					"addr": 73591,
+					"len": 8328,
+					"label": "Padding_011f77"
+				},
+				{
+					"type": "padding",
+					"addr": 93358,
+					"len": 4945,
+					"label": "Padding_016cae"
+				},
+				{
+					"type": "padding",
+					"addr": 102205,
+					"len": 323,
+					"label": "Padding_018f3d"
+				},
+				{
+					"type": "padding",
+					"addr": 105581,
+					"len": 3027,
+					"label": "Padding_019c6d"
+				},
+				{
+					"type": "padding",
+					"addr": 116864,
+					"len": 2048,
+					"label": "Padding_01c880"
+				},
+				{
+					"type": "padding",
+					"addr": 122702,
+					"len": 2290,
+					"label": "Padding_01df4e"
+				},
+				{
+					"type": "padding",
+					"addr": 128358,
+					"len": 2713,
+					"label": "Padding_01f566"
+				},
+				{
+					"type": "padding",
+					"addr": 139391,
+					"len": 897,
+					"label": "Padding_02207f"
+				},
+				{
+					"type": "padding",
+					"addr": 144260,
+					"len": 3195,
+					"label": "Padding_023384"
+				},
+				{
+					"type": "padding",
+					"addr": 149848,
+					"len": 2058,
+					"label": "Padding_024958"
+				},
+				{
+					"type": "padding",
+					"addr": 152880,
+					"len": 1065,
+					"label": "Padding_025530"
+				},
+				{
+					"type": "padding",
+					"addr": 155887,
+					"len": 2089,
+					"label": "Padding_0260ef"
+				},
+				{
+					"type": "padding",
+					"addr": 158023,
+					"len": 2065,
+					"label": "Padding_026947"
+				},
+				{
+					"type": "padding",
+					"addr": 161378,
+					"len": 2461,
+					"label": "Padding_027662"
+				},
+				{
+					"type": "padding",
+					"addr": 166048,
+					"len": 2052,
+					"label": "Padding_0288a0"
+				},
+				{
+					"type": "padding",
+					"addr": 172157,
+					"len": 2019,
+					"label": "Padding_02a07d"
+				},
+				{
+					"type": "padding",
+					"addr": 175934,
+					"len": 354,
+					"label": "Padding_02af3e"
+				},
+				{
+					"type": "padding",
+					"addr": 178891,
+					"len": 1332,
+					"label": "Padding_02bacb"
+				},
+				{
+					"type": "padding",
+					"addr": 182387,
+					"len": 2073,
+					"label": "Padding_02c873"
+				},
+				{
+					"type": "padding",
+					"addr": 189271,
+					"len": 1257,
+					"label": "Padding_02e357"
+				},
+				{
+					"type": "padding",
+					"addr": 191424,
+					"len": 1216,
+					"label": "Padding_02ebc0"
+				},
+				{
+					"type": "padding",
+					"addr": 193418,
+					"len": 3189,
+					"label": "Padding_02f38a"
+				},
+				{
+					"type": "padding",
+					"addr": 212000,
+					"len": 991,
+					"label": "Padding_033c20"
+				},
+				{
+					"type": "padding",
+					"addr": 216136,
+					"len": 1102,
+					"label": "Padding_034c48"
+				},
+				{
+					"type": "padding",
+					"addr": 220482,
+					"len": 2830,
+					"label": "Padding_035d42"
+				},
+				{
+					"type": "padding",
+					"addr": 224512,
+					"len": 4863,
+					"label": "Padding_036d00"
+				},
+				{
+					"type": "padding",
+					"addr": 234471,
+					"len": 1049,
+					"label": "Padding_0393e7"
+				},
+				{
+					"type": "padding",
+					"addr": 235908,
+					"len": 3644,
+					"label": "Padding_039984"
+				},
+				{
+					"type": "padding",
+					"addr": 239599,
+					"len": 2065,
+					"label": "Padding_03a7ef"
+				},
+				{
+					"type": "padding",
+					"addr": 242705,
+					"len": 3054,
+					"label": "Padding_03b411"
+				},
+				{
+					"type": "padding",
+					"addr": 260393,
+					"len": 1750,
+					"label": "Padding_03f929"
+				},
+				{
+					"type": "padding",
+					"addr": 276145,
+					"len": 2382,
+					"label": "Padding_0436b1"
+				},
+				{
+					"type": "padding",
+					"addr": 289019,
+					"len": 609,
+					"label": "Padding_0468fb"
+				},
+				{
+					"type": "padding",
+					"addr": 294396,
+					"len": 515,
+					"label": "Padding_047dfc"
+				},
+				{
+					"type": "padding",
+					"addr": 304950,
+					"len": 6345,
+					"label": "Padding_04a736"
+				},
+				{
+					"type": "padding",
+					"addr": 314853,
+					"len": 1122,
+					"label": "Padding_04cde5"
+				},
+				{
+					"type": "padding",
+					"addr": 317717,
+					"len": 256,
+					"label": "Padding_04d915"
+				},
+				{
+					"type": "padding",
+					"addr": 320396,
+					"len": 7283,
+					"label": "Padding_04e38c"
+				},
+				{
+					"type": "padding",
+					"addr": 335911,
+					"len": 836,
+					"label": "Padding_052027"
+				},
+				{
+					"type": "padding",
+					"addr": 338411,
+					"len": 5652,
+					"label": "Padding_0529eb"
+				},
+				{
+					"type": "padding",
+					"addr": 357619,
+					"len": 2828,
+					"label": "Padding_0574f3"
+				},
+				{
+					"type": "padding",
+					"addr": 374280,
+					"len": 2551,
+					"label": "Padding_05b608"
+				},
+				{
+					"type": "padding",
+					"addr": 390576,
+					"len": 2639,
+					"label": "Padding_05f5b0"
+				},
+				{
+					"type": "padding",
+					"addr": 407913,
+					"len": 1686,
+					"label": "Padding_063969"
+				},
+				{
+					"type": "padding",
+					"addr": 419992,
+					"len": 5991,
+					"label": "Padding_066898"
+				},
+				{
+					"type": "padding",
+					"addr": 439852,
+					"len": 2515,
+					"label": "Padding_06b62c"
+				},
+				{
+					"type": "padding",
+					"addr": 451063,
+					"len": 614,
+					"label": "Padding_06e1f7"
+				},
+				{
+					"type": "padding",
+					"addr": 455387,
+					"len": 386,
+					"label": "Padding_06f2db"
+				},
+				{
+					"type": "padding",
+					"addr": 456926,
+					"len": 1825,
+					"label": "Padding_06f8de"
+				},
+				{
+					"type": "padding",
+					"addr": 458969,
+					"len": 1840,
+					"label": "Padding_0700d9"
+				},
+				{
+					"type": "padding",
+					"addr": 461606,
+					"len": 1348,
+					"label": "Padding_070b26"
+				},
+				{
+					"type": "padding",
+					"addr": 472918,
+					"len": 2217,
+					"label": "Padding_073756"
+				},
+				{
+					"type": "padding",
+					"addr": 488940,
+					"len": 2579,
+					"label": "Padding_0775ec"
+				},
+				{
+					"type": "padding",
+					"addr": 492800,
+					"len": 768,
+					"label": "Padding_078500"
+				},
+				{
+					"type": "padding",
+					"addr": 500711,
+					"len": 257,
+					"label": "Padding_07a3e7"
+				},
+				{
+					"type": "padding",
+					"addr": 505562,
+					"len": 2341,
+					"label": "Padding_07b6da"
+				},
+				{
+					"type": "padding",
+					"addr": 522054,
+					"len": 637,
+					"label": "Padding_07f746"
+				},
+				{
+					"type": "padding",
+					"addr": 523303,
+					"len": 480,
+					"label": "Padding_07fc27"
+				},
+				{
+					"type": "padding",
+					"addr": 539053,
+					"len": 1618,
+					"label": "Padding_0839ad"
+				},
+				{
+					"type": "padding",
+					"addr": 554005,
+					"len": 3050,
+					"label": "Padding_087415"
+				},
+				{
+					"type": "padding",
+					"addr": 570843,
+					"len": 2596,
+					"label": "Padding_08b5db"
+				},
+				{
+					"type": "padding",
+					"addr": 588728,
+					"len": 1095,
+					"label": "Padding_08fbb8"
+				},
+				{
+					"type": "padding",
+					"addr": 599541,
+					"len": 6666,
+					"label": "Padding_0925f5"
+				},
+				{
+					"type": "padding",
+					"addr": 612607,
+					"len": 1793,
+					"label": "Padding_0958ff"
+				},
+				{
+					"type": "padding",
+					"addr": 615808,
+					"len": 641,
+					"label": "Padding_096580"
+				},
+				{
+					"type": "padding",
+					"addr": 619248,
+					"len": 3343,
+					"label": "Padding_0972f0"
+				},
+				{
+					"type": "padding",
+					"addr": 623701,
+					"len": 939,
+					"label": "Padding_098455"
+				},
+				{
+					"type": "padding",
+					"addr": 628736,
+					"len": 2056,
+					"label": "Padding_099800"
+				},
+				{
+					"type": "padding",
+					"addr": 636602,
+					"len": 2373,
+					"label": "Padding_09b6ba"
+				},
+				{
+					"type": "padding",
+					"addr": 651264,
+					"len": 4095,
+					"label": "Padding_09f000"
+				},
+				{
+					"type": "padding",
+					"addr": 669007,
+					"len": 2736,
+					"label": "Padding_0a354f"
+				},
+				{
+					"type": "padding",
+					"addr": 686924,
+					"len": 1203,
+					"label": "Padding_0a7b4c"
+				},
+				{
+					"type": "padding",
+					"addr": 703075,
+					"len": 1436,
+					"label": "Padding_0aba63"
+				},
+				{
+					"type": "padding",
+					"addr": 710672,
+					"len": 2048,
+					"label": "Padding_0ad810"
+				},
+				{
+					"type": "padding",
+					"addr": 720298,
+					"len": 597,
+					"label": "Padding_0afdaa"
+				},
+				{
+					"type": "padding",
+					"addr": 720896,
+					"len": 16383,
+					"label": "Padding_0b0000"
+				},
+				{
+					"type": "padding",
+					"addr": 752967,
+					"len": 696,
+					"label": "Padding_0b7d47"
+				},
+				{
+					"type": "padding",
+					"addr": 769351,
+					"len": 696,
+					"label": "Padding_0bbd47"
+				},
+				{
+					"type": "padding",
+					"addr": 779342,
+					"len": 7089,
+					"label": "Padding_0be44e"
+				},
+				{
+					"type": "padding",
+					"addr": 794680,
+					"len": 8135,
+					"label": "Padding_0c2038"
+				},
+				{
+					"type": "padding",
+					"addr": 804862,
+					"len": 14337,
+					"label": "Padding_0c47fe"
+				},
+				{
+					"type": "padding",
+					"addr": 821491,
+					"len": 3360,
+					"label": "Padding_0c88f3"
+				},
+				{
+					"type": "padding",
+					"addr": 826258,
+					"len": 577,
+					"label": "Padding_0c9b92"
+				},
+				{
+					"type": "padding",
+					"addr": 830334,
+					"len": 5249,
+					"label": "Padding_0cab7e"
+				},
+				{
+					"type": "padding",
+					"addr": 848937,
+					"len": 3030,
+					"label": "Padding_0cf429"
+				},
+				{
+					"type": "padding",
+					"addr": 853632,
+					"len": 552,
+					"label": "Padding_0d0680"
+				},
+				{
+					"type": "padding",
+					"addr": 858280,
+					"len": 2082,
+					"label": "Padding_0d18a8"
+				},
+				{
+					"type": "padding",
+					"addr": 861704,
+					"len": 672,
+					"label": "Padding_0d2608"
+				},
+				{
+					"type": "padding",
+					"addr": 864161,
+					"len": 263,
+					"label": "Padding_0d2fa1"
+				},
+				{
+					"type": "padding",
+					"addr": 866861,
+					"len": 1490,
+					"label": "Padding_0d3a2d"
+				},
+				{
+					"type": "padding",
+					"addr": 877878,
+					"len": 6857,
+					"label": "Padding_0d6536"
+				},
+				{
+					"type": "padding",
+					"addr": 884736,
+					"len": 16383,
+					"label": "Padding_0d8000"
+				},
+				{
+					"type": "padding",
+					"addr": 901120,
+					"len": 16383,
+					"label": "Padding_0dc000"
+				},
+				{
+					"type": "padding",
+					"addr": 928793,
+					"len": 5094,
+					"label": "Padding_0e2c19"
+				},
+				{
+					"type": "padding",
+					"addr": 933888,
+					"len": 16383,
+					"label": "Padding_0e4000"
+				},
+				{
+					"type": "padding",
+					"addr": 950272,
+					"len": 16383,
+					"label": "Padding_0e8000"
+				},
+				{
+					"type": "padding",
+					"addr": 972595,
+					"len": 10444,
+					"label": "Padding_0ed733"
+				},
+				{
+					"type": "padding",
+					"addr": 984415,
+					"len": 675,
+					"label": "Padding_0f055f"
+				},
+				{
+					"type": "padding",
+					"addr": 986292,
+					"len": 844,
+					"label": "Padding_0f0cb4"
+				},
+				{
+					"type": "padding",
+					"addr": 988693,
+					"len": 491,
+					"label": "Padding_0f1615"
+				},
+				{
+					"type": "padding",
+					"addr": 990849,
+					"len": 383,
+					"label": "Padding_0f1e81"
+				},
+				{
+					"type": "padding",
+					"addr": 992423,
+					"len": 1018,
+					"label": "Padding_0f24a7"
+				},
+				{
+					"type": "padding",
+					"addr": 994748,
+					"len": 580,
+					"label": "Padding_0f2dbc"
+				},
+				{
+					"type": "padding",
+					"addr": 996208,
+					"len": 3215,
+					"label": "Padding_0f3370"
+				},
+				{
+					"type": "padding",
+					"addr": 1008844,
+					"len": 771,
+					"label": "Padding_0f64cc"
+				},
+				{
+					"type": "padding",
+					"addr": 1015009,
+					"len": 558,
+					"label": "Padding_0f7ce1"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{

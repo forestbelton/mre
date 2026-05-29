@@ -36,7 +36,7 @@ HARDWARE_INC = "hardware.inc"
 #   - "data"  : treat as a span of bytes; labels at any byte position.
 # `ascii` and `asciz` are emitted as RGBASM string literals but are
 # coverage-equivalent to `data` (any byte is a valid label position).
-SECTION_TYPES = {"code", "data", "ascii", "asciz"}
+SECTION_TYPES = {"code", "data", "ascii", "asciz", "padding"}
 DATA_LIKE_TYPES = {"data", "ascii", "asciz"}
 
 
@@ -446,6 +446,39 @@ def _validate_label(value: Any, where: str, seen: dict[str, str]) -> str | None:
 ANALYZED_FILE_NAME = "analyzed.asm"
 
 
+def validate_padding_sections(spec: dict[str, Any], rom: bytes) -> None:
+    """Verify every padding section in the spec is backed by all-$00 bytes.
+
+    Padding sections don't emit any RGBASM directives — they exist purely
+    to claim the address range so the extractor's coverage stats know it
+    isn't an "uncovered" gap. The bytes get filled by rgblink's `-p 0`
+    pass since there's no SECTION declared for that range and a real
+    section sits at a higher address (extending the ROM size). If any of
+    those bytes were non-zero, dropping the section directive would
+    silently corrupt the build, so we check up-front.
+    """
+    for f in spec.get("files", []):
+        if not isinstance(f, dict) or f.get("type") != "code":
+            continue
+        for s in f.get("sections", []) or []:
+            if not isinstance(s, dict) or s.get("type") != "padding":
+                continue
+            start = int(s["addr"])
+            length = int(s["len"])
+            end = start + length
+            if end > len(rom):
+                raise MapError(
+                    f"{f.get('name')!r} padding section at ${start:06x}: "
+                    f"extends past ROM end (${len(rom):06x})"
+                )
+            for i in range(start, end):
+                if rom[i] != 0:
+                    raise MapError(
+                        f"{f.get('name')!r} padding section at ${start:06x}: "
+                        f"byte ${i:06x} is ${rom[i]:02x}, not $00"
+                    )
+
+
 def reconcile_analyzed_sections(spec: dict[str, Any]) -> None:
     """In-memory split of analyzed.asm sections around user-curated ranges.
 
@@ -593,6 +626,7 @@ _COV_CATEGORIES = [
     ("user_data",     "user-curated data"),
     ("user_ascii",    "user-curated ascii"),
     ("user_asciz",    "user-curated asciz"),
+    ("user_padding",  "user-curated padding"),
     ("analyzed_code", "analyzer code"),
     ("analyzed_data", "analyzer data"),
     ("conflict",      "conflict bytes"),
@@ -660,6 +694,8 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
                     fill(s["addr"], s["len"], "user_ascii")
                 elif t == "asciz":
                     fill(s["addr"], s["len"], "user_asciz")
+                elif t == "padding":
+                    fill(s["addr"], s["len"], "user_padding")
         elif ftype == "data":
             fill(f["addr"], f["len"], "user_data")
 
@@ -1098,7 +1134,15 @@ def emit_code_file(
     """
     name = file_spec["name"]
     stem = Path(name).stem
-    sections = sorted(file_spec["sections"], key=lambda s: s["addr"])
+    # Padding sections claim a range for coverage purposes but emit
+    # nothing — rgblink's -p 0 fills the bytes since they're not assigned
+    # to any SECTION. Skip them here so an entry like
+    #   { "type": "padding", "addr": ..., "len": ... }
+    # contributes zero output but still keeps the range out of find_gaps.
+    sections = sorted(
+        (s for s in file_spec["sections"] if s.get("type") != "padding"),
+        key=lambda s: s["addr"],
+    )
     out_path = output_dir / name
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -1271,6 +1315,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         intervals = validate_map(spec, len(rom))
+        validate_padding_sections(spec, rom)
     except MapError as e:
         print(f"error: {e}", file=sys.stderr)
         return 2
