@@ -6,14 +6,15 @@ INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "names.asm"
 INCLUDE "scripts/kalum.asm"
+INCLUDE "scripts/letter_from_cox.asm"
 INCLUDE "scripts/mistral.asm"
 INCLUDE "scripts/nada.asm"
 INCLUDE "scripts/naji.asm"
+INCLUDE "scripts/nox.asm"
 INCLUDE "scripts/pashute.asm"
 INCLUDE "scripts/rafaga.asm"
 INCLUDE "scripts/tempest.asm"
 INCLUDE "scripts/toamuna.asm"
-INCLUDE "scripts/tradehouse.asm"
 INCLUDE "scripts/verde.asm"
 
 SECTION "data_000005", ROM0[$0005]
@@ -4324,6 +4325,10 @@ SECTION "data_04c000", ROMX[$4000], BANK[$13]
 Data_13_4000:
 	INCBIN "data_04c000.bin"
 
+SECTION "data_04c884", ROMX[$4884], BANK[$13]
+Data_13_4884:
+	INCBIN "data_04c884.bin"
+
 SECTION "data_050000", ROMX[$4000], BANK[$14]
 Data_14_4000:
 	INCBIN "data_050000.bin"
@@ -4576,9 +4581,9 @@ SECTION "data_061e03", ROMX[$5e03], BANK[$18]
 Data_18_5e03:
 	INCBIN "data_061e03.bin"
 
-SECTION "data_062b62", ROMX[$6b62], BANK[$18]
-Data_18_6b62:
-	INCBIN "data_062b62.bin"
+SECTION "data_062b65", ROMX[$6b65], BANK[$18]
+Data_18_6b65:
+	INCBIN "data_062b65.bin"
 
 SECTION "data_062bb7", ROMX[$6bb7], BANK[$18]
 Data_18_6bb7:

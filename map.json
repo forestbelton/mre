@@ -98,18 +98,6 @@
 		},
 		{
 			"type": "code",
-			"name": "scripts/tradehouse.asm",
-			"sections": [
-				{
-					"type": "data",
-					"addr": 401554,
-					"len": 2768,
-					"label": "TradeHouseEntry"
-				}
-			]
-		},
-		{
-			"type": "code",
 			"name": "scripts/kalum.asm",
 			"sections": [
 				{
@@ -176,7 +164,37 @@
 					"type": "data",
 					"addr": 398581,
 					"len": 2286,
-					"label": "VerdeScript"
+					"label": "VerdeEntry"
+				},
+				{
+					"type": "data",
+					"addr": 401554,
+					"len": 2771,
+					"label": "VerdeEmptyEntry"
+				}
+			]
+		},
+		{
+			"type": "code",
+			"name": "scripts/nox.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 312393,
+					"len": 950,
+					"label": "NoxScript"
+				}
+			]
+		},
+		{
+			"type": "code",
+			"name": "scripts/letter_from_cox.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 313343,
+					"len": 133,
+					"label": "LetterFromCox"
 				}
 			]
 		},
