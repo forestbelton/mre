@@ -158,6 +158,18 @@
 		},
 		{
 			"type": "code",
+			"name": "scripts/nada.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 512226,
+					"len": 1907,
+					"label": "NadaScript"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{
