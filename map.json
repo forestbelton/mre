@@ -86,6 +86,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"scripts/kalum.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	508605,
+					"len":	345,
+					"label":	"KalumScript"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"analyzed.asm",
 			"sections":	[{
 					"type":	"data",
@@ -5010,11 +5019,11 @@
 				}, {
 					"type":	"data",
 					"addr":	508593,
-					"len":	239
+					"len":	12
 				}, {
 					"type":	"code",
-					"addr":	508950,
-					"len":	399
+					"addr":	508959,
+					"len":	390
 				}, {
 					"type":	"data",
 					"addr":	509349,

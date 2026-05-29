@@ -5,6 +5,7 @@ INCLUDE "hardware.inc"
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "names.asm"
+INCLUDE "scripts/kalum.asm"
 INCLUDE "scripts/naji.asm"
 INCLUDE "scripts/pashute.asm"
 INCLUDE "scripts/toamuna.asm"
@@ -4654,9 +4655,9 @@ SECTION "data_07c145", ROMX[$4145], BANK[$1f]
 Data_1f_4145:
 	INCBIN "data_07c145.bin"
 
-SECTION "data_07c3a0", ROMX[$43a0], BANK[$1f]
-Data_1f_43a0:
-	INCBIN "data_07c3a0.bin"
+SECTION "data_07c416", ROMX[$4416], BANK[$1f]
+Data_1f_4416:
+	INCBIN "data_07c416.bin"
 
 SECTION "data_07c6b6", ROMX[$46b6], BANK[$1f]
 Data_1f_46b6:
