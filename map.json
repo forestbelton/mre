@@ -134,6 +134,18 @@
 		},
 		{
 			"type": "code",
+			"name": "scripts/rafaga.asm",
+			"sections": [
+				{
+					"type": "data",
+					"addr": 510051,
+					"len": 529,
+					"label": "RafagaScript"
+				}
+			]
+		},
+		{
+			"type": "code",
 			"name": "analyzed.asm",
 			"sections": [
 				{
