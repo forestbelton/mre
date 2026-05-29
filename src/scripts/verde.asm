@@ -1,28 +1,34 @@
-; Verde (monster breeder at the ranch).
-; 
-; Verde is one of the townspeople who went to the tower and returned
-; (Toamuna's D0DC=3 greeting: "Verde returned. Great! Thank you").
-; He introduces himself as "a monster breeder", which fits — like
-; Pashute (priest, monster regeneration), he runs a ranch-side service.
-; 
-; D0E4 gates the state cascade: ==1/3/4 jump to alternate welcomes,
-; fall-through is the first-encounter intro.
-; 
-; The 286-byte Z80 helper region at $061F6E onward (after this script)
-; holds routines $07 FAR_CALLed from within the script; we don't
-; include those bytes here.
+; Verde (monster checkroom, ranch).
 ;
-; Carved out of analyzed.asm via map.json; see docs/text_engine.md
-; for the bytecode reference. Initial dump produced by
-; tools/script_disasm.py — hand-curate freely; the extractor's
-; append-only rule on non-auto-managed files preserves your edits.
+; Verde is one of the townspeople who returned from the tower
+; (Toamuna's D0DC=3 greeting: "Verde returned. Great! Thank you").
+; He introduces himself as "the owner of the checkroom" — monster
+; boarding likely via the GBC link cable for trading.
+;
+; Two scripts in this file, dispatched independently by the engine
+; depending on whether Verde is at the building:
+;
+;   VerdeEntry       $0614F5  D0E4 cascade; first-time intro is
+;                             the long "I am Verde..." monologue
+;                             referencing Naji as the referrer.
+;   VerdeEmptyEntry  $062092  D0E3 cascade; building is empty,
+;                             player finds a note about the link
+;                             function. The two ROM regions are
+;                             ~2 KB apart but represent the same
+;                             building's state.
+;
+; The tail of the empty-state script ($6251A onward, "What do you
+; want to do?" menu) is shared infrastructure also reachable from
+; the Verde-present script.
+;
+; See docs/text_engine.md for the bytecode reference.
 
 INCLUDE "script.inc"
 
 SECTION "verde_0614f5", ROMX[$54f5], BANK[$18]
 
 
-VerdeScript:
+VerdeEntry:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     SCRIPT_IF_EQ $d0e4, $04, verde_5929
     SCRIPT_IF_EQ $d0e4, $03, verde_5833
@@ -436,3 +442,538 @@ verde_5da4:
     db "Good luck!"
     SCRIPT_WAIT
     SCRIPT_END
+
+SECTION "verde_062092_empty", ROMX[$6092], BANK[$18]
+
+
+VerdeEmptyEntry:
+    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_IF_EQ $d0e3, $01, verde_60f9
+    SCRIPT_FAR_CALL $5f6e, $18
+    db "Nobody seems"
+    SCRIPT_NEWLINE
+    db "to be here."
+    SCRIPT_WAIT
+    db "Oh!"
+    SCRIPT_NEWLINE
+    db "There's a note!"
+    SCRIPT_WAIT
+    SCRIPT_FAR_CALL $5fcb, $18
+    db "Link function"
+    SCRIPT_NEWLINE
+    db "seems usable."
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $d0e3, $01
+    SCRIPT_FAR_CALL $5f71, $18
+    SCRIPT_GOTO verde_60fd
+
+verde_60f9:
+    SCRIPT_FAR_CALL $5f6e, $18
+
+verde_60fd:
+    db "What would you"
+    SCRIPT_NEWLINE
+    db "like to play?"
+    SCRIPT_FAR_CALL $5f50, $1f
+    SCRIPT_FAR_CALL $5fbf, $18
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d5ff, verde_612b, verde_6190, verde_646b
+
+verde_612b:
+    db "OK. Let's enter"
+    SCRIPT_NEWLINE
+    db "the room, then."
+    SCRIPT_WAIT
+    SCRIPT_FAR_CALL $18f7, $00
+    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_IF_EQ $c2c0, $04, verde_616d
+    SCRIPT_IF_EQ $c2c0, $05, verde_616d
+    SCRIPT_IF_EQ $c2c0, $06, verde_616d
+    SCRIPT_FAR_CALL $195e, $00
+    SCRIPT_FAR_CALL $5f6e, $18
+
+verde_616d:
+    db "Done. OK, let's"
+    SCRIPT_NEWLINE
+    db "leave the room."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_6190:
+    db "Okay. Let me try"
+    SCRIPT_NEWLINE
+    db "the exchange."
+    SCRIPT_YN_CUE
+    SCRIPT_WRITE_WRAM $d5c2, $00
+    SCRIPT_FAR_CALL $4040, $31
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d5c2, verde_624e, verde_61c3, verde_6203, verde_6238
+
+verde_61c3:
+    db "Your friend does"
+    SCRIPT_NEWLINE
+    db "not seem ready."
+    SCRIPT_WAIT
+    db "Try when you're"
+    SCRIPT_NEWLINE
+    db "both ready."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_6203:
+    db "You don't seem"
+    SCRIPT_NEWLINE
+    db "ready yet."
+    SCRIPT_WAIT
+    db "Connect the"
+    SCRIPT_NEWLINE
+    db "Link Cable!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_6238:
+    db "Process"
+    SCRIPT_NEWLINE
+    db "cancelled."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_624e:
+    db "But before that,"
+    SCRIPT_NEWLINE
+    db "current status"
+    SCRIPT_WAIT
+    db "must be saved."
+    SCRIPT_NEWLINE
+    db "Okay?"
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_IF_EQ $d5fe, $00, verde_62b3
+    db "Hmmm..."
+    SCRIPT_WAIT
+    db "Let's not do it"
+    SCRIPT_NEWLINE
+    db "this time."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_62b3:
+    db "Now saving."
+    SCRIPT_NEWLINE
+    db "Leave Game Pak."
+    SCRIPT_WAIT
+    SCRIPT_REPEAT_CHAR 120
+    SCRIPT_ANCHOR
+    SCRIPT_FAR_CALL $4b67, $12
+    db "We're ready! Now"
+    SCRIPT_NEWLINE
+    db "start exchange!"
+    SCRIPT_WAIT
+    db "Okay, then..."
+    SCRIPT_WAIT
+    db "Let's choose a"
+    SCRIPT_NEWLINE
+    db "room to exchange"
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $cfbe, $02
+    SCRIPT_FAR_CALL $1937, $00
+    SCRIPT_FAR_CALL $5dec, $18
+    SCRIPT_FAR_CALL $5f6e, $18
+    db "Next, choose a"
+    SCRIPT_NEWLINE
+    db "room to receive."
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $cfbe, $01
+    SCRIPT_FAR_CALL $1937, $00
+    SCRIPT_FAR_CALL $5df3, $18
+    SCRIPT_FAR_CALL $5f6e, $18
+    db "You're both OK?"
+    SCRIPT_NEWLINE
+    db "Let's start!"
+    SCRIPT_WAIT
+    db "Leave Link Cable"
+    SCRIPT_NEWLINE
+    db "and Game Pak."
+    SCRIPT_WAIT
+    db "Your friend is"
+    SCRIPT_NEWLINE
+    db "getting ready."
+    SCRIPT_WAIT
+    db "Let's wait for"
+    SCRIPT_NEWLINE
+    db "a little while."
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $44c9, $31
+    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_FAR_CALL $5de3, $18
+    SCRIPT_JUMP_TABLE $d5c2, verde_63f5, verde_6424, verde_6455, verde_6455
+
+verde_63f5:
+    db "Yes!"
+    SCRIPT_NEWLINE
+    db "We did it!"
+    SCRIPT_WAIT
+    db "The exchange was"
+    SCRIPT_NEWLINE
+    db "a success!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_6424:
+    db "Uh-oh. Something"
+    SCRIPT_NEWLINE
+    db "went wrong."
+    SCRIPT_WAIT
+    db "Let's try again."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_6455:
+    db "Process"
+    SCRIPT_NEWLINE
+    db "cancelled."
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_60fd
+
+verde_646b:
+    db "I should stop"
+    SCRIPT_NEWLINE
+    db "for now."
+    SCRIPT_WAIT
+    SCRIPT_END
+    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_CYCLE 4
+    SCRIPT_JUMP_TABLE $d60d, verde_6499, verde_64b5, verde_64d7, verde_64fd
+
+verde_6499:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Hey!"
+    SCRIPT_NEWLINE
+    db "How's it going?"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_64b5:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Hey! Howdy?"
+    SCRIPT_NEWLINE
+    db "Have some fun!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_64d7:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Oh! You again!"
+    SCRIPT_NEWLINE
+    db "Take your time!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_64fd:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Wow!"
+    SCRIPT_NEWLINE
+    db "Doing your best?"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+VerdeSharedMenu:
+    SCRIPT_RENDERER $5f3c, $18
+    db "What do you"
+    SCRIPT_NEWLINE
+    db "want to do?"
+    SCRIPT_FAR_CALL $5e43, $1f
+    SCRIPT_FAR_CALL $5ebc, $18
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d5ff, verde_654b, verde_659a, verde_6614, verde_6641, verde_69ab
+
+verde_654b:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Leave it to me!"
+    SCRIPT_NEWLINE
+    db "I got it ready."
+    SCRIPT_WAIT
+    SCRIPT_FAR_CALL $1982, $00
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_RENDERER $5f3c, $18
+    db "Oh, you're done?"
+    SCRIPT_NEWLINE
+    db "Great job!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_659a:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Want to try a"
+    SCRIPT_NEWLINE
+    db "room. Good luck!"
+    SCRIPT_WAIT
+    SCRIPT_FAR_CALL $18f7, $00
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_IF_EQ $c2c0, $04, verde_65fd
+    SCRIPT_IF_EQ $c2c0, $05, verde_65fd
+    SCRIPT_IF_EQ $c2c0, $06, verde_65fd
+    SCRIPT_RENDERER $5f3c, $18
+    db "Okay! Now enter"
+    SCRIPT_NEWLINE
+    db "the room!"
+    SCRIPT_WAIT
+    SCRIPT_FAR_CALL $195e, $00
+    SCRIPT_FAR_CALL $5e03, $18
+
+verde_65fd:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Not today, huh?"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_6614:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Now,"
+    SCRIPT_NEWLINE
+    db "let me explain."
+    SCRIPT_FAR_CALL $5fc3, $1f
+    SCRIPT_FAR_CALL $5ebc, $18
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d600, verde_69c9, verde_6a9b, verde_6b62
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_6641:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Well then,"
+    SCRIPT_NEWLINE
+    db "let's exchange!"
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $4040, $31
+    SCRIPT_ANCHOR
+    SCRIPT_JUMP_TABLE $d5c2, verde_66f9, verde_6670, verde_66a6, verde_66df
+
+verde_6670:
+    SCRIPT_RENDERER $5ec8, $18
+    db "Opponent not"
+    SCRIPT_NEWLINE
+    db "ready yet."
+    SCRIPT_WAIT
+    db "Call again"
+    SCRIPT_NEWLINE
+    db "when ready."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_66a6:
+    SCRIPT_RENDERER $5ec8, $18
+    db "You don't look"
+    SCRIPT_NEWLINE
+    db "ready yet."
+    SCRIPT_WAIT
+    db "Connect the"
+    SCRIPT_NEWLINE
+    db "Link Cable."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_66df:
+    SCRIPT_RENDERER $5ec8, $18
+    db "Process"
+    SCRIPT_NEWLINE
+    db "cancelled."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_66f9:
+    SCRIPT_RENDERER $5ec8, $18
+    db "First, I'll save"
+    SCRIPT_NEWLINE
+    db "current status."
+    SCRIPT_WAIT
+    db "Okay?"
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_IF_EQ $d5fe, $00, verde_676b
+    SCRIPT_RENDERER $5ec8, $18
+    db "I see. How"
+    SCRIPT_NEWLINE
+    db "disappointing."
+    SCRIPT_WAIT
+    db "Tell me again,"
+    SCRIPT_NEWLINE
+    db "if you like."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_676b:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Okay. Looks like"
+    SCRIPT_NEWLINE
+    db "you're ready."
+    SCRIPT_WAIT
+    db "Well."
+    SCRIPT_NEWLINE
+    db "Wait a second."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER $5ec8, $18
+    db "I'm saving now."
+    SCRIPT_NEWLINE
+    db "Leave Game Pak."
+    SCRIPT_REPEAT_CHAR 120
+    SCRIPT_ANCHOR
+    SCRIPT_FAR_CALL $4b67, $12
+    SCRIPT_RENDERER $5f3c, $18
+    db "Sorry you waited"
+    SCRIPT_NEWLINE
+    db "Let's exchange."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER $5ec8, $18
+    db "Okay, now choose"
+    SCRIPT_WAIT
+    db "the room you"
+    SCRIPT_NEWLINE
+    db "want to exchange"
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $cfbe, $02
+    SCRIPT_FAR_CALL $1937, $00
+    SCRIPT_FAR_CALL $5dec, $18
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_RENDERER $5f3c, $18
+    db "Now, choose a"
+    SCRIPT_NEWLINE
+    db "room to receive."
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM $cfbe, $01
+    SCRIPT_FAR_CALL $1937, $00
+    SCRIPT_FAR_CALL $5df3, $18
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_RENDERER $5f3c, $18
+    db "Are you both OK?"
+    SCRIPT_NEWLINE
+    db "Let's get going."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER $5ec8, $18
+    db "Leave Link Cable"
+    SCRIPT_NEWLINE
+    db "and Game Pak."
+    SCRIPT_WAIT
+    db "Your friend is"
+    SCRIPT_NEWLINE
+    db "getting ready."
+    SCRIPT_WAIT
+    db "Please wait"
+    SCRIPT_NEWLINE
+    db "a second."
+    SCRIPT_YN_CUE
+    SCRIPT_FAR_CALL $44c9, $31
+    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_FAR_CALL $5de3, $18
+    SCRIPT_JUMP_TABLE $d5c2, verde_68fc, verde_6958, verde_6991, verde_6991
+
+verde_68fc:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Whoa! Looks like"
+    SCRIPT_NEWLINE
+    db "it was a success"
+    SCRIPT_WAIT
+    SCRIPT_RENDERER $5f3c, $18
+    db "Exchange done."
+    SCRIPT_WAIT
+    db "Call if you need"
+    SCRIPT_NEWLINE
+    db "anything else."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_6958:
+    SCRIPT_RENDERER $5ec8, $18
+    db "Hmmm. Looks"
+    SCRIPT_NEWLINE
+    db "like we failed."
+    SCRIPT_WAIT
+    db "Can you try"
+    SCRIPT_NEWLINE
+    db "it again?"
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_6991:
+    SCRIPT_RENDERER $5ec8, $18
+    db "Process"
+    SCRIPT_NEWLINE
+    db "cancelled."
+    SCRIPT_WAIT
+    SCRIPT_GOTO VerdeSharedMenu
+
+verde_69ab:
+    SCRIPT_RENDERER $5f3c, $18
+    db "Okay! Please"
+    SCRIPT_NEWLINE
+    db "come again!"
+    SCRIPT_WAIT
+    SCRIPT_END
+
+verde_69c9:
+    SCRIPT_RENDERER $5ec8, $18
+    db "You can make 3"
+    SCRIPT_NEWLINE
+    db "rooms. Choose a"
+    SCRIPT_WAIT
+    db "large or small"
+    SCRIPT_NEWLINE
+    db "sized room."
+    SCRIPT_WAIT
+    db "Place monsters"
+    SCRIPT_NEWLINE
+    db "and items where"
+    SCRIPT_WAIT
+    db "you wish. Don't"
+    SCRIPT_NEWLINE
+    db "forget the door"
+    SCRIPT_WAIT
+    db "and key. You can"
+    SCRIPT_NEWLINE
+    db "place 3 types"
+    SCRIPT_WAIT
+    db "and up to 9"
+    SCRIPT_NEWLINE
+    db "monsters in all."
+    SCRIPT_WAIT
+    db "That's all."
+    SCRIPT_NEWLINE
+    db "Have fun!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_6614
+
+verde_6a9b:
+    SCRIPT_RENDERER $5ec8, $18
+    db "Link Exchange,"
+    SCRIPT_NEWLINE
+    db "right?"
+    SCRIPT_WAIT
+    SCRIPT_RENDERER $5f3c, $18
+    db "This lets you"
+    SCRIPT_NEWLINE
+    db "exchange"
+    SCRIPT_WAIT
+    db "rooms created"
+    SCRIPT_NEWLINE
+    db "with your pals."
+    SCRIPT_WAIT
+    db "A cool feature"
+    SCRIPT_NEWLINE
+    db "only found here."
+    SCRIPT_WAIT
+    db "Create fun or"
+    SCRIPT_NEWLINE
+    db "difficult rooms"
+    SCRIPT_WAIT
+    db "and attack them"
+    SCRIPT_NEWLINE
+    db "with your pals!"
+    SCRIPT_WAIT
+    db "That's fun."
+    SCRIPT_WAIT
+    db "Enjoy!"
+    SCRIPT_WAIT
+    SCRIPT_GOTO verde_6614
+
+verde_6b62:
+    SCRIPT_GOTO VerdeSharedMenu
