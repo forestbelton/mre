@@ -89,7 +89,7 @@ Func_00_0150:
 	ld c, $0a
 Func_00_017f:
 	push bc
-	call Func_00_02e6
+	call WaitForNextFrame
 	pop bc
 	dec c
 	jr nz, Func_00_017f
@@ -269,7 +269,7 @@ Func_00_02dd:
 	cp $03
 	jr z, Func_00_02dd
 	ret
-Func_00_02e6:
+WaitForNextFrame:
 	ld a, [$c287]
 	inc a
 	ld [$c287], a
@@ -277,11 +277,11 @@ Func_00_02e6:
 	rra
 	ret nc
 	rst $20
-	jr z, Func_00_02fc
+	jr z, HaltOnly
 	call Func_00_0643
 	call Func_00_0666
-	jr Func_00_02fc
-Func_00_02fc:
+	jr HaltOnly
+HaltOnly:
 	halt
 
 SECTION "analyzed_0002fd", ROM0[$02fd]
@@ -291,10 +291,10 @@ Data_00_02fd:
 
 SECTION "analyzed_0002fe", ROM0[$02fe]
 
-Func_00_02fe:
+HaltIfC286Set:
 	ld a, [$c286]
 	and a
-	jr z, Func_00_02fc
+	jr z, HaltOnly
 	xor a
 	ld [$c286], a
 	rst $20
@@ -443,7 +443,7 @@ Func_00_0413:
 	ld [$c292], a
 	ei
 	ret
-Func_00_042e:
+CallBankedHL:
 	ld d, a
 	ld a, [$7fff]
 	push af
@@ -491,12 +491,12 @@ Func_00_0467:
 SECTION "analyzed_0004bc", ROM0[$04bc]
 
 Func_00_04bc:
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, $e7
 	ldh [rLCDC], a
 	ret
 Func_00_04c4:
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, $c7
 	ldh [rLCDC], a
 	ret
@@ -957,10 +957,10 @@ Func_00_0786:
 	rst $20
 	ret z
 Func_00_0788:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_04d9
 	jr nz, Func_00_0788
-	call Func_00_02e6
+	call WaitForNextFrame
 	ret
 Func_00_0794:
 	rst $20
@@ -1334,7 +1334,7 @@ Func_00_0be6:
 	jr nz, Func_00_0be6
 	ld a, $00
 	ldh [$ffa7], a
-Func_00_0bf1:
+HideUnusedOamSprites:
 	ldh a, [$ffa7]
 	cp $a0
 	jr nc, Func_00_0c04
@@ -1666,7 +1666,7 @@ Func_00_0f41:
 	call Func_00_1863
 	ld a, $05
 	ld hl, $463a
-	call Func_00_042e
+	call CallBankedHL
 Func_00_0f58:
 	ld hl, $0f6e
 	push hl
@@ -2744,22 +2744,22 @@ SECTION "analyzed_00166f", ROM0[$166f]
 Func_00_166f:
 	ld a, $01
 	ld hl, $569b
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld hl, $56c5
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld hl, $56fb
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $05
 	ld hl, $496b
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $05
 	ld hl, $49c8
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $05
 	ld hl, $499d
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $ff
 	ld [$c530], a
 	ld [$c531], a
@@ -2873,10 +2873,10 @@ Func_00_1748:
 	call Func_00_030b
 	ld a, $05
 	ld hl, $49ef
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld hl, $572d
-	call Func_00_042e
+	call CallBankedHL
 	pop af
 	ld [$2fff], a
 	ret
@@ -3045,17 +3045,17 @@ Func_00_18f7:
 	ld [$cfbe], a
 	ld a, $15
 	ld hl, $41fe
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $15
 	ld hl, $4134
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $15
 	ld hl, $4015
-	call Func_00_042e
+	call CallBankedHL
 Func_00_1919:
 	ld a, $12
 	ld hl, $41f5
-	call Func_00_042e
+	call CallBankedHL
 	or a
 	ret nz
 	ld a, $04
@@ -3372,7 +3372,7 @@ Func_00_34bb:
 	ld [$d0f4], a
 	ld a, $00
 	ld hl, $1219
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_1863
 	push af
 	ld a, $2f
@@ -3435,7 +3435,7 @@ Func_00_3508:
 	call $503b
 	ld a, $05
 	ld hl, $46ba
-	call Func_00_042e
+	call CallBankedHL
 	ret
 	push af
 	ld a, $28
@@ -3451,7 +3451,7 @@ SECTION "analyzed_003572", ROM0[$3572]
 Func_00_3572:
 	ld a, $18
 	ld hl, $6b71
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -3797,7 +3797,7 @@ Func_00_3942:
 Func_00_3957:
 	ld a, $1f
 	ld hl, $4094
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -3845,7 +3845,7 @@ Func_00_39bb:
 	ret
 ScriptDispatcherEnterAfterCall:
 	push hl
-	call Func_00_02e6
+	call WaitForNextFrame
 	pop hl
 ScriptDispatcherNext:
 	ld c, [hl]
@@ -3871,10 +3871,10 @@ ScriptDispatcherNext:
 	push bc
 	ret
 ScriptTextOutputPath:
-	call Func_00_3c77
+	call PrintCharacterAtCursor
 	push hl
-	call Func_00_3cf3
-	call Func_00_0bf1
+	call DispatchTextRenderer
+	call HideUnusedOamSprites
 	pop hl
 	jp ScriptDispatcherEnterAfterCall
 
@@ -3912,9 +3912,9 @@ ScriptOpcode03Handler_WaitAndRenderPrep:
 ScriptWaitInputCore:
 	push hl
 Func_00_3a3a:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$d61a]
 	or a
 	jr nz, Data_00_3a4e
@@ -3925,7 +3925,7 @@ SECTION "analyzed_003a51", ROM0[$3a51]
 
 Func_00_3a51:
 	call Func_00_3e10
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ldh a, [$ff8c]
 	bit 0, a
 	jr z, Func_00_3a3a
@@ -3941,9 +3941,9 @@ Func_00_3a51:
 	ld [$d616], a
 	ld a, h
 	ld [$d617], a
-	call Func_00_02e6
-	call Func_00_3cf3
-	call Func_00_0bf1
+	call WaitForNextFrame
+	call DispatchTextRenderer
+	call HideUnusedOamSprites
 	pop hl
 	ret
 ScriptOpcode02Handler_RenderAnchor:
@@ -3992,7 +3992,7 @@ ScriptOpcode07Handler_FarCall:
 	push hl
 	push bc
 	pop hl
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	jp ScriptDispatcherNext
 ScriptOpcode09Handler_WriteWram:
@@ -4081,7 +4081,7 @@ Func_00_3b31:
 	ld a, [$d5fb]
 	add a, $30
 	ld c, a
-	call Func_00_3c77
+	call PrintCharacterAtCursor
 	pop hl
 	jp ScriptDispatcherNext
 ScriptOpcode10Handler_RepeatChar:
@@ -4090,9 +4090,9 @@ ScriptOpcode10Handler_RepeatChar:
 	push hl
 Func_00_3b41:
 	push bc
-	call Func_00_02e6
-	call Func_00_3cf3
-	call Func_00_0bf1
+	call WaitForNextFrame
+	call DispatchTextRenderer
+	call HideUnusedOamSprites
 	pop bc
 	dec c
 	jr nz, Func_00_3b41
@@ -4207,7 +4207,7 @@ Func_00_3c55:
 
 SECTION "analyzed_003c77", ROM0[$3c77]
 
-Func_00_3c77:
+PrintCharacterAtCursor:
 	push bc
 	push de
 	push hl
@@ -4218,9 +4218,9 @@ Func_00_3c77:
 	ld d, a
 	ld a, [$d616]
 	ld e, a
-	call Func_00_3ca3
+	call PrintCharacterAtCursor_Helper1
 	ld a, c
-	call Func_00_3ce7
+	call PrintCharacterAtCursor_Helper2
 	jr c, Func_00_3c94
 	ld hl, $d616
 	inc [hl]
@@ -4232,10 +4232,10 @@ Func_00_3c94:
 
 SECTION "analyzed_003ca3", ROM0[$3ca3]
 
-Func_00_3ca3:
+PrintCharacterAtCursor_Helper1:
 	push bc
 	ld a, c
-	call Func_00_3ce7
+	call PrintCharacterAtCursor_Helper2
 	jr nc, Func_00_3cad
 
 SECTION "analyzed_003cad", ROM0[$3cad]
@@ -4278,7 +4278,7 @@ Func_00_3cd3:
 	ei
 	pop bc
 	ret
-Func_00_3ce7:
+PrintCharacterAtCursor_Helper2:
 	cp $de
 	jr z, Data_00_3cf1
 	cp $df
@@ -4288,7 +4288,7 @@ Func_00_3ce7:
 
 SECTION "analyzed_003cf3", ROM0[$3cf3]
 
-Func_00_3cf3:
+DispatchTextRenderer:
 	ld a, [$7fff]
 	push af
 	ld a, [$d620]
@@ -4303,6 +4303,7 @@ Func_00_3cf3:
 	or h
 	ret z
 	jp hl
+DispatchTextRenderer_Return:
 	pop af
 	ld [$2fff], a
 	ret
@@ -4978,21 +4979,21 @@ SECTION "analyzed_00439e", ROMX[$439e], BANK[$01]
 Func_01_439e:
 	ld a, $05
 	ld hl, $46f0
-	call Func_00_042e
+	call CallBankedHL
 	call Func_01_5cbe
 	call Func_01_49cb
 	call Func_00_083c
 	ld a, $05
 	ld hl, $4884
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_16c1
 	ld a, $17
 	ld hl, $40b1
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_166f
 	ld a, $05
 	ld hl, $4931
-	call Func_00_042e
+	call CallBankedHL
 	xor a
 	call Func_01_5bd8
 	call Func_01_75ad
@@ -5000,10 +5001,10 @@ Func_01_439e:
 	call Func_01_4a71
 	ld a, $05
 	ld hl, $48a5
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $03
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	call Func_01_4c57
 	ld a, [$c289]
 	ldh [rSCY], a
@@ -5011,7 +5012,7 @@ Func_01_439e:
 	ldh [rSCX], a
 	ld a, $05
 	ld hl, $48fc
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_0786
 	xor a
 	ldh [$ff8b], a
@@ -5021,7 +5022,7 @@ Func_01_439e:
 	call Func_00_0d41
 	call Func_00_04bc
 Func_01_4412:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ld a, [$c2d5]
 	bit 7, a
@@ -5032,7 +5033,7 @@ Func_01_4412:
 	call Func_01_4bae
 	ld a, $03
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	ld a, [$c2db]
 	cp $04
 	jr z, Func_01_446b
@@ -5054,29 +5055,29 @@ Func_01_4458:
 	call Func_01_4dd9
 	ld a, $04
 	ld hl, $425c
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $02
 	ld hl, $4023
-	call Func_00_042e
+	call CallBankedHL
 Func_01_446b:
 	ld a, $0f
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	call Func_01_75f6
 	call Func_01_775b
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_01_4412
 Func_01_447f:
 	call Func_00_07e4
 	call Func_00_0e24
 	call Func_00_04c4
 	call Func_00_0bd7
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_1863
 	call Func_01_459a
 	ld a, $05
 	ld hl, $473d
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_01_449d:
 	ld a, [$c2e6]
@@ -5221,7 +5222,7 @@ Func_01_45ad:
 	jr nz, Func_01_45d2
 	ld a, $05
 	ld hl, $481d
-	call Func_00_042e
+	call CallBankedHL
 	call Func_01_4b7c
 	call Func_01_45d6
 	ld a, $13
@@ -5338,7 +5339,7 @@ SECTION "analyzed_004748", ROMX[$4748], BANK[$01]
 Func_01_4748:
 	ld a, $05
 	ld hl, $4800
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_1219
 	ld a, $10
 	ld [$c2a7], a
@@ -5347,7 +5348,7 @@ Func_01_4759:
 	call Func_01_5d77
 	ld a, $05
 	ld hl, $4800
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_1219
 	ld a, $10
 	ld [$c2a7], a
@@ -6184,7 +6185,7 @@ Func_01_50b2:
 	jr z, Func_01_50c1
 	ld a, $05
 	ld hl, $46ba
-	call Func_00_042e
+	call CallBankedHL
 Func_01_50c1:
 	pop bc
 	pop af
@@ -7280,7 +7281,7 @@ Func_01_5993:
 Func_01_599b:
 	ld a, $12
 	ld hl, $402c
-	call Func_00_042e
+	call CallBankedHL
 	call Func_01_449d
 	call Func_01_4aa1
 	xor a
@@ -7499,7 +7500,7 @@ Func_01_5c70:
 	ld [$d60e], a
 	ld a, $1f
 	ld hl, $4109
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_01_5c7c:
 	ld a, [$c2c0]
@@ -7563,7 +7564,7 @@ Func_01_5ce2:
 	ld [$d60f], a
 	ld a, $1f
 	ld hl, $4109
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $00
 	call Func_00_1164
 	ret
@@ -7578,7 +7579,7 @@ Func_01_5cff:
 	ld [$d60f], a
 	ld a, $1f
 	ld hl, $4109
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $02
 	call Func_00_1164
 	ret
@@ -7599,7 +7600,7 @@ Func_01_5d84:
 	ret nz
 	ld a, $18
 	ld hl, $4097
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $0c
 	call Func_00_1164
 	ret
@@ -8647,7 +8648,7 @@ Func_01_693a:
 	push hl
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 Func_01_6944:
 	ld a, $01
@@ -8680,7 +8681,7 @@ Func_01_6970:
 	push hl
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 Func_01_697a:
 	ld a, $01
@@ -8713,7 +8714,7 @@ Func_01_69a6:
 	push hl
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 Func_01_69b0:
 	ld a, $01
@@ -8750,7 +8751,7 @@ Func_01_69e1:
 	push hl
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 Func_01_69eb:
 	ld a, $01
@@ -9040,7 +9041,7 @@ Func_01_6c41:
 	ld b, a
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	pop bc
 	ret
@@ -9062,7 +9063,7 @@ Func_01_6c68:
 	ld b, a
 	ld a, $03
 	ld hl, $44cb
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	pop bc
 	ret
@@ -10164,14 +10165,14 @@ Func_01_74c4:
 	push bc
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	ret
 
@@ -10207,7 +10208,7 @@ Func_01_7534:
 	push bc
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop bc
 	ld a, $10
 	add a, c
@@ -10215,14 +10216,14 @@ Func_01_7534:
 	push bc
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	ret
 Func_01_755b:
@@ -10256,14 +10257,14 @@ Func_01_7578:
 	push bc
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
 	push bc
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
@@ -10276,7 +10277,7 @@ Func_01_7578:
 	ld c, a
 	ld a, $03
 	ld hl, $44bb
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	ret
 Func_01_75ad:
@@ -10876,7 +10877,7 @@ Func_01_7b24:
 	ld [$cf6a], a
 	ld a, $04
 	ld hl, $4100
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	ret
 
@@ -11620,14 +11621,14 @@ Func_03_4071:
 Func_03_4077:
 	ld a, $01
 	ld hl, $6d48
-	call Func_00_042e
+	call CallBankedHL
 Func_03_407f:
 	ldh a, [$ffb1]
 	or a
 	jr z, Func_03_408c
 	ld a, $04
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 Func_03_408c:
 	ldh a, [$ffe5]
 	ld l, a
@@ -11795,7 +11796,7 @@ Func_03_418a:
 	push de
 	ld a, $04
 	ld hl, $40e2
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	inc de
 	jp Func_03_4042
@@ -12457,7 +12458,7 @@ Func_03_45a0:
 	push hl
 	ld a, $01
 	ld hl, $7b24
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	pop de
 	ld a, [$cf65]
@@ -12482,7 +12483,7 @@ Func_03_45a0:
 	push hl
 	ld a, $04
 	ld hl, $4344
-	call Func_00_042e
+	call CallBankedHL
 	pop hl
 	pop de
 	push hl
@@ -13403,7 +13404,7 @@ Func_03_4c39:
 	push de
 	ld a, $01
 	ld hl, $4ce1
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	push af
 	ld a, $04
@@ -13415,7 +13416,7 @@ Func_03_4c4c:
 	push de
 	ld a, $01
 	ld hl, $4cfe
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	push af
 	ld a, $04
@@ -14450,7 +14451,7 @@ Func_03_5508:
 	jr z, Data_03_5518
 	ld a, $01
 	ld hl, $4d0d
-	call Func_00_042e
+	call CallBankedHL
 	ret
 
 SECTION "analyzed_00d539", ROMX[$5539], BANK[$03]
@@ -14786,7 +14787,7 @@ Func_03_57da:
 	push de
 	ld a, $01
 	ld hl, $42b3
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	ld a, c
 	ldh [$ffc1], a
@@ -20020,7 +20021,7 @@ SECTION "analyzed_01463a", ROMX[$463a], BANK[$05]
 Func_05_463a:
 	ld a, $00
 	ld hl, $39ad
-	call Func_00_042e
+	call CallBankedHL
 	call Func_05_4690
 	call Func_05_4699
 	ld a, $01
@@ -20057,7 +20058,7 @@ Func_05_463a:
 	ld [$cfd9], a
 	ld a, $12
 	ld hl, $4c13
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_05_4690:
 	xor a
@@ -20214,13 +20215,13 @@ SECTION "analyzed_014843", ROMX[$4843], BANK[$05]
 Func_05_4843:
 	ld a, $12
 	ld hl, $4bb3
-	call Func_00_042e
+	call CallBankedHL
 	ld [$d0f4], a
 	or a
 	jr z, Func_05_4865
 	ld a, $12
 	ld hl, $4bef
-	call Func_00_042e
+	call CallBankedHL
 	or a
 	jr z, Data_05_485f
 	ld a, $01
@@ -20276,16 +20277,16 @@ Func_05_4884:
 	ret
 	ld a, $10
 	ld hl, $4018
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $02
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $16
 	ld hl, $4016
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $17
 	ld hl, $4122
-	call Func_00_042e
+	call CallBankedHL
 	call Func_05_48c9
 	ret
 Func_05_48c9:
@@ -20294,7 +20295,7 @@ Func_05_48c9:
 	jr nz, Func_05_48d9
 	ld a, $3d
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_05_48d9:
 	call Func_05_48dd
@@ -20311,7 +20312,7 @@ Func_05_48e2:
 	push de
 	ld a, $11
 	ld hl, $4081
-	call Func_00_042e
+	call CallBankedHL
 	pop de
 	pop bc
 Func_05_48f4:
@@ -20323,14 +20324,14 @@ Func_05_48f4:
 	ret
 	ld a, $02
 	ld hl, $4010
-	call Func_00_042e
+	call CallBankedHL
 	call Func_05_4918
 	ld a, $10
 	ld hl, $40a4
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $17
 	ld hl, $416c
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_05_4918:
 	ld a, [$c2c1]
@@ -20338,12 +20339,12 @@ Func_05_4918:
 	jr nz, Func_05_4928
 	ld a, $3d
 	ld hl, $4051
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_05_4928:
 	ld a, $11
 	ld hl, $40b1
-	call Func_00_042e
+	call CallBankedHL
 	ret
 	ld a, [$c2c1]
 	cp $02
@@ -20480,7 +20481,7 @@ Func_0f_4000:
 	ret nz
 	ld a, $01
 	ld hl, $4c4d
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $0d
 	call Func_00_0a85
@@ -20521,14 +20522,14 @@ Func_0f_4054:
 	jr z, Func_0f_4086
 	ld a, $01
 	ld hl, $4e09
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $11
 	ld [$c2d8], a
 	xor a
 	ld [$c2d9], a
 	ld a, $01
 	ld hl, $4eb8
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $02
 	ld [$c2ac], a
 	ret
@@ -20557,15 +20558,15 @@ Func_0f_40b2:
 	ld [$c2da], a
 	ld a, $01
 	ld hl, $4e8c
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_0f_40cb:
 	ld a, $01
 	ld hl, $4e09
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld hl, $4eb8
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $0e
 	call Func_00_0a85
@@ -20608,7 +20609,7 @@ Func_0f_416c:
 	ld [$c2d9], a
 	ld a, $01
 	ld hl, $4eb8
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $04
 	call Func_00_0a85
@@ -20622,7 +20623,7 @@ Func_0f_41a3:
 	ld [$c2d9], a
 	ld a, $01
 	ld hl, $4eb8
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $04
 	call Func_00_0a85
@@ -20636,7 +20637,7 @@ Func_0f_41bd:
 	ld [$c2d9], a
 	ld a, $01
 	ld hl, $4eb8
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $04
 	call Func_00_0a85
@@ -20658,12 +20659,12 @@ Func_0f_41d6:
 	pop af
 	ld a, $01
 	ld hl, $4e55
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld [$c2da], a
 	ld a, $01
 	ld hl, $4e8c
-	call Func_00_042e
+	call CallBankedHL
 	ret
 
 SECTION "analyzed_03c20f", ROMX[$420f], BANK[$0f]
@@ -20705,7 +20706,7 @@ Func_0f_427b:
 	pop af
 	ld a, $03
 	ld hl, $4a58
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $01
 	ld [$c2c3], a
 	ld a, $02
@@ -20726,7 +20727,7 @@ Func_0f_42a2:
 	pop af
 	ld a, $01
 	ld hl, $449d
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_0f_42bb:
 	ld a, [$c2d8]
@@ -20801,7 +20802,7 @@ Func_0f_433a:
 	call Func_0f_450d
 	ld a, $3b
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	call Func_0f_462b
 	call Func_0f_4b62
 	call Func_0f_4565
@@ -20991,10 +20992,10 @@ Func_0f_4543:
 	call Func_0f_450d
 	ld a, $05
 	ld hl, $48a5
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $05
 	ld hl, $48fc
-	call Func_00_042e
+	call CallBankedHL
 	call Func_00_0786
 	ld a, $01
 	ld [$c2ac], a
@@ -21693,7 +21694,7 @@ Func_0f_4ac6:
 	jr z, Func_0f_4ad9
 	ld a, $12
 	ld hl, $484e
-	call Func_00_042e
+	call CallBankedHL
 Func_0f_4ad9:
 	ldh a, [$ff8c]
 	bit 1, a
@@ -21716,7 +21717,7 @@ Func_0f_4aef:
 Func_0f_4b02:
 	ld a, $12
 	ld hl, $47e5
-	call Func_00_042e
+	call CallBankedHL
 	ld hl, $5138
 	ld de, $9de3
 	call Func_00_0b4e
@@ -21733,13 +21734,13 @@ Func_0f_4b1d:
 Func_0f_4b27:
 	ld a, $10
 	ld hl, $405f
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $16
 	ld hl, $4016
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $10
 	ld hl, $4007
-	call Func_00_042e
+	call CallBankedHL
 	xor a
 	ldh [rVBK], a
 	ld hl, $4d38
@@ -21750,7 +21751,7 @@ Func_0f_4b27:
 Func_0f_4b4f:
 	ld a, $10
 	ld hl, $40a4
-	call Func_00_042e
+	call CallBankedHL
 	ld hl, $4ce8
 	ld a, $06
 	ld b, $01
@@ -23933,7 +23934,7 @@ Func_12_41e8:
 SECTION "analyzed_0481f5", ROMX[$41f5], BANK[$12]
 
 Func_12_41f5:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8c]
 	ld b, a
@@ -24003,10 +24004,10 @@ Func_12_4271:
 	ld [$c55d], a
 	ld a, $15
 	ld hl, $408a
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $15
 	ld hl, $41cf
-	call Func_00_042e
+	call CallBankedHL
 	jp Func_12_41f5
 Func_12_4287:
 	cp $04
@@ -24846,7 +24847,7 @@ Func_15_4185:
 	call Func_00_0c09
 	ld hl, $74ee
 	call Func_00_0c09
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $00
 	ld bc, $4008
 	call Func_00_20f0
@@ -26572,7 +26573,7 @@ Func_17_4113:
 	jr c, Func_17_4135
 	ld a, $38
 	ld hl, $4000
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_17_4135:
 	xor a
@@ -26901,7 +26902,7 @@ Func_18_40f3:
 	call Func_00_392d
 	call Func_18_4144
 	call Func_18_4150
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $5bdd
 	ld de, $c101
@@ -26918,7 +26919,7 @@ Func_18_40f3:
 	pop af
 	ld a, $1f
 	ld hl, $4008
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_18_4144:
 	ld hl, $5880
@@ -27065,7 +27066,7 @@ Func_18_5f6e:
 	call Func_00_392d
 	call Func_18_5fbf
 	call Func_18_601f
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $33
 	ld hl, $7000
 	ld de, $c101
@@ -27079,7 +27080,7 @@ Func_18_5f6e:
 	xor a
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	ret
 Func_18_5fbf:
 	ld hl, $7080
@@ -27112,7 +27113,7 @@ Func_18_5fbf:
 	xor a
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	ret
 Func_18_6013:
 	ld hl, $723e
@@ -27189,7 +27190,7 @@ Func_18_6b71:
 	call ScriptDispatcherEnterAfterCall
 	ld a, $1f
 	ld hl, $4094
-	call Func_00_042e
+	call CallBankedHL
 	ret
 	call Func_18_6bc8
 	ld hl, $717e
@@ -27200,17 +27201,17 @@ Func_18_6b71:
 	ret
 	ld a, $05
 	ld hl, $4785
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $00
 	ld hl, $34e3
-	call Func_00_042e
+	call CallBankedHL
 	ret
 	ld a, $05
 	ld hl, $479d
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $00
 	ld hl, $34e3
-	call Func_00_042e
+	call CallBankedHL
 	ret
 
 SECTION "analyzed_062bc8", ROMX[$6bc8], BANK[$18]
@@ -27228,7 +27229,7 @@ Func_18_6bc8:
 	call Func_00_392d
 	call Func_18_6c1b
 	call Func_18_6c27
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $72e8
 	ld de, $c101
@@ -27242,7 +27243,7 @@ Func_18_6bc8:
 	xor a
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	push af
 	ld a, $2f
 	call Func_00_0a56
@@ -27352,17 +27353,17 @@ SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
 Func_19_4000:
 	ld a, $12
 	ld hl, $4b8e
-	call Func_00_042e
+	call CallBankedHL
 	ld [$d5fe], a
 	ret
 	ld a, $12
 	ld hl, $4b67
-	call Func_00_042e
+	call CallBankedHL
 	ld [$d5fe], a
 	ret
 	ld a, $12
 	ld hl, $4bb3
-	call Func_00_042e
+	call CallBankedHL
 	ld [$d5fe], a
 	ret
 	call Func_00_0822
@@ -27377,7 +27378,7 @@ Func_19_4000:
 	call Func_00_392d
 	call Func_19_407f
 	call Func_19_408b
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $5800
 	ld de, $c101
@@ -27391,7 +27392,7 @@ Func_19_4000:
 	xor a
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	push af
 	ld a, $34
 	call Func_00_0a63
@@ -29855,11 +29856,11 @@ Func_1f_40bd:
 	ld a, $09
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, $ff
 	ld [$ffa1], a
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	pop bc
 	dec c
 	jr nz, Func_1f_40bd
@@ -29870,10 +29871,10 @@ Func_1f_40db:
 	push bc
 	ld a, $09
 	ld [$ffa1], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, $ff
 	ld [$ffa1], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	pop bc
 	dec c
 	jr nz, Func_1f_40db
@@ -29884,10 +29885,10 @@ Func_1f_40f3:
 	push bc
 	ld a, $09
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, $ff
 	ld [$ffa2], a
-	call Func_00_02e6
+	call WaitForNextFrame
 	pop bc
 	dec c
 	jr nz, Func_1f_40f3
@@ -29903,7 +29904,7 @@ SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 Func_1f_4121:
 	ld a, $1f
 	ld hl, $417b
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $28
 	call Func_00_0a63
@@ -29912,7 +29913,7 @@ Func_1f_4121:
 Func_1f_4133:
 	ld a, $1f
 	ld hl, $4416
-	call Func_00_042e
+	call CallBankedHL
 	push af
 	ld a, $28
 	call Func_00_0a63
@@ -29937,7 +29938,7 @@ Func_1f_417b:
 	ld de, $9800
 	call Func_00_3942
 	call Func_1f_4234
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $1d
 	ld hl, $5800
 	ld de, $c101
@@ -30076,7 +30077,7 @@ Func_1f_441f:
 	ld de, $9800
 	call Func_00_3942
 	call Func_1f_44ca
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, $35
 	ld hl, $6000
 	ld de, $c101
@@ -30257,13 +30258,13 @@ Func_1f_58d7:
 	xor a
 	ld [$d5fe], a
 Func_1f_58ed:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_590b
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	call Func_00_3c55
 	push af
 	ld a, $0d
@@ -30285,7 +30286,7 @@ Func_1f_590b:
 	pop af
 Func_1f_5921:
 	call Func_1f_592a
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_58ed
 Func_1f_592a:
 	ld bc, $7478
@@ -30316,9 +30317,9 @@ Func_1f_5960:
 	xor a
 	ld [$d5ff], a
 Func_1f_596d:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5985
@@ -30345,7 +30346,7 @@ Func_1f_5985:
 	ld de, $98eb
 	call Func_00_0b4e
 	call Func_1f_59ae
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_596d
 Func_1f_59ae:
 	ld a, [$d5ff]
@@ -30378,9 +30379,9 @@ Func_1f_59d3:
 	xor a
 	ld [$d5ff], a
 Func_1f_59e0:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5a08
@@ -30416,7 +30417,7 @@ Func_1f_5a08:
 	ld de, $98eb
 	call Func_00_0b4e
 	call Func_1f_5a31
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_59e0
 Func_1f_5a31:
 	ld a, [$d5ff]
@@ -30466,9 +30467,9 @@ Func_1f_5abc:
 	xor a
 	ld [$d5ff], a
 Func_1f_5ac9:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5af1
@@ -30504,7 +30505,7 @@ Func_1f_5af1:
 	ld de, $98ed
 	call Func_00_0b4e
 	call Func_1f_5b1a
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_5ac9
 Func_1f_5b1a:
 	ld a, [$d5ff]
@@ -30537,9 +30538,9 @@ Func_1f_5b42:
 	xor a
 	ld [$d5ff], a
 Func_1f_5b4f:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5b77
@@ -30575,7 +30576,7 @@ Func_1f_5b77:
 	ld de, $98ed
 	call Func_00_0b4e
 	call Func_1f_5ba0
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_5b4f
 Func_1f_5ba0:
 	ld a, [$d5ff]
@@ -30629,9 +30630,9 @@ Func_1f_5d76:
 	xor a
 	ld [$d600], a
 Func_1f_5d83:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5d9b
@@ -30658,7 +30659,7 @@ Func_1f_5d9b:
 	ld de, $98ed
 	call Func_00_0b4e
 	call Func_1f_5dc4
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_5d83
 Func_1f_5dc4:
 	ld a, [$d600]
@@ -30710,9 +30711,9 @@ Func_1f_5f50:
 	xor a
 	ld [$d5ff], a
 Func_1f_5f5d:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
-	call Func_00_3cf3
+	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_1f_5f75
@@ -30739,7 +30740,7 @@ Func_1f_5f75:
 	ld de, $98ed
 	call Func_00_0b4e
 	call Func_1f_5f9e
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	jp Func_1f_5f5d
 Func_1f_5f9e:
 	ld a, [$d5ff]
@@ -40594,7 +40595,7 @@ Func_30_4077:
 	ld c, $08
 	call Func_00_0c09
 	call Func_30_42d5
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -40610,7 +40611,7 @@ Func_30_4077:
 	call Func_00_09d5
 	call Func_30_436c
 Func_30_40ab:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	ld b, a
@@ -40684,7 +40685,7 @@ Func_30_4129:
 	ld b, $10
 	ld c, $08
 	call Func_00_0c09
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
@@ -40854,7 +40855,7 @@ Func_30_42d5:
 	ld [$d0f8], a
 	ld a, $20
 	ld hl, $796d
-	call Func_00_042e
+	call CallBankedHL
 	ret
 Func_30_42e9:
 	ld a, $00
@@ -40886,7 +40887,7 @@ SECTION "analyzed_0c0325", ROMX[$4325], BANK[$30]
 Func_30_4325:
 	ld a, $20
 	ld hl, $796d
-	call Func_00_042e
+	call CallBankedHL
 	ret
 
 SECTION "analyzed_0c032e", ROMX[$432e], BANK[$30]
@@ -40981,7 +40982,7 @@ Func_30_4387:
 	ld a, $03
 	call Func_30_4487
 	call Func_30_4494
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -40996,7 +40997,7 @@ Func_30_4387:
 	ld hl, $7040
 	call Func_00_09d5
 Func_30_4403:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	ld b, a
@@ -41030,7 +41031,7 @@ Func_30_443d:
 	call Func_30_4484
 Func_30_444a:
 	call Func_30_4494
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
@@ -41150,7 +41151,7 @@ Func_30_4514:
 	set 1, a
 	ldh [rLCDC], a
 Func_30_4540:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	ld b, a
@@ -41222,7 +41223,7 @@ Func_30_45a1:
 	ld d, $20
 	ld e, $89
 	call Func_00_35f9
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
@@ -41553,7 +41554,7 @@ Func_30_4931:
 	ld c, $25
 	call Func_00_09d5
 Func_30_4946:
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, [$d0fe]
 	cp $2c
 	jr nz, Func_30_4957
@@ -41607,7 +41608,7 @@ Func_30_49bc:
 	jr z, Func_30_49c6
 	call Func_30_5023
 Func_30_49c6:
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0f8]
 	cp $c3
 	jr c, Func_30_49d1
@@ -42033,7 +42034,7 @@ Func_30_503b:
 	call Func_00_35e9
 	ld a, $21
 	ld hl, $7409
-	call Func_00_042e
+	call CallBankedHL
 	xor a
 	ld b, $08
 	ld c, $21
@@ -42048,7 +42049,7 @@ Func_30_503b:
 	set 1, a
 	ldh [rLCDC], a
 Func_30_50d7:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	ld b, a
@@ -42066,10 +42067,10 @@ Func_30_50d7:
 	jr nc, Func_30_512e
 	ld a, $21
 	ld hl, $73e4
-	call Func_00_042e
+	call CallBankedHL
 	ld a, $21
 	ld hl, $73ac
-	call Func_00_042e
+	call CallBankedHL
 	ld a, [$d0f6]
 	cp $00
 	jr nz, Func_30_5121
@@ -42082,7 +42083,7 @@ Func_30_50d7:
 	ld c, a
 	call Func_30_4855
 Func_30_5121:
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
@@ -42099,7 +42100,7 @@ Func_30_512e:
 Func_30_5142:
 	ld a, $01
 	ld hl, $4654
-	call Func_00_042e
+	call CallBankedHL
 	ret
 
 SECTION "analyzed_0c115e", ROMX[$515e], BANK[$30]
@@ -42338,7 +42339,7 @@ Func_30_5418:
 	call Func_00_3614
 	call Func_00_0794
 Func_30_545b:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	cp $00
@@ -42369,7 +42370,7 @@ Func_30_54b8:
 	ld [$d0f7], a
 	ld a, $05
 	ld hl, $4843
-	call Func_00_042e
+	call CallBankedHL
 	ld [$d0f4], a
 	cp $01
 	jr nz, Func_30_54df
@@ -42407,7 +42408,7 @@ Func_30_54df:
 	call Func_00_3614
 	call Func_00_0794
 Func_30_552f:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ld a, [$d0f3]
 	cp $00
@@ -42433,7 +42434,7 @@ Func_30_555d:
 	ld [$c2a7], a
 	ld c, $5a
 Func_30_5564:
-	call Func_00_02e6
+	call WaitForNextFrame
 	dec c
 	jr nz, Func_30_5564
 	call Func_00_07a7
@@ -42469,7 +42470,7 @@ Func_30_55a6:
 	jr z, Func_30_555d
 	ld a, $12
 	ld hl, $4b8e
-	call Func_00_042e
+	call CallBankedHL
 	and a
 	jr nz, Func_30_555d
 
@@ -42661,7 +42662,7 @@ Func_30_577e:
 	call Func_00_0a63
 	pop af
 Func_30_57d4:
-	call Func_00_02e6
+	call WaitForNextFrame
 	call Func_00_0252
 	ldh a, [$ff8d]
 	and a
@@ -42682,7 +42683,7 @@ Func_30_57ef:
 	rst $00
 	rst $18
 	jp hl
-	call Func_00_0bf1
+	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
@@ -43767,7 +43768,7 @@ Func_31_404a:
 	jr c, Func_31_4069
 	call Func_31_4289
 Func_31_4069:
-	call Func_00_02e6
+	call WaitForNextFrame
 	ld a, [$d10e]
 	cp $f1
 	jp z, Data_31_40a1

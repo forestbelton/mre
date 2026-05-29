@@ -24,7 +24,7 @@ PrintIndexedName:
 	or a
 	jr z, .PutCharDone
 	ld c, a
-	call Func_00_3c77
+	call PrintCharacterAtCursor
 	jr .PutChar
 .PutCharDone:
 	pop hl

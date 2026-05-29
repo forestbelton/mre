@@ -9102,6 +9102,26 @@
 	],
 	"labels": [
 		{
+			"addr": 742,
+			"name": "WaitForNextFrame"
+		},
+		{
+			"addr": 764,
+			"name": "HaltOnly"
+		},
+		{
+			"addr": 766,
+			"name": "HaltIfC286Set"
+		},
+		{
+			"addr": 1070,
+			"name": "CallBankedHL"
+		},
+		{
+			"addr": 3057,
+			"name": "HideUnusedOamSprites"
+		},
+		{
 			"addr": 14784,
 			"name": "ScriptDispatcherEnterAfterCall"
 		},
@@ -9196,6 +9216,26 @@
 		{
 			"addr": 15315,
 			"name": "ScriptOpcode05Helper"
+		},
+		{
+			"addr": 15479,
+			"name": "PrintCharacterAtCursor"
+		},
+		{
+			"addr": 15523,
+			"name": "PrintCharacterAtCursor_Helper1"
+		},
+		{
+			"addr": 15591,
+			"name": "PrintCharacterAtCursor_Helper2"
+		},
+		{
+			"addr": 15603,
+			"name": "DispatchTextRenderer"
+		},
+		{
+			"addr": 15627,
+			"name": "DispatchTextRenderer_Return"
 		}
 	]
 }
