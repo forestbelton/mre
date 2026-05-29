@@ -68,6 +68,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"scripts/pashute.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	393842,
+					"len":	4271,
+					"label":	"PashuteScript"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"analyzed.asm",
 			"sections":	[{
 					"type":	"data",
@@ -4913,10 +4922,6 @@
 					"type":	"code",
 					"addr":	393459,
 					"len":	383
-				}, {
-					"type":	"data",
-					"addr":	393842,
-					"len":	1044
 				}, {
 					"type":	"code",
 					"addr":	400890,
