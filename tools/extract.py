@@ -1269,6 +1269,11 @@ def emit_main(
     """
     lines: list[str] = [GENERATED_BANNER, ""]
     lines.append('INCLUDE "hardware.inc"')
+    # WRAM variable declarations — included here so labels resolve in
+    # every other file. Optional: if include/wram.inc isn't present
+    # the build will fail loudly, but that's the same behaviour as
+    # hardware.inc.
+    lines.append('INCLUDE "wram.inc"')
     lines.append("")
     lines.append('INCLUDE "header.asm"')
     for asm in sorted(code_asms):

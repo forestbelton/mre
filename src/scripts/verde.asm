@@ -30,9 +30,9 @@ SECTION "verde_0614f5", ROMX[$54f5], BANK[$18]
 
 VerdeEntry:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_IF_EQ $d0e4, $04, verde_5929
-    SCRIPT_IF_EQ $d0e4, $03, verde_5833
-    SCRIPT_IF_EQ $d0e4, $01, verde_57cc
+    SCRIPT_IF_EQ wVerdeState, $04, verde_5929
+    SCRIPT_IF_EQ wVerdeState, $03, verde_5833
+    SCRIPT_IF_EQ wVerdeState, $01, verde_57cc
     SCRIPT_FAR_CALL $5398, $18
     SCRIPT_RENDERER $53f7, $18
     db "Oh?"
@@ -136,16 +136,16 @@ VerdeEntry:
     db "Good luck!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM $d0e1, $01
-    SCRIPT_WRITE_WRAM $d0dc, $03
-    SCRIPT_WRITE_WRAM $d0dd, $02
+    SCRIPT_WRITE_WRAM wRanchProgress, $03
+    SCRIPT_WRITE_WRAM wNajiState, $02
     SCRIPT_WRITE_WRAM $d0de, $02
-    SCRIPT_WRITE_WRAM $d0e4, $01
+    SCRIPT_WRITE_WRAM wVerdeState, $01
     SCRIPT_END
 
 verde_57cc:
     SCRIPT_FAR_CALL $5345, $18
     SCRIPT_CYCLE 4
-    SCRIPT_JUMP_TABLE $d60d, verde_57dd, verde_57fc, verde_580a, verde_5823
+    SCRIPT_JUMP_TABLE wCycleCounter, verde_57dd, verde_57fc, verde_580a, verde_5823
 
 verde_57dd:
     SCRIPT_RENDERER $53f7, $18
@@ -210,7 +210,7 @@ verde_5833:
     SCRIPT_NEWLINE
     db "Go try it out!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0e4, $01
+    SCRIPT_WRITE_WRAM wVerdeState, $01
     SCRIPT_GOTO verde_59d4
 
 verde_5929:
@@ -242,7 +242,7 @@ verde_5929:
     SCRIPT_NEWLINE
     db "more of them."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0e4, $01
+    SCRIPT_WRITE_WRAM wVerdeState, $01
     SCRIPT_GOTO verde_59d4
 
 verde_59d4:
@@ -255,7 +255,7 @@ verde_59d4:
     SCRIPT_FAR_CALL $63ce, $1f
     SCRIPT_FAR_CALL $53eb, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, verde_5a3a, verde_5adb, verde_5bf1, verde_5c9c, verde_5da4
+    SCRIPT_JUMP_TABLE wMainMenuResult, verde_5a3a, verde_5adb, verde_5bf1, verde_5c9c, verde_5da4
 
 verde_5a0f:
     SCRIPT_RENDERER $53f7, $18
@@ -264,7 +264,7 @@ verde_5a0f:
     db "something else?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_JUMP_TABLE $d5fe, verde_59d4, verde_5da4
+    SCRIPT_JUMP_TABLE wYNResult, verde_59d4, verde_5da4
 
 verde_5a3a:
     SCRIPT_RENDERER $53f7, $18
@@ -313,7 +313,7 @@ verde_5adb:
     db "Your monster is?"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL $5321, $18
-    SCRIPT_IF_NEQ $d5fe, $00, verde_5b43
+    SCRIPT_IF_NEQ wYNResult, $00, verde_5b43
     SCRIPT_RENDERER $54ba, $18
     db "Oh yes,"
     SCRIPT_NEWLINE
@@ -322,7 +322,7 @@ verde_5adb:
     SCRIPT_GOTO verde_5a0f
 
 verde_5b43:
-    SCRIPT_IF_NEQ $d5fe, $01, verde_5b6b
+    SCRIPT_IF_NEQ wYNResult, $01, verde_5b6b
     db "Yes! It's "
     SCRIPT_INDEXED_STR $cfbb
     db "."
@@ -358,7 +358,7 @@ verde_5baf:
 
 verde_5bf1:
     SCRIPT_FAR_CALL $5321, $18
-    SCRIPT_IF_EQ $d5fe, $01, verde_5c4d
+    SCRIPT_IF_EQ wYNResult, $01, verde_5c4d
     SCRIPT_RENDERER $53f7, $18
     db "OK! Switch of"
     SCRIPT_NEWLINE
@@ -448,7 +448,7 @@ SECTION "verde_062092_empty", ROMX[$6092], BANK[$18]
 
 VerdeEmptyEntry:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_IF_EQ $d0e3, $01, verde_60f9
+    SCRIPT_IF_EQ wTradehouseState, $01, verde_60f9
     SCRIPT_FAR_CALL $5f6e, $18
     db "Nobody seems"
     SCRIPT_NEWLINE
@@ -463,7 +463,7 @@ VerdeEmptyEntry:
     SCRIPT_NEWLINE
     db "seems usable."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0e3, $01
+    SCRIPT_WRITE_WRAM wTradehouseState, $01
     SCRIPT_FAR_CALL $5f71, $18
     SCRIPT_GOTO verde_60fd
 
@@ -477,7 +477,7 @@ verde_60fd:
     SCRIPT_FAR_CALL $5f50, $1f
     SCRIPT_FAR_CALL $5fbf, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, verde_612b, verde_6190, verde_646b
+    SCRIPT_JUMP_TABLE wMainMenuResult, verde_612b, verde_6190, verde_646b
 
 verde_612b:
     db "OK. Let's enter"
@@ -548,7 +548,7 @@ verde_624e:
     db "Okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $00, verde_62b3
+    SCRIPT_IF_EQ wYNResult, $00, verde_62b3
     db "Hmmm..."
     SCRIPT_WAIT
     db "Let's not do it"
@@ -644,7 +644,7 @@ verde_646b:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     SCRIPT_FAR_CALL $5e03, $18
     SCRIPT_CYCLE 4
-    SCRIPT_JUMP_TABLE $d60d, verde_6499, verde_64b5, verde_64d7, verde_64fd
+    SCRIPT_JUMP_TABLE wCycleCounter, verde_6499, verde_64b5, verde_64d7, verde_64fd
 
 verde_6499:
     SCRIPT_RENDERER $5f3c, $18
@@ -686,7 +686,7 @@ VerdeSharedMenu:
     SCRIPT_FAR_CALL $5e43, $1f
     SCRIPT_FAR_CALL $5ebc, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, verde_654b, verde_659a, verde_6614, verde_6641, verde_69ab
+    SCRIPT_JUMP_TABLE wMainMenuResult, verde_654b, verde_659a, verde_6614, verde_6641, verde_69ab
 
 verde_654b:
     SCRIPT_RENDERER $5f3c, $18
@@ -736,7 +736,7 @@ verde_6614:
     SCRIPT_FAR_CALL $5fc3, $1f
     SCRIPT_FAR_CALL $5ebc, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d600, verde_69c9, verde_6a9b, verde_6b62
+    SCRIPT_JUMP_TABLE wSubMenuCursor, verde_69c9, verde_6a9b, verde_6b62
     SCRIPT_GOTO VerdeSharedMenu
 
 verde_6641:
@@ -790,7 +790,7 @@ verde_66f9:
     db "Okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $00, verde_676b
+    SCRIPT_IF_EQ wYNResult, $00, verde_676b
     SCRIPT_RENDERER $5ec8, $18
     db "I see. How"
     SCRIPT_NEWLINE

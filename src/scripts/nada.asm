@@ -283,10 +283,10 @@ NadaScript:
     SCRIPT_WAIT
     db "time. See ya!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0e2, $01
-    SCRIPT_WRITE_WRAM $d0dc, $04
+    SCRIPT_WRITE_WRAM wNajiMenuShown, $01
+    SCRIPT_WRITE_WRAM wRanchProgress, $04
     SCRIPT_WRITE_WRAM $d0de, $03
-    SCRIPT_WRITE_WRAM $d0e4, $03
+    SCRIPT_WRITE_WRAM wVerdeState, $03
     SCRIPT_END
     SCRIPT_FAR_CALL $4d97, $1f
     SCRIPT_RENDERER $4f2f, $1f

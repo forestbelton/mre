@@ -21,10 +21,10 @@ SECTION "toamuna_0640dd", ROMX[$40dd], BANK[$19]
 
 ToamunaScript:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_IF_EQ $d0dc, $04, ToamunaAllBack
-    SCRIPT_IF_EQ $d0dc, $03, ToamunaVerde
-    SCRIPT_IF_EQ $d0dc, $02, ToamunaPashute
-    SCRIPT_IF_EQ $d0dc, $01, ToamunaCycler
+    SCRIPT_IF_EQ wRanchProgress, $04, ToamunaAllBack
+    SCRIPT_IF_EQ wRanchProgress, $03, ToamunaVerde
+    SCRIPT_IF_EQ wRanchProgress, $02, ToamunaPashute
+    SCRIPT_IF_EQ wRanchProgress, $01, ToamunaCycler
     SCRIPT_RENDERER $408b, $19
     db "I haven't had a"
     SCRIPT_NEWLINE
@@ -111,12 +111,12 @@ ToamunaScript:
     SCRIPT_NEWLINE
     db "help you out."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dc, $01
+    SCRIPT_WRITE_WRAM wRanchProgress, $01
     SCRIPT_GOTO ToamunaMenu
 
 ToamunaCycler:
     SCRIPT_CYCLE 4
-    SCRIPT_JUMP_TABLE $d60d, .cycle0, .cycle1, .cycle2, .cycle3
+    SCRIPT_JUMP_TABLE wCycleCounter, .cycle0, .cycle1, .cycle2, .cycle3
 .cycle0:
     SCRIPT_RENDERER $408b, $19
     db "Welcome, stay as"
@@ -150,7 +150,7 @@ ToamunaPashute:
     SCRIPT_NEWLINE
     db "Thanks a lot."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dc, $01
+    SCRIPT_WRITE_WRAM wRanchProgress, $01
     SCRIPT_GOTO ToamunaMenu
 
 ToamunaVerde:
@@ -159,7 +159,7 @@ ToamunaVerde:
     SCRIPT_NEWLINE
     db "Great! Thank you"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dc, $01
+    SCRIPT_WRITE_WRAM wRanchProgress, $01
     SCRIPT_GOTO ToamunaMenu
 
 ToamunaAllBack:
@@ -172,7 +172,7 @@ ToamunaAllBack:
     SCRIPT_NEWLINE
     db "I'm speechless."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dc, $01
+    SCRIPT_WRITE_WRAM wRanchProgress, $01
     SCRIPT_GOTO ToamunaMenu
 
 ToamunaMenu:
@@ -181,7 +181,7 @@ ToamunaMenu:
     SCRIPT_NEWLINE
     db "want to do?"
     SCRIPT_FAR_CALL $4018, $19
-    SCRIPT_IF_EQ $d5fe, $01, .afterPrompt
+    SCRIPT_IF_EQ wYNResult, $01, .afterPrompt
     SCRIPT_FAR_CALL $59d3, $1f
     SCRIPT_GOTO ToamunaPostAction
 .afterPrompt:
@@ -190,7 +190,7 @@ ToamunaMenu:
 ToamunaPostAction:
     SCRIPT_FAR_CALL $407f, $19
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, ToamunaSign, ToamunaConfirm, ToamunaExit
+    SCRIPT_JUMP_TABLE wMainMenuResult, ToamunaSign, ToamunaConfirm, ToamunaExit
 ToamunaPostActionBody:
     SCRIPT_RENDERER $408b, $19
     db "Need to do"
@@ -198,7 +198,7 @@ ToamunaPostActionBody:
     db "something else?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_JUMP_TABLE $d5fe, ToamunaMenu, ToamunaExit
+    SCRIPT_JUMP_TABLE wYNResult, ToamunaMenu, ToamunaExit
 
 ToamunaSign:
     SCRIPT_RENDERER $408b, $19
@@ -211,7 +211,7 @@ ToamunaSign:
     db "Okay. It's ready"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL $4018, $19
-    SCRIPT_IF_EQ $d5fe, $01, .signSavePrompt
+    SCRIPT_IF_EQ wYNResult, $01, .signSavePrompt
     db "Current data"
     SCRIPT_NEWLINE
     db "will be saved."
@@ -224,7 +224,7 @@ ToamunaSign:
     SCRIPT_YN_CUE
 .signReplaceFlow:
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, ToamunaMenu
+    SCRIPT_IF_EQ wYNResult, $01, ToamunaMenu
     db "Do not remove"
     SCRIPT_NEWLINE
     db "Game Pak."
@@ -252,14 +252,14 @@ ToamunaConfirm:
     db "will be loaded."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, ToamunaMenu
+    SCRIPT_IF_EQ wYNResult, $01, ToamunaMenu
     db "Do not remove"
     SCRIPT_NEWLINE
     db "Game Pak."
     SCRIPT_REPEAT_CHAR 120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL $4000, $19
-    SCRIPT_IF_NEQ $d5fe, $01, .confirmDoneFlow
+    SCRIPT_IF_NEQ wYNResult, $01, .confirmDoneFlow
     db "Done checking"
     SCRIPT_NEWLINE
     db "the guest book!"

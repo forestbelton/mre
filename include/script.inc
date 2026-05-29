@@ -5,6 +5,8 @@
     IF !DEF(SCRIPT_INC)
 DEF SCRIPT_INC EQU 1
 
+INCLUDE "wram.inc"
+
 ; --- Single-byte opcodes ---
 
 MACRO SCRIPT_ANCHOR

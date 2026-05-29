@@ -164,14 +164,14 @@ PashuteScript:
     db "we meet again!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM $d0e0, $01
-    SCRIPT_WRITE_WRAM $d0dc, $02
+    SCRIPT_WRITE_WRAM wRanchProgress, $02
     SCRIPT_WRITE_WRAM $d0de, $01
     SCRIPT_END
 
 pashute_4686:
     SCRIPT_FAR_CALL $40a0, $18
     SCRIPT_CYCLE 4
-    SCRIPT_JUMP_TABLE $d60d, pashute_4697, pashute_46bd, pashute_46d4, pashute_46fa
+    SCRIPT_JUMP_TABLE wCycleCounter, pashute_4697, pashute_46bd, pashute_46d4, pashute_46fa
 
 pashute_4697:
     SCRIPT_RENDERER $4150, $18
@@ -326,7 +326,7 @@ pashute_49f2:
     SCRIPT_FAR_CALL $6090, $1f
     SCRIPT_FAR_CALL $4144, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, pashute_4a75, PashuteMenu, PashuteLeave
+    SCRIPT_JUMP_TABLE wMainMenuResult, pashute_4a75, PashuteMenu, PashuteLeave
 
 pashute_4a27:
     SCRIPT_RENDERER $4150, $18
@@ -335,7 +335,7 @@ pashute_4a27:
     db "else you need?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_JUMP_TABLE $d5fe, pashute_49f2, pashute_4a4e
+    SCRIPT_JUMP_TABLE wYNResult, pashute_49f2, pashute_4a4e
 
 pashute_4a4e:
     SCRIPT_RENDERER $4150, $18
@@ -369,7 +369,7 @@ pashute_4a75:
     db "replaced, okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $00, pashute_4b6c
+    SCRIPT_IF_EQ wYNResult, $00, pashute_4b6c
     SCRIPT_RENDERER $41e1, $18
     db "Until recently,"
     SCRIPT_WAIT
@@ -524,7 +524,7 @@ pashute_4db9:
 pashute_4e28:
     SCRIPT_IF_EQ $d0e1, $01, pashute_4eb4
     SCRIPT_FAR_CALL $4027, $18
-    SCRIPT_IF_EQ $d5fe, $00, pashute_4e80
+    SCRIPT_IF_EQ wYNResult, $00, pashute_4e80
     SCRIPT_IF_EQ $cfd9, $ff, pashute_4e80
     SCRIPT_RENDERER $4150, $18
     db "Then I will"
@@ -558,14 +558,14 @@ pashute_4e80:
 
 pashute_4eb4:
     SCRIPT_FAR_CALL $403c, $18
-    SCRIPT_IF_NEQ $d5fe, $05, pashute_4f97
+    SCRIPT_IF_NEQ wYNResult, $05, pashute_4f97
     SCRIPT_RENDERER $4150, $18
     db "Will you take"
     SCRIPT_NEWLINE
     db "the newborn now?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, pashute_4f5e
+    SCRIPT_IF_EQ wYNResult, $01, pashute_4f5e
     SCRIPT_IF_EQ $cfd9, $ff, pashute_4f2a
     db "Then let's put"
     SCRIPT_NEWLINE
@@ -607,7 +607,7 @@ pashute_4f5e:
 
 pashute_4f97:
     SCRIPT_FAR_CALL $4027, $18
-    SCRIPT_IF_EQ $d5fe, $00, pashute_4fe0
+    SCRIPT_IF_EQ wYNResult, $00, pashute_4fe0
     db "Now "
     SCRIPT_INDEXED_STR $cfbb
     db " in the"
@@ -615,7 +615,7 @@ pashute_4f97:
     db "Checkroom has"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL $4000, $18
-    SCRIPT_DECIMAL $d5fe
+    SCRIPT_DECIMAL wYNResult
     db " times of"
     SCRIPT_NEWLINE
     db "usable moves."
@@ -630,7 +630,7 @@ pashute_4fe0:
     SCRIPT_WAIT
     db "has "
     SCRIPT_FAR_CALL $4000, $18
-    SCRIPT_DECIMAL $d5fe
+    SCRIPT_DECIMAL wYNResult
     db " times of"
     SCRIPT_NEWLINE
     db "usable moves."
@@ -657,7 +657,7 @@ PashuteMenu:
     SCRIPT_FAR_CALL $6169, $1f
     SCRIPT_FAR_CALL $4144, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d600, pashute_50a9, pashute_518e
+    SCRIPT_JUMP_TABLE wSubMenuCursor, pashute_50a9, pashute_518e
     db "'J"
 
 PashuteLeave:

@@ -33,10 +33,10 @@ NajiScript:
     ; intro) -> 2 (mid-quest "made it half-way" message available once)
     ; -> 4 (end-game). $C2D7 is a separate story flag. The fall-through
     ; is the long first-visit intro below.
-    SCRIPT_IF_EQ $d0dd, $04, NajiCycler
-    SCRIPT_IF_EQ $c2d7, $01, NajiCycler
-    SCRIPT_IF_EQ $d0dd, $02, NajiProgress
-    SCRIPT_IF_EQ $d0dd, $01, NajiCycler
+    SCRIPT_IF_EQ wNajiState, $04, NajiCycler
+    SCRIPT_IF_EQ wC2D7, $01, NajiCycler
+    SCRIPT_IF_EQ wNajiState, $02, NajiProgress
+    SCRIPT_IF_EQ wNajiState, $01, NajiCycler
     SCRIPT_RENDERER $6c27, $18
     db "Did you come to"
     SCRIPT_NEWLINE
@@ -90,12 +90,12 @@ NajiScript:
     SCRIPT_WAIT
     db "Please help!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dd, $01
+    SCRIPT_WRITE_WRAM wNajiState, $01
     SCRIPT_GOTO NajiMenu
 
 NajiCycler:
     SCRIPT_CYCLE 4
-    SCRIPT_JUMP_TABLE $d60d, naji_734a, naji_736d, naji_7394, naji_73bc
+    SCRIPT_JUMP_TABLE wCycleCounter, naji_734a, naji_736d, naji_7394, naji_73bc
 
 naji_734a:
     SCRIPT_RENDERER $6c9f, $18
@@ -151,7 +151,7 @@ NajiProgress:
     SCRIPT_NEWLINE
     db "It gets harder."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0dd, $01
+    SCRIPT_WRITE_WRAM wNajiState, $01
     SCRIPT_GOTO NajiMenu
 
 NajiMenu:
@@ -159,15 +159,15 @@ NajiMenu:
     db "What are your"
     SCRIPT_NEWLINE
     db "plans this time?"
-    SCRIPT_IF_EQ $d0e2, $01, .checkAsk
-    SCRIPT_IF_NEQ $cff0, $00, .renderClimb
+    SCRIPT_IF_EQ wNajiMenuShown, $01, .checkAsk
+    SCRIPT_IF_NEQ wCFF0, $00, .renderClimb
     SCRIPT_FAR_CALL $5abc, $1f
     SCRIPT_GOTO .menuFinalize
 .renderClimb:
     SCRIPT_FAR_CALL $5b42, $1f
     SCRIPT_GOTO .menuFinalize
 .checkAsk:
-    SCRIPT_IF_NEQ $cff0, $00, .renderLeave
+    SCRIPT_IF_NEQ wCFF0, $00, .renderLeave
     SCRIPT_FAR_CALL $5bcb, $1f
     SCRIPT_GOTO .menuFinalize
 .renderLeave:
@@ -175,21 +175,21 @@ NajiMenu:
 .menuFinalize:
     SCRIPT_FAR_CALL $6c1b, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5ff, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
+    SCRIPT_JUMP_TABLE wMainMenuResult, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
 NajiRestart:
     SCRIPT_RENDERER $6c27, $18
     db "You've climbed"
     SCRIPT_NEWLINE
     db "till Level "
-    SCRIPT_DECIMAL $cff2
+    SCRIPT_DECIMAL wCurrentFloor
     SCRIPT_WAIT
     db "Want to"
     SCRIPT_NEWLINE
     db "start there?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
     SCRIPT_FAR_CALL $4094, $1f
     SCRIPT_FAR_CALL $6ba6, $18
     SCRIPT_END
@@ -205,7 +205,7 @@ NajiClimb:
     db "are you ready?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
     SCRIPT_FAR_CALL $4094, $1f
     SCRIPT_FAR_CALL $6b95, $18
     SCRIPT_END
@@ -218,7 +218,7 @@ NajiAskMenu:
     SCRIPT_FAR_CALL $5d76, $1f
     SCRIPT_FAR_CALL $6c1b, $18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d600, NajiAskTower, NajiAskItem, NajiAskStop
+    SCRIPT_JUMP_TABLE wSubMenuCursor, NajiAskTower, NajiAskItem, NajiAskStop
 
 NajiLeave:
     SCRIPT_RENDERER $6c27, $18
@@ -227,7 +227,7 @@ NajiLeave:
     SCRIPT_END
 
 NajiTowerLong:
-    SCRIPT_IF_EQ $d0df, $01, NajiTowerShort
+    SCRIPT_IF_EQ wTowerExplained, $01, NajiTowerShort
     SCRIPT_RENDERER $6c27, $18
     db "10 underground"
     SCRIPT_NEWLINE
@@ -239,7 +239,7 @@ NajiTowerLong:
     SCRIPT_WAIT
     db "Don't misjudge."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0df, $01
+    SCRIPT_WRITE_WRAM wTowerExplained, $01
     SCRIPT_FAR_CALL $4094, $1f
     SCRIPT_FAR_CALL $6bb7, $18
     SCRIPT_END
@@ -259,7 +259,7 @@ NajiTowerShort:
     db "show you the way"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ $d5fe, $01, NajiMenu
+    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
     SCRIPT_FAR_CALL $4094, $1f
     SCRIPT_FAR_CALL $6bb7, $18
     SCRIPT_END
