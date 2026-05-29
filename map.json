@@ -77,6 +77,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"scripts/tradehouse.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	401554,
+					"len":	2768,
+					"label":	"TradeHouseEntry"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"analyzed.asm",
 			"sections":	[{
 					"type":	"data",
@@ -229,10 +238,10 @@
 				}, {
 					"type":	"data",
 					"addr":	2810,
-					"len":	2
+					"len":	6
 				}, {
 					"type":	"data",
-					"addr":	2814,
+					"addr":	2826,
 					"len":	2
 				}, {
 					"type":	"data",
@@ -253,11 +262,7 @@
 				}, {
 					"type":	"data",
 					"addr":	2856,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	2862,
-					"len":	4
+					"len":	12
 				}, {
 					"type":	"data",
 					"addr":	2870,
@@ -325,23 +330,11 @@
 				}, {
 					"type":	"code",
 					"addr":	4316,
-					"len":	116
-				}, {
-					"type":	"code",
-					"addr":	4452,
-					"len":	27
+					"len":	163
 				}, {
 					"type":	"code",
 					"addr":	4506,
-					"len":	46
-				}, {
-					"type":	"code",
-					"addr":	4554,
-					"len":	6
-				}, {
-					"type":	"code",
-					"addr":	4569,
-					"len":	16
+					"len":	79
 				}, {
 					"type":	"data",
 					"addr":	4617,
@@ -353,11 +346,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4640,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	4647,
-					"len":	11
+					"len":	18
 				}, {
 					"type":	"data",
 					"addr":	4662,
@@ -381,11 +370,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4688,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	4691,
-					"len":	10
+					"len":	13
 				}, {
 					"type":	"data",
 					"addr":	4706,
@@ -393,7 +378,11 @@
 				}, {
 					"type":	"data",
 					"addr":	4720,
-					"len":	1
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	4736,
+					"len":	2
 				}, {
 					"type":	"code",
 					"addr":	4752,
@@ -417,11 +406,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4878,
-					"len":	8
-				}, {
-					"type":	"data",
-					"addr":	4888,
-					"len":	16
+					"len":	26
 				}, {
 					"type":	"data",
 					"addr":	4908,
@@ -433,7 +418,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4923,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	4928,
@@ -445,7 +430,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4938,
-					"len":	6
+					"len":	8
 				}, {
 					"type":	"data",
 					"addr":	4948,
@@ -461,7 +446,7 @@
 				}, {
 					"type":	"data",
 					"addr":	4973,
-					"len":	6
+					"len":	8
 				}, {
 					"type":	"data",
 					"addr":	4983,
@@ -501,7 +486,7 @@
 				}, {
 					"type":	"data",
 					"addr":	5048,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5053,
@@ -537,51 +522,51 @@
 				}, {
 					"type":	"data",
 					"addr":	5098,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5103,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5108,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5113,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5118,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5123,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5128,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5133,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5138,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5143,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5148,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5153,
-					"len":	1
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	5158,
@@ -797,11 +782,11 @@
 				}, {
 					"type":	"data",
 					"addr":	5479,
-					"len":	18
+					"len":	21
 				}, {
 					"type":	"data",
 					"addr":	5549,
-					"len":	1
+					"len":	2
 				}, {
 					"type":	"data",
 					"addr":	5557,
@@ -813,11 +798,11 @@
 				}, {
 					"type":	"data",
 					"addr":	5567,
-					"len":	36
+					"len":	42
 				}, {
 					"type":	"data",
 					"addr":	5707,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	5723,
@@ -1097,19 +1082,11 @@
 				}, {
 					"type":	"code",
 					"addr":	16384,
-					"len":	364
+					"len":	372
 				}, {
 					"type":	"code",
 					"addr":	16758,
-					"len":	11
-				}, {
-					"type":	"code",
-					"addr":	16782,
-					"len":	9
-				}, {
-					"type":	"code",
-					"addr":	16800,
-					"len":	297
+					"len":	339
 				}, {
 					"type":	"data",
 					"addr":	17099,
@@ -1121,11 +1098,11 @@
 				}, {
 					"type":	"data",
 					"addr":	17205,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	17215,
-					"len":	7
+					"len":	26
 				}, {
 					"type":	"code",
 					"addr":	17310,
@@ -1137,19 +1114,15 @@
 				}, {
 					"type":	"code",
 					"addr":	17639,
-					"len":	20
+					"len":	38
 				}, {
 					"type":	"code",
 					"addr":	17685,
-					"len":	18
+					"len":	46
 				}, {
 					"type":	"code",
-					"addr":	17712,
-					"len":	6
-				}, {
-					"type":	"code",
-					"addr":	17762,
-					"len":	44
+					"addr":	17754,
+					"len":	52
 				}, {
 					"type":	"code",
 					"addr":	17814,
@@ -1157,11 +1130,11 @@
 				}, {
 					"type":	"code",
 					"addr":	17837,
-					"len":	80
+					"len":	84
 				}, {
 					"type":	"code",
 					"addr":	17934,
-					"len":	14
+					"len":	28
 				}, {
 					"type":	"code",
 					"addr":	18004,
@@ -1185,47 +1158,43 @@
 				}, {
 					"type":	"code",
 					"addr":	18607,
-					"len":	12
+					"len":	16
 				}, {
 					"type":	"code",
 					"addr":	18635,
-					"len":	6
+					"len":	12
 				}, {
 					"type":	"code",
 					"addr":	18665,
-					"len":	7
-				}, {
-					"type":	"code",
-					"addr":	18688,
 					"len":	11
 				}, {
 					"type":	"code",
+					"addr":	18688,
+					"len":	22
+				}, {
+					"type":	"code",
 					"addr":	18743,
-					"len":	10
+					"len":	14
 				}, {
 					"type":	"code",
 					"addr":	18770,
-					"len":	6
+					"len":	12
 				}, {
 					"type":	"code",
 					"addr":	18800,
-					"len":	44
+					"len":	48
 				}, {
 					"type":	"code",
 					"addr":	18861,
-					"len":	6
+					"len":	12
 				}, {
 					"type":	"code",
 					"addr":	18891,
-					"len":	198
+					"len":	258
 				}, {
 					"type":	"code",
-					"addr":	19097,
-					"len":	52
-				}, {
-					"type":	"code",
-					"addr":	19207,
-					"len":	52
+					"addr":	19188,
+					"len":	118
 				}, {
 					"type":	"code",
 					"addr":	19324,
@@ -1233,11 +1202,7 @@
 				}, {
 					"type":	"code",
 					"addr":	19350,
-					"len":	44
-				}, {
-					"type":	"code",
-					"addr":	19420,
-					"len":	11
+					"len":	86
 				}, {
 					"type":	"code",
 					"addr":	19451,
@@ -1248,8 +1213,8 @@
 					"len":	97
 				}, {
 					"type":	"code",
-					"addr":	19725,
-					"len":	14
+					"addr":	19667,
+					"len":	72
 				}, {
 					"type":	"code",
 					"addr":	19861,
@@ -1288,12 +1253,20 @@
 					"len":	1
 				}, {
 					"type":	"data",
-					"addr":	20842,
+					"addr":	20839,
 					"len":	1
 				}, {
 					"type":	"data",
-					"addr":	20851,
+					"addr":	20841,
 					"len":	3
+				}, {
+					"type":	"data",
+					"addr":	20846,
+					"len":	1
+				}, {
+					"type":	"data",
+					"addr":	20849,
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	20866,
@@ -1308,20 +1281,16 @@
 					"len":	1
 				}, {
 					"type":	"data",
+					"addr":	20875,
+					"len":	1
+				}, {
+					"type":	"data",
 					"addr":	20877,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	20880,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	20887,
-					"len":	5
+					"len":	15
 				}, {
 					"type":	"data",
 					"addr":	20899,
-					"len":	1
+					"len":	2
 				}, {
 					"type":	"data",
 					"addr":	20902,
@@ -1336,20 +1305,16 @@
 					"len":	4
 				}, {
 					"type":	"data",
+					"addr":	20926,
+					"len":	4
+				}, {
+					"type":	"data",
 					"addr":	20934,
-					"len":	8
-				}, {
-					"type":	"data",
-					"addr":	20946,
-					"len":	24
-				}, {
-					"type":	"data",
-					"addr":	20974,
-					"len":	20
+					"len":	60
 				}, {
 					"type":	"data",
 					"addr":	21022,
-					"len":	4
+					"len":	8
 				}, {
 					"type":	"data",
 					"addr":	21034,
@@ -1364,20 +1329,16 @@
 					"len":	2
 				}, {
 					"type":	"data",
+					"addr":	21060,
+					"len":	2
+				}, {
+					"type":	"data",
 					"addr":	21064,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	21070,
-					"len":	12
-				}, {
-					"type":	"data",
-					"addr":	21084,
-					"len":	10
+					"len":	30
 				}, {
 					"type":	"data",
 					"addr":	21108,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	21114,
@@ -1385,11 +1346,11 @@
 				}, {
 					"type":	"code",
 					"addr":	21122,
-					"len":	134
+					"len":	286
 				}, {
 					"type":	"code",
-					"addr":	21296,
-					"len":	98
+					"addr":	21471,
+					"len":	21
 				}, {
 					"type":	"code",
 					"addr":	21512,
@@ -1404,20 +1365,20 @@
 					"len":	116
 				}, {
 					"type":	"code",
-					"addr":	22134,
+					"addr":	21926,
 					"len":	43
 				}, {
 					"type":	"code",
-					"addr":	22213,
-					"len":	8
+					"addr":	21979,
+					"len":	54
+				}, {
+					"type":	"code",
+					"addr":	22134,
+					"len":	87
 				}, {
 					"type":	"code",
 					"addr":	22229,
-					"len":	73
-				}, {
-					"type":	"code",
-					"addr":	22304,
-					"len":	157
+					"len":	232
 				}, {
 					"type":	"code",
 					"addr":	22466,
@@ -1453,15 +1414,11 @@
 				}, {
 					"type":	"code",
 					"addr":	22857,
-					"len":	41
-				}, {
-					"type":	"code",
-					"addr":	22939,
-					"len":	77
+					"len":	159
 				}, {
 					"type":	"code",
 					"addr":	23046,
-					"len":	7
+					"len":	14
 				}, {
 					"type":	"code",
 					"addr":	23062,
@@ -1489,11 +1446,11 @@
 				}, {
 					"type":	"code",
 					"addr":	23618,
-					"len":	12
+					"len":	16
 				}, {
 					"type":	"code",
 					"addr":	23647,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"code",
 					"addr":	23664,
@@ -1501,11 +1458,11 @@
 				}, {
 					"type":	"code",
 					"addr":	23742,
-					"len":	19
+					"len":	23
 				}, {
 					"type":	"code",
 					"addr":	23778,
-					"len":	29
+					"len":	59
 				}, {
 					"type":	"code",
 					"addr":	23927,
@@ -1521,7 +1478,11 @@
 				}, {
 					"type":	"code",
 					"addr":	24281,
-					"len":	17
+					"len":	20
+				}, {
+					"type":	"code",
+					"addr":	24424,
+					"len":	49
 				}, {
 					"type":	"code",
 					"addr":	24670,
@@ -1533,7 +1494,7 @@
 				}, {
 					"type":	"code",
 					"addr":	24916,
-					"len":	49
+					"len":	101
 				}, {
 					"type":	"code",
 					"addr":	25023,
@@ -1557,11 +1518,11 @@
 				}, {
 					"type":	"code",
 					"addr":	25673,
-					"len":	66
+					"len":	97
 				}, {
 					"type":	"code",
-					"addr":	25788,
-					"len":	9
+					"addr":	25779,
+					"len":	18
 				}, {
 					"type":	"code",
 					"addr":	25806,
@@ -1581,6 +1542,18 @@
 				}, {
 					"type":	"data",
 					"addr":	26224,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	26230,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	26234,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	26336,
 					"len":	2
 				}, {
 					"type":	"data",
@@ -1609,19 +1582,11 @@
 				}, {
 					"type":	"code",
 					"addr":	26826,
-					"len":	166
-				}, {
-					"type":	"code",
-					"addr":	27002,
-					"len":	139
+					"len":	315
 				}, {
 					"type":	"code",
 					"addr":	27169,
-					"len":	41
-				}, {
-					"type":	"code",
-					"addr":	27355,
-					"len":	12
+					"len":	198
 				}, {
 					"type":	"code",
 					"addr":	27502,
@@ -1649,11 +1614,7 @@
 				}, {
 					"type":	"data",
 					"addr":	27992,
-					"len":	10
-				}, {
-					"type":	"data",
-					"addr":	28004,
-					"len":	22
+					"len":	34
 				}, {
 					"type":	"data",
 					"addr":	28034,
@@ -1677,11 +1638,7 @@
 				}, {
 					"type":	"data",
 					"addr":	28086,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	28092,
-					"len":	20
+					"len":	26
 				}, {
 					"type":	"data",
 					"addr":	28122,
@@ -1689,43 +1646,31 @@
 				}, {
 					"type":	"data",
 					"addr":	28150,
-					"len":	2
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	28182,
+					"len":	4
 				}, {
 					"type":	"code",
 					"addr":	28214,
-					"len":	8
+					"len":	47
 				}, {
 					"type":	"code",
-					"addr":	28232,
-					"len":	29
+					"addr":	28309,
+					"len":	16
 				}, {
 					"type":	"code",
 					"addr":	28335,
-					"len":	198
-				}, {
-					"type":	"code",
-					"addr":	28540,
-					"len":	18
-				}, {
-					"type":	"code",
-					"addr":	28594,
-					"len":	229
-				}, {
-					"type":	"code",
-					"addr":	28899,
-					"len":	656
-				}, {
-					"type":	"code",
-					"addr":	29707,
-					"len":	42
+					"len":	1414
 				}, {
 					"type":	"code",
 					"addr":	29892,
 					"len":	25
 				}, {
 					"type":	"code",
-					"addr":	30125,
-					"len":	31
+					"addr":	29970,
+					"len":	186
 				}, {
 					"type":	"data",
 					"addr":	30156,
@@ -1752,16 +1697,12 @@
 					"len":	161
 				}, {
 					"type":	"code",
-					"addr":	30736,
-					"len":	12
+					"addr":	30710,
+					"len":	38
 				}, {
 					"type":	"data",
 					"addr":	30751,
-					"len":	15
-				}, {
-					"type":	"data",
-					"addr":	30769,
-					"len":	33
+					"len":	51
 				}, {
 					"type":	"data",
 					"addr":	30814,
@@ -1785,11 +1726,7 @@
 				}, {
 					"type":	"data",
 					"addr":	30892,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	30901,
-					"len":	30
+					"len":	39
 				}, {
 					"type":	"data",
 					"addr":	30946,
@@ -1797,15 +1734,15 @@
 				}, {
 					"type":	"data",
 					"addr":	30988,
-					"len":	3
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	31036,
+					"len":	6
 				}, {
 					"type":	"data",
 					"addr":	31086,
-					"len":	10
-				}, {
-					"type":	"data",
-					"addr":	31098,
-					"len":	22
+					"len":	34
 				}, {
 					"type":	"data",
 					"addr":	31128,
@@ -1829,11 +1766,7 @@
 				}, {
 					"type":	"data",
 					"addr":	31180,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	31186,
-					"len":	20
+					"len":	26
 				}, {
 					"type":	"data",
 					"addr":	31216,
@@ -1841,7 +1774,11 @@
 				}, {
 					"type":	"data",
 					"addr":	31244,
-					"len":	2
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	31276,
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	31308,
@@ -1849,11 +1786,7 @@
 				}, {
 					"type":	"data",
 					"addr":	31340,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	31346,
-					"len":	20
+					"len":	26
 				}, {
 					"type":	"data",
 					"addr":	31376,
@@ -1861,7 +1794,7 @@
 				}, {
 					"type":	"data",
 					"addr":	31404,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	31416,
@@ -1869,11 +1802,7 @@
 				}, {
 					"type":	"data",
 					"addr":	31448,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	31454,
-					"len":	20
+					"len":	26
 				}, {
 					"type":	"data",
 					"addr":	31484,
@@ -1881,7 +1810,7 @@
 				}, {
 					"type":	"data",
 					"addr":	31512,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"code",
 					"addr":	31524,
@@ -1890,6 +1819,14 @@
 					"type":	"data",
 					"addr":	31597,
 					"len":	80
+				}, {
+					"type":	"data",
+					"addr":	31679,
+					"len":	122
+				}, {
+					"type":	"data",
+					"addr":	31803,
+					"len":	120
 				}, {
 					"type":	"data",
 					"addr":	32767,
@@ -1917,11 +1854,7 @@
 				}, {
 					"type":	"data",
 					"addr":	37617,
-					"len":	64
-				}, {
-					"type":	"data",
-					"addr":	37690,
-					"len":	118
+					"len":	191
 				}, {
 					"type":	"data",
 					"addr":	37817,
@@ -1969,7 +1902,15 @@
 				}, {
 					"type":	"data",
 					"addr":	38762,
-					"len":	800
+					"len":	1145
+				}, {
+					"type":	"data",
+					"addr":	39989,
+					"len":	246
+				}, {
+					"type":	"data",
+					"addr":	40276,
+					"len":	41
 				}, {
 					"type":	"data",
 					"addr":	49151,
@@ -1997,11 +1938,7 @@
 				}, {
 					"type":	"data",
 					"addr":	49348,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	49352,
-					"len":	2
+					"len":	6
 				}, {
 					"type":	"data",
 					"addr":	49356,
@@ -2045,11 +1982,7 @@
 				}, {
 					"type":	"code",
 					"addr":	49755,
-					"len":	32
-				}, {
-					"type":	"code",
-					"addr":	49803,
-					"len":	50
+					"len":	98
 				}, {
 					"type":	"code",
 					"addr":	49887,
@@ -2057,11 +1990,7 @@
 				}, {
 					"type":	"code",
 					"addr":	49915,
-					"len":	325
-				}, {
-					"type":	"code",
-					"addr":	50273,
-					"len":	174
+					"len":	532
 				}, {
 					"type":	"code",
 					"addr":	50451,
@@ -2101,27 +2030,15 @@
 				}, {
 					"type":	"code",
 					"addr":	51800,
-					"len":	166
-				}, {
-					"type":	"code",
-					"addr":	51971,
-					"len":	57
-				}, {
-					"type":	"code",
-					"addr":	52054,
-					"len":	121
+					"len":	375
 				}, {
 					"type":	"code",
 					"addr":	52202,
-					"len":	47
+					"len":	77
 				}, {
 					"type":	"code",
-					"addr":	52275,
-					"len":	4
-				}, {
-					"type":	"code",
-					"addr":	52319,
-					"len":	41
+					"addr":	52281,
+					"len":	79
 				}, {
 					"type":	"code",
 					"addr":	52370,
@@ -2145,11 +2062,7 @@
 				}, {
 					"type":	"code",
 					"addr":	53024,
-					"len":	10
-				}, {
-					"type":	"code",
-					"addr":	53048,
-					"len":	423
+					"len":	447
 				}, {
 					"type":	"data",
 					"addr":	53473,
@@ -2205,27 +2118,15 @@
 				}, {
 					"type":	"code",
 					"addr":	54832,
-					"len":	45
-				}, {
-					"type":	"code",
-					"addr":	54882,
-					"len":	69
+					"len":	119
 				}, {
 					"type":	"code",
 					"addr":	54957,
-					"len":	20
-				}, {
-					"type":	"code",
-					"addr":	54982,
-					"len":	19
-				}, {
-					"type":	"code",
-					"addr":	55007,
 					"len":	44
 				}, {
 					"type":	"code",
-					"addr":	55057,
-					"len":	50
+					"addr":	55007,
+					"len":	100
 				}, {
 					"type":	"code",
 					"addr":	55220,
@@ -2257,7 +2158,7 @@
 				}, {
 					"type":	"code",
 					"addr":	55608,
-					"len":	22
+					"len":	26
 				}, {
 					"type":	"code",
 					"addr":	55638,
@@ -2317,27 +2218,19 @@
 				}, {
 					"type":	"code",
 					"addr":	56587,
-					"len":	58
+					"len":	62
 				}, {
 					"type":	"code",
 					"addr":	56653,
-					"len":	10
+					"len":	18
 				}, {
 					"type":	"code",
 					"addr":	56675,
-					"len":	4
-				}, {
-					"type":	"code",
-					"addr":	56683,
-					"len":	14
+					"len":	22
 				}, {
 					"type":	"code",
 					"addr":	56701,
-					"len":	26
-				}, {
-					"type":	"code",
-					"addr":	56731,
-					"len":	8
+					"len":	38
 				}, {
 					"type":	"code",
 					"addr":	56743,
@@ -2353,11 +2246,7 @@
 				}, {
 					"type":	"code",
 					"addr":	56910,
-					"len":	240
-				}, {
-					"type":	"code",
-					"addr":	57156,
-					"len":	117
+					"len":	363
 				}, {
 					"type":	"code",
 					"addr":	57279,
@@ -2373,7 +2262,7 @@
 				}, {
 					"type":	"code",
 					"addr":	57830,
-					"len":	43
+					"len":	86
 				}, {
 					"type":	"code",
 					"addr":	57959,
@@ -2389,7 +2278,35 @@
 				}, {
 					"type":	"code",
 					"addr":	58303,
-					"len":	42
+					"len":	64
+				}, {
+					"type":	"code",
+					"addr":	58383,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	58421,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	58429,
+					"len":	63
+				}, {
+					"type":	"code",
+					"addr":	58496,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	58509,
+					"len":	10
+				}, {
+					"type":	"code",
+					"addr":	58531,
+					"len":	10
+				}, {
+					"type":	"code",
+					"addr":	58546,
+					"len":	10
 				}, {
 					"type":	"code",
 					"addr":	58940,
@@ -2421,7 +2338,19 @@
 				}, {
 					"type":	"code",
 					"addr":	59671,
-					"len":	73
+					"len":	108
+				}, {
+					"type":	"code",
+					"addr":	59788,
+					"len":	139
+				}, {
+					"type":	"code",
+					"addr":	59932,
+					"len":	5
+				}, {
+					"type":	"code",
+					"addr":	61209,
+					"len":	171
 				}, {
 					"type":	"data",
 					"addr":	61384,
@@ -2445,23 +2374,27 @@
 				}, {
 					"type":	"data",
 					"addr":	61472,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	61484,
 					"len":	2
 				}, {
 					"type":	"data",
-					"addr":	61510,
-					"len":	28
+					"addr":	61494,
+					"len":	2
 				}, {
 					"type":	"data",
-					"addr":	61545,
-					"len":	41
+					"addr":	61510,
+					"len":	76
 				}, {
 					"type":	"data",
 					"addr":	61614,
 					"len":	32
+				}, {
+					"type":	"data",
+					"addr":	61649,
+					"len":	8
 				}, {
 					"type":	"data",
 					"addr":	61665,
@@ -2504,12 +2437,20 @@
 					"len":	58
 				}, {
 					"type":	"data",
+					"addr":	61931,
+					"len":	96
+				}, {
+					"type":	"data",
 					"addr":	62166,
 					"len":	176
 				}, {
 					"type":	"data",
 					"addr":	62471,
 					"len":	140
+				}, {
+					"type":	"data",
+					"addr":	62614,
+					"len":	28
 				}, {
 					"type":	"data",
 					"addr":	62645,
@@ -2537,15 +2478,11 @@
 				}, {
 					"type":	"data",
 					"addr":	62972,
-					"len":	25
+					"len":	72
 				}, {
 					"type":	"data",
-					"addr":	63144,
-					"len":	76
-				}, {
-					"type":	"data",
-					"addr":	63222,
-					"len":	45
+					"addr":	63135,
+					"len":	132
 				}, {
 					"type":	"data",
 					"addr":	63271,
@@ -2580,8 +2517,12 @@
 					"len":	9
 				}, {
 					"type":	"data",
-					"addr":	63871,
-					"len":	22
+					"addr":	63844,
+					"len":	9
+				}, {
+					"type":	"data",
+					"addr":	63862,
+					"len":	31
 				}, {
 					"type":	"data",
 					"addr":	63912,
@@ -2641,7 +2582,7 @@
 				}, {
 					"type":	"data",
 					"addr":	64906,
-					"len":	41
+					"len":	156
 				}, {
 					"type":	"data",
 					"addr":	65535,
@@ -2673,19 +2614,15 @@
 				}, {
 					"type":	"code",
 					"addr":	66140,
-					"len":	98
-				}, {
-					"type":	"code",
-					"addr":	66246,
-					"len":	170
+					"len":	276
 				}, {
 					"type":	"data",
 					"addr":	66416,
 					"len":	16
 				}, {
 					"type":	"data",
-					"addr":	66448,
-					"len":	8
+					"addr":	66444,
+					"len":	12
 				}, {
 					"type":	"data",
 					"addr":	66464,
@@ -2693,7 +2630,7 @@
 				}, {
 					"type":	"data",
 					"addr":	66544,
-					"len":	8
+					"len":	16
 				}, {
 					"type":	"data",
 					"addr":	66608,
@@ -2709,11 +2646,7 @@
 				}, {
 					"type":	"data",
 					"addr":	66685,
-					"len":	5
-				}, {
-					"type":	"data",
-					"addr":	66691,
-					"len":	11
+					"len":	17
 				}, {
 					"type":	"data",
 					"addr":	66706,
@@ -2737,11 +2670,7 @@
 				}, {
 					"type":	"data",
 					"addr":	66732,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	66735,
-					"len":	10
+					"len":	13
 				}, {
 					"type":	"data",
 					"addr":	66750,
@@ -2749,7 +2678,11 @@
 				}, {
 					"type":	"data",
 					"addr":	66764,
-					"len":	1
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	66780,
+					"len":	2
 				}, {
 					"type":	"code",
 					"addr":	66796,
@@ -2790,6 +2723,14 @@
 					"type":	"data",
 					"addr":	66836,
 					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	66844,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	66848,
+					"len":	3
 				}, {
 					"type":	"data",
 					"addr":	66852,
@@ -2961,6 +2902,22 @@
 				}, {
 					"type":	"data",
 					"addr":	67112,
+					"len":	3
+				}, {
+					"type":	"data",
+					"addr":	67116,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	67120,
+					"len":	3
+				}, {
+					"type":	"data",
+					"addr":	67124,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	67128,
 					"len":	3
 				}, {
 					"type":	"data",
@@ -3149,15 +3106,7 @@
 				}, {
 					"type":	"data",
 					"addr":	67622,
-					"len":	8
-				}, {
-					"type":	"data",
-					"addr":	67632,
-					"len":	14
-				}, {
-					"type":	"data",
-					"addr":	67650,
-					"len":	6
+					"len":	36
 				}, {
 					"type":	"data",
 					"addr":	67660,
@@ -3197,11 +3146,7 @@
 				}, {
 					"type":	"data",
 					"addr":	67740,
-					"len":	64
-				}, {
-					"type":	"data",
-					"addr":	67817,
-					"len":	66
+					"len":	143
 				}, {
 					"type":	"data",
 					"addr":	67884,
@@ -3238,6 +3183,10 @@
 					"type":	"data",
 					"addr":	68377,
 					"len":	13
+				}, {
+					"type":	"data",
+					"addr":	68403,
+					"len":	18
 				}, {
 					"type":	"data",
 					"addr":	68590,
@@ -3337,15 +3286,7 @@
 				}, {
 					"type":	"data",
 					"addr":	68827,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	68833,
-					"len":	59
-				}, {
-					"type":	"data",
-					"addr":	68895,
-					"len":	10
+					"len":	78
 				}, {
 					"type":	"data",
 					"addr":	68921,
@@ -3357,11 +3298,7 @@
 				}, {
 					"type":	"data",
 					"addr":	68989,
-					"len":	49
-				}, {
-					"type":	"data",
-					"addr":	69071,
-					"len":	7
+					"len":	89
 				}, {
 					"type":	"data",
 					"addr":	69079,
@@ -3413,35 +3350,19 @@
 				}, {
 					"type":	"data",
 					"addr":	69219,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	69223,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	69227,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	69231,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	69235,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	69239,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	69243,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	69247,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	69251,
@@ -3505,11 +3426,35 @@
 				}, {
 					"type":	"data",
 					"addr":	69492,
-					"len":	18
+					"len":	25
 				}, {
 					"type":	"data",
-					"addr":	69669,
+					"addr":	69518,
 					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	69526,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	69566,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	69570,
+					"len":	3
+				}, {
+					"type":	"data",
+					"addr":	69576,
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	69592,
+					"len":	33
+				}, {
+					"type":	"data",
+					"addr":	69651,
+					"len":	25
 				}, {
 					"type":	"data",
 					"addr":	69677,
@@ -3777,102 +3722,78 @@
 				}, {
 					"type":	"data",
 					"addr":	70612,
-					"len":	43
-				}, {
-					"type":	"data",
-					"addr":	70657,
-					"len":	3
+					"len":	48
 				}, {
 					"type":	"data",
 					"addr":	70661,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70665,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70669,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70673,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70677,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70681,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70685,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70689,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70693,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70697,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70701,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	70705,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70709,
-					"len":	2
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70713,
-					"len":	3
+					"addr":	70733,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70735,
-					"len":	5
+					"addr":	70741,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70743,
-					"len":	5
+					"addr":	70749,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70751,
-					"len":	5
+					"addr":	70757,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70759,
-					"len":	5
+					"addr":	70765,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70767,
-					"len":	5
+					"addr":	70773,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70775,
-					"len":	5
+					"addr":	70781,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	70783,
-					"len":	5
-				}, {
-					"type":	"data",
-					"addr":	70791,
-					"len":	5
+					"addr":	70789,
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	70819,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	70825,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	70829,
 					"len":	2
 				}, {
 					"type":	"data",
@@ -3884,8 +3805,12 @@
 					"len":	13
 				}, {
 					"type":	"data",
-					"addr":	71071,
-					"len":	7
+					"addr":	71032,
+					"len":	13
+				}, {
+					"type":	"data",
+					"addr":	71058,
+					"len":	20
 				}, {
 					"type":	"data",
 					"addr":	71079,
@@ -3985,19 +3910,11 @@
 				}, {
 					"type":	"data",
 					"addr":	71742,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	71746,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	71750,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	71754,
-					"len":	3
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	71758,
@@ -4072,28 +3989,28 @@
 					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72413,
-					"len":	5
+					"addr":	72411,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72421,
-					"len":	5
+					"addr":	72419,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72437,
-					"len":	5
+					"addr":	72435,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72445,
-					"len":	5
+					"addr":	72443,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72453,
-					"len":	5
+					"addr":	72451,
+					"len":	7
 				}, {
 					"type":	"data",
-					"addr":	72477,
-					"len":	5
+					"addr":	72475,
+					"len":	7
 				}, {
 					"type":	"data",
 					"addr":	72493,
@@ -4109,7 +4026,55 @@
 				}, {
 					"type":	"data",
 					"addr":	72587,
+					"len":	85
+				}, {
+					"type":	"data",
+					"addr":	72673,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72681,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72689,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72705,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72713,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72721,
+					"len":	7
+				}, {
+					"type":	"data",
+					"addr":	72731,
+					"len":	5
+				}, {
+					"type":	"data",
+					"addr":	72741,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	72755,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	72765,
 					"len":	78
+				}, {
+					"type":	"data",
+					"addr":	72846,
+					"len":	40
+				}, {
+					"type":	"data",
+					"addr":	72889,
+					"len":	28
 				}, {
 					"type":	"data",
 					"addr":	81919,
@@ -4233,15 +4198,11 @@
 				}, {
 					"type":	"code",
 					"addr":	247404,
-					"len":	32
-				}, {
-					"type":	"code",
-					"addr":	247440,
-					"len":	36
+					"len":	72
 				}, {
 					"type":	"data",
 					"addr":	247483,
-					"len":	15
+					"len":	27
 				}, {
 					"type":	"code",
 					"addr":	247510,
@@ -4262,6 +4223,10 @@
 					"type":	"data",
 					"addr":	247810,
 					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	247818,
+					"len":	2
 				}, {
 					"type":	"code",
 					"addr":	247820,
@@ -4349,11 +4314,7 @@
 				}, {
 					"type":	"data",
 					"addr":	248481,
-					"len":	1
-				}, {
-					"type":	"data",
-					"addr":	248486,
-					"len":	1
+					"len":	6
 				}, {
 					"type":	"data",
 					"addr":	248491,
@@ -4401,11 +4362,7 @@
 				}, {
 					"type":	"data",
 					"addr":	257230,
-					"len":	120
-				}, {
-					"type":	"data",
-					"addr":	257398,
-					"len":	22
+					"len":	190
 				}, {
 					"type":	"data",
 					"addr":	257712,
@@ -4418,6 +4375,10 @@
 					"type":	"data",
 					"addr":	257762,
 					"len":	30
+				}, {
+					"type":	"data",
+					"addr":	257802,
+					"len":	10
 				}, {
 					"type":	"data",
 					"addr":	257836,
@@ -4444,6 +4405,10 @@
 					"len":	14
 				}, {
 					"type":	"data",
+					"addr":	258256,
+					"len":	14
+				}, {
+					"type":	"data",
 					"addr":	258326,
 					"len":	25
 				}, {
@@ -4461,11 +4426,11 @@
 				}, {
 					"type":	"data",
 					"addr":	262284,
-					"len":	6
+					"len":	8
 				}, {
 					"type":	"data",
-					"addr":	262304,
-					"len":	2
+					"addr":	262302,
+					"len":	4
 				}, {
 					"type":	"code",
 					"addr":	262308,
@@ -4489,6 +4454,14 @@
 				}, {
 					"type":	"data",
 					"addr":	270775,
+					"len":	56
+				}, {
+					"type":	"data",
+					"addr":	270903,
+					"len":	56
+				}, {
+					"type":	"data",
+					"addr":	271671,
 					"len":	56
 				}, {
 					"type":	"data",
@@ -4641,7 +4614,7 @@
 				}, {
 					"type":	"data",
 					"addr":	299093,
-					"len":	469
+					"len":	910
 				}, {
 					"type":	"data",
 					"addr":	301318,
@@ -4705,15 +4678,11 @@
 				}, {
 					"type":	"data",
 					"addr":	360448,
-					"len":	8
+					"len":	12
 				}, {
 					"type":	"data",
-					"addr":	360458,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	360466,
-					"len":	2
+					"addr":	360464,
+					"len":	4
 				}, {
 					"type":	"code",
 					"addr":	360470,
@@ -4721,15 +4690,11 @@
 				}, {
 					"type":	"data",
 					"addr":	360575,
-					"len":	8192
+					"len":	12288
 				}, {
 					"type":	"data",
-					"addr":	370815,
-					"len":	2048
-				}, {
-					"type":	"data",
-					"addr":	373631,
-					"len":	256
+					"addr":	373375,
+					"len":	512
 				}, {
 					"type":	"data",
 					"addr":	376831,
@@ -4825,7 +4790,7 @@
 				}, {
 					"type":	"data",
 					"addr":	377164,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	377174,
@@ -4837,7 +4802,7 @@
 				}, {
 					"type":	"code",
 					"addr":	377196,
-					"len":	36
+					"len":	44
 				}, {
 					"type":	"data",
 					"addr":	377336,
@@ -4897,11 +4862,11 @@
 				}, {
 					"type":	"data",
 					"addr":	385304,
-					"len":	1024
+					"len":	2048
 				}, {
 					"type":	"data",
 					"addr":	390424,
-					"len":	8
+					"len":	24
 				}, {
 					"type":	"data",
 					"addr":	390488,
@@ -4933,27 +4898,7 @@
 				}, {
 					"type":	"data",
 					"addr":	401548,
-					"len":	109
-				}, {
-					"type":	"data",
-					"addr":	401661,
-					"len":	98
-				}, {
-					"type":	"data",
-					"addr":	401773,
-					"len":	78
-				}, {
-					"type":	"data",
-					"addr":	401855,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	401923,
-					"len":	53
-				}, {
-					"type":	"data",
-					"addr":	402539,
-					"len":	24
+					"len":	6
 				}, {
 					"type":	"code",
 					"addr":	404337,
@@ -5053,11 +4998,11 @@
 				}, {
 					"type":	"code",
 					"addr":	508052,
-					"len":	124
+					"len":	128
 				}, {
 					"type":	"code",
 					"addr":	508193,
-					"len":	18
+					"len":	36
 				}, {
 					"type":	"code",
 					"addr":	508283,
@@ -5066,6 +5011,14 @@
 					"type":	"data",
 					"addr":	508593,
 					"len":	239
+				}, {
+					"type":	"code",
+					"addr":	508950,
+					"len":	399
+				}, {
+					"type":	"data",
+					"addr":	509349,
+					"len":	273
 				}, {
 					"type":	"code",
 					"addr":	514133,
@@ -5269,11 +5222,7 @@
 				}, {
 					"type":	"data",
 					"addr":	588460,
-					"len":	10
-				}, {
-					"type":	"data",
-					"addr":	588480,
-					"len":	30
+					"len":	60
 				}, {
 					"type":	"data",
 					"addr":	588650,
@@ -5281,11 +5230,7 @@
 				}, {
 					"type":	"data",
 					"addr":	588688,
-					"len":	22
-				}, {
-					"type":	"data",
-					"addr":	588712,
-					"len":	6
+					"len":	32
 				}, {
 					"type":	"data",
 					"addr":	589823,
@@ -5305,7 +5250,7 @@
 				}, {
 					"type":	"data",
 					"addr":	596351,
-					"len":	660
+					"len":	990
 				}, {
 					"type":	"data",
 					"addr":	599357,
@@ -5313,7 +5258,7 @@
 				}, {
 					"type":	"data",
 					"addr":	599487,
-					"len":	4
+					"len":	6
 				}, {
 					"type":	"data",
 					"addr":	599513,
@@ -5582,6 +5527,14 @@
 					"type":	"data",
 					"addr":	747157,
 					"len":	325
+				}, {
+					"type":	"data",
+					"addr":	747738,
+					"len":	325
+				}, {
+					"type":	"data",
+					"addr":	748319,
+					"len":	906
 				}, {
 					"type":	"data",
 					"addr":	753663,
@@ -5911,6 +5864,22 @@
 					"addr":	851967,
 					"len":	1
 				}, {
+					"type":	"data",
+					"addr":	868352,
+					"len":	8240
+				}, {
+					"type":	"data",
+					"addr":	876608,
+					"len":	48
+				}, {
+					"type":	"data",
+					"addr":	876672,
+					"len":	1206
+				}, {
+					"type":	"data",
+					"addr":	884735,
+					"len":	1
+				}, {
 					"type":	"code",
 					"addr":	917504,
 					"len":	26
@@ -5941,31 +5910,27 @@
 				}, {
 					"type":	"code",
 					"addr":	999424,
-					"len":	71
-				}, {
-					"type":	"code",
-					"addr":	999505,
-					"len":	20
+					"len":	101
 				}, {
 					"type":	"data",
 					"addr":	999525,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	999535,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	999545,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	999555,
-					"len":	2
+					"len":	4
 				}, {
 					"type":	"data",
 					"addr":	999565,
-					"len":	3104
+					"len":	6976
 				}, {
 					"type":	"data",
 					"addr":	1015807,
@@ -6221,15 +6186,7 @@
 				}, {
 					"type":	"data",
 					"addr":	1021706,
-					"len":	62
-				}, {
-					"type":	"data",
-					"addr":	1021771,
-					"len":	417
-				}, {
-					"type":	"data",
-					"addr":	1022227,
-					"len":	165
+					"len":	686
 				}, {
 					"type":	"data",
 					"addr":	1022493,
@@ -6325,7 +6282,7 @@
 				}, {
 					"type":	"data",
 					"addr":	1033262,
-					"len":	10
+					"len":	12
 				}, {
 					"type":	"data",
 					"addr":	1033276,
@@ -6334,6 +6291,10 @@
 					"type":	"data",
 					"addr":	1033284,
 					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	1033294,
+					"len":	12
 				}, {
 					"type":	"data",
 					"addr":	1033326,
@@ -6497,10 +6458,10 @@
 				}, {
 					"type":	"data",
 					"addr":	1035042,
-					"len":	2
+					"len":	6
 				}, {
 					"type":	"data",
-					"addr":	1035046,
+					"addr":	1035058,
 					"len":	2
 				}, {
 					"type":	"data",
@@ -6521,11 +6482,7 @@
 				}, {
 					"type":	"data",
 					"addr":	1035088,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	1035094,
-					"len":	4
+					"len":	12
 				}, {
 					"type":	"data",
 					"addr":	1035520,
@@ -6592,8 +6549,16 @@
 					"len":	230
 				}, {
 					"type":	"data",
+					"addr":	1036696,
+					"len":	179
+				}, {
+					"type":	"data",
 					"addr":	1036876,
 					"len":	54
+				}, {
+					"type":	"data",
+					"addr":	1037434,
+					"len":	60
 				}, {
 					"type":	"data",
 					"addr":	1037588,
@@ -6636,28 +6601,68 @@
 					"len":	62
 				}, {
 					"type":	"data",
+					"addr":	1039523,
+					"len":	23
+				}, {
+					"type":	"data",
+					"addr":	1039600,
+					"len":	17
+				}, {
+					"type":	"data",
+					"addr":	1039754,
+					"len":	11
+				}, {
+					"type":	"data",
+					"addr":	1039819,
+					"len":	18
+				}, {
+					"type":	"data",
+					"addr":	1039997,
+					"len":	9
+				}, {
+					"type":	"data",
+					"addr":	1040060,
+					"len":	25
+				}, {
+					"type":	"data",
+					"addr":	1040416,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	1040480,
+					"len":	14
+				}, {
+					"type":	"data",
 					"addr":	1040575,
-					"len":	1440
+					"len":	2439
 				}, {
 					"type":	"data",
-					"addr":	1042018,
-					"len":	258
+					"addr":	1043070,
+					"len":	14
 				}, {
 					"type":	"data",
-					"addr":	1042293,
-					"len":	68
+					"addr":	1043363,
+					"len":	11
 				}, {
 					"type":	"data",
-					"addr":	1042364,
-					"len":	155
+					"addr":	1043428,
+					"len":	11
 				}, {
 					"type":	"data",
-					"addr":	1042522,
-					"len":	371
+					"addr":	1043592,
+					"len":	9
 				}, {
 					"type":	"data",
-					"addr":	1042896,
-					"len":	95
+					"addr":	1043655,
+					"len":	18
+				}, {
+					"type":	"data",
+					"addr":	1043960,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	1044026,
+					"len":	9
 				}, {
 					"type":	"data",
 					"addr":	1048575,

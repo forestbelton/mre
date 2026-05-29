@@ -1216,12 +1216,12 @@ Data_00_0ad8:
 SECTION "analyzed_000afa", ROM0[$0afa]
 
 Data_00_0afa:
-	db $3f, $11
+	db $3f, $11, $3f, $12, $3f, $13
 
-SECTION "analyzed_000afe", ROM0[$0afe]
+SECTION "analyzed_000b0a", ROM0[$0b0a]
 
-Data_00_0afe:
-	db $3f, $13
+Data_00_0b0a:
+	db $3f, $19
 
 SECTION "analyzed_000b0e", ROM0[$0b0e]
 
@@ -1246,12 +1246,7 @@ Data_00_0b22:
 SECTION "analyzed_000b28", ROM0[$0b28]
 
 Data_00_0b28:
-	db $3f, $28, $3f, $29
-
-SECTION "analyzed_000b2e", ROM0[$0b2e]
-
-Data_00_0b2e:
-	db $3f, $2b, $3f, $2c
+	db $3f, $28, $3f, $29, $3f, $2a, $3f, $2b, $3f, $2c, $3f, $2d
 
 SECTION "analyzed_000b36", ROM0[$0b36]
 
@@ -1988,9 +1983,19 @@ Func_00_113e:
 	pop af
 	ld [$2fff], a
 	ret
-
-SECTION "analyzed_001164", ROM0[$1164]
-
+Func_00_1150:
+	push de
+	ld a, [$7fff]
+	push af
+	ld a, b
+	ld [$2fff], a
+	ld de, $115e
+	push de
+	jp hl
+	pop af
+	ld [$2fff], a
+	pop de
+	ret
 Func_00_1164:
 	push bc
 	push hl
@@ -2036,7 +2041,7 @@ Func_00_119a:
 Func_00_11b4:
 	ld a, [hl]
 	or a
-	jr z, $11d7
+	jr z, Func_00_11d7
 	cp $01
 	jr z, Func_00_11ca
 	and $f0
@@ -2045,16 +2050,18 @@ Func_00_11b4:
 	ld a, [$c2e3]
 	or a
 	jr z, Func_00_11d9
-
-SECTION "analyzed_0011ca", ROM0[$11ca]
-
+	jr Func_00_11d3
 Func_00_11ca:
 	ld a, [$c2df]
 	or a
 	jr z, Func_00_11d9
-
-SECTION "analyzed_0011d9", ROM0[$11d9]
-
+	ld a, [$c2e0]
+Func_00_11d3:
+	and $02
+	jr z, Func_00_11d9
+Func_00_11d7:
+	xor a
+	ret
 Func_00_11d9:
 	ld a, $01
 	ret
@@ -2083,12 +2090,8 @@ Func_00_1219:
 SECTION "analyzed_001220", ROM0[$1220]
 
 Data_00_1220:
-	db $00, $00, $40, $40, $40, $40
-
-SECTION "analyzed_001227", ROM0[$1227]
-
-Data_00_1227:
-	db $40, $40, $00, $60, $60, $40, $40, $60, $60, $40, $40
+	db $00, $00, $40, $40, $40, $40, $40, $40, $40, $00, $60, $60, $40, $40, $60, $60
+	db $40, $40
 
 SECTION "analyzed_001236", ROM0[$1236]
 
@@ -2118,12 +2121,7 @@ Data_00_1249:
 SECTION "analyzed_001250", ROM0[$1250]
 
 Data_00_1250:
-	db $8f, $8f
-
-SECTION "analyzed_001253", ROM0[$1253]
-
-Data_00_1253:
-	db $8f, $8f, $cf, $cf, $cf, $8f, $cf, $cf, $87, $87
+	db $8f, $8f, $8f, $8f, $8f, $cf, $cf, $cf, $8f, $cf, $cf, $87, $87
 
 SECTION "analyzed_001262", ROM0[$1262]
 
@@ -2133,7 +2131,12 @@ Data_00_1262:
 SECTION "analyzed_001270", ROM0[$1270]
 
 Data_00_1270:
-	db $01
+	db $01, $01
+
+SECTION "analyzed_001280", ROM0[$1280]
+
+Data_00_1280:
+	db $01, $01
 
 SECTION "analyzed_001290", ROM0[$1290]
 
@@ -2224,12 +2227,8 @@ Data_00_12fa:
 SECTION "analyzed_00130e", ROM0[$130e]
 
 Data_00_130e:
-	db $40, $20, $01, $58, $01, $41, $24, $01
-
-SECTION "analyzed_001318", ROM0[$1318]
-
-Data_00_1318:
-	db $42, $64, $09, $59, $01, $43, $66, $09, $5a, $01, $c0, $00, $09, $5b, $01, $c1
+	db $40, $20, $01, $58, $01, $41, $24, $01, $58, $01, $42, $64, $09, $59, $01, $43
+	db $66, $09, $5a, $01, $c0, $00, $09, $5b, $01, $c1
 
 SECTION "analyzed_00132c", ROM0[$132c]
 
@@ -2244,7 +2243,7 @@ Data_00_1336:
 SECTION "analyzed_00133b", ROM0[$133b]
 
 Data_00_133b:
-	db $c5
+	db $c5, $10, $09
 
 SECTION "analyzed_001340", ROM0[$1340]
 
@@ -2259,7 +2258,7 @@ Data_00_1345:
 SECTION "analyzed_00134a", ROM0[$134a]
 
 Data_00_134a:
-	db $c8, $14, $09, $61, $01, $c9
+	db $c8, $14, $09, $61, $01, $c9, $16, $09
 
 SECTION "analyzed_001354", ROM0[$1354]
 
@@ -2279,7 +2278,7 @@ Data_00_135e:
 SECTION "analyzed_00136d", ROM0[$136d]
 
 Data_00_136d:
-	db $cf, $26, $0c, $66, $04, $d0
+	db $cf, $26, $0c, $66, $04, $d0, $30, $0a
 
 SECTION "analyzed_001377", ROM0[$1377]
 
@@ -2330,7 +2329,7 @@ Data_00_13b3:
 SECTION "analyzed_0013b8", ROM0[$13b8]
 
 Data_00_13b8:
-	db $de
+	db $de, $56, $09
 
 SECTION "analyzed_0013bd", ROM0[$13bd]
 
@@ -2375,62 +2374,62 @@ Data_00_13e5:
 SECTION "analyzed_0013ea", ROM0[$13ea]
 
 Data_00_13ea:
-	db $14
+	db $14, $42, $05
 
 SECTION "analyzed_0013ef", ROM0[$13ef]
 
 Data_00_13ef:
-	db $15
+	db $15, $52, $05
 
 SECTION "analyzed_0013f4", ROM0[$13f4]
 
 Data_00_13f4:
-	db $16
+	db $16, $62, $05
 
 SECTION "analyzed_0013f9", ROM0[$13f9]
 
 Data_00_13f9:
-	db $17
+	db $17, $72, $05
 
 SECTION "analyzed_0013fe", ROM0[$13fe]
 
 Data_00_13fe:
-	db $18
+	db $18, $44, $05
 
 SECTION "analyzed_001403", ROM0[$1403]
 
 Data_00_1403:
-	db $19
+	db $19, $54, $05
 
 SECTION "analyzed_001408", ROM0[$1408]
 
 Data_00_1408:
-	db $1a
+	db $1a, $64, $05
 
 SECTION "analyzed_00140d", ROM0[$140d]
 
 Data_00_140d:
-	db $1b
+	db $1b, $74, $05
 
 SECTION "analyzed_001412", ROM0[$1412]
 
 Data_00_1412:
-	db $1c
+	db $1c, $46, $05
 
 SECTION "analyzed_001417", ROM0[$1417]
 
 Data_00_1417:
-	db $1d
+	db $1d, $56, $05
 
 SECTION "analyzed_00141c", ROM0[$141c]
 
 Data_00_141c:
-	db $1e
+	db $1e, $66, $05
 
 SECTION "analyzed_001421", ROM0[$1421]
 
 Data_00_1421:
-	db $1f
+	db $1f, $76, $05
 
 SECTION "analyzed_001426", ROM0[$1426]
 
@@ -2701,12 +2700,12 @@ SECTION "analyzed_001567", ROM0[$1567]
 
 Data_00_1567:
 	db $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d
-	db $2d, $2d
+	db $2d, $2d, $2d, $2d, $2d
 
 SECTION "analyzed_0015ad", ROM0[$15ad]
 
 Data_00_15ad:
-	db $12
+	db $12, $12
 
 SECTION "analyzed_0015b5", ROM0[$15b5]
 
@@ -2723,12 +2722,12 @@ SECTION "analyzed_0015bf", ROM0[$15bf]
 Data_00_15bf:
 	db $00, $40, $45, $42, $8a, $44, $cf, $46, $14, $49, $59, $4b, $9e, $4d, $e3, $4f
 	db $28, $52, $6d, $54, $b2, $56, $f7, $58, $3c, $5b, $81, $5d, $c6, $5f, $0b, $62
-	db $50, $64, $95, $66
+	db $50, $64, $95, $66, $da, $68, $1f, $6b, $64, $6d
 
 SECTION "analyzed_00164b", ROM0[$164b]
 
 Data_00_164b:
-	db $55, $50
+	db $55, $50, $26, $52
 
 SECTION "analyzed_00165b", ROM0[$165b]
 
@@ -4671,6 +4670,10 @@ Func_01_4154:
 	and $03
 	cp $01
 	jr z, Func_01_418e
+	cp $03
+	jr z, Func_01_4197
+	cp $02
+	jr z, Func_01_41a0
 
 SECTION "analyzed_004176", ROMX[$4176], BANK[$01]
 
@@ -4681,9 +4684,14 @@ Func_01_4176:
 	jr z, Func_01_418e
 	cp $03
 	jr z, Func_01_41a0
-
-SECTION "analyzed_00418e", ROMX[$418e], BANK[$01]
-
+	cp $02
+	jr z, Func_01_4197
+	push hl
+	ld de, $000e
+	add hl, de
+	dec [hl]
+	pop hl
+	jr Func_01_41a7
 Func_01_418e:
 	push hl
 	ld de, $000e
@@ -4691,9 +4699,13 @@ Func_01_418e:
 	inc [hl]
 	pop hl
 	jr Func_01_41a7
-
-SECTION "analyzed_0041a0", ROMX[$41a0], BANK[$01]
-
+Func_01_4197:
+	push hl
+	ld de, $000c
+	add hl, de
+	inc [hl]
+	pop hl
+	jr Func_01_41a7
 Func_01_41a0:
 	push hl
 	ld de, $000c
@@ -4942,12 +4954,13 @@ Func_01_42f2:
 SECTION "analyzed_004335", ROMX[$4335], BANK[$01]
 
 Data_01_4335:
-	db $3f, $43
+	db $3f, $43, $46, $43
 
 SECTION "analyzed_00433f", ROMX[$433f], BANK[$01]
 
 Data_01_433f:
-	db $50, $60, $37, $22, $01, $01, $00
+	db $50, $60, $37, $22, $01, $01, $00, $51, $a4, $47, $22, $01, $05, $60, $20, $10
+	db $22, $03, $00, $61, $e0, $10, $22, $03, $00, $00
 
 SECTION "analyzed_00439e", ROMX[$439e], BANK[$01]
 
@@ -5099,6 +5112,15 @@ Func_01_44ef:
 	ld a, [$c2e6]
 	or a
 	jr z, Func_01_4515
+	ld a, [$c2c1]
+	cp $02
+	ret z
+	ld a, [$c2d3]
+	or a
+	jr nz, Data_01_450d
+	ld a, [$c2d2]
+	cp $20
+	ret c
 
 SECTION "analyzed_004515", ROMX[$4515], BANK[$01]
 
@@ -5112,16 +5134,30 @@ Func_01_4515:
 	ld a, [$c2d2]
 	cp $20
 	ret nc
-
-SECTION "analyzed_004530", ROMX[$4530], BANK[$01]
-
+	call Func_01_455a
+	ld a, $01
+	ld [$c2e6], a
+	ret
 Func_01_4530:
 	ld a, [$c2c5]
 	cp $01
 	ret nz
+	push af
+	ld a, $2d
+	call Func_00_0a63
+	pop af
+	ld a, $01
+	ld [$c2e6], a
+	ret
 
-SECTION "analyzed_004562", ROMX[$4562], BANK[$01]
+SECTION "analyzed_00455a", ROMX[$455a], BANK[$01]
 
+Func_01_455a:
+	push af
+	ld a, $2a
+	call Func_00_0a63
+	pop af
+	ret
 Func_01_4562:
 	ld a, [$c7fd]
 	bit 0, a
@@ -5205,11 +5241,20 @@ Func_01_45f6:
 	ld a, [$c2c0]
 	cp $0a
 	jr z, Func_01_460e
+	cp $14
+	jr z, Func_01_461c
 
 SECTION "analyzed_00460e", ROMX[$460e], BANK[$01]
 
 Func_01_460e:
 	ld a, $01
+	ld [$cff0], a
+	ld a, $02
+	ld [$cff1], a
+	call Func_01_4987
+	ret
+Func_01_461c:
+	ld a, $02
 	ld [$cff0], a
 	ld a, $02
 	ld [$cff1], a
@@ -5335,11 +5380,17 @@ Func_01_48af:
 	ld a, [$c2c0]
 	cp $0a
 	jr z, Func_01_48cb
+	cp $14
+	jr z, Func_01_48d1
 
 SECTION "analyzed_0048cb", ROMX[$48cb], BANK[$01]
 
 Func_01_48cb:
 	ld a, $01
+	ld [$c2c0], a
+	ret
+Func_01_48d1:
+	ld a, $02
 	ld [$c2c0], a
 	ret
 
@@ -5349,11 +5400,19 @@ Func_01_48e9:
 	ld a, [$c2c0]
 	cp $01
 	jr z, Func_01_4900
+	cp $02
+	jr z, Func_01_490b
 
 SECTION "analyzed_004900", ROMX[$4900], BANK[$01]
 
 Func_01_4900:
 	ld a, $0a
+	ld [$c2c0], a
+	ld a, $00
+	ld [$c2c1], a
+	ret
+Func_01_490b:
+	ld a, $14
 	ld [$c2c0], a
 	ld a, $00
 	ld [$c2c1], a
@@ -5366,11 +5425,17 @@ Func_01_4937:
 	ld a, [$c2c0]
 	cp $0a
 	jr z, Func_01_4952
+	cp $14
+	jr z, Func_01_4958
 
 SECTION "analyzed_004952", ROMX[$4952], BANK[$01]
 
 Func_01_4952:
 	ld a, $01
+	call Func_00_1164
+	ret
+Func_01_4958:
+	ld a, $03
 	call Func_00_1164
 	ret
 
@@ -5399,11 +5464,17 @@ Func_01_4995:
 	ld a, [$cff0]
 	cp $01
 	jr z, Func_01_49ad
+	cp $02
+	jr z, Func_01_49b3
 
 SECTION "analyzed_0049ad", ROMX[$49ad], BANK[$01]
 
 Func_01_49ad:
 	ld a, $0a
+	ld [$cff2], a
+	ret
+Func_01_49b3:
+	ld a, $14
 	ld [$cff2], a
 	ret
 
@@ -5501,22 +5572,25 @@ Func_01_4a71:
 Func_01_4a76:
 	ld a, [hl]
 	cp $60
-	jr z, Data_01_4a91
+	jr z, Func_01_4a91
 	cp $61
-	jr z, Data_01_4a91
+	jr z, Func_01_4a91
 	cp $62
-	jr z, Data_01_4a91
+	jr z, Func_01_4a91
 	cp $63
-	jr z, Data_01_4a91
+	jr z, Func_01_4a91
 	push hl
 	ld de, $0006
 	add hl, de
 	set 6, [hl]
 	pop hl
 	jr Func_01_4a99
-
-SECTION "analyzed_004a99", ROMX[$4a99], BANK[$01]
-
+Func_01_4a91:
+	push hl
+	ld de, $0006
+	add hl, de
+	res 6, [hl]
+	pop hl
 Func_01_4a99:
 	ld de, $002a
 	add hl, de
@@ -5546,13 +5620,22 @@ Func_01_4ab6:
 	ret z
 	dec a
 	ld [$c2c5], a
-	jr nz, $4af4
+	jr nz, Func_01_4af4
 	ld a, [$cfd9]
 	cp $06
 	jr nz, Func_01_4b07
 
-SECTION "analyzed_004b07", ROMX[$4b07], BANK[$01]
+SECTION "analyzed_004af4", ROMX[$4af4], BANK[$01]
 
+Func_01_4af4:
+	ld a, $01
+	ld [$c2df], a
+	ld a, $2c
+	ld [$c2e0], a
+	ld a, $01
+	ld [$c2e1], a
+	call Func_01_77d2
+	ret
 Func_01_4b07:
 	call Func_01_4b0e
 	call Func_01_77d2
@@ -5570,7 +5653,7 @@ Func_01_4b0e:
 	set 0, a
 	ld [$c7fd], a
 	bit 7, a
-	jr nz, Data_01_4b3b
+	jr nz, Func_01_4b3b
 	ld a, $14
 	ld [$c7fc], a
 	ld a, $82
@@ -5578,6 +5661,31 @@ Func_01_4b0e:
 	ld a, $74
 	ld [$c812], a
 	ret
+Func_01_4b3b:
+	ld a, $15
+	ld [$c7fc], a
+	ld a, $96
+	ld [$c811], a
+	ld a, $74
+	ld [$c812], a
+	ld a, [$c805]
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, [$c807]
+	ld b, a
+	ld a, [$c81c]
+	add a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	push bc
+	call Func_00_102b
+	pop bc
+	or a
+	ret z
 
 SECTION "analyzed_004b7c", ROMX[$4b7c], BANK[$01]
 
@@ -5617,9 +5725,22 @@ Func_01_4bbd:
 	ld a, [$c2df]
 	or a
 	ret z
-
-SECTION "analyzed_004bdc", ROMX[$4bdc], BANK[$01]
-
+	ld a, [$c2e0]
+	ld e, a
+	ld a, [$c2e1]
+	ld d, a
+	or e
+	ret z
+	dec de
+	ld a, e
+	ld [$c2e0], a
+	ld a, d
+	ld [$c2e1], a
+	or e
+	ret nz
+	xor a
+	ld [$c2df], a
+	ret
 Func_01_4bdc:
 	ld a, [$c2c1]
 	cp $02
@@ -5627,6 +5748,9 @@ Func_01_4bdc:
 	ld a, [$c2e3]
 	or a
 	ret z
+	dec a
+	ld [$c2e3], a
+	ret
 
 SECTION "analyzed_004bfb", ROMX[$4bfb], BANK[$01]
 
@@ -5706,9 +5830,37 @@ Func_01_4ca5:
 Func_01_4cad:
 	ret
 
-SECTION "analyzed_004d0d", ROMX[$4d0d], BANK[$01]
+SECTION "analyzed_004cd3", ROMX[$4cd3], BANK[$01]
 
-Func_01_4d0d:
+Func_01_4cd3:
+	ld a, $30
+	ld b, $05
+	ld c, $01
+	call Func_01_4d95
+	xor a
+	ld [$cf77], a
+	ret
+	ld a, $31
+	ld b, $05
+	ld c, $01
+	call Func_01_4d95
+	ld a, $01
+	ld [$cf77], a
+	ret
+	ld a, $32
+	ld b, $05
+	ld c, $0f
+	call Func_01_4d95
+	xor a
+	ld [$cf78], a
+	ret
+	ld a, $33
+	ld b, $05
+	ld c, $0f
+	call Func_01_4d95
+	ld a, $01
+	ld [$cf78], a
+	ret
 	ld a, [$c530]
 	ld c, a
 	ld a, [$c531]
@@ -6137,15 +6289,25 @@ SECTION "analyzed_005164", ROMX[$5164], BANK[$01]
 Data_01_5164:
 	db $00
 
-SECTION "analyzed_00516a", ROMX[$516a], BANK[$01]
+SECTION "analyzed_005167", ROMX[$5167], BANK[$01]
 
-Data_01_516a:
+Data_01_5167:
 	db $00
 
-SECTION "analyzed_005173", ROMX[$5173], BANK[$01]
+SECTION "analyzed_005169", ROMX[$5169], BANK[$01]
 
-Data_01_5173:
-	db $00, $00, $00
+Data_01_5169:
+	db $01, $00, $00
+
+SECTION "analyzed_00516e", ROMX[$516e], BANK[$01]
+
+Data_01_516e:
+	db $00
+
+SECTION "analyzed_005171", ROMX[$5171], BANK[$01]
+
+Data_01_5171:
+	db $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_005182", ROMX[$5182], BANK[$01]
 
@@ -6162,25 +6324,20 @@ SECTION "analyzed_005188", ROMX[$5188], BANK[$01]
 Data_01_5188:
 	db $00
 
+SECTION "analyzed_00518b", ROMX[$518b], BANK[$01]
+
+Data_01_518b:
+	db $03
+
 SECTION "analyzed_00518d", ROMX[$518d], BANK[$01]
 
 Data_01_518d:
-	db $05, $10
-
-SECTION "analyzed_005190", ROMX[$5190], BANK[$01]
-
-Data_01_5190:
-	db $12, $13, $15, $14, $17, $16
-
-SECTION "analyzed_005197", ROMX[$5197], BANK[$01]
-
-Data_01_5197:
-	db $24, $22, $25, $23, $27
+	db $05, $10, $11, $12, $13, $15, $14, $17, $16, $21, $24, $22, $25, $23, $27
 
 SECTION "analyzed_0051a3", ROMX[$51a3], BANK[$01]
 
 Data_01_51a3:
-	db $20
+	db $20, $36
 
 SECTION "analyzed_0051a6", ROMX[$51a6], BANK[$01]
 
@@ -6197,27 +6354,23 @@ SECTION "analyzed_0051b2", ROMX[$51b2], BANK[$01]
 Data_01_51b2:
 	db $00, $00, $00, $00
 
+SECTION "analyzed_0051be", ROMX[$51be], BANK[$01]
+
+Data_01_51be:
+	db $00, $00, $00, $00
+
 SECTION "analyzed_0051c6", ROMX[$51c6], BANK[$01]
 
 Data_01_51c6:
-	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_0051d2", ROMX[$51d2], BANK[$01]
-
-Data_01_51d2:
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $00, $00
-	db $00, $00, $05, $00, $00, $00, $50, $00
-
-SECTION "analyzed_0051ee", ROMX[$51ee], BANK[$01]
-
-Data_01_51ee:
-	db $00, $00, $01, $00, $00, $00, $02, $00, $00, $00, $10, $00, $00, $00, $20, $00
-	db $00, $01, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $02, $00, $00, $00, $00, $00, $00, $00, $05, $00
+	db $00, $00, $50, $00, $00, $05, $00, $00, $00, $00, $01, $00, $00, $00, $02, $00
+	db $00, $00, $10, $00, $00, $00, $20, $00, $00, $01, $00, $00
 
 SECTION "analyzed_00521e", ROMX[$521e], BANK[$01]
 
 Data_01_521e:
-	db $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_00522a", ROMX[$522a], BANK[$01]
 
@@ -6234,25 +6387,21 @@ SECTION "analyzed_00523e", ROMX[$523e], BANK[$01]
 Data_01_523e:
 	db $5c, $53
 
+SECTION "analyzed_005244", ROMX[$5244], BANK[$01]
+
+Data_01_5244:
+	db $df, $53
+
 SECTION "analyzed_005248", ROMX[$5248], BANK[$01]
 
 Data_01_5248:
-	db $08, $54, $dc, $52
-
-SECTION "analyzed_00524e", ROMX[$524e], BANK[$01]
-
-Data_01_524e:
-	db $b4, $52, $c7, $52, $30, $53, $46, $53, $82, $52, $82, $52
-
-SECTION "analyzed_00525c", ROMX[$525c], BANK[$01]
-
-Data_01_525c:
-	db $82, $52, $82, $52, $82, $52, $82, $52, $82, $52
+	db $08, $54, $dc, $52, $08, $53, $b4, $52, $c7, $52, $30, $53, $46, $53, $82, $52
+	db $82, $52, $82, $52, $82, $52, $82, $52, $82, $52, $82, $52, $82, $52
 
 SECTION "analyzed_005274", ROMX[$5274], BANK[$01]
 
 Data_01_5274:
-	db $52, $54
+	db $52, $54, $92, $53
 
 SECTION "analyzed_00527a", ROMX[$527a], BANK[$01]
 
@@ -6342,10 +6491,31 @@ Func_01_52fd:
 	and b
 	ld [hl], a
 	ret
-
-SECTION "analyzed_005330", ROMX[$5330], BANK[$01]
-
-Func_01_5330:
+	call Func_01_54d0
+	push af
+	ld a, $05
+	call Func_00_0a85
+	pop af
+	ld a, [$c2cb]
+	ld b, a
+	ld a, [$c2cc]
+	cp b
+	ret z
+	inc a
+	ld [$c2cc], a
+	ld c, a
+	ld b, $01
+Func_01_5322:
+	dec c
+	jr z, Func_01_5329
+	sla b
+	jr Func_01_5322
+Func_01_5329:
+	ld hl, $c2cd
+	ld a, [hl]
+	or b
+	ld [hl], a
+	ret
 	call Func_01_54d0
 	push af
 	ld a, $05
@@ -6397,6 +6567,30 @@ Func_01_5330:
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
+	ret
+	call Func_01_54d0
+	push af
+	ld a, $05
+	call Func_00_0a85
+	pop af
+	call Func_01_55a6
+	ret
+
+SECTION "analyzed_0053df", ROMX[$53df], BANK[$01]
+
+Func_01_53df:
+	call Func_01_54d0
+	push af
+	ld a, $05
+	call Func_00_0a85
+	pop af
+	ld hl, $c2d3
+	xor a
+	ld [hl-], a
+	ld a, $50
+	ld [hl-], a
+	xor a
+	ld [hl], a
 	ret
 
 SECTION "analyzed_005408", ROMX[$5408], BANK[$01]
@@ -6501,6 +6695,69 @@ Func_01_5538:
 	call Func_01_5854
 	ret
 
+SECTION "analyzed_0055a6", ROMX[$55a6], BANK[$01]
+
+Func_01_55a6:
+	ld hl, $c823
+	ld c, $1b
+Func_01_55ab:
+	push bc
+	push hl
+	ld a, [hl]
+	cp $30
+	jr z, Func_01_55bc
+	cp $31
+	jr z, Func_01_55bc
+	cp $32
+	jr z, Func_01_55bc
+	jr Func_01_5607
+Func_01_55bc:
+	call Func_00_1290
+	bit 6, a
+	jr nz, Data_01_55d1
+	push hl
+	ld bc, $000e
+	add hl, bc
+	ld a, [hl]
+	sub $08
+	ld [$cf76], a
+	pop hl
+	jr Func_01_55db
+
+SECTION "analyzed_0055db", ROMX[$55db], BANK[$01]
+
+Func_01_55db:
+	push hl
+	ld bc, $000c
+	add hl, bc
+	ld a, [hl]
+	ld [$cf75], a
+	pop hl
+	xor a
+	ld [hl], a
+	ld a, [$cf75]
+	ld e, a
+	ld a, [$cf76]
+	ld d, a
+	ld bc, $0000
+	ld a, $08
+	ld [$c29c], a
+	ld a, h
+	ld [$c2a1], a
+	ld a, l
+	ld [$c2a2], a
+	ld a, $03
+	ld hl, $4593
+	call Func_00_0467
+Func_01_5607:
+	pop hl
+	ld de, $002a
+	add hl, de
+	pop bc
+	dec c
+	jr nz, Func_01_55ab
+	ret
+
 SECTION "analyzed_005676", ROMX[$5676], BANK[$01]
 
 Func_01_5676:
@@ -6530,10 +6787,32 @@ Func_01_5699:
 	ld a, [$c2d5]
 	bit 1, a
 	ret z
-
-SECTION "analyzed_0056c5", ROMX[$56c5], BANK[$01]
-
-Func_01_56c5:
+	ld hl, $c3dd
+	ld a, [$c2ed]
+	ld b, a
+Func_01_56a8:
+	ld a, [$c2ec]
+	ld c, a
+	push hl
+Func_01_56ad:
+	ld a, [hl]
+	cp $c0
+	jr z, Func_01_56b6
+	cp $80
+	jr nz, Func_01_56b8
+Func_01_56b6:
+	xor a
+	ld [hl], a
+Func_01_56b8:
+	inc hl
+	dec c
+	jr nz, Func_01_56ad
+	pop hl
+	ld de, $0011
+	add hl, de
+	dec b
+	jr nz, Func_01_56a8
+	ret
 	ld a, $09
 	call Func_00_119a
 	or a
@@ -6590,9 +6869,8 @@ Func_01_570d:
 	pop hl
 	or a
 	jr z, Func_01_5720
-
-SECTION "analyzed_005720", ROMX[$5720], BANK[$01]
-
+	xor a
+	ld [hl], a
 Func_01_5720:
 	inc hl
 	dec c
@@ -6946,7 +7224,7 @@ Func_01_5949:
 	cp $05
 	jr z, Func_01_599b
 	cp $04
-	jr z, $597b
+	jr z, Func_01_597b
 	cp $03
 	jr z, Func_01_596b
 	cp $01
@@ -6964,9 +7242,30 @@ Func_01_596b:
 	ld a, [$c2d5]
 	bit 1, a
 	jr z, Func_01_599b
-
-SECTION "analyzed_00599b", ROMX[$599b], BANK[$01]
-
+	xor a
+	ld [$c2de], a
+	ld a, $04
+	ld [$c2dd], a
+Func_01_597b:
+	ld a, [$c2de]
+	ld e, a
+	and $0f
+	jr nz, Func_01_5993
+	ld a, e
+	swap a
+	and $0f
+	ld e, a
+	ld d, $00
+	ld hl, $58ec
+	add hl, de
+	ld a, [hl]
+	call Func_01_5b9e
+Func_01_5993:
+	ld hl, $c2de
+	inc [hl]
+	ld a, [hl]
+	cp $20
+	ret nz
 Func_01_599b:
 	ld a, $12
 	ld hl, $402c
@@ -7012,6 +7311,9 @@ SECTION "analyzed_005a06", ROMX[$5a06], BANK[$01]
 
 Func_01_5a06:
 	ld a, [$c530]
+	cp $ff
+	jr nz, Func_01_5a16
+	ld a, [$c52e]
 	cp $ff
 	jr nz, Func_01_5a16
 
@@ -7168,11 +7470,16 @@ Func_01_5c42:
 	ld a, [$c2c0]
 	cp $01
 	jr z, Func_01_5c5f
+	cp $02
+	jr z, Func_01_5c62
 
 SECTION "analyzed_005c5f", ROMX[$5c5f], BANK[$01]
 
 Func_01_5c5f:
 	xor a
+	jr Func_01_5c70
+Func_01_5c62:
+	ld a, $01
 	jr Func_01_5c70
 
 SECTION "analyzed_005c70", ROMX[$5c70], BANK[$01]
@@ -7229,6 +7536,8 @@ Func_01_5cbe:
 	ld a, [$c2c0]
 	cp $01
 	jr z, Func_01_5ce2
+	cp $02
+	jr z, Func_01_5cff
 
 SECTION "analyzed_005ce2", ROMX[$5ce2], BANK[$01]
 
@@ -7245,6 +7554,21 @@ Func_01_5ce2:
 	ld hl, $4109
 	call Func_00_042e
 	ld a, $00
+	call Func_00_1164
+	ret
+Func_01_5cff:
+	ld a, $02
+	call Func_00_119a
+	or a
+	ret nz
+	ld a, $01
+	ld [$d60e], a
+	xor a
+	ld [$d60f], a
+	ld a, $1f
+	ld hl, $4109
+	call Func_00_042e
+	ld a, $02
 	call Func_00_1164
 	ret
 
@@ -7421,6 +7745,39 @@ Func_01_5ed9:
 	jp z, Func_01_6154
 	cp $03
 	jp z, Func_01_624a
+	jp Func_01_5f68
+
+SECTION "analyzed_005f68", ROMX[$5f68], BANK[$01]
+
+Func_01_5f68:
+	ldh a, [$ffbc]
+	add a, $03
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ldh a, [$ffbe]
+	sub $04
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	push bc
+	call Func_00_101b
+	pop bc
+	or a
+	jp nz, $5fd3
+	ldh a, [$ffbe]
+	add a, $03
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	push bc
+	call Func_00_101b
+	pop bc
+	or a
+	ret nz
 
 SECTION "analyzed_00605e", ROMX[$605e], BANK[$01]
 
@@ -7549,6 +7906,37 @@ Func_01_6154:
 	pop bc
 	or a
 	ret nz
+	ldh a, [$ffbe]
+	add a, $03
+	ld b, a
+	push bc
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	pop bc
+	or a
+	jr z, Data_01_61b9
+	dec b
+	dec b
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	or a
+	ret nz
+	call Func_01_64a1
+	ld hl, $ffb6
+	ld a, [hl]
+	and $fc
+	or $00
+	ld [hl], a
+	call Func_01_648b
+	ret
 
 SECTION "analyzed_0061bf", ROMX[$61bf], BANK[$01]
 
@@ -7738,9 +8126,34 @@ Func_01_6475:
 	xor a
 	ldh [$ffbd], a
 	ret
+Func_01_648b:
+	ldh a, [$ffbe]
+	add a, $08
+	swap a
+	and $0f
+	swap a
+	and $f0
+	sub $08
+	add a, $0d
+	ldh [$ffbe], a
+	xor a
+	ldh [$ffbd], a
+	ret
+Func_01_64a1:
+	xor a
+	ldh [$ffc6], a
+	ldh a, [$ffb4]
+	bit 3, a
+	jr nz, Func_01_64b3
 
-SECTION "analyzed_0064bc", ROMX[$64bc], BANK[$01]
+SECTION "analyzed_0064b3", ROMX[$64b3], BANK[$01]
 
+Func_01_64b3:
+	ld a, $d1
+	ldh [$ffc8], a
+	ld a, $70
+	ldh [$ffc9], a
+	ret
 Func_01_64bc:
 	xor a
 	ldh [$ffc6], a
@@ -7962,6 +8375,21 @@ SECTION "analyzed_006670", ROMX[$6670], BANK[$01]
 
 Data_01_6670:
 	db $49, $79
+
+SECTION "analyzed_006676", ROMX[$6676], BANK[$01]
+
+Data_01_6676:
+	db $64, $79
+
+SECTION "analyzed_00667a", ROMX[$667a], BANK[$01]
+
+Data_01_667a:
+	db $76, $79
+
+SECTION "analyzed_0066e0", ROMX[$66e0], BANK[$01]
+
+Data_01_66e0:
+	db $9f, $76
 
 SECTION "analyzed_0066e8", ROMX[$66e8], BANK[$01]
 
@@ -8234,12 +8662,15 @@ Func_01_6949:
 	or a
 	jr z, Func_01_697f
 	cp $22
-	jr z, Data_01_6970
+	jr z, Func_01_6970
 	cp $23
 	jr nz, Func_01_697a
-
-SECTION "analyzed_00697a", ROMX[$697a], BANK[$01]
-
+Func_01_6970:
+	push hl
+	ld a, $03
+	ld hl, $44cb
+	call Func_00_042e
+	pop hl
 Func_01_697a:
 	ld a, $01
 	ld [$cf65], a
@@ -8359,9 +8790,100 @@ Func_01_6a3e:
 	ld a, [$c2c0]
 	cp $02
 	ret nz
-
-SECTION "analyzed_006adb", ROMX[$6adb], BANK[$01]
-
+	ld a, [$c2e4]
+	or a
+	ret z
+	ld a, [$c2e3]
+	or a
+	ret nz
+	ld hl, $c823
+	ld c, $1b
+Func_01_6a59:
+	ld a, [hl]
+	cp $60
+	jr z, Func_01_6a6a
+	cp $61
+	jr z, Func_01_6a6a
+Func_01_6a62:
+	ld de, $002a
+	add hl, de
+	dec c
+	jr nz, Func_01_6a59
+	ret
+Func_01_6a6a:
+	push bc
+	push hl
+	ld c, $da
+	call Func_00_106f
+	ldh a, [$ffda]
+	add a, c
+	ldh [$ffda], a
+	ldh a, [$ffdb]
+	add a, b
+	ldh [$ffdb], a
+	ldh a, [$ffdc]
+	or a
+	jr z, Func_01_6aaa
+	ld hl, $c823
+	ld c, $1b
+Func_01_6a85:
+	ld a, [hl]
+	cp $51
+	jr nz, Func_01_6aa3
+	push bc
+	push hl
+	ld c, $de
+	call Func_00_106f
+	ldh a, [$ffde]
+	add a, c
+	ldh [$ffde], a
+	ldh a, [$ffdf]
+	add a, b
+	ldh [$ffdf], a
+	call Func_00_0fb0
+	pop hl
+	pop bc
+	or a
+	jr nz, Func_01_6aae
+Func_01_6aa3:
+	ld de, $002a
+	add hl, de
+	dec c
+	jr nz, Func_01_6a85
+Func_01_6aaa:
+	pop hl
+	pop bc
+	jr Func_01_6a62
+Func_01_6aae:
+	ld a, [$c2e4]
+	dec a
+	ld [$c2e4], a
+	jr z, Func_01_6ac4
+	ld a, $b4
+	ld [$c2e3], a
+	ld a, $01
+	ld [$cf79], a
+	pop hl
+	pop bc
+	ret
+Func_01_6ac4:
+	push hl
+	ld de, $0018
+	add hl, de
+	ld a, $17
+	ld [hl+], a
+	ld a, $7e
+	ld [hl], a
+	pop hl
+	push hl
+	ld de, $0016
+	add hl, de
+	xor a
+	ld [hl], a
+	pop hl
+	pop hl
+	pop bc
+	ret
 Func_01_6adb:
 	ld a, [$c2c1]
 	cp $02
@@ -8600,13 +9122,9 @@ Func_01_6d48:
 SECTION "analyzed_006d58", ROMX[$6d58], BANK[$01]
 
 Data_01_6d58:
-	db $af, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e
-
-SECTION "analyzed_006d64", ROMX[$6d64], BANK[$01]
-
-Data_01_6d64:
-	db $36, $6e, $36, $6e, $36, $6e, $37, $6e, $37, $6e, $37, $6e, $36, $6e, $37, $6e
-	db $37, $6e, $37, $6e, $37, $6e
+	db $af, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e
+	db $36, $6e, $37, $6e, $37, $6e, $37, $6e, $36, $6e, $37, $6e, $37, $6e, $37, $6e
+	db $37, $6e
 
 SECTION "analyzed_006d82", ROMX[$6d82], BANK[$01]
 
@@ -8636,13 +9154,8 @@ Data_01_6da8:
 SECTION "analyzed_006db6", ROMX[$6db6], BANK[$01]
 
 Data_01_6db6:
-	db $48, $6e, $48, $6e
-
-SECTION "analyzed_006dbc", ROMX[$6dbc], BANK[$01]
-
-Data_01_6dbc:
-	db $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e, $37, $6e, $48, $6e
-	db $48, $6e, $48, $6e
+	db $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e
+	db $48, $6e, $37, $6e, $48, $6e, $48, $6e, $48, $6e
 
 SECTION "analyzed_006dda", ROMX[$6dda], BANK[$01]
 
@@ -8652,7 +9165,12 @@ Data_01_6dda:
 SECTION "analyzed_006df6", ROMX[$6df6], BANK[$01]
 
 Data_01_6df6:
-	db $55, $6e
+	db $55, $6e, $95, $6e
+
+SECTION "analyzed_006e16", ROMX[$6e16], BANK[$01]
+
+Data_01_6e16:
+	db $3e, $6e, $3e, $6e
 
 SECTION "analyzed_006e36", ROMX[$6e36], BANK[$01]
 
@@ -8661,10 +9179,10 @@ Func_01_6e36:
 	call Func_01_6f07
 	call Func_01_6f3a
 	ret
-
-SECTION "analyzed_006e48", ROMX[$6e48], BANK[$01]
-
-Func_01_6e48:
+	call Func_01_6f07
+	call Func_01_6f3a
+	call Func_01_755b
+	ret
 	call Func_01_6f07
 	call Func_01_70e3
 	call Func_01_6f3a
@@ -8675,6 +9193,16 @@ Func_01_6e48:
 	call Func_01_716f
 	call Func_01_6f3a
 	call Func_01_704b
+	ret
+
+SECTION "analyzed_006e95", ROMX[$6e95], BANK[$01]
+
+Func_01_6e95:
+	call Func_01_6f07
+	call Func_01_740b
+	call Func_01_716f
+	call Func_01_6f3a
+	call Func_01_7097
 	ret
 
 SECTION "analyzed_006eaf", ROMX[$6eaf], BANK[$01]
@@ -8803,12 +9331,13 @@ Func_01_6f5b:
 Func_01_6f6b:
 	ldh a, [$ffb0]
 	cp $51
-	jr z, Data_01_6f75
+	jr z, Func_01_6f75
 	call Func_01_6f7c
 	ret
-
-SECTION "analyzed_006f7c", ROMX[$6f7c], BANK[$01]
-
+Func_01_6f75:
+	call Func_01_6f8e
+	call Func_01_7512
+	ret
 Func_01_6f7c:
 	ldh a, [$ffc7]
 	cp $28
@@ -8821,9 +9350,29 @@ Func_01_6f85:
 	call Func_01_6fb2
 	pop hl
 	ret
-
-SECTION "analyzed_006fb2", ROMX[$6fb2], BANK[$01]
-
+Func_01_6f8e:
+	ldh a, [$ffc7]
+	cp $3d
+	jr z, Func_01_6f97
+	inc a
+	ldh [$ffc7], a
+Func_01_6f97:
+	ldh a, [$ffc1]
+	or a
+	jr z, Func_01_6fa7
+	push hl
+	ld hl, $7c39
+	ldh a, [$ffc7]
+	call Func_01_6fb2
+	pop hl
+	ret
+Func_01_6fa7:
+	push hl
+	ld hl, $7bbd
+	ldh a, [$ffc7]
+	call Func_01_6fb2
+	pop hl
+	ret
 Func_01_6fb2:
 	add a, a
 	ld c, a
@@ -8973,9 +9522,52 @@ Func_01_7066:
 	ld hl, $ffb4
 	res 7, [hl]
 	jr Func_01_705a
-
-SECTION "analyzed_0070e3", ROMX[$70e3], BANK[$01]
-
+Func_01_7097:
+	ldh a, [$ffb4]
+	bit 1, a
+	ret nz
+	bit 7, a
+	jr nz, Func_01_70b2
+	call Func_01_7373
+	or a
+	jr z, Func_01_70ac
+Func_01_70a6:
+	ld hl, $ffb6
+	set 3, [hl]
+	ret
+Func_01_70ac:
+	ld hl, $ffb6
+	res 3, [hl]
+	ret
+Func_01_70b2:
+	ldh a, [$ffc7]
+	cp $1f
+	ret c
+	call Func_01_7373
+	or a
+	jr z, Func_01_70ac
+	ldh a, [$ffd3]
+	ld b, a
+	ldh a, [$ffd5]
+	ld c, a
+	ldh a, [$ffbe]
+	add a, b
+	add a, c
+	add a, $08
+	swap a
+	and $0f
+	swap a
+	and $f0
+	sub $08
+	sub c
+	sub b
+	ldh [$ffbe], a
+	xor a
+	ldh [$ffbd], a
+	ldh [$ffc7], a
+	ld hl, $ffb4
+	res 7, [hl]
+	jr Func_01_70a6
 Func_01_70e3:
 	cp $00
 	jr z, Func_01_7129
@@ -9426,9 +10018,104 @@ Func_01_736e:
 Func_01_7371:
 	xor a
 	ret
-
-SECTION "analyzed_00740b", ROMX[$740b], BANK[$01]
-
+Func_01_7373:
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+	ldh a, [$ffd5]
+	add a, b
+	ld b, a
+	push bc
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	pop bc
+	or a
+	cp $20
+	jr z, Func_01_7408
+	cp $21
+	jr z, Func_01_7408
+	dec c
+	push bc
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	pop bc
+	or a
+	cp $20
+	jr z, Func_01_7408
+	cp $21
+	jr z, Func_01_7408
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	push bc
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	pop bc
+	or a
+	cp $20
+	jr z, Func_01_7408
+	cp $21
+	jr z, Func_01_7408
+	ldh a, [$ffd4]
+	dec a
+	add a, c
+	ld c, a
+	push bc
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	pop bc
+	or a
+	cp $20
+	jr z, Func_01_7408
+	cp $21
+	jr z, Func_01_7408
+	xor a
+	ret
+Func_01_7408:
+	ld a, $01
+	ret
 Func_01_740b:
 	ldh a, [$ffbe]
 	ld b, a
@@ -9477,8 +10164,110 @@ Func_01_74c4:
 	pop de
 	ret
 
-SECTION "analyzed_0075ad", ROMX[$75ad], BANK[$01]
+SECTION "analyzed_007512", ROMX[$7512], BANK[$01]
 
+Func_01_7512:
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	ldh a, [$ffc7]
+	cp $1f
+	jr c, Func_01_752d
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+	ldh a, [$ffd5]
+	add a, b
+	dec a
+	ld b, a
+	jr Func_01_7534
+Func_01_752d:
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+Func_01_7534:
+	push de
+	push bc
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop bc
+	ld a, $10
+	add a, c
+	ld c, a
+	push bc
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop bc
+	ld a, $10
+	add a, c
+	ld c, a
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop de
+	ret
+Func_01_755b:
+	ldh a, [$ffb6]
+	and $03
+	cp $02
+	jr z, Func_01_7571
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+	ldh a, [$ffd5]
+	add a, b
+	dec a
+	ld b, a
+	jr Func_01_7578
+Func_01_7571:
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+Func_01_7578:
+	push de
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	push bc
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop bc
+	ldh a, [$ffbc]
+	ld c, a
+	push bc
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop bc
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	ldh a, [$ffd4]
+	add a, c
+	dec a
+	ld c, a
+	ld a, $03
+	ld hl, $44bb
+	call Func_00_042e
+	pop de
+	ret
 Func_01_75ad:
 	ld a, [$c2c1]
 	cp $02
@@ -9846,14 +10635,32 @@ Func_01_77d2:
 	ldh [rVBK], a
 	ld a, [$c2c5]
 	cp $01
-	jr z, $77f6
+	jr z, Func_01_77f6
 	cp $02
-	jr z, $7803
+	jr z, Func_01_7803
 	cp $03
 	jr z, Func_01_7810
 
-SECTION "analyzed_007810", ROMX[$7810], BANK[$01]
+SECTION "analyzed_0077f6", ROMX[$77f6], BANK[$01]
 
+Func_01_77f6:
+	ld hl, $9c04
+	call Func_00_02d1
+	ld a, $b1
+	ld [hl+], a
+	inc a
+	ld [hl+], a
+	ld [hl], a
+	ret
+Func_01_7803:
+	ld hl, $9c04
+	call Func_00_02d1
+	ld a, $b1
+	ld [hl+], a
+	ld [hl+], a
+	inc a
+	ld [hl], a
+	ret
 Func_01_7810:
 	ld hl, $9c04
 	call Func_00_02d1
@@ -9866,14 +10673,10 @@ Func_01_7810:
 SECTION "analyzed_00781f", ROMX[$781f], BANK[$01]
 
 Data_01_781f:
-	db $01, $01, $01, $02, $00, $00, $03, $00, $00, $04, $00, $00, $05, $00, $00
-
-SECTION "analyzed_007831", ROMX[$7831], BANK[$01]
-
-Data_01_7831:
-	db $07, $00, $00, $08, $00, $00, $09, $00, $00, $0a, $00, $00, $0b, $00, $00, $0c
-	db $00, $00, $0d, $00, $00, $0e, $00, $00, $0f, $00, $00, $10, $00, $00, $11, $00
-	db $00
+	db $01, $01, $01, $02, $00, $00, $03, $00, $00, $04, $00, $00, $05, $00, $00, $06
+	db $00, $00, $07, $00, $00, $08, $00, $00, $09, $00, $00, $0a, $00, $00, $0b, $00
+	db $00, $0c, $00, $00, $0d, $00, $00, $0e, $00, $00, $0f, $00, $00, $10, $00, $00
+	db $11, $00, $00
 
 SECTION "analyzed_00785e", ROMX[$785e], BANK[$01]
 
@@ -9903,13 +10706,9 @@ Data_01_7897:
 SECTION "analyzed_0078ac", ROMX[$78ac], BANK[$01]
 
 Data_01_78ac:
-	db $30, $10, $10, $31, $11, $11
-
-SECTION "analyzed_0078b5", ROMX[$78b5], BANK[$01]
-
-Data_01_78b5:
-	db $33, $13, $13, $34, $14, $14, $35, $15, $15, $36, $16, $16, $37, $17, $17, $38
-	db $18, $18, $39, $19, $19, $3a, $1a, $1a, $3b, $1b, $1b, $3c, $1c, $1c
+	db $30, $10, $10, $31, $11, $11, $32, $12, $12, $33, $13, $13, $34, $14, $14, $35
+	db $15, $15, $36, $16, $16, $37, $17, $17, $38, $18, $18, $39, $19, $19, $3a, $1a
+	db $1a, $3b, $1b, $1b, $3c, $1c, $1c
 
 SECTION "analyzed_0078e2", ROMX[$78e2], BANK[$01]
 
@@ -9919,18 +10718,19 @@ Data_01_78e2:
 SECTION "analyzed_00790c", ROMX[$790c], BANK[$01]
 
 Data_01_790c:
-	db $50, $30, $30
+	db $50, $30, $30, $51, $31, $31
+
+SECTION "analyzed_00793c", ROMX[$793c], BANK[$01]
+
+Data_01_793c:
+	db $60, $00, $00, $61, $00, $00
 
 SECTION "analyzed_00796e", ROMX[$796e], BANK[$01]
 
 Data_01_796e:
-	db $d6, $72, $46, $70, $4d, $70, $54, $70, $5b, $70
-
-SECTION "analyzed_00797a", ROMX[$797a], BANK[$01]
-
-Data_01_797a:
-	db $69, $70, $70, $70, $ae, $70, $77, $70, $86, $70, $ad, $71, $b8, $71, $bf, $71
-	db $c9, $71, $09, $71, $c9, $70
+	db $d6, $72, $46, $70, $4d, $70, $54, $70, $5b, $70, $62, $70, $69, $70, $70, $70
+	db $ae, $70, $77, $70, $86, $70, $ad, $71, $b8, $71, $bf, $71, $c9, $71, $09, $71
+	db $c9, $70
 
 SECTION "analyzed_007998", ROMX[$7998], BANK[$01]
 
@@ -9960,13 +10760,8 @@ Data_01_79be:
 SECTION "analyzed_0079cc", ROMX[$79cc], BANK[$01]
 
 Data_01_79cc:
-	db $f1, $74, $6c, $75
-
-SECTION "analyzed_0079d2", ROMX[$79d2], BANK[$01]
-
-Data_01_79d2:
-	db $a8, $76, $13, $77, $77, $77, $b7, $77, $f7, $77, $5c, $78, $d7, $78, $7f, $79
-	db $df, $79, $1f, $7a
+	db $f1, $74, $6c, $75, $15, $76, $a8, $76, $13, $77, $77, $77, $b7, $77, $f7, $77
+	db $5c, $78, $d7, $78, $7f, $79, $df, $79, $1f, $7a
 
 SECTION "analyzed_0079f0", ROMX[$79f0], BANK[$01]
 
@@ -9976,7 +10771,12 @@ Data_01_79f0:
 SECTION "analyzed_007a0c", ROMX[$7a0c], BANK[$01]
 
 Data_01_7a0c:
-	db $36, $7d
+	db $36, $7d, $b3, $7d
+
+SECTION "analyzed_007a2c", ROMX[$7a2c], BANK[$01]
+
+Data_01_7a2c:
+	db $eb, $71, $1b, $72
 
 SECTION "analyzed_007a4c", ROMX[$7a4c], BANK[$01]
 
@@ -9986,13 +10786,8 @@ Data_01_7a4c:
 SECTION "analyzed_007a6c", ROMX[$7a6c], BANK[$01]
 
 Data_01_7a6c:
-	db $4b, $4e, $df, $4e
-
-SECTION "analyzed_007a72", ROMX[$7a72], BANK[$01]
-
-Data_01_7a72:
-	db $25, $50, $cb, $50, $65, $51, $ea, $51, $89, $52, $23, $53, $fd, $53, $9f, $55
-	db $41, $56, $41, $56
+	db $4b, $4e, $df, $4e, $86, $4f, $25, $50, $cb, $50, $65, $51, $ea, $51, $89, $52
+	db $23, $53, $fd, $53, $9f, $55, $41, $56, $41, $56
 
 SECTION "analyzed_007a90", ROMX[$7a90], BANK[$01]
 
@@ -10002,7 +10797,7 @@ Data_01_7a90:
 SECTION "analyzed_007aac", ROMX[$7aac], BANK[$01]
 
 Data_01_7aac:
-	db $9b, $5a
+	db $9b, $5a, $d9, $5b
 
 SECTION "analyzed_007ab8", ROMX[$7ab8], BANK[$01]
 
@@ -10012,13 +10807,8 @@ Data_01_7ab8:
 SECTION "analyzed_007ad8", ROMX[$7ad8], BANK[$01]
 
 Data_01_7ad8:
-	db $83, $4e, $1f, $4f
-
-SECTION "analyzed_007ade", ROMX[$7ade], BANK[$01]
-
-Data_01_7ade:
-	db $65, $50, $0b, $51, $95, $51, $2a, $52, $c1, $52, $73, $53, $9d, $54, $df, $55
-	db $79, $56, $79, $56
+	db $83, $4e, $1f, $4f, $c6, $4f, $65, $50, $0b, $51, $95, $51, $2a, $52, $c1, $52
+	db $73, $53, $9d, $54, $df, $55, $79, $56, $79, $56
 
 SECTION "analyzed_007afc", ROMX[$7afc], BANK[$01]
 
@@ -10028,7 +10818,7 @@ Data_01_7afc:
 SECTION "analyzed_007b18", ROMX[$7b18], BANK[$01]
 
 Data_01_7b18:
-	db $2b, $5b
+	db $2b, $5b, $21, $5c
 
 SECTION "analyzed_007b24", ROMX[$7b24], BANK[$01]
 
@@ -10087,6 +10877,30 @@ Data_01_7b6d:
 	db $a1, $ff, $bb, $ff, $d7, $ff, $f2, $ff, $0e, $00, $29, $00, $45, $00, $5f, $00
 	db $7a, $00, $93, $00, $ac, $00, $c3, $00, $da, $00, $ef, $00, $02, $01, $14, $01
 	db $24, $01, $33, $01, $3f, $01, $4a, $01, $53, $01, $59, $01, $5d, $01, $5f, $01
+
+SECTION "analyzed_007bbf", ROMX[$7bbf], BANK[$01]
+
+Data_01_7bbf:
+	db $2a, $ff, $2a, $ff, $2b, $ff, $2d, $ff, $2f, $ff, $32, $ff, $36, $ff, $3a, $ff
+	db $3e, $ff, $44, $ff, $49, $ff, $4f, $ff, $56, $ff, $5d, $ff, $64, $ff, $6c, $ff
+	db $75, $ff, $7d, $ff, $87, $ff, $90, $ff, $9a, $ff, $a4, $ff, $ae, $ff, $b8, $ff
+	db $c3, $ff, $ce, $ff, $d9, $ff, $e4, $ff, $ef, $ff, $fa, $ff, $06, $00, $11, $00
+	db $1c, $00, $27, $00, $32, $00, $3d, $00, $48, $00, $52, $00, $5c, $00, $66, $00
+	db $70, $00, $79, $00, $83, $00, $8b, $00, $94, $00, $9c, $00, $a3, $00, $aa, $00
+	db $b1, $00, $b7, $00, $bc, $00, $c2, $00, $c6, $00, $ca, $00, $ce, $00, $d1, $00
+	db $d3, $00, $d5, $00, $d6, $00, $d6, $00, $ac, $01
+
+SECTION "analyzed_007c3b", ROMX[$7c3b], BANK[$01]
+
+Data_01_7c3b:
+	db $d2, $fb, $d2, $fb, $d7, $fb, $e1, $fb, $eb, $fb, $fa, $fb, $0e, $fc, $22, $fc
+	db $36, $fc, $54, $fc, $6d, $fc, $8b, $fc, $ae, $fc, $d1, $fc, $f4, $fc, $1c, $fd
+	db $49, $fd, $71, $fd, $a3, $fd, $d0, $fd, $02, $fe, $34, $fe, $66, $fe, $98, $fe
+	db $cf, $fe, $06, $ff, $3d, $ff, $74, $ff, $ab, $ff, $e2, $ff, $1e, $00, $55, $00
+	db $8c, $00, $c3, $00, $fa, $00, $31, $01, $68, $01, $9a, $01, $cc, $01, $fe, $01
+	db $30, $02, $5d, $02, $8f, $02, $b7, $02, $e4, $02, $0c, $03, $2f, $03, $52, $03
+	db $75, $03, $93, $03, $ac, $03, $ca, $03, $de, $03, $f2, $03, $06, $04, $15, $04
+	db $1f, $04, $29, $04, $2e, $04, $2e, $04
 
 SECTION "analyzed_007fff", ROMX[$7fff], BANK[$01]
 
@@ -10504,18 +11318,14 @@ Data_02_52f1:
 	db $c2, $22, $02, $f8, $f8, $c4, $02, $f8, $00, $cc, $02, $02, $f8, $f8, $cc, $22
 	db $f8, $00, $c4, $22, $02, $f8, $f8, $80, $03, $f8, $00, $80, $23, $02, $f8, $f8
 	db $82, $03, $f8, $00, $82, $63, $01, $f8, $fc, $8e, $03, $01, $f8, $fc, $84, $03
-
-SECTION "analyzed_00933a", ROMX[$533a], BANK[$02]
-
-Data_02_533a:
-	db $02, $f8, $f8, $88, $23, $f8, $00, $8c, $23, $02, $f8, $f8, $8c, $03, $f8, $00
-	db $88, $03, $01, $f8, $fc, $8a, $03, $02, $f8, $f8, $8c, $03, $f8, $00, $8c, $23
-	db $02, $f8, $f8, $90, $03, $f8, $00, $90, $63, $01, $f8, $fc, $8a, $01, $02, $f8
-	db $f8, $a4, $01, $f8, $00, $a4, $21, $02, $f8, $f8, $a6, $01, $f8, $00, $a6, $21
-	db $02, $f8, $f8, $a8, $01, $f8, $00, $a8, $21, $02, $f8, $f8, $aa, $01, $f8, $00
-	db $aa, $21, $02, $f8, $f8, $92, $03, $f8, $00, $94, $03, $02, $f8, $f8, $94, $23
-	db $f8, $00, $92, $23, $02, $f8, $f8, $96, $03, $f8, $00, $98, $03, $02, $f8, $f8
-	db $96, $43, $f8, $00, $98, $43
+	db $02, $f8, $f8, $86, $03, $f8, $00, $86, $23, $02, $f8, $f8, $88, $23, $f8, $00
+	db $8c, $23, $02, $f8, $f8, $8c, $03, $f8, $00, $88, $03, $01, $f8, $fc, $8a, $03
+	db $02, $f8, $f8, $8c, $03, $f8, $00, $8c, $23, $02, $f8, $f8, $90, $03, $f8, $00
+	db $90, $63, $01, $f8, $fc, $8a, $01, $02, $f8, $f8, $a4, $01, $f8, $00, $a4, $21
+	db $02, $f8, $f8, $a6, $01, $f8, $00, $a6, $21, $02, $f8, $f8, $a8, $01, $f8, $00
+	db $a8, $21, $02, $f8, $f8, $aa, $01, $f8, $00, $aa, $21, $02, $f8, $f8, $92, $03
+	db $f8, $00, $94, $03, $02, $f8, $f8, $94, $23, $f8, $00, $92, $23, $02, $f8, $f8
+	db $96, $03, $f8, $00, $98, $03, $02, $f8, $f8, $96, $43, $f8, $00, $98, $43
 
 SECTION "analyzed_0093b9", ROMX[$53b9], BANK[$02]
 
@@ -10664,6 +11474,55 @@ Data_02_576a:
 	db $f9, $f8, $be, $2c, $f9, $00, $be, $0c, $f9, $08, $c6, $0c, $f9, $10, $ce, $0c
 	db $01, $f8, $fc, $78, $0c, $02, $f8, $f8, $d0, $0c, $f8, $00, $d8, $0c, $02, $f8
 	db $f8, $d2, $0c, $f8, $00, $da, $0c, $02, $f8, $f8, $d4, $0c, $f8, $00, $dc, $0c
+	db $04, $f8, $f0, $78, $0d, $f8, $f8, $7a, $0d, $f8, $00, $7a, $0d, $f8, $08, $7c
+	db $0d, $0a, $e1, $ec, $00, $0c, $e1, $f4, $08, $0c, $e1, $fc, $10, $0c, $e1, $04
+	db $18, $0c, $e1, $0c, $20, $0c, $f1, $ec, $02, $0c, $f1, $f4, $0a, $0c, $f1, $fc
+	db $12, $0c, $f1, $04, $1a, $0c, $f1, $0c, $22, $0c, $0a, $e1, $ec, $20, $2c, $e1
+	db $f4, $18, $2c, $e1, $fc, $10, $2c, $e1, $04, $08, $2c, $e1, $0c, $00, $2c, $f1
+	db $ec, $22, $2c, $f1, $f4, $1a, $2c, $f1, $fc, $12, $2c, $f1, $04, $0a, $2c, $f1
+	db $0c, $02, $2c, $0a, $e1, $ec, $04, $0c, $e1, $f4, $0c, $0c, $e1, $fc, $14, $0c
+	db $e1, $04, $1c, $0c, $e1, $0c, $24, $0c, $f1, $ec, $06, $0c, $f1, $f4, $0e, $0c
+	db $f1, $fc, $16, $0c, $f1, $04, $1e, $0c, $f1, $0c, $26, $0c, $0a, $e1, $ec, $24
+	db $2c, $e1, $f4, $1c, $2c, $e1, $fc, $14, $2c, $e1, $04, $0c, $2c, $e1, $0c, $04
+	db $2c, $f1, $ec, $26, $2c, $f1, $f4, $1e, $2c, $f1, $fc, $16, $2c, $f1, $04, $0e
+	db $2c, $f1, $0c, $06, $2c, $0a, $e1, $ec, $28, $0c, $e1, $f4, $30, $0c, $e1, $fc
+	db $38, $0c, $e1, $04, $40, $0c, $e1, $0c, $48, $0c, $f1, $ec, $2a, $0c, $f1, $f4
+	db $32, $0c, $f1, $fc, $3a, $0c, $f1, $04, $42, $0c, $f1, $0c, $4a, $0c, $0a, $e1
+	db $ec, $48, $2c, $e1, $f4, $40, $2c, $e1, $fc, $38, $2c, $e1, $04, $30, $2c, $e1
+	db $0c, $28, $2c, $f1, $ec, $4a, $2c, $f1, $f4, $42, $2c, $f1, $fc, $3a, $2c, $f1
+	db $04, $32, $2c, $f1, $0c, $2a, $2c, $0a, $e1, $ec, $2c, $0c, $e1, $f4, $34, $0c
+	db $e1, $fc, $3c, $0c, $e1, $04, $44, $0c, $e1, $0c, $4c, $0c, $f1, $ec, $2e, $0c
+	db $f1, $f4, $36, $0c, $f1, $fc, $3e, $0c, $f1, $04, $46, $0c, $f1, $0c, $4e, $0c
+	db $0a, $e1, $ec, $4c, $2c, $e1, $f4, $44, $2c, $e1, $fc, $3c, $2c, $e1, $04, $34
+	db $2c, $e1, $0c, $2c, $2c, $f1, $ec, $4e, $2c, $f1, $f4, $46, $2c, $f1, $fc, $3e
+	db $2c, $f1, $04, $36, $2c, $f1, $0c, $2e, $2c
+
+SECTION "analyzed_009c35", ROMX[$5c35], BANK[$02]
+
+Data_02_5c35:
+	db $0a, $e1, $ec, $54, $0c, $e1, $f4, $5c, $0c, $e1, $fc, $64, $0c, $e1, $04, $6c
+	db $0c, $e1, $0c, $74, $0c, $f1, $ec, $56, $0c, $f1, $f4, $5e, $0c, $f1, $fc, $66
+	db $0c, $f1, $04, $6e, $0c, $f1, $0c, $76, $0c, $0a, $e1, $ec, $74, $2c, $e1, $f4
+	db $6c, $2c, $e1, $fc, $64, $2c, $e1, $04, $5c, $2c, $e1, $0c, $54, $2c, $f1, $ec
+	db $76, $2c, $f1, $f4, $6e, $2c, $f1, $fc, $66, $2c, $f1, $04, $5e, $2c, $f1, $0c
+	db $56, $2c, $0a, $e1, $ec, $b8, $0c, $e1, $f4, $c0, $0c, $e1, $fc, $c8, $0c, $e1
+	db $04, $d0, $0c, $e1, $0c, $d8, $0c, $f1, $ec, $ba, $0c, $f1, $f4, $c2, $0c, $f1
+	db $fc, $ca, $0c, $f1, $04, $d2, $0c, $f1, $0c, $da, $0c, $0a, $e1, $ec, $d8, $2c
+	db $e1, $f4, $d0, $2c, $e1, $fc, $c8, $2c, $e1, $04, $c0, $2c, $e1, $0c, $b8, $2c
+	db $f1, $ec, $da, $2c, $f1, $f4, $d2, $2c, $f1, $fc, $ca, $2c, $f1, $04, $c2, $2c
+	db $f1, $0c, $ba, $2c, $0a, $e1, $ec, $bc, $0c, $e1, $f4, $c4, $0c, $e1, $fc, $cc
+	db $0c, $e1, $04, $d4, $0c, $e1, $0c, $dc, $0c, $f1, $ec, $be, $0c, $f1, $f4, $c6
+	db $0c, $f1, $fc, $ce, $0c, $f1, $04, $d6, $0c, $f1, $0c, $de, $0c, $0a, $e1, $ec
+	db $dc, $2c, $e1, $f4, $d4, $2c, $e1, $fc, $cc, $2c, $e1, $04, $c4, $2c, $e1, $0c
+	db $bc, $2c, $f1, $ec, $de, $2c, $f1, $f4, $d6, $2c, $f1, $fc, $ce, $2c, $f1, $04
+	db $c6, $2c, $f1, $0c, $be, $2c
+
+SECTION "analyzed_009d54", ROMX[$5d54], BANK[$02]
+
+Data_02_5d54:
+	db $0a, $e1, $ec, $f0, $24, $e1, $f4, $e8, $24, $e1, $fc, $e0, $24, $e1, $04, $d8
+	db $24, $e1, $0c, $d0, $24, $f1, $ec, $f2, $24, $f1, $f4, $ea, $24, $f1, $fc, $e2
+	db $24, $f1, $04, $da, $24, $f1, $0c, $d2, $24
 
 SECTION "analyzed_00bfff", ROMX[$7fff], BANK[$02]
 
@@ -10787,12 +11646,7 @@ Data_03_40b6:
 SECTION "analyzed_00c0c4", ROMX[$40c4], BANK[$03]
 
 Data_03_40c4:
-	db $6f, $42
-
-SECTION "analyzed_00c0c8", ROMX[$40c8], BANK[$03]
-
-Data_03_40c8:
-	db $01, $42
+	db $6f, $42, $7b, $42, $01, $42
 
 SECTION "analyzed_00c0cc", ROMX[$40cc], BANK[$03]
 
@@ -11050,10 +11904,18 @@ Func_03_425b:
 	ld h, a
 	inc de
 	jp hl
-
-SECTION "analyzed_00c28b", ROMX[$428b], BANK[$03]
-
-Func_03_428b:
+	inc de
+	ld a, [de]
+	ld b, a
+	inc de
+	ld a, [de]
+	ld l, a
+	inc de
+	ld a, [de]
+	ld h, a
+	inc de
+	call Func_00_1150
+	jp Func_03_4042
 	inc de
 	jp Func_03_404f
 Func_03_428f:
@@ -11324,10 +12186,26 @@ Func_03_443a:
 	set 0, a
 	ldh [$ffb7], a
 	ret
-
-SECTION "analyzed_00c461", ROMX[$4461], BANK[$03]
-
-Func_03_4461:
+	ld hl, $ffb4
+	bit 7, [hl]
+	jr z, Func_03_444d
+	ldh a, [$ffc7]
+	cp $1f
+	jr c, Func_03_445b
+Func_03_444d:
+	ldh a, [$ffb6]
+	bit 3, a
+	jr z, Func_03_445b
+	res 7, [hl]
+	xor a
+	ldh [$ffc7], a
+	ldh [$ffb7], a
+	ret
+Func_03_445b:
+	xor a
+	set 0, a
+	ldh [$ffb7], a
+	ret
 	push de
 	ldh a, [$ffbe]
 	add a, $08
@@ -12212,6 +13090,7 @@ Func_03_4a2c:
 	call Func_03_4593
 	ld a, $02
 	ret
+Func_03_4a46:
 	ld hl, $ffb4
 	set 7, [hl]
 	xor a
@@ -12317,13 +13196,14 @@ Func_03_4ada:
 Func_03_4af3:
 	ldh a, [$ffb3]
 	cp $05
-	jr z, Data_03_4afe
+	jr z, Func_03_4afe
 	call Func_03_4b08
 	pop de
 	ret
-
-SECTION "analyzed_00cb03", ROMX[$4b03], BANK[$03]
-
+Func_03_4afe:
+	call Func_03_4b3c
+	pop de
+	ret
 Func_03_4b03:
 	call Func_03_4b56
 	pop de
@@ -12362,9 +13242,23 @@ Func_03_4b20:
 	rst $00
 	set 7, [hl]
 	ret
-
-SECTION "analyzed_00cb56", ROMX[$4b56], BANK[$03]
-
+Func_03_4b3c:
+	ld a, c
+	swap a
+	and $f0
+	ld e, a
+	ld a, b
+	swap a
+	and $f0
+	sub $08
+	ld d, a
+	ld hl, $ffe5
+	ld a, [hl+]
+	ld c, a
+	ld b, [hl]
+	ld a, $06
+	call Func_03_4593
+	ret
 Func_03_4b56:
 	ld a, c
 	swap a
@@ -12474,17 +13368,50 @@ Func_03_4c0b:
 	ld a, [$c2c0]
 	cp $02
 	jr nz, Func_03_4c33
-
-SECTION "analyzed_00cc33", ROMX[$4c33], BANK[$03]
-
+	ld a, [$cf71]
+	ld c, a
+	ld a, [$cf72]
+	ld b, a
+	ldh a, [$ffac]
+	cp $30
+	jr z, Func_03_4c39
+	cp $32
+	jr z, Func_03_4c4c
+	cp $31
+	jr z, Data_03_4c37
+	cp $33
+	jr z, Data_03_4c37
 Func_03_4c33:
 	ld a, $01
 	or a
 	ret
 
-SECTION "analyzed_00cc5f", ROMX[$4c5f], BANK[$03]
+SECTION "analyzed_00cc39", ROMX[$4c39], BANK[$03]
 
-Func_03_4c5f:
+Func_03_4c39:
+	push de
+	ld a, $01
+	ld hl, $4ce1
+	call Func_00_042e
+	pop de
+	push af
+	ld a, $04
+	call Func_00_0a85
+	pop af
+	xor a
+	ret
+Func_03_4c4c:
+	push de
+	ld a, $01
+	ld hl, $4cfe
+	call Func_00_042e
+	pop de
+	push af
+	ld a, $04
+	call Func_00_0a85
+	pop af
+	xor a
+	ret
 	ld hl, $c7fd
 	res 2, [hl]
 	ret
@@ -12764,14 +13691,17 @@ Func_03_4f20:
 	ld a, [$c2d5]
 	bit 1, a
 	jr z, Func_03_4f38
-
-SECTION "analyzed_00cf38", ROMX[$4f38], BANK[$03]
-
+	ld a, [$c52e]
+	ld [$cf6f], a
+	ld a, [$c52f]
+	ld [$cf70], a
+	jr Func_03_4f44
 Func_03_4f38:
 	ld a, [$c530]
 	ld [$cf6f], a
 	ld a, [$c531]
 	ld [$cf70], a
+Func_03_4f44:
 	ld a, [$cf6f]
 	swap a
 	and $f0
@@ -13653,9 +14583,8 @@ Func_03_5649:
 	ld a, h
 	cp b
 	jr nc, Func_03_5662
-
-SECTION "analyzed_00d662", ROMX[$5662], BANK[$03]
-
+	ld hl, $ffb6
+	set 6, [hl]
 Func_03_5662:
 	ldh a, [$ffbd]
 	ld c, a
@@ -13720,9 +14649,8 @@ Func_03_56ad:
 	ld a, h
 	cp b
 	jr nc, Func_03_56c6
-
-SECTION "analyzed_00d6c6", ROMX[$56c6], BANK[$03]
-
+	ld hl, $ffb6
+	set 6, [hl]
 Func_03_56c6:
 	ldh a, [$ffbd]
 	ld c, a
@@ -13771,9 +14699,9 @@ Func_03_56f8:
 	ld a, h
 	cp b
 	ret c
-
-SECTION "analyzed_00d711", ROMX[$5711], BANK[$03]
-
+	ld hl, $ffb6
+	set 6, [hl]
+	ret
 Func_03_5711:
 	ldh a, [$ffbb]
 	ld c, a
@@ -14083,12 +15011,15 @@ Func_03_5938:
 	cp $ff
 	jr z, Func_03_594a
 	cp $01
-	jr z, Data_03_594e
+	jr z, Func_03_594e
 	cp $02
-	jr z, $5952
+	jr z, Data_03_5952
 	ret
 Func_03_594a:
 	ld de, $75d1
+	ret
+Func_03_594e:
+	ld de, $759b
 	ret
 
 SECTION "analyzed_00d956", ROMX[$5956], BANK[$03]
@@ -14715,13 +15646,16 @@ Func_03_5d2f:
 	cp $00
 	jr z, Func_03_5d41
 	cp $01
-	jr z, Data_03_5d45
+	jr z, Func_03_5d45
 	cp $02
-	jr z, $5d49
+	jr z, Data_03_5d49
 	ld de, $792c
 	ret
 Func_03_5d41:
 	ld de, $78df
+	ret
+Func_03_5d45:
+	ld de, $7900
 	ret
 
 SECTION "analyzed_00dd4d", ROMX[$5d4d], BANK[$03]
@@ -14729,19 +15663,22 @@ SECTION "analyzed_00dd4d", ROMX[$5d4d], BANK[$03]
 Func_03_5d4d:
 	and $03
 	cp $00
-	jr z, $5d5f
+	jr z, Data_03_5d5f
 	cp $01
 	jr z, Func_03_5d63
+	cp $02
+	jr z, Func_03_5d67
+	ld de, $7916
+	ret
 
 SECTION "analyzed_00dd63", ROMX[$5d63], BANK[$03]
 
 Func_03_5d63:
 	ld de, $78ea
 	ret
-
-SECTION "analyzed_00dd6b", ROMX[$5d6b], BANK[$03]
-
-Func_03_5d6b:
+Func_03_5d67:
+	ld de, $7921
+	ret
 	ldh a, [$ffb6]
 	bit 2, a
 	jr nz, Func_03_5d7d
@@ -14764,12 +15701,12 @@ Func_03_5d85:
 	bit 2, a
 	jr nz, Func_03_5d9b
 	bit 3, a
-	jr z, Data_03_5d97
+	jr z, Func_03_5d97
 	call Func_03_5ed9
 	ret
-
-SECTION "analyzed_00dd9b", ROMX[$5d9b], BANK[$03]
-
+Func_03_5d97:
+	call Func_03_6211
+	ret
 Func_03_5d9b:
 	bit 3, a
 	jr z, Data_03_5da3
@@ -15001,7 +15938,7 @@ Func_03_5ed9:
 	call Func_00_101b
 	pop bc
 	or a
-	jr z, Data_03_5f3e
+	jr z, Func_03_5f3e
 	dec c
 	dec c
 	ld a, c
@@ -15020,9 +15957,10 @@ Func_03_5ed9:
 	ld [hl], a
 	call Func_03_6329
 	ret
-
-SECTION "analyzed_00df44", ROMX[$5f44], BANK[$03]
-
+Func_03_5f3e:
+	ld hl, $ffb6
+	res 3, [hl]
+	ret
 Func_03_5f44:
 	ld de, $7921
 	ld hl, $ffb6
@@ -15421,6 +16359,30 @@ Func_03_61e6:
 	ld [hl], a
 	call Func_03_6329
 	ret
+Func_03_6211:
+	ldh a, [$ffbc]
+	sub $08
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ldh a, [$ffbe]
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	or a
+	ret z
+	ld de, $7921
+	ld hl, $ffb6
+	ld a, [hl]
+	and $fc
+	or $02
+	set 3, a
+	ld [hl], a
+	call Func_03_6313
+	ret
 
 SECTION "analyzed_00e267", ROMX[$6267], BANK[$03]
 
@@ -15606,6 +16568,122 @@ Func_03_63d4:
 	xor a
 	ld [hl], a
 	pop hl
+	ret
+	call Func_03_64a3
+	ldh a, [$ffb8]
+	cp $ff
+	jr z, Data_03_63ff
+	cp $01
+	jr z, $6403
+	cp $02
+	jr z, $6407
+	cp $03
+	jr z, $640b
+	ret
+
+SECTION "analyzed_00e40f", ROMX[$640f], BANK[$03]
+
+Func_03_640f:
+	call Func_03_643d
+	ldh a, [$ffb8]
+	cp $ff
+	jr z, Data_03_6429
+	cp $01
+	jr z, $642d
+	cp $02
+	jr z, $6431
+	cp $03
+	jr z, Func_03_6435
+	cp $04
+	jr z, Data_03_6439
+	ret
+
+SECTION "analyzed_00e435", ROMX[$6435], BANK[$03]
+
+Func_03_6435:
+	ld de, $7625
+	ret
+
+SECTION "analyzed_00e43d", ROMX[$643d], BANK[$03]
+
+Func_03_643d:
+	call Func_03_64a3
+	cp $ff
+	ret z
+	cp $02
+	ret z
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	ldh a, [$ffb6]
+	bit 7, a
+	jr nz, Func_03_645c
+	ldh a, [$ffd4]
+	add a, c
+	ld c, a
+	jr Func_03_645d
+Func_03_645c:
+	dec c
+Func_03_645d:
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	push bc
+	call Func_00_101b
+	pop bc
+	or a
+	jr nz, Func_03_6480
+	ldh a, [$ffc3]
+	ld l, a
+	ldh a, [$ffc4]
+	or l
+	ret z
+
+SECTION "analyzed_00e480", ROMX[$6480], BANK[$03]
+
+Func_03_6480:
+	cp $22
+	jr z, Data_03_6488
+	cp $23
+	jr nz, Func_03_648d
+
+SECTION "analyzed_00e48d", ROMX[$648d], BANK[$03]
+
+Func_03_648d:
+	ldh a, [$ffb8]
+	or a
+	jr nz, Data_03_6497
+	ld a, $03
+	ldh [$ffb8], a
+	ret
+
+SECTION "analyzed_00e4a3", ROMX[$64a3], BANK[$03]
+
+Func_03_64a3:
+	call Func_03_57bc
+	call Func_03_441f
+	bit 0, a
+	jr z, Func_03_64b2
+
+SECTION "analyzed_00e4b2", ROMX[$64b2], BANK[$03]
+
+Func_03_64b2:
+	call Func_03_462f
+	or a
+	jr nz, Data_03_64bc
+	xor a
+	ldh [$ffb8], a
 	ret
 
 SECTION "analyzed_00e63c", ROMX[$663c], BANK[$03]
@@ -15892,6 +16970,231 @@ Func_03_6917:
 	pop bc
 	pop de
 	ret
+	xor a
+	ld [$cf79], a
+	ret
+	ld a, $01
+	ldh [$ffc1], a
+	call Func_03_4a46
+	ret
+	xor a
+	ldh [$ffc1], a
+	call Func_03_4a46
+	ret
+	ldh a, [$ffc7]
+	cp $3d
+	jr z, Data_03_6983
+	ld a, $11
+	ldh [$ffbf], a
+	ld a, $01
+	ldh [$ffc0], a
+	ret
+
+SECTION "analyzed_00e98c", ROMX[$698c], BANK[$03]
+
+Func_03_698c:
+	ldh a, [$ffc7]
+	cp $3d
+	jr z, Func_03_699b
+	ld a, $aa
+	ldh [$ffbf], a
+	ld a, $00
+	ldh [$ffc0], a
+	ret
+Func_03_699b:
+	ld a, $22
+	ldh [$ffbf], a
+	ld a, $00
+	ldh [$ffc0], a
+	ret
+	ld a, [$cf79]
+	or a
+	jr z, Func_03_69b3
+	xor a
+	ld [$cf79], a
+	ld a, $01
+	ldh [$ffb8], a
+	ret
+Func_03_69b3:
+	ldh a, [$ffb6]
+	bit 3, a
+	jr nz, Func_03_69be
+Func_03_69b9:
+	ld a, $ff
+	ldh [$ffb8], a
+	ret
+Func_03_69be:
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffbc]
+	ld c, a
+	ldh a, [$ffd2]
+	add a, c
+	ld c, a
+	ldh a, [$ffb6]
+	bit 7, a
+	jr nz, Func_03_69d4
+	ldh a, [$ffd4]
+	add a, c
+	ld c, a
+	jr Func_03_69d5
+Func_03_69d4:
+	dec c
+Func_03_69d5:
+	ld a, c
+	add a, $08
+	swap a
+	and $0f
+	ld c, a
+	ld a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	push bc
+	call Func_00_101b
+	pop bc
+	cp $20
+	jr z, Func_03_6a11
+	ldh a, [$ffbe]
+	ld b, a
+	ldh a, [$ffd3]
+	add a, b
+	ld b, a
+	ldh a, [$ffd5]
+	add a, b
+	add a, $08
+	swap a
+	and $0f
+	ld b, a
+	call Func_00_101b
+	or a
+	jr z, Func_03_69b9
+	cp $22
+	jr z, Func_03_69b9
+	cp $23
+	jr z, Func_03_69b9
+	xor a
+	ldh [$ffb8], a
+	ret
+Func_03_6a11:
+	ldh a, [$ffbe]
+	cp $87
+	jr z, Func_03_6a1c
+
+SECTION "analyzed_00ea1c", ROMX[$6a1c], BANK[$03]
+
+Func_03_6a1c:
+	ld a, $02
+	ldh [$ffb8], a
+	ret
+
+SECTION "analyzed_00ef19", ROMX[$6f19], BANK[$03]
+
+Func_03_6f19:
+	ld a, [$cf77]
+	or a
+	ret z
+	ld de, $71f9
+	ret
+	ld a, [$cf78]
+	or a
+	ret z
+	ld de, $7229
+	ret
+	ldh a, [$ffb6]
+	and $fc
+	or $02
+	ldh [$ffb6], a
+	xor a
+	ldh [$ffc1], a
+	ret
+	ldh a, [$ffb6]
+	and $fc
+	or $03
+	ldh [$ffb6], a
+	xor a
+	ldh [$ffc1], a
+	ret
+	ldh a, [$ffbe]
+	cp $80
+	jr nc, Func_03_6f53
+	call Func_03_6fbb
+	call Func_03_6f63
+	xor a
+	ldh [$ffb8], a
+	ret
+Func_03_6f53:
+	ld a, $80
+	ldh [$ffbe], a
+	xor a
+	ldh [$ffbd], a
+	ldh [$ffbf], a
+	ldh [$ffc0], a
+	ld a, $01
+	ldh [$ffb8], a
+	ret
+Func_03_6f63:
+	ldh a, [$ffc1]
+	cp $41
+	jr c, Func_03_6f89
+	ldh a, [$ffc0]
+	cp $02
+	jr nc, Func_03_6f80
+	ldh a, [$ffbf]
+	ld l, a
+	ldh a, [$ffc0]
+	ld h, a
+	ld bc, $0040
+	add hl, bc
+	ld a, l
+	ldh [$ffbf], a
+	ld a, h
+	ldh [$ffc0], a
+	ret
+Func_03_6f80:
+	ld a, $00
+	ldh [$ffbf], a
+	ld a, $02
+	ldh [$ffc0], a
+	ret
+Func_03_6f89:
+	ld a, $40
+	ldh [$ffbf], a
+	ld a, $00
+	ldh [$ffc0], a
+	ret
+	ldh a, [$ffbe]
+	cp $11
+	jr c, Func_03_6fa2
+	call Func_03_6fbb
+	call Func_03_6fb2
+	xor a
+	ldh [$ffb8], a
+	ret
+Func_03_6fa2:
+	ld a, $10
+	ldh [$ffbe], a
+	xor a
+	ldh [$ffbd], a
+	ldh [$ffbf], a
+	ldh [$ffc0], a
+	ld a, $01
+	ldh [$ffb8], a
+	ret
+Func_03_6fb2:
+	ld a, $80
+	ldh [$ffbf], a
+	ld a, $00
+	ldh [$ffc0], a
+	ret
+Func_03_6fbb:
+	ldh a, [$ffc1]
+	cp $41
+	ret z
+	inc a
+	ldh [$ffc1], a
+	ret
 
 SECTION "analyzed_00efc8", ROMX[$6fc8], BANK[$03]
 
@@ -15921,31 +17224,37 @@ Data_03_700a:
 SECTION "analyzed_00f020", ROMX[$7020], BANK[$03]
 
 Data_03_7020:
-	db $60, $00
+	db $60, $00, $80, $00
 
 SECTION "analyzed_00f02c", ROMX[$702c], BANK[$03]
 
 Data_03_702c:
 	db $40, $00
 
+SECTION "analyzed_00f036", ROMX[$7036], BANK[$03]
+
+Data_03_7036:
+	db $c0, $00
+
 SECTION "analyzed_00f046", ROMX[$7046], BANK[$03]
 
 Data_03_7046:
 	db $02, $07, $01, $08, $04, $0b, $00, $02, $07, $02, $08, $0a, $0b, $00, $02, $07
-	db $03, $08, $0a, $0b, $00, $02, $07, $04, $08, $07, $0b, $00
-
-SECTION "analyzed_00f069", ROMX[$7069], BANK[$03]
-
-Data_03_7069:
-	db $02, $07, $06, $08, $07, $0b, $00, $02, $07, $07, $08, $07, $0b, $00, $07, $0a
-	db $08, $18, $0b, $16, $aa, $4f, $16, $59, $50, $0c, $20, $7f, $70, $07, $09, $16
-	db $20, $4f, $16, $13, $50, $0c, $20, $8b, $70
+	db $03, $08, $0a, $0b, $00, $02, $07, $04, $08, $07, $0b, $00, $02, $07, $05, $08
+	db $07, $0b, $00, $02, $07, $06, $08, $07, $0b, $00, $02, $07, $07, $08, $07, $0b
+	db $00, $07, $0a, $08, $18, $0b, $16, $aa, $4f, $16, $59, $50, $0c, $20, $7f, $70
+	db $07, $09, $16, $20, $4f, $16, $13, $50, $0c, $20, $8b, $70
 
 SECTION "analyzed_00f0ae", ROMX[$70ae], BANK[$03]
 
 Data_03_70ae:
 	db $02, $07, $0c, $08, $0f, $0b, $00, $02, $07, $19, $08, $15, $0b, $16, $5f, $4c
 	db $00, $02, $07, $10, $08, $1f, $0b, $16, $5f, $4c, $00, $06, $00, $07, $11, $1d
+
+SECTION "analyzed_00f0d1", ROMX[$70d1], BANK[$03]
+
+Data_03_70d1:
+	db $06, $00, $07, $12, $1d, $20, $bf, $70
 
 SECTION "analyzed_00f0e1", ROMX[$70e1], BANK[$03]
 
@@ -16001,6 +17310,16 @@ Data_03_719b:
 	db $08, $0a, $0b, $00, $02, $07, $0f, $08, $3c, $0b, $16, $a1, $55, $00, $02, $07
 	db $09, $08, $5a, $16, $e7, $55, $0a, $ce, $71, $00
 
+SECTION "analyzed_00f1eb", ROMX[$71eb], BANK[$03]
+
+Data_03_71eb:
+	db $02, $07, $0e, $17, $01, $d3, $4c, $16, $19, $6f, $0c, $20, $f2, $71, $02, $07
+	db $0d, $16, $37, $6f, $16, $43, $6f, $27, $01, $0a, $72, $0c, $20, $ff, $71, $02
+	db $07, $0e, $16, $2b, $6f, $16, $92, $6f, $27, $01, $eb, $71, $0c, $20, $10, $72
+	db $02, $07, $0e, $17, $01, $f0, $4c, $16, $22, $6f, $0c, $20, $22, $72, $02, $07
+	db $0d, $16, $37, $6f, $16, $43, $6f, $27, $01, $3a, $72, $0c, $20, $2f, $72, $02
+	db $07, $0e, $16, $2b, $6f, $16, $92, $6f, $27, $01, $1b, $72, $0c, $20, $40, $72
+
 SECTION "analyzed_00f2d6", ROMX[$72d6], BANK[$03]
 
 Data_03_72d6:
@@ -16028,6 +17347,12 @@ Data_03_7407:
 	db $16, $5e, $4a, $20, $2f, $74, $01, $13, $16, $64, $4a, $07, $0b, $08, $0a, $16
 	db $cb, $48, $0a, $76, $74, $16, $5e, $4a, $20, $3d, $74, $01, $14, $02, $07, $10
 	db $08, $a8, $16, $0a, $4f, $0a, $89, $74, $16, $58, $4a, $0c
+
+SECTION "analyzed_00f496", ROMX[$7496], BANK[$03]
+
+Data_03_7496:
+	db $01, $15, $02, $16, $5e, $4a, $0f, $07, $11, $0c, $10, $21, $9f, $74, $07, $12
+	db $08, $90, $16, $0a, $4f, $0a, $a8, $74, $16, $58, $4a, $0c
 
 SECTION "analyzed_00f4b5", ROMX[$74b5], BANK[$03]
 
@@ -16078,23 +17403,23 @@ SECTION "analyzed_00f5fc", ROMX[$75fc], BANK[$03]
 
 Data_03_75fc:
 	db $01, $06, $04, $0a, $70, $06, $fe, $07, $02, $16, $84, $59, $0c, $20, $05, $76
-	db $01, $ff, $02, $07, $09, $08, $3c, $0b, $00
+	db $01, $ff, $02, $07, $09, $08, $3c, $0b, $00, $01, $00, $02, $07, $01, $08, $3c
+	db $16, $e9, $63, $0a, $1c, $76, $20, $34, $76, $01, $01, $02, $07, $01, $08, $3c
+	db $16, $e9, $63, $0a, $2c, $76, $05, $ff, $01, $02, $04, $00, $70, $06, $fe, $07
+	db $02, $16, $0f, $64, $0c, $20, $3d, $76
 
-SECTION "analyzed_00f6a8", ROMX[$76a8], BANK[$03]
+SECTION "analyzed_00f69f", ROMX[$769f], BANK[$03]
 
-Data_03_76a8:
-	db $01, $00, $02, $07, $01, $08, $3c, $16, $6b, $5a, $0a, $af, $76, $20, $c7, $76
-	db $01, $01, $02, $07, $01, $08, $3c, $16, $6b, $5a, $0a, $bf, $76, $05, $ff, $01
-	db $02, $04, $00, $70, $06, $fe, $07, $02, $16, $91, $5a, $0c, $20, $d0, $76, $05
-	db $ff, $01, $03, $02, $07, $03, $08, $1e, $10, $21, $ff, $76, $0a, $e0, $76, $16
-	db $76, $53, $16, $61, $44, $08, $28, $0b, $08, $05, $10, $21
-
-SECTION "analyzed_00f6f6", ROMX[$76f6], BANK[$03]
-
-Data_03_76f6:
-	db $0a, $f2, $76, $16, $b4, $57, $20, $c7, $76, $01, $04, $02, $07, $04, $0f, $10
-	db $0c, $21, $05, $77, $01, $ff, $02, $07, $09, $08, $3c, $0b, $00, $01, $00, $02
-	db $07, $01, $08, $3c, $16, $71, $5b, $0a, $1a, $77, $20, $36, $77
+Data_03_769f:
+	db $01, $ff, $02, $07, $09, $08, $3c, $0b, $00, $01, $00, $02, $07, $01, $08, $3c
+	db $16, $6b, $5a, $0a, $af, $76, $20, $c7, $76, $01, $01, $02, $07, $01, $08, $3c
+	db $16, $6b, $5a, $0a, $bf, $76, $05, $ff, $01, $02, $04, $00, $70, $06, $fe, $07
+	db $02, $16, $91, $5a, $0c, $20, $d0, $76, $05, $ff, $01, $03, $02, $07, $03, $08
+	db $1e, $10, $21, $ff, $76, $0a, $e0, $76, $16, $76, $53, $16, $61, $44, $08, $28
+	db $0b, $08, $05, $10, $21, $ff, $76, $0a, $f2, $76, $16, $b4, $57, $20, $c7, $76
+	db $01, $04, $02, $07, $04, $0f, $10, $0c, $21, $05, $77, $01, $ff, $02, $07, $09
+	db $08, $3c, $0b, $00, $01, $00, $02, $07, $01, $08, $3c, $16, $71, $5b, $0a, $1a
+	db $77, $20, $36, $77
 
 SECTION "analyzed_00f727", ROMX[$7727], BANK[$03]
 
@@ -16162,11 +17487,16 @@ SECTION "analyzed_00f949", ROMX[$7949], BANK[$03]
 Data_03_7949:
 	db $01, $ff, $02, $07, $03, $08, $3c, $0b, $00
 
-SECTION "analyzed_00f97f", ROMX[$797f], BANK[$03]
+SECTION "analyzed_00f964", ROMX[$7964], BANK[$03]
 
-Data_03_797f:
-	db $16, $81, $63, $01, $00, $02, $07, $01, $16, $47, $54, $16, $6b, $63, $27, $01
-	db $a8, $79, $0c, $20, $8a, $79
+Data_03_7964:
+	db $01, $ff, $02, $07, $06, $08, $3c, $0b, $00
+
+SECTION "analyzed_00f976", ROMX[$7976], BANK[$03]
+
+Data_03_7976:
+	db $01, $ff, $02, $07, $08, $08, $3c, $0b, $00, $16, $81, $63, $01, $00, $02, $07
+	db $01, $16, $47, $54, $16, $6b, $63, $27, $01, $a8, $79, $0c, $20, $8a, $79
 
 SECTION "analyzed_00f9a8", ROMX[$79a8], BANK[$03]
 
@@ -16255,7 +17585,14 @@ SECTION "analyzed_00fd8a", ROMX[$7d8a], BANK[$03]
 Data_03_7d8a:
 	db $0a, $86, $7d, $16, $b8, $54, $20, $4b, $7d, $16, $22, $46, $01, $04, $02, $07
 	db $04, $08, $54, $0b, $0f, $16, $1f, $69, $10, $0c, $21, $9f, $7d, $01, $ff, $02
-	db $07, $09, $08, $3c, $0b, $16, $39, $55, $00
+	db $07, $09, $08, $3c, $0b, $16, $39, $55, $00, $16, $60, $69, $20, $bb, $7d, $05
+	db $ff, $06, $fe, $01, $01, $04, $32, $70, $07, $02, $16, $a4, $69, $27, $ff, $f9
+	db $7d, $27, $01, $b9, $7d, $27, $02, $d7, $7d, $0c, $20, $c4, $7d, $05, $ff, $06
+	db $fe, $01, $01, $02, $07, $03, $08, $14, $0b, $16, $65, $69, $16, $74, $69, $16
+	db $40, $44, $0c, $21, $e6, $7d, $02, $07, $04, $08, $28, $0b, $20, $bb, $7d, $01
+	db $01, $02, $07, $05, $08, $28, $0b, $16, $6d, $69, $16, $8c, $69, $16, $40, $44
+	db $0c, $21, $04, $7e, $02, $07, $06, $08, $14, $0b, $20, $b9, $7d, $16, $22, $46
+	db $01, $ff, $02, $07, $09, $08, $3c, $0b, $16, $39, $55, $00
 
 SECTION "analyzed_00ffff", ROMX[$7fff], BANK[$03]
 
@@ -16610,9 +17947,9 @@ Func_04_42b3:
 	jr z, Func_04_42c6
 	cp $01
 	jr z, Func_04_42ce
-
-SECTION "analyzed_0102c6", ROMX[$42c6], BANK[$04]
-
+	ld de, $ce54
+	ld bc, $cc93
+	jr Func_04_42d4
 Func_04_42c6:
 	ld de, $cc94
 	ld bc, $cc91
@@ -16730,10 +18067,10 @@ SECTION "analyzed_010370", ROMX[$4370], BANK[$04]
 Data_04_4370:
 	db $00, $00, $00, $00, $fc, $f3, $08, $0e, $fc, $f3, $08, $0a, $fc, $f5, $08, $08
 
-SECTION "analyzed_010390", ROMX[$4390], BANK[$04]
+SECTION "analyzed_01038c", ROMX[$438c], BANK[$04]
 
-Data_04_4390:
-	db $f9, $f9, $0e, $0e, $fa, $fa, $0c, $0c
+Data_04_438c:
+	db $f0, $f8, $20, $10, $f9, $f9, $0e, $0e, $fa, $fa, $0c, $0c
 
 SECTION "analyzed_0103a0", ROMX[$43a0], BANK[$04]
 
@@ -16745,7 +18082,7 @@ Data_04_43a0:
 SECTION "analyzed_0103f0", ROMX[$43f0], BANK[$04]
 
 Data_04_43f0:
-	db $ec, $e9, $28, $18, $e8, $e9, $30, $18
+	db $ec, $e9, $28, $18, $e8, $e9, $30, $18, $f0, $e9, $20, $18, $f0, $e9, $20, $18
 
 SECTION "analyzed_010430", ROMX[$4430], BANK[$04]
 
@@ -16765,12 +18102,8 @@ Data_04_4470:
 SECTION "analyzed_01047d", ROMX[$447d], BANK[$04]
 
 Data_04_447d:
-	db $00, $01, $01, $01, $01
-
-SECTION "analyzed_010483", ROMX[$4483], BANK[$04]
-
-Data_04_4483:
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+	db $00, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
+	db $01
 
 SECTION "analyzed_010492", ROMX[$4492], BANK[$04]
 
@@ -16800,12 +18133,7 @@ Data_04_44a5:
 SECTION "analyzed_0104ac", ROMX[$44ac], BANK[$04]
 
 Data_04_44ac:
-	db $11, $11
-
-SECTION "analyzed_0104af", ROMX[$44af], BANK[$04]
-
-Data_04_44af:
-	db $11, $11, $11, $11, $11, $11, $11, $11, $11, $11
+	db $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $11, $11
 
 SECTION "analyzed_0104be", ROMX[$44be], BANK[$04]
 
@@ -16815,7 +18143,12 @@ Data_04_44be:
 SECTION "analyzed_0104cc", ROMX[$44cc], BANK[$04]
 
 Data_04_44cc:
-	db $01
+	db $01, $01
+
+SECTION "analyzed_0104dc", ROMX[$44dc], BANK[$04]
+
+Data_04_44dc:
+	db $02, $02
 
 SECTION "analyzed_0104ec", ROMX[$44ec], BANK[$04]
 
@@ -16871,6 +18204,16 @@ SECTION "analyzed_010514", ROMX[$4514], BANK[$04]
 
 Data_04_4514:
 	db $2c, $53, $2c, $53, $00, $00, $00
+
+SECTION "analyzed_01051c", ROMX[$451c], BANK[$04]
+
+Data_04_451c:
+	db $31, $53
+
+SECTION "analyzed_010520", ROMX[$4520], BANK[$04]
+
+Data_04_4520:
+	db $00, $00, $00
 
 SECTION "analyzed_010524", ROMX[$4524], BANK[$04]
 
@@ -17086,6 +18429,26 @@ SECTION "analyzed_010628", ROMX[$4628], BANK[$04]
 
 Data_04_4628:
 	db $00, $00, $00
+
+SECTION "analyzed_01062c", ROMX[$462c], BANK[$04]
+
+Data_04_462c:
+	db $8a, $5a
+
+SECTION "analyzed_010630", ROMX[$4630], BANK[$04]
+
+Data_04_4630:
+	db $07, $07, $00
+
+SECTION "analyzed_010634", ROMX[$4634], BANK[$04]
+
+Data_04_4634:
+	db $8a, $5a
+
+SECTION "analyzed_010638", ROMX[$4638], BANK[$04]
+
+Data_04_4638:
+	db $07, $00, $00
 
 SECTION "analyzed_01063c", ROMX[$463c], BANK[$04]
 
@@ -17320,17 +18683,9 @@ Data_04_481c:
 SECTION "analyzed_010826", ROMX[$4826], BANK[$04]
 
 Data_04_4826:
-	db $a0, $48, $a8, $48, $bc, $48, $cf, $48
-
-SECTION "analyzed_010830", ROMX[$4830], BANK[$04]
-
-Data_04_4830:
-	db $e9, $48, $eb, $48, $59, $49, $f6, $48, $2c, $49, $61, $49, $12, $49
-
-SECTION "analyzed_010842", ROMX[$4842], BANK[$04]
-
-Data_04_4842:
-	db $03, $49, $71, $49, $f4, $49
+	db $a0, $48, $a8, $48, $bc, $48, $cf, $48, $dc, $48, $e9, $48, $eb, $48, $59, $49
+	db $f6, $48, $2c, $49, $61, $49, $12, $49, $33, $4b, $3d, $4b, $03, $49, $71, $49
+	db $f4, $49, $f6, $49
 
 SECTION "analyzed_01084c", ROMX[$484c], BANK[$04]
 
@@ -17384,15 +18739,11 @@ Data_04_489c:
 	db $01, $02, $03, $03, $01, $02, $02, $03, $03, $01, $03, $02, $03, $03, $06, $00
 	db $04, $03, $05, $01, $01, $02, $03, $03, $01, $02, $02, $03, $03, $01, $00, $02
 	db $03, $03, $00, $04, $04, $01, $04, $02, $03, $03, $01, $06, $02, $03, $03, $00
-
-SECTION "analyzed_0108e9", ROMX[$48e9], BANK[$04]
-
-Data_04_48e9:
-	db $04, $04, $01, $07, $02, $03, $03, $01, $08, $02, $03, $03, $00, $01, $01, $02
-	db $05, $03, $01, $02, $02, $05, $03, $10, $f6, $48, $04, $1b, $01, $01, $02, $05
-	db $03, $01, $02, $02, $05, $03, $10, $05, $49, $01, $38, $02, $03, $03, $01, $39
-	db $02, $03, $03, $01, $3a, $02, $03, $03, $01, $3b, $02, $03, $03, $01, $3c, $02
-	db $03, $03
+	db $04, $04, $01, $04, $02, $03, $03, $01, $05, $02, $03, $03, $00, $04, $04, $01
+	db $07, $02, $03, $03, $01, $08, $02, $03, $03, $00, $01, $01, $02, $05, $03, $01
+	db $02, $02, $05, $03, $10, $f6, $48, $04, $1b, $01, $01, $02, $05, $03, $01, $02
+	db $02, $05, $03, $10, $05, $49, $01, $38, $02, $03, $03, $01, $39, $02, $03, $03
+	db $01, $3a, $02, $03, $03, $01, $3b, $02, $03, $03, $01, $3c, $02, $03, $03
 
 SECTION "analyzed_01092c", ROMX[$492c], BANK[$04]
 
@@ -17453,6 +18804,12 @@ SECTION "analyzed_010b19", ROMX[$4b19], BANK[$04]
 
 Data_04_4b19:
 	db $01, $45, $02, $03, $03, $01, $46, $02, $03, $03, $10, $19, $4b
+
+SECTION "analyzed_010b33", ROMX[$4b33], BANK[$04]
+
+Data_04_4b33:
+	db $04, $12, $01, $27, $02, $03, $03, $10, $35, $4b, $01, $28, $02, $03, $03, $10
+	db $3d, $4b
 
 SECTION "analyzed_010bee", ROMX[$4bee], BANK[$04]
 
@@ -17577,20 +18934,11 @@ Data_04_4cc9:
 SECTION "analyzed_010cdb", ROMX[$4cdb], BANK[$04]
 
 Data_04_4cdb:
-	db $7d, $4d
-
-SECTION "analyzed_010ce1", ROMX[$4ce1], BANK[$04]
-
-Data_04_4ce1:
-	db $01, $01, $02, $01, $03, $10, $e1, $4c, $01, $02, $02, $01, $03, $10, $e9, $4c
-	db $01, $03, $02, $03, $03, $01, $04, $02, $03, $03, $01, $05, $02, $03, $03, $01
-	db $06, $02, $03, $03, $10, $f1, $4c, $01, $02, $02, $0a, $03, $01, $07, $02, $0a
-	db $03, $01, $02, $02, $0a, $03, $01, $08, $02, $0a, $03
-
-SECTION "analyzed_010d1f", ROMX[$4d1f], BANK[$04]
-
-Data_04_4d1f:
-	db $01, $0f, $02, $07, $03, $01, $10, $02, $07, $03
+	db $7d, $4d, $ae, $4d, $b8, $4d, $01, $01, $02, $01, $03, $10, $e1, $4c, $01, $02
+	db $02, $01, $03, $10, $e9, $4c, $01, $03, $02, $03, $03, $01, $04, $02, $03, $03
+	db $01, $05, $02, $03, $03, $01, $06, $02, $03, $03, $10, $f1, $4c, $01, $02, $02
+	db $0a, $03, $01, $07, $02, $0a, $03, $01, $02, $02, $0a, $03, $01, $08, $02, $0a
+	db $03, $10, $08, $4d, $01, $0f, $02, $07, $03, $01, $10, $02, $07, $03
 
 SECTION "analyzed_010d39", ROMX[$4d39], BANK[$04]
 
@@ -17611,12 +18959,9 @@ Data_04_4d7d:
 	db $04, $0c, $01, $13, $02, $06, $03, $01, $14, $02, $06, $03, $07, $02, $01, $13
 	db $02, $06, $03, $07, $02, $01, $15, $02, $06, $03, $01, $16, $02, $06, $03, $01
 	db $17, $02, $06, $03, $01, $16, $02, $06, $03, $01, $17, $02, $06, $03, $10, $a6
-	db $4d
-
-SECTION "analyzed_010dcf", ROMX[$4dcf], BANK[$04]
-
-Data_04_4dcf:
-	db $f1, $52, $fa, $52, $08, $09, $00
+	db $4d, $04, $0c, $01, $16, $02, $01, $03, $10, $b0, $4d, $01, $16, $02, $06, $03
+	db $01, $17, $02, $06, $03, $01, $16, $02, $06, $03, $01, $17, $02, $06, $03, $10
+	db $c7, $4d, $f1, $52, $fa, $52, $08, $09, $00
 
 SECTION "analyzed_010dd7", ROMX[$4dd7], BANK[$04]
 
@@ -17683,42 +19028,22 @@ Data_04_4e5b:
 SECTION "analyzed_010e63", ROMX[$4e63], BANK[$04]
 
 Data_04_4e63:
-	db $fd, $54
-
-SECTION "analyzed_010e67", ROMX[$4e67], BANK[$04]
-
-Data_04_4e67:
-	db $0c, $0d, $00
+	db $fd, $54, $69, $55, $0c, $0d, $00
 
 SECTION "analyzed_010e6b", ROMX[$4e6b], BANK[$04]
 
 Data_04_4e6b:
-	db $06, $55
-
-SECTION "analyzed_010e6f", ROMX[$4e6f], BANK[$04]
-
-Data_04_4e6f:
-	db $0c, $0d, $00
+	db $06, $55, $72, $55, $0c, $0d, $00
 
 SECTION "analyzed_010e73", ROMX[$4e73], BANK[$04]
 
 Data_04_4e73:
-	db $0f, $55
-
-SECTION "analyzed_010e77", ROMX[$4e77], BANK[$04]
-
-Data_04_4e77:
-	db $0c, $00, $00
+	db $0f, $55, $7b, $55, $0c, $00, $00
 
 SECTION "analyzed_010e7b", ROMX[$4e7b], BANK[$04]
 
 Data_04_4e7b:
-	db $18, $55
-
-SECTION "analyzed_010e7f", ROMX[$4e7f], BANK[$04]
-
-Data_04_4e7f:
-	db $0c, $00, $00
+	db $18, $55, $84, $55, $0c, $00, $00
 
 SECTION "analyzed_010e83", ROMX[$4e83], BANK[$04]
 
@@ -17805,12 +19130,45 @@ SECTION "analyzed_010f74", ROMX[$4f74], BANK[$04]
 
 Data_04_4f74:
 	db $01, $07, $02, $04, $03, $09, $01, $07, $02, $02, $03, $08, $02, $02, $03, $10
-	db $79, $4f
+	db $79, $4f, $e2, $54, $4e, $55, $0c, $0d, $00
 
-SECTION "analyzed_011025", ROMX[$5025], BANK[$04]
+SECTION "analyzed_010f8e", ROMX[$4f8e], BANK[$04]
 
-Data_04_5025:
-	db $e2, $54, $4e, $55, $0c, $0d, $00
+Data_04_4f8e:
+	db $eb, $54, $57, $55, $0c, $0d, $00
+
+SECTION "analyzed_010f96", ROMX[$4f96], BANK[$04]
+
+Data_04_4f96:
+	db $f4, $54, $60, $55, $0c, $0d, $00
+
+SECTION "analyzed_010fbe", ROMX[$4fbe], BANK[$04]
+
+Data_04_4fbe:
+	db $21, $55
+
+SECTION "analyzed_010fc2", ROMX[$4fc2], BANK[$04]
+
+Data_04_4fc2:
+	db $0c, $00, $00
+
+SECTION "analyzed_010fc8", ROMX[$4fc8], BANK[$04]
+
+Data_04_4fc8:
+	db $da, $4f, $e2, $4f
+
+SECTION "analyzed_010fd8", ROMX[$4fd8], BANK[$04]
+
+Data_04_4fd8:
+	db $13, $50, $01, $00, $02, $01, $03, $10, $da, $4f, $01, $00, $02, $03, $03, $01
+	db $01, $02, $03, $03, $01, $02, $02, $03, $03, $01, $01, $02, $03, $03, $10, $e2
+	db $4f
+
+SECTION "analyzed_011013", ROMX[$5013], BANK[$04]
+
+Data_04_5013:
+	db $01, $07, $02, $04, $03, $09, $01, $07, $02, $02, $03, $08, $02, $02, $03, $10
+	db $18, $50, $e2, $54, $4e, $55, $0c, $0d, $00
 
 SECTION "analyzed_01102d", ROMX[$502d], BANK[$04]
 
@@ -18167,127 +19525,97 @@ SECTION "analyzed_0113d4", ROMX[$53d4], BANK[$04]
 Data_04_53d4:
 	db $01, $06, $02, $02, $03, $01, $07, $02, $02, $03, $01, $08, $02, $02, $03, $01
 	db $09, $02, $02, $03, $10, $d4, $53, $01, $07, $02, $03, $03, $09, $01, $07, $02
-	db $02, $03, $08, $02, $02, $03, $10, $f0, $53, $8e, $57
-
-SECTION "analyzed_011401", ROMX[$5401], BANK[$04]
-
-Data_04_5401:
-	db $13, $14, $00
+	db $02, $03, $08, $02, $02, $03, $10, $f0, $53, $8e, $57, $8e, $57, $13, $14, $00
 
 SECTION "analyzed_011405", ROMX[$5405], BANK[$04]
 
 Data_04_5405:
-	db $97, $57
-
-SECTION "analyzed_011409", ROMX[$5409], BANK[$04]
-
-Data_04_5409:
-	db $13, $14, $00
+	db $97, $57, $97, $57, $13, $14, $00
 
 SECTION "analyzed_01140d", ROMX[$540d], BANK[$04]
 
 Data_04_540d:
-	db $a0, $57
-
-SECTION "analyzed_011411", ROMX[$5411], BANK[$04]
-
-Data_04_5411:
-	db $13, $14, $00
+	db $a0, $57, $a0, $57, $13, $14, $00
 
 SECTION "analyzed_011415", ROMX[$5415], BANK[$04]
 
 Data_04_5415:
-	db $a9, $57
-
-SECTION "analyzed_011419", ROMX[$5419], BANK[$04]
-
-Data_04_5419:
-	db $13, $14, $00
+	db $a9, $57, $a9, $57, $13, $14, $00
 
 SECTION "analyzed_01141d", ROMX[$541d], BANK[$04]
 
 Data_04_541d:
-	db $b2, $57
-
-SECTION "analyzed_011421", ROMX[$5421], BANK[$04]
-
-Data_04_5421:
-	db $13, $14, $00
+	db $b2, $57, $b2, $57, $13, $14, $00
 
 SECTION "analyzed_011425", ROMX[$5425], BANK[$04]
 
 Data_04_5425:
-	db $bb, $57
-
-SECTION "analyzed_011429", ROMX[$5429], BANK[$04]
-
-Data_04_5429:
-	db $13, $14, $00
+	db $bb, $57, $bb, $57, $13, $14, $00
 
 SECTION "analyzed_01142d", ROMX[$542d], BANK[$04]
 
 Data_04_542d:
-	db $c4, $57
-
-SECTION "analyzed_011431", ROMX[$5431], BANK[$04]
-
-Data_04_5431:
-	db $13, $14, $00
+	db $c4, $57, $c4, $57, $13, $14, $00
 
 SECTION "analyzed_011435", ROMX[$5435], BANK[$04]
 
 Data_04_5435:
-	db $cd, $57
+	db $cd, $57, $cd, $57, $13, $14, $00
 
-SECTION "analyzed_011439", ROMX[$5439], BANK[$04]
+SECTION "analyzed_01144d", ROMX[$544d], BANK[$04]
 
-Data_04_5439:
-	db $13, $14, $00
+Data_04_544d:
+	db $d6, $57, $d6, $57, $13, $14, $00
 
-SECTION "analyzed_01144f", ROMX[$544f], BANK[$04]
+SECTION "analyzed_011455", ROMX[$5455], BANK[$04]
 
-Data_04_544f:
-	db $d6, $57, $13, $14, $00
+Data_04_5455:
+	db $df, $57, $df, $57, $13, $14, $00
 
-SECTION "analyzed_011457", ROMX[$5457], BANK[$04]
+SECTION "analyzed_01145d", ROMX[$545d], BANK[$04]
 
-Data_04_5457:
-	db $df, $57, $13, $14, $00
+Data_04_545d:
+	db $e8, $57, $e8, $57, $13, $14, $00
 
-SECTION "analyzed_01145f", ROMX[$545f], BANK[$04]
+SECTION "analyzed_011465", ROMX[$5465], BANK[$04]
 
-Data_04_545f:
-	db $e8, $57, $13, $14, $00
+Data_04_5465:
+	db $f1, $57, $f1, $57, $13, $14, $00
 
-SECTION "analyzed_011467", ROMX[$5467], BANK[$04]
+SECTION "analyzed_01146d", ROMX[$546d], BANK[$04]
 
-Data_04_5467:
-	db $f1, $57, $13, $14, $00
+Data_04_546d:
+	db $fa, $57, $fa, $57, $13, $14, $00
 
-SECTION "analyzed_01146f", ROMX[$546f], BANK[$04]
+SECTION "analyzed_011475", ROMX[$5475], BANK[$04]
 
-Data_04_546f:
-	db $fa, $57, $13, $14, $00
+Data_04_5475:
+	db $03, $58, $03, $58, $13, $14, $00
 
-SECTION "analyzed_011477", ROMX[$5477], BANK[$04]
+SECTION "analyzed_01147d", ROMX[$547d], BANK[$04]
 
-Data_04_5477:
-	db $03, $58, $13, $14, $00
+Data_04_547d:
+	db $0c, $58, $0c, $58, $13, $14, $00
 
-SECTION "analyzed_01147f", ROMX[$547f], BANK[$04]
+SECTION "analyzed_011485", ROMX[$5485], BANK[$04]
 
-Data_04_547f:
-	db $0c, $58, $13, $14, $00
-
-SECTION "analyzed_011487", ROMX[$5487], BANK[$04]
-
-Data_04_5487:
-	db $15, $58, $13, $14, $00
+Data_04_5485:
+	db $15, $58, $15, $58, $13, $14, $00
 
 SECTION "analyzed_0114a3", ROMX[$54a3], BANK[$04]
 
 Data_04_54a3:
 	db $51, $55
+
+SECTION "analyzed_0114a9", ROMX[$54a9], BANK[$04]
+
+Data_04_54a9:
+	db $78, $55
+
+SECTION "analyzed_0114ad", ROMX[$54ad], BANK[$04]
+
+Data_04_54ad:
+	db $92, $55
 
 SECTION "analyzed_0114bf", ROMX[$54bf], BANK[$04]
 
@@ -18306,10 +19634,16 @@ SECTION "analyzed_011551", ROMX[$5551], BANK[$04]
 Data_04_5551:
 	db $09, $01, $0e, $02, $02, $03, $08, $02, $02, $03, $10, $51, $55
 
-SECTION "analyzed_01159f", ROMX[$559f], BANK[$04]
+SECTION "analyzed_011578", ROMX[$5578], BANK[$04]
 
-Data_04_559f:
-	db $92, $56, $fe, $56, $0e, $0f, $00
+Data_04_5578:
+	db $09, $01, $0c, $02, $02, $03, $08, $02, $02, $03, $10, $78, $55
+
+SECTION "analyzed_011592", ROMX[$5592], BANK[$04]
+
+Data_04_5592:
+	db $09, $01, $02, $02, $03, $03, $08, $02, $02, $03, $10, $92, $55, $92, $56, $fe
+	db $56, $0e, $0f, $00
 
 SECTION "analyzed_0115a7", ROMX[$55a7], BANK[$04]
 
@@ -18440,22 +19774,12 @@ Data_04_5836:
 SECTION "analyzed_01183e", ROMX[$583e], BANK[$04]
 
 Data_04_583e:
-	db $fd, $54
-
-SECTION "analyzed_011842", ROMX[$5842], BANK[$04]
-
-Data_04_5842:
-	db $0c, $0d, $00
+	db $fd, $54, $69, $55, $0c, $0d, $00
 
 SECTION "analyzed_011846", ROMX[$5846], BANK[$04]
 
 Data_04_5846:
-	db $06, $55
-
-SECTION "analyzed_01184a", ROMX[$584a], BANK[$04]
-
-Data_04_584a:
-	db $0c, $0d, $00
+	db $06, $55, $72, $55, $0c, $0d, $00
 
 SECTION "analyzed_01184e", ROMX[$584e], BANK[$04]
 
@@ -18549,35 +19873,35 @@ SECTION "analyzed_011ad3", ROMX[$5ad3], BANK[$04]
 Data_04_5ad3:
 	db $a6, $59, $d7, $59, $20, $21, $00
 
-SECTION "analyzed_011add", ROMX[$5add], BANK[$04]
+SECTION "analyzed_011adb", ROMX[$5adb], BANK[$04]
 
-Data_04_5add:
-	db $08, $5a, $20, $00, $00
+Data_04_5adb:
+	db $08, $5a, $08, $5a, $20, $00, $00
 
-SECTION "analyzed_011ae5", ROMX[$5ae5], BANK[$04]
+SECTION "analyzed_011ae3", ROMX[$5ae3], BANK[$04]
 
-Data_04_5ae5:
-	db $39, $5a, $20, $00, $00
+Data_04_5ae3:
+	db $39, $5a, $39, $5a, $20, $00, $00
 
-SECTION "analyzed_011af5", ROMX[$5af5], BANK[$04]
+SECTION "analyzed_011af3", ROMX[$5af3], BANK[$04]
 
-Data_04_5af5:
-	db $4f, $58, $20, $00, $00
+Data_04_5af3:
+	db $4f, $58, $4f, $58, $20, $00, $00
 
-SECTION "analyzed_011afd", ROMX[$5afd], BANK[$04]
+SECTION "analyzed_011afb", ROMX[$5afb], BANK[$04]
 
-Data_04_5afd:
-	db $13, $59, $20, $00, $00
+Data_04_5afb:
+	db $80, $58, $13, $59, $20, $00, $00
 
-SECTION "analyzed_011b05", ROMX[$5b05], BANK[$04]
+SECTION "analyzed_011b03", ROMX[$5b03], BANK[$04]
 
-Data_04_5b05:
-	db $b1, $58, $20, $00, $00
+Data_04_5b03:
+	db $b1, $58, $b1, $58, $20, $00, $00
 
-SECTION "analyzed_011b1d", ROMX[$5b1d], BANK[$04]
+SECTION "analyzed_011b1b", ROMX[$5b1b], BANK[$04]
 
-Data_04_5b1d:
-	db $75, $59, $20, $00, $00
+Data_04_5b1b:
+	db $44, $59, $75, $59, $20, $00, $00
 
 SECTION "analyzed_011b2d", ROMX[$5b2d], BANK[$04]
 
@@ -18605,7 +19929,75 @@ Data_04_5b8b:
 	db $10, $02, $07, $03, $01, $0c, $02, $0e, $03, $01, $0b, $02, $07, $03, $01, $0d
 	db $02, $07, $03, $01, $0c, $02, $07, $03, $01, $10, $02, $07, $03, $01, $0c, $02
 	db $0e, $03, $04, $13, $01, $08, $02, $0a, $03, $10, $bf, $5b, $01, $09, $02, $04
-	db $03, $09, $01, $09, $02, $02, $03, $08, $02, $02, $03, $10, $cc, $5b
+	db $03, $09, $01, $09, $02, $02, $03, $08, $02, $02, $03, $10, $cc, $5b, $9b, $5a
+	db $c4, $5a, $22, $23, $00
+
+SECTION "analyzed_011be1", ROMX[$5be1], BANK[$04]
+
+Data_04_5be1:
+	db $ed, $5a, $16, $5b, $22, $23, $00
+
+SECTION "analyzed_011be9", ROMX[$5be9], BANK[$04]
+
+Data_04_5be9:
+	db $3f, $5b, $68, $5b, $22, $23, $00
+
+SECTION "analyzed_011bf1", ROMX[$5bf1], BANK[$04]
+
+Data_04_5bf1:
+	db $91, $5b, $ba, $5b, $22, $23, $00
+
+SECTION "analyzed_011c01", ROMX[$5c01], BANK[$04]
+
+Data_04_5c01:
+	db $35, $5c, $5e, $5c, $22, $23, $00
+
+SECTION "analyzed_011c09", ROMX[$5c09], BANK[$04]
+
+Data_04_5c09:
+	db $87, $5c, $b0, $5c, $22, $23, $00
+
+SECTION "analyzed_011c11", ROMX[$5c11], BANK[$04]
+
+Data_04_5c11:
+	db $d9, $5c, $02, $5d, $22, $23, $00
+
+SECTION "analyzed_011c1b", ROMX[$5c1b], BANK[$04]
+
+Data_04_5c1b:
+	db $54, $5d, $22, $00, $00
+
+SECTION "analyzed_011c25", ROMX[$5c25], BANK[$04]
+
+Data_04_5c25:
+	db $3d, $5c, $63, $5c, $77, $5c, $8e, $5c, $ac, $5c
+
+SECTION "analyzed_011c33", ROMX[$5c33], BANK[$04]
+
+Data_04_5c33:
+	db $b9, $5c
+
+SECTION "analyzed_011c3d", ROMX[$5c3d], BANK[$04]
+
+Data_04_5c3d:
+	db $01, $00, $02, $0a, $03, $01, $02, $02, $0a, $03, $01, $03, $02, $0a, $03, $01
+	db $00, $02, $0a, $03, $01, $01, $02, $0a, $03, $01, $02, $02, $0a, $03, $01, $03
+	db $02, $0a, $03, $10, $3d, $5c, $01, $00, $02, $0a, $03, $01, $05, $02, $0a, $03
+	db $04, $19, $01, $06, $02, $01, $03, $10, $6f, $5c, $01, $03, $02, $0a, $03, $01
+	db $07, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $00, $02, $0a, $03
+
+SECTION "analyzed_011c8e", ROMX[$5c8e], BANK[$04]
+
+Data_04_5c8e:
+	db $01, $00, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $06, $02, $0a, $03, $01
+	db $03, $02, $0a, $03, $04, $19, $01, $07, $02, $01, $03, $10, $a4, $5c, $01, $05
+	db $02, $0a, $03, $01, $00, $02, $0a, $03
+
+SECTION "analyzed_011cb9", ROMX[$5cb9], BANK[$04]
+
+Data_04_5cb9:
+	db $01, $00, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $08, $02, $0a, $03, $09
+	db $01, $08, $02, $02, $03, $08, $02, $02, $03, $10, $c8, $5c
 
 SECTION "analyzed_013fff", ROMX[$7fff], BANK[$04]
 
@@ -19732,9 +21124,9 @@ Func_0f_4684:
 	ld a, [hl+]
 	or a
 	jr nz, Func_0f_4690
-
-SECTION "analyzed_03c690", ROMX[$4690], BANK[$0f]
-
+	ld h, d
+	ld l, e
+	jr Func_0f_4684
 Func_0f_4690:
 	ld [$cf3e], a
 	ld a, e
@@ -19758,7 +21150,8 @@ Func_0f_4690:
 SECTION "analyzed_03c6bb", ROMX[$46bb], BANK[$0f]
 
 Data_0f_46bb:
-	db $ce, $6c, $07, $e6, $6c, $07, $fe, $6c, $07, $16, $6d, $07, $2e, $6d, $07
+	db $ce, $6c, $07, $e6, $6c, $07, $fe, $6c, $07, $16, $6d, $07, $2e, $6d, $07, $46
+	db $6d, $07, $fe, $6c, $07, $5e, $6d, $07, $bb, $46, $00
 
 SECTION "analyzed_03c6d6", ROMX[$46d6], BANK[$0f]
 
@@ -19916,6 +21309,11 @@ SECTION "analyzed_03c802", ROMX[$4802], BANK[$0f]
 
 Data_0f_4802:
 	db $e2, $6e, $ec, $6e, $f6, $6e
+
+SECTION "analyzed_03c80a", ROMX[$480a], BANK[$0f]
+
+Data_0f_480a:
+	db $0a, $6f
 
 SECTION "analyzed_03c80c", ROMX[$480c], BANK[$0f]
 
@@ -20251,12 +21649,7 @@ Data_0f_4a9c:
 SECTION "analyzed_03caa1", ROMX[$4aa1], BANK[$0f]
 
 Data_0f_4aa1:
-	db $36
-
-SECTION "analyzed_03caa6", ROMX[$4aa6], BANK[$0f]
-
-Data_0f_4aa6:
-	db $37
+	db $36, $0e, $9e, $d0, $70, $37
 
 SECTION "analyzed_03caab", ROMX[$4aab], BANK[$0f]
 
@@ -20746,13 +22139,11 @@ Data_0f_6cce:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $03, $03, $25, $6d, $1c, $6d, $51, $59
 	db $61, $52, $5a, $62, $53, $5b, $63, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $03, $03, $3d, $6d, $34, $6d, $54, $5c, $64, $55, $5d, $65, $56, $5e, $66, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08
-
-SECTION "analyzed_03ed76", ROMX[$6d76], BANK[$0f]
-
-Data_0f_6d76:
-	db $02, $04, $84, $6d, $7c, $6d, $fc, $fc, $fc, $fc, $a5, $a5, $a5, $a5, $09, $09
-	db $09, $09, $09, $09, $09, $09
+	db $08, $08, $08, $08, $08, $08, $08, $08, $03, $03, $55, $6d, $4c, $6d, $57, $5f
+	db $67, $68, $70, $78, $69, $71, $79, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $03, $03, $6d, $6d, $64, $6d, $6a, $72, $7a, $6b, $73, $7b, $6c, $74, $7c, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $02, $04, $84, $6d, $7c, $6d, $fc, $fc
+	db $fc, $fc, $a5, $a5, $a5, $a5, $09, $09, $09, $09, $09, $09, $09, $09
 
 SECTION "analyzed_03eeb0", ROMX[$6eb0], BANK[$0f]
 
@@ -20770,6 +22161,11 @@ SECTION "analyzed_03eee2", ROMX[$6ee2], BANK[$0f]
 Data_0f_6ee2:
 	db $02, $01, $ea, $6e, $e8, $6e, $e8, $e9, $08, $08, $02, $01, $f4, $6e, $f2, $6e
 	db $ea, $eb, $08, $08, $02, $01, $fe, $6e, $fc, $6e, $ec, $ed, $08, $08
+
+SECTION "analyzed_03ef0a", ROMX[$6f0a], BANK[$0f]
+
+Data_0f_6f0a:
+	db $02, $01, $12, $6f, $10, $6f, $f0, $f1, $08, $08
 
 SECTION "analyzed_03ef2c", ROMX[$6f2c], BANK[$0f]
 
@@ -20810,6 +22206,11 @@ SECTION "analyzed_03f06e", ROMX[$706e], BANK[$0f]
 
 Data_0f_706e:
 	db $02, $02, $78, $70, $74, $70, $54, $5c, $55, $5d, $02, $02, $02, $02
+
+SECTION "analyzed_03f0d0", ROMX[$70d0], BANK[$0f]
+
+Data_0f_70d0:
+	db $02, $02, $da, $70, $d6, $70, $70, $78, $71, $79, $01, $01, $01, $01
 
 SECTION "analyzed_03f116", ROMX[$7116], BANK[$0f]
 
@@ -20860,12 +22261,12 @@ Func_10_405f:
 SECTION "analyzed_04008c", ROMX[$408c], BANK[$10]
 
 Data_10_408c:
-	db $b7, $60, $37, $61, $b7, $61
+	db $b7, $60, $37, $61, $b7, $61, $37, $62
 
-SECTION "analyzed_0400a0", ROMX[$40a0], BANK[$10]
+SECTION "analyzed_04009e", ROMX[$409e], BANK[$10]
 
-Data_10_40a0:
-	db $b7, $65
+Data_10_409e:
+	db $37, $65, $b7, $65
 
 SECTION "analyzed_0400a4", ROMX[$40a4], BANK[$10]
 
@@ -21249,6 +22650,22 @@ Data_10_61b7:
 	db $ea, $3c, $63, $0c, $ce, $39, $5a, $6b, $ea, $3c, $63, $0c, $26, $12, $9f, $2f
 	db $ea, $3c, $63, $0c, $ff, $00, $9f, $63, $ea, $3c, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
+
+SECTION "analyzed_042237", ROMX[$6237], BANK[$10]
+
+Data_10_6237:
+	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $c2, $11, $63, $0c, $b5, $01, $3d, $3f
+	db $c2, $11, $63, $0c, $ce, $39, $5a, $6b, $c2, $11, $63, $0c, $26, $12, $9f, $2f
+	db $c2, $11, $63, $0c, $ff, $00, $9f, $63, $c2, $11, $63, $0c, $60, $7d, $9f, $63
+	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
+
+SECTION "analyzed_042537", ROMX[$6537], BANK[$10]
+
+Data_10_6537:
+	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $63, $18, $63, $0c, $b5, $01, $3d, $3f
+	db $63, $18, $63, $0c, $ce, $39, $5a, $6b, $63, $18, $63, $0c, $26, $12, $9f, $2f
+	db $63, $18, $63, $0c, $ff, $00, $9f, $63, $63, $18, $63, $0c, $60, $7d, $9f, $63
+	db $00, $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_0425b7", ROMX[$65b7], BANK[$10]
 
@@ -23231,7 +24648,34 @@ Data_12_5055:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $00, $04, $08, $00
+	db $ff, $00, $04, $08, $00, $08, $09, $0a, $11, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $00, $00, $00, $21, $21
+	db $21, $21, $21, $21, $21, $21, $21, $00, $00, $00, $20, $20, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00
+	db $00, $00, $21, $21, $21, $21, $21, $21, $21, $21, $21, $00, $00, $00, $20, $20
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20
+	db $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $14, $15, $16, $17, $00
+	db $40, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $18, $19, $1a, $1b
+	db $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $1c, $1d, $1e
+	db $1f, $00, $00, $00, $00, $00, $00, $20, $20, $30, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $32, $20, $20, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $04, $05, $00
 
 SECTION "analyzed_049906", ROMX[$5906], BANK[$12]
 
@@ -24045,17 +25489,12 @@ Data_15_7fff:
 SECTION "analyzed_058000", ROMX[$4000], BANK[$16]
 
 Data_16_4000:
-	db $7f, $40, $7f, $48, $7f, $50, $7f, $58
+	db $7f, $40, $7f, $48, $7f, $50, $7f, $58, $7f, $60, $7f, $68
 
-SECTION "analyzed_05800a", ROMX[$400a], BANK[$16]
+SECTION "analyzed_058010", ROMX[$4010], BANK[$16]
 
-Data_16_400a:
-	db $7f, $68
-
-SECTION "analyzed_058012", ROMX[$4012], BANK[$16]
-
-Data_16_4012:
-	db $7f, $73
+Data_16_4010:
+	db $7f, $72, $7f, $73
 
 SECTION "analyzed_058016", ROMX[$4016], BANK[$16]
 
@@ -24619,10 +26058,134 @@ Data_16_407f:
 	db $ff, $00, $01, $00, $ff, $00, $10, $00, $ff, $00, $01, $00, $ff, $00, $10, $00
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $00, $00, $00, $00, $00, $00
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_05a87f", ROMX[$687f], BANK[$16]
-
-Data_16_687f:
+	db $ff, $03, $07, $06, $7f, $05, $7e, $05, $ff, $06, $13, $03, $f6, $01, $f7, $01
+	db $ff, $01, $01, $01, $7f, $01, $7f, $01, $ff, $01, $11, $01, $f7, $01, $f6, $01
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $01, $11, $01, $f6, $03, $f3, $07
+	db $f7, $0f, $0e, $0f, $5f, $3f, $3f, $7f, $b8, $7f, $3e, $03, $f7, $01, $f7, $00
+	db $ff, $00, $01, $00, $7f, $07, $7f, $03, $ff, $02, $13, $02, $f7, $02, $f7, $02
+	db $ff, $02, $03, $02, $7f, $04, $7b, $0f, $f2, $1f, $20, $3f, $ff, $3f, $ff, $00
+	db $ff, $00, $01, $00, $7f, $07, $7f, $03, $fe, $03, $12, $03, $f6, $03, $f6, $03
+	db $fe, $03, $02, $03, $7c, $07, $7b, $0f, $f2, $1f, $20, $3f, $ff, $3f, $ff, $00
+	db $3f, $c0, $91, $60, $5f, $a0, $5f, $a0, $9f, $60, $30, $c0, $77, $80, $77, $80
+	db $5f, $e0, $11, $e0, $7f, $80, $5f, $e0, $5f, $e0, $50, $e0, $17, $e0, $77, $80
+	db $ff, $00, $41, $70, $cf, $f0, $9f, $e0, $3f, $c0, $50, $80, $37, $c0, $97, $e0
+	db $cf, $f0, $0d, $f0, $83, $fc, $c1, $fe, $01, $fe, $7f, $80, $77, $80, $f7, $00
+	db $ff, $00, $01, $00, $ff, $c0, $ff, $80, $ff, $80, $d0, $80, $f7, $80, $f7, $80
+	db $ff, $80, $c1, $80, $ff, $40, $3f, $e0, $1f, $f0, $0c, $f8, $ff, $f8, $ff, $00
+	db $ff, $00, $01, $00, $ff, $c0, $ff, $80, $ff, $80, $d0, $80, $f7, $80, $f7, $80
+	db $ff, $80, $c1, $80, $7f, $c0, $3f, $e0, $1f, $f0, $0c, $f8, $ff, $f8, $ff, $00
+	db $ff, $00, $01, $00, $7f, $00, $46, $3f, $ff, $10, $1f, $10, $ff, $10, $f8, $0f
+	db $fe, $07, $01, $01, $7e, $07, $7e, $09, $f2, $1f, $16, $1f, $f0, $1f, $c6, $3f
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f6, $07
+	db $ff, $0f, $19, $1e, $7d, $1e, $7d, $1e, $ff, $30, $7e, $7f, $ff, $7f, $ff, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $07, $02, $7f, $00, $7f, $04, $ff, $04, $1f, $04, $f7, $02, $f7, $00
+	db $ff, $00, $01, $00, $7f, $01, $7f, $01, $ff, $00, $1f, $06, $ff, $04, $ff, $00
+	db $ff, $10, $3f, $10, $7f, $10, $7f, $10, $ff, $08, $1f, $04, $ff, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $07, $f8, $ff, $10, $f8, $10, $ff, $10, $37, $e0
+	db $ff, $c0, $c1, $00, $ff, $c0, $ff, $20, $1f, $f0, $18, $f0, $1f, $f0, $07, $f8
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $37, $c0
+	db $1f, $e0, $89, $f0, $87, $f8, $c7, $f8, $07, $f8, $02, $fc, $83, $fc, $ff, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $50, $40, $f7, $80, $f7, $80
+	db $ff, $00, $e1, $00, $ff, $00, $ff, $00, $ff, $00, $f0, $00, $f7, $00, $f7, $00
+	db $ff, $40, $c1, $c0, $ff, $80, $7f, $00, $ff, $00, $f0, $00, $ff, $00, $ff, $00
+	db $ff, $00, $fd, $00, $ff, $00, $ff, $00, $ff, $00, $f8, $00, $f7, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $01, $7f, $03, $ff, $07, $1f, $0f, $ea, $1f, $f7, $0f
+	db $fb, $07, $0d, $0b, $76, $0d, $7b, $06, $fd, $03, $12, $03, $f5, $06, $fb, $0c
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $18, $7f, $78, $ff, $f4, $ff, $1a, $ff, $07, $17, $03, $f7, $01, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f6, $01
+	db $fd, $03, $03, $07, $78, $07, $79, $17, $fd, $1b, $1f, $0d, $f7, $05, $f7, $01
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $07, $f5, $0f, $eb, $1f
+	db $d5, $3f, $1f, $3f, $6a, $1f, $75, $0f, $fa, $07, $11, $03, $f6, $01, $f7, $00
+	db $ff, $00, $01, $00, $ff, $00, $7f, $80, $3f, $c0, $90, $e0, $0f, $f0, $97, $e0
+	db $3f, $c0, $61, $a0, $df, $60, $bf, $c0, $7f, $80, $d0, $80, $77, $c0, $b7, $60
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $f9, $18, $ff, $2e, $ff, $9f, $ff, $70, $f0, $c0, $f7, $80, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $77, $80
+	db $3f, $c0, $11, $e0, $1f, $e0, $9f, $e8, $ff, $98, $f8, $b0, $f7, $a0, $f7, $80
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $e0, $0f, $f0, $07, $f8
+	db $03, $fc, $c3, $fc, $07, $f8, $0f, $f0, $1f, $e0, $30, $c0, $77, $80, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $fe, $03, $17, $07, $f9, $0e, $f3, $1c
+	db $f7, $18, $15, $18, $77, $18, $73, $1c, $f9, $0e, $14, $07, $f7, $03, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $07, $19, $0f, $f3, $1f, $f6, $1f
+	db $fc, $1f, $18, $1f, $78, $0f, $7c, $07, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $01, $13, $03, $f6, $07, $fc, $0f
+	db $f8, $1f, $30, $3f, $60, $3f, $60, $3f, $f0, $3f, $21, $3e, $ff, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $02, $7f, $02, $ff, $07, $1e, $0f, $fb, $7f, $fb, $0f
+	db $f8, $0f, $38, $3f, $7c, $0f, $7f, $07, $ff, $02, $13, $02, $f7, $02, $f7, $04
+	db $ff, $00, $01, $00, $7f, $00, $7f, $40, $ff, $e0, $70, $f0, $bf, $f8, $df, $7c
+	db $eb, $3c, $17, $1c, $7b, $0c, $7b, $0c, $fb, $0c, $14, $f8, $ef, $f0, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $80, $b0, $c0, $17, $e0, $17, $e0
+	db $1f, $e0, $11, $e0, $3f, $c0, $7f, $80, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $7c, $cb, $fc, $83, $fc, $02, $fc, $03, $fc, $07, $f8
+	db $0f, $f0, $19, $e0, $3f, $c0, $7f, $80, $ff, $00, $90, $00, $f7, $00, $f7, $00
+	db $ff, $80, $61, $40, $7f, $40, $7f, $40, $ff, $e0, $38, $f0, $1f, $fe, $1f, $f0
+	db $1f, $f0, $1f, $ff, $3f, $f0, $ff, $e0, $ff, $40, $70, $40, $f7, $00, $f7, $00
+	db $ff, $07, $08, $0f, $70, $1f, $71, $1f, $f2, $1f, $11, $1f, $f2, $1f, $f8, $0f
+	db $ff, $07, $00, $03, $7d, $02, $7d, $02, $ff, $02, $17, $06, $ff, $0d, $ff, $1b
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f3, $07, $f1, $0f
+	db $e0, $1f, $00, $3f, $40, $3f, $40, $3f, $c0, $3f, $00, $1f, $f1, $0f, $f0, $07
+	db $ff, $3f, $20, $3f, $60, $3f, $67, $3f, $eb, $3f, $37, $3f, $f5, $3f, $f4, $3f
+	db $f3, $3f, $28, $3f, $67, $3f, $60, $3f, $e0, $3f, $3f, $3f, $ff, $00, $ff, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $fe, $01, $10, $03, $f1, $07, $f2, $0f
+	db $e4, $1f, $04, $3f, $44, $3f, $44, $3f, $d4, $3f, $18, $3f, $ea, $1f, $f5, $0e
+	db $3f, $c0, $51, $e0, $af, $f0, $6f, $f0, $af, $f0, $68, $f0, $af, $f0, $57, $e0
+	db $3f, $c0, $21, $c0, $7f, $c0, $ff, $c0, $ff, $c0, $f0, $c0, $f7, $c0, $f7, $80
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $80, $f7, $c0
+	db $ff, $e0, $f9, $f0, $ff, $f0, $ff, $f0, $ff, $f0, $c4, $f8, $93, $ec, $33, $c4
+	db $ff, $f0, $19, $f0, $1f, $f0, $9f, $f0, $5f, $f0, $bc, $f0, $3f, $f0, $ff, $f0
+	db $bf, $f0, $5d, $f0, $9f, $f0, $1f, $f0, $1f, $f0, $fc, $f0, $ff, $00, $ff, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $7f, $80, $b0, $c0, $97, $e0, $6f, $f0
+	db $b7, $f8, $73, $fc, $fb, $fc, $7b, $fc, $bb, $fc, $52, $fc, $a7, $f8, $0f, $f0
+	db $f1, $3f, $61, $5e, $c5, $ba, $89, $f6, $99, $e6, $f0, $8f, $f6, $8f, $e6, $9d
+	db $e6, $9d, $fc, $9f, $ff, $be, $fe, $bf, $ff, $99, $f7, $88, $f8, $47, $ff, $3f
+	db $ff, $00, $36, $03, $6c, $37, $48, $37, $fb, $04, $1f, $03, $ff, $05, $ff, $0d
+	db $ff, $07, $0f, $00, $76, $0b, $7f, $35, $ff, $37, $3f, $0f, $fb, $04, $f7, $00
+	db $3f, $c0, $41, $e0, $6f, $f0, $37, $78, $9b, $7c, $28, $7c, $ad, $7e, $b4, $7f
+	db $b4, $7f, $14, $3f, $58, $3f, $58, $3f, $ec, $1f, $0c, $1f, $f3, $0c, $f7, $00
+	db $ff, $00, $00, $01, $7f, $03, $7f, $05, $ff, $00, $17, $07, $f7, $03, $f7, $01
+	db $fe, $07, $1b, $1d, $77, $39, $67, $39, $ff, $01, $13, $03, $fe, $0f, $fd, $0e
+	db $ff, $fc, $c7, $3a, $a3, $5d, $91, $6f, $99, $67, $0d, $f3, $6f, $f1, $67, $b9
+	db $67, $b9, $3f, $f9, $ff, $7d, $7f, $fd, $ff, $99, $ef, $11, $1f, $e2, $ff, $fc
+	db $ff, $00, $2d, $c0, $17, $ec, $13, $ec, $df, $20, $f0, $c0, $ff, $a0, $ff, $b0
+	db $ff, $e0, $f1, $00, $6f, $d0, $ff, $ac, $ff, $ec, $fc, $f0, $d7, $20, $f7, $00
+	db $f8, $07, $06, $0f, $6d, $1e, $59, $3e, $b5, $7e, $2d, $7e, $5b, $fc, $d5, $fe
+	db $bd, $fe, $bb, $fc, $b7, $f8, $6b, $fc, $f7, $f8, $e8, $f0, $17, $e0, $f7, $00
+	db $ff, $00, $21, $c0, $9f, $e0, $cf, $b0, $cf, $f0, $c8, $f0, $97, $e0, $37, $c0
+	db $2f, $f0, $33, $dc, $b9, $ce, $bd, $ce, $3f, $c0, $90, $e0, $c7, $78, $e7, $38
+	db $ff, $00, $0d, $07, $79, $0f, $79, $0f, $f8, $0f, $37, $18, $cf, $35, $ff, $0d
+	db $ff, $07, $07, $00, $79, $07, $7c, $1b, $fc, $1b, $1b, $04, $f4, $03, $f8, $07
+	db $ff, $00, $20, $3f, $62, $3f, $65, $3f, $e2, $3f, $35, $3f, $f2, $1f, $f5, $1f
+	db $fa, $1f, $09, $0f, $7c, $0f, $7e, $07, $ff, $03, $11, $01, $f7, $00, $f7, $00
+	db $ff, $0f, $30, $3f, $4f, $70, $5f, $6f, $bf, $c9, $bf, $ca, $bf, $d8, $bf, $f7
+	db $bf, $f0, $bf, $d2, $bf, $cd, $5f, $60, $cf, $71, $30, $3f, $ff, $0f, $f7, $00
+	db $ff, $00, $01, $00, $7f, $08, $7f, $32, $ff, $73, $5f, $4e, $ff, $44, $f7, $40
+	db $ff, $40, $55, $40, $7f, $58, $7f, $64, $ff, $22, $11, $01, $f7, $00, $f7, $00
+	db $ff, $00, $31, $e0, $1f, $f0, $1f, $f0, $1f, $f0, $ec, $18, $f3, $ac, $ff, $b0
+	db $ff, $e0, $e1, $00, $1f, $e0, $bf, $d8, $7f, $d8, $d8, $20, $37, $c0, $17, $e0
+	db $ff, $00, $ff, $f8, $ff, $f8, $ff, $f8, $ff, $f8, $fe, $f0, $ff, $f0, $ff, $f0
+	db $ff, $f0, $7d, $e0, $bf, $e0, $5f, $e0, $1f, $e0, $f8, $e0, $ff, $60, $f7, $00
+	db $ff, $e0, $19, $f8, $e7, $1c, $f7, $0c, $fb, $06, $fb, $76, $fb, $86, $fb, $66
+	db $fb, $06, $fb, $c6, $fb, $26, $f7, $8c, $e7, $5c, $1c, $f8, $ff, $e0, $f7, $00
+	db $ff, $00, $01, $00, $7f, $20, $ff, $98, $ff, $9c, $f4, $e4, $ff, $44, $f7, $04
+	db $ff, $04, $55, $04, $ff, $34, $7f, $4c, $ff, $88, $10, $00, $f7, $00, $f7, $00
+	db $f0, $0f, $0f, $3f, $30, $7f, $2f, $7f, $49, $ff, $4a, $ff, $58, $ff, $77, $ff
+	db $70, $ff, $52, $ff, $4d, $ff, $20, $7f, $b1, $7f, $0f, $3f, $f0, $0f, $f7, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $1f, $e0, $e1, $f8, $1b, $fc, $0b, $fc, $05, $fe, $75, $fe, $85, $fe, $65, $fe
+	db $05, $fe, $c5, $fe, $25, $fe, $8b, $fc, $5b, $fc, $e4, $f8, $1f, $e0, $f7, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $ee, $00, $00, $00, $bb, $00, $00, $00, $ee, $00, $00, $00, $bb, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
+	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
 	db $57, $03, $af, $06, $47, $05, $86, $05, $47, $06, $83, $03, $40, $01, $81, $01
 	db $41, $01, $81, $01, $41, $01, $81, $01, $41, $01, $81, $01, $55, $01, $aa, $01
 	db $55, $00, $aa, $00, $40, $00, $80, $00, $41, $01, $81, $01, $42, $03, $83, $07
@@ -24752,9 +26315,25 @@ Data_16_687f:
 	db $55, $00, $aa, $00, $01, $00, $02, $00, $01, $00, $02, $00, $01, $00, $02, $00
 	db $01, $00, $02, $00, $01, $00, $02, $00, $01, $00, $02, $00, $55, $00, $aa, $00
 
-SECTION "analyzed_05b37f", ROMX[$737f], BANK[$16]
+SECTION "analyzed_05b27f", ROMX[$727f], BANK[$16]
 
-Data_16_737f:
+Data_16_727f:
+	db $03, $03, $07, $06, $07, $05, $06, $05, $07, $06, $03, $03, $00, $01, $01, $01
+	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $01
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $20, $c0, $90, $60, $50, $a0, $50, $a0, $90, $60, $20, $c0, $40, $80, $40, $80
+	db $50, $e0, $10, $e0, $60, $80, $50, $e0, $50, $e0, $50, $e0, $10, $e0, $60, $80
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $ff, $03, $07, $06, $07, $05, $06, $05, $ff, $06, $13, $03, $10, $01, $11, $01
 	db $ff, $01, $01, $01, $01, $01, $01, $01, $ff, $01, $11, $01, $11, $01, $10, $01
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -25001,7 +26580,7 @@ Func_17_4135:
 SECTION "analyzed_05c14c", ROMX[$414c], BANK[$17]
 
 Data_17_414c:
-	db $18, $75
+	db $18, $75, $20, $75
 
 SECTION "analyzed_05c156", ROMX[$4156], BANK[$17]
 
@@ -25028,13 +26607,18 @@ Func_17_416c:
 	ld l, a
 	ld a, c
 	cp $01
-	jr z, Data_17_4190
+	jr z, Func_17_4190
 	cp $03
-	jr z, Data_17_4190
+	jr z, Func_17_4190
 	cp $04
-	jr z, Data_17_4190
+	jr z, Func_17_4190
 	ld a, $06
 	ld b, $01
+	call Func_00_0716
+	ret
+Func_17_4190:
+	ld a, $05
+	ld b, $02
 	call Func_00_0716
 	ret
 
@@ -25197,11 +26781,76 @@ Data_17_6118:
 	db $ff, $00, $ff, $00, $00, $ff, $00, $ff, $00, $ff, $00, $fc, $00, $fc, $00, $f8
 	db $0f, $f0, $01, $00, $01, $00, $01, $00, $ff, $00, $f0, $00, $00, $f0, $00, $f0
 	db $0f, $f0, $0f, $f0, $0f, $f0, $01, $fe, $01, $fe, $10, $00, $10, $00, $10, $00
+	db $ff, $ff, $80, $ff, $bf, $ff, $a0, $ff, $a0, $ff, $bf, $e0, $82, $fc, $82, $fc
+	db $82, $fc, $82, $fc, $82, $fc, $82, $fc, $83, $fd, $80, $ff, $80, $ff, $ff, $80
+	db $03, $00, $07, $00, $00, $00, $01, $01, $2e, $33, $44, $3f, $61, $9e, $09, $86
+	db $00, $87, $00, $83, $c0, $bf, $c0, $3f, $03, $80, $30, $87, $0d, $86, $29, $9e
+	db $62, $bd, $4e, $b1, $71, $80, $40, $80, $80, $80, $84, $18, $30, $1e, $10, $3e
+	db $e2, $3c, $00, $fc, $06, $f8, $01, $fe, $00, $ff, $90, $7f, $e4, $1f, $79, $07
+	db $a2, $c1, $21, $c0, $42, $80, $41, $82, $04, $87, $89, $0e, $12, $1c, $64, $38
+	db $08, $70, $10, $20, $00, $00, $00, $00, $03, $03, $00, $03, $01, $00, $00, $00
+	db $ff, $ff, $01, $fe, $fd, $fe, $05, $fa, $05, $fa, $fd, $02, $41, $7e, $41, $7e
+	db $41, $7e, $41, $7e, $41, $7e, $41, $7e, $c1, $fe, $01, $fe, $01, $fe, $ff, $00
+	db $ff, $00, $fe, $00, $fd, $00, $3e, $00, $1c, $81, $9a, $00, $3c, $01, $19, $02
+	db $9a, $00, $84, $00, $72, $f0, $03, $f0, $82, $00, $04, $00, $27, $0a, $29, $01
+	db $2d, $00, $8b, $83, $08, $80, $2c, $00, $6c, $00, $00, $00, $63, $0c, $6f, $00
+	db $00, $00, $00, $00, $05, $06, $88, $0f, $70, $9f, $20, $ff, $01, $fe, $02, $fc
+	db $84, $f8, $42, $fc, $a3, $7c, $61, $3e, $10, $3f, $30, $1f, $08, $1f, $18, $0f
+	db $08, $0f, $0c, $0f, $24, $0f, $2c, $07, $c4, $e7, $00, $e7, $c7, $00, $00, $ff
+	db $ff, $ff, $80, $ff, $80, $ff, $83, $fc, $82, $fc, $82, $fc, $82, $fc, $82, $fc
+	db $82, $fc, $82, $fc, $bf, $ff, $a0, $ff, $a0, $ff, $bf, $e0, $80, $ff, $ff, $80
+	db $ff, $00, $47, $20, $03, $90, $25, $50, $19, $e4, $68, $c0, $42, $80, $88, $04
+	db $b1, $00, $0b, $90, $47, $00, $0f, $00, $93, $90, $f1, $a0, $64, $fc, $e8, $f0
+	db $d0, $e8, $3c, $c4, $a0, $51, $92, $93, $06, $07, $0c, $0f, $d8, $1f, $81, $3e
+	db $1a, $04, $0c, $00, $04, $00, $81, $00, $5f, $80, $9f, $00, $1f, $00, $07, $08
+	db $00, $00, $00, $00, $38, $18, $64, $f8, $00, $fc, $00, $fc, $18, $e0, $40, $80
+	db $00, $c0, $20, $c0, $20, $c0, $00, $e0, $1d, $fe, $01, $fe, $ff, $00, $ff, $ff
+	db $ff, $ff, $01, $fe, $01, $fe, $c1, $3e, $41, $7e, $41, $7e, $41, $7e, $41, $7e
+	db $41, $7e, $41, $7e, $fd, $fe, $05, $fa, $05, $fa, $fd, $02, $01, $fe, $ff, $00
+	db $9f, $40, $df, $40, $df, $40, $df, $40, $df, $41, $df, $41, $02, $41, $13, $ca
+	db $c2, $82, $94, $82, $b6, $84, $b4, $84, $28, $84, $20, $88, $08, $80, $98, $00
+	db $80, $11, $91, $00, $23, $07, $a6, $0f, $c6, $03, $61, $80, $80, $00, $00, $00
+	db $00, $00, $01, $00, $04, $03, $85, $43, $c3, $01, $c0, $01, $c0, $00, $c0, $04
+	db $80, $44, $c2, $04, $c2, $04, $82, $44, $82, $44, $02, $04, $02, $04, $02, $04
+	db $02, $04, $02, $04, $02, $04, $02, $04, $02, $04, $02, $04, $02, $04, $ff, $ff
+	db $ff, $ff, $80, $ff, $bf, $ff, $a0, $ff, $a0, $ff, $bf, $e0, $82, $fc, $82, $fc
+	db $82, $fc, $82, $fc, $82, $fc, $82, $fc, $83, $fd, $80, $ff, $80, $ff, $ff, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80
+	db $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $00, $80, $83, $e0
+	db $ff, $ff, $01, $fe, $fd, $fe, $05, $fa, $05, $fa, $fd, $02, $41, $7e, $41, $7e
+	db $41, $7e, $41, $7e, $41, $7e, $41, $7e, $c1, $fe, $01, $fe, $01, $fe, $ff, $00
+	db $c0, $01, $81, $02, $03, $01, $06, $0f, $0c, $1f, $1d, $3e, $3a, $41, $70, $3c
+	db $c4, $f8, $88, $f0, $b0, $c0, $40, $20, $02, $80, $87, $00, $0f, $00, $05, $02
+	db $02, $01, $01, $00, $40, $00, $e0, $00, $f0, $00, $f8, $00, $3c, $80, $78, $00
+	db $f0, $00, $e0, $00, $c0, $00, $01, $80, $02, $01, $05, $02, $13, $0c, $8f, $70
+	db $7e, $00, $78, $00, $00, $00, $00, $00, $fc, $00, $fc, $00, $fc, $00, $fc, $00
+	db $00, $c0, $c0, $00, $c1, $00, $c0, $01, $02, $01, $03, $01, $01, $00, $00, $ff
+	db $ff, $ff, $80, $ff, $80, $ff, $83, $fc, $82, $fc, $82, $fc, $82, $fc, $82, $fc
+	db $82, $fc, $82, $fc, $bf, $ff, $a0, $ff, $a0, $ff, $bf, $e0, $80, $ff, $ff, $80
+	db $ec, $f0, $d0, $08, $80, $e0, $24, $c0, $44, $80, $84, $00, $04, $00, $3d, $00
+	db $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $00, $84, $00, $c4, $00
+	db $e4, $00, $64, $80, $70, $80, $b1, $40, $31, $40, $31, $40, $42, $01, $32, $43
+	db $b3, $42, $b0, $42, $77, $80, $62, $85, $e3, $05, $c5, $03, $9d, $06, $3e, $08
+	db $28, $0a, $0c, $0a, $0a, $14, $1c, $28, $08, $28, $08, $30, $70, $20, $64, $50
+	db $a4, $d0, $84, $a0, $6c, $80, $cc, $40, $4c, $40, $cc, $80, $dd, $00, $00, $ff
+	db $ff, $ff, $01, $fe, $01, $fe, $c1, $3e, $41, $7e, $41, $7e, $41, $7e, $41, $7e
+	db $41, $7e, $41, $7e, $fd, $fe, $05, $fa, $05, $fa, $fd, $02, $01, $fe, $ff, $00
+	db $00, $60, $00, $30, $00, $18, $20, $2c, $40, $26, $60, $1b, $58, $11, $57, $11
+	db $61, $31, $71, $41, $41, $51, $01, $51, $c1, $31, $b1, $21, $81, $21, $c1, $61
+	db $e1, $81, $81, $a1, $01, $a1, $21, $c1, $c3, $83, $81, $83, $03, $81, $83, $03
+	db $03, $83, $03, $83, $01, $83, $07, $01, $01, $05, $03, $05, $03, $03, $07, $05
+	db $07, $05, $05, $03, $03, $05, $0d, $07, $0d, $0b, $0d, $0b, $03, $0d, $0d, $15
+	db $09, $15, $11, $19, $31, $29, $19, $21, $31, $53, $22, $a6, $c4, $0c, $00, $f8
 
 SECTION "analyzed_05f518", ROMX[$7518], BANK[$17]
 
 Data_17_7518:
-	db $4a, $29, $00, $00, $a4, $20, $ab, $18
+	db $4a, $29, $00, $00, $a4, $20, $ab, $18, $63, $18, $c7, $30, $69, $41, $71, $52
+	db $00, $00, $8c, $31, $94, $52, $bd, $77
 
 SECTION "analyzed_05f558", ROMX[$7558], BANK[$17]
 
@@ -25519,52 +27168,7 @@ Func_18_6082:
 SECTION "analyzed_06208c", ROMX[$608c], BANK[$18]
 
 Data_18_608c:
-	db $0a, $e2, $d0, $01, $83, $64, $01, $82, $99, $10, $04, $0a, $e3, $d0, $01, $f9
-	db $60, $07, $6e, $5f, $18, $4e, $6f, $62, $6f, $64, $79, $20, $73, $65, $65, $6d
-	db $73, $0d, $74, $6f, $20, $62, $65, $20, $68, $65, $72, $65, $2e, $04, $4f, $68
-	db $21, $0d, $54, $68, $65, $72, $65, $27, $73, $20, $61, $20, $6e, $6f, $74, $65
-	db $21, $04, $07, $cb, $5f, $18, $4c, $69, $6e, $6b, $20, $66, $75, $6e, $63, $74
-	db $69, $6f, $6e, $0d, $73, $65, $65, $6d, $73, $20, $75, $73, $61, $62, $6c, $65
-	db $2e, $04, $09, $e3, $d0, $01, $07, $71, $5f, $18, $06, $fd, $60
-
-SECTION "analyzed_0620fd", ROMX[$60fd], BANK[$18]
-
-Data_18_60fd:
-	db $57, $68, $61, $74, $20, $77, $6f, $75, $6c, $64, $20, $79, $6f, $75, $0d, $6c
-	db $69, $6b, $65, $20, $74, $6f, $20, $70, $6c, $61, $79, $3f, $07, $50, $5f, $1f
-	db $07, $bf, $5f, $18, $02, $08, $ff, $d5, $2b, $61, $90, $61, $6b, $64, $4f, $4b
-	db $2e, $20, $4c, $65, $74, $27, $73, $20, $65, $6e, $74, $65, $72, $0d, $74, $68
-	db $65, $20, $72, $6f, $6f, $6d, $2c, $20, $74, $68, $65, $6e, $2e, $04, $07, $f7
-	db $18, $00, $07, $6e, $5f, $18, $0a, $c0, $c2, $04, $6d, $61, $0a, $c0, $c2, $05
-	db $6d, $61
-
-SECTION "analyzed_06216d", ROMX[$616d], BANK[$18]
-
-Data_18_616d:
-	db $44, $6f, $6e, $65, $2e, $20, $4f, $4b, $2c, $20, $6c, $65, $74, $27, $73, $0d
-	db $6c, $65, $61, $76, $65, $20, $74, $68, $65, $20, $72, $6f, $6f, $6d, $2e, $04
-	db $06, $fd, $60, $4f, $6b, $61, $79, $2e, $20, $4c, $65, $74, $20, $6d, $65, $20
-	db $74, $72, $79, $0d, $74, $68, $65, $20, $65, $78, $63, $68, $61, $6e, $67, $65
-	db $2e, $03, $09, $c2, $d5, $00, $07, $40, $40, $31, $02, $08, $c2, $d5
-
-SECTION "analyzed_0621bf", ROMX[$61bf], BANK[$18]
-
-Data_18_61bf:
-	db $03, $62
-
-SECTION "analyzed_062203", ROMX[$6203], BANK[$18]
-
-Data_18_6203:
-	db $59, $6f, $75, $20, $64, $6f, $6e, $27, $74, $20, $73, $65, $65, $6d, $0d, $72
-	db $65, $61, $64, $79, $20, $79, $65, $74, $2e, $04, $43, $6f, $6e, $6e, $65, $63
-	db $74, $20, $74, $68, $65, $0d, $4c, $69, $6e, $6b, $20, $43, $61, $62, $6c, $65
-	db $21, $04, $06, $fd, $60
-
-SECTION "analyzed_06246b", ROMX[$646b], BANK[$18]
-
-Data_18_646b:
-	db $49, $20, $73, $68, $6f, $75, $6c, $64, $20, $73, $74, $6f, $70, $0d, $66, $6f
-	db $72, $20, $6e, $6f, $77, $2e, $04, $ff
+	db $0a, $e2, $d0, $01, $83, $64
 
 SECTION "analyzed_062b71", ROMX[$6b71], BANK[$18]
 
@@ -28280,12 +29884,23 @@ Func_1f_40f3:
 	ld a, [$c2c0]
 	cp $01
 	jr z, Func_1f_4121
+	cp $02
+	jr z, Func_1f_4133
 
 SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
 Func_1f_4121:
 	ld a, $1f
 	ld hl, $417b
+	call Func_00_042e
+	push af
+	ld a, $28
+	call Func_00_0a63
+	pop af
+	jp Func_00_3957
+Func_1f_4133:
+	ld a, $1f
+	ld hl, $4416
 	call Func_00_042e
 	push af
 	ld a, $28
@@ -28441,6 +30056,188 @@ Data_1f_42b1:
 	db $20, $69, $66, $20, $79, $6f, $75, $0d, $62, $65, $61, $74, $20, $6d, $65, $2e
 	db $2e, $2e, $04, $53, $74, $72, $6f, $6e, $67, $65, $72, $20, $67, $75, $79, $73
 	db $0d, $61, $72, $65, $20, $75, $70, $20, $68, $65, $72, $65, $21, $04, $ff
+
+SECTION "analyzed_07c416", ROMX[$4416], BANK[$1f]
+
+Func_1f_4416:
+	call Func_00_0822
+	call Func_00_0bd7
+	call Func_00_3971
+	ld a, $00
+	ld [rVBK], a
+	ld a, $35
+	ld hl, $4000
+	ld de, $9000
+	ld bc, $0800
+	call Func_00_392d
+	ld a, $01
+	ld [rVBK], a
+	ld a, $35
+	ld hl, $4800
+	ld de, $8000
+	ld bc, $1800
+	call Func_00_392d
+	ld hl, $6080
+	ld a, $35
+	ld de, $9800
+	call Func_00_3942
+	call Func_1f_44ca
+	call Func_00_0bf1
+	ld a, $35
+	ld hl, $6000
+	ld de, $c101
+	ld bc, $0030
+	call Func_00_3913
+	ld a, $35
+	ld hl, $6040
+	ld de, $c141
+	ld bc, $0030
+	call Func_00_3913
+	call Func_1f_41da
+	call Func_1f_41e6
+	push af
+	ld a, $36
+	call Func_00_0a63
+	pop af
+	call Func_1f_4008
+	ld hl, $45a5
+	jp Func_00_39c0
+	call Func_1f_4497
+	call Func_1f_41e6
+	jp Func_1f_40d9
+	call Func_1f_4497
+	jp Func_1f_40f1
+Func_1f_4497:
+	ld a, $35
+	ld hl, $6000
+	ld de, $c181
+	ld bc, $0030
+	call Func_00_3913
+	ld de, $c131
+	ld hl, $c1b1
+	ld c, $10
+	call Func_00_030b
+	ld a, $35
+	ld hl, $6040
+	ld de, $c1c1
+	ld bc, $0030
+	call Func_00_3913
+	ld de, $c171
+	ld hl, $c1f1
+	ld c, $10
+	call Func_00_030b
+	ret
+Func_1f_44ca:
+	ld a, $ca
+	ld [$d61e], a
+	ld a, $44
+	ld [$d61f], a
+	ld a, $1f
+	ld [$d620], a
+	ld a, $35
+	ld [$c100], a
+	ld hl, $6508
+	ld bc, $5068
+	call Func_00_0c09
+	ld hl, $6531
+	ld bc, $1039
+	call Func_00_0c09
+Func_1f_44f0:
+	ld a, [rLY]
+	cp $50
+	jr nz, Func_1f_44f0
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $1f
+	ld [hl], a
+	srl a
+	srl a
+	srl a
+	cp $00
+	jr z, Func_1f_4515
+	cp $01
+	jr z, Func_1f_4545
+	cp $02
+	jr z, Func_1f_4575
+	cp $03
+	jr z, Func_1f_4545
+Func_1f_4515:
+	ld hl, $623e
+	ld a, $35
+	ld de, $984b
+	call Func_00_3942
+	ld hl, $62d4
+	ld bc, $405a
+	call Func_00_0c09
+	ld hl, $62e5
+	ld bc, $3890
+	call Func_00_0c09
+	ld hl, $62f6
+	ld bc, $2068
+	call Func_00_0c09
+	ld hl, $6327
+	ld bc, $2088
+	call Func_00_0c09
+	ret
+Func_1f_4545:
+	ld hl, $6334
+	ld a, $35
+	ld de, $984b
+	call Func_00_3942
+	ld hl, $63ca
+	ld bc, $4060
+	call Func_00_0c09
+	ld hl, $63db
+	ld bc, $3898
+	call Func_00_0c09
+	ld hl, $63e4
+	ld bc, $2068
+	call Func_00_0c09
+	ld hl, $6415
+	ld bc, $2088
+	call Func_00_0c09
+	ret
+Func_1f_4575:
+	ld hl, $6422
+	ld a, $35
+	ld de, $984b
+	call Func_00_3942
+	ld hl, $64b8
+	ld bc, $4063
+	call Func_00_0c09
+	ld hl, $64c1
+	ld bc, $409a
+	call Func_00_0c09
+	ld hl, $64ca
+	ld bc, $2068
+	call Func_00_0c09
+	ld hl, $64fb
+	ld bc, $2088
+	call Func_00_0c09
+	ret
+
+SECTION "analyzed_07c5a5", ROMX[$45a5], BANK[$1f]
+
+Data_1f_45a5:
+	db $0a, $0f, $d6, $01, $46, $46, $0a, $0f, $d6, $02, $b6, $46, $01, $82, $99, $10
+	db $04, $4f, $68, $3f, $0d, $49, $20, $68, $61, $76, $65, $6e, $27, $74, $20, $68
+	db $61, $64, $20, $61, $04, $67, $75, $65, $73, $74, $20, $69, $6e, $20, $61, $20
+	db $77, $68, $69, $6c, $65, $04, $54, $68, $61, $74, $20, $6d, $65, $61, $6e, $73
+	db $0d, $4b, $61, $6c, $75, $6d, $20, $6c, $6f, $73, $74, $2e, $04, $49, $20, $67
+	db $75, $65, $73, $73, $20, $79, $6f, $75, $27, $72, $65, $0d, $70, $72, $65, $74
+	db $74, $79, $20, $67, $6f, $6f, $64, $2e, $04, $46, $65, $72, $69, $6f, $75, $73
+	db $20, $69, $73, $6e, $27, $74, $0d, $65, $61, $73, $79, $20, $74, $6f, $20, $64
+	db $65, $66, $65, $61, $74, $21, $04, $46, $65, $72, $69, $6f, $75, $73, $21, $20
+	db $43, $6f, $6d, $65, $21, $03, $07, $88, $44, $1f, $07, $91, $44, $1f, $10, $5a
+	db $ff, $49, $2e, $2e, $2e, $20, $6c, $6f, $73, $74, $3f, $04, $44, $6f, $6e, $27
+	db $74, $20, $62, $6f, $61, $73, $74, $0d, $73, $6f, $20, $73, $6f, $6f, $6e, $21
+	db $04, $59, $6f, $75, $20, $64, $69, $64, $6e, $27, $74, $20, $62, $65, $61, $74
+	db $0d, $61, $6e, $79, $62, $6f, $64, $79, $20, $65, $6c, $73, $65, $20, $79, $65
+	db $74, $04, $4e, $6f, $77, $2c, $0d, $79, $6f, $75, $20, $63, $61, $6e, $20, $67
+	db $6f, $21, $04, $49, $27, $6c, $6c, $20, $6c, $65, $74, $20, $79, $6f, $75, $0d
+	db $70, $61, $73, $73, $20, $74, $68, $69, $73, $20, $74, $69, $6d, $65, $2e, $04
+	db $ff
 
 SECTION "analyzed_07d855", ROMX[$5855], BANK[$1f]
 
@@ -32717,13 +34514,10 @@ Data_23_759c:
 SECTION "analyzed_08faac", ROMX[$7aac], BANK[$23]
 
 Data_23_7aac:
-	db $02, $01, $b4, $7a, $b2, $7a, $38, $39, $0d, $0d
-
-SECTION "analyzed_08fac0", ROMX[$7ac0], BANK[$23]
-
-Data_23_7ac0:
-	db $02, $01, $c8, $7a, $c6, $7a, $78, $79, $05, $05, $02, $01, $d2, $7a, $d0, $7a
-	db $00, $01, $0d, $0d, $02, $01, $dc, $7a, $da, $7a, $08, $09, $0d, $0d
+	db $02, $01, $b4, $7a, $b2, $7a, $38, $39, $0d, $0d, $02, $01, $be, $7a, $bc, $7a
+	db $70, $71, $05, $05, $02, $01, $c8, $7a, $c6, $7a, $78, $79, $05, $05, $02, $01
+	db $d2, $7a, $d0, $7a, $00, $01, $0d, $0d, $02, $01, $dc, $7a, $da, $7a, $08, $09
+	db $0d, $0d, $02, $01, $e6, $7a, $e4, $7a, $10, $11, $0d, $0d
 
 SECTION "analyzed_08fb6a", ROMX[$7b6a], BANK[$23]
 
@@ -32735,12 +34529,7 @@ SECTION "analyzed_08fb90", ROMX[$7b90], BANK[$23]
 
 Data_23_7b90:
 	db $2a, $7a, $34, $7a, $3e, $7a, $48, $7a, $52, $7a, $5c, $7a, $66, $7a, $70, $7a
-	db $7a, $7a, $84, $7a, $ac, $7a
-
-SECTION "analyzed_08fba8", ROMX[$7ba8], BANK[$23]
-
-Data_23_7ba8:
-	db $c0, $7a, $ca, $7a, $d4, $7a
+	db $7a, $7a, $84, $7a, $ac, $7a, $b6, $7a, $c0, $7a, $ca, $7a, $d4, $7a, $de, $7a
 
 SECTION "analyzed_08ffff", ROMX[$7fff], BANK[$23]
 
@@ -33204,7 +34993,27 @@ Data_24_597f:
 	db $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a
 	db $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a
 	db $0a, $2a, $0a, $02, $02, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $02, $02, $0a
-	db $0a, $0a, $0a, $2a
+	db $0a, $0a, $0a, $2a, $12, $09, $bb, $5c, $19, $5c, $31, $4f, $36, $4f, $3c, $44
+	db $4c, $54, $32, $32, $4f, $36, $4f, $3d, $45, $4d, $55, $31, $31, $4f, $36, $4f
+	db $3b, $42, $4a, $52, $32, $33, $4f, $36, $4f, $3e, $43, $4b, $53, $32, $34, $7a
+	db $02, $0a, $38, $40, $48, $50, $32, $35, $7b, $03, $0b, $39, $41, $49, $51, $31
+	db $32, $4f, $36, $4f, $3c, $44, $4c, $54, $33, $32, $4f, $36, $4f, $3d, $45, $4d
+	db $55, $34, $32, $4f, $36, $4f, $3b, $42, $4a, $52, $35, $32, $4f, $36, $4f, $3e
+	db $43, $4b, $53, $32, $32, $78, $00, $08, $38, $40, $48, $50, $32, $32, $79, $01
+	db $09, $39, $41, $49, $51, $32, $32, $4f, $36, $4f, $3b, $42, $4a, $52, $32, $32
+	db $4f, $36, $4f, $58, $60, $68, $70, $32, $32, $4f, $36, $4f, $59, $61, $69, $71
+	db $32, $32, $4f, $36, $4f, $5a, $62, $6a, $72, $31, $32, $66, $6e, $76, $38, $40
+	db $48, $50, $32, $2c, $67, $6f, $77, $39, $41, $49, $51, $32, $0a, $02, $0a, $02
+	db $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02
+	db $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a
+	db $0a, $02, $0a, $0a, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $0a, $0a, $0a, $0a
+	db $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a
+	db $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a
+	db $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $0a, $0a, $0a, $0a, $0a, $2a, $0a
+	db $02, $0a, $0a, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a
+	db $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a
+	db $0a, $0a, $2a, $0a, $02, $0a, $02, $0a, $0a, $0a, $0a, $2a, $0a, $02, $02, $02
+	db $0a, $0a, $0a, $0a, $2a, $0a, $02, $02, $02, $0a, $0a, $0a, $0a, $2a
 
 SECTION "analyzed_09253d", ROMX[$653d], BANK[$24]
 
@@ -33220,7 +35029,7 @@ Data_24_653d:
 SECTION "analyzed_0925bf", ROMX[$65bf], BANK[$24]
 
 Data_24_65bf:
-	db $7f, $59, $c9, $5a
+	db $7f, $59, $c9, $5a, $13, $5c
 
 SECTION "analyzed_0925d9", ROMX[$65d9], BANK[$24]
 
@@ -38647,6 +40456,92 @@ Data_2d_6695:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff
 
+SECTION "analyzed_0b68da", ROMX[$68da], BANK[$2d]
+
+Data_2d_68da:
+	db $12, $05, $08, $00, $05, $02, $0a, $0b, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $00, $22, $22, $00, $00, $00, $22, $22, $00, $20, $20, $22
+	db $00, $00, $22, $00, $22, $00, $00, $22, $20, $20, $22, $00, $00, $22, $00, $22
+	db $00, $00, $22, $20, $20, $00, $22, $22, $00, $00, $00, $22, $22, $00, $20, $20
+	db $00, $22, $22, $00, $00, $00, $22, $22, $00, $20, $20, $22, $00, $00, $22, $00
+	db $22, $00, $00, $22, $20, $20, $22, $00, $00, $22, $00, $22, $00, $00, $22, $20
+	db $20, $00, $22, $22, $00, $00, $00, $22, $22, $00, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $d4, $00, $00, $00, $00, $00, $00, $00, $d3, $20, $20, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $20, $20, $00, $40, $00, $00, $00, $00, $d3, $00
+	db $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00
+	db $00, $00, $c9, $00, $00, $00, $00, $20, $20, $00, $00, $d2, $00, $00, $00, $00
+	db $c0, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $d1
+	db $00, $00, $00, $00, $00, $00, $00, $d1, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $09, $01, $02, $0e, $07, $07, $21, $04, $00, $02, $07, $22
+	db $02, $00, $03, $02, $21, $05, $00, $08, $02, $22, $03, $00, $ff, $ff, $ff, $01
+	db $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff
+	db $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff
+
+SECTION "analyzed_0b6b1f", ROMX[$6b1f], BANK[$2d]
+
+Data_2d_6b1f:
+	db $3c, $03, $01, $00, $01, $02, $0e, $11, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $21, $21, $21, $21, $21
+	db $22, $22, $21, $21, $21, $21, $22, $21, $21, $21, $20, $20, $00, $00, $00, $00
+	db $22, $22, $22, $22, $22, $00, $00, $22, $00, $00, $00, $20, $20, $00, $00, $00
+	db $00, $21, $21, $21, $21, $21, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00
+	db $00, $22, $00, $00, $00, $00, $00, $00, $00, $00, $00, $22, $22, $20, $20, $00
+	db $00, $22, $00, $00, $00, $00, $00, $00, $22, $00, $22, $22, $22, $22, $20, $20
+	db $00, $22, $00, $00, $00, $00, $00, $00, $00, $00, $21, $00, $00, $00, $00, $20
+	db $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $21, $00, $00, $00, $00
+	db $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $21, $00, $00, $00
+	db $00, $20, $20, $22, $00, $22, $22, $22, $22, $00, $00, $00, $00, $21, $00, $00
+	db $00, $00, $20, $20, $00, $22, $00, $00, $00, $00, $22, $00, $21, $00, $21, $22
+	db $22, $22, $22, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $21
+	db $22, $22, $00, $22, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $00, $40, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $cf, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $c9, $00, $20, $20, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $8c, $00, $20, $20, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20
+	db $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $c7, $20, $20, $00, $c2, $00, $00, $00, $00, $d5, $00, $c0, $00, $00, $90, $85
+	db $42, $e0, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $00, $01, $02, $0e, $0f, $01, $22, $00, $01, $0a, $05, $22
+	db $00, $01, $0c, $0a, $22, $00, $01, $01, $09, $22, $00, $01, $06, $0c, $22, $00
+	db $02, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff
+	db $ff, $ff, $ff, $01, $ff, $0e, $0c, $02, $00, $02, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $3d, $01, $01, $00, $04, $03, $0a, $0b, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $00, $21, $00, $00, $00, $00, $00
+	db $00, $00, $20, $20, $00, $21, $22, $22, $22, $22, $21, $22, $00, $20, $20, $00
+	db $21, $00, $00, $00, $00, $21, $00, $22, $20, $20, $00, $21, $00, $00, $00, $00
+	db $21, $22, $00, $20, $20, $00, $21, $21, $21, $00, $21, $21, $00, $22, $20, $20
+	db $00, $21, $00, $22, $00, $00, $21, $22, $00, $20, $20, $00, $21, $00, $21, $00
+	db $21, $21, $00, $22, $20, $20, $00, $00, $22, $00, $22, $00, $00, $22, $00, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $20, $20, $00, $00, $c0, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00
+	db $40, $00, $00, $c2, $00, $00, $00, $20, $20, $00, $00, $91, $00, $00, $00, $00
+	db $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $20
+	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $00, $01, $02, $0e, $08, $05, $22
+	db $00, $01, $08, $03, $22, $00, $01, $08, $01, $22, $00, $01, $ff, $ff, $ff, $01
+	db $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff
+	db $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+
 SECTION "analyzed_0b7fff", ROMX[$7fff], BANK[$2d]
 
 Data_2d_7fff:
@@ -42789,6 +44684,617 @@ SECTION "analyzed_0cffff", ROMX[$7fff], BANK[$33]
 Data_33_7fff:
 	db $33
 
+SECTION "analyzed_0d4000", ROMX[$4000], BANK[$35]
+
+Data_35_4000:
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $18, $18, $18, $18, $00, $00
+	db $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $00, $00, $18, $18
+	db $38, $38, $6c, $6c, $c6, $c6, $c6, $c6, $fe, $fe, $c6, $c6, $c6, $c6, $00, $00
+	db $fc, $fc, $c6, $c6, $c6, $c6, $fc, $fc, $c6, $c6, $c6, $c6, $fc, $fc, $00, $00
+	db $3c, $3c, $66, $66, $c0, $c0, $c0, $c0, $c0, $c0, $66, $66, $3c, $3c, $00, $00
+	db $f8, $f8, $cc, $cc, $c6, $c6, $c6, $c6, $c6, $c6, $cc, $cc, $f8, $f8, $00, $00
+	db $fe, $fe, $c0, $c0, $c0, $c0, $fc, $fc, $c0, $c0, $c0, $c0, $fe, $fe, $00, $00
+	db $fe, $fe, $c0, $c0, $c0, $c0, $fc, $fc, $c0, $c0, $c0, $c0, $c0, $c0, $00, $00
+	db $3c, $3c, $62, $62, $c0, $c0, $c0, $c0, $ce, $ce, $66, $66, $3a, $3a, $00, $00
+	db $c6, $c6, $c6, $c6, $c6, $c6, $fe, $fe, $c6, $c6, $c6, $c6, $c6, $c6, $00, $00
+	db $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $18, $00, $00
+	db $7e, $7e, $0c, $0c, $0c, $0c, $0c, $0c, $8c, $8c, $9c, $9c, $78, $78, $00, $00
+	db $c6, $c6, $cc, $cc, $d8, $d8, $f0, $f0, $f8, $f8, $dc, $dc, $ce, $ce, $00, $00
+	db $70, $70, $70, $70, $70, $70, $70, $70, $70, $70, $70, $70, $7e, $7e, $00, $00
+	db $c6, $c6, $ee, $ee, $fe, $fe, $fe, $fe, $d6, $d6, $c6, $c6, $c6, $c6, $00, $00
+	db $c6, $c6, $e6, $e6, $f6, $f6, $fe, $fe, $de, $de, $ce, $ce, $c6, $c6, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $7c, $7c, $00, $00
+	db $fc, $fc, $c6, $c6, $c6, $c6, $c6, $c6, $fc, $fc, $c0, $c0, $c0, $c0, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $c6, $c6, $f6, $f6, $ce, $ce, $7c, $7c, $00, $00
+	db $fc, $fc, $c6, $c6, $c6, $c6, $c6, $c6, $fc, $fc, $c6, $c6, $c6, $c6, $00, $00
+	db $7c, $7c, $c6, $c6, $c0, $c0, $7c, $7c, $06, $06, $c6, $c6, $7c, $7c, $00, $00
+	db $fc, $fc, $30, $30, $30, $30, $30, $30, $30, $30, $30, $30, $30, $30, $00, $00
+	db $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $7c, $7c, $00, $00
+	db $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $c6, $6c, $6c, $38, $38, $00, $00
+	db $c6, $c6, $c6, $c6, $c6, $c6, $d6, $d6, $fe, $fe, $fe, $fe, $6c, $6c, $00, $00
+	db $c6, $c6, $ee, $ee, $7c, $7c, $38, $38, $7c, $7c, $ee, $ee, $c6, $c6, $00, $00
+	db $c6, $c6, $c6, $c6, $c6, $c6, $7c, $7c, $38, $38, $38, $38, $38, $38, $00, $00
+	db $fe, $fe, $0e, $0e, $1c, $1c, $38, $38, $70, $70, $e0, $e0, $fe, $fe, $00, $00
+	db $7c, $7c, $c6, $c6, $ce, $ce, $d6, $d6, $e6, $e6, $c6, $c6, $7c, $7c, $00, $00
+	db $30, $30, $70, $70, $30, $30, $30, $30, $30, $30, $30, $30, $78, $78, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $0c, $0c, $30, $30, $60, $60, $fe, $fe, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $1c, $1c, $c6, $c6, $c6, $c6, $7c, $7c, $00, $00
+	db $1c, $1c, $3c, $3c, $6c, $6c, $4c, $4c, $cc, $cc, $fe, $fe, $0c, $0c, $00, $00
+	db $fe, $fe, $c0, $c0, $fc, $fc, $06, $06, $06, $06, $c6, $c6, $7c, $7c, $00, $00
+	db $7c, $7c, $c6, $c6, $c0, $c0, $fc, $fc, $c6, $c6, $c6, $c6, $7c, $7c, $00, $00
+	db $fe, $fe, $c6, $c6, $c6, $c6, $0c, $0c, $18, $18, $30, $30, $30, $30, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $7c, $7c, $c6, $c6, $c6, $c6, $7c, $7c, $00, $00
+	db $7c, $7c, $c6, $c6, $c6, $c6, $7e, $7e, $06, $06, $c6, $c6, $7c, $7c, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $18, $18, $18, $18, $08, $08
+	db $3c, $3c, $7e, $7e, $66, $66, $0c, $0c, $18, $18, $18, $18, $00, $00, $18, $18
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $7c, $7c, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $18, $18, $18, $18, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $54, $54, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $03, $01, $01, $03, $03, $03
+	db $03, $03, $03, $03, $01, $03, $01, $03, $03, $01, $02, $01, $00, $01, $01, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $03, $03, $06, $06
+	db $00, $00, $00, $00, $00, $00, $01, $00, $01, $02, $02, $0d, $15, $1f, $2b, $3f
+	db $5a, $7f, $54, $ff, $b4, $ff, $b9, $fe, $69, $fe, $6b, $fc, $63, $fc, $62, $fd
+	db $63, $fd, $6b, $f5, $ab, $75, $eb, $34, $6a, $b4, $4e, $b1, $0e, $b1, $2f, $91
+	db $0f, $91, $0e, $91, $9e, $00, $8a, $00, $03, $00, $03, $00, $05, $02, $05, $02
+	db $07, $02, $07, $02, $07, $02, $07, $02, $07, $02, $06, $03, $02, $03, $01, $03
+	db $03, $01, $01, $01, $01, $01, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $01, $01, $0f, $0f, $7f, $7f, $ff, $ff, $f8, $f8, $80, $80, $00, $00
+	db $00, $01, $05, $09, $23, $1d, $73, $1d, $33, $dd, $93, $fd, $19, $ff, $39, $df
+	db $79, $9e, $69, $9e, $d9, $2e, $bd, $6e, $65, $fe, $ed, $f6, $f8, $f7, $f4, $fb
+	db $f8, $ff, $fe, $fd, $fe, $fd, $ff, $fe, $7f, $3f, $0f, $ff, $e7, $ff, $c7, $8f
+	db $3f, $7f, $bf, $3f, $df, $1f, $e7, $0f, $f3, $03, $f8, $01, $f4, $08, $f4, $08
+	db $d2, $0c, $5a, $84, $4c, $82, $cd, $82, $a6, $c1, $22, $c1, $a1, $40, $70, $00
+	db $30, $00, $10, $00, $08, $00, $00, $00, $e0, $e7, $e0, $ff, $c0, $ff, $80, $ff
+	db $1f, $1f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $10, $e0
+	db $04, $f8, $01, $fe, $00, $ff, $00, $ff, $20, $ff, $b0, $ff, $90, $ff, $98, $ff
+	db $88, $ff, $dc, $ef, $54, $ef, $ce, $77, $0b, $f7, $44, $b8, $e1, $52, $c7, $6f
+	db $8b, $1f, $d4, $7e, $4d, $b9, $6a, $b2, $a6, $7e, $f6, $7e, $fe, $ff, $ff, $ff
+	db $00, $00, $00, $00, $00, $00, $00, $01, $9f, $1f, $9f, $1f, $9f, $1f, $9f, $1f
+	db $00, $00, $00, $00, $90, $00, $54, $88, $2b, $c4, $1d, $e2, $0c, $f3, $06, $f9
+	db $03, $fc, $03, $fc, $01, $fe, $01, $fe, $00, $ff, $00, $1f, $80, $7f, $60, $9f
+	db $fc, $e3, $07, $18, $03, $24, $06, $1f, $0f, $0f, $0f, $0f, $0f, $1f, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $fe, $fe, $fc, $fc, $f1, $f8, $e1, $e0, $80, $c0, $01, $1e
+	db $7f, $7f, $1f, $1f, $0f, $0f, $03, $03, $01, $01, $00, $00, $80, $00, $40, $80
+	db $20, $c0, $10, $e0, $9c, $60, $8a, $74, $8d, $72, $85, $7a, $c4, $3b, $c4, $3b
+	db $62, $bd, $62, $bd, $d2, $3d, $d2, $3d, $32, $dd, $f2, $dd, $f6, $d9, $f6, $d9
+	db $f6, $d9, $f4, $d9, $d4, $f9, $9c, $f1, $c8, $b1, $d8, $a1, $d1, $a1, $15, $e1
+	db $af, $41, $ab, $41, $c9, $03, $1a, $83, $96, $03, $22, $07, $07, $06, $85, $06
+	db $c9, $06, $f2, $fc, $f4, $f8, $e4, $f8, $ec, $f4, $dc, $ec, $bc, $dc, $ff, $ff
+	db $00, $00, $e0, $e0, $f8, $f8, $fe, $fe, $ff, $ff, $ff, $ff, $fe, $fe, $fd, $fd
+	db $fd, $fd, $fd, $fd, $ed, $ed, $f1, $f1, $fd, $fd, $fd, $fd, $7d, $7d, $3c, $3c
+	db $38, $38, $38, $38, $10, $10, $00, $00, $40, $00, $c0, $00, $e0, $00, $70, $80
+	db $70, $80, $78, $80, $38, $c0, $38, $c0, $3c, $c0, $3c, $c0, $bc, $c0, $be, $c0
+	db $be, $c0, $be, $c0, $be, $c0, $be, $c0, $be, $c0, $ba, $c0, $ba, $c0, $ba, $c0
+	db $5c, $80, $5c, $80, $5c, $80, $9c, $00, $98, $00, $98, $00, $18, $00, $10, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $0f, $88
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $80, $00, $00, $80, $80
+	db $80, $80, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $e0, $e0, $e0, $e0
+	db $e0, $e0, $f0, $f0, $f0, $f0, $f0, $f0, $f8, $f8, $78, $78, $78, $78, $7c, $7c
+	db $7c, $7c, $3c, $3c, $3c, $3c, $3e, $3e, $3e, $3e, $1e, $1e, $1e, $1e, $1e, $1e
+	db $1e, $1e, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $1f, $1f, $1f, $1f
+	db $1f, $1f, $3f, $3f, $3f, $3f, $3c, $3c, $00, $00, $00, $00, $f8, $f8, $fc, $7c
+	db $00, $00, $00, $00, $00, $00, $00, $00, $80, $80, $80, $80, $80, $80, $80, $80
+	db $80, $80, $80, $80, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0
+	db $f0, $7f, $da, $9d, $c7, $e7, $61, $f9, $72, $bc, $73, $bc, $77, $f8, $82, $ff
+	db $e1, $ff, $30, $1f, $fe, $9f, $e7, $3f, $cb, $77, $9e, $e7, $b4, $ce, $1c, $cc
+	db $78, $8c, $38, $98, $f8, $18, $78, $18, $68, $38, $e0, $3c, $ec, $34, $cc, $74
+	db $dc, $7c, $7c, $f6, $ca, $f6, $c6, $7a, $46, $7a, $26, $ba, $56, $9a, $aa, $ce
+	db $dc, $e6, $6e, $f2, $37, $f9, $1f, $f9, $1f, $f5, $7b, $bd, $fd, $6f, $ea, $de
+	db $00, $ff, $9f, $68, $7f, $94, $b3, $e7, $d6, $7f, $ac, $7f, $f2, $1e, $f6, $06
+	db $9f, $e1, $f7, $7b, $7e, $9f, $d8, $ee, $b0, $f8, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $ff, $7f, $80, $43, $bc, $47, $a3, $46, $a3, $5e, $a3, $7e, $9f, $70, $9f
+	db $70, $98, $70, $98, $70, $98, $70, $98, $70, $98, $70, $98, $70, $98, $70, $98
+	db $44, $ba, $46, $a3, $46, $a3, $5c, $a3, $7f, $80, $7f, $80, $ff, $ff, $00, $ff
+	db $00, $ff, $fe, $03, $0e, $f3, $1e, $83, $1e, $83, $7e, $83, $fe, $f3, $0e, $73
+	db $0e, $13, $0e, $13, $0e, $13, $0e, $13, $0e, $13, $0e, $13, $0e, $13, $0e, $13
+	db $0e, $f3, $1e, $83, $1e, $83, $7e, $83, $fe, $03, $fe, $03, $fe, $ff, $00, $ff
+	db $00, $ff, $ff, $00, $ff, $00, $ff, $ff, $00, $ff, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $00, $ff, $00, $ff, $ff, $00, $ff
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $00, $27, $00, $4f, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $18, $00, $1f, $00, $1e, $00, $0f, $00
+	db $0f, $00, $0f, $00, $0f, $00, $1f, $00, $5f, $00, $cf, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $e0, $00, $c3, $00, $fc, $00, $f0, $00, $07, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $40, $00, $00, $00, $00, $00, $73, $00, $e6, $00, $ec, $00, $c8, $00, $90, $00
+	db $00, $00, $00, $00, $01, $00, $01, $00, $01, $00, $03, $00, $03, $00, $03, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $5f, $00, $bf, $00, $bf, $00, $7f, $00, $7f, $00, $7f, $00, $7f, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $fe, $00, $f9, $00, $e7, $00, $fc, $00, $f0, $00, $c0, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $b0, $00, $60, $00, $c0, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $07, $00, $0f, $00, $0e, $00
+	db $18, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $03, $03, $01
+	db $03, $05, $03, $07, $06, $0a, $16, $0e, $0c, $14, $0c, $3c, $18, $68, $38, $d8
+	db $02, $01, $00, $07, $10, $1f, $01, $3e, $03, $fd, $4f, $77, $1f, $1f, $07, $07
+	db $03, $03, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $70, $b0, $70, $f0, $e0, $60, $c0, $c0, $c0, $c0, $c0, $c0, $80, $80, $80, $80
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $01, $00, $03, $05, $02, $01, $07, $03, $0d, $07, $0b, $07, $1f
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $20, $20, $60, $60
+	db $40, $80, $40, $c0, $80, $00, $80, $80, $00, $00, $00, $00, $00, $00, $00, $00
+	db $0e, $36, $0e, $3e, $1e, $6e, $3e, $5e, $3e, $fe, $fe, $3e, $fe, $7e, $fe, $fe
+	db $8e, $8e, $06, $06, $02, $02, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $03, $03, $06, $06
+	db $0e, $0a, $0e, $02, $06, $0a, $14, $1c, $14, $0c, $04, $1c, $04, $1c, $24, $3c
+	db $24, $1c, $04, $3c, $04, $3c, $04, $3c, $44, $7c, $04, $7c, $0c, $74, $4c, $34
+	db $2e, $16, $0e, $0e, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $04, $00, $08, $04
+	db $08, $04, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01
+	db $00, $07, $08, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $04, $18, $00, $18, $00, $18, $08, $30, $00, $30, $10, $60, $00, $e0, $00, $c0
+	db $40, $80, $40, $80, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $20, $00, $20, $00, $10, $00, $10, $00, $10, $00, $18, $00
+	db $08, $00, $00, $08, $04, $08, $00, $0c, $00, $0c, $02, $0c, $00, $0e, $00, $0e
+	db $00, $0e, $00, $0e, $00, $0e, $00, $0e, $00, $0e, $00, $0e, $10, $0e, $00, $1e
+	db $00, $1e, $00, $1e, $22, $1c, $08, $10, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $40, $00, $40, $00, $40, $00, $00, $40, $00, $40, $20, $40
+	db $40, $20, $00, $20, $10, $20, $20, $10, $00, $10, $08, $10, $10, $08, $04, $08
+	db $00, $0c, $0a, $04, $01, $06, $04, $02, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $f0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $0e, $00, $1e, $00, $3c, $00, $00, $00
+	db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $80, $80, $40, $00, $40, $40, $00, $40, $00, $00, $00, $00, $00, $00, $00
+	db $f8, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $1e, $00, $3e, $00, $1c, $00, $00, $01
+	db $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80
+	db $00, $80, $80, $40, $40, $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $f8, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $0f, $00, $1e, $00, $18, $00, $01, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80
+	db $80, $00, $00, $40, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $01, $01, $0f, $0f, $3f, $3f, $7c, $7c, $c0, $c0, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $01, $00, $01, $00, $01, $00, $01, $00, $00, $00, $00
+	db $1f, $1f, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $ff, $f8, $f8, $e0, $e0, $c0, $c0, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $10, $00, $10, $00, $20, $00, $20, $00, $60, $00, $40, $00, $40
+	db $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $06, $00, $02, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $28, $20, $e0, $e8, $00, $00, $00, $00
+	db $10, $00, $00, $44, $60, $24, $00, $48, $00, $00, $00, $00, $00, $20, $00, $38
+	db $00, $38, $00, $1c, $00, $0e, $00, $07, $00, $01, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $40, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $07, $07, $3f, $3f, $7c, $7c, $c0, $c0, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $01, $00, $01, $00, $01, $00, $01, $00, $00, $00, $00
+	db $0f, $0f, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $ff, $fc, $fc, $f0, $f0, $c0, $c0, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $10, $00, $10, $00, $20, $00, $20, $00, $60, $00, $40, $00, $40
+	db $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $06, $00, $02, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $28, $20, $e0, $e8, $00, $00, $00, $00
+	db $10, $00, $00, $44, $60, $24, $00, $48, $00, $00, $00, $00, $00, $20, $00, $38
+	db $00, $38, $00, $1c, $00, $0e, $00, $07, $00, $01, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $40, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $07, $07, $1f, $1f, $7c, $7c, $c0, $c0, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $01, $00, $01, $00, $01, $00, $01, $00, $00, $00, $00
+	db $07, $07, $7f, $7f, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $ff, $ff, $ff, $f8, $f8, $c0, $c0, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $10, $00, $10, $00, $20, $00, $20, $00, $60, $00, $40, $00, $40
+	db $00, $40, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $06, $00, $02, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $28, $20, $e0, $e8, $00, $00, $00, $00
+	db $10, $00, $00, $44, $60, $24, $00, $48, $00, $00, $00, $00, $00, $20, $00, $38
+	db $00, $38, $00, $1c, $00, $0e, $00, $07, $00, $01, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $40, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $70, $80, $70, $80, $30, $c0, $38, $c0, $38, $c0, $3c, $c0, $3c, $c0, $3c, $c0
+	db $3e, $c0, $be, $c0, $be, $c0, $be, $c0, $be, $c0, $be, $c0, $be, $c0, $3e, $c0
+	db $3c, $c0, $7c, $80, $5c, $80, $b8, $00, $b8, $00, $38, $00, $30, $00, $60, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $07, $07, $0f, $88
+	db $00, $00, $05, $02, $0a, $05, $0d, $02, $01, $02, $01, $02, $01, $02, $01, $02
+	db $01, $02, $01, $02, $01, $02, $01, $02, $01, $02, $01, $02, $01, $02, $00, $03
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $80, $80, $c0, $c0, $60, $60, $a0, $a0
+	db $80, $80, $c0, $c0, $c0, $c0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0
+	db $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0, $e0
+	db $00, $00, $04, $00, $00, $04, $00, $04, $00, $04, $00, $04, $00, $04, $08, $04
+	db $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $00, $0c, $10, $0c
+	db $0a, $14, $0c, $12, $8c, $12, $0c, $92, $0c, $93, $0d, $92, $2b, $94, $2b, $94
+	db $6a, $95, $68, $97, $36, $c9, $6e, $91, $ce, $31, $8a, $75, $25, $da, $50, $8a
+	db $01, $0a, $01, $0a, $02, $09, $08, $05, $08, $05, $01, $04, $03, $04, $04, $02
+	db $00, $ff, $4f, $30, $11, $0e, $02, $01, $00, $00, $00, $00, $00, $00, $00, $00
+	db $e0, $e0, $f0, $f0, $f0, $f0, $f0, $f0, $78, $78, $78, $78, $78, $78, $7c, $7c
+	db $3c, $3c, $3e, $3e, $3e, $3e, $3e, $3e, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
+	db $00, $00, $00, $00, $04, $00, $00, $08, $10, $08, $08, $10, $00, $10, $20, $10
+	db $08, $30, $10, $28, $10, $28, $10, $28, $10, $28, $14, $28, $18, $24, $28, $14
+	db $08, $14, $28, $14, $58, $24, $b4, $48, $68, $90, $c0, $30, $90, $60, $20, $c0
+	db $60, $80, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $80, $00, $80
+	db $00, $ff, $01, $44, $40, $84, $34, $c8, $4f, $30, $10, $0f, $02, $01, $00, $00
+	db $3f, $3f, $1f, $1f, $1f, $1f, $1f, $1f, $0f, $0f, $0f, $0f, $07, $07, $07, $07
+	db $03, $03, $03, $03, $03, $03, $01, $01, $00, $00, $00, $00, $f8, $f8, $fc, $7c
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $80
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $01, $00, $01
+	db $00, $01, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $01, $00, $01, $fe, $03, $44, $02, $45, $7a, $85, $f5, $0a, $4c, $b2, $84, $7a
+	db $71, $0a, $3d, $42, $0a, $51, $86, $51, $04, $f1, $21, $d4, $61, $94, $42, $94
+	db $00, $96, $88, $16, $09, $16, $08, $17, $0c, $13, $0c, $13, $14, $0b, $04, $0b
+	db $04, $0b, $08, $07, $00, $07, $04, $03, $00, $03, $02, $01, $01, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $00, $80, $40, $80, $a2, $41, $41, $3e
+	db $66, $18, $c9, $30, $23, $d0, $83, $70, $2b, $10, $13, $08, $03, $08, $05, $08
+	db $09, $04, $01, $04, $03, $04, $05, $02, $01, $02, $01, $02, $02, $01, $00, $01
+	db $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $28, $c7, $48, $87, $08, $87, $88, $07, $0c, $03, $0c, $03, $2c, $03, $24, $03
+	db $16, $01, $16, $01, $9e, $01, $8f, $00, $47, $80, $33, $c0, $8e, $71, $60, $9f
+	db $00, $c0, $a0, $40, $10, $60, $48, $30, $54, $a8, $28, $d4, $ca, $34, $a9, $16
+	db $16, $09, $05, $0a, $0a, $05, $82, $05, $05, $82, $02, $81, $41, $80, $80, $40
+	db $20, $00, $00, $00, $00, $00, $00, $00, $00, $00, $08, $07, $04, $f8, $03, $00
+	db $10, $0f, $01, $fe, $08, $f0, $99, $60, $48, $90, $26, $c8, $11, $e6, $24, $d9
+	db $89, $66, $82, $61, $d0, $20, $00, $b0, $40, $b0, $22, $d0, $a9, $50, $10, $68
+	db $d5, $28, $4b, $b4, $49, $b6, $69, $96, $ac, $53, $20, $5b, $32, $49, $55, $28
+	db $8a, $05, $09, $84, $59, $86, $9a, $44, $58, $27, $68, $14, $60, $18, $d1, $28
+	db $d3, $20, $5e, $20, $2c, $80, $00, $80, $01, $80, $8f, $40, $7f, $80, $4f, $30
+	db $07, $38, $1f, $00, $ff, $00, $ff, $00, $ff, $00, $7f, $00, $3f, $00, $9f, $00
+	db $77, $80, $8f, $70, $70, $8f, $1f, $c0, $0a, $c5, $85, $42, $02, $c1, $01, $40
+	db $20, $00, $00, $00, $00, $00, $00, $00, $10, $0f, $08, $f0, $07, $00, $c0, $3f
+	db $07, $f8, $0c, $00, $3b, $00, $df, $00, $07, $00, $7e, $01, $8e, $01, $7d, $82
+	db $18, $66, $5a, $84, $90, $64, $38, $04, $08, $04, $ea, $04, $34, $02, $bd, $02
+	db $de, $01, $e7, $00, $b7, $00, $ff, $00, $ef, $00, $e7, $00, $7f, $80, $3f, $c0
+	db $41, $80, $94, $60, $2a, $10, $35, $08, $87, $48, $4b, $04, $0b, $04, $0d, $02
+	db $1e, $01, $1e, $01, $3e, $01, $fe, $01, $fe, $01, $fd, $02, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $fe, $01
+	db $fc, $03, $f3, $0c, $0a, $f1, $e1, $00, $41, $80, $00, $81, $02, $81, $05, $82
+	db $01, $46, $22, $05, $02, $05, $0a, $05, $09, $f6, $10, $06, $f0, $06, $0c, $e2
+	db $f1, $0a, $ea, $11, $d8, $21, $b0, $40, $61, $8e, $8c, $70, $40, $80, $03, $00
+	db $0f, $00, $1f, $00, $7f, $00, $7f, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $fe, $00, $3e, $c0, $8c, $70, $c2, $3c, $f0, $0e, $fc, $02, $f5, $0a, $f4, $0b
+	db $44, $80, $a2, $40, $53, $20, $01, $30, $09, $30, $01, $38, $81, $38, $c5, $38
+	db $87, $78, $93, $6c, $2b, $d4, $49, $96, $a1, $12, $e2, $11, $e0, $11, $e9, $10
+	db $d8, $20, $d4, $28, $db, $24, $9e, $61, $bd, $42, $39, $c6, $7b, $84, $f7, $08
+	db $5e, $00, $70, $0e, $c8, $30, $20, $c0, $70, $8f, $c8, $30, $a0, $40, $40, $80
+	db $01, $80, $87, $00, $1f, $00, $3f, $00, $3f, $00, $7f, $00, $7f, $00, $7f, $00
+	db $7f, $00, $7f, $00, $7f, $00, $7e, $80, $30, $40, $20, $00, $00, $00, $80, $00
+	db $c0, $00, $c1, $00, $86, $00, $86, $00, $84, $00, $0c, $00, $0c, $00, $0c, $00
+	db $0c, $00, $0e, $00, $0b, $00, $01, $00, $00, $00, $00, $00, $00, $00, $c0, $00
+	db $80, $60, $d0, $20, $c0, $30, $c0, $30, $c0, $30, $80, $70, $80, $70, $80, $70
+	db $80, $70, $a0, $50, $40, $90, $10, $80, $04, $83, $92, $0c, $28, $10, $50, $20
+	db $b0, $40, $20, $c0, $60, $80, $e0, $00, $c0, $00, $c4, $00, $88, $04, $08, $04
+	db $08, $04, $02, $04, $04, $02, $01, $02, $0a, $f1, $13, $0c, $01, $00, $00, $00
+	db $f0, $00, $fc, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $fe, $00, $fc, $00
+	db $f0, $00, $e0, $00, $80, $00, $00, $00, $00, $00, $00, $00, $01, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $00, $10, $0f
+	db $80, $80, $80, $80, $c0, $c0, $e0, $e0, $f0, $f0, $f8, $f8, $f8, $f8, $f0, $f0
+	db $00, $00, $00, $00, $00, $00, $00, $00, $21, $c0, $44, $38, $09, $06, $04, $03
+	db $02, $01, $00, $01, $07, $00, $0f, $00, $0f, $00, $0f, $00, $0f, $00, $0f, $00
+	db $07, $00, $07, $00, $07, $00, $03, $00, $83, $00, $41, $80, $20, $c0, $80, $60
+	db $40, $30, $28, $10, $14, $08, $89, $06, $04, $03, $02, $01, $06, $01, $0e, $01
+	db $1e, $01, $7e, $01, $fe, $01, $3e, $01, $1e, $01, $fe, $01, $fe, $01, $1e, $01
+	db $07, $00, $01, $02, $02, $01, $00, $00, $80, $00, $e0, $00, $f8, $00, $7c, $00
+	db $7e, $00, $3e, $00, $3f, $00, $3f, $00, $7f, $00, $ff, $00, $fe, $00, $18, $e0
+	db $01, $08, $01, $08, $03, $08, $03, $08, $03, $08, $03, $08, $12, $09, $0a, $11
+	db $06, $11, $26, $11, $54, $23, $ad, $42, $d9, $06, $b3, $0c, $2f, $10, $3f, $00
+	db $1c, $80, $5e, $80, $2c, $c0, $10, $e0, $88, $70, $c4, $38, $f2, $0c, $f9, $06
+	db $fc, $03, $ff, $00, $ff, $00, $fe, $00, $fe, $00, $fe, $00, $fc, $00, $f0, $00
+	db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01, $03, $03, $03
+	db $03, $03, $03, $03, $03, $03, $01, $03, $01, $03, $02, $01, $00, $01, $01, $00
+	db $00, $80, $40, $80, $20, $c0, $90, $60, $40, $38, $10, $00, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $c0, $28, $c0, $28, $c0, $2a, $c0, $3a, $c0, $73, $80, $7f, $80, $6f, $80
+	db $7d, $80, $ff, $00, $ff, $00, $ff, $00, $fc, $00, $f8, $00, $e0, $00, $c0, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $03, $03, $06, $06
+	db $00, $00, $00, $00, $00, $00, $01, $00, $01, $02, $02, $0d, $15, $1f, $2b, $3f
+	db $5a, $7f, $56, $ff, $b4, $ff, $b5, $fe, $69, $fe, $6b, $fc, $6b, $fc, $62, $fd
+	db $63, $fd, $6b, $f5, $eb, $75, $a9, $76, $6c, $b2, $46, $b9, $26, $99, $07, $99
+	db $57, $89, $46, $89, $ce, $00, $4a, $00, $03, $00, $03, $00, $01, $02, $01, $02
+	db $03, $02, $03, $02, $03, $02, $02, $03, $02, $03, $03, $03, $01, $03, $03, $01
+	db $af, $50, $af, $50, $d7, $28, $d7, $28, $d6, $28, $d6, $28, $56, $28, $da, $24
+	db $e8, $14, $e8, $14, $e8, $14, $e8, $14, $2c, $10, $0c, $10, $18, $00, $10, $00
+	db $00, $00, $03, $03, $1f, $1f, $7f, $7f, $ff, $ff, $f8, $f8, $80, $80, $00, $00
+	db $00, $01, $05, $09, $23, $1d, $73, $1d, $33, $dd, $93, $fd, $19, $ff, $39, $df
+	db $79, $9e, $69, $9e, $cd, $3e, $bd, $6e, $75, $ee, $ed, $f6, $f8, $f7, $f4, $fb
+	db $f8, $ff, $fe, $fd, $ff, $fe, $ff, $ff, $7f, $3f, $0f, $ff, $e7, $ff, $c7, $8f
+	db $c7, $47, $47, $47, $c7, $cf, $4f, $cf, $67, $77, $73, $7f, $7f, $7f, $7f, $7f
+	db $3f, $7f, $bf, $3f, $df, $1f, $e7, $0f, $f3, $03, $f8, $01, $f0, $08, $7c, $80
+	db $d5, $00, $8c, $00, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $f0, $f0, $e0, $e0, $e0, $e0, $c0, $c0, $80, $80, $00, $00, $00, $00, $00, $00
+	db $3f, $3f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $10, $e0
+	db $04, $f8, $01, $fe, $00, $ff, $00, $ff, $20, $ff, $a0, $ff, $90, $ff, $98, $ff
+	db $88, $ff, $cc, $ff, $56, $ef, $ab, $77, $45, $bb, $74, $c8, $e1, $72, $c7, $6f
+	db $8b, $1f, $54, $be, $4d, $b9, $aa, $52, $e6, $be, $f6, $fe, $fe, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $1f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $3f, $7f, $0e, $1f
+	db $26, $d8, $b7, $48, $db, $24, $ed, $12, $71, $0a, $36, $09, $1b, $04, $0c, $02
+	db $05, $02, $02, $01, $02, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $3f, $3f, $07, $07, $00, $00
+	db $00, $00, $00, $00, $90, $00, $54, $88, $2b, $c4, $1d, $e2, $0c, $f3, $06, $f9
+	db $03, $fc, $01, $fe, $01, $fe, $00, $ff, $80, $ff, $00, $1f, $80, $7f, $60, $9f
+	db $fc, $e3, $07, $18, $00, $27, $07, $1f, $0f, $0f, $0f, $0f, $0f, $1f, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $ff, $ff, $ff, $ff, $fe, $fe, $fc, $fc, $f0, $f8, $e1, $e0, $80, $c0, $01, $1e
+	db $00, $00, $00, $00, $80, $00, $80, $00, $c0, $00, $c0, $00, $60, $80, $60, $80
+	db $b0, $40, $30, $40, $d0, $20, $10, $a0, $f0, $00, $50, $00, $00, $00, $00, $00
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $7f, $7f, $1f, $1f, $0f, $0f, $03, $03, $01, $01, $00, $00, $80, $00, $40, $80
+	db $20, $c0, $10, $e0, $9c, $60, $8a, $74, $8d, $72, $85, $7a, $44, $bb, $44, $bb
+	db $62, $bd, $62, $bd, $f2, $3d, $52, $bd, $b2, $dd, $f2, $dd, $f2, $dd, $f6, $d9
+	db $f6, $d9, $f4, $d9, $f4, $d9, $e4, $d9, $ec, $d1, $e8, $d1, $a9, $d1, $d5, $a1
+	db $57, $a1, $2f, $41, $29, $43, $c9, $03, $5f, $83, $12, $07, $02, $07, $82, $07
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $e0, $e0, $f0, $f0, $fc, $fc, $ff, $ff, $ff, $ff, $fe, $fe, $fd, $fd
+	db $fd, $fd, $fd, $fd, $ed, $ed, $f1, $f1, $fd, $fd, $fd, $fd, $7d, $7d, $38, $38
+	db $38, $38, $38, $38, $10, $10, $00, $00, $40, $00, $c0, $00, $e0, $00, $70, $80
+	db $70, $80, $78, $80, $38, $c0, $3c, $c0, $3c, $c0, $3c, $c0, $be, $c0, $be, $c0
+	db $be, $c0, $be, $c0, $bf, $c0, $bf, $c0, $bf, $c0, $bb, $c0, $bb, $c0, $bb, $c0
+	db $1d, $c0, $1d, $c0, $5d, $80, $4c, $80, $4c, $80, $4c, $80, $c9, $01, $8b, $03
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $80, $00, $00, $80, $80
+	db $80, $80, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $c0, $e0, $e0, $e0, $e0
+	db $e0, $e0, $e0, $e0, $e0, $e0, $f0, $f0, $f0, $f0, $f0, $f0, $70, $70, $70, $70
+	db $78, $78, $38, $38, $3c, $3c, $1e, $1e, $1e, $1e, $1f, $1f, $0f, $0f, $0f, $0f
+	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $1f, $1f
+	db $1f, $1f, $1f, $1f, $3f, $3f, $3e, $3e, $7e, $7e, $fe, $fe, $fe, $fe, $fc, $fc
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $80, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80, $80, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $70, $80, $38, $c0, $ba, $41, $d8, $27, $f2, $0c, $e4, $18, $e8, $10, $c0, $30
+	db $00, $60, $20, $40, $80, $40, $40, $80, $40, $80, $40, $80, $00, $c0, $a1, $40
+	db $b7, $40, $df, $20, $ef, $10, $e3, $1c, $d0, $2f, $28, $c7, $80, $07, $04, $03
+	db $c0, $07, $f9, $fe, $fb, $fc, $f2, $fc, $f4, $f8, $ec, $f4, $fc, $ec, $ff, $ff
+	db $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $01, $ff, $03, $ff, $07, $fe
+	db $04, $02, $00, $02, $01, $02, $02, $01, $00, $01, $01, $00, $00, $00, $00, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $62, $1c, $88, $70, $20, $c0, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $2f, $10, $07, $38, $03, $3c, $43, $3c, $63, $1c, $f3, $0c, $f7, $08, $f7, $08
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $07, $f8, $0f, $f0, $3f, $c0
+	db $0f, $0f, $0b, $0b, $07, $07, $00, $00, $00, $00, $00, $00, $07, $07, $0f, $88
+	db $1f, $f8, $1f, $f0, $3f, $e0, $7f, $c0, $ff, $80, $ff, $80, $ff, $00, $ff, $00
+	db $80, $40, $00, $40, $20, $40, $40, $20, $d0, $20, $20, $90, $28, $90, $70, $88
+	db $94, $48, $38, $44, $5a, $24, $1c, $22, $2f, $10, $0e, $11, $1d, $02, $12, $0c
+	db $09, $14, $03, $14, $04, $13, $02, $14, $01, $14, $09, $14, $11, $0c, $09, $04
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $e0, $00, $f8, $00, $fc, $00, $fc, $00, $fc, $00, $fe, $00, $ff, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $fc, $fc, $fc, $fc, $fc, $fc, $7c, $7c, $3c, $3c, $00, $00, $f8, $f8, $fc, $7c
+	db $ff, $7f, $ff, $3f, $ff, $3f, $ff, $1f, $ff, $1f, $ff, $0f, $ff, $07, $ff, $01
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $84, $78, $40, $87, $81, $00, $20, $00, $c0, $30
+	db $90, $60, $02, $fc, $9c, $62, $bc, $42, $9b, $44, $73, $8c, $28, $97, $0e, $91
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01
+	db $03, $02, $07, $04, $07, $00, $0f, $08, $0f, $00, $1f, $10, $1f, $00, $1f, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $80, $80, $c0, $c0, $e0, $e0, $f0, $f0, $f0, $f0, $f8, $f8, $fc, $fc
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $00, $c0, $90, $60, $48, $30
+	db $64, $18, $32, $0c, $30, $0f, $31, $0e, $3e, $01, $ff, $00, $fc, $00, $30, $c0
+	db $01, $01, $01, $01, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $1f, $17, $7f, $43, $ff, $83, $ff, $07
+	db $ff, $07, $fe, $0f, $fe, $0f, $fe, $0f, $fc, $1f, $fc, $1f, $fc, $1f, $fc, $1f
+	db $0f, $fe, $0f, $fe, $1f, $fc, $3f, $fc, $7f, $fc, $ff, $f8, $ff, $f8, $ff, $fc
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $03, $ff, $0f
+	db $11, $2c, $2a, $14, $08, $16, $15, $0a, $05, $0a, $0a, $05, $02, $05, $05, $02
+	db $01, $02, $02, $01, $00, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $10, $0f, $08, $f0, $00, $00, $00, $00, $00, $00, $03, $00, $7f, $00
+	db $5a, $84, $d8, $86, $bd, $c2, $ae, $c1, $76, $c1, $13, $60, $19, $20, $08, $10
+	db $0c, $00, $04, $00, $02, $00, $00, $00, $e0, $e7, $e0, $ff, $c0, $ff, $80, $ff
+	db $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff
+	db $ff, $03, $ff, $07, $ff, $0f, $ff, $1f, $ff, $7f, $ff, $ff, $ff, $ff, $ff, $ff
+	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fe, $fe, $fe, $fe, $fe, $fe, $fe, $fe
+	db $3e, $c0, $9f, $60, $4f, $30, $67, $18, $33, $0c, $b9, $06, $fc, $03, $7e, $81
+	db $7f, $80, $bf, $40, $bf, $40, $5f, $a0, $af, $50, $4e, $31, $11, $2e, $44, $38
+	db $10, $e0, $41, $80, $03, $00, $07, $00, $0f, $00, $7f, $00, $ff, $00, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $80, $01, $1f, $9f, $1f, $9f, $9f, $1f, $5f, $1f
+	db $00, $0f, $00, $0f, $00, $1f, $00, $3f, $00, $ff, $00, $ff, $00, $ff, $00, $ff
+	db $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff
+	db $c0, $c0, $c0, $c0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $01, $01, $01, $01, $01, $01, $03, $03, $03
+	db $f2, $0d, $fb, $04, $fb, $04, $f9, $06, $fd, $02, $fd, $02, $fd, $02, $7d, $82
+	db $3d, $c2, $fa, $04, $f4, $08, $c8, $30, $90, $60, $41, $80, $07, $00, $1f, $00
+	db $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $fe, $01, $f0, $0f, $02, $fc
+	db $00, $3f, $03, $ff, $3f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff
+	db $00, $ff, $00, $ff, $00, $ff, $00, $ff, $00, $ff, $01, $ff, $07, $ff, $1f, $ff
+	db $03, $03, $03, $03, $01, $03, $01, $03, $00, $03, $02, $01, $02, $01, $00, $01
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $03, $03, $06, $06
+	db $00, $00, $00, $00, $00, $00, $01, $00, $01, $02, $02, $0d, $15, $1f, $2b, $3f
+	db $5a, $7f, $54, $ff, $b4, $ff, $b1, $fe, $69, $fe, $63, $fc, $63, $fc, $62, $fd
+	db $63, $fd, $43, $fd, $47, $f9, $47, $f8, $d6, $68, $96, $69, $9e, $61, $df, $21
+	db $9b, $21, $92, $21, $12, $00, $02, $00, $07, $00, $07, $00, $05, $02, $05, $02
+	db $01, $06, $01, $06, $05, $06, $05, $06, $05, $06, $05, $06, $05, $06, $05, $06
+	db $05, $06, $03, $06, $07, $02, $01, $02, $01, $02, $02, $01, $00, $01, $01, $00
+	db $00, $00, $01, $01, $0f, $0f, $3f, $3f, $ff, $ff, $f8, $f8, $80, $80, $00, $00
+	db $00, $01, $05, $09, $23, $1d, $73, $1d, $33, $dd, $93, $fd, $11, $ff, $39, $df
+	db $79, $9e, $69, $9e, $c9, $3e, $bd, $6e, $75, $ee, $ed, $f6, $fd, $f6, $f1, $fe
+	db $f8, $ff, $fc, $fb, $fc, $ff, $fe, $fd, $7f, $3e, $0f, $fe, $e7, $ff, $c7, $8f
+	db $3f, $7f, $bf, $3f, $df, $1f, $e7, $0f, $f3, $03, $a8, $11, $a8, $10, $24, $18
+	db $34, $08, $34, $08, $16, $08, $1a, $04, $8a, $04, $84, $02, $83, $00, $80, $00
+	db $80, $00, $80, $00, $00, $00, $00, $00, $e0, $e7, $e0, $ff, $c0, $ff, $80, $ff
+	db $1f, $1f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $00, $00, $00, $00, $10, $e0
+	db $04, $f8, $01, $fe, $00, $ff, $00, $ff, $20, $ff, $20, $ff, $b0, $ff, $90, $ff
+	db $98, $ff, $88, $ff, $54, $ef, $ce, $77, $ca, $77, $44, $b8, $23, $d0, $46, $ef
+	db $8b, $1f, $d4, $7e, $8d, $79, $ea, $52, $66, $fe, $f6, $fe, $fe, $ff, $ff, $ff
+	db $00, $00, $00, $00, $00, $00, $00, $01, $1f, $1f, $1f, $1f, $1f, $1f, $1f, $1f
+	db $00, $00, $00, $00, $90, $00, $54, $88, $2b, $c4, $1d, $e2, $0c, $f3, $06, $f9
+	db $07, $f8, $03, $fc, $03, $fc, $01, $fe, $01, $fe, $00, $1f, $80, $7f, $e0, $1f
+	db $b8, $c7, $0c, $13, $02, $25, $07, $1e, $0f, $0f, $0f, $0f, $0f, $1f, $ff, $ff
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $fe, $ff
+	db $ff, $fe, $ff, $fe, $fd, $fe, $fe, $fd, $f1, $fa, $e4, $e0, $80, $c0, $01, $1e
+	db $7f, $7f, $1f, $1f, $0f, $0f, $03, $03, $01, $01, $00, $00, $80, $00, $40, $80
+	db $20, $c0, $10, $e0, $9c, $60, $8a, $74, $8d, $72, $85, $7a, $c4, $3b, $c4, $3b
+	db $e2, $3d, $e2, $3d, $e2, $3d, $62, $bd, $62, $bd, $e2, $bd, $e3, $bd, $e7, $b9
+	db $e7, $b9, $ed, $b1, $ed, $b1, $6d, $b1, $0d, $f1, $99, $61, $99, $61, $b1, $41
+	db $3b, $c1, $69, $83, $53, $83, $b6, $03, $22, $07, $07, $06, $0d, $06, $85, $0e
+	db $c2, $0c, $e0, $fc, $e4, $f8, $cc, $f4, $bc, $cc, $7c, $bc, $fc, $fc, $ff, $ff
+	db $00, $00, $e0, $e0, $fc, $fc, $ff, $ff, $ff, $ff, $ff, $ff, $fe, $fe, $fd, $fd
+	db $fd, $fd, $fd, $fd, $ed, $ed, $f0, $f0, $fc, $fc, $fc, $fc, $7d, $7d, $3d, $3d
+	db $3d, $3d, $39, $39, $11, $11, $01, $01, $41, $01, $c1, $01, $e1, $01, $61, $81
+	db $44, $18, $2a, $3c, $0f, $59, $00, $00, $44, $18, $aa, $08, $30, $19, $0e, $24
+	db $44, $18, $aa, $08, $30, $19, $d9, $25, $44, $18, $aa, $08, $30, $19, $57, $5a
+	db $44, $18, $aa, $08, $57, $5a, $0e, $24, $44, $18, $18, $18, $57, $5a, $0e, $24
+
+SECTION "analyzed_0d6040", ROMX[$6040], BANK[$35]
+
+Data_35_6040:
+	db $e0, $03, $be, $7b, $3e, $43, $18, $18, $00, $00, $be, $7b, $3e, $43, $1f, $00
+	db $00, $7c, $18, $18, $fd, $55, $1f, $00, $00, $00, $18, $18, $fd, $55, $0e, $24
+	db $00, $00, $00, $00, $00, $00, $00, $00, $e0, $7f, $1f, $00, $00, $00, $00, $00
+
+SECTION "analyzed_0d6080", ROMX[$6080], BANK[$35]
+
+Data_35_6080:
+	db $0b, $14, $62, $61, $86, $60, $80, $80, $90, $98, $a0, $a8, $b0, $b8, $c0, $c8
+	db $80, $d8, $e0, $e8, $f0, $f8, $00, $80, $80, $80, $80, $80, $80, $80, $a1, $a9
+	db $b1, $b9, $c1, $c9, $d1, $d9, $e1, $e9, $80, $f9, $01, $80, $80, $80, $80, $80
+	db $80, $80, $a2, $aa, $b2, $ba, $c2, $ca, $d2, $da, $e2, $ea, $f2, $fa, $02, $0a
+	db $12, $80, $80, $8b, $93, $9b, $a3, $ab, $b3, $bb, $c3, $cb, $d3, $db, $e3, $eb
+	db $f3, $fb, $03, $0b, $13, $80, $80, $8c, $94, $9c, $a4, $ac, $b4, $bc, $c4, $cc
+	db $d4, $dc, $e4, $ec, $f4, $fc, $04, $0c, $14, $80, $85, $8d, $95, $9d, $a5, $ad
+	db $b5, $bd, $c5, $cd, $d5, $dd, $e5, $ed, $f5, $fd, $05, $0d, $15, $1d, $86, $8e
+	db $96, $80, $a6, $ae, $b6, $be, $c6, $80, $d6, $de, $e6, $ee, $f6, $fe, $06, $0e
+	db $16, $1e, $80, $8f, $97, $80, $a7, $af, $b7, $bf, $c7, $cf, $d7, $80, $e7, $ef
+	db $f7, $ff, $07, $0f, $17, $1f, $80, $28, $30, $80, $80, $48, $50, $58, $23, $2b
+	db $80, $80, $43, $4b, $53, $5b, $26, $2e, $36, $3e, $80, $80, $31, $39, $41, $49
+	db $51, $59, $24, $2c, $34, $3c, $44, $4c, $54, $5c, $27, $2f, $37, $3f, $80, $80
+	db $32, $3a, $42, $4a, $52, $5a, $25, $2d, $35, $3d, $45, $4d, $55, $5d, $46, $47
+	db $4e, $4f, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $09, $09, $09, $09, $09, $09, $09, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $09, $09
+	db $09, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a, $0a
+	db $0a, $0a, $0a, $09, $0d, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0d, $09, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0d, $09, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $09
+	db $0d, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a
+	db $0b, $0b, $0b, $0d, $0d, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $0d, $0d, $0c, $0d, $0d, $0d, $0d, $0d, $0d, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $08, $09
+	db $8c, $62, $44, $62, $da, $e2, $ea, $f2, $fa, $02, $0a, $12, $80, $db, $e3, $eb
+	db $f3, $fb, $03, $0b, $13, $80, $dc, $e4, $ec, $f4, $fc, $04, $0c, $14, $80, $dd
+	db $e5, $ed, $f5, $fd, $05, $0d, $15, $1d, $de, $e6, $ee, $f6, $fe, $06, $0e, $16
+	db $1e, $80, $e7, $ef, $f7, $ff, $07, $0f, $17, $1f, $80, $43, $4b, $53, $5b, $26
+	db $2e, $36, $3e, $3c, $44, $4c, $54, $5c, $27, $2f, $37, $3f, $08, $09, $09, $09
+	db $09, $09, $09, $09, $08, $08, $0a, $0a, $0a, $0a, $09, $09, $09, $08, $0a, $0a
+	db $0a, $0a, $0a, $0a, $09, $09, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $09, $09
+	db $08, $0a, $0a, $0a, $0a, $0a, $0a, $09, $09, $08, $0a, $0a, $0a, $0a, $0a, $09
+	db $09, $09, $08, $0a, $0a, $0b, $0b, $0b, $0d, $0d, $09, $0d, $0d, $0c, $0d, $0d
+	db $0d, $0d, $0d, $0d, $04, $00, $00, $00, $0b, $00, $08, $16, $0b, $10, $00, $18
+	db $0b, $10, $08, $1a, $0b, $04, $00, $00, $00, $0a, $00, $08, $26, $0a, $10, $00
+	db $28, $0a, $10, $08, $2a, $0a, $0c, $00, $00, $46, $08, $00, $08, $48, $08, $00
+	db $10, $4a, $08, $00, $18, $4c, $08, $10, $00, $4e, $08, $10, $08, $00, $09, $10
+	db $10, $50, $09, $10, $18, $52, $09, $20, $00, $00, $08, $20, $08, $54, $09, $20
+	db $10, $56, $09, $20, $18, $00, $09, $03, $00, $00, $34, $0b, $00, $08, $36, $0b
+	db $00, $10, $38, $0b, $08, $09, $82, $63, $3a, $63, $da, $42, $49, $50, $fa, $02
+	db $60, $67, $80, $db, $43, $4a, $51, $55, $5a, $61, $68, $80, $40, $44, $4b, $52
+	db $56, $5b, $62, $69, $80, $41, $45, $4c, $53, $57, $5c, $63, $6a, $1d, $de, $46
+	db $ee, $f6, $58, $5d, $64, $6b, $6e, $80, $47, $4d, $f7, $59, $5e, $65, $6c, $6f
+	db $80, $48, $4e, $54, $5b, $5f, $66, $6d, $56, $3c, $44, $4f, $54, $5c, $27, $2f
+	db $37, $3f, $08, $01, $01, $01, $09, $09, $01, $01, $08, $08, $02, $02, $02, $02
+	db $01, $01, $01, $08, $02, $02, $02, $02, $02, $02, $01, $01, $08, $02, $02, $02
+	db $02, $02, $02, $02, $01, $09, $08, $02, $0a, $0a, $02, $02, $02, $01, $01, $08
+	db $02, $02, $0a, $02, $02, $02, $01, $01, $08, $02, $02, $03, $0b, $03, $05, $05
+	db $09, $0d, $0d, $04, $0d, $0d, $0d, $0d, $0d, $0d, $04, $00, $00, $1c, $0b, $00
+	db $08, $1e, $0b, $10, $00, $20, $0b, $10, $08, $00, $0b, $02, $00, $00, $2c, $0a
+	db $10, $00, $2e, $0a, $0c, $00, $00, $58, $08, $00, $08, $5a, $08, $00, $10, $5c
+	db $08, $00, $18, $5e, $08, $10, $00, $60, $08, $10, $08, $00, $09, $10, $10, $62
+	db $09, $10, $18, $64, $09, $20, $00, $00, $08, $20, $08, $66, $09, $20, $10, $68
+	db $09, $20, $18, $00, $09, $03, $00, $00, $3a, $0b, $00, $08, $3c, $0b, $00, $10
+	db $3e, $0b, $08, $09, $70, $64, $28, $64, $da, $5f, $66, $6d, $fa, $02, $7d, $88
+	db $80, $db, $60, $67, $6e, $72, $77, $7e, $89, $80, $57, $61, $68, $6f, $73, $78
+	db $7f, $8a, $80, $5e, $62, $69, $70, $74, $79, $81, $91, $1d, $de, $63, $ee, $f6
+	db $75, $7a, $82, $92, $9b, $80, $64, $6a, $f7, $76, $7b, $83, $99, $d0, $80, $65
+	db $6b, $71, $5b, $7c, $84, $9a, $f1, $3c, $44, $6c, $54, $5c, $27, $2f, $37, $3f
+	db $08, $09, $09, $09, $09, $09, $09, $09, $08, $08, $0a, $0a, $0a, $09, $09, $09
+	db $09, $08, $0a, $0a, $0a, $0a, $0a, $0a, $09, $09, $08, $0a, $0a, $0a, $0a, $0a
+	db $0a, $0a, $09, $09, $08, $0a, $0a, $0a, $0a, $0a, $0a, $09, $09, $08, $0a, $0a
+	db $0a, $0a, $0a, $09, $09, $09, $08, $0a, $0a, $0b, $0b, $0b, $0d, $0d, $09, $0d
+	db $0d, $0c, $0d, $0d, $0d, $0d, $0d, $0d, $02, $00, $00, $22, $0b, $10, $00, $24
+	db $0b, $02, $00, $00, $30, $0a, $10, $00, $32, $0a, $0c, $00, $00, $6a, $08, $00
+	db $08, $6c, $08, $00, $10, $6e, $08, $00, $18, $70, $08, $10, $00, $72, $08, $10
+	db $08, $00, $09, $10, $10, $74, $09, $10, $18, $76, $09, $20, $00, $00, $08, $20
+	db $08, $78, $09, $20, $10, $7a, $09, $20, $18, $00, $09, $03, $00, $00, $40, $0b
+	db $00, $08, $42, $0b, $00, $10, $44, $0b, $0a, $00, $00, $00, $08, $00, $08, $02
+	db $08, $00, $10, $04, $08, $00, $18, $06, $08, $00, $20, $08, $08, $10, $00, $0a
+	db $08, $10, $08, $0c, $08, $10, $10, $0e, $08, $10, $18, $10, $08, $10, $20, $12
+	db $08, $01, $00, $00, $14, $0d
+
+SECTION "analyzed_0d7fff", ROMX[$7fff], BANK[$35]
+
+Data_35_7fff:
+	db $35
+
 SECTION "analyzed_0e0000", ROMX[$4000], BANK[$38]
 
 Func_38_4000:
@@ -43530,10 +46036,10 @@ Func_3d_4035:
 	ld l, a
 	or h
 	ret z
-
-SECTION "analyzed_0f4051", ROMX[$4051], BANK[$3d]
-
-Func_3d_4051:
+	ld de, $8d00
+	ld bc, $0300
+	call Func_00_0394
+	ret
 	ld a, [$c2c0]
 	dec a
 	add a, a
@@ -43550,22 +46056,22 @@ Func_3d_4051:
 SECTION "analyzed_0f4065", ROMX[$4065], BANK[$3d]
 
 Data_3d_4065:
-	db $8d, $4c
+	db $8d, $4c, $ad, $5b
 
 SECTION "analyzed_0f406f", ROMX[$406f], BANK[$3d]
 
 Data_3d_406f:
-	db $8d, $40
+	db $8d, $40, $ad, $4c
 
 SECTION "analyzed_0f4079", ROMX[$4079], BANK[$3d]
 
 Data_3d_4079:
-	db $8d, $48
+	db $8d, $48, $ad, $54
 
 SECTION "analyzed_0f4083", ROMX[$4083], BANK[$3d]
 
 Data_3d_4083:
-	db $00, $00
+	db $00, $00, $ad, $58
 
 SECTION "analyzed_0f408d", ROMX[$408d], BANK[$3d]
 
@@ -43763,6 +46269,248 @@ Data_3d_408d:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $04, $2c, $66, $59, $5b, $5b, $00, $00, $8c, $31, $94, $52, $bd, $77
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $03
+	db $01, $02, $01, $06, $02, $0c, $02, $0c, $02, $0c, $02, $04, $00, $06, $00, $02
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $03, $01, $06
+	db $f5, $0a, $2b, $14, $1d, $20, $19, $40, $32, $80, $60, $00, $00, $00, $80, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $1e, $00, $21, $de, $40, $bf, $c0, $3f
+	db $00, $7f, $41, $3e, $43, $3c, $47, $38, $6e, $10, $1c, $20, $18, $20, $00, $30
+	db $00, $30, $10, $60, $10, $60, $00, $30, $00, $30, $00, $38, $0c, $1c, $1e, $1e
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2f, $40, $f0, $0f, $e0, $1f
+	db $00, $3f, $20, $1f, $21, $1e, $23, $1c, $2f, $10, $17, $08, $16, $08, $10, $0e
+	db $18, $07, $1c, $03, $0c, $00, $0e, $00, $07, $00, $03, $00, $01, $00, $00, $00
+	db $00, $00, $00, $00, $01, $01, $00, $03, $02, $05, $05, $0a, $05, $0a, $0a, $15
+	db $0a, $15, $0a, $15, $0a, $15, $09, $14, $08, $10, $08, $00, $c3, $00, $3f, $c0
+	db $06, $f9, $82, $7d, $83, $7c, $87, $78, $4f, $30, $0f, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $03
+	db $01, $06, $02, $05, $02, $05, $02, $04, $00, $04, $80, $00, $20, $c0, $0f, $f0
+	db $01, $fe, $81, $7e, $87, $78, $87, $78, $ce, $31, $0c, $03, $02, $01, $01, $00
+	db $00, $00, $00, $c0, $00, $e0, $00, $30, $04, $1c, $8e, $0e, $c0, $00, $e0, $00
+	db $00, $00, $00, $00, $00, $0f, $00, $1f, $01, $1f, $07, $9f, $87, $4f, $cc, $2c
+	db $7c, $9c, $be, $5e, $9e, $7e, $18, $9f, $3c, $1a, $7c, $18, $e0, $1c, $b0, $4e
+	db $18, $e7, $0c, $f1, $0c, $f0, $08, $f0, $98, $60, $90, $60, $30, $40, $00, $60
+	db $00, $60, $20, $c0, $20, $c0, $00, $60, $00, $60, $00, $70, $18, $38, $3c, $3c
+	db $00, $00, $00, $00, $00, $00, $10, $13, $00, $27, $00, $e7, $61, $97, $a1, $53
+	db $53, $ab, $af, $57, $af, $5f, $1e, $1d, $0c, $3b, $0c, $73, $9e, $60, $9a, $64
+	db $b2, $4c, $26, $d8, $34, $c8, $3c, $c0, $fe, $00, $3f, $c0, $03, $fc, $f1, $0e
+	db $08, $06, $10, $0c, $20, $38, $30, $30, $20, $20, $00, $00, $00, $00, $00, $00
+	db $20, $20, $40, $40, $80, $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $08, $08, $10, $10, $20, $e0, $00, $e0, $40, $e0, $c0, $c0, $c0, $c0
+	db $00, $00, $00, $00, $00, $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $e0, $00, $f0, $00
+	db $38, $00, $1c, $00, $0e, $00, $06, $00, $03, $00, $01, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $41, $00, $3c, $83, $10, $8f, $03, $7c
+	db $02, $20, $04, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $01, $00, $02, $01, $04, $02, $18, $14, $18, $18, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $20, $00, $10, $01, $08, $33, $01, $7e
+	db $3b, $c4, $1e, $80, $18, $80, $08, $00, $00, $00, $00, $02, $00, $07, $00, $07
+	db $02, $04, $46, $48, $cc, $f0, $d8, $e0, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $2f, $c0, $70, $8f, $e0, $1f, $00, $3f
+	db $40, $3f, $41, $3e, $61, $1e, $63, $1c, $36, $08, $6c, $10, $48, $30, $98, $60
+	db $30, $c0, $30, $80, $60, $00, $60, $00, $c0, $00, $c0, $00, $80, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $4f, $00, $30, $cf, $e0, $1f, $00, $3f
+	db $08, $37, $51, $2e, $53, $2c, $7f, $00, $3e, $00, $4c, $30, $08, $f0, $b8, $40
+	db $18, $00, $1c, $00, $0e, $00, $06, $00, $06, $00, $0e, $00, $0c, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $03, $04, $06, $09
+	db $05, $0a, $04, $08, $00, $00, $00, $00, $00, $00, $f0, $00, $07, $f8, $00, $ff
+	db $80, $7f, $80, $7f, $c0, $3f, $fc, $03, $0f, $00, $03, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $01, $02
+	db $02, $05, $02, $05, $02, $04, $00, $04, $80, $00, $20, $c0, $1f, $e0, $03, $fc
+	db $83, $7c, $81, $7e, $c0, $3f, $61, $1e, $1f, $00, $01, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $01, $00, $03, $02, $03, $03, $00, $00, $00, $00
+	db $00, $00, $00, $00, $02, $02, $00, $7c, $78, $84, $a8, $54, $58, $a4, $ab, $57
+	db $5f, $af, $3f, $3e, $1b, $78, $04, $73, $0e, $71, $c6, $38, $f0, $0c, $f0, $0c
+	db $30, $cc, $74, $88, $fa, $04, $c0, $3e, $e0, $1f, $f8, $07, $39, $00, $30, $00
+	db $30, $00, $60, $00, $60, $00, $60, $00, $60, $00, $60, $00, $60, $00, $30, $00
+	db $00, $00, $04, $04, $00, $08, $00, $39, $30, $c9, $f0, $09, $58, $a4, $58, $a4
+	db $af, $53, $af, $57, $0f, $0e, $0f, $1c, $02, $1d, $e1, $1e, $f8, $07, $8e, $71
+	db $06, $f8, $02, $fc, $82, $7c, $e4, $18, $cc, $30, $c8, $30, $e0, $18, $30, $08
+	db $10, $0c, $10, $0c, $20, $18, $c8, $30, $18, $e0, $18, $00, $1c, $00, $0e, $00
+	db $00, $00, $01, $01, $02, $02, $04, $7c, $00, $fc, $08, $fc, $38, $f8, $78, $f8
+	db $c0, $c0, $c0, $c0, $80, $c0, $00, $c0, $00, $80, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $c0, $00, $e0
+	db $50, $20, $20, $10, $00, $18, $00, $0c, $07, $01, $03, $03, $00, $00, $00, $00
+	db $02, $02, $04, $04, $08, $f8, $00, $f8, $10, $f8, $70, $f0, $70, $f0, $c0, $c0
+	db $c0, $c0, $c0, $c0, $80, $c0, $00, $c0, $00, $80, $00, $00, $00, $00, $00, $c0
+	db $00, $e0, $00, $60, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $40, $00, $24, $83, $31, $8e, $13, $cc
+	db $02, $fc, $4c, $30, $38, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $18, $06, $20, $1f
+	db $4e, $31, $4c, $30, $9c, $60, $1c, $60, $34, $40, $22, $40, $20, $40, $10, $20
+	db $00, $02, $00, $07, $01, $06, $02, $0c, $02, $0c, $02, $0c, $03, $07, $07, $07
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $2f, $c0, $78, $87, $b0, $0f, $20, $1f
+	db $60, $1f, $61, $1e, $71, $0e, $3b, $04, $3f, $00, $67, $18, $c7, $30, $8e, $60
+	db $4e, $30, $06, $30, $03, $18, $13, $0c, $04, $0c, $0e, $0e, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00
+	db $7e, $80, $c1, $3e, $00, $7f, $10, $6f, $a2, $5d, $a7, $58, $ff, $00, $7c, $00
+	db $98, $60, $10, $e0, $70, $80, $60, $00, $70, $00, $38, $00, $1c, $00, $9e, $80
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $01, $02
+	db $01, $02, $01, $02, $00, $02, $00, $00, $00, $00, $80, $00, $3f, $c0, $00, $ff
+	db $80, $7f, $81, $7e, $c3, $3c, $e2, $1d, $9e, $01, $03, $00, $00, $00, $00, $00
+	db $00, $00, $1c, $1b, $3f, $30, $80, $00, $e0, $00, $70, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $03
+	db $03, $04, $05, $0a, $06, $09, $0a, $15, $0b, $14, $0b, $14, $0d, $12, $00, $09
+	db $00, $00, $01, $00, $fe, $01, $3c, $c3, $18, $e7, $18, $e7, $38, $c7, $fc, $03
+	db $1f, $00, $00, $00, $00, $00, $01, $00, $02, $01, $02, $01, $02, $01, $03, $03
+	db $00, $00, $10, $10, $00, $21, $00, $73, $60, $93, $f0, $0b, $50, $a9, $5b, $a7
+	db $57, $af, $5f, $af, $1e, $1d, $3c, $3b, $0d, $72, $4a, $34, $ca, $34, $e6, $18
+	db $e6, $18, $b2, $4c, $12, $ec, $34, $c8, $1c, $e0, $1e, $e0, $1e, $e0, $07, $60
+	db $03, $60, $21, $c0, $c3, $00, $1f, $00, $3c, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $80, $00, $0f, $00, $1f
+	db $01, $9f, $87, $5f, $87, $4f, $dc, $3c, $7c, $bc, $78, $ec, $f0, $cc, $30, $c8
+	db $18, $e0, $80, $78, $e0, $1c, $70, $8c, $70, $88, $f0, $00, $38, $c0, $1e, $e0
+	db $8f, $70, $47, $38, $8e, $70, $0c, $c0, $18, $80, $38, $80, $b8, $80, $dc, $c0
+	db $04, $04, $08, $08, $10, $f0, $00, $f0, $20, $f0, $e0, $e0, $e0, $e0, $80, $80
+	db $80, $80, $00, $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $40, $40, $80, $80, $00, $80
+	db $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $ff, $ff, $80, $ff, $bc, $ff, $a4, $fb, $a4, $fb, $bc, $e3, $80, $ff, $ff, $80
+	db $4e, $70, $4e, $70, $2c, $30, $2c, $30, $2c, $30, $2c, $30, $08, $10, $08, $10
+	db $ff, $ff, $00, $ff, $3c, $ff, $24, $fb, $24, $fb, $3c, $e3, $00, $ff, $ff, $00
+	db $4e, $70, $4e, $70, $2c, $30, $2c, $30, $2c, $30, $2c, $30, $08, $10, $08, $10
+	db $ff, $ff, $01, $fe, $3d, $fe, $25, $fa, $25, $fa, $3d, $e2, $01, $fe, $ff, $00
+	db $4e, $70, $4e, $70, $2c, $30, $2c, $30, $2c, $30, $2c, $30, $08, $10, $08, $10
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $06, $01, $18, $07, $32, $0d, $47, $18, $09, $30, $12, $20
+	db $24, $40, $00, $40, $00, $01, $00, $01, $00, $01, $11, $12, $33, $3c, $36, $38
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $40, $00, $24, $83, $31, $8e, $13, $cc
+	db $02, $fc, $4c, $30, $38, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $13, $00, $0d, $72, $38, $c7, $40, $8f, $c0, $0f, $90, $0f, $10, $0f, $13, $0c
+	db $0b, $04, $17, $88, $07, $f8, $2c, $d0, $9c, $00, $b8, $00, $70, $00, $60, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $2f, $c0, $78, $87, $b0, $0f, $20, $1f
+	db $60, $1f, $61, $1e, $71, $0e, $3b, $04, $3f, $00, $67, $18, $c7, $30, $8e, $60
+	db $4e, $30, $06, $30, $03, $18, $17, $0c, $0e, $0e, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $03, $04, $02, $0d
+	db $0f, $10, $16, $29, $10, $2f, $39, $46, $26, $40, $00, $00, $07, $00, $39, $06
+	db $c0, $3f, $80, $7f, $01, $fe, $03, $fc, $47, $b8, $f0, $00, $c0, $00, $80, $00
+	db $87, $06, $0f, $0c, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $01, $00, $03
+	db $01, $06, $02, $05, $02, $05, $02, $04, $00, $04, $80, $00, $20, $c0, $0f, $f0
+	db $81, $7e, $81, $7e, $c3, $3c, $c7, $38, $be, $01, $0f, $00, $01, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $80, $00, $e0, $00, $70, $00, $00, $00, $00, $00
+	db $08, $18, $00, $38, $10, $68, $78, $84, $fc, $02, $b4, $4a, $56, $a9, $5f, $af
+	db $bf, $7f, $1f, $f1, $3f, $c3, $c4, $03, $0c, $03, $f9, $06, $fb, $04, $9f, $60
+	db $8f, $70, $07, $f8, $0f, $f0, $07, $f8, $c7, $38, $07, $38, $01, $18, $00, $18
+	db $08, $f0, $f0, $00, $07, $00, $0f, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $10, $13, $00, $27, $00, $e7, $61, $97, $a1, $53
+	db $53, $ab, $af, $57, $af, $5f, $1e, $1d, $0c, $3b, $0c, $73, $9e, $60, $9a, $64
+	db $b2, $4c, $26, $d8, $34, $c8, $3c, $c0, $7e, $80, $9f, $60, $03, $fc, $f1, $0e
+	db $08, $06, $04, $03, $02, $01, $01, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $01, $01, $02, $02, $04, $7c, $00, $fc, $08, $fc, $38, $f8, $38, $78, $e0, $e0
+	db $e0, $e0, $c0, $e0, $00, $e0, $00, $c0, $80, $00, $80, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $80, $00, $c0, $00, $e0, $00
+	db $60, $00, $e0, $00, $c0, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $08, $08, $10, $10, $20, $e0, $00, $e0, $40, $e0, $c0, $c0, $c0, $c0
+	db $00, $00, $00, $00, $00, $80, $00, $80, $00, $80, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80, $00, $e0, $00, $f0, $00
+	db $38, $00, $1c, $00, $0e, $80, $46, $c0, $e3, $e0, $01, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $1f, $00, $36, $09, $48, $33, $90, $63, $95, $62, $b5, $42, $b7, $40, $a3, $40
+	db $c4, $13, $40, $3f, $0b, $34, $13, $60, $13, $60, $11, $60, $18, $38, $3c, $3c
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $f0, $00, $08, $f0, $04, $f8, $87, $78, $13, $ec, $38, $c7, $f8, $07, $f8, $07
+	db $cc, $03, $87, $00, $80, $00, $00, $00, $80, $00, $c0, $00, $e1, $01, $f7, $03
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $01, $01, $02, $01, $02, $01, $02, $00, $00
+	db $00, $00, $00, $00, $0f, $00, $3f, $00, $ff, $00, $63, $9c, $01, $fe, $41, $be
+	db $c1, $3e, $c3, $3c, $31, $0e, $00, $0f, $00, $07, $00, $07, $c1, $be, $ff, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $04, $3c, $30, $48, $50, $a9, $b0, $49, $50, $a9, $b7, $4f, $0f, $0f, $1e, $0f
+	db $6c, $1f, $8c, $7f, $8c, $7c, $d8, $2c, $e0, $0e, $c0, $06, $c0, $03, $c0, $01
+	db $c0, $01, $c0, $00, $e0, $01, $e0, $00, $f0, $00, $70, $00, $f0, $00, $e0, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $f0, $00, $f8, $40, $f8, $f7, $ff, $e0, $e0, $40, $40, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $80
+	db $00, $c0, $00, $c0, $00, $80, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $91, $1c, $5f, $20, $1e, $47, $00, $00, $8c, $31, $94, $52, $bd, $77
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_0f7fff", ROMX[$7fff], BANK[$3d]
@@ -45001,53 +47749,46 @@ Data_3e_570a:
 	db $f0, $16, $0c, $f0, $13, $0e, $f0, $88, $0e, $f0, $1d, $0f, $fb, $00, $fc, $02
 	db $fd, $09, $ef, $00, $ed, $04, $ed, $04, $f9, $29, $00, $f9, $5c, $00, $f9, $82
 	db $00, $f9, $b6, $00, $ed, $03, $f9, $db, $00, $f9, $24, $01, $f9, $54, $01, $f9
-	db $85, $01, $f9, $f5, $00, $f9, $18, $01, $f9, $48, $01, $f9, $a4, $01
-
-SECTION "analyzed_0f974b", ROMX[$574b], BANK[$3e]
-
-Data_3e_574b:
+	db $85, $01, $f9, $f5, $00, $f9, $18, $01, $f9, $48, $01, $f9, $a4, $01, $fa, $d8
+	db $ff, $95, $fc, $02, $64, $fc, $03, $64, $96, $fc, $02, $60, $fc, $03, $60, $95
+	db $fc, $02, $66, $fc, $03, $66, $96, $fc, $02, $61, $fc, $03, $61, $fc, $04, $61
+	db $fc, $05, $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $66, $fc, $03, $66
+	db $fc, $02, $64, $fc, $03, $64, $f8, $fc, $02, $75, $24, $fc, $03, $65, $fc, $04
+	db $65, $fc, $02, $63, $fc, $03, $63, $fc, $03, $63, $fc, $04, $63, $fc, $02, $62
+	db $fc, $03, $62, $fc, $02, $61, $fc, $03, $61, $fc, $02, $63, $fc, $03, $63, $f8
 	db $95, $fc, $02, $64, $fc, $03, $64, $96, $fc, $02, $60, $fc, $03, $60, $95, $fc
 	db $02, $66, $fc, $03, $66, $96, $fc, $02, $61, $fc, $03, $61, $fc, $04, $61, $fc
-	db $05, $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $66, $fc, $03, $66, $fc
-	db $02, $64, $fc, $03, $64, $f8, $fc, $02, $75, $24, $fc, $03, $65, $fc, $04, $65
-	db $fc, $02, $63, $fc, $03, $63, $fc, $03, $63, $fc, $04, $63, $fc, $02, $62, $fc
-	db $03, $62, $fc, $02, $61, $fc, $03, $61, $fc, $02, $63, $fc, $03, $63, $f8, $95
-	db $fc, $02, $64, $fc, $03, $64, $96, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02
-	db $66, $fc, $03, $66, $96, $fc, $02, $61, $fc, $03, $61, $fc, $04, $61, $fc, $05
-	db $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $64, $fc, $03, $64, $96, $fc
-	db $02, $62, $fc, $03, $62, $f8, $fc, $02, $71, $24, $fc, $03, $61, $fc, $04, $61
-	db $fc, $02, $63, $fc, $03, $63, $fc, $04, $63, $fc, $05, $63, $fc, $02, $62, $fc
-	db $03, $62, $fc, $02, $61, $fc, $03, $61, $95, $fc, $02, $6d, $fc, $03, $6d, $f8
-	db $fc, $03, $62, $64, $60, $64, $64, $62, $62, $64, $fc, $02, $64, $fc, $03, $64
-	db $96, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $66, $fc, $03, $66, $96, $fc
-	db $02, $61, $fc, $03, $61, $f8, $fc, $03, $64, $64, $62, $64, $64, $60, $62, $64
-	db $fc, $02, $64, $fc, $03, $64, $96, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02
-	db $66, $fc, $03, $66, $96, $fc, $02, $61, $fc, $03, $61, $f8, $fc, $04, $61, $fc
-	db $05, $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $6d, $fc, $03, $6d, $fc
-	db $02, $63, $fc, $03, $63, $fc, $02, $61, $fc, $03, $61, $fc, $02, $63, $fc, $03
-	db $63, $fc, $02, $6d, $fc, $03, $6d, $96, $fc, $02, $63, $fc, $03, $63, $f8, $fc
-	db $04, $63, $fc, $05, $63, $fc, $02, $62, $fc, $03, $62, $96, $fc, $02, $60, $fc
-	db $03, $60, $95, $fc, $02, $64, $fc, $03, $64, $fc, $04, $64, $fc, $05, $64, $fc
-	db $02, $66, $fc, $03, $66, $96, $fc, $02, $60, $fc, $03, $60, $fc, $02, $62, $fc
-	db $03, $62, $f8, $fc, $02, $63, $fc, $03, $63, $fc, $02, $62, $fc, $03, $62, $fc
-	db $02, $64, $fc, $03, $64, $fc, $02, $60, $fc, $03, $60, $fc, $04, $60, $fc, $05
-	db $60, $fc, $02, $61, $fc, $03, $61, $95, $75, $12, $74, $12, $fe, $f8, $fc, $02
-	db $63
-
-SECTION "analyzed_0f9913", ROMX[$5913], BANK[$3e]
-
-Data_3e_5913:
-	db $fb, $01, $fc, $01, $fd, $12, $ef, $00, $ed, $05, $f9, $0f, $00, $f9, $1e, $00
-	db $f9, $34, $00, $f9, $4a, $00, $fa, $f4, $ff, $94, $fc, $01, $60, $fc, $03, $60
-	db $fc, $01, $74, $48, $fc, $02, $64, $fc, $03, $64, $f8, $93, $fc, $01, $6d, $fc
-	db $03, $6d, $94, $fc, $01, $73, $24, $fc, $02, $63, $fc, $03, $63, $fc, $04, $63
-	db $fc, $05, $63, $f8, $93, $fc, $01, $64, $fc, $03, $64, $94, $fc, $01, $72, $24
-	db $fc, $02, $62, $fc, $03, $62, $fc, $04, $62, $fc, $05, $62, $f8, $93, $fc, $01
-	db $6d, $fc, $03, $6d, $94, $fc, $01, $73, $24, $fc, $02, $63, $fc, $03, $63, $fc
-	db $02, $62, $61, $95, $f8, $fb, $00, $ea, $02, $fd, $12, $ef, $00, $f9, $0f, $00
-	db $f9, $19, $00, $f9, $09, $00, $f9, $13, $00, $fa, $f4, $ff, $93, $fc, $14, $60
-	db $64, $94, $70, $48, $93, $64, $94, $60, $f8, $92, $fc, $14, $6d, $63, $93, $7d
-	db $48, $93, $63, $6d, $f8
+	db $05, $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $64, $fc, $03, $64, $96
+	db $fc, $02, $62, $fc, $03, $62, $f8, $fc, $02, $71, $24, $fc, $03, $61, $fc, $04
+	db $61, $fc, $02, $63, $fc, $03, $63, $fc, $04, $63, $fc, $05, $63, $fc, $02, $62
+	db $fc, $03, $62, $fc, $02, $61, $fc, $03, $61, $95, $fc, $02, $6d, $fc, $03, $6d
+	db $f8, $fc, $03, $62, $64, $60, $64, $64, $62, $62, $64, $fc, $02, $64, $fc, $03
+	db $64, $96, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $66, $fc, $03, $66, $96
+	db $fc, $02, $61, $fc, $03, $61, $f8, $fc, $03, $64, $64, $62, $64, $64, $60, $62
+	db $64, $fc, $02, $64, $fc, $03, $64, $96, $fc, $02, $60, $fc, $03, $60, $95, $fc
+	db $02, $66, $fc, $03, $66, $96, $fc, $02, $61, $fc, $03, $61, $f8, $fc, $04, $61
+	db $fc, $05, $61, $fc, $02, $60, $fc, $03, $60, $95, $fc, $02, $6d, $fc, $03, $6d
+	db $fc, $02, $63, $fc, $03, $63, $fc, $02, $61, $fc, $03, $61, $fc, $02, $63, $fc
+	db $03, $63, $fc, $02, $6d, $fc, $03, $6d, $96, $fc, $02, $63, $fc, $03, $63, $f8
+	db $fc, $04, $63, $fc, $05, $63, $fc, $02, $62, $fc, $03, $62, $96, $fc, $02, $60
+	db $fc, $03, $60, $95, $fc, $02, $64, $fc, $03, $64, $fc, $04, $64, $fc, $05, $64
+	db $fc, $02, $66, $fc, $03, $66, $96, $fc, $02, $60, $fc, $03, $60, $fc, $02, $62
+	db $fc, $03, $62, $f8, $fc, $02, $63, $fc, $03, $63, $fc, $02, $62, $fc, $03, $62
+	db $fc, $02, $64, $fc, $03, $64, $fc, $02, $60, $fc, $03, $60, $fc, $04, $60, $fc
+	db $05, $60, $fc, $02, $61, $fc, $03, $61, $95, $75, $12, $74, $12, $fe, $f8, $fc
+	db $02, $63, $fc, $03, $63, $fc, $02, $62, $fc, $03, $62, $fc, $02, $64, $fc, $03
+	db $64, $fc, $02, $63, $fc, $03, $63, $fc, $04, $63, $fc, $05, $63, $fc, $02, $62
+	db $fc, $03, $62, $71, $12, $70, $12, $fe, $f8, $fb, $01, $fc, $01, $fd, $12, $ef
+	db $00, $ed, $05, $f9, $0f, $00, $f9, $1e, $00, $f9, $34, $00, $f9, $4a, $00, $fa
+	db $f4, $ff, $94, $fc, $01, $60, $fc, $03, $60, $fc, $01, $74, $48, $fc, $02, $64
+	db $fc, $03, $64, $f8, $93, $fc, $01, $6d, $fc, $03, $6d, $94, $fc, $01, $73, $24
+	db $fc, $02, $63, $fc, $03, $63, $fc, $04, $63, $fc, $05, $63, $f8, $93, $fc, $01
+	db $64, $fc, $03, $64, $94, $fc, $01, $72, $24, $fc, $02, $62, $fc, $03, $62, $fc
+	db $04, $62, $fc, $05, $62, $f8, $93, $fc, $01, $6d, $fc, $03, $6d, $94, $fc, $01
+	db $73, $24, $fc, $02, $63, $fc, $03, $63, $fc, $02, $62, $61, $95, $f8, $fb, $00
+	db $ea, $02, $fd, $12, $ef, $00, $f9, $0f, $00, $f9, $19, $00, $f9, $09, $00, $f9
+	db $13, $00, $fa, $f4, $ff, $93, $fc, $14, $60, $64, $94, $70, $48, $93, $64, $94
+	db $60, $f8, $92, $fc, $14, $6d, $63, $93, $7d, $48, $93, $63, $6d, $f8
 
 SECTION "analyzed_0f9a1d", ROMX[$5a1d], BANK[$3e]
 
@@ -46000,7 +48741,7 @@ Func_3f_4425:
 SECTION "analyzed_0fc42e", ROMX[$442e], BANK[$3f]
 
 Data_3f_442e:
-	db $00, $01, $20, $01, $40, $01, $60, $01, $80, $01
+	db $00, $01, $20, $01, $40, $01, $60, $01, $80, $01, $a0, $01
 
 SECTION "analyzed_0fc43c", ROMX[$443c], BANK[$3f]
 
@@ -46011,6 +48752,11 @@ SECTION "analyzed_0fc444", ROMX[$4444], BANK[$3f]
 
 Data_3f_4444:
 	db $70, $01, $90, $01
+
+SECTION "analyzed_0fc44e", ROMX[$444e], BANK[$3f]
+
+Data_3f_444e:
+	db $2c, $00, $07, $01, $c9, $01, $23, $02, $c7, $02, $58, $03
 
 SECTION "analyzed_0fc46e", ROMX[$446e], BANK[$3f]
 
@@ -46455,12 +49201,12 @@ Data_3f_4b00:
 SECTION "analyzed_0fcb22", ROMX[$4b22], BANK[$3f]
 
 Data_3f_4b22:
-	db $b1, $05
+	db $b1, $05, $98, $06, $4c, $07
 
-SECTION "analyzed_0fcb26", ROMX[$4b26], BANK[$3f]
+SECTION "analyzed_0fcb32", ROMX[$4b32], BANK[$3f]
 
-Data_3f_4b26:
-	db $4c, $07
+Data_3f_4b32:
+	db $7a, $09
 
 SECTION "analyzed_0fcb36", ROMX[$4b36], BANK[$3f]
 
@@ -46485,12 +49231,7 @@ Data_3f_4b4a:
 SECTION "analyzed_0fcb50", ROMX[$4b50], BANK[$3f]
 
 Data_3f_4b50:
-	db $0a, $0d, $1b, $0d
-
-SECTION "analyzed_0fcb56", ROMX[$4b56], BANK[$3f]
-
-Data_3f_4b56:
-	db $bf, $15, $0d, $1b
+	db $0a, $0d, $1b, $0d, $a3, $11, $bf, $15, $0d, $1b, $2f, $1f
 
 SECTION "analyzed_0fcd00", ROMX[$4d00], BANK[$3f]
 
@@ -46635,6 +49376,22 @@ Data_3f_50b1:
 	db $01, $fd, $02, $63, $fe, $63, $63, $63, $63, $63, $77, $01, $fd, $02, $63, $63
 	db $fe, $63, $63, $fe, $63, $ff
 
+SECTION "analyzed_0fd198", ROMX[$5198], BANK[$3f]
+
+Data_3f_5198:
+	db $00, $4b, $07, $f0, $a4, $06, $00, $4b, $07, $f0, $10, $07, $ef, $00, $ed, $03
+	db $fd, $03, $fb, $00, $91, $fc, $00, $64, $92, $64, $91, $65, $92, $60, $fd, $02
+	db $64, $64, $93, $64, $92, $65, $65, $93, $65, $92, $65, $64, $91, $64, $92, $64
+	db $91, $65, $92, $60, $92, $64, $64, $93, $64, $92, $65, $65, $93, $65, $92, $65
+	db $64, $fc, $00, $64, $93, $64, $92, $65, $93, $65, $fc, $03, $92, $65, $64, $fc
+	db $00, $63, $93, $63, $92, $64, $93, $64, $fc, $04, $92, $65, $64, $93, $fc, $03
+	db $63, $92, $64, $65, $63, $93, $fc, $04, $63, $92, $64, $65, $64, $62, $63, $64
+	db $62, $fc, $05, $61, $62, $63, $61, $ff, $fd, $02, $fb, $00, $91, $fc, $03, $64
+	db $64, $64, $6c, $6c, $fd, $06, $fc, $00, $6c, $6c, $64, $fd, $01, $fc, $03, $64
+	db $64, $6c, $6c, $fd, $04, $fc, $00, $6c, $6c, $64, $fd, $14, $64, $64, $fd, $02
+	db $fc, $02, $64, $64, $64, $64, $fc, $03, $64, $64, $6c, $6c, $fc, $05, $6c, $6c
+	db $65, $65, $ff
+
 SECTION "analyzed_0fd24c", ROMX[$524c], BANK[$3f]
 
 Data_3f_524c:
@@ -46642,6 +49399,14 @@ Data_3f_524c:
 	db $91, $fc, $00, $60, $68, $61, $68, $63, $6b, $64, $6c, $fd, $0c, $fb, $00, $fc
 	db $00, $64, $fd, $09, $fb, $00, $fc, $00, $64, $fc, $01, $64, $fc, $02, $64, $fc
 	db $03, $64, $fc, $04, $64, $ff
+
+SECTION "analyzed_0fd47a", ROMX[$547a], BANK[$3f]
+
+Data_3f_547a:
+	db $00, $b6, $09, $00, $b6, $09, $00, $b6, $09, $f0, $86, $09, $fd, $01, $fb, $00
+	db $91, $fc, $05, $60, $67, $fd, $03, $fc, $01, $61, $fc, $00, $62, $fc, $01, $62
+	db $fe, $63, $fe, $fd, $03, $fb, $00, $fc, $00, $62, $fe, $63, $fe, $64, $fe, $fe
+	db $fc, $03, $64, $fe, $fc, $04, $63, $fe, $fc, $05, $62, $ff
 
 SECTION "analyzed_0fd514", ROMX[$5514], BANK[$3f]
 
@@ -46767,6 +49532,50 @@ Data_3f_5c40:
 	db $fd, $0e, $fc, $0a, $63, $63, $fc, $0e, $63, $fc, $0a, $70, $07, $fc, $0a, $63
 	db $fd, $07, $60, $63, $60, $fc, $0e, $73, $0e, $fc, $0a, $63, $60, $f8
 
+SECTION "analyzed_0fdca3", ROMX[$5ca3], BANK[$3f]
+
+Data_3f_5ca3:
+	db $f0, $af, $11, $f0, $8a, $12, $f0, $7d, $13, $f0, $20, $15, $fb, $00, $fd, $07
+	db $ef, $00, $ed, $05, $f9, $39, $00
+
+SECTION "analyzed_0fdcf0", ROMX[$5cf0], BANK[$3f]
+
+Data_3f_5cf0:
+	db $fd, $07, $fc, $01, $94, $6c, $64, $7b, $0e, $fc, $03, $6b, $fc, $01, $63, $70
+	db $1c
+
+SECTION "analyzed_0fdd8a", ROMX[$5d8a], BANK[$3f]
+
+Data_3f_5d8a:
+	db $fb, $00, $fd, $07, $ef, $00, $ed, $04, $f9, $39, $00
+
+SECTION "analyzed_0fddcb", ROMX[$5dcb], BANK[$3f]
+
+Data_3f_5dcb:
+	db $fd, $07, $fc, $02, $94, $6b, $93, $6b, $94, $61, $6b, $93, $6b, $94, $61, $6b
+	db $93, $6b
+
+SECTION "analyzed_0fde7d", ROMX[$5e7d], BANK[$3f]
+
+Data_3f_5e7d:
+	db $fd, $07, $fb, $00, $ef, $00, $f9, $39, $00
+
+SECTION "analyzed_0fdebc", ROMX[$5ebc], BANK[$3f]
+
+Data_3f_5ebc:
+	db $fd, $07, $ea, $02, $93, $fc, $14, $6c, $fc, $13, $6c, $fc, $14, $6c, $fc, $13
+	db $6c, $67, $fc, $14, $7c, $0e, $fc, $13, $6c
+
+SECTION "analyzed_0fe020", ROMX[$6020], BANK[$3f]
+
+Data_3f_6020:
+	db $fb, $00, $91, $fd, $07, $ef, $00, $f9, $39, $00
+
+SECTION "analyzed_0fe060", ROMX[$6060], BANK[$3f]
+
+Data_3f_6060:
+	db $fc, $0a, $63, $60, $60, $60, $fc, $0e, $63, $fc, $0a, $60, $60, $60
+
 SECTION "analyzed_0fe0bf", ROMX[$60bf], BANK[$3f]
 
 Data_3f_60bf:
@@ -46860,88 +49669,105 @@ Data_3f_60bf:
 	db $56, $00, $f9, $34, $00, $f9, $6e, $00, $ed, $02, $f9, $87, $00, $f9, $96, $00
 	db $f9, $23, $00, $f9, $9d, $00, $f9, $b2, $00, $f9, $be, $00, $f9, $17, $00, $f9
 	db $c3, $00, $ed, $00, $f9, $cf, $00, $f9, $ed, $00, $f9, $c9, $00, $f9, $00, $01
+	db $fa, $be, $ff, $77, $70, $f8, $fc, $01, $fd, $07, $94, $70, $0e, $74, $0e, $fc
+	db $02, $64, $fc, $01, $7b, $0e, $fc, $02, $6b, $fc, $01, $73, $15, $79, $15, $93
+	db $fc, $03, $7d, $0e, $f8, $fc, $01, $fd, $07, $94, $70, $0e, $74, $0e, $fc, $02
+	db $64, $fc, $01, $7b, $0e, $fc, $02, $6b, $fc, $01, $73, $15, $79, $15, $fc, $03
+	db $73, $0e, $f8, $fc, $01, $fd, $07, $94, $fc, $01, $60, $6b, $64, $6d, $fc, $02
+	db $6d, $fc, $01, $7d, $0e, $fc, $02, $6d, $fc, $01, $7d, $15, $7c, $15, $75, $0e
+	db $f8, $fc, $01, $fd, $15, $94, $6c, $65, $fd, $07, $7c, $1c, $77, $0e, $69, $72
+	db $0e, $63, $f8, $67, $6c, $69, $75, $15, $7c, $1c, $fd, $0e, $6b, $7c, $1c, $f8
+	db $94, $67, $fc, $01, $6d, $fd, $07, $67, $fc, $01, $65, $fc, $02, $65, $fc, $01
+	db $65, $fd, $0e, $6c, $6b, $68, $69, $f8, $fc, $01, $fd, $0e, $94, $71, $15, $79
+	db $15, $73, $1c, $6b, $63, $69, $f8, $65, $79, $07, $7c, $15, $7b, $1c, $6c, $65
+	db $6b, $f8, $94, $fd, $0e, $67, $fc, $01, $6d, $77, $07, $75, $15, $7c, $15, $7b
+	db $15, $65, $f8, $fc, $02, $fd, $07, $94, $6c, $95, $6c, $94, $6c, $6c, $95, $6c
+	db $94, $6c, $6c, $95, $6c, $94, $6c, $6c, $95, $6c, $94, $6c, $94, $6c, $95, $6c
+	db $94, $6c, $6c, $f8, $94, $65, $95, $65, $94, $65, $6d, $65, $95, $65, $69, $94
+	db $65, $6b, $95, $65, $95, $65, $6d, $95, $65, $69, $65, $6d, $f8, $94, $65, $95
+	db $65, $94, $65, $6d, $65, $95, $65, $69, $94, $65, $6b, $95, $65, $95, $65, $6d
+	db $95, $65, $69, $61, $68, $f8, $fb, $01, $fd, $07, $ef, $00, $ed, $05, $f9, $3f
+	db $00, $f9, $3c, $00, $f9, $39, $00, $f9, $4a, $00, $f9, $33, $00, $f9, $30, $00
+	db $f9, $2d, $00, $f9, $3e, $00, $f9, $4c, $00, $f9, $49, $00, $f9, $61, $00, $f9
+	db $5e, $00, $f9, $40, $00, $f9, $3d, $00, $f9, $55, $00, $f9, $52, $00, $f9, $34
+	db $00, $f9, $4c, $00, $f9, $2e, $00, $f9, $46, $00, $fa, $c4, $ff, $fc, $01, $93
+	db $64, $63, $6b, $64, $61, $63, $6b, $64, $64, $63, $6b, $64, $61, $63, $6b, $64
+	db $f8, $fc, $01, $64, $68, $61, $69, $6c, $65, $6b, $64, $73, $15, $79, $15, $72
+	db $0e, $f8, $94, $fc, $02, $73, $0e, $93, $6c, $6d, $94, $63, $93, $6c, $6d, $65
+	db $94, $7c, $0e, $93, $65, $6d, $6c, $94, $63, $93, $6d, $65, $f8, $94, $7b, $0e
+	db $93, $65, $66, $94, $6b, $93, $65, $66, $6d, $94, $75, $0e, $93, $65, $66, $65
+	db $94, $6b, $93, $66, $6d, $f8, $fb, $00, $fd, $07, $ef, $00, $f9, $3f, $00, $f9
+	db $3c, $00, $f9, $39, $00, $f9, $61, $00, $f9, $33, $00, $f9, $30, $00, $f9, $2d
+	db $00, $f9, $55, $00, $f9, $7e, $00, $f9, $7b, $00, $f9, $a6, $00, $f9, $a3, $00
+	db $f9, $72, $00, $f9, $6f, $00, $f9, $9a, $00, $f9, $c5, $00, $f9, $ec, $00, $f9
+	db $13, $01, $f9, $e6, $00, $f9, $0d, $01, $fa, $c4, $ff, $ea, $02, $94, $fc, $14
+	db $60, $fc, $13, $60, $fc, $14, $60, $fc, $13, $60, $67, $fc, $14, $70, $0e, $fc
+	db $13, $60, $fc, $14, $70, $0e, $fc, $13, $60, $93, $fc, $14, $73, $0e, $fc, $13
+	db $63, $fc, $14, $74, $0e, $f8, $ea, $02, $93, $fc, $14, $64, $fc, $13, $64, $fc
+	db $14, $64, $fc, $13, $64, $67, $fc, $14, $74, $0e, $fc, $13, $64, $fc, $14, $74
+	db $0e, $fc, $13, $64, $fc, $14, $74, $0e, $fc, $13, $64, $fc, $14, $64, $fc, $13
+	db $64, $f8, $ea, $02, $93, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc, $14, $6d, $fc
+	db $13, $6d, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc, $14, $6d, $fc, $13, $6d, $fc
+	db $14, $6d, $fc, $13, $6d, $fc, $14, $6d, $6d, $fc, $13, $6d, $fc, $14, $6d, $f8
+	db $ea, $02, $93, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66
+	db $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66, $fc, $14, $66
+	db $fc, $13, $66, $fc, $14, $66, $66, $fc, $13, $66, $fc, $14, $66, $f8, $ea, $02
+	db $93, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66, $fc, $14
+	db $76, $0e, $fc, $13, $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $76, $0e
+	db $fc, $13, $66, $fc, $14, $66, $66, $f8, $ea, $02, $93, $fc, $14, $6d, $fc, $13
+	db $6d, $fc, $14, $6d, $fc, $13, $6d, $67, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc
+	db $14, $7d, $0e, $fc, $13, $6d, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc, $14, $7d
+	db $0e, $f8, $fc, $14, $66, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66, $67, $fc
+	db $14, $76, $0e, $fc, $13, $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $76
+	db $0e, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66, $f8, $fb, $00, $91, $fd, $07
+	db $ef, $00, $f9, $3f, $00, $f9, $3c, $00, $f9, $39, $00, $f9, $36, $00, $f9, $33
+	db $00, $f9, $30, $00, $f9, $2d, $00, $f9, $2a, $00, $f9, $46, $00, $f9, $43, $00
+	db $f9, $40, $00, $f9, $3d, $00, $f9, $3a, $00, $f9, $37, $00, $f9, $34, $00, $f9
+	db $52, $00, $f9, $0f, $00, $f9, $0c, $00, $f9, $09, $00, $f9, $46, $00, $fa, $c4
+	db $ff, $fc, $0a, $63, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $63, $60, $63, $fc
+	db $0a, $60, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $60, $63, $fc, $0e, $63, $f8
+	db $fc, $0a, $73, $0e, $60, $fc, $0e, $73, $0e, $fc, $0e, $73, $0e, $fc, $0a, $63
+	db $fc, $0a, $73, $0e, $fc, $0e, $73, $0e, $fc, $0e, $63, $63, $fc, $0a, $73, $0e
+	db $f8, $fc, $0a, $63, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $63, $60, $63, $fc
+	db $0a, $63, $fc, $0e, $63, $fc, $0a, $60, $fc, $0e, $63, $63, $63, $63, $63, $f8
+	db $f0, $3b, $1f, $f0, $a3, $20, $f0, $88, $21, $f0, $f8, $22, $fb, $00, $fd, $07
+	db $ef, $00, $ed, $05, $f9, $3b, $00
 
-SECTION "analyzed_0fe662", ROMX[$6662], BANK[$3f]
+SECTION "analyzed_0fea7e", ROMX[$6a7e], BANK[$3f]
 
-Data_3f_6662:
-	db $77, $70, $f8, $fc, $01, $fd, $07, $94, $70, $0e, $74, $0e, $fc, $02, $64, $fc
-	db $01, $7b, $0e, $fc, $02, $6b, $fc, $01, $73, $15, $79, $15, $93, $fc, $03, $7d
-	db $0e, $f8, $fc, $01, $fd, $07, $94, $70, $0e, $74, $0e, $fc, $02, $64, $fc, $01
-	db $7b, $0e, $fc, $02, $6b, $fc, $01, $73, $15, $79, $15, $fc, $03, $73, $0e, $f8
-	db $fc, $01, $fd, $07, $94, $fc, $01, $60, $6b, $64, $6d, $fc, $02, $6d, $fc, $01
-	db $7d, $0e, $fc, $02, $6d, $fc, $01, $7d, $15, $7c, $15, $75, $0e, $f8, $fc, $01
-	db $fd, $15, $94, $6c, $65, $fd, $07, $7c, $1c, $77, $0e, $69, $72, $0e, $63, $f8
-	db $67, $6c, $69, $75, $15, $7c, $1c, $fd, $0e, $6b, $7c, $1c, $f8, $94, $67, $fc
-	db $01, $6d, $fd, $07, $67, $fc, $01, $65, $fc, $02, $65, $fc, $01, $65, $fd, $0e
-	db $6c, $6b, $68, $69, $f8, $fc, $01, $fd, $0e, $94, $71, $15, $79, $15, $73, $1c
-	db $6b, $63, $69, $f8, $65, $79, $07, $7c, $15, $7b, $1c, $6c, $65, $6b, $f8, $94
-	db $fd, $0e, $67, $fc, $01, $6d, $77, $07, $75, $15, $7c, $15, $7b, $15, $65, $f8
-	db $fc, $02, $fd, $07, $94, $6c, $95, $6c, $94, $6c, $6c, $95, $6c, $94, $6c, $6c
-	db $95, $6c, $94, $6c, $6c, $95, $6c, $94, $6c, $94, $6c, $95, $6c, $94, $6c, $6c
-	db $f8, $94, $65, $95, $65, $94, $65, $6d, $65, $95, $65, $69, $94, $65, $6b, $95
-	db $65, $95, $65, $6d, $95, $65, $69, $65, $6d, $f8, $94, $65, $95, $65, $94, $65
-	db $6d, $65
+Data_3f_6a7e:
+	db $fd, $07, $fc, $02, $94, $6c, $93, $65, $94, $6c, $93, $6c, $93, $65
 
-SECTION "analyzed_0fe775", ROMX[$6775], BANK[$3f]
+SECTION "analyzed_0feba3", ROMX[$6ba3], BANK[$3f]
 
-Data_3f_6775:
-	db $fb, $01, $fd, $07, $ef, $00, $ed, $05, $f9, $3f, $00, $f9, $3c, $00, $f9, $39
-	db $00, $f9, $4a, $00, $f9, $33, $00, $f9, $30, $00, $f9, $2d, $00, $f9, $3e, $00
-	db $f9, $4c, $00, $f9, $49, $00, $f9, $61, $00, $f9, $5e, $00, $f9, $40, $00, $f9
-	db $3d, $00, $f9, $55, $00, $f9, $52, $00, $f9, $34, $00, $f9, $4c, $00, $f9, $2e
-	db $00, $f9, $46, $00
+Data_3f_6ba3:
+	db $fb, $00, $fd, $07, $ef, $00, $ed, $03, $f9, $39, $00
 
-SECTION "analyzed_0fe7bc", ROMX[$67bc], BANK[$3f]
+SECTION "analyzed_0febe4", ROMX[$6be4], BANK[$3f]
 
-Data_3f_67bc:
-	db $fc, $01, $93, $64, $63, $6b, $64, $61, $63, $6b, $64, $64, $63, $6b, $64, $61
-	db $63, $6b, $64, $f8, $fc, $01, $64, $68, $61, $69, $6c, $65, $6b, $64, $73, $15
-	db $79, $15, $72, $0e, $f8, $94, $fc, $02, $73, $0e, $93, $6c, $6d, $94, $63, $93
-	db $6c, $6d, $65, $94, $7c, $0e, $93, $65, $6d, $6c, $94, $63, $93, $6d, $65, $f8
-	db $94, $7b, $0e, $93, $65, $66, $94, $6b, $93, $65, $66, $6d, $94, $75, $0e, $93
-	db $65, $66, $65, $94, $6b, $93, $66, $6d, $f8, $fb, $00, $fd, $07, $ef, $00, $f9
-	db $3f, $00, $f9, $3c, $00, $f9, $39, $00, $f9, $61, $00, $f9, $33, $00, $f9, $30
-	db $00, $f9, $2d, $00, $f9, $55, $00, $f9, $7e, $00, $f9, $7b, $00, $f9, $a6, $00
-	db $f9, $a3, $00, $f9, $72, $00, $f9, $6f, $00, $f9, $9a, $00, $f9, $c5, $00, $f9
-	db $ec, $00, $f9, $13, $01, $f9, $e6, $00, $f9, $0d, $01
+Data_3f_6be4:
+	db $fd, $07, $fc, $01, $94, $68, $61, $69, $60, $94, $68
 
-SECTION "analyzed_0fe85a", ROMX[$685a], BANK[$3f]
+SECTION "analyzed_0fec88", ROMX[$6c88], BANK[$3f]
 
-Data_3f_685a:
-	db $ea, $02, $94, $fc, $14, $60, $fc, $13, $60, $fc, $14, $60, $fc, $13, $60, $67
-	db $fc, $14, $70, $0e, $fc, $13, $60, $fc, $14, $70, $0e, $fc, $13, $60, $93, $fc
-	db $14, $73, $0e, $fc, $13, $63, $fc, $14, $74, $0e, $f8, $ea, $02, $93, $fc, $14
-	db $64, $fc, $13, $64, $fc, $14, $64, $fc, $13, $64, $67, $fc, $14, $74, $0e, $fc
-	db $13, $64, $fc, $14, $74, $0e, $fc, $13, $64, $fc, $14, $74, $0e, $fc, $13, $64
-	db $fc, $14, $64, $fc, $13, $64, $f8, $ea, $02, $93, $fc, $14, $7d, $0e, $fc, $13
-	db $6d, $fc, $14, $6d, $fc, $13, $6d, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc, $14
-	db $6d, $fc, $13, $6d, $fc, $14, $6d, $fc, $13, $6d, $fc, $14, $6d, $6d, $fc, $13
-	db $6d, $fc, $14, $6d, $f8, $ea, $02, $93, $fc, $14, $76, $0e, $fc, $13, $66, $fc
-	db $14, $66, $fc, $13, $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $fc
-	db $13, $66, $fc, $14, $66, $fc, $13, $66, $fc, $14, $66, $66, $fc, $13, $66, $fc
-	db $14, $66, $f8, $ea, $02, $93, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66
-	db $fc, $13, $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $76, $0e, $fc, $13
-	db $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $66, $f8, $ea, $02, $93
-	db $fc, $14, $6d, $fc, $13, $6d, $fc, $14, $6d, $fc, $13, $6d, $67, $fc, $14, $7d
-	db $0e, $fc, $13, $6d, $fc, $14, $7d, $0e, $fc, $13, $6d, $fc, $14, $7d, $0e, $fc
-	db $13, $6d, $fc, $14, $7d, $0e, $f8, $fc, $14, $66, $fc, $13, $66, $fc, $14, $66
-	db $fc, $13, $66, $67, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $76, $0e, $fc
-	db $13, $66, $fc, $14, $76, $0e, $fc, $13, $66, $fc, $14, $66, $fc, $13, $66, $f8
-	db $fb, $00, $91, $fd, $07, $ef, $00, $f9, $3f, $00, $f9, $3c, $00, $f9, $39, $00
-	db $f9, $36, $00, $f9, $33, $00, $f9, $30, $00, $f9, $2d, $00, $f9, $2a, $00, $f9
-	db $46, $00, $f9, $43, $00, $f9, $40, $00, $f9, $3d, $00, $f9, $3a, $00, $f9, $37
-	db $00, $f9, $34, $00, $f9, $52, $00, $f9, $0f, $00, $f9, $0c, $00, $f9, $09, $00
-	db $f9, $46, $00
+Data_3f_6c88:
+	db $fd, $07, $fb, $00, $ef, $00, $f9, $39, $00
 
-SECTION "analyzed_0fe9d0", ROMX[$69d0], BANK[$3f]
+SECTION "analyzed_0fecc7", ROMX[$6cc7], BANK[$3f]
 
-Data_3f_69d0:
-	db $fc, $0a, $63, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $63, $60, $63, $fc, $0a
-	db $60, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $60, $63, $fc, $0e, $63, $f8, $fc
-	db $0a, $73, $0e, $60, $fc, $0e, $73, $0e, $fc, $0e, $73, $0e, $fc, $0a, $63, $fc
-	db $0a, $73, $0e, $fc, $0e, $73, $0e, $fc, $0e, $63, $63, $fc, $0a, $73, $0e, $f8
-	db $fc, $0a, $63, $60, $63, $60, $fc, $0e, $63, $fc, $0a, $63, $60, $63, $fc, $0a
-	db $63, $fc, $0e, $63, $fc, $0a, $60, $fc, $0e, $63, $63, $63, $63, $63, $f8
+Data_3f_6cc7:
+	db $fd, $07, $ea, $02, $93, $fc, $14, $6d, $fc, $13, $6d, $fc, $14, $6d, $fc, $13
+	db $6d, $67
+
+SECTION "analyzed_0fedf8", ROMX[$6df8], BANK[$3f]
+
+Data_3f_6df8:
+	db $fb, $00, $91, $fd, $07, $ef, $00, $f9, $3b, $00
+
+SECTION "analyzed_0fee3a", ROMX[$6e3a], BANK[$3f]
+
+Data_3f_6e3a:
+	db $fc, $0a, $63, $60, $63, $60, $fc, $0e, $63
 
 SECTION "analyzed_0fffff", ROMX[$7fff], BANK[$3f]
 

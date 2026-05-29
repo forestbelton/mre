@@ -112,12 +112,21 @@ def main():
         return False
 
     def size_table(ts):
-        t0 = rom[ts] | (rom[ts + 1] << 8)
-        flat_t0 = to_flat(t0)
-        diff = flat_t0 - ts
-        if diff > 0 and diff % 2 == 0 and 1 <= diff // 2 <= 16 \
-                and plausible_opcode(ts + diff):
-            return diff // 2
+        # Look for *any* entry whose flat address equals the table end for
+        # some N — that entry is the fall-through case and tells us N.
+        # (Earlier versions only checked entry 0; the menu at $0621BB in
+        # the trade house puts the fall-through at index 1.)
+        for n in range(1, 17):
+            table_end = ts + 2 * n
+            if not plausible_opcode(table_end):
+                continue
+            for i in range(n):
+                ei = rom[ts + 2 * i] | (rom[ts + 2 * i + 1] << 8)
+                if to_flat(ei) == table_end:
+                    return n
+        # Fallback for tables with no fall-through entry (e.g. menus that
+        # always dispatch). Try N=2..8 and pick the smallest that lands on
+        # a plausible byte after the table.
         for n in (2, 3, 4, 5, 6, 7, 8):
             if plausible_opcode(ts + 2 * n):
                 return n
