@@ -3777,7 +3777,7 @@ CopyBytesBanked:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_3942:
+CopyBgMapBankedA:
 	ld [$c29c], a
 	ld a, [$7fff]
 	push af
@@ -3812,7 +3812,7 @@ Func_00_397a:
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld a, $19
 	ld hl, $66cb
 	ld de, $c101
@@ -4195,7 +4195,7 @@ DrawTextWindow:
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
-	call Func_00_3942
+	call CopyBgMapBankedA
 	pop hl
 	ret
 
@@ -27204,7 +27204,7 @@ Func_18_4144:
 	ld hl, $5880
 	ld a, $1b
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 Func_18_4150:
 	ld a, $50
@@ -27227,7 +27227,7 @@ Func_18_4150:
 	ld hl, $5b3e
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -27244,7 +27244,7 @@ Func_18_4150:
 	ld hl, $5a3e
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5a54
 	ld bc, $1d28
 	call DrawMetasprite
@@ -27253,7 +27253,7 @@ Func_18_41b7:
 	ld hl, $5a7d
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5a93
 	ld bc, $1d28
 	call DrawMetasprite
@@ -27262,7 +27262,7 @@ Func_18_41cc:
 	ld hl, $5abc
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5ad2
 	ld bc, $1d28
 	call DrawMetasprite
@@ -27287,7 +27287,7 @@ Func_18_41cc:
 	ld hl, $5b56
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5b6e
 	ld bc, $1d28
 	call DrawMetasprite
@@ -27312,7 +27312,7 @@ Func_18_41cc:
 	ld hl, $5b97
 	ld a, $1b
 	ld de, $9885
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5baf
 	ld bc, $1d28
 	call DrawMetasprite
@@ -27414,7 +27414,7 @@ Func_18_53eb:
 	ld hl, $74dd
 	ld a, $1b
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 Func_18_53f7:
 	ld a, $f7
@@ -27434,7 +27434,7 @@ Func_18_53f7:
 	ld hl, $77b2
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -27451,7 +27451,7 @@ Func_18_53f7:
 	ld hl, $769b
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $76a9
 	ld bc, $142d
 	call DrawMetasprite
@@ -27460,7 +27460,7 @@ Func_18_5455:
 	ld hl, $76e6
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $76f4
 	ld bc, $142d
 	call DrawMetasprite
@@ -27469,7 +27469,7 @@ Func_18_546a:
 	ld hl, $7731
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $773f
 	ld bc, $142d
 	call DrawMetasprite
@@ -27488,7 +27488,7 @@ Func_18_546a:
 	ld hl, $782c
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $7881
 	ld bc, $4435
 	call DrawMetasprite
@@ -27510,7 +27510,7 @@ Func_18_546a:
 	ld hl, $77ca
 	ld a, $1b
 	ld de, $98a5
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $781f
 	ld bc, $4435
 	call DrawMetasprite
@@ -27563,7 +27563,7 @@ Func_18_5fbf:
 	ld hl, $7080
 	ld a, $33
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 	ld a, $c7
 	ld [rLCDC], a
@@ -27596,7 +27596,7 @@ Func_18_6013:
 	ld hl, $723e
 	ld a, $33
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 Func_18_601f:
 	ld a, $1f
@@ -27730,7 +27730,7 @@ Func_18_6c1b:
 	ld hl, $7368
 	ld a, $1a
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 Func_18_6c27:
 	ld a, $27
@@ -27744,7 +27744,7 @@ Func_18_6c27:
 	ld hl, $75d3
 	ld a, $1a
 	ld de, $9886
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $7590
 	ld bc, $3e3c
 	call DrawMetasprite
@@ -27768,7 +27768,7 @@ Func_18_6c27:
 	ld hl, $7526
 	ld a, $1a
 	ld de, $9886
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $7532
 	ld bc, $1e34
 	call DrawMetasprite
@@ -27777,7 +27777,7 @@ Func_18_6c8a:
 	ld hl, $755b
 	ld a, $1a
 	ld de, $9886
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $7567
 	ld bc, $1e34
 	call DrawMetasprite
@@ -27793,7 +27793,7 @@ Func_18_6c8a:
 	ld hl, $75eb
 	ld a, $1a
 	ld de, $9886
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $7603
 	ld bc, $1e34
 	call DrawMetasprite
@@ -27894,7 +27894,7 @@ Func_19_407f:
 	ld hl, $5880
 	ld a, $1a
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 Func_19_408b:
 	ld a, $8b
@@ -27911,7 +27911,7 @@ Func_19_408b:
 	ld hl, $5a3e
 	ld a, $1a
 	ld de, $98c4
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 	ld a, $b4
 	ld [wRendererAddr], a
@@ -27927,7 +27927,7 @@ Func_19_408b:
 	ld hl, $5a93
 	ld a, $1a
 	ld de, $98c4
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ret
 
 SECTION "analyzed_0646ca", ROMX[$46ca], BANK[$19]
@@ -30820,7 +30820,7 @@ SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
 Func_1f_4121:
 	ld a, $1f
-	ld hl, Func_1f_417b
+	ld hl, Kalum_StartEncounter
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -30839,7 +30839,7 @@ Func_1f_4133:
 
 SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
 
-Func_1f_417b:
+Kalum_StartEncounter:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -30853,7 +30853,7 @@ Func_1f_417b:
 	ld hl, $5880
 	ld a, $1d
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	call Kalum_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1d
@@ -30945,7 +30945,7 @@ Kalum_AnimateMonsterPortrait:
 	ld hl, $5a3e
 	ld a, $1d
 	ld de, $988d
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5a50
 	ld bc, $2068
 	call DrawMetasprite
@@ -30954,7 +30954,7 @@ Func_1f_4287:
 	ld hl, $5a81
 	ld a, $1d
 	ld de, $988d
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5a93
 	ld bc, $2068
 	call DrawMetasprite
@@ -30963,7 +30963,7 @@ Func_1f_429c:
 	ld hl, $5ac4
 	ld a, $1d
 	ld de, $988d
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $5ad6
 	ld bc, $2068
 	call DrawMetasprite
@@ -30997,7 +30997,7 @@ Func_1f_4416:
 	ld hl, $6080
 	ld a, $35
 	ld de, $9800
-	call Func_00_3942
+	call CopyBgMapBankedA
 	call Func_1f_44ca
 	call HideUnusedOamSprites
 	ld a, $35
@@ -31083,7 +31083,7 @@ Func_1f_4515:
 	ld hl, $623e
 	ld a, $35
 	ld de, $984b
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $62d4
 	ld bc, $405a
 	call DrawMetasprite
@@ -31101,7 +31101,7 @@ Func_1f_4545:
 	ld hl, $6334
 	ld a, $35
 	ld de, $984b
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $63ca
 	ld bc, $4060
 	call DrawMetasprite
@@ -31119,7 +31119,7 @@ Func_1f_4575:
 	ld hl, $6422
 	ld a, $35
 	ld de, $984b
-	call Func_00_3942
+	call CopyBgMapBankedA
 	ld hl, $64b8
 	ld bc, $4063
 	call DrawMetasprite

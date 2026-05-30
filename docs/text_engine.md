@@ -629,3 +629,23 @@ call their own offsets). The menu UI is shared:
 - `ShowYesNoMenu` ($1f:$58D7) — blit the Y/N prompt (`CopyBgMap $5942 -> $9990`),
   then loop (`WaitForNextFrame` / `ReadJoypad` / `DispatchTextRenderer`) until a
   choice; result in `wYNResult`. Invoked by many scripts via `$07`.
+
+### Encounter launch (where the NPC scene is built)
+
+The dialogue scripts are run by a per-NPC **encounter launcher** that first
+builds the scene, then enters the engine. For Kalum it's `Kalum_StartEncounter`
+($1f:$417b), reached via `Func_1f_4109` (dispatch on state `$c2c0`) ->
+`Func_1f_4121` -> `CallBankedHL Kalum_StartEncounter`. The launcher:
+
+1. loads the portrait tile data into VRAM (`$1d:$4000 -> $8000`);
+2. copies the **scene background** tilemap (`CopyBgMapBankedA $1d:$5880 -> $9800`);
+3. draws the portrait via `Kalum_AnimateMonsterPortrait`;
+4. stages sprite tiles + palette, calls a lib routine, then
+   `ld hl, $42b1` / `jp ScriptDispatcherEnterAfterCall` to run the dialogue.
+
+So background + portrait are drawn by the launcher *before* the script runs;
+the script's later `$07` calls re-trigger the monster animation. (NB: the
+launcher enters the script at `$42b1`, slightly before the `KalumScript` label
+at `$42bd` — the script likely begins at `$42b1`.) `CopyBgMapBankedA`
+($00:$3942) is the shared bank-aware BG-map copy (bank in `a`) used throughout
+the portrait/scene code.

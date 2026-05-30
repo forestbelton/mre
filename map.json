@@ -7323,6 +7323,12 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	14658,
+			"name":	"CopyBgMapBankedA"
+		}, {
+			"addr":	508283,
+			"name":	"Kalum_StartEncounter"
+		}, {
 			"addr":	508402,
 			"name":	"Kalum_ShowMonsterPortrait"
 		}, {
