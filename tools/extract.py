@@ -974,11 +974,113 @@ def collect_refs(rom: bytes, spec: dict[str, Any]) -> list[tuple[str, int, int]]
     return refs
 
 
+# ---------------------------------------------------------------------------
+# Banked-call resolution
+# ---------------------------------------------------------------------------
+# The game calls across ROM banks through two idioms that hide the real target
+# behind a register, so the disassembler otherwise shows only a raw address:
+#
+#   ld a, <bank> / ld hl, <addr> / call CallBankedHL      (the common one)
+#   ld a, <bank> / ld [$2fff], a / call|jp <$4000-$7fff>  (direct MBC5 switch)
+#
+# We recognize the *unambiguous, consecutive* form of each, compute the real
+# (bank, addr) -> flat ROM offset, label it, and rewrite the hl/call operand to
+# that label. Deliberately conservative: a wrong-bank label still assembles to
+# the same bytes, so `make verify` cannot catch a misresolution — we only
+# resolve when the idiom is textbook.
+
+_OP_LD_A_IMM8 = 0x3E
+_OP_LD_HL_IMM16 = 0x21
+_OP_LD_MEM_A = 0xEA       # ld [nn], a
+_OP_CALL = 0xCD           # unconditional call nn
+_OP_JP = 0xC3             # unconditional jp nn
+_MBC5_BANK_PORTS = (0x2000, 0x2FFF)  # writing A here sets the ROM bank (low byte)
+
+
+def _banked_target_flat(bank: int, addr: int, rom_size: int) -> int | None:
+    """Flat ROM offset for a (bank, 16-bit addr) call target, or None if out
+    of range. addr < $4000 is bank-independent ROM0."""
+    flat = addr if addr < BANK_SIZE else bank * BANK_SIZE + (addr - BANK_SIZE)
+    return flat if 0 <= flat < rom_size else None
+
+
+def _decode_code_section(rom: bytes, offset: int, length: int) -> list[dict[str, Any]]:
+    """Decode a code section into instruction records {flat, op, n, imm16, imm8}."""
+    out: list[dict[str, Any]] = []
+    _, mem_start = rom_offset_to_bank_addr(offset)
+    chunk = rom[offset:offset + length]
+    i = 0
+    while i < length:
+        _, n = decode(chunk, i, (mem_start + i) & 0xFFFF)
+        imm16 = chunk[i + 1] | (chunk[i + 2] << 8) if n >= 3 and i + 2 < length else None
+        imm8 = chunk[i + 1] if n >= 2 and i + 1 < length else None
+        out.append({"flat": offset + i, "op": chunk[i], "n": n, "imm16": imm16, "imm8": imm8})
+        i += n
+    return out
+
+
+def find_label_flat(spec: dict[str, Any], name: str) -> int | None:
+    """Flat offset of a named user label from map.json, or None."""
+    for entry in spec.get("labels", []) or []:
+        if isinstance(entry, dict) and entry.get("name") == name:
+            try:
+                return int(entry["addr"])
+            except (KeyError, TypeError, ValueError):
+                return None
+    return None
+
+
+def scan_banked_calls(
+    rom: bytes, spec: dict[str, Any], callbankedhl_flat: int | None,
+) -> list[tuple[int, int]]:
+    """Find banked-call idioms. Returns (insn_flat, target_flat) pairs where
+    insn_flat is the instruction whose operand should be rewritten to a
+    symbolic label for the cross-bank target at target_flat."""
+    rom_size = len(rom)
+    out: list[tuple[int, int]] = []
+    for f in spec.get("files", []):
+        if f.get("type") != "code":
+            continue
+        for s in f.get("sections", []):
+            if s.get("type") != "code":
+                continue
+            sec_bank, _ = rom_offset_to_bank_addr(s["addr"])
+            insns = _decode_code_section(rom, s["addr"], s["len"])
+            for k, ins in enumerate(insns):
+                op = ins["op"]
+                # --- CallBankedHL idiom: ld a,n / ld hl,nn / call CallBankedHL
+                if (op == _OP_CALL and callbankedhl_flat is not None
+                        and ins["imm16"] is not None
+                        and resolve_target_to_flat(sec_bank, ins["imm16"]) == callbankedhl_flat
+                        and k >= 2):
+                    pair = (insns[k - 2], insns[k - 1])
+                    ld_a = next((x for x in pair if x["op"] == _OP_LD_A_IMM8), None)
+                    ld_hl = next((x for x in pair if x["op"] == _OP_LD_HL_IMM16), None)
+                    if ld_a and ld_hl and ld_a["imm8"] is not None and ld_hl["imm16"] is not None:
+                        tf = _banked_target_flat(ld_a["imm8"], ld_hl["imm16"], rom_size)
+                        if tf is not None:
+                            out.append((ld_hl["flat"], tf))
+                    continue
+                # --- direct MBC5 switch: ld a,n / ld [$2fff],a / call|jp $4xxx
+                if (op in (_OP_CALL, _OP_JP) and ins["imm16"] is not None
+                        and BANK_SIZE <= ins["imm16"] < 2 * BANK_SIZE
+                        and k >= 2
+                        and insns[k - 1]["op"] == _OP_LD_MEM_A
+                        and insns[k - 1]["imm16"] in _MBC5_BANK_PORTS
+                        and insns[k - 2]["op"] == _OP_LD_A_IMM8
+                        and insns[k - 2]["imm8"] is not None):
+                    tf = _banked_target_flat(insns[k - 2]["imm8"], ins["imm16"], rom_size)
+                    if tf is not None:
+                        out.append((ins["flat"], tf))
+    return out
+
+
 def build_labels(
     refs: list[tuple[str, int, int]],
     sec_index: list[tuple[int, int, str]],
     insn_boundaries: set[int],
     spec: dict[str, Any],
+    bank_targets: list[int] | None = None,
 ) -> dict[int, str]:
     """Pass 2. Build {flat_offset: label_name}.
 
@@ -1043,6 +1145,24 @@ def build_labels(
                 continue
             # data subsection inside a code file: any byte is fine
         assign(flat, kind)
+
+    # Cross-bank call targets (already resolved to flat offsets). Label them
+    # with the same validity rules as refs so the rewritten operand points at
+    # a real, emittable position.
+    for flat in bank_targets or []:
+        sec = section_at(sec_index, flat)
+        if sec is None:
+            continue
+        sec_start, _sec_end, sec_kind, owner = sec
+        if owner == "header":
+            continue
+        if owner in ("data-file", "string-section", "gfx-section"):
+            if flat != sec_start:
+                continue
+        elif owner == "code-file":
+            if sec_kind == "code" and flat not in insn_boundaries:
+                continue
+        assign(flat, "code")
 
     return labels
 
@@ -1200,12 +1320,18 @@ def _build_section_lines(
     hw_symbols: dict[int, str],
     wram_symbols: dict[int, str] | None = None,
     output_dir: Path | None = None,
+    bank_rewrites: dict[int, int] | None = None,
 ) -> list[str]:
     """Render one section in a code file. Returns the list of lines
     (including the SECTION directive at the top).
 
     For a `gfx` section this also writes the decoded PNG under
-    `output_dir/gfx/` as a side effect (output_dir is required in that case)."""
+    `output_dir/gfx/` as a side effect (output_dir is required in that case).
+
+    `bank_rewrites` maps an instruction's flat offset to a cross-bank target
+    flat offset; the instruction's address operand is re-rendered as that
+    target's label (banked-call resolution)."""
+    bank_rewrites = bank_rewrites or {}
     offset = sec["addr"]
     length = sec["len"]
     stype = sec["type"]
@@ -1242,6 +1368,19 @@ def _build_section_lines(
                 lines.append(f"{labels[flat]}:")
             pc = (mem_addr + i) & 0xFFFF
             mnem, n = decode(chunk, i, pc, fmt_target, fmt_io)
+            # Banked-call resolution: re-render this instruction's address
+            # operand as the cross-bank target's label. Reconstruct from the
+            # opcode rather than string-substituting, so it's correct even
+            # when fmt_target already produced a (wrong-bank) label.
+            tgt = bank_rewrites.get(flat)
+            if tgt is not None and tgt in labels:
+                op = chunk[i]
+                if op == _OP_LD_HL_IMM16:
+                    mnem = f"ld hl, {labels[tgt]}"
+                elif op == _OP_CALL:
+                    mnem = f"call {labels[tgt]}"
+                elif op == _OP_JP:
+                    mnem = f"jp {labels[tgt]}"
             lines.append(f"\t{mnem}")
             i += n
     elif stype in ("ascii", "asciz"):
@@ -1282,6 +1421,7 @@ def emit_code_file(
     labels: dict[int, str],
     hw_symbols: dict[int, str],
     wram_symbols: dict[int, str] | None = None,
+    bank_rewrites: dict[int, int] | None = None,
 ) -> Path:
     """Emit (or update) a code file.
 
@@ -1327,7 +1467,7 @@ def emit_code_file(
             sec_name = f"{stem}_{sec['addr']:06x}"
             block = "\n".join(_build_section_lines(
                 sec, sec_name, name, rom, labels, hw_symbols, wram_symbols,
-                output_dir))
+                output_dir, bank_rewrites))
             new_blocks.append(block)
             appended.append(sec_name)
         if new_blocks:
@@ -1349,7 +1489,7 @@ def emit_code_file(
         sec_name = f"{stem}_{sec['addr']:06x}"
         all_lines.extend(_build_section_lines(
             sec, sec_name, name, rom, labels, hw_symbols, wram_symbols,
-            output_dir))
+            output_dir, bank_rewrites))
         all_lines.append("")
     out_path.write_text("\n".join(all_lines))
     return out_path
@@ -1515,7 +1655,17 @@ def main(argv: list[str] | None = None) -> int:
     refs = collect_refs(rom, label_spec)
     insn_boundaries = compute_insn_boundaries(rom, label_spec)
     sec_index = build_section_index(label_spec)
-    labels = build_labels(refs, sec_index, insn_boundaries, label_spec)
+
+    # Banked-call resolution: find cross-bank call idioms, label their targets,
+    # and rewrite the hl/call operand to that label at emission time.
+    callbankedhl_flat = find_label_flat(label_spec, "CallBankedHL")
+    bank_calls = scan_banked_calls(rom, label_spec, callbankedhl_flat)
+    bank_rewrites = {insn_flat: tgt for insn_flat, tgt in bank_calls}
+    labels = build_labels(refs, sec_index, insn_boundaries, label_spec,
+                          bank_targets=[tgt for _, tgt in bank_calls])
+    resolved = sum(1 for tgt in bank_rewrites.values() if tgt in labels)
+    print(f"banked calls: resolved {resolved}/{len(bank_calls)} cross-bank targets",
+          file=sys.stderr)
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1525,7 +1675,8 @@ def main(argv: list[str] | None = None) -> int:
 
     for f in spec["files"]:
         if f["type"] == "code":
-            written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols, wram_symbols))
+            written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols,
+                                           wram_symbols, bank_rewrites))
             code_asms.append(f["name"])
         else:
             written.append(emit_data_file(f, rom, output_dir))

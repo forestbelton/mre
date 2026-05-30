@@ -7326,6 +7326,9 @@
 			"addr":	638976,
 			"name":	"IntroBlankTiles"
 		}, {
+			"addr":	791576,
+			"name":	"DrawTecmoLogo"
+		}, {
 			"addr":	13696,
 			"name":	"IntroScene_TecmoLogo"
 		}, {

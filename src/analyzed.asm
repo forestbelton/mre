@@ -1138,7 +1138,7 @@ Func_00_0a30:
 	push af
 	ld a, $3f
 	ld [$2fff], a
-	call $4000
+	call Func_3f_4000
 	pop af
 	ld [$2fff], a
 	xor a
@@ -1149,7 +1149,7 @@ Func_00_0a45:
 	push af
 	ld a, $3f
 	ld [$2fff], a
-	call $4003
+	call Func_3f_4003
 	pop af
 	ld [$2fff], a
 	ret
@@ -1660,7 +1660,7 @@ Func_00_0f41:
 	ld [$c2a7], a
 	call Func_00_1863
 	ld a, $05
-	ld hl, $463a
+	ld hl, Func_05_463a
 	call CallBankedHL
 RunIntroScene:
 	ld hl, $0f6e
@@ -2735,22 +2735,22 @@ SECTION "analyzed_00166f", ROM0[$166f]
 
 Func_00_166f:
 	ld a, $01
-	ld hl, $569b
+	ld hl, Func_01_569b
 	call CallBankedHL
 	ld a, $01
-	ld hl, $56c5
+	ld hl, Func_01_56c5
 	call CallBankedHL
 	ld a, $01
-	ld hl, $56fb
+	ld hl, Func_01_56fb
 	call CallBankedHL
 	ld a, $05
-	ld hl, $496b
+	ld hl, Func_05_496b
 	call CallBankedHL
 	ld a, $05
-	ld hl, $49c8
+	ld hl, Func_05_49c8
 	call CallBankedHL
 	ld a, $05
-	ld hl, $499d
+	ld hl, Func_05_499d
 	call CallBankedHL
 	ld a, $ff
 	ld [$c530], a
@@ -2761,7 +2761,7 @@ Func_00_166f:
 	push af
 	ld a, $12
 	ld [$2fff], a
-	call $4094
+	call Func_12_4094
 	call $41a9
 	pop af
 	ld [$2fff], a
@@ -2864,10 +2864,10 @@ Func_00_1748:
 	ld hl, $c4fe
 	call Func_00_030b
 	ld a, $05
-	ld hl, $49ef
+	ld hl, Func_05_49ef
 	call CallBankedHL
 	ld a, $01
-	ld hl, $572d
+	ld hl, Func_01_572d
 	call CallBankedHL
 	pop af
 	ld [$2fff], a
@@ -3036,17 +3036,17 @@ Func_00_18f7:
 	ld a, $00
 	ld [$cfbe], a
 	ld a, $15
-	ld hl, $41fe
+	ld hl, Func_15_41fe
 	call CallBankedHL
 	ld a, $15
-	ld hl, $4134
+	ld hl, Func_15_4134
 	call CallBankedHL
 	ld a, $15
-	ld hl, $4015
+	ld hl, Func_15_4015
 	call CallBankedHL
 Func_00_1919:
 	ld a, $12
-	ld hl, $41f5
+	ld hl, Func_12_41f5
 	call CallBankedHL
 	or a
 	ret nz
@@ -3362,7 +3362,7 @@ Func_00_34bc:
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld a, $00
-	ld hl, $1219
+	ld hl, Func_00_1219
 	call CallBankedHL
 	call Func_00_1863
 	push af
@@ -3371,8 +3371,9 @@ Func_00_34bc:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call $401e
+	call Func_30_401e
 	ret
+Func_00_34e3:
 	call Func_00_1863
 	push af
 	ld a, $28
@@ -3380,7 +3381,7 @@ Func_00_34bc:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call $43a4
+	call Func_30_43a4
 	ld a, [$c2c1]
 	cp $02
 	jr z, Data_00_3502
@@ -3398,7 +3399,7 @@ Func_00_3508:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call $44aa
+	call Func_30_44aa
 	ld a, [$c2c1]
 	cp $05
 	ret z
@@ -3412,7 +3413,7 @@ Func_00_3508:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call $487d
+	call Func_30_487d
 	ld a, $11
 	ld [$c2a7], a
 	push af
@@ -3423,9 +3424,9 @@ Func_00_3508:
 	call Func_00_1863
 	ld a, $30
 	ld [$2fff], a
-	call $503b
+	call Func_30_503b
 	ld a, $05
-	ld hl, $46ba
+	ld hl, Func_05_46ba
 	call CallBankedHL
 	ret
 	push af
@@ -3438,10 +3439,10 @@ Func_00_3508:
 	jr nz, Func_00_3572
 	ld a, $30
 	ld [$2fff], a
-	call $52c4
+	call Func_30_52c4
 Func_00_3572:
 	ld a, $18
-	ld hl, $6b71
+	ld hl, Func_18_6b71
 	call CallBankedHL
 	ld a, $04
 	ld [$c2a7], a
@@ -3450,14 +3451,14 @@ IntroScene_TecmoLogo:
 	call Func_00_1863
 	ld a, $30
 	ld [$2fff], a
-	call $5418
+	call DrawTecmoLogo
 	ld a, $02
 	ld [$c2a7], a
 	ret
 	call Func_00_1863
 	ld a, $30
 	ld [$2fff], a
-	call $577e
+	call Func_30_577e
 	ld a, $00
 	ld [$c2a7], a
 	push af
@@ -3472,7 +3473,7 @@ IntroScene_TecmoLogo:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call $54b8
+	call Func_30_54b8
 	push af
 	ld a, $28
 	call Func_00_0a63
@@ -3484,7 +3485,7 @@ Func_00_35c8:
 	call Func_00_1863
 	ld a, $30
 	ld [$2fff], a
-	call $547f
+	call Func_30_547f
 	ret
 Func_00_35d4:
 	ld c, a
@@ -3788,7 +3789,7 @@ Func_00_3942:
 	ret
 Func_00_3957:
 	ld a, $1f
-	ld hl, $4094
+	ld hl, Func_1f_4094
 	call CallBankedHL
 	ld a, $04
 	ld [$c2a7], a
@@ -3824,6 +3825,7 @@ Func_00_397a:
 	ld [wRendererBank], a
 	ld [$d61a], a
 	ret
+Func_00_39ad:
 	ld a, $00
 	ld [$d60e], a
 	ld [$d60f], a
@@ -4974,21 +4976,21 @@ SECTION "analyzed_00439e", ROMX[$439e], BANK[$01]
 
 Func_01_439e:
 	ld a, $05
-	ld hl, $46f0
+	ld hl, Func_05_46f0
 	call CallBankedHL
 	call Func_01_5cbe
 	call Func_01_49cb
 	call Func_00_083c
 	ld a, $05
-	ld hl, $4884
+	ld hl, Func_05_4884
 	call CallBankedHL
 	call Func_00_16c1
 	ld a, $17
-	ld hl, $40b1
+	ld hl, Func_17_40b1
 	call CallBankedHL
 	call Func_00_166f
 	ld a, $05
-	ld hl, $4931
+	ld hl, Func_05_4931
 	call CallBankedHL
 	xor a
 	call Func_01_5bd8
@@ -4996,10 +4998,10 @@ Func_01_439e:
 	call Func_01_4000
 	call Func_01_4a71
 	ld a, $05
-	ld hl, $48a5
+	ld hl, Func_05_48a5
 	call CallBankedHL
 	ld a, $03
-	ld hl, $4000
+	ld hl, Func_03_4000
 	call CallBankedHL
 	call Func_01_4c57
 	ld a, [$c289]
@@ -5007,7 +5009,7 @@ Func_01_439e:
 	ld a, [$c28a]
 	ldh [rSCX], a
 	ld a, $05
-	ld hl, $48fc
+	ld hl, Func_05_48fc
 	call CallBankedHL
 	call Func_00_0786
 	xor a
@@ -5028,7 +5030,7 @@ Func_01_4412:
 	call Func_01_5866
 	call Func_01_4bae
 	ld a, $03
-	ld hl, $4000
+	ld hl, Func_03_4000
 	call CallBankedHL
 	ld a, [$c2db]
 	cp $04
@@ -5050,14 +5052,14 @@ Func_01_444a:
 Func_01_4458:
 	call Func_01_4dd9
 	ld a, $04
-	ld hl, $425c
+	ld hl, Func_04_425c
 	call CallBankedHL
 	ld a, $02
-	ld hl, $4023
+	ld hl, Func_02_4023
 	call CallBankedHL
 Func_01_446b:
 	ld a, $0f
-	ld hl, $4000
+	ld hl, Func_0f_4000
 	call CallBankedHL
 	call Func_01_75f6
 	call Func_01_775b
@@ -5072,7 +5074,7 @@ Func_01_447f:
 	call Func_00_1863
 	call Func_01_459a
 	ld a, $05
-	ld hl, $473d
+	ld hl, Func_05_473d
 	call CallBankedHL
 	ret
 Func_01_449d:
@@ -5217,7 +5219,7 @@ Func_01_45ad:
 	cp $01
 	jr nz, Func_01_45d2
 	ld a, $05
-	ld hl, $481d
+	ld hl, Func_05_481d
 	call CallBankedHL
 	call Func_01_4b7c
 	call Func_01_45d6
@@ -5334,7 +5336,7 @@ SECTION "analyzed_004748", ROMX[$4748], BANK[$01]
 
 Func_01_4748:
 	ld a, $05
-	ld hl, $4800
+	ld hl, Func_05_4800
 	call CallBankedHL
 	call Func_00_1219
 	ld a, $10
@@ -5343,7 +5345,7 @@ Func_01_4748:
 Func_01_4759:
 	call Func_01_5d77
 	ld a, $05
-	ld hl, $4800
+	ld hl, Func_05_4800
 	call CallBankedHL
 	call Func_00_1219
 	ld a, $10
@@ -5848,6 +5850,7 @@ Func_01_4cd3:
 	xor a
 	ld [$cf77], a
 	ret
+Func_01_4ce1:
 	ld a, $31
 	ld b, $05
 	ld c, $01
@@ -5862,6 +5865,7 @@ Func_01_4cd3:
 	xor a
 	ld [$cf78], a
 	ret
+Func_01_4cfe:
 	ld a, $33
 	ld b, $05
 	ld c, $0f
@@ -5869,6 +5873,7 @@ Func_01_4cd3:
 	ld a, $01
 	ld [$cf78], a
 	ret
+Func_01_4d0d:
 	ld a, [$c530]
 	ld c, a
 	ld a, [$c531]
@@ -5946,6 +5951,7 @@ Func_01_4e4b:
 	ld de, $9cc0
 	call Func_01_76dd
 	ret
+Func_01_4e55:
 	ld hl, $4f70
 	ld de, $9c20
 	call Func_01_76dd
@@ -5965,6 +5971,7 @@ Func_01_4e4b:
 	ld de, $9cc0
 	call Func_01_76dd
 	ret
+Func_01_4e8c:
 	ld a, [$c2da]
 	or a
 	jr z, Func_01_4ea5
@@ -5983,6 +5990,7 @@ Func_01_4ea5:
 	ld de, $9cab
 	call Func_01_76dd
 	ret
+Func_01_4eb8:
 	ld a, [$c2d9]
 	cp $01
 	jr z, Func_01_4eec
@@ -6180,7 +6188,7 @@ Func_01_50b2:
 	cp $05
 	jr z, Func_01_50c1
 	ld a, $05
-	ld hl, $46ba
+	ld hl, Func_05_46ba
 	call CallBankedHL
 Func_01_50c1:
 	pop bc
@@ -6782,6 +6790,7 @@ Func_01_5676:
 Func_01_5699:
 	pop bc
 	ret
+Func_01_569b:
 	ld a, [$c2d5]
 	bit 1, a
 	ret z
@@ -6811,6 +6820,7 @@ Func_01_56b8:
 	dec b
 	jr nz, Func_01_56a8
 	ret
+Func_01_56c5:
 	ld a, $09
 	call Func_00_119a
 	or a
@@ -6845,6 +6855,7 @@ Func_01_56ee:
 	dec b
 	jr nz, Func_01_56dc
 	ret
+Func_01_56fb:
 	ld a, [$c2d5]
 	bit 0, a
 	ret nz
@@ -6879,6 +6890,7 @@ Func_01_5720:
 	dec b
 	jr nz, Func_01_5708
 	ret
+Func_01_572d:
 	call Func_01_573d
 	ld a, [$c2c1]
 	cp $05
@@ -7266,7 +7278,7 @@ Func_01_5993:
 	ret nz
 Func_01_599b:
 	ld a, $12
-	ld hl, $402c
+	ld hl, Func_12_402c
 	call CallBankedHL
 	call Func_01_449d
 	call Func_01_4aa1
@@ -7485,7 +7497,7 @@ SECTION "analyzed_005c70", ROMX[$5c70], BANK[$01]
 Func_01_5c70:
 	ld [$d60e], a
 	ld a, $1f
-	ld hl, $4109
+	ld hl, Func_1f_4109
 	call CallBankedHL
 	ret
 Func_01_5c7c:
@@ -7553,7 +7565,7 @@ Func_01_5ce2:
 	xor a
 	ld [$d60f], a
 	ld a, $1f
-	ld hl, $4109
+	ld hl, Func_1f_4109
 	call CallBankedHL
 	ld a, $00
 	call Func_00_1164
@@ -7568,7 +7580,7 @@ Func_01_5cff:
 	xor a
 	ld [$d60f], a
 	ld a, $1f
-	ld hl, $4109
+	ld hl, Func_1f_4109
 	call CallBankedHL
 	ld a, $02
 	call Func_00_1164
@@ -7591,7 +7603,7 @@ Func_01_5d84:
 	or a
 	ret nz
 	ld a, $18
-	ld hl, $4097
+	ld hl, Func_18_4097
 	call CallBankedHL
 	ld a, $0c
 	call Func_00_1164
@@ -7602,7 +7614,7 @@ Func_01_5d99:
 	or a
 	ret nz
 	ld a, $18
-	ld hl, $533c
+	ld hl, Func_18_533c
 	call CallBankedHL
 	ld a, $0d
 	call Func_00_1164
@@ -8657,7 +8669,7 @@ Func_01_68f5:
 Func_01_693a:
 	push hl
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 Func_01_6944:
@@ -8690,7 +8702,7 @@ Func_01_6949:
 Func_01_6970:
 	push hl
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 Func_01_697a:
@@ -8723,7 +8735,7 @@ Func_01_697f:
 Func_01_69a6:
 	push hl
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 Func_01_69b0:
@@ -8760,7 +8772,7 @@ Func_01_69b5:
 Func_01_69e1:
 	push hl
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 Func_01_69eb:
@@ -9070,7 +9082,7 @@ Func_01_6c41:
 	and $0f
 	ld b, a
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 	pop bc
@@ -9092,7 +9104,7 @@ Func_01_6c68:
 	and $0f
 	ld b, a
 	ld a, $03
-	ld hl, $44cb
+	ld hl, Func_03_44cb
 	call CallBankedHL
 	pop hl
 	pop bc
@@ -9212,6 +9224,7 @@ Func_01_6d44:
 	res 7, [hl]
 	pop hl
 	ret
+Func_01_6d48:
 	ldh a, [$ffb0]
 	add a, a
 	ld c, a
@@ -10256,14 +10269,14 @@ Func_01_74c4:
 	push de
 	push bc
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop de
 	ret
@@ -10299,7 +10312,7 @@ Func_01_7534:
 	push de
 	push bc
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop bc
 	ld a, $10
@@ -10307,14 +10320,14 @@ Func_01_7534:
 	ld c, a
 	push bc
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop de
 	ret
@@ -10348,14 +10361,14 @@ Func_01_7578:
 	ld c, a
 	push bc
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
 	push bc
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop bc
 	ldh a, [$ffbc]
@@ -10368,7 +10381,7 @@ Func_01_7578:
 	dec a
 	ld c, a
 	ld a, $03
-	ld hl, $44bb
+	ld hl, Func_03_44bb
 	call CallBankedHL
 	pop de
 	ret
@@ -10968,7 +10981,7 @@ Func_01_7b24:
 	ld a, [hl]
 	ld [$cf6a], a
 	ld a, $04
-	ld hl, $4100
+	ld hl, Func_04_4100
 	call CallBankedHL
 	pop hl
 	ret
@@ -11021,6 +11034,7 @@ Func_02_4000:
 	ld bc, $1000
 	call Func_00_0394
 	ret
+Func_02_4010:
 	ld a, $07
 	ld hl, $50e9
 	call Func_00_052e
@@ -11029,6 +11043,7 @@ Func_02_4000:
 	ld hl, $50f1
 	call Func_00_0732
 	ret
+Func_02_4023:
 	ld hl, $cc94
 	ld c, $01
 	call Func_02_4058
@@ -11712,14 +11727,14 @@ Func_03_4071:
 	jr z, Func_03_407f
 Func_03_4077:
 	ld a, $01
-	ld hl, $6d48
+	ld hl, Func_01_6d48
 	call CallBankedHL
 Func_03_407f:
 	ldh a, [$ffb1]
 	or a
 	jr z, Func_03_408c
 	ld a, $04
-	ld hl, $4000
+	ld hl, Func_04_4000
 	call CallBankedHL
 Func_03_408c:
 	ldh a, [$ffe5]
@@ -11887,7 +11902,7 @@ Func_03_418a:
 	ld b, a
 	push de
 	ld a, $04
-	ld hl, $40e2
+	ld hl, Func_04_40e2
 	call CallBankedHL
 	pop de
 	inc de
@@ -12363,6 +12378,7 @@ Func_03_447b:
 	call Func_03_44cb
 	pop de
 	ret
+Func_03_44bb:
 	ld a, c
 	add a, $08
 	swap a
@@ -12548,7 +12564,7 @@ Func_03_45a0:
 	push de
 	push hl
 	ld a, $01
-	ld hl, $7b24
+	ld hl, Func_01_7b24
 	call CallBankedHL
 	pop hl
 	pop de
@@ -12573,7 +12589,7 @@ Func_03_45a0:
 	push de
 	push hl
 	ld a, $04
-	ld hl, $4344
+	ld hl, Func_04_4344
 	call CallBankedHL
 	pop hl
 	pop de
@@ -13497,7 +13513,7 @@ SECTION "analyzed_00cc39", ROMX[$4c39], BANK[$03]
 Func_03_4c39:
 	push de
 	ld a, $01
-	ld hl, $4ce1
+	ld hl, Func_01_4ce1
 	call CallBankedHL
 	pop de
 	push af
@@ -13509,7 +13525,7 @@ Func_03_4c39:
 Func_03_4c4c:
 	push de
 	ld a, $01
-	ld hl, $4cfe
+	ld hl, Func_01_4cfe
 	call CallBankedHL
 	pop de
 	push af
@@ -14547,7 +14563,7 @@ Func_03_5508:
 	cp $05
 	jr z, Data_03_5518
 	ld a, $01
-	ld hl, $4d0d
+	ld hl, Func_01_4d0d
 	call CallBankedHL
 	ret
 
@@ -14882,7 +14898,7 @@ Func_03_57da:
 	ld c, a
 	push de
 	ld a, $01
-	ld hl, $42b3
+	ld hl, Func_01_42b3
 	call CallBankedHL
 	pop de
 	ld a, c
@@ -17915,6 +17931,7 @@ Func_04_40d8:
 	ld d, a
 	ld e, l
 	jp Func_04_4006
+Func_04_40e2:
 	ld a, b
 	ldh [$ffb1], a
 	ld l, a
@@ -17935,6 +17952,7 @@ Func_04_40d8:
 	ldh [$ffb2], a
 	ldh [$ffc5], a
 	ret
+Func_04_4100:
 	ld a, [$cf67]
 	ld l, a
 	ld a, [$cf68]
@@ -18212,6 +18230,7 @@ Func_04_4319:
 	ld a, [hl+]
 	ldh [$ffd0], a
 	ret
+Func_04_4344:
 	ld a, [$cf6b]
 	ld c, $da
 	call Func_04_4355
@@ -20186,7 +20205,7 @@ SECTION "analyzed_01463a", ROMX[$463a], BANK[$05]
 
 Func_05_463a:
 	ld a, $00
-	ld hl, $39ad
+	ld hl, Func_00_39ad
 	call CallBankedHL
 	call Func_05_4690
 	call Func_05_4699
@@ -20223,7 +20242,7 @@ Func_05_463a:
 	ld a, $ff
 	ld [$cfd9], a
 	ld a, $12
-	ld hl, $4c13
+	ld hl, Func_12_4c13
 	call CallBankedHL
 	ret
 Func_05_4690:
@@ -20254,6 +20273,7 @@ Func_05_46b5:
 	dec c
 	jr nz, Func_05_46b5
 	ret
+Func_05_46ba:
 	ld hl, $c2ca
 	ld de, $cfd6
 	ld c, $05
@@ -20291,6 +20311,7 @@ Func_05_46e9:
 	dec c
 	jr nz, Func_05_46e9
 	ret
+Func_05_46f0:
 	ld a, [$c2c1]
 	cp $05
 	ret nz
@@ -20315,6 +20336,7 @@ Func_05_4785:
 	ld [$c2c0], a
 	call Func_00_1219
 	ret
+Func_05_479d:
 	xor a
 	call Func_05_47d4
 	xor a
@@ -20349,6 +20371,7 @@ Func_05_47d4:
 	ld [hl+], a
 	ld [hl], a
 	ret
+Func_05_4800:
 	ld a, [$c2c1]
 	cp $01
 	jr z, Data_05_4812
@@ -20380,13 +20403,13 @@ SECTION "analyzed_014843", ROMX[$4843], BANK[$05]
 
 Func_05_4843:
 	ld a, $12
-	ld hl, $4bb3
+	ld hl, Func_12_4bb3
 	call CallBankedHL
 	ld [$d0f4], a
 	or a
 	jr z, Func_05_4865
 	ld a, $12
-	ld hl, $4bef
+	ld hl, Func_12_4bef
 	call CallBankedHL
 	or a
 	jr z, Data_05_485f
@@ -20441,17 +20464,18 @@ Func_05_4884:
 	xor a
 	ldh [rVBK], a
 	ret
+Func_05_48a5:
 	ld a, $10
-	ld hl, $4018
+	ld hl, Func_10_4018
 	call CallBankedHL
 	ld a, $02
-	ld hl, $4000
+	ld hl, Func_02_4000
 	call CallBankedHL
 	ld a, $16
-	ld hl, $4016
+	ld hl, Func_16_4016
 	call CallBankedHL
 	ld a, $17
-	ld hl, $4122
+	ld hl, Func_17_4122
 	call CallBankedHL
 	call Func_05_48c9
 	ret
@@ -20460,7 +20484,7 @@ Func_05_48c9:
 	cp $02
 	jr nz, Func_05_48d9
 	ld a, $3d
-	ld hl, $4000
+	ld hl, Func_3d_4000
 	call CallBankedHL
 	ret
 Func_05_48d9:
@@ -20477,7 +20501,7 @@ Func_05_48e2:
 	push bc
 	push de
 	ld a, $11
-	ld hl, $4081
+	ld hl, Func_11_4081
 	call CallBankedHL
 	pop de
 	pop bc
@@ -20488,15 +20512,16 @@ Func_05_48f4:
 	cp $04
 	jr nz, Func_05_48e2
 	ret
+Func_05_48fc:
 	ld a, $02
-	ld hl, $4010
+	ld hl, Func_02_4010
 	call CallBankedHL
 	call Func_05_4918
 	ld a, $10
-	ld hl, $40a4
+	ld hl, Func_10_40a4
 	call CallBankedHL
 	ld a, $17
-	ld hl, $416c
+	ld hl, Func_17_416c
 	call CallBankedHL
 	ret
 Func_05_4918:
@@ -20504,14 +20529,15 @@ Func_05_4918:
 	cp $02
 	jr nz, Func_05_4928
 	ld a, $3d
-	ld hl, $4051
+	ld hl, Func_3d_4051
 	call CallBankedHL
 	ret
 Func_05_4928:
 	ld a, $11
-	ld hl, $40b1
+	ld hl, Func_11_40b1
 	call CallBankedHL
 	ret
+Func_05_4931:
 	ld a, [$c2c1]
 	cp $02
 	jr nz, Func_05_4956
@@ -20531,6 +20557,7 @@ Func_05_4956:
 	swap a
 	ld [$c55a], a
 	ret
+Func_05_496b:
 	ld a, [$c2e8]
 	or a
 	ret nz
@@ -20564,6 +20591,7 @@ Func_05_4990:
 	dec b
 	jr nz, Func_05_4977
 	ret
+Func_05_499d:
 	ld a, [$c2aa]
 	or a
 	ret nz
@@ -20594,6 +20622,7 @@ Func_05_49bb:
 	dec b
 	jr nz, Func_05_49a9
 	ret
+Func_05_49c8:
 	ld hl, $c3dd
 	ld a, [$c2ed]
 	ld b, a
@@ -20621,6 +20650,7 @@ Func_05_49e2:
 	dec b
 	jr nz, Func_05_49cf
 	ret
+Func_05_49ef:
 	ld a, [$c2c1]
 	cp $01
 	ret nz
@@ -20646,7 +20676,7 @@ Func_0f_4000:
 	bit 0, a
 	ret nz
 	ld a, $01
-	ld hl, $4c4d
+	ld hl, Func_01_4c4d
 	call CallBankedHL
 	push af
 	ld a, $0d
@@ -20687,14 +20717,14 @@ Func_0f_4054:
 	cp $03
 	jr z, Func_0f_4086
 	ld a, $01
-	ld hl, $4e09
+	ld hl, Func_01_4e09
 	call CallBankedHL
 	ld a, $11
 	ld [$c2d8], a
 	xor a
 	ld [$c2d9], a
 	ld a, $01
-	ld hl, $4eb8
+	ld hl, Func_01_4eb8
 	call CallBankedHL
 	ld a, $02
 	ld [$c2ac], a
@@ -20723,15 +20753,15 @@ Func_0f_40b2:
 	xor a
 	ld [$c2da], a
 	ld a, $01
-	ld hl, $4e8c
+	ld hl, Func_01_4e8c
 	call CallBankedHL
 	ret
 Func_0f_40cb:
 	ld a, $01
-	ld hl, $4e09
+	ld hl, Func_01_4e09
 	call CallBankedHL
 	ld a, $01
-	ld hl, $4eb8
+	ld hl, Func_01_4eb8
 	call CallBankedHL
 	push af
 	ld a, $0e
@@ -20774,7 +20804,7 @@ Func_0f_416c:
 	inc a
 	ld [$c2d9], a
 	ld a, $01
-	ld hl, $4eb8
+	ld hl, Func_01_4eb8
 	call CallBankedHL
 	push af
 	ld a, $04
@@ -20788,7 +20818,7 @@ Func_0f_41a3:
 	inc a
 	ld [$c2d9], a
 	ld a, $01
-	ld hl, $4eb8
+	ld hl, Func_01_4eb8
 	call CallBankedHL
 	push af
 	ld a, $04
@@ -20802,7 +20832,7 @@ Func_0f_41bd:
 	dec a
 	ld [$c2d9], a
 	ld a, $01
-	ld hl, $4eb8
+	ld hl, Func_01_4eb8
 	call CallBankedHL
 	push af
 	ld a, $04
@@ -20824,12 +20854,12 @@ Func_0f_41d6:
 	call Func_00_0a85
 	pop af
 	ld a, $01
-	ld hl, $4e55
+	ld hl, Func_01_4e55
 	call CallBankedHL
 	ld a, $01
 	ld [$c2da], a
 	ld a, $01
-	ld hl, $4e8c
+	ld hl, Func_01_4e8c
 	call CallBankedHL
 	ret
 Func_0f_4206:
@@ -20873,7 +20903,7 @@ Func_0f_427b:
 	call Func_00_0a63
 	pop af
 	ld a, $03
-	ld hl, $4a58
+	ld hl, Func_03_4a58
 	call CallBankedHL
 	ld a, $01
 	ld [$c2c3], a
@@ -20894,7 +20924,7 @@ Func_0f_42a2:
 	call Func_00_0a85
 	pop af
 	ld a, $01
-	ld hl, $449d
+	ld hl, Func_01_449d
 	call CallBankedHL
 	ret
 Func_0f_42bb:
@@ -20969,7 +20999,7 @@ Func_0f_433a:
 	call Func_00_0bdd
 	call Func_0f_450d
 	ld a, $3b
-	ld hl, $4000
+	ld hl, Func_3b_4000
 	call CallBankedHL
 	call Func_0f_462b
 	call Func_0f_4b62
@@ -21159,10 +21189,10 @@ Func_0f_4543:
 	call Func_00_0bdd
 	call Func_0f_450d
 	ld a, $05
-	ld hl, $48a5
+	ld hl, Func_05_48a5
 	call CallBankedHL
 	ld a, $05
-	ld hl, $48fc
+	ld hl, Func_05_48fc
 	call CallBankedHL
 	call Func_00_0786
 	ld a, $01
@@ -21861,7 +21891,7 @@ Func_0f_4ac6:
 	cp $02
 	jr z, Func_0f_4ad9
 	ld a, $12
-	ld hl, $484e
+	ld hl, Func_12_484e
 	call CallBankedHL
 Func_0f_4ad9:
 	ldh a, [$ff8c]
@@ -21884,7 +21914,7 @@ Func_0f_4aef:
 	ret
 Func_0f_4b02:
 	ld a, $12
-	ld hl, $47e5
+	ld hl, Func_12_47e5
 	call CallBankedHL
 	ld hl, $5138
 	ld de, $9de3
@@ -21901,13 +21931,13 @@ Func_0f_4b1d:
 	ret
 Func_0f_4b27:
 	ld a, $10
-	ld hl, $405f
+	ld hl, Func_10_405f
 	call CallBankedHL
 	ld a, $16
-	ld hl, $4016
+	ld hl, Func_16_4016
 	call CallBankedHL
 	ld a, $10
-	ld hl, $4007
+	ld hl, Func_10_4007
 	call CallBankedHL
 	xor a
 	ldh [rVBK], a
@@ -21918,7 +21948,7 @@ Func_0f_4b27:
 	ret
 Func_0f_4b4f:
 	ld a, $10
-	ld hl, $40a4
+	ld hl, Func_10_40a4
 	call CallBankedHL
 	ld hl, $4ce8
 	ld a, $06
@@ -22413,6 +22443,7 @@ Func_10_4007:
 	ld bc, $0400
 	call Func_00_0394
 	ret
+Func_10_4018:
 	xor a
 	ld [rVBK], a
 	ld hl, $40b7
@@ -22901,6 +22932,7 @@ Func_11_4081:
 	ld bc, $0300
 	call Func_00_0394
 	ret
+Func_11_40b1:
 	ld de, $c4cd
 	ld c, $00
 Func_11_40b6:
@@ -23898,6 +23930,7 @@ Func_12_4026:
 	ret nz
 	ld a, d
 	ret
+Func_12_402c:
 	ld bc, $0100
 	ld hl, $c2ef
 	ld a, $11
@@ -24218,10 +24251,10 @@ SECTION "analyzed_048271", ROMX[$4271], BANK[$12]
 Func_12_4271:
 	ld [$c55d], a
 	ld a, $15
-	ld hl, $408a
+	ld hl, Func_15_408a
 	call CallBankedHL
 	ld a, $15
-	ld hl, $41cf
+	ld hl, Func_15_41cf
 	call CallBankedHL
 	jp Func_12_41f5
 Func_12_4287:
@@ -24300,6 +24333,7 @@ Func_12_483f:
 	jr Func_12_481d
 Func_12_484d:
 	ret
+Func_12_484e:
 	ld hl, $18ce
 	ld bc, $0000
 	call Func_00_0c09
@@ -24660,6 +24694,7 @@ Func_12_4b67:
 	call Func_00_12ee
 	call Func_00_09ff
 	ret
+Func_12_4b8e:
 	call Func_00_09f9
 	ld hl, $a6ed
 	ld bc, $0118
@@ -24676,6 +24711,7 @@ Func_12_4ba1:
 	call Func_00_09ff
 	ld a, $01
 	ret
+Func_12_4bb3:
 	call Func_00_09f9
 	ld de, $4b64
 	ld hl, $a6ed
@@ -24719,6 +24755,7 @@ Func_12_4bd7:
 Func_12_4bed:
 	xor a
 	ret
+Func_12_4bef:
 	call Func_00_09f9
 	ld hl, $a6ed
 	ld bc, $0118
@@ -24735,6 +24772,7 @@ Func_12_4c02:
 	call Func_00_09ff
 	ld a, $01
 	ret
+Func_12_4c13:
 	call Func_00_09f9
 	xor a
 	ld [$d0e7], a
@@ -25101,6 +25139,7 @@ Func_15_41f3:
 	ld b, $01
 	call Func_00_0716
 	ret
+Func_15_41fe:
 	call Func_00_083c
 	xor a
 	ld [rVBK], a
@@ -26776,13 +26815,14 @@ Func_17_4113:
 	cp $ff
 	jr nz, Func_17_40e8
 	ret
+Func_17_4122:
 	ld a, [$c55c]
 	cp $ff
 	ret z
 	cp $05
 	jr c, Func_17_4135
 	ld a, $38
-	ld hl, $4000
+	ld hl, Func_38_4000
 	call CallBankedHL
 	ret
 Func_17_4135:
@@ -27157,7 +27197,7 @@ Func_18_4097:
 	call Func_00_0a63
 	pop af
 	ld a, $1f
-	ld hl, $4008
+	ld hl, Func_1f_4008
 	call CallBankedHL
 	ret
 Func_18_4144:
@@ -27302,6 +27342,7 @@ Func_18_5331:
 	ld a, b
 	ld [wYNResult], a
 	ret
+Func_18_533c:
 	ld hl, $54f5
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
@@ -27625,7 +27666,7 @@ Func_18_6b71:
 	ld hl, $6ce3
 	call ScriptDispatcherEnterAfterCall
 	ld a, $1f
-	ld hl, $4094
+	ld hl, Func_1f_4094
 	call CallBankedHL
 	ret
 	call Func_18_6bc8
@@ -27636,17 +27677,17 @@ Func_18_6b71:
 	jp z, Func_00_3957
 	ret
 	ld a, $05
-	ld hl, $4785
+	ld hl, Func_05_4785
 	call CallBankedHL
 	ld a, $00
-	ld hl, $34e3
+	ld hl, Func_00_34e3
 	call CallBankedHL
 	ret
 	ld a, $05
-	ld hl, $479d
+	ld hl, Func_05_479d
 	call CallBankedHL
 	ld a, $00
-	ld hl, $34e3
+	ld hl, Func_00_34e3
 	call CallBankedHL
 	ret
 
@@ -27801,17 +27842,17 @@ SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
 
 Func_19_4000:
 	ld a, $12
-	ld hl, $4b8e
+	ld hl, Func_12_4b8e
 	call CallBankedHL
 	ld [wYNResult], a
 	ret
 	ld a, $12
-	ld hl, $4b67
+	ld hl, Func_12_4b67
 	call CallBankedHL
 	ld [wYNResult], a
 	ret
 	ld a, $12
-	ld hl, $4bb3
+	ld hl, Func_12_4bb3
 	call CallBankedHL
 	ld [wYNResult], a
 	ret
@@ -30768,6 +30809,7 @@ Func_1f_40f3:
 	dec c
 	jr nz, Func_1f_40f3
 	ret
+Func_1f_4109:
 	ld a, [$c2c0]
 	cp $01
 	jr z, Func_1f_4121
@@ -30778,7 +30820,7 @@ SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
 Func_1f_4121:
 	ld a, $1f
-	ld hl, $417b
+	ld hl, Func_1f_417b
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -30787,7 +30829,7 @@ Func_1f_4121:
 	jp Func_00_3957
 Func_1f_4133:
 	ld a, $1f
-	ld hl, $4416
+	ld hl, Func_1f_4416
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -33759,6 +33801,7 @@ Func_21_73ac:
 	swap a
 	call Func_00_3635
 	ret
+Func_21_73e4:
 	call Func_00_02d1
 	ld hl, $c2d1
 	ld de, $992c
@@ -33776,6 +33819,7 @@ Func_21_73ac:
 	ld a, [hl]
 	call Func_00_3635
 	ret
+Func_21_7409:
 	call Func_00_02d1
 	ld de, $9927
 	ld a, $00
@@ -41446,7 +41490,7 @@ Func_30_42d5:
 	ld a, $03
 	ld [$d0f8], a
 	ld a, $20
-	ld hl, $796d
+	ld hl, Func_20_796d
 	call CallBankedHL
 	ret
 Func_30_42e9:
@@ -41478,7 +41522,7 @@ SECTION "analyzed_0c0325", ROMX[$4325], BANK[$30]
 
 Func_30_4325:
 	ld a, $20
-	ld hl, $796d
+	ld hl, Func_20_796d
 	call CallBankedHL
 	ret
 
@@ -41549,6 +41593,7 @@ Func_30_4387:
 	ld c, $20
 	call Func_00_09d5
 	ret
+Func_30_43a4:
 	xor a
 	ld [$d0fe], a
 	ld [$d0f4], a
@@ -42062,6 +42107,7 @@ Func_30_486d:
 	dec b
 	jr nz, Func_30_486d
 	ret
+Func_30_487d:
 	xor a
 	ld [$d0fe], a
 	ld [$d0ff], a
@@ -42625,7 +42671,7 @@ Func_30_503b:
 	ld de, $9800
 	call CopyBgMapBanked
 	ld a, $21
-	ld hl, $7409
+	ld hl, Func_21_7409
 	call CallBankedHL
 	xor a
 	ld b, $08
@@ -42658,10 +42704,10 @@ Func_30_50d7:
 	cp $04
 	jr nc, Func_30_512e
 	ld a, $21
-	ld hl, $73e4
+	ld hl, Func_21_73e4
 	call CallBankedHL
 	ld a, $21
-	ld hl, $73ac
+	ld hl, Func_21_73ac
 	call CallBankedHL
 	ld a, [$d0f6]
 	cp $00
@@ -42691,7 +42737,7 @@ Func_30_512e:
 	jr nz, Data_30_514b
 Func_30_5142:
 	ld a, $01
-	ld hl, $4654
+	ld hl, Func_01_4654
 	call CallBankedHL
 	ret
 
@@ -42900,6 +42946,7 @@ Func_30_52bf:
 	inc a
 	ld [$d0f5], a
 	ret
+Func_30_52c4:
 	xor a
 	ld [$d0fe], a
 	ld [$d0f3], a
@@ -43083,7 +43130,7 @@ Func_30_54b8:
 	ld [$d0f6], a
 	ld [$d0f7], a
 	ld a, $05
-	ld hl, $4843
+	ld hl, Func_05_4843
 	call CallBankedHL
 	ld [$d0f4], a
 	cp $01
@@ -43183,7 +43230,7 @@ Func_30_55a6:
 	and a
 	jr z, Func_30_555d
 	ld a, $12
-	ld hl, $4b8e
+	ld hl, Func_12_4b8e
 	call CallBankedHL
 	and a
 	jr nz, Func_30_555d
@@ -46860,6 +46907,7 @@ Func_3d_4035:
 	ld bc, $0300
 	call Func_00_0394
 	ret
+Func_3d_4051:
 	ld a, [$c2c0]
 	dec a
 	add a, a
@@ -48875,6 +48923,7 @@ SECTION "analyzed_0fc000", ROMX[$4000], BANK[$3f]
 
 Func_3f_4000:
 	jp Func_3f_4012
+Func_3f_4003:
 	jp Func_3f_4059
 	jp Func_3f_409c
 	jp Func_3f_40b4

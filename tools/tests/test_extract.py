@@ -1274,5 +1274,71 @@ class TestGfxSections(unittest.TestCase):
             self.assertTrue(png.exists())
 
 
+class TestBankedCalls(unittest.TestCase):
+    """Banked-call idiom detection + operand rewriting."""
+
+    def test_banked_target_flat(self):
+        self.assertEqual(extract._banked_target_flat(5, 0x463a, 0x100000), 0x1463a)
+        self.assertEqual(extract._banked_target_flat(0x30, 0x5418, 0x100000), 0xC1418)
+        # addr < $4000 is bank-independent ROM0
+        self.assertEqual(extract._banked_target_flat(7, 0x0150, 0x100000), 0x0150)
+        # out of range
+        self.assertIsNone(extract._banked_target_flat(0xff, 0x7fff, 0x8000))
+
+    def _code_spec(self, addr, code):
+        return {"files": [{"type": "code", "name": "x.asm",
+                           "sections": [{"type": "code", "addr": addr, "len": len(code)}]}]}
+
+    def test_callbankedhl_idiom(self):
+        rom = bytearray(0x20000)
+        # ld a,$05 ; ld hl,$463a ; call $042e  (CallBankedHL at $042e)
+        code = bytes.fromhex("3e05") + bytes.fromhex("213a46") + bytes.fromhex("cd2e04")
+        rom[0x0200:0x0200 + len(code)] = code
+        out = extract.scan_banked_calls(bytes(rom), self._code_spec(0x0200, code), 0x042e)
+        # rewrite the ld hl at $0202; target = bank 5 : $463a -> 0x1463a
+        self.assertEqual(out, [(0x0202, 0x1463a)])
+
+    def test_direct_mbc5_idiom(self):
+        rom = bytearray(0x100000)
+        # ld a,$30 ; ld [$2fff],a ; call $5418
+        code = bytes.fromhex("3e30") + bytes.fromhex("eaff2f") + bytes.fromhex("cd1854")
+        rom[0x0300:0x0300 + len(code)] = code
+        out = extract.scan_banked_calls(bytes(rom), self._code_spec(0x0300, code), None)
+        # rewrite the call at $0305; target = bank $30 : $5418 -> 0xC1418
+        self.assertEqual(out, [(0x0305, 0xC1418)])
+
+    def test_idiom_requires_adjacency(self):
+        rom = bytearray(0x20000)
+        # ld a,$05 ; nop ; ld hl,$463a ; call $042e  — ld a not in the 2-instr window
+        code = bytes.fromhex("3e05") + b"\x00" + bytes.fromhex("213a46") + bytes.fromhex("cd2e04")
+        rom[0x0200:0x0200 + len(code)] = code
+        out = extract.scan_banked_calls(bytes(rom), self._code_spec(0x0200, code), 0x042e)
+        self.assertEqual(out, [])
+
+    def test_emission_rewrites_to_label(self):
+        rom = bytearray(0x20000)
+        code = bytes.fromhex("213a46") + bytes.fromhex("cd2e04")  # ld hl,$463a ; call $042e
+        rom[0x0200:0x0200 + len(code)] = code
+        sec = {"type": "code", "addr": 0x0200, "len": len(code)}
+        labels = {0x0200: "X", 0x1463a: "CrossBankTarget"}
+        lines = extract._build_section_lines(
+            sec, "x", "x.asm", bytes(rom), labels, {},
+            bank_rewrites={0x0200: 0x1463a})
+        body = "\n".join(lines)
+        self.assertIn("ld hl, CrossBankTarget", body)
+        self.assertNotIn("$463a", body)
+
+    def test_emission_no_rewrite_when_target_unlabeled(self):
+        # If the target never got a label (invalid position), leave raw hex.
+        rom = bytearray(0x20000)
+        code = bytes.fromhex("213a46") + bytes.fromhex("cd2e04")
+        rom[0x0200:0x0200 + len(code)] = code
+        sec = {"type": "code", "addr": 0x0200, "len": len(code)}
+        lines = extract._build_section_lines(
+            sec, "x", "x.asm", bytes(rom), {0x0200: "X"}, {},
+            bank_rewrites={0x0200: 0x1463a})  # 0x1463a not in labels
+        self.assertIn("ld hl, $463a", "\n".join(lines))
+
+
 if __name__ == "__main__":
     unittest.main()
