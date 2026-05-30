@@ -644,6 +644,25 @@ static cJSON *load_map_json_root(const char *path) {
     return root;
 }
 
+/* addr/len fields in map.json may be a JSON number or a hex/decimal string
+ * ("0x39f0"). Read either form; write the hex-string form so the file stays
+ * greppable. */
+static bool map_uint_field(const cJSON *obj, const char *key, uint32_t *out) {
+    const cJSON *it = cJSON_GetObjectItem(obj, key);
+    if (cJSON_IsNumber(it)) { *out = (uint32_t)it->valuedouble; return true; }
+    if (cJSON_IsString(it) && it->valuestring) {
+        *out = (uint32_t)strtoul(it->valuestring, NULL, 0);
+        return true;
+    }
+    return false;
+}
+
+static void add_uint_field(cJSON *obj, const char *key, uint32_t v) {
+    char buf[16];
+    snprintf(buf, sizeof buf, "0x%x", v);
+    cJSON_AddStringToObject(obj, key, buf);
+}
+
 static void mark_covered_from_map(cJSON *root) {
     /* Header is reserved by extract.py — keep our hands off it. */
     cover_range(HEADER_START, HEADER_END - HEADER_START);
@@ -663,16 +682,14 @@ static void mark_covered_from_map(cJSON *root) {
             if (!cJSON_IsArray(secs)) continue;
             cJSON *s;
             cJSON_ArrayForEach(s, secs) {
-                cJSON *ja = cJSON_GetObjectItem(s, "addr");
-                cJSON *jl = cJSON_GetObjectItem(s, "len");
-                if (cJSON_IsNumber(ja) && cJSON_IsNumber(jl))
-                    cover_range((uint32_t)ja->valuedouble, (uint32_t)jl->valuedouble);
+                uint32_t a, l;
+                if (map_uint_field(s, "addr", &a) && map_uint_field(s, "len", &l))
+                    cover_range(a, l);
             }
         } else if (strcmp(jtype->valuestring, "data") == 0) {
-            cJSON *ja = cJSON_GetObjectItem(file, "addr");
-            cJSON *jl = cJSON_GetObjectItem(file, "len");
-            if (cJSON_IsNumber(ja) && cJSON_IsNumber(jl))
-                cover_range((uint32_t)ja->valuedouble, (uint32_t)jl->valuedouble);
+            uint32_t a, l;
+            if (map_uint_field(file, "addr", &a) && map_uint_field(file, "len", &l))
+                cover_range(a, l);
         }
     }
 }
@@ -701,9 +718,8 @@ static void load_prior_rom_map(cJSON *root) {
             cJSON *s;
             cJSON_ArrayForEach(s, secs) {
                 cJSON *jt = cJSON_GetObjectItem(s, "type");
-                cJSON *ja = cJSON_GetObjectItem(s, "addr");
-                cJSON *jl = cJSON_GetObjectItem(s, "len");
-                if (!cJSON_IsString(jt) || !cJSON_IsNumber(ja) || !cJSON_IsNumber(jl))
+                uint32_t a, l;
+                if (!cJSON_IsString(jt) || !map_uint_field(s, "addr", &a) || !map_uint_field(s, "len", &l))
                     continue;
                 uint8_t kind;
                 bool gfx = false;
@@ -711,8 +727,6 @@ static void load_prior_rom_map(cJSON *root) {
                 else if (strcmp(jt->valuestring, "data") == 0) kind = REGION_DATA;
                 else if (strcmp(jt->valuestring, "gfx") == 0) { kind = REGION_DATA; gfx = true; }
                 else continue;
-                uint32_t a = (uint32_t)ja->valuedouble;
-                uint32_t l = (uint32_t)jl->valuedouble;
                 for (uint32_t i = 0; i < l && (a + i) < g.rom_size; i++) {
                     if (g.covered[a + i]) continue;
                     g.rom_map[a + i] = kind;
@@ -730,11 +744,8 @@ static void load_prior_rom_map(cJSON *root) {
     if (cJSON_IsArray(conflicts)) {
         cJSON *e;
         cJSON_ArrayForEach(e, conflicts) {
-            cJSON *ja = cJSON_GetObjectItem(e, "addr");
-            cJSON *jl = cJSON_GetObjectItem(e, "len");
-            if (!cJSON_IsNumber(ja) || !cJSON_IsNumber(jl)) continue;
-            uint32_t a = (uint32_t)ja->valuedouble;
-            uint32_t l = (uint32_t)jl->valuedouble;
+            uint32_t a, l;
+            if (!map_uint_field(e, "addr", &a) || !map_uint_field(e, "len", &l)) continue;
             for (uint32_t i = 0; i < l && (a + i) < g.rom_size; i++) {
                 if (g.covered[a + i]) continue;
                 /* Restoring CONFLICT — the byte was both code- and data-
@@ -768,8 +779,8 @@ static void add_section(cJSON *sections, const char *type,
                         uint32_t start, uint32_t len) {
     cJSON *sec = cJSON_CreateObject();
     cJSON_AddStringToObject(sec, "type", type);
-    cJSON_AddNumberToObject(sec, "addr", (double)start);
-    cJSON_AddNumberToObject(sec, "len",  (double)len);
+    add_uint_field(sec, "addr", start);
+    add_uint_field(sec, "len",  len);
     cJSON_AddItemToArray(sections, sec);
 }
 
@@ -844,8 +855,8 @@ static cJSON *build_conflict_array(const uint8_t *snapshot) {
             i++;
         }
         cJSON *e = cJSON_CreateObject();
-        cJSON_AddNumberToObject(e, "addr", (double)start);
-        cJSON_AddNumberToObject(e, "len",  (double)(i - start));
+        add_uint_field(e, "addr", start);
+        add_uint_field(e, "len",  (i - start));
         cJSON_AddItemToArray(arr, e);
     }
     return arr;

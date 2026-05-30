@@ -36,6 +36,10 @@ def main(argv=None):
     rom = Path(args.rom).read_bytes()
     spec = json.loads(Path(args.map_file).read_text())
 
+    # addr/len may be decimal numbers or hex strings ("0x39f0").
+    def _i(v):
+        return int(v, 0) if isinstance(v, str) else int(v)
+
     # Build a "covered" bitmap from existing map.json entries (any type).
     covered = bytearray(len(rom))
     def claim(start, length):
@@ -48,10 +52,10 @@ def main(argv=None):
         if f.get("type") == "code":
             for s in f.get("sections", []) or []:
                 if isinstance(s, dict) and "addr" in s and "len" in s:
-                    claim(int(s["addr"]), int(s["len"]))
+                    claim(_i(s["addr"]), _i(s["len"]))
         elif f.get("type") == "data":
             if "addr" in f and "len" in f:
-                claim(int(f["addr"]), int(f["len"]))
+                claim(_i(f["addr"]), _i(f["len"]))
     # Reserve the cartridge header so we don't try to "pad" through it.
     claim(0x100, 0x150 - 0x100)
 

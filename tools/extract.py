@@ -1604,6 +1604,21 @@ def emit_main(
 # Main
 # ---------------------------------------------------------------------------
 
+def normalize_addr_fields(obj: Any) -> None:
+    """Recursively convert `addr`/`len` fields from hex strings (e.g. "0x39f0")
+    to ints, in place. map.json may store these as decimal numbers or hex
+    strings; the rest of the pipeline works in ints."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in ("addr", "len") and isinstance(v, str):
+                obj[k] = int(v, 0)
+            else:
+                normalize_addr_fields(v)
+    elif isinstance(obj, list):
+        for item in obj:
+            normalize_addr_fields(item)
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     p.add_argument("--rom", required=True, help="path to ROM file")
@@ -1622,6 +1637,7 @@ def main(argv: list[str] | None = None) -> int:
 
     rom = rom_path.read_bytes()
     spec = json.loads(map_path.read_text())
+    normalize_addr_fields(spec)
 
     reconcile_analyzed_sections(spec)
 
