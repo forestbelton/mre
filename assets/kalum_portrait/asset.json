@@ -6,6 +6,7 @@
   "tiles_count": 384,
   "palette_count": 0,
   "index_base": 0,
+  "addressing": "8800",
   "tiles_addr": 475136,
   "palette_addr": null,
   "desc_addr": 481408,

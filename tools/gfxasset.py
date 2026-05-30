@@ -56,8 +56,10 @@ ASSETS = {
         "palette_addr": 0x9D800,
         "palette_count": 1,
         "desc_addr": 0x9D808,
-        # $8800 addressing: index 0 -> the first tile of tiles_addr (VRAM $9000).
+        # tiles_addr already points at the VRAM $9000 tiles, and all indices are
+        # < $80, so the tile number is the index directly.
         "index_base": 0,
+        "addressing": "direct",
     },
     # Kalum's encounter portrait (tower NPC). Drawn by Kalum_StartEncounter
     # ($1f:$417b): tiles loaded $1d:$4000 +0x1800 to VRAM bank 1 $8000 ($8000
@@ -73,6 +75,9 @@ ASSETS = {
         "palette_count": 0,
         "desc_addr": 0x75880,
         "index_base": 0,
+        # $8800 signed addressing with the sheet based at VRAM $8000 (tiles_addr):
+        # index >=$80 -> tile=index; index <$80 -> tile=index+$100 (the $9000 set).
+        "addressing": "8800",
     },
 }
 
@@ -254,8 +259,19 @@ def sheet_png_to_tiles(path: Path, count: int) -> list[bytes]:
 # Composite render: tiles + index map + attr map + palettes -> full-color PNG
 # ---------------------------------------------------------------------------
 
+def map_index_to_tile(v: int, index_base: int, addressing: str) -> int:
+    """Map a BG tilemap index to a tile number in the sheet, per the LCDC
+    tile-data addressing mode. "8800" is signed addressing with the sheet
+    based at VRAM $8000 (index >=$80 -> index; <$80 -> index+$100, the $9000
+    half); "direct" is index - index_base."""
+    if addressing == "8800":
+        return v if v >= 0x80 else v + 0x100
+    return (v - index_base) & 0xFF
+
+
 def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
-                     tiles: list[bytes], pals: list[list[int]], index_base: int) -> None:
+                     tiles: list[bytes], pals: list[list[int]], index_base: int,
+                     addressing: str = "direct") -> None:
     W, H = cols * 8, rows * 8
     grayscale = not pals
     # Build a 256-color RGB palette from the CGB palettes (palette p, color k
@@ -272,7 +288,7 @@ def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
         a = attr[cell]
         pal_no = 0 if grayscale else (a & 0x07)
         xflip, yflip = (a >> 5) & 1, (a >> 6) & 1
-        tile_no = (v - index_base) & 0xFF
+        tile_no = map_index_to_tile(v, index_base, addressing)
         ind = tile_to_indices(tiles[tile_no]) if tile_no < len(tiles) else [[0] * 8] * 8
         for r in range(8):
             sr = 7 - r if yflip else r
@@ -321,7 +337,7 @@ def cmd_decode(args) -> int:
     name = args.asset
     # preview.png is a *generated* composite (not source) — gitignored.
     render_composite(out / "preview.png", rows, cols, idx, attr, tiles, pals,
-                     spec["index_base"])
+                     spec["index_base"], spec.get("addressing", "direct"))
 
     meta = {
         "asset": name,
@@ -330,6 +346,7 @@ def cmd_decode(args) -> int:
         "tiles_count": spec["tiles_count"],
         "palette_count": spec["palette_count"],
         "index_base": spec["index_base"],
+        "addressing": spec.get("addressing", "direct"),
         # ROM offsets + the descriptor's bank-local pointers (kept so encode can
         # reproduce the descriptor's dw bytes exactly).
         "tiles_addr": spec["tiles_addr"],
@@ -388,7 +405,8 @@ def cmd_preview(args) -> int:
     pals = read_pal_file(src / "palette.pal") if (src / "palette.pal").exists() else []
     out = Path(args.out)
     render_composite(out, meta["rows"], meta["cols"], comps["tilemap"],
-                     comps["attrmap"], tiles, pals, meta["index_base"])
+                     comps["attrmap"], tiles, pals, meta["index_base"],
+                     meta.get("addressing", "direct"))
     print(f"preview -> {out}")
     return 0
 
