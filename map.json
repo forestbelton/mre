@@ -51,6 +51,51 @@
 					"type":	"code",
 					"addr":	15603,
 					"len":	29
+				}, 				{
+					"type":	"code",
+					"addr":	15187,
+					"len":	34,
+					"label":	"PrintIndexedName"
+				}, 				{
+					"type":	"data",
+					"addr":	15221,
+					"len":	14,
+					"label":	"MonsterNamePointers"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15235,
+					"len":	6,
+					"label":	"Name_Tiger"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15241,
+					"len":	7,
+					"label":	"Name_Mocchi"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15248,
+					"len":	5,
+					"label":	"Name_Hare"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15253,
+					"len":	5,
+					"label":	"Name_Gali"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15258,
+					"len":	6,
+					"label":	"Name_Golem"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15264,
+					"len":	6,
+					"label":	"Name_Suezo"
+				}, 				{
+					"type":	"asciz",
+					"addr":	15270,
+					"len":	7,
+					"label":	"Name_Phenix"
 				}
 			]
 		}, {
@@ -80,55 +125,6 @@
 					"type":	"code",
 					"addr":	791576,
 					"len":	103
-				}]
-		}, {
-			"type":	"code",
-			"name":	"names.asm",
-			"sections":	[{
-					"type":	"code",
-					"addr":	15187,
-					"len":	34,
-					"label":	"PrintIndexedName"
-				}, {
-					"type":	"data",
-					"addr":	15221,
-					"len":	14,
-					"label":	"MonsterNamePointers"
-				}, {
-					"type":	"asciz",
-					"addr":	15235,
-					"len":	6,
-					"label":	"Name_Tiger"
-				}, {
-					"type":	"asciz",
-					"addr":	15241,
-					"len":	7,
-					"label":	"Name_Mocchi"
-				}, {
-					"type":	"asciz",
-					"addr":	15248,
-					"len":	5,
-					"label":	"Name_Hare"
-				}, {
-					"type":	"asciz",
-					"addr":	15253,
-					"len":	5,
-					"label":	"Name_Gali"
-				}, {
-					"type":	"asciz",
-					"addr":	15258,
-					"len":	6,
-					"label":	"Name_Golem"
-				}, {
-					"type":	"asciz",
-					"addr":	15264,
-					"len":	6,
-					"label":	"Name_Suezo"
-				}, {
-					"type":	"asciz",
-					"addr":	15270,
-					"len":	7,
-					"label":	"Name_Phenix"
 				}]
 		}, {
 			"type":	"code",

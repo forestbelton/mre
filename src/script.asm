@@ -466,3 +466,51 @@ DispatchTextRenderer_Return:
 	pop af
 	ld [$2fff], a
 	ret
+
+; --- $11 opcode handler + monster-name table (folded in from names.asm) ---
+SECTION "names_003b53", ROM0[$3b53]
+
+PrintIndexedName:
+	ld e, [hl]
+	inc hl
+	ld d, [hl]
+	inc hl
+	push hl
+	ld a, [de]
+	ld hl, MonsterNamePointers
+	sla a
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+.PutChar:
+	ld a, [hl+]
+	or a
+	jr z, .PutCharDone
+	ld c, a
+	call PrintCharacterAtCursor
+	jr .PutChar
+.PutCharDone:
+	pop hl
+	jp ScriptDispatcherNext
+
+MonsterNamePointers:
+	dw Name_Tiger
+	dw Name_Mocchi
+	dw Name_Hare
+	dw Name_Gali
+	dw Name_Golem
+	dw Name_Suezo
+	dw Name_Phenix
+
+Name_Tiger:  db "Tiger", 0
+Name_Mocchi: db "Mocchi", 0
+Name_Hare:   db "Hare", 0
+Name_Gali:   db "Gali", 0
+Name_Golem:  db "Golem", 0
+Name_Suezo:  db "Suezo", 0
+Name_Phenix: db "Phenix", 0
