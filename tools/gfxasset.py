@@ -59,7 +59,25 @@ ASSETS = {
         # $8800 addressing: index 0 -> the first tile of tiles_addr (VRAM $9000).
         "index_base": 0,
     },
+    # Kalum's encounter portrait (tower NPC). Drawn by Kalum_StartEncounter
+    # ($1f:$417b): tiles loaded $1d:$4000 +0x1800 to VRAM bank 1 $8000 ($8000
+    # index addressing), arranged by the CopyBgMap descriptor at $1d:$5880 over
+    # the top 20x11 cells. Uses 6 BG palettes whose ROM source is lib-dispatched
+    # (not yet located) — so palette_count 0 = grayscale composite for now;
+    # tiles/tilemap still round-trip byte-exact.
+    "kalum_portrait": {
+        "bank": 0x1d,
+        "tiles_addr": 0x74000,
+        "tiles_count": 384,
+        "palette_addr": None,
+        "palette_count": 0,
+        "desc_addr": 0x75880,
+        "index_base": 0,
+    },
 }
+
+# Grayscale ramp for palette-less assets (composite + tile sheet).
+GRAY = [(0xFF, 0xFF, 0xFF), (0xAA, 0xAA, 0xAA), (0x55, 0x55, 0x55), (0x00, 0x00, 0x00)]
 
 
 # ---------------------------------------------------------------------------
@@ -239,9 +257,12 @@ def sheet_png_to_tiles(path: Path, count: int) -> list[bytes]:
 def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
                      tiles: list[bytes], pals: list[list[int]], index_base: int) -> None:
     W, H = cols * 8, rows * 8
+    grayscale = not pals
     # Build a 256-color RGB palette from the CGB palettes (palette p, color k
     # -> PNG index p*4 + k). Cells reference it via their attr palette bits.
-    pal_rgb: list[tuple[int, int, int]] = []
+    # With no palettes (source not yet located), fall back to a gray ramp and
+    # ignore the per-cell palette selector.
+    pal_rgb: list[tuple[int, int, int]] = list(GRAY) if grayscale else []
     for pal in pals:
         pal_rgb += [rgb555_to_rgb888(w) for w in pal]
     px = bytearray(W * H)
@@ -249,7 +270,7 @@ def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
         ty, tx = divmod(cell, cols)
         v = idx[cell]
         a = attr[cell]
-        pal_no = a & 0x07
+        pal_no = 0 if grayscale else (a & 0x07)
         xflip, yflip = (a >> 5) & 1, (a >> 6) & 1
         tile_no = (v - index_base) & 0xFF
         ind = tile_to_indices(tiles[tile_no]) if tile_no < len(tiles) else [[0] * 8] * 8
@@ -285,13 +306,15 @@ def cmd_decode(args) -> int:
 
     tiles = [rom[spec["tiles_addr"] + t * TILE_BYTES: spec["tiles_addr"] + (t + 1) * TILE_BYTES]
              for t in range(spec["tiles_count"])]
-    pals = read_palettes(rom, spec["palette_addr"], spec["palette_count"])
+    pals = (read_palettes(rom, spec["palette_addr"], spec["palette_count"])
+            if spec["palette_count"] else [])
     idx = rom[desc["idx_addr"]: desc["idx_addr"] + n_cells]
     attr = rom[desc["attr_addr"]: desc["attr_addr"] + n_cells]
 
-    pal_rgb = [rgb555_to_rgb888(w) for w in pals[0]]
+    pal_rgb = [rgb555_to_rgb888(w) for w in pals[0]] if pals else list(GRAY)
     tiles_to_sheet_png(out / "tiles.png", tiles, pal_rgb)
-    write_pal_file(out / "palette.pal", pals)
+    if pals:
+        write_pal_file(out / "palette.pal", pals)
     (out / "tilemap.bin").write_bytes(idx)
     (out / "attrmap.bin").write_bytes(attr)
 
@@ -318,8 +341,9 @@ def cmd_decode(args) -> int:
     (out / "asset.json").write_text(json.dumps(meta, indent=2) + "\n")
 
     print(f"decoded {name}: {cols}x{rows} cells, {spec['tiles_count']} tiles, "
-          f"{spec['palette_count']} palette(s)")
-    print(f"  components -> {out}/  (tiles.png, palette.pal, tilemap.bin, attrmap.bin)")
+          f"{spec['palette_count']} palette(s)" + (" [grayscale]" if not pals else ""))
+    comp = "tiles.png, tilemap.bin, attrmap.bin" + (", palette.pal" if pals else "")
+    print(f"  components -> {out}/  ({comp})")
     print(f"  composite  -> {out / 'preview.png'}  (generated preview)")
     return 0
 
@@ -329,7 +353,7 @@ def encode_components(src: Path) -> dict[str, bytes]:
     dict component -> bytes, plus the asset.json metadata under key '_meta'."""
     meta = json.loads((src / "asset.json").read_text())
     tiles = sheet_png_to_tiles(src / "tiles.png", meta["tiles_count"])
-    pals = read_pal_file(src / "palette.pal")
+    pals = read_pal_file(src / "palette.pal") if (src / "palette.pal").exists() else []
     idx = (src / "tilemap.bin").read_bytes()
     attr = (src / "attrmap.bin").read_bytes()
     return {
@@ -361,7 +385,7 @@ def cmd_preview(args) -> int:
     meta = comps["_meta"]
     tiles_blob = comps["tiles"]
     tiles = [tiles_blob[i:i + TILE_BYTES] for i in range(0, len(tiles_blob), TILE_BYTES)]
-    pals = read_pal_file(src / "palette.pal")
+    pals = read_pal_file(src / "palette.pal") if (src / "palette.pal").exists() else []
     out = Path(args.out)
     render_composite(out, meta["rows"], meta["cols"], comps["tilemap"],
                      comps["attrmap"], tiles, pals, meta["index_base"])
@@ -376,11 +400,12 @@ def cmd_verify(args) -> int:
     # (component, ROM file offset)
     regions = [
         ("tiles", meta["tiles_addr"]),
-        ("palette", meta["palette_addr"]),
         ("descriptor", meta["desc_addr"]),
         ("tilemap", meta["idx_addr"]),
         ("attrmap", meta["attr_addr"]),
     ]
+    if meta.get("palette_count") and meta.get("palette_addr") is not None:
+        regions.insert(1, ("palette", meta["palette_addr"]))
     ok = True
     for name, addr in regions:
         data = comps[name]

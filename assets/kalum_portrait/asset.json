@@ -1,0 +1,16 @@
+{
+  "asset": "kalum_portrait",
+  "bank": 29,
+  "rows": 11,
+  "cols": 20,
+  "tiles_count": 384,
+  "palette_count": 0,
+  "index_base": 0,
+  "tiles_addr": 475136,
+  "palette_addr": null,
+  "desc_addr": 481408,
+  "attr_ptr": 22882,
+  "idx_ptr": 22662,
+  "attr_addr": 481634,
+  "idx_addr": 481414
+}
