@@ -12,10 +12,14 @@
 
 INCLUDE "script.inc"
 
-SECTION "mistral_07c5b1", ROMX[$45b1], BANK[$1f]
+SECTION "mistral_07c5a5", ROMX[$45a5], BANK[$1f]
 
 
 MistralScript:
+    ; Greeting selector on $d60f (encounter state); launcher enters here at $45a5.
+    SCRIPT_IF_EQ $d60f, $01, $4646
+    SCRIPT_IF_EQ $d60f, $02, $46b6
+    ; Default greeting — was the mislabeled start at $45b1:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     db "Oh?"
     SCRIPT_NEWLINE

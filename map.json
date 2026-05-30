@@ -117,8 +117,8 @@
 			"name":	"scripts/mistral.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	509361,
-					"len":	408,
+					"addr":	509349,
+					"len":	420,
 					"label":	"MistralScript"
 				}]
 		}, {
