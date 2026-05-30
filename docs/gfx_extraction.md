@@ -145,9 +145,18 @@ rgbgfx -c "#5abdc5,#83a400,#393939,#0883ac" -o x.2bpp x.png   # colors = 2bpp va
 
 So we CAN keep real colors (render the PNG in the captured palette, pass those
 same colors to `-c`) and still rebuild exactly — as long as the 4 are distinct.
-When a real palette has duplicate colors: nudge a dup by 1 LSB (imperceptible,
-restores distinctness) or fall back to sentinel grays. Either way the asm
-INCBINs only the 2bpp bytes; palette never enters the assembly.
+The asm INCBINs only the 2bpp bytes; palette never enters the assembly.
+
+**Duplicate-color palettes (decision):** rgbgfx can't encode these at all
+(color→index is lossy), and we will NOT distort colors to work around it.
+- **For now:** the extractor/build must **error** if a gfx region's palette has
+  duplicate colors, naming the region — don't silently mis-encode.
+- **Later:** write our own tiny PNG→2bpp encoder for these regions (trivial:
+  read an indexed PNG, emit 2 bitplane bytes per row straight from the pixel
+  indices — no color matching, so duplicates are a non-issue). The 2bpp format
+  is 16 bytes/tile, row = lo-plane byte then hi-plane byte, bit7 = leftmost
+  pixel. Once that exists, route duplicate-palette regions through it instead
+  of rgbgfx and drop the error.
 
 ## Caveats / open questions
 - Tilemaps written with a tile-index base offset are NOT verbatim → currently
