@@ -108,8 +108,8 @@
 			"name":	"scripts/kalum.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	508605,
-					"len":	345,
+					"addr":	508593,
+					"len":	357,
 					"label":	"KalumScript"
 				}]
 		}, {

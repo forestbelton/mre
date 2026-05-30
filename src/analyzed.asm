@@ -30969,11 +30969,6 @@ Func_1f_429c:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_07c2b1", ROMX[$42b1], BANK[$1f]
-
-Data_1f_42b1:
-	db $0a, $0f, $d6, $01, $45, $43, $0a, $0f, $d6, $02, $a0, $43
-
 SECTION "analyzed_07c416", ROMX[$4416], BANK[$1f]
 
 Func_1f_4416:

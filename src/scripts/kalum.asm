@@ -10,10 +10,15 @@
 
 INCLUDE "script.inc"
 
-SECTION "kalum_07c2bd", ROMX[$42bd], BANK[$1f]
+SECTION "kalum_07c2b1", ROMX[$42b1], BANK[$1f]
 
 
 KalumScript:
+    ; Greeting selector on $d60f (encounter state), set before the script runs.
+    ; Kalum_StartEncounter enters the script here at $42b1.
+    SCRIPT_IF_EQ $d60f, $01, $4345
+    SCRIPT_IF_EQ $d60f, $02, $43a0
+    ; Default greeting (first visit) — was the mislabeled start at $42bd:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     db "Wow! I can't"
     SCRIPT_NEWLINE
