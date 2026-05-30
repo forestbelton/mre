@@ -43065,50 +43065,10 @@ Func_30_5408:
 	ld c, $08
 	call Func_00_0c09
 	ret
-DrawTecmoLogo:
-	xor a
-	ld [$d0fe], a
-	call Func_00_0bd7
-	xor a
-	ldh [rVBK], a
-	ld a, $27
-	ld hl, $4000
-	ld de, $8000
-	ld bc, $1800
-	call CopyBytesBanked
-	ld a, $01
-	ldh [rVBK], a
-	ld a, $27
-	ld hl, $5800
-	ld de, $8000
-	ld bc, $1800
-	call CopyBytesBanked
-	ld b, $27
-	ld hl, $5808
-	ld de, $9800
-	call CopyBgMapBanked
-	call Func_00_0822
-	ld b, $27
-	ld de, $5800
-	call LoadPalettesBanked
-	call Func_00_0794
-TecmoLogo_FadeLoop:
-	call WaitForNextFrame
-	call ReadJoypad
-	ldh a, [$ff8d]
-	cp $00
-	jr nz, TecmoLogo_Done
-	ld a, [$d0fe]
-	cp $b4
-	jr nc, TecmoLogo_Done
-	ld a, [$d0fe]
-	inc a
-	ld [$d0fe], a
-	jp TecmoLogo_FadeLoop
-TecmoLogo_Done:
-	call Func_00_07a7
-	call Func_00_0786
-	ret
+
+SECTION "analyzed_0c147f", ROMX[$547f], BANK[$30]
+
+Func_30_547f:
 	rst $20
 	ret nz
 

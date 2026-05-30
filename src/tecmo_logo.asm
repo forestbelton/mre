@@ -29,3 +29,57 @@ TecmoLogoIndexMap:
 SECTION "TecmoLogoAttrMap", ROMX[$5976], BANK[$27]
 TecmoLogoAttrMap:
 	INCBIN "assets/tecmo_logo/attrmap.bin"     ; 20x18 CGB BG attributes
+
+; --- Renderer ---------------------------------------------------------------
+; The "draw the TECMO logo and fade it" routine, lifted out of bank $30 in
+; analyzed.asm so the logo's code lives with its data. It is pure rendering:
+; no state-machine logic. The intro dispatcher reaches it via the bank-0
+; handler IntroScene_TecmoLogo ($3580), which banks in $30, `call`s here, and
+; advances the intro state — see RunIntroScene / IntroSceneTable. It calls
+; shared engine routines (CopyBytesBanked, etc.) defined in analyzed.asm.
+
+SECTION "DrawTecmoLogo", ROMX[$5418], BANK[$30]
+DrawTecmoLogo:
+	xor a
+	ld [$d0fe], a               ; fade level := 0
+	call Func_00_0bd7           ; clear OAM / pre-screen init
+	xor a
+	ldh [rVBK], a               ; VRAM bank 0
+	ld a, $27
+	ld hl, $4000                ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
+	ld de, $8000
+	ld bc, $1800
+	call CopyBytesBanked
+	ld a, $01
+	ldh [rVBK], a               ; VRAM bank 1
+	ld a, $27
+	ld hl, $5800                ; bank-1 plane (palette/maps/tail ride along, unused as tiles)
+	ld de, $8000
+	ld bc, $1800
+	call CopyBytesBanked
+	ld b, $27
+	ld hl, $5808                ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
+	ld de, $9800
+	call CopyBgMapBanked
+	call Func_00_0822
+	ld b, $27
+	ld de, $5800                ; TecmoLogoPalette -> BG/OBJ palette buffers
+	call LoadPalettesBanked
+	call Func_00_0794           ; show screen + apply palettes
+.fadeLoop:
+	call WaitForNextFrame
+	call ReadJoypad
+	ldh a, [$ff8d]              ; held buttons
+	cp $00
+	jr nz, .done                ; any press skips the fade
+	ld a, [$d0fe]
+	cp $b4                      ; held ~180 frames (~3 s)
+	jr nc, .done
+	ld a, [$d0fe]
+	inc a
+	ld [$d0fe], a               ; advance fade level (per-frame palette dim)
+	jp .fadeLoop
+.done:
+	call Func_00_07a7           ; fade out
+	call Func_00_0786
+	ret

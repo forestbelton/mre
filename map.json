@@ -22,6 +22,10 @@
 					"type":	"data",
 					"addr":	645494,
 					"len":	360
+				}, {
+					"type":	"code",
+					"addr":	791576,
+					"len":	103
 				}]
 		}, {
 			"type":	"code",
@@ -7321,15 +7325,6 @@
 	"labels":	[{
 			"addr":	638976,
 			"name":	"IntroBlankTiles"
-		}, {
-			"addr":	791576,
-			"name":	"DrawTecmoLogo"
-		}, {
-			"addr":	791643,
-			"name":	"TecmoLogo_FadeLoop"
-		}, {
-			"addr":	791672,
-			"name":	"TecmoLogo_Done"
 		}, {
 			"addr":	13696,
 			"name":	"IntroScene_TecmoLogo"
