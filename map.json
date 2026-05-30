@@ -1,6 +1,30 @@
 {
 	"files":	[{
 			"type":	"code",
+			"name":	"tecmo_logo.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	643072,
+					"len":	2048
+				}, {
+					"type":	"data",
+					"addr":	645120,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	645128,
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	645134,
+					"len":	360
+				}, {
+					"type":	"data",
+					"addr":	645494,
+					"len":	360
+				}]
+		}, {
+			"type":	"code",
 			"name":	"names.asm",
 			"sections":	[{
 					"type":	"code",
@@ -5847,7 +5871,11 @@
 				}, {
 					"type":	"gfx",
 					"addr":	638976,
-					"len":	12288
+					"len":	4096
+				}, {
+					"type":	"data",
+					"addr":	645854,
+					"len":	5410
 				}, {
 					"type":	"data",
 					"addr":	655359,
@@ -7292,7 +7320,7 @@
 		}],
 	"labels":	[{
 			"addr":	638976,
-			"name":	"TecmoLogoGfx"
+			"name":	"IntroBlankTiles"
 		}, {
 			"addr":	791576,
 			"name":	"DrawTecmoLogo"

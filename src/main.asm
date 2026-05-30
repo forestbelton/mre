@@ -18,6 +18,7 @@ INCLUDE "scripts/rafaga.asm"
 INCLUDE "scripts/tempest.asm"
 INCLUDE "scripts/toamuna.asm"
 INCLUDE "scripts/verde.asm"
+INCLUDE "tecmo_logo.asm"
 
 SECTION "data_000005", ROM0[$0005]
 Data_00_0005:

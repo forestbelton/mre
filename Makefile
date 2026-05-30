@@ -76,7 +76,13 @@ $(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
 			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
 		done; \
 	fi
-	$(RGBASM) -i $(SRC_DIR)/ -i include/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
+	@# Compile editable screen assets (assets/<name>/) into their ROM
+	@# component bytes under build/assets/, which the asm INCBINs.
+	@for a in $(wildcard assets/*); do \
+		[ -f "$$a/asset.json" ] || continue; \
+		$(PYTHON) tools/gfxasset.py encode --in "$$a" --out-dir "$(BUILD_DIR)/$$a" || exit 1; \
+	done
+	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -o $@ $(BUILD_DIR)/main.o
 
 extract: $(EXTRACT_STAMP)
