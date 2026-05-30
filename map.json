@@ -198,8 +198,8 @@
 			"name":	"scripts/rafaga.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	510051,
-					"len":	529,
+					"addr":	510039,
+					"len":	541,
 					"label":	"RafagaScript"
 				}]
 		}, {
@@ -207,8 +207,8 @@
 			"name":	"scripts/tempest.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	510862,
-					"len":	472,
+					"addr":	510850,
+					"len":	484,
 					"label":	"TempestScript"
 				}]
 		}, {
@@ -216,8 +216,8 @@
 			"name":	"scripts/nada.asm",
 			"sections":	[{
 					"type":	"data",
-					"addr":	512226,
-					"len":	1907,
+					"addr":	512214,
+					"len":	1919,
 					"label":	"NadaScript"
 				}]
 		}, {

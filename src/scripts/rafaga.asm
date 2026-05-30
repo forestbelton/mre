@@ -12,10 +12,14 @@
 
 INCLUDE "script.inc"
 
-SECTION "rafaga_07c863", ROMX[$4863], BANK[$1f]
+SECTION "rafaga_07c857", ROMX[$4857], BANK[$1f]
 
 
 RafagaScript:
+    ; Greeting selector on $d60f (encounter state); launcher enters here.
+    SCRIPT_IF_EQ $d60f, $01, $495f
+    SCRIPT_IF_EQ $d60f, $02, $49f3
+    ; Default greeting — was the mislabeled start at $4863:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     db "Hello. You're"
     SCRIPT_NEWLINE

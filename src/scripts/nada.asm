@@ -18,10 +18,14 @@
 
 INCLUDE "script.inc"
 
-SECTION "nada_07d0e2", ROMX[$50e2], BANK[$1f]
+SECTION "nada_07d0d6", ROMX[$50d6], BANK[$1f]
 
 
 NadaScript:
+    ; Greeting selector on $d60f (encounter state); launcher enters here.
+    SCRIPT_IF_EQ $d60f, $01, $5473
+    SCRIPT_IF_EQ $d60f, $02, $57ea
+    ; Default greeting — was the mislabeled start at $50e2:
     SCRIPT_OPEN_TEXTBOX $9982, $10, $04
     SCRIPT_FAR_CALL $4d97, $1f
     SCRIPT_RENDERER $4f14, $1f
