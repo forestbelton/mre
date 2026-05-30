@@ -5845,7 +5845,7 @@
 					"addr":	638975,
 					"len":	1
 				}, {
-					"type":	"data",
+					"type":	"gfx",
 					"addr":	638976,
 					"len":	12288
 				}, {
@@ -5869,9 +5869,13 @@
 					"addr":	671743,
 					"len":	1
 				}, {
-					"type":	"data",
+					"type":	"gfx",
 					"addr":	671744,
-					"len":	12822
+					"len":	12288
+				}, {
+					"type":	"data",
+					"addr":	684032,
+					"len":	534
 				}, {
 					"type":	"data",
 					"addr":	684972,
@@ -5901,9 +5905,21 @@
 					"addr":	688127,
 					"len":	1
 				}, {
-					"type":	"data",
+					"type":	"gfx",
 					"addr":	688128,
-					"len":	14947
+					"len":	5120
+				}, {
+					"type":	"data",
+					"addr":	693248,
+					"len":	16
+				}, {
+					"type":	"gfx",
+					"addr":	693264,
+					"len":	2048
+				}, {
+					"type":	"data",
+					"addr":	695312,
+					"len":	7763
 				}, {
 					"type":	"data",
 					"addr":	704511,

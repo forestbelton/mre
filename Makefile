@@ -34,6 +34,8 @@ SAMEBOY_VERSION  := $(shell sed -n 's/^VERSION *:= *//p' $(SAMEBOY_DIR)/version.
 PYTHON   := python3
 RGBASM   := rgbasm
 RGBLINK  := rgblink
+RGBGFX   := rgbgfx
+GFX_DIR  := $(SRC_DIR)/gfx
 CC       := cc
 CFLAGS   := -O2 -Wall -Wno-unused-parameter -Wno-multichar
 SAMEBOY_CFLAGS := -std=gnu11 -D_GNU_SOURCE \
@@ -64,6 +66,16 @@ verify: $(OUT)
 rom: $(OUT)
 
 $(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
+	@# Build every gfx PNG the extractor emitted into its 2bpp tile data.
+	@# `-c embedded` maps PNG pixels back to 2bpp values by the embedded
+	@# palette's index order, so the round-trip is byte-exact (the asm
+	@# INCBINs only the leading bytes; rgbgfx zero-pads the last tile-row).
+	@if [ -d $(GFX_DIR) ]; then \
+		for png in $(GFX_DIR)/*.png; do \
+			[ -e "$$png" ] || continue; \
+			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
+		done; \
+	fi
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -o $@ $(BUILD_DIR)/main.o
 

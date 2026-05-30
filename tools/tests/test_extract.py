@@ -774,17 +774,20 @@ class TestPaddingSections(unittest.TestCase):
             ]}
         ]}, rom_size=0x8000)
 
-    def test_gfx_subsection_emits_db_bytes(self):
-        # For now gfx is coverage-equivalent to data: emitted as `db` so the
-        # build round-trips byte-exact (PNG rendering comes later).
+    def test_gfx_subsection_emits_incbin(self):
+        # gfx renders to a PNG and INCBINs the rgbgfx-built 2bpp (sliced to
+        # the exact ROM length), not raw `db` bytes.
         rom = bytes(0x4000) + bytes(range(16)) + bytes(0x4000)
-        lines = extract._build_section_lines(
-            {"type": "gfx", "addr": 0x4000, "len": 16},
-            "gfx_004000", "analyzed.asm", rom, labels={}, hw_symbols={},
-        )
-        body = "\n".join(lines)
-        self.assertIn("db $00, $01, $02, $03", body)
-        self.assertIn("$0f", body)
+        with tempfile.TemporaryDirectory() as td:
+            lines = extract._build_section_lines(
+                {"type": "gfx", "addr": 0x4000, "len": 16},
+                "gfx_004000", "analyzed.asm", rom, labels={0x4000: "G"},
+                hw_symbols={}, output_dir=Path(td),
+            )
+            body = "\n".join(lines)
+            self.assertIn('INCBIN "gfx/G.2bpp", 0, 16', body)
+            self.assertNotIn("db ", body)
+            self.assertTrue((Path(td) / "gfx" / "G.png").exists())
 
     def test_validate_padding_ignores_non_padding(self):
         # A code or data section with non-zero bytes is fine; only padding
@@ -1189,6 +1192,86 @@ class TestAppendOnlyEmission(unittest.TestCase):
         final = out.read_text()
         self.assertNotIn("STALE_CONTENT", final)
         self.assertIn('SECTION "analyzed_000200"', final)
+
+
+class TestGfxSections(unittest.TestCase):
+    """gfx (2bpp tile data) sections: owner classification, the byte-exact
+    PNG <-> 2bpp round-trip through rgbgfx, and the INCBIN emission."""
+
+    @staticmethod
+    def _make_tiles(n: int) -> bytes:
+        # Deterministic pseudo-data exercising all 4 pixel indices and both
+        # bitplanes. 16 bytes per tile.
+        return bytes((i * 37 + 11) & 0xFF for i in range(n * extract.GFX_TILE_BYTES))
+
+    def test_gfx_owner_in_section_index(self):
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "gfx", "addr": 0x200, "len": 0x40},
+        ]}]}
+        index = extract.build_section_index(spec)
+        by_start = {s[0]: s for s in index}
+        self.assertEqual(by_start[0x200][3], "gfx-section")
+        # coverage kind is data
+        self.assertEqual(by_start[0x200][2], "data")
+
+    def test_gfx_interior_ref_gets_no_label(self):
+        # A reference into the middle of a gfx blob can't take a label
+        # (INCBIN'd), exactly like a .bin / string span. Only the start does.
+        rom = bytearray(0x10000)
+        # `jp $0204` at $0200 targets the interior of the gfx section.
+        rom[0x0200:0x0203] = bytes.fromhex("c30402")
+        spec = {"files": [{"type": "code", "name": "x.asm", "sections": [
+            {"type": "code", "addr": 0x0200, "len": 3},
+            {"type": "gfx", "addr": 0x0204, "len": 0x40},
+        ]}]}
+        sec_index = extract.build_section_index(spec)
+        boundaries = extract.compute_insn_boundaries(bytes(rom), spec)
+        refs = extract.collect_refs(bytes(rom), spec)
+        labels = extract.build_labels(refs, sec_index, boundaries, spec)
+        self.assertIn(0x0204, labels)        # section start labeled
+        self.assertNotIn(0x0244, labels)     # interior not labeled
+
+    def test_non_multiple_of_16_raises(self):
+        with self.assertRaises(extract.MapError):
+            extract.gfx_to_indexed_png(b"\x00" * 17, 16, Path("/tmp/never.png"))
+
+    def test_roundtrip_byte_exact_via_rgbgfx(self):
+        import shutil
+        import subprocess
+        if shutil.which("rgbgfx") is None:
+            self.skipTest("rgbgfx not installed")
+        data = self._make_tiles(20)  # 20 tiles, not a multiple of width=16
+        with tempfile.TemporaryDirectory() as td:
+            png = Path(td) / "tiles.png"
+            bpp = Path(td) / "tiles.2bpp"
+            extract.gfx_to_indexed_png(data, extract.GFX_DEFAULT_WIDTH, png)
+            subprocess.run(
+                ["rgbgfx", "-c", "embedded", "-o", str(bpp), str(png)],
+                check=True, capture_output=True,
+            )
+            out = bpp.read_bytes()
+            # rgbgfx zero-pads the final partial tile-row; the asm slices to
+            # len, so only the leading bytes must match.
+            self.assertGreaterEqual(len(out), len(data))
+            self.assertEqual(out[:len(data)], data)
+
+    def test_build_section_lines_emits_incbin_and_png(self):
+        rom = bytearray(0x10000)
+        data = self._make_tiles(4)
+        rom[0x0200:0x0200 + len(data)] = data
+        sec = {"type": "gfx", "addr": 0x0200, "len": len(data)}
+        with tempfile.TemporaryDirectory() as td:
+            out_dir = Path(td)
+            lines = extract._build_section_lines(
+                sec, "analyzed_000200", "analyzed.asm", bytes(rom),
+                {0x0200: "Data_00_0200"}, {}, None, out_dir,
+            )
+            text = "\n".join(lines)
+            self.assertIn(
+                f'INCBIN "gfx/Data_00_0200.2bpp", 0, {len(data)}', text)
+            self.assertNotIn("\tdb ", text)  # not emitted as raw bytes
+            png = out_dir / "gfx" / "Data_00_0200.png"
+            self.assertTrue(png.exists())
 
 
 if __name__ == "__main__":

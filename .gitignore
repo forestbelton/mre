@@ -1,6 +1,7 @@
 rom.gbc
 *.sav
 src/*.bin
+src/gfx/
 build/
 tools/analyzer/analyzer
 __pycache__/

@@ -38,11 +38,70 @@ WRAM_INC     = "wram.inc"
 # `ascii` and `asciz` are emitted as RGBASM string literals but are
 # coverage-equivalent to `data` (any byte is a valid label position).
 # `gfx` marks 2bpp tile pixel data identified by the analyzer's VRAM-write
-# provenance (--watch-vram). It is coverage-equivalent to `data` and, for
-# now, emitted as `db` bytes too; a later stage renders it to a PNG and
-# INCBINs an rgbgfx-built .2bpp instead.
+# provenance (--watch-vram). It is coverage-equivalent to `data`, but is
+# emitted as an indexed PNG (the editable/viewable source) plus an
+# `INCBIN` of the rgbgfx-built `.2bpp` — see _build_section_lines / the
+# gfx encoder below.
 SECTION_TYPES = {"code", "data", "ascii", "asciz", "padding", "gfx"}
 DATA_LIKE_TYPES = {"data", "ascii", "asciz", "gfx"}
+
+# --- gfx (2bpp tile data) ---------------------------------------------------
+# A gfx section is rendered to `src/gfx/<label>.png` and INCBIN'd back as
+# `gfx/<label>.2bpp` (built by rgbgfx in the Makefile). 2bpp = 16 bytes/tile,
+# 8x8 px, each row is two bytes (low bitplane then high bitplane), bit 7 is the
+# leftmost pixel; pixel value = lo_bit | (hi_bit << 1), i.e. an index 0..3.
+GFX_DIR = "gfx"             # subdir under the output dir for PNGs/2bpp
+GFX_TILE_BYTES = 16
+GFX_DEFAULT_WIDTH = 16      # tiles per PNG row when a section has no `width`
+# Fixed sentinel palette: index i -> these four DISTINCT grays. 2bpp stores
+# pixel *indices*, not color (color is applied at draw time by the tilemap/OAM
+# attribute), so the round-trip is palette-agnostic — any 4 distinct colors
+# work. rgbgfx maps PNG pixels back to 2bpp values by the embedded palette's
+# index order (`-c embedded`), so index i -> value i, byte-exact. The colors
+# must be distinct or rgbgfx collapses indices; these are.
+GFX_PALETTE = [(0xFF, 0xFF, 0xFF), (0xAA, 0xAA, 0xAA), (0x55, 0x55, 0x55), (0x00, 0x00, 0x00)]
+
+
+def gfx_to_indexed_png(chunk: bytes, width_tiles: int, out_path: Path) -> None:
+    """Decode 2bpp tile data into an indexed PNG laid out `width_tiles` tiles
+    per row, written to `out_path`. The PNG palette index equals the 2bpp
+    pixel value, so `rgbgfx -c embedded` reproduces `chunk` exactly (the first
+    len(chunk) bytes of its output; a partial final tile-row is zero-padded
+    here and sliced off by the INCBIN length in the asm)."""
+    from PIL import Image
+
+    if len(chunk) % GFX_TILE_BYTES != 0:
+        raise MapError(
+            f"gfx data length {len(chunk)} is not a multiple of "
+            f"{GFX_TILE_BYTES} (whole 8x8 tiles)"
+        )
+    n_tiles = len(chunk) // GFX_TILE_BYTES
+    width_tiles = max(1, int(width_tiles))
+    height_tiles = (n_tiles + width_tiles - 1) // width_tiles
+    img_w, img_h = width_tiles * 8, height_tiles * 8
+
+    # Pixel buffer defaults to index 0 — that also pads the trailing partial
+    # tile-row, which the INCBIN length discards.
+    pixels = bytearray(img_w * img_h)
+    for t in range(n_tiles):
+        base_x = (t % width_tiles) * 8
+        base_y = (t // width_tiles) * 8
+        tile = chunk[t * GFX_TILE_BYTES:(t + 1) * GFX_TILE_BYTES]
+        for row in range(8):
+            lo, hi = tile[row * 2], tile[row * 2 + 1]
+            for col in range(8):
+                bit = 7 - col
+                val = ((lo >> bit) & 1) | (((hi >> bit) & 1) << 1)
+                pixels[(base_y + row) * img_w + (base_x + col)] = val
+
+    img = Image.frombytes("P", (img_w, img_h), bytes(pixels))
+    palette: list[int] = []
+    for rgb in GFX_PALETTE:
+        palette.extend(rgb)
+    palette.extend([0, 0, 0] * (256 - len(GFX_PALETTE)))
+    img.putpalette(palette)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path)
 
 
 def section_coverage_kind(stype: str) -> str:
@@ -817,6 +876,9 @@ def build_section_index(
                        data subsections, so any byte can take a label.
       - "data-file"  — a top-level .bin; only the section *start* is a
                        valid label position (the body is INCBIN'd).
+      - "string-section" / "gfx-section" — an ascii/asciz span or a gfx
+                       (2bpp) blob inside a code .asm; like data-file, only
+                       the section *start* can take a label.
       - "header"     — the cartridge header; off-limits.
     """
     out: list[tuple[int, int, str, str]] = []
@@ -829,9 +891,14 @@ def build_section_index(
                 # as an INCBIN'd top-level data file. Mark the owner
                 # accordingly so build_labels only accepts a label at
                 # the section's start.
-                owner = ("string-section"
-                         if s["type"] in ("ascii", "asciz")
-                         else "code-file")
+                # gfx is INCBIN'd as one blob (like a .bin / string span), so
+                # a label can only sit at its start.
+                if s["type"] in ("ascii", "asciz"):
+                    owner = "string-section"
+                elif s["type"] == "gfx":
+                    owner = "gfx-section"
+                else:
+                    owner = "code-file"
                 out.append((s["addr"], s["addr"] + s["len"], kind, owner))
         elif f.get("type") == "data":
             out.append((f["addr"], f["addr"] + f["len"], "data", "data-file"))
@@ -968,7 +1035,7 @@ def build_labels(
         sec_start, _sec_end, sec_kind, owner = sec
         if owner == "header":
             continue
-        if owner in ("data-file", "string-section"):
+        if owner in ("data-file", "string-section", "gfx-section"):
             if flat != sec_start:
                 continue
         elif owner == "code-file":
@@ -1132,9 +1199,13 @@ def _build_section_lines(
     labels: dict[int, str],
     hw_symbols: dict[int, str],
     wram_symbols: dict[int, str] | None = None,
+    output_dir: Path | None = None,
 ) -> list[str]:
     """Render one section in a code file. Returns the list of lines
-    (including the SECTION directive at the top)."""
+    (including the SECTION directive at the top).
+
+    For a `gfx` section this also writes the decoded PNG under
+    `output_dir/gfx/` as a side effect (output_dir is required in that case)."""
     offset = sec["addr"]
     length = sec["len"]
     stype = sec["type"]
@@ -1143,6 +1214,25 @@ def _build_section_lines(
     lines: list[str] = [section_directive(sec_name, offset), ""]
     chunk = rom[offset:offset + length]
     fmt_target, fmt_io = make_resolver(hw_symbols, labels, sec_bank, wram_symbols)
+
+    if stype == "gfx":
+        # The section start always carries a label (assigned in build_labels);
+        # use it for the on-disk PNG/2bpp name and as the asm label.
+        label = labels.get(offset, sec_name)
+        if offset in labels:
+            lines.append(f"{labels[offset]}:")
+        width_tiles = sec.get("width", GFX_DEFAULT_WIDTH)
+        if output_dir is not None:
+            try:
+                gfx_to_indexed_png(
+                    chunk, width_tiles, output_dir / GFX_DIR / f"{label}.png")
+            except MapError as e:
+                raise MapError(
+                    f"{file_name} gfx section at ${offset:06x}: {e}") from None
+        # INCBIN the rgbgfx-built 2bpp, sliced to the exact ROM length
+        # (rgbgfx zero-pads the final partial tile-row).
+        lines.append(f'\tINCBIN "{GFX_DIR}/{label}.2bpp", 0, {length}')
+        return lines
 
     if stype == "code":
         i = 0
@@ -1236,7 +1326,8 @@ def emit_code_file(
                 continue
             sec_name = f"{stem}_{sec['addr']:06x}"
             block = "\n".join(_build_section_lines(
-                sec, sec_name, name, rom, labels, hw_symbols, wram_symbols))
+                sec, sec_name, name, rom, labels, hw_symbols, wram_symbols,
+                output_dir))
             new_blocks.append(block)
             appended.append(sec_name)
         if new_blocks:
@@ -1257,7 +1348,8 @@ def emit_code_file(
     for sec in sections:
         sec_name = f"{stem}_{sec['addr']:06x}"
         all_lines.extend(_build_section_lines(
-            sec, sec_name, name, rom, labels, hw_symbols, wram_symbols))
+            sec, sec_name, name, rom, labels, hw_symbols, wram_symbols,
+            output_dir))
         all_lines.append("")
     out_path.write_text("\n".join(all_lines))
     return out_path

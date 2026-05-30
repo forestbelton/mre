@@ -1,8 +1,13 @@
 # Graphics extraction — plan & handoff
 
-Status as of 2026-05-29. Goal #2 work: turn mapped "data" regions that are
+Status as of 2026-05-30. Goal #2 work: turn mapped "data" regions that are
 actually graphics into real source (PNGs round-tripped through `rgbgfx`),
 driven by runtime VRAM-write provenance rather than visual guessing.
+
+**Stages 1–3 are complete and byte-exact** (analyzer marks gfx → extract emits
+PNG + INCBIN → build rebuilds the exact ROM). What remains is purely *coverage*:
+capture wider play sessions so more of the ~328 KB of data gets traced and
+reclassified data → gfx (see "How to capture a real session" below).
 
 ## The approach (decided)
 
@@ -40,10 +45,11 @@ verbatim rejections**. Identified tiledata runs render as clean graphics — the
 in-game font + sprites at `0x0A4000`, a logo at `0x09C000`, sprite sheet at
 `0x0A8000`. These line up exactly with the big "data" blocks in map.json.
 
-## How to capture a real session (THIS is the blocker)
+## How to capture a real session (the remaining coverage work)
 
-Runtime coverage only marks graphics actually drawn on screen. Boot touched
-27 KB of ~328 KB of data. A full play session is needed:
+Runtime coverage only marks graphics actually drawn on screen. A boot trace
+touches ~31 KB of ~328 KB of data (the title logo, font, and intro sprites). A
+full play session is needed to reach the rest:
 
 ```
 make analyzer
@@ -54,10 +60,14 @@ Play widely: battles, menus, ranch, every dungeon floor, monster encyclopedia,
 shops, cutscenes — anything that draws new art. Double-tap ESC to quit. The
 report appends to `/tmp/vram.log`.
 
-NOTE: the analyzer also merges code/data coverage into `--map` every 10s. That's
-desirable for a real session (accumulates coverage). For throwaway smoke tests
-use a copy: `cp map.json /tmp/m.json` and `--map /tmp/m.json --no-save`. Always
-`--no-save` in tests so rom.gbc.sav isn't clobbered (see memory feedback note).
+NOTE: the analyzer **merges** code/data coverage into `--map` every 10s (it
+never deletes). For a real session that accumulates coverage. For a smoke test
+the trace's coverage is almost always already a subset of the committed map, so
+pointing `--map map.json` straight at the real file is effectively a no-op — no
+need to copy it to `/tmp` first. Likewise `--no-save` is unnecessary for these
+traces: `rom.gbc.sav` is only written on an actual in-game save (`GB_save_battery`),
+which a boot/smoke trace never reaches. Reserve `--no-save` for sessions where
+you actually save in-game and don't want to overwrite the user's `.sav`.
 
 ## Next steps (Stage 2 + 3)
 
@@ -86,14 +96,24 @@ use a copy: `cp map.json /tmp/m.json` and `--map /tmp/m.json --no-save`. Always
 - Coalescing note: adjacent runs separated by tiny gaps may be one image split
   by partial draws; merging heuristics may help. Runs are bank-local already.
 
-**Stage 3 — extractor + build (round-trip PROVEN byte-exact).**
-- `tools/extract.py`: add `gfx` to SECTION_TYPES / DATA_LIKE_TYPES (coverage
-  kind = data). For a gfx section, decode bytes → **indexed** PNG into
-  `src/gfx/<label>.png`; emit `INCBIN "gfx/<label>.2bpp", 0, <len>` in the asm.
-- `Makefile`: add a rule to build `%.2bpp` from `%.png` via rgbgfx, and make the
-  ROM target depend on the generated `.2bpp` files. Gitignore `*.2bpp`.
-- `make verify` must still produce the exact sha256
-  (8f66b5972bf76ed15985815ccdecc459fab9e84221454139b05d1d6654b69e7a).
+**Stage 3 — extractor + build (round-trip byte-exact). DONE.**
+- `tools/extract.py`: `gfx` is in SECTION_TYPES / DATA_LIKE_TYPES (coverage
+  kind = data). `_build_section_lines` decodes a gfx section → **indexed** PNG
+  (`gfx_to_indexed_png`, sentinel grays, palette index == 2bpp value) into
+  `src/gfx/<label>.png` and emits `INCBIN "gfx/<label>.2bpp", 0, <len>`. The
+  filename/label is the section's start label. gfx is INCBIN-like for label
+  assignment (owner `gfx-section`): only the section start can carry a label,
+  same as a `.bin`/string span — interior refs fall back to raw hex.
+  An optional per-section `width` (tiles/row, default 16) sets the PNG layout.
+- `Makefile`: the ROM target builds every `src/gfx/*.png` → `.2bpp` with
+  `rgbgfx -c embedded` before assembling. `src/gfx/` is gitignored (generated
+  from ROM by extract, like the `.bin` gap files).
+- **Verified end-to-end:** a boot trace folded 4 real gfx sections (logo
+  `0x9c000`, font `0xa4000` = `bg{0,1,2,3}`, sprites `0xa8000`/`0xa9410`) into
+  map.json; `make verify` rebuilds the exact sha256
+  (8f66b5972bf76ed15985815ccdecc459fab9e84221454139b05d1d6654b69e7a) and the
+  font PNG renders as the legible Latin+kana glyph sheet. Unit test
+  `TestGfxSections` covers the rgbgfx round-trip + INCBIN emission.
 
 ### Proven encode recipe (byte-exact, verified)
 2bpp = 16 bytes/tile, 8x8, row = 2 bytes (lo plane, hi plane), bit7 = leftmost
