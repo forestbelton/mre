@@ -30854,7 +30854,7 @@ Func_1f_417b:
 	ld a, $1d
 	ld de, $9800
 	call Func_00_3942
-	call Func_1f_4234
+	call Kalum_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1d
 	ld hl, $5800
@@ -30887,12 +30887,14 @@ Func_1f_41e6:
 	ld c, $08
 	call CopyDEtoHL
 	ret
-	call Func_1f_4201
+Kalum_ShowMonsterPortrait:
+	call Kalum_LoadMonsterTiles
 	call Func_1f_41e6
 	jp Func_1f_40d9
-	call Func_1f_4201
+Kalum_ShowMonsterPortrait2:
+	call Kalum_LoadMonsterTiles
 	jp Func_1f_40f1
-Func_1f_4201:
+Kalum_LoadMonsterTiles:
 	ld a, $1d
 	ld hl, $5800
 	ld de, $c181
@@ -30912,7 +30914,7 @@ Func_1f_4201:
 	ld c, $10
 	call CopyDEtoHL
 	ret
-Func_1f_4234:
+Kalum_AnimateMonsterPortrait:
 	ld a, $34
 	ld [wRendererAddr], a
 	ld a, $42
@@ -31168,7 +31170,7 @@ Func_1f_587b:
 
 SECTION "analyzed_07d8d7", ROMX[$58d7], BANK[$1f]
 
-Func_1f_58d7:
+ShowYesNoMenu:
 	ld de, $996d
 	ld bc, $0707
 	call ScriptOpcode05Helper

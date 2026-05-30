@@ -7323,6 +7323,21 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	508402,
+			"name":	"Kalum_ShowMonsterPortrait"
+		}, {
+			"addr":	508411,
+			"name":	"Kalum_ShowMonsterPortrait2"
+		}, {
+			"addr":	508417,
+			"name":	"Kalum_LoadMonsterTiles"
+		}, {
+			"addr":	508468,
+			"name":	"Kalum_AnimateMonsterPortrait"
+		}, {
+			"addr":	514263,
+			"name":	"ShowYesNoMenu"
+		}, {
 			"addr":	15430,
 			"name":	"WriteWindowRow"
 		}, {

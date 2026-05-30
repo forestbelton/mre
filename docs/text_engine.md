@@ -596,3 +596,36 @@ intent rather than raw `$39xx` addresses:
 Still unnamed (banked, per-context): the `$0E`-configured renderers themselves
 (e.g. bank $19 `$408B`, which draws a window/portrait and sets the render
 config) and the bank-$31 menu/Y-N UI invoked via `$07`.
+
+## Portraits & menus (bank $1f NPC-encounter UI)
+
+NPC encounters present a portrait that animates while dialogue shows. The trick:
+the **text-renderer slot is repurposed as a per-frame animation hook**.
+`DispatchTextRenderer` ($3CF3) calls `wRendererBank`:`wRendererAddr` every frame
+of a message; an NPC installs its *animator* there instead of a glyph renderer.
+
+A portrait is **a BG-map image + metasprite overlays**:
+- the static image is a BG tilemap copied via `CopyBgMap`/`CopyBgMapBanked`;
+- animated parts are `DrawMetasprite` overlays, with tiles loaded from a
+  monster sprite bank (e.g. bank $1d);
+- the animator advances a frame counter (`$D610`) and selects an animation
+  phase from `frame >> 2`, drawing a different overlay per phase.
+
+Worked example — **Kalum / his monster Selketo** (the script says "Let's go,
+Selketo!" then `SCRIPT_FAR_CALL` x2 then `SCRIPT_REPEAT_CHAR 90` to hold the
+animation ~90 frames):
+
+- `Kalum_ShowMonsterPortrait` ($1f:$41F2) / `..._2` ($1f:$41FB) — script entry
+  points: load the sprite, then kick off the animation.
+- `Kalum_LoadMonsterTiles` ($1f:$4201) — copy Selketo's sprite tiles from bank
+  $1d into the OAM staging buffers ($C181/$C1C1).
+- `Kalum_AnimateMonsterPortrait` ($1f:$4234) — the per-frame animator: draws the
+  portrait metasprites, bumps `$D610`, and cycles a 4-phase overlay. Installs
+  itself as `wRendererAddr` so it re-runs each frame.
+
+Each tower NPC has its own such routines low in bank $1f (Naji, Toamuna, Rafaga
+call their own offsets). The menu UI is shared:
+
+- `ShowYesNoMenu` ($1f:$58D7) — blit the Y/N prompt (`CopyBgMap $5942 -> $9990`),
+  then loop (`WaitForNextFrame` / `ReadJoypad` / `DispatchTextRenderer`) until a
+  choice; result in `wYNResult`. Invoked by many scripts via `$07`.
