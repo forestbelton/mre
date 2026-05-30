@@ -7323,6 +7323,18 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	2659,
+			"name":	"CallLibFuncSaveId"
+		}, {
+			"addr":	2693,
+			"name":	"CallLibFunc"
+		}, {
+			"addr":	2776,
+			"name":	"LibFuncTable"
+		}, {
+			"addr":	3081,
+			"name":	"DrawMetasprite"
+		}, {
 			"addr":	721,
 			"name":	"WaitForHBlank"
 		}, {

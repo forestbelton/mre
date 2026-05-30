@@ -80,11 +80,11 @@ Func_00_0150:
 	ei
 	push af
 	ld a, $00
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld c, $0a
 Func_00_017f:
@@ -1159,11 +1159,11 @@ Func_00_0a56:
 	cp [hl]
 	jr z, Func_00_0a61
 	ld [hl], a
-	call Func_00_0a63
+	call CallLibFuncSaveId
 Func_00_0a61:
 	pop hl
 	ret
-Func_00_0a63:
+CallLibFuncSaveId:
 	ld [$c28c], a
 	push bc
 	push de
@@ -1185,7 +1185,7 @@ Func_00_0a63:
 	pop de
 	pop bc
 	ret
-Func_00_0a85:
+CallLibFunc:
 	push bc
 	push de
 	push hl
@@ -1209,7 +1209,7 @@ Func_00_0a85:
 
 SECTION "analyzed_000ad8", ROM0[$0ad8]
 
-Data_00_0ad8:
+LibFuncTable:
 	db $3f, $00, $3f, $01, $3f, $02, $3f, $03, $3f, $04, $3f, $05, $3f, $06, $3f, $07
 	db $3f, $08, $3f, $09, $3f, $0a, $3f, $0b, $3f, $0c, $3f, $0d, $3f, $0e, $3f, $0f
 
@@ -1348,7 +1348,7 @@ Func_00_0c04:
 	ld a, $00
 	ldh [$ffa7], a
 	ret
-Func_00_0c09:
+DrawMetasprite:
 	ld a, [$7fff]
 	push af
 	ld a, [$c100]
@@ -3333,7 +3333,7 @@ Func_00_3450:
 	ld [$c7de], a
 	push af
 	ld a, $02
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_00_3386
 	ret
@@ -3367,7 +3367,7 @@ Func_00_34bc:
 	call Func_00_1863
 	push af
 	ld a, $2f
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -3377,7 +3377,7 @@ Func_00_34e3:
 	call Func_00_1863
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -3395,7 +3395,7 @@ Func_00_3508:
 	call Func_00_1863
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -3409,7 +3409,7 @@ Func_00_3508:
 	call Func_00_1863
 	push af
 	ld a, $31
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -3418,7 +3418,7 @@ Func_00_3508:
 	ld [$c2a7], a
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 	call Func_00_1863
@@ -3431,7 +3431,7 @@ Func_00_3508:
 	ret
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	call Func_00_1863
 	ld a, [wC2D7]
@@ -3463,20 +3463,20 @@ IntroScene_TecmoLogo:
 	ld [$c2a7], a
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 	call Func_00_1863
 	push af
 	ld a, $37
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_54b8
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $03
 	ld [$c2a9], a
@@ -3524,7 +3524,7 @@ Func_00_35f9:
 	ld [$c100], a
 	ld b, d
 	ld c, e
-	call Func_00_0c09
+	call DrawMetasprite
 	pop af
 	ld [$2fff], a
 	ret
@@ -3925,7 +3925,7 @@ Func_00_3a51:
 	jr z, Func_00_3a3a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $d614
 	ld a, [hl+]
@@ -4389,7 +4389,7 @@ Func_00_3e10:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $d612
 	inc [hl]
 	pop af
@@ -5094,7 +5094,7 @@ Func_01_44bd:
 	jr z, Func_01_44e7
 	push af
 	ld a, $29
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_01_44d0:
@@ -5103,7 +5103,7 @@ Func_01_44d0:
 	jr z, Data_01_44df
 	push af
 	ld a, $2c
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 
@@ -5112,7 +5112,7 @@ SECTION "analyzed_0044e7", ROMX[$44e7], BANK[$01]
 Func_01_44e7:
 	push af
 	ld a, $2b
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_01_44ef:
@@ -5154,7 +5154,7 @@ Func_01_4530:
 	ret nz
 	push af
 	ld a, $2d
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $01
 	ld [$c2e6], a
@@ -5165,7 +5165,7 @@ SECTION "analyzed_00455a", ROMX[$455a], BANK[$01]
 Func_01_455a:
 	push af
 	ld a, $2a
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_01_4562:
@@ -5653,7 +5653,7 @@ Func_01_4b07:
 Func_01_4b0e:
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	xor a
 	ld [$c80f], a
@@ -6420,13 +6420,13 @@ Func_01_5282:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $cfd7
 	ld a, [hl]
@@ -6450,7 +6450,7 @@ Func_01_5282:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2cb
 	ld a, [hl]
@@ -6461,7 +6461,7 @@ Func_01_5282:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, [$c2cc]
 	or a
@@ -6472,7 +6472,7 @@ Func_01_5282:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, [$c2cb]
 	ld b, a
@@ -6500,7 +6500,7 @@ Func_01_52fd:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, [$c2cb]
 	ld b, a
@@ -6525,7 +6525,7 @@ Func_01_5329:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2ce
 	ld a, [hl]
@@ -6538,7 +6538,7 @@ Func_01_5329:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2ce
 	ld a, [hl]
@@ -6551,7 +6551,7 @@ Func_01_5329:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, [$c52f]
 	cp $ff
@@ -6577,7 +6577,7 @@ Func_01_5329:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_01_55a6
 	ret
@@ -6588,7 +6588,7 @@ Func_01_53df:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2d3
 	xor a
@@ -6605,7 +6605,7 @@ Func_01_5408:
 	call Func_01_5504
 	push af
 	ld a, $08
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2c3
 	ld a, [hl]
@@ -6627,7 +6627,7 @@ Func_01_5452:
 	call Func_01_54d0
 	push af
 	ld a, $05
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2d5
 	set 3, [hl]
@@ -7212,13 +7212,13 @@ Func_01_5922:
 Func_01_5934:
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_01_593c:
 	push af
 	ld a, $09
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 
@@ -7243,7 +7243,7 @@ Func_01_5949:
 	ret nz
 	push af
 	ld a, $0a
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $01
 	ld [$c2dd], a
@@ -8557,7 +8557,7 @@ Func_01_67ee:
 	call Func_00_0467
 	push af
 	ld a, $06
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_01_6829:
@@ -8588,7 +8588,7 @@ Func_01_6856:
 	ld [$c2c4], a
 	push af
 	ld a, $08
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 
@@ -12621,7 +12621,7 @@ Func_03_45a0:
 	ret
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $02
 	ld [$c2e6], a
@@ -12866,7 +12866,7 @@ Func_03_4726:
 	ret
 	push af
 	ld a, $25
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_03_48cb
 	and $03
@@ -13085,7 +13085,7 @@ Func_03_4978:
 	jr z, Func_03_4985
 	push af
 	ld a, $02
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_03_4985:
 	ld a, $14
@@ -13437,7 +13437,7 @@ Func_03_4ba1:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_03_63bf
 	jr Func_03_4c00
@@ -13451,7 +13451,7 @@ Func_03_4bb8:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_03_63d4
 	jr Func_03_4c00
@@ -13468,7 +13468,7 @@ Func_03_4bea:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_03_66f6
 Func_03_4c00:
@@ -13518,7 +13518,7 @@ Func_03_4c39:
 	pop de
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ret
@@ -13530,7 +13530,7 @@ Func_03_4c4c:
 	pop de
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ret
@@ -17862,7 +17862,7 @@ Func_04_405f:
 	jr Func_04_4006
 	inc de
 	ld a, [de]
-	call Func_00_0a85
+	call CallLibFunc
 	inc de
 	jr Func_04_4006
 	inc de
@@ -20680,7 +20680,7 @@ Func_0f_4000:
 	call CallBankedHL
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld hl, $c2d5
 	set 5, [hl]
@@ -20689,7 +20689,7 @@ Func_0f_4000:
 	call Func_0f_43bb
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_0f_403b:
@@ -20748,7 +20748,7 @@ Func_0f_40b2:
 	ret z
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ld [$c2da], a
@@ -20765,7 +20765,7 @@ Func_0f_40cb:
 	call CallBankedHL
 	push af
 	ld a, $0e
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $11
 	ld [$c2d8], a
@@ -20776,7 +20776,7 @@ Func_0f_40e8:
 	jr nz, Func_0f_40cb
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_0f_427b
 	ret
@@ -20808,7 +20808,7 @@ Func_0f_416c:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_0f_41a3:
@@ -20822,7 +20822,7 @@ Func_0f_41a3:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_0f_41bd:
@@ -20836,7 +20836,7 @@ Func_0f_41bd:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_0f_41d6:
@@ -20851,7 +20851,7 @@ Func_0f_41d6:
 	ld [$c2d8], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $01
 	ld hl, Func_01_4e55
@@ -20873,7 +20873,7 @@ Func_0f_420f:
 	call Func_00_04bc
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ldh a, [$ffa8]
 	ld [$cf6d], a
@@ -20886,7 +20886,7 @@ Func_0f_4229:
 	call Func_00_04bc
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ldh a, [$ffa8]
 	ld [$cf6d], a
@@ -20900,7 +20900,7 @@ Func_0f_427b:
 	call Func_0f_42a2
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $03
 	ld hl, Func_03_4a58
@@ -20921,7 +20921,7 @@ Func_0f_42a2:
 	ld [$c2d8], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $01
 	ld hl, Func_01_449d
@@ -20959,7 +20959,7 @@ Func_0f_42dd:
 	ld [$c2d8], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_0f_42f9:
@@ -20983,7 +20983,7 @@ Func_0f_4307:
 	ld [$c2d8], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_0f_4329:
@@ -21031,7 +21031,7 @@ Func_0f_436e:
 	ld b, a
 	ldh a, [rSCX]
 	ld c, a
-	call Func_00_0c09
+	call DrawMetasprite
 	ld a, [$c287]
 	and $0c
 	srl a
@@ -21046,7 +21046,7 @@ Func_0f_436e:
 	ldh a, [rSCX]
 	add a, $98
 	ld c, a
-	call Func_00_0c09
+	call DrawMetasprite
 	call Func_0f_43c3
 	ret
 
@@ -21638,7 +21638,7 @@ Func_0f_48f1:
 SECTION "analyzed_03c91f", ROMX[$491f], BANK[$0f]
 
 Func_0f_491f:
-	call Func_00_0c09
+	call DrawMetasprite
 	ld a, [$cf67]
 	inc a
 	ld [$cf67], a
@@ -24193,7 +24193,7 @@ Func_12_41f5:
 	jr nc, Func_12_41f5
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	inc a
 	cp $03
@@ -24208,7 +24208,7 @@ Func_12_4218:
 	jr nc, Func_12_41f5
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	dec a
 	cp $80
@@ -24221,7 +24221,7 @@ Func_12_4230:
 	jr z, Func_12_423f
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor $04
 	jr Func_12_4271
@@ -24236,7 +24236,7 @@ Func_12_424e:
 	jr z, Func_12_425b
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	jr Func_12_4287
 Func_12_425b:
@@ -24336,7 +24336,7 @@ Func_12_484d:
 Func_12_484e:
 	ld hl, $18ce
 	ld bc, $0000
-	call Func_00_0c09
+	call DrawMetasprite
 	ld a, [$c2ec]
 	cp $11
 	jr z, Func_12_4863
@@ -25095,11 +25095,11 @@ Func_15_4185:
 	ld a, $15
 	ld [$c100], a
 	ld hl, $74ee
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $74ee
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $74ee
-	call Func_00_0c09
+	call DrawMetasprite
 	call HideUnusedOamSprites
 	ld a, $00
 	ld bc, $4008
@@ -27166,7 +27166,7 @@ Func_18_4097:
 	call WaitForNextFrame
 	push af
 	ld a, $32
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 	call Func_00_0822
@@ -27194,7 +27194,7 @@ Func_18_4097:
 	call Func_00_3913
 	push af
 	ld a, $32
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld a, $1f
 	ld hl, Func_1f_4008
@@ -27217,13 +27217,13 @@ Func_18_4150:
 	ld [$c100], a
 	ld hl, $5afb
 	ld bc, $5018
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b0c
 	ld bc, $5058
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b1d
 	ld bc, $482f
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b3e
 	ld a, $1b
 	ld de, $9885
@@ -27247,7 +27247,7 @@ Func_18_4150:
 	call Func_00_3942
 	ld hl, $5a54
 	ld bc, $1d28
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_41b7:
 	ld hl, $5a7d
@@ -27256,7 +27256,7 @@ Func_18_41b7:
 	call Func_00_3942
 	ld hl, $5a93
 	ld bc, $1d28
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_41cc:
 	ld hl, $5abc
@@ -27265,7 +27265,7 @@ Func_18_41cc:
 	call Func_00_3942
 	ld hl, $5ad2
 	ld bc, $1d28
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, $e1
 	ld [wRendererAddr], a
@@ -27277,20 +27277,20 @@ Func_18_41cc:
 	ld [$c100], a
 	ld hl, $5afb
 	ld bc, $5018
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b0c
 	ld bc, $5058
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b1d
 	ld bc, $482f
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b56
 	ld a, $1b
 	ld de, $9885
 	call Func_00_3942
 	ld hl, $5b6e
 	ld bc, $1d28
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, $25
 	ld [wRendererAddr], a
@@ -27302,23 +27302,23 @@ Func_18_41cc:
 	ld [$c100], a
 	ld hl, $5afb
 	ld bc, $5018
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b0c
 	ld bc, $5058
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b1d
 	ld bc, $482f
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b97
 	ld a, $1b
 	ld de, $9885
 	call Func_00_3942
 	ld hl, $5baf
 	ld bc, $1d28
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5bd8
 	ld bc, $3d3a
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_061321", ROMX[$5321], BANK[$18]
@@ -27375,7 +27375,7 @@ Func_18_533c:
 	call WaitForNextFrame
 	push af
 	ld a, $33
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 	call Func_00_0822
@@ -27407,7 +27407,7 @@ Func_18_533c:
 	call WaitForNextFrame
 	push af
 	ld a, $33
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ret
 Func_18_53eb:
@@ -27427,10 +27427,10 @@ Func_18_53f7:
 	ld [$c100], a
 	ld hl, $777c
 	ld bc, $4435
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $7789
 	ld bc, $502c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $77b2
 	ld a, $1b
 	ld de, $98a5
@@ -27454,7 +27454,7 @@ Func_18_53f7:
 	call Func_00_3942
 	ld hl, $76a9
 	ld bc, $142d
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_5455:
 	ld hl, $76e6
@@ -27463,7 +27463,7 @@ Func_18_5455:
 	call Func_00_3942
 	ld hl, $76f4
 	ld bc, $142d
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_546a:
 	ld hl, $7731
@@ -27472,7 +27472,7 @@ Func_18_546a:
 	call Func_00_3942
 	ld hl, $773f
 	ld bc, $142d
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, $7f
 	ld [wRendererAddr], a
@@ -27484,17 +27484,17 @@ Func_18_546a:
 	ld [$c100], a
 	ld hl, $7789
 	ld bc, $502c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $782c
 	ld a, $1b
 	ld de, $98a5
 	call Func_00_3942
 	ld hl, $7881
 	ld bc, $4435
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $7844
 	ld bc, $142d
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, $ba
 	ld [wRendererAddr], a
@@ -27506,17 +27506,17 @@ Func_18_546a:
 	ld [$c100], a
 	ld hl, $7789
 	ld bc, $502c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $77ca
 	ld a, $1b
 	ld de, $98a5
 	call Func_00_3942
 	ld hl, $781f
 	ld bc, $4435
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $77e2
 	ld bc, $142d
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_061dfa", ROMX[$5dfa], BANK[$18]
@@ -27631,27 +27631,27 @@ Func_18_603d:
 	jr z, Func_18_6064
 	ld hl, $73fc
 	ld bc, $1e98
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_6064:
 	ld hl, $7405
 	ld bc, $1e98
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_606e:
 	ld hl, $740e
 	ld bc, $1e98
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_6078:
 	ld hl, $7417
 	ld bc, $1e98
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_6082:
 	ld hl, $7420
 	ld bc, $1e98
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_06208c", ROMX[$608c], BANK[$18]
@@ -27747,13 +27747,13 @@ Func_18_6c27:
 	call Func_00_3942
 	ld hl, $7590
 	ld bc, $3e3c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $75a1
 	ld bc, $4828
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $75ba
 	ld bc, $484c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -27771,7 +27771,7 @@ Func_18_6c27:
 	call Func_00_3942
 	ld hl, $7532
 	ld bc, $1e34
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_18_6c8a:
 	ld hl, $755b
@@ -27780,7 +27780,7 @@ Func_18_6c8a:
 	call Func_00_3942
 	ld hl, $7567
 	ld bc, $1e34
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, $9f
 	ld [wRendererAddr], a
@@ -27796,16 +27796,16 @@ Func_18_6c8a:
 	call Func_00_3942
 	ld hl, $7603
 	ld bc, $1e34
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $7590
 	ld bc, $3e3c
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $75a1
 	ld bc, $4828
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $75ba
 	ld bc, $484c
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_062ce3", ROMX[$6ce3], BANK[$18]
@@ -27885,7 +27885,7 @@ Func_19_4000:
 	call WaitForNextFrame
 	push af
 	ld a, $34
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	ld hl, $40dd
 	call ScriptDispatcherEnterAfterCall
@@ -27907,7 +27907,7 @@ Func_19_408b:
 	ld [$c100], a
 	ld hl, $5a56
 	ld bc, $2828
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5a3e
 	ld a, $1a
 	ld de, $98c4
@@ -27923,7 +27923,7 @@ Func_19_408b:
 	ld [$c100], a
 	ld hl, $5aab
 	ld bc, $2828
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5a93
 	ld a, $1a
 	ld de, $98c4
@@ -30824,7 +30824,7 @@ Func_1f_4121:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	jp Func_00_3957
 Func_1f_4133:
@@ -30833,7 +30833,7 @@ Func_1f_4133:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	jp Func_00_3957
 
@@ -30870,7 +30870,7 @@ Func_1f_417b:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	call Func_1f_4008
 	ld hl, $42b1
@@ -30923,10 +30923,10 @@ Func_1f_4234:
 	ld [$c100], a
 	ld hl, $5b07
 	ld bc, $5070
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $5b10
 	ld bc, $2058
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -30946,7 +30946,7 @@ Func_1f_4234:
 	call Func_00_3942
 	ld hl, $5a50
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_1f_4287:
 	ld hl, $5a81
@@ -30955,7 +30955,7 @@ Func_1f_4287:
 	call Func_00_3942
 	ld hl, $5a93
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_1f_429c:
 	ld hl, $5ac4
@@ -30964,7 +30964,7 @@ Func_1f_429c:
 	call Func_00_3942
 	ld hl, $5ad6
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_07c2b1", ROMX[$42b1], BANK[$1f]
@@ -31012,7 +31012,7 @@ Func_1f_4416:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 	call Func_1f_4008
 	ld hl, $45a5
@@ -31053,10 +31053,10 @@ Func_1f_44ca:
 	ld [$c100], a
 	ld hl, $6508
 	ld bc, $5068
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $6531
 	ld bc, $1039
-	call Func_00_0c09
+	call DrawMetasprite
 Func_1f_44f0:
 	ld a, [rLY]
 	cp $50
@@ -31084,16 +31084,16 @@ Func_1f_4515:
 	call Func_00_3942
 	ld hl, $62d4
 	ld bc, $405a
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $62e5
 	ld bc, $3890
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $62f6
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $6327
 	ld bc, $2088
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_1f_4545:
 	ld hl, $6334
@@ -31102,16 +31102,16 @@ Func_1f_4545:
 	call Func_00_3942
 	ld hl, $63ca
 	ld bc, $4060
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $63db
 	ld bc, $3898
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $63e4
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $6415
 	ld bc, $2088
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_1f_4575:
 	ld hl, $6422
@@ -31120,16 +31120,16 @@ Func_1f_4575:
 	call Func_00_3942
 	ld hl, $64b8
 	ld bc, $4063
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $64c1
 	ld bc, $409a
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $64ca
 	ld bc, $2068
-	call Func_00_0c09
+	call DrawMetasprite
 	ld hl, $64fb
 	ld bc, $2088
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_07c5a5", ROMX[$45a5], BANK[$1f]
@@ -31149,7 +31149,7 @@ Func_1f_5855:
 	inc [hl]
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_1f_5868:
 	ld a, [$ff8c]
@@ -31161,7 +31161,7 @@ Func_1f_5868:
 	dec [hl]
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_1f_587b:
 	ret
@@ -31188,7 +31188,7 @@ Func_1f_58ed:
 	call Func_00_3c55
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_590b:
@@ -31202,7 +31202,7 @@ Func_1f_590b:
 	ld [hl], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_1f_5921:
 	call Func_1f_592a
@@ -31245,7 +31245,7 @@ Func_1f_596d:
 	jr z, Func_1f_5985
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5985:
@@ -31316,7 +31316,7 @@ Func_1f_59e0:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5a08:
@@ -31404,7 +31404,7 @@ Func_1f_5ac9:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5af1:
@@ -31475,7 +31475,7 @@ Func_1f_5b4f:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5b77:
@@ -31558,7 +31558,7 @@ Func_1f_5d83:
 	jr z, Func_1f_5d9b
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5d9b:
@@ -31639,7 +31639,7 @@ Func_1f_5f5d:
 	jr z, Func_1f_5f75
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_5f75:
@@ -31701,7 +31701,7 @@ Func_1f_609d:
 	jr z, Func_1f_60b5
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_60b5:
@@ -31769,7 +31769,7 @@ Func_1f_6176:
 	jr z, Func_1f_618e
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_618e:
@@ -31846,7 +31846,7 @@ Func_1f_63db:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ret
 Func_1f_6403:
@@ -31936,7 +31936,7 @@ Func_1f_65d7:
 	ld l, a
 	ld a, l
 	or h
-	call nz, Func_00_0c09
+	call nz, DrawMetasprite
 	ret
 
 SECTION "analyzed_07e5e8", ROMX[$65e8], BANK[$1f]
@@ -32933,7 +32933,7 @@ Func_20_7990:
 	ld b, a
 	ld a, $20
 	ld [$c100], a
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_083fff", ROMX[$7fff], BANK[$20]
@@ -41136,7 +41136,7 @@ Func_30_4077:
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
-	call Func_00_0c09
+	call DrawMetasprite
 	call Func_30_42d5
 	call HideUnusedOamSprites
 	ldh a, [rLCDC]
@@ -41193,7 +41193,7 @@ Func_30_40e4:
 Func_30_40f7:
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_30_42c2
 	jp Func_30_4152
@@ -41227,7 +41227,7 @@ Func_30_4129:
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
-	call Func_00_0c09
+	call DrawMetasprite
 	call HideUnusedOamSprites
 	ld a, [$d0fe]
 	inc a
@@ -41343,7 +41343,7 @@ Func_30_41a9:
 	jr nz, Func_30_41c9
 	push af
 	ld a, $02
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	jr Func_30_41d8
 Func_30_41c9:
@@ -41351,7 +41351,7 @@ Func_30_41c9:
 	ld [$d0f3], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ld [$d0fe], a
@@ -41646,7 +41646,7 @@ Func_30_4403:
 	jp z, Func_30_4403
 	push af
 	ld a, $11
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	call Func_30_42c2
 	xor a
@@ -41709,7 +41709,7 @@ Func_30_4494:
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_0c04a4", ROMX[$44a4], BANK[$30]
@@ -41805,7 +41805,7 @@ Func_30_4554:
 	ld [$d0f3], a
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	jr Func_30_456a
 Func_30_456a:
@@ -41879,14 +41879,14 @@ Func_30_45e2:
 	ld [$c100], a
 	ld b, $28
 	ld c, $48
-	call Func_00_0c09
+	call DrawMetasprite
 Func_30_4603:
 	ld hl, $7377
 	ld a, $23
 	ld [$c100], a
 	ld b, $48
 	ld c, $38
-	call Func_00_0c09
+	call DrawMetasprite
 	ld a, [$d0f3]
 	cp $00
 	jr nz, Func_30_461f
@@ -42093,7 +42093,7 @@ Func_30_4855:
 	rst $18
 	ld a, $02
 	ld [$c100], a
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_30_486d:
 	push bc
@@ -42211,7 +42211,7 @@ Func_30_4957:
 	jp z, Func_30_4982
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_30_4973:
 	xor a
@@ -42382,7 +42382,7 @@ Func_30_4df3:
 	ld hl, $5920
 	ld b, $68
 	ld c, $78
-	call Func_00_0c09
+	call DrawMetasprite
 	ld a, [$d0fe]
 	and $0f
 	srl a
@@ -42432,7 +42432,7 @@ Func_30_4e47:
 	pop hl
 	ld a, $02
 	ld [$c100], a
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_0c0e68", ROMX[$4e68], BANK[$30]
@@ -42490,7 +42490,7 @@ Func_30_4ece:
 	ld a, [hl]
 	ld b, a
 	pop hl
-	call Func_00_0c09
+	call DrawMetasprite
 	jp Func_30_4f0f
 
 SECTION "analyzed_0c0f0f", ROMX[$4f0f], BANK[$30]
@@ -42589,7 +42589,7 @@ Func_30_4f88:
 	ld hl, $5968
 	ld b, $90
 	ld c, $10
-	call Func_00_0c09
+	call DrawMetasprite
 Func_30_4fb4:
 	ld a, [$d0f7]
 	bit 1, a
@@ -42599,7 +42599,7 @@ Func_30_4fb4:
 	ld hl, $5968
 	ld b, $60
 	ld c, $10
-	call Func_00_0c09
+	call DrawMetasprite
 Func_30_4fca:
 	ld a, [$d0f7]
 	bit 2, a
@@ -42615,7 +42615,7 @@ Func_30_5023:
 	ld hl, $592d
 	ld b, $10
 	ld c, $50
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_0c1033", ROMX[$5033], BANK[$30]
@@ -42753,7 +42753,7 @@ Func_30_515e:
 Func_30_516b:
 	push af
 	ld a, $0b
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $01
 	ld [$d0f4], a
@@ -42872,7 +42872,7 @@ Func_30_5219:
 Func_30_5236:
 	push af
 	ld a, $00
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $02
 	ld [$d0f4], a
@@ -42883,7 +42883,7 @@ Func_30_5242:
 	jr nz, Func_30_5251
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_30_5251:
 	cp $02
@@ -42903,7 +42903,7 @@ Func_30_5259:
 	ld [$d0f3], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $98
 	ld [$d0fa], a
@@ -42916,7 +42916,7 @@ Func_30_527e:
 	jr z, Func_30_52b0
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $88
 	ld [$d0fa], a
@@ -42928,7 +42928,7 @@ Func_30_529c:
 	jr z, Func_30_52b0
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ld [$d0f5], a
@@ -43006,7 +43006,7 @@ Func_30_5341:
 	jr nz, Func_30_5351
 	push af
 	ld a, $11
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 Func_30_5351:
 	ld a, [$d0fe]
@@ -43025,7 +43025,7 @@ Func_30_5368:
 	jr z, Func_30_537e
 	push af
 	ld a, $00
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	xor a
 	ld [$d0f3], a
@@ -43110,7 +43110,7 @@ Func_30_5408:
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 
 SECTION "analyzed_0c147f", ROMX[$547f], BANK[$30]
@@ -43252,7 +43252,7 @@ Func_30_55fa:
 	ld [$d0f5], a
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	jr Func_30_5646
 Func_30_561d:
@@ -43263,7 +43263,7 @@ Func_30_561d:
 	jr z, Func_30_5646
 	push af
 	ld a, $04
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $00
 	ld [$d0f5], a
@@ -43273,7 +43273,7 @@ Func_30_5636:
 	jr z, Func_30_5646
 	push af
 	ld a, $0d
-	call Func_00_0a85
+	call CallLibFunc
 	pop af
 	ld a, $02
 	ld [$d0f3], a
@@ -43296,7 +43296,7 @@ Func_30_565c:
 	ld b, $10
 	ld c, $08
 	ld hl, $74c6
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 Func_30_566c:
 	ld b, $28
@@ -43420,7 +43420,7 @@ Func_30_577e:
 	call Func_00_0794
 	push af
 	ld a, $38
-	call Func_00_0a63
+	call CallLibFuncSaveId
 	pop af
 Func_30_57d4:
 	call WaitForNextFrame
@@ -43534,7 +43534,7 @@ Func_30_58d7:
 	rst $18
 	ld b, d
 	ld c, e
-	call Func_00_0c09
+	call DrawMetasprite
 	ret
 	ld a, [$d0f4]
 	cp $f0
