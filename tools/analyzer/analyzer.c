@@ -54,9 +54,13 @@ enum {
 /* Max screen we ever need to back: SGB border is 256x224. */
 #define MAX_SCREEN_PIXELS         (256 * 224)
 
-/* --watch-vram provenance bitmask (per ROM byte). */
+/* --watch-vram provenance bitmask (per ROM byte). Despite the "vram" name
+ * VSRC_PALETTE tracks ROM bytes copied to the CGB palette data port, which
+ * is a separate destination ($FF69/$FF6B) — palette tables are usually NOT
+ * colocated with the tiles they color. */
 #define VSRC_TILEDATA 0x01   /* copied to VRAM tiledata ($8000-$97FF) */
 #define VSRC_TILEMAP  0x02   /* copied to VRAM tilemap  ($9800-$9FFF) */
+#define VSRC_PALETTE  0x04   /* copied to CGB palette RAM ($FF69/$FF6B)  */
 
 /* Minimal CGB boot stub.
  *
@@ -175,8 +179,26 @@ typedef struct {
      * is marked, so map.json only ever gets definite ROM sources. */
     uint64_t    cpu_tiledata_marked, cpu_tiledata_rejected;
     uint64_t    cpu_tilemap_marked,  cpu_tilemap_rejected;
+    uint64_t    cpu_palette_marked,  cpu_palette_rejected;
     uint64_t    cpu_vram_from_ram;
     uint64_t    hdma_from_rom_bytes, hdma_from_ram_bytes;
+
+    /* Tile<->palette cross-reference. The ROM source that loaded each VRAM
+     * byte is remembered in vram_byte_src (indexed by VRAM offset, both
+     * banks; UINT32_MAX = not from ROM). Each frame we walk the active BG/
+     * window tilemaps and OAM, read the palette number applied to each tile
+     * (tilemap attribute / OAM attribute bits 0-2), follow the slot back to
+     * its ROM source, and OR that palette's bit into rom_bg_pal / rom_obj_pal
+     * for every byte of the tile. Result per ROM tile region: the set of
+     * palettes it's drawn with. pal_colors_seen snapshots each palette's
+     * RGB555 the first frame it's observed in use, so colors pair with tiles
+     * even though the live palette RAM is reused across screens. */
+    uint32_t   *vram_byte_src;   /* [0x4000], allocated iff watch_vram */
+    uint8_t    *rom_bg_pal;      /* [rom_size] bitmask of BG palettes (bit p) */
+    uint8_t    *rom_obj_pal;     /* [rom_size] bitmask of OBJ palettes        */
+    uint8_t     bg_pal_colors[8][8];   /* RGB555, snapshotted on first use */
+    uint8_t     obj_pal_colors[8][8];
+    uint16_t    bg_pal_seen, obj_pal_seen;   /* bit p set once snapshotted */
 
     /* Writer thread */
     pthread_t       writer_thread;
@@ -305,11 +327,32 @@ static void vram_note_cpu_write(uint16_t addr, uint8_t value) {
 
     bool verbatim = (src < g.rom_size && g.rom_data[src] == value);
     if (kind == VSRC_TILEDATA) {
-        if (verbatim) { g.vram_src_kind[src] |= kind; g.cpu_tiledata_marked++; }
+        if (verbatim) {
+            g.vram_src_kind[src] |= kind; g.cpu_tiledata_marked++;
+            uint32_t voff = (uint32_t)(addr - 0x8000)
+                          + (g.gb.cgb_vram_bank ? 0x2000 : 0);
+            g.vram_byte_src[voff] = src;   /* remember slot's ROM source */
+        }
         else            g.cpu_tiledata_rejected++;
     } else {
         if (verbatim) { g.vram_src_kind[src] |= kind; g.cpu_tilemap_marked++; }
         else            g.cpu_tilemap_rejected++;
+    }
+}
+
+/* A CPU write hit a CGB palette data port ($FF69 BGPD / $FF6B OBPD). The
+ * 64-byte BG and OBJ palette RAMs are usually filled by a loop reading an
+ * RGB555 table from ROM, so the same verbatim-copy provenance applies. The
+ * palette ROM region is typically separate from the tile data it colors. */
+static void vram_note_palette_write(uint8_t value) {
+    uint32_t src = g.last_data_read;
+    if (src == UINT32_MAX) { g.cpu_vram_from_ram++; return; }
+    g.last_data_read = UINT32_MAX;  /* consume */
+    if (src < g.rom_size && g.rom_data[src] == value) {
+        g.vram_src_kind[src] |= VSRC_PALETTE;
+        g.cpu_palette_marked++;
+    } else {
+        g.cpu_palette_rejected++;
     }
 }
 
@@ -339,8 +382,13 @@ static void vram_note_hdma(GB_gameboy_t *gb, uint8_t hdma5) {
         uint16_t doff = (uint16_t)((dest + i) & 0x1FFF);
         uint8_t kind = (doff < 0x1800) ? VSRC_TILEDATA : VSRC_TILEMAP;
         uint32_t flat = resolve_rom_addr(s);
-        if (flat != UINT32_MAX && flat < g.rom_size)
+        if (flat != UINT32_MAX && flat < g.rom_size) {
             g.vram_src_kind[flat] |= kind;
+            if (kind == VSRC_TILEDATA) {
+                uint32_t voff = doff + (g.gb.cgb_vram_bank ? 0x2000 : 0);
+                g.vram_byte_src[voff] = flat;
+            }
+        }
     }
     g.hdma_from_rom_bytes += len;
 }
@@ -364,6 +412,9 @@ static bool on_write_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
     if (g.watch_vram) {
         if (addr >= 0x8000 && addr < 0xA000)
             vram_note_cpu_write(addr, data);
+        else if (addr == (uint16_t)(0xFF00 + GB_IO_BGPD) ||
+                 addr == (uint16_t)(0xFF00 + GB_IO_OBPD))
+            vram_note_palette_write(data);
         else if (addr == (uint16_t)(0xFF00 + GB_IO_HDMA5))
             vram_note_hdma(gb, data);   /* GDMA or HDMA trigger; same span */
     }
@@ -387,9 +438,75 @@ static uint32_t rgb_encode(GB_gameboy_t *gb, uint8_t r, uint8_t gr, uint8_t b) {
     return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)gr << 8) | b;
 }
 
+/* Snapshot palette P's current RGB555 (8 bytes) the first frame it's seen
+ * applied to a tile, so extracted tiles keep colors that match when they
+ * were drawn even though palette RAM is reused across screens. */
+static void snapshot_palette(bool obj, int p) {
+    uint16_t *seen = obj ? &g.obj_pal_seen : &g.bg_pal_seen;
+    if (*seen & (1u << p)) return;
+    const uint8_t *pd = obj ? g.gb.object_palettes_data
+                            : g.gb.background_palettes_data;
+    memcpy(obj ? g.obj_pal_colors[p] : g.bg_pal_colors[p], pd + p * 8, 8);
+    *seen |= (uint16_t)(1u << p);
+}
+
+/* Credit palette `pal` to the ROM source of every byte of the 16-byte tile
+ * at VRAM tiledata offset `voff` (bank already folded in). */
+static void credit_tile_palette(uint32_t voff, int pal, bool obj) {
+    for (int k = 0; k < 16; k++) {
+        uint32_t src = g.vram_byte_src[(voff + k) & 0x3FFF];
+        if (src == UINT32_MAX || src >= g.rom_size) continue;
+        if (obj) g.rom_obj_pal[src] |= (uint8_t)(1u << pal);
+        else     g.rom_bg_pal[src]  |= (uint8_t)(1u << pal);
+    }
+}
+
+/* Once per frame: walk the active BG/window tilemaps and OAM, read the
+ * palette each on-screen tile uses, and credit it back to the tile's ROM
+ * source. This is the tile<->palette cross-reference: the link only exists
+ * at draw time (in tilemap/OAM attributes), not when the tiles were copied. */
+static void scan_tile_palette_associations(void) {
+    uint8_t lcdc = g.gb.io_registers[GB_IO_LCDC];
+    if (!(lcdc & 0x80)) return;                 /* LCD off */
+    const uint8_t *vram = g.gb.vram;
+    bool unsigned_td = (lcdc & 0x10) != 0;      /* $8000 vs $8800 addressing */
+
+    for (int pass = 0; pass < 2; pass++) {      /* 0 = BG map, 1 = window map */
+        bool is_win = (pass == 1);
+        if (is_win && !(lcdc & 0x20)) continue; /* window disabled */
+        uint32_t map_base =
+            ((is_win ? (lcdc & 0x40) : (lcdc & 0x08)) ? 0x1C00 : 0x1800);
+        for (int c = 0; c < 32 * 32; c++) {
+            uint8_t idx  = vram[map_base + c];
+            uint8_t attr = vram[0x2000 + map_base + c];   /* bank 1 attrs */
+            int pal = attr & 7;
+            uint32_t td = unsigned_td ? (uint32_t)idx * 16
+                                      : (uint32_t)(0x1000 + (int8_t)idx * 16);
+            td += (attr & 0x08) ? 0x2000 : 0;             /* tile VRAM bank */
+            credit_tile_palette(td, pal, false);
+            snapshot_palette(false, pal);
+        }
+    }
+
+    if (lcdc & 0x02) {                          /* OBJ enabled */
+        bool tall = (lcdc & 0x04) != 0;         /* 8x16 sprites */
+        for (int s = 0; s < 40; s++) {
+            const uint8_t *o = g.gb.oam + s * 4;
+            if (o[0] == 0 || o[0] >= 160) continue;       /* parked off-screen */
+            uint8_t tile = tall ? (o[2] & 0xFE) : o[2];
+            int pal = o[3] & 7;
+            uint32_t td = (uint32_t)tile * 16 + ((o[3] & 0x08) ? 0x2000 : 0);
+            credit_tile_palette(td, pal, true);
+            if (tall) credit_tile_palette(td + 16, pal, true);
+            snapshot_palette(true, pal);
+        }
+    }
+}
+
 static void on_vblank(GB_gameboy_t *gb, GB_vblank_type_t type) {
     (void)gb; (void)type;
     g.total_frames++;
+    if (g.watch_vram) scan_tile_palette_associations();
 }
 
 static void on_log(GB_gameboy_t *gb, const char *string,
@@ -895,11 +1012,48 @@ static int parse_args(int argc, char **argv) {
  * match a stale ROM read) and are summarized, not listed. */
 static const char *vsrc_kind_name(uint8_t k) {
     switch (k) {
-        case VSRC_TILEDATA:                return "tiledata";
-        case VSRC_TILEMAP:                 return "tilemap";
-        case VSRC_TILEDATA | VSRC_TILEMAP: return "mixed";
-        default:                           return "?";
+        case VSRC_TILEDATA: return "tiledata";
+        case VSRC_TILEMAP:  return "tilemap";
+        case VSRC_PALETTE:  return "palette";
+        default:            return "mixed";   /* >1 destination kind */
     }
+}
+
+/* Print the palettes that were actually applied to tiles, using the colors
+ * snapshotted the first frame each palette was seen in use (RGB555, 5-bit
+ * components). These are what colorize the extracted tile PNGs. */
+static void dump_seen_palettes(FILE *o, const char *tag, uint16_t seen,
+                               const uint8_t colors[8][8]) {
+    for (int p = 0; p < 8; p++) {
+        if (!(seen & (1u << p))) continue;
+        fprintf(o, "[vram]   %s pal %d:", tag, p);
+        for (int c = 0; c < 4; c++) {
+            unsigned v = colors[p][c * 2] | ((unsigned)colors[p][c * 2 + 1] << 8);
+            fprintf(o, " %02X,%02X,%02X", v & 0x1F, (v >> 5) & 0x1F, (v >> 10) & 0x1F);
+        }
+        fprintf(o, "\n");
+    }
+}
+
+/* Format the BG/OBJ palette bitmasks observed for a region, e.g. "bg{0,3}"
+ * or "bg{1} obj{2}" or "-" if no palette was ever cross-referenced. */
+static void format_region_pals(char *buf, size_t n, uint8_t bgm, uint8_t objm) {
+    size_t k = 0; buf[0] = 0;
+    for (int pass = 0; pass < 2; pass++) {
+        uint8_t m = pass ? objm : bgm;
+        if (!m) continue;
+        k += (size_t)snprintf(buf + k, k < n ? n - k : 0,
+                              "%s%s{", k ? " " : "", pass ? "obj" : "bg");
+        bool first = true;
+        for (int p = 0; p < 8; p++)
+            if (m & (1u << p)) {
+                k += (size_t)snprintf(buf + k, k < n ? n - k : 0,
+                                      "%s%d", first ? "" : ",", p);
+                first = false;
+            }
+        k += (size_t)snprintf(buf + k, k < n ? n - k : 0, "}");
+    }
+    if (!buf[0]) snprintf(buf, n, "-");
 }
 
 static void vram_report(void) {
@@ -909,15 +1063,21 @@ static void vram_report(void) {
     fprintf(o, "[vram] CPU verbatim copies (marked): tiledata %llu, tilemap %llu\n",
         (unsigned long long)g.cpu_tiledata_marked,
         (unsigned long long)g.cpu_tilemap_marked);
+    fprintf(o, "[vram] CPU verbatim palette copies (marked): %llu\n",
+        (unsigned long long)g.cpu_palette_marked);
     fprintf(o, "[vram] CPU rejected (ROM read but value differs — transformed): "
-               "tiledata %llu, tilemap %llu\n",
+               "tiledata %llu, tilemap %llu, palette %llu\n",
         (unsigned long long)g.cpu_tiledata_rejected,
-        (unsigned long long)g.cpu_tilemap_rejected);
+        (unsigned long long)g.cpu_tilemap_rejected,
+        (unsigned long long)g.cpu_palette_rejected);
     fprintf(o, "[vram] CPU writes not from ROM (RAM/computed): %llu\n",
         (unsigned long long)g.cpu_vram_from_ram);
     fprintf(o, "[vram] HDMA bytes: from ROM %llu, from RAM (decompressed) %llu\n",
         (unsigned long long)g.hdma_from_rom_bytes,
         (unsigned long long)g.hdma_from_ram_bytes);
+    fprintf(o, "[vram] palettes seen applied to tiles (first-use RGB555):\n");
+    dump_seen_palettes(o, "BG ", g.bg_pal_seen, g.bg_pal_colors);
+    dump_seen_palettes(o, "OBJ", g.obj_pal_seen, g.obj_pal_colors);
 
     uint64_t total_marked = 0, listed = 0, noise = 0;
     uint32_t i = 0, runs = 0;
@@ -926,13 +1086,18 @@ static void vram_report(void) {
         uint8_t k = g.vram_src_kind[i];
         if (!k) { i++; continue; }
         uint32_t start = i;
-        while (i < g.rom_size && g.vram_src_kind[i] == k) i++;
+        uint8_t bgm = 0, objm = 0;
+        while (i < g.rom_size && g.vram_src_kind[i] == k) {
+            bgm |= g.rom_bg_pal[i]; objm |= g.rom_obj_pal[i]; i++;
+        }
         uint32_t len = i - start;
         total_marked += len;
         if (len >= 16) {
-            fprintf(o, "[vram]   0x%06X +0x%-5X (%6u)  %s  bank $%02X\n",
+            char pbuf[80];
+            format_region_pals(pbuf, sizeof pbuf, bgm, objm);
+            fprintf(o, "[vram]   0x%06X +0x%-5X (%6u)  %-8s  bank $%02X  %s\n",
                 start, len, len, vsrc_kind_name(k),
-                (unsigned)(start / 0x4000));
+                (unsigned)(start / 0x4000), pbuf);
             listed += len; runs++;
         } else {
             noise += len;
@@ -1025,7 +1190,12 @@ int main(int argc, char **argv) {
 
     if (g.watch_vram) {
         g.vram_src_kind = calloc(g.rom_size, 1);
-        if (!g.vram_src_kind) { fprintf(stderr, "out of memory\n"); return 1; }
+        g.rom_bg_pal    = calloc(g.rom_size, 1);
+        g.rom_obj_pal   = calloc(g.rom_size, 1);
+        g.vram_byte_src = malloc(0x4000 * sizeof(uint32_t));
+        if (!g.vram_src_kind || !g.rom_bg_pal || !g.rom_obj_pal ||
+            !g.vram_byte_src) { fprintf(stderr, "out of memory\n"); return 1; }
+        for (int v = 0; v < 0x4000; v++) g.vram_byte_src[v] = UINT32_MAX;
         g.last_data_read = UINT32_MAX;
         g.vram_log = stderr;
         if (g.vram_log_path) {
@@ -1127,6 +1297,9 @@ int main(int argc, char **argv) {
     if (g.watch_log && g.watch_log != stderr) fclose(g.watch_log);
     if (g.vram_log && g.vram_log != stderr) fclose(g.vram_log);
     free(g.vram_src_kind);
+    free(g.rom_bg_pal);
+    free(g.rom_obj_pal);
+    free(g.vram_byte_src);
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
