@@ -31,12 +31,8 @@
 					"len":	48
 				}, 				{
 					"type":	"data",
-					"addr":	14834,
-					"len":	8
-				}, 				{
-					"type":	"data",
-					"addr":	14844,
-					"len":	22
+					"addr":	14832,
+					"len":	36
 				}, 				{
 					"type":	"code",
 					"addr":	14868,
@@ -118,6 +114,34 @@
 					"addr":	15270,
 					"len":	7,
 					"label":	"Name_Phenix"
+				}, 				{
+					"type":	"code",
+					"addr":	14926,
+					"len":	3
+				}, 				{
+					"type":	"code",
+					"addr":	14995,
+					"len":	14
+				}, 				{
+					"type":	"code",
+					"addr":	15465,
+					"len":	14
+				}, 				{
+					"type":	"code",
+					"addr":	15512,
+					"len":	11
+				}, 				{
+					"type":	"code",
+					"addr":	15530,
+					"len":	3
+				}, 				{
+					"type":	"code",
+					"addr":	15567,
+					"len":	4
+				}, 				{
+					"type":	"code",
+					"addr":	15601,
+					"len":	2
 				}
 			]
 		}, {

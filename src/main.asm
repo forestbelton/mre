@@ -809,46 +809,6 @@ SECTION "data_0037cc", ROM0[$37cc]
 Data_00_37cc:
 	INCBIN "data_0037cc.bin"
 
-SECTION "data_0039f0", ROM0[$39f0]
-ScriptOpcodeTable:
-	INCBIN "data_0039f0.bin"
-
-SECTION "data_0039fa", ROM0[$39fa]
-Data_00_39fa:
-	INCBIN "data_0039fa.bin"
-
-SECTION "data_003a12", ROM0[$3a12]
-Data_00_3a12:
-	INCBIN "data_003a12.bin"
-
-SECTION "data_003a4e", ROM0[$3a4e]
-Data_00_3a4e:
-	INCBIN "data_003a4e.bin"
-
-SECTION "data_003a93", ROM0[$3a93]
-ScriptOpcode05Handler_InitTextStateV2:
-	INCBIN "data_003a93.bin"
-
-SECTION "data_003c69", ROM0[$3c69]
-Data_00_3c69:
-	INCBIN "data_003c69.bin"
-
-SECTION "data_003c98", ROM0[$3c98]
-Data_00_3c98:
-	INCBIN "data_003c98.bin"
-
-SECTION "data_003caa", ROM0[$3caa]
-Data_00_3caa:
-	INCBIN "data_003caa.bin"
-
-SECTION "data_003ccf", ROM0[$3ccf]
-Data_00_3ccf:
-	INCBIN "data_003ccf.bin"
-
-SECTION "data_003cf1", ROM0[$3cf1]
-Data_00_3cf1:
-	INCBIN "data_003cf1.bin"
-
 SECTION "data_003d10", ROM0[$3d10]
 Data_00_3d10:
 	INCBIN "data_003d10.bin"
