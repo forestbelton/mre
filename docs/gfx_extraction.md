@@ -192,6 +192,39 @@ The asm INCBINs only the 2bpp bytes; palette never enters the assembly.
   pixel. Once that exists, route duplicate-palette regions through it instead
   of rgbgfx and drop the error.
 
+## Worked example: the TECMO logo (first thing drawn at boot)
+
+The intro sequence is TECMO logo (fade in/out) → opening cutscene → title
+screen. The TECMO logo is a CGB full-screen image and the first concrete use of
+the gfx pipeline on a real asset.
+
+- **Graphic:** `TecmoLogoGfx` at file offset **`0x9C000`** = ROM bank `$27`
+  (`0x27·0x4000`), uploaded through the CPU's ROMX window at `$4000`. NB: the
+  `9C000` is a *file offset*, unrelated to the VRAM `$9C00` window-tilemap
+  address — different address space. `0x3000` bytes = two `$1800` tile planes
+  (this image needs >384 tiles, so it spans both CGB VRAM banks). Extracts to
+  `src/gfx/TecmoLogoGfx.png`.
+- **Renderer:** `DrawTecmoLogo` (bank `$30`, `$5418` = `0xC1418`):
+  - `CopyBytesBanked` ×2 — tile plane 0 → VRAM bank 0 `$8000`, plane 1 → VRAM
+    bank 1 `$8000` (`ld hl,$4000`/`$5800`, both bank `$27`).
+  - `CopyBgMapBanked` — BG tilemap + CGB attribute map from `$5808` (bank `$27`)
+    → `$9800` (a 2-byte dimension header precedes the data).
+  - `LoadPalettesBanked` — BG (`$c201`) and OBJ (`$c241`) palette buffers from
+    bank `$27` (palettes reach hardware from these WRAM buffers, which is why
+    `--watch-vram` couldn't trace palette writes back to ROM — see above).
+  - **Fade loop** (`TecmoLogo_FadeLoop`): each frame `ReadJoypad`, then bump the
+    fade level `$d0fe` until `$b4` (~180 frames ≈ 3 s); a button press (`$ff8d`)
+    skips to `TecmoLogo_Done`. The per-frame palette update dims by `$d0fe`.
+- **Dispatch:** `RunIntroScene` (`$0f58`) indexes `IntroSceneTable` (`$0f71`,
+  3 bytes/entry `{bank,lo,hi}`) by the intro state `$c2a7`; the TECMO entry →
+  `IntroScene_TecmoLogo` (`$3580`) which banks in `$30` and calls `DrawTecmoLogo`.
+- The tile blob is kept whole (one `gfx` section) because that's exactly what
+  the two-plane upload copies and it round-trips byte-exact; the tilemap/palette
+  live packed inside the same bank and are *not* split out as separate sections
+  (a label can't sit mid-INCBIN). Confirmed first-drawn empirically: a ~30 s
+  boot `--watch-vram` trace marked bank `$27` (this logo) but never reached the
+  bank `$28` cutscene/title art.
+
 ## Caveats / open questions
 - Tilemaps written with a tile-index base offset are NOT verbatim → currently
   unmarked. A later pass could detect a constant offset (value - rom[src]) and

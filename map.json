@@ -7291,6 +7291,39 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	638976,
+			"name":	"TecmoLogoGfx"
+		}, {
+			"addr":	791576,
+			"name":	"DrawTecmoLogo"
+		}, {
+			"addr":	791643,
+			"name":	"TecmoLogo_FadeLoop"
+		}, {
+			"addr":	791672,
+			"name":	"TecmoLogo_Done"
+		}, {
+			"addr":	13696,
+			"name":	"IntroScene_TecmoLogo"
+		}, {
+			"addr":	3928,
+			"name":	"RunIntroScene"
+		}, {
+			"addr":	3953,
+			"name":	"IntroSceneTable"
+		}, {
+			"addr":	14637,
+			"name":	"CopyBytesBanked"
+		}, {
+			"addr":	13801,
+			"name":	"CopyBgMapBanked"
+		}, {
+			"addr":	13844,
+			"name":	"LoadPalettesBanked"
+		}, {
+			"addr":	594,
+			"name":	"ReadJoypad"
+		}, {
 			"addr":	742,
 			"name":	"WaitForNextFrame"
 		}, {

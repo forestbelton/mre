@@ -178,7 +178,7 @@ Func_00_01f9:
 
 SECTION "analyzed_000252", ROM0[$0252]
 
-Func_00_0252:
+ReadJoypad:
 	ld c, $00
 	ldh a, [$ff8b]
 	ld d, a
@@ -1662,7 +1662,7 @@ Func_00_0f41:
 	ld a, $05
 	ld hl, $463a
 	call CallBankedHL
-Func_00_0f58:
+RunIntroScene:
 	ld hl, $0f6e
 	push hl
 	ld a, [$c2a7]
@@ -1677,11 +1677,11 @@ Func_00_0f58:
 	ld h, [hl]
 	ld l, a
 	jp hl
-	jr Func_00_0f58
+	jr RunIntroScene
 
 SECTION "analyzed_000f71", ROM0[$0f71]
 
-Data_00_0f71:
+IntroSceneTable:
 	db $00, $a9, $35, $00, $80, $35, $00, $91, $35
 
 SECTION "analyzed_000f7d", ROM0[$0f7d]
@@ -3446,6 +3446,7 @@ Func_00_3572:
 	ld a, $04
 	ld [$c2a7], a
 	ret
+IntroScene_TecmoLogo:
 	call Func_00_1863
 	ld a, $30
 	ld [$2fff], a
@@ -3499,7 +3500,7 @@ Func_00_35d4:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_35e9:
+CopyBgMapBanked:
 	ld a, [$7fff]
 	push af
 	ld a, b
@@ -3526,7 +3527,7 @@ Func_00_35f9:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_3614:
+LoadPalettesBanked:
 	ld a, [$7fff]
 	push af
 	ld a, b
@@ -3765,7 +3766,7 @@ Func_00_3920:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_392d:
+CopyBytesBanked:
 	ld [$c29c], a
 	ld a, [$7fff]
 	push af
@@ -3806,7 +3807,7 @@ Func_00_3971:
 Func_00_397a:
 	ld de, $8800
 	ld bc, $1000
-	call Func_00_392d
+	call CopyBytesBanked
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
@@ -3904,7 +3905,7 @@ ScriptWaitInputCore:
 	push hl
 Func_00_3a3a:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$d61a]
 	or a
@@ -5018,7 +5019,7 @@ Func_01_439e:
 	call Func_00_04bc
 Func_01_4412:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ld a, [$c2d5]
 	bit 7, a
 	jr nz, Func_01_447f
@@ -24149,7 +24150,7 @@ SECTION "analyzed_0481f5", ROMX[$41f5], BANK[$12]
 
 Func_12_41f5:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8c]
 	ld b, a
 	ld a, [$c55d]
@@ -27105,7 +27106,7 @@ Func_18_4097:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_4144
 	call Func_18_4150
 	call HideUnusedOamSprites
@@ -27137,7 +27138,7 @@ Func_18_4097:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_4144
 	call Func_18_4150
 	call HideUnusedOamSprites
@@ -27313,7 +27314,7 @@ Func_18_5331:
 	ld hl, $5c5d
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_53eb
 	call Func_18_53f7
 	call HideUnusedOamSprites
@@ -27345,7 +27346,7 @@ Func_18_5331:
 	ld hl, $5c5d
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_53eb
 	call Func_18_53f7
 	call HideUnusedOamSprites
@@ -27498,7 +27499,7 @@ Func_18_5f6e:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_5fbf
 	call Func_18_601f
 	call HideUnusedOamSprites
@@ -27533,7 +27534,7 @@ Func_18_5fbf:
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_6013
 	ld a, $33
 	ld hl, $7000
@@ -27661,7 +27662,7 @@ Func_18_6bc8:
 	ld hl, $5ae8
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_18_6c1b
 	call Func_18_6c27
 	call HideUnusedOamSprites
@@ -27823,7 +27824,7 @@ Func_19_4000:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	call Func_19_407f
 	call Func_19_408b
 	call HideUnusedOamSprites
@@ -30806,7 +30807,7 @@ Func_1f_417b:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld hl, $5880
 	ld a, $1d
 	ld de, $9800
@@ -30941,14 +30942,14 @@ Func_1f_4416:
 	ld hl, $4000
 	ld de, $9000
 	ld bc, $0800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ld [rVBK], a
 	ld a, $35
 	ld hl, $4800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld hl, $6080
 	ld a, $35
 	ld de, $9800
@@ -31136,7 +31137,7 @@ Func_1f_58d7:
 	ld [wYNResult], a
 Func_1f_58ed:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31195,7 +31196,7 @@ Func_1f_5960:
 	ld [wMainMenuResult], a
 Func_1f_596d:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31257,7 +31258,7 @@ Func_1f_59d3:
 	ld [wMainMenuResult], a
 Func_1f_59e0:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31345,7 +31346,7 @@ Func_1f_5abc:
 	ld [wMainMenuResult], a
 Func_1f_5ac9:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31416,7 +31417,7 @@ Func_1f_5b42:
 	ld [wMainMenuResult], a
 Func_1f_5b4f:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31508,7 +31509,7 @@ Func_1f_5d76:
 	ld [wSubMenuCursor], a
 Func_1f_5d83:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31589,7 +31590,7 @@ Func_1f_5f50:
 	ld [wMainMenuResult], a
 Func_1f_5f5d:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31651,7 +31652,7 @@ Func_1f_6090:
 	ld [wMainMenuResult], a
 Func_1f_609d:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31719,7 +31720,7 @@ Func_1f_6169:
 	ld [wSubMenuCursor], a
 Func_1f_6176:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -31787,7 +31788,7 @@ Func_1f_63ce:
 	ld [wMainMenuResult], a
 Func_1f_63db:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$ff8c]
 	bit 0, a
@@ -37287,8 +37288,8 @@ Data_26_7fff:
 
 SECTION "analyzed_09c000", ROMX[$4000], BANK[$27]
 
-Data_27_4000:
-	INCBIN "gfx/Data_27_4000.2bpp", 0, 12288
+TecmoLogoGfx:
+	INCBIN "gfx/TecmoLogoGfx.2bpp", 0, 12288
 
 SECTION "analyzed_09ffff", ROMX[$7fff], BANK[$27]
 
@@ -40710,14 +40711,14 @@ Func_30_401e:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $20
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld c, $00
 	ld a, [$d0fb]
 	ld b, $02
@@ -40767,7 +40768,7 @@ Func_30_4077:
 	call Func_30_436c
 Func_30_40ab:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	bit 7, b
@@ -41215,18 +41216,18 @@ Func_30_4387:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $22
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $22
 	ld hl, $7080
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld a, $03
 	call Func_30_4487
 	call Func_30_4494
@@ -41246,7 +41247,7 @@ Func_30_4387:
 	call Func_00_09d5
 Func_30_4403:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	ld a, [$c55d]
@@ -41347,18 +41348,18 @@ Func_30_44aa:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $23
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $23
 	ld hl, $7080
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld a, [$c2c1]
 	cp $05
 	jr nz, Func_30_4506
@@ -41400,7 +41401,7 @@ Func_30_4514:
 	ldh [rLCDC], a
 Func_30_4540:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	ld a, [$c55d]
@@ -41527,11 +41528,11 @@ Func_30_463d:
 	ld hl, $73a0
 	ld de, $984f
 	ld b, $23
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld hl, $737c
 	ld de, $990f
 	ld b, $23
-	call Func_00_35e9
+	call CopyBgMapBanked
 Func_30_465a:
 	ld a, [$c2c1]
 	cp $06
@@ -41580,7 +41581,7 @@ Func_30_46a4:
 	ld hl, $73d8
 	ld de, $9845
 	ld b, $23
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_30_47d0
 	ld a, [$c2c3]
 	and $0f
@@ -41612,7 +41613,7 @@ Func_30_46f1:
 	ld hl, $759c
 	ld de, $9845
 	ld b, $23
-	call Func_00_35e9
+	call CopyBgMapBanked
 Func_30_4703:
 	jr Func_30_4711
 
@@ -41739,11 +41740,11 @@ Func_30_486d:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $24
 	ld hl, $5880
 	ld de, $9c00
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld a, [$c2c0]
 	ld b, a
 	ld c, $00
@@ -41777,11 +41778,11 @@ Func_30_48c9:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $25
 	ld hl, $7100
 	ld de, $9909
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_30_5023
 	ld hl, $7000
 	jr Func_30_4931
@@ -41810,7 +41811,7 @@ Func_30_4946:
 	cp $01
 	jr z, Func_30_4973
 Func_30_4957:
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	ld a, [$c55d]
@@ -42268,18 +42269,18 @@ Func_30_503b:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $21
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $21
 	ld hl, $7080
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld a, $21
 	ld hl, $7409
 	call CallBankedHL
@@ -42298,7 +42299,7 @@ Func_30_503b:
 	ldh [rLCDC], a
 Func_30_50d7:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	ld a, [$c55d]
@@ -42474,11 +42475,11 @@ Func_30_5219:
 	ld b, $21
 	ld hl, $7356
 	ld de, $9964
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld b, $21
 	ld hl, $738c
 	ld de, $99a9
-	call Func_00_35e9
+	call CopyBgMapBanked
 Func_30_5236:
 	push af
 	ld a, $00
@@ -42568,18 +42569,18 @@ Func_30_52bf:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $26
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $26
 	ld hl, $7080
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_30_5408
 	call HideUnusedOamSprites
 	xor a
@@ -42597,7 +42598,7 @@ Func_30_52bf:
 	ldh [rLCDC], a
 Func_30_5324:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	ld b, a
 	ld a, [$c55d]
@@ -42721,6 +42722,7 @@ Func_30_5408:
 	ld c, $08
 	call Func_00_0c09
 	ret
+DrawTecmoLogo:
 	xor a
 	ld [$d0fe], a
 	call Func_00_0bd7
@@ -42730,37 +42732,37 @@ Func_30_5408:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $27
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $27
 	ld hl, $5808
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_00_0822
 	ld b, $27
 	ld de, $5800
-	call Func_00_3614
+	call LoadPalettesBanked
 	call Func_00_0794
-Func_30_545b:
+TecmoLogo_FadeLoop:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	cp $00
-	jr nz, Func_30_5478
+	jr nz, TecmoLogo_Done
 	ld a, [$d0fe]
 	cp $b4
-	jr nc, Func_30_5478
+	jr nc, TecmoLogo_Done
 	ld a, [$d0fe]
 	inc a
 	ld [$d0fe], a
-	jp Func_30_545b
-Func_30_5478:
+	jp TecmoLogo_FadeLoop
+TecmoLogo_Done:
 	call Func_00_07a7
 	call Func_00_0786
 	ret
@@ -42793,32 +42795,32 @@ Func_30_54df:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $28
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $28
 	ld hl, $7080
 	ld de, $9800
-	call Func_00_35e9
+	call CopyBgMapBanked
 	ld b, $28
 	ld hl, $7356
 	ld de, $9986
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_30_5698
 	call Func_30_565c
 	call Func_00_0822
 	ld b, $28
 	ld de, $7000
-	call Func_00_3614
+	call LoadPalettesBanked
 	call Func_00_0794
 Func_30_552f:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ld a, [$d0f3]
 	cp $00
 	jr z, Func_30_5571
@@ -42856,7 +42858,7 @@ Func_30_5571:
 	ld b, $28
 	ld hl, $737c
 	ld de, $9966
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_30_56d3
 	ld a, [$d0f4]
 	and a
@@ -42864,7 +42866,7 @@ Func_30_5571:
 	ld b, $28
 	ld hl, $73a2
 	ld de, $99a6
-	call Func_00_35e9
+	call CopyBgMapBanked
 Func_30_5596:
 	ld a, $01
 	ld [$d0f3], a
@@ -43049,22 +43051,22 @@ Func_30_577e:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $29
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call Func_00_392d
+	call CopyBytesBanked
 	ld b, $29
 	ld hl, $7080
 	ld de, $9880
-	call Func_00_35e9
+	call CopyBgMapBanked
 	call Func_00_0822
 	ld b, $29
 	ld de, $7000
-	call Func_00_3614
+	call LoadPalettesBanked
 	call Func_00_0794
 	push af
 	ld a, $38
@@ -43072,7 +43074,7 @@ Func_30_577e:
 	pop af
 Func_30_57d4:
 	call WaitForNextFrame
-	call Func_00_0252
+	call ReadJoypad
 	ldh a, [$ff8d]
 	and a
 	jr nz, Func_30_5809
@@ -44162,7 +44164,7 @@ Func_31_4040:
 	xor a
 	ld [$d5c3], a
 Func_31_404a:
-	call Func_00_0252
+	call ReadJoypad
 	ld a, $f0
 	ldh [rSB], a
 	xor a
