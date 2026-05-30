@@ -74,6 +74,15 @@ use a copy: `cp map.json /tmp/m.json` and `--map /tmp/m.json --no-save`. Always
   gfx sections in map → extract → assemble → identical sha256.
 - A `gfx` section may later gain an optional `width` (tiles/row, default 16)
   for the PNG arrangement; len is already a multiple of 16.
+- **No `palette` field is needed** (verified). 2bpp tile data IS pixel indices
+  (0-3); color is applied at runtime by the tilemap/OAM attribute. So the
+  build renders every gfx region to a PNG with ONE fixed distinct sentinel
+  palette and `rgbgfx -c "#ffffff,#aaaaaa,#555555,#000000"` recovers the exact
+  bytes — region colors are irrelevant to the round-trip (one Makefile rule
+  fits all). A `palette` field would also be ambiguous: the same tiles are
+  drawn with multiple palettes (font region = bg{0,1,2,3}). Real colors are
+  only wanted for a *colored preview*; that's optional, many-to-one sidecar
+  metadata sourced from the --watch-vram report, never needed by the asm.
 - Coalescing note: adjacent runs separated by tiny gaps may be one image split
   by partial draws; merging heuristics may help. Runs are bank-local already.
 
