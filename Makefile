@@ -36,6 +36,14 @@ RGBASM   := rgbasm
 RGBLINK  := rgblink
 RGBGFX   := rgbgfx
 GFX_DIR  := $(SRC_DIR)/gfx
+
+# Assembler inputs — a change to any of these rebuilds the ROM (no `make clean`
+# needed). Wildcards are evaluated at parse time, which is fine: these are all
+# committed source. find covers subdirs (src/scripts/, assets/<name>/).
+SRC_ASM   := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
+INCLUDES  := $(wildcard include/*.inc)
+ASSET_SRC := $(shell find assets -type f 2>/dev/null)
+
 CC       := cc
 CFLAGS   := -O2 -Wall -Wno-unused-parameter -Wno-multichar
 SAMEBOY_CFLAGS := -std=gnu11 -D_GNU_SOURCE \
@@ -65,7 +73,7 @@ verify: $(OUT)
 
 rom: $(OUT)
 
-$(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
+$(OUT): $(EXTRACT_STAMP) $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
 	@# Build every gfx PNG the extractor emitted into its 2bpp tile data.
 	@# `-c embedded` maps PNG pixels back to 2bpp values by the embedded
 	@# palette's index order, so the round-trip is byte-exact (the asm
@@ -83,7 +91,7 @@ $(OUT): $(EXTRACT_STAMP) | $(BUILD_DIR)
 		$(PYTHON) tools/gfxasset.py encode --in "$$a" --out-dir "$(BUILD_DIR)/$$a" || exit 1; \
 	done
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
-	$(RGBLINK) -p 0 -o $@ $(BUILD_DIR)/main.o
+	$(RGBLINK) -p 0 -m $@.map -o $@ $(BUILD_DIR)/main.o
 
 extract: $(EXTRACT_STAMP)
 
