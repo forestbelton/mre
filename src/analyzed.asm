@@ -74,7 +74,7 @@ Func_00_0150:
 	call Func_00_01ca
 	call Func_00_018f
 	call Func_00_0a30
-	call Func_00_0bd7
+	call HideAllSprites
 	ld a, $c7
 	ldh [rLCDC], a
 	ei
@@ -254,7 +254,7 @@ Func_00_02b9:
 	pop bc
 	pop af
 	ret
-Func_00_02d1:
+WaitForHBlank:
 	ldh a, [rLCDC]
 	rla
 	ret nc
@@ -302,21 +302,21 @@ HaltIfC286Set:
 
 SECTION "analyzed_00030b", ROM0[$030b]
 
-Func_00_030b:
+CopyDEtoHL:
 	ld a, [de]
 	ld [hl+], a
 	inc de
 	dec c
-	jr nz, Func_00_030b
+	jr nz, CopyDEtoHL
 	ret
-Func_00_0312:
+CopyDEtoHLLong:
 	ld a, [de]
 	ld [hl+], a
 	inc de
 	dec bc
 	ld a, b
 	or c
-	jr nz, Func_00_0312
+	jr nz, CopyDEtoHLLong
 	ret
 
 SECTION "analyzed_000348", ROM0[$0348]
@@ -329,7 +329,7 @@ SECTION "analyzed_000361", ROM0[$0361]
 
 Func_00_0361:
 	di
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -370,7 +370,7 @@ Func_00_0361:
 Func_00_0392:
 	ei
 	ret
-Func_00_0394:
+CopyHLtoDE:
 	ld a, c
 	and c
 	jr z, Func_00_039e
@@ -383,8 +383,8 @@ Func_00_039e:
 	dec b
 	jr nz, Func_00_039e
 	ret
-Func_00_03a5:
-	call Func_00_02d1
+FillVram:
+	call WaitForHBlank
 	ld a, d
 	ld [hl+], a
 	dec bc
@@ -402,7 +402,7 @@ Func_00_03a5:
 	dec bc
 	ld a, b
 	or c
-	jr nz, Func_00_03a5
+	jr nz, FillVram
 	ret
 Func_00_03bc:
 	ld a, d
@@ -531,7 +531,7 @@ Func_00_04f2:
 	ld e, l
 	ld hl, $c101
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $08
 	ldh [$ffa1], a
 	ei
@@ -581,7 +581,7 @@ Func_00_052e:
 	add a, a
 	rst $00
 	ld c, $08
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $08
 	ldh [$ffa1], a
 	ei
@@ -594,7 +594,7 @@ Func_00_0547:
 	ld e, l
 	ld hl, $c141
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $08
 	ldh [$ffa2], a
 	ei
@@ -645,7 +645,7 @@ Func_00_0583:
 	ld hl, $c141
 	rst $00
 	ld c, $08
-	call Func_00_030b
+	call CopyDEtoHL
 	pop af
 	ldh [$ffa2], a
 	ei
@@ -663,7 +663,7 @@ Func_00_05ae:
 	ld e, l
 	ld hl, $c181
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $20
 	ld [$c281], a
 	ld a, $09
@@ -681,7 +681,7 @@ Func_00_05ca:
 	ld c, $08
 Func_00_05d7:
 	ld b, $08
-	call Func_00_02d1
+	call WaitForHBlank
 Func_00_05dc:
 	ld a, [de]
 	ld [hl+], a
@@ -708,7 +708,7 @@ Func_00_0602:
 	ld e, l
 	ld hl, $c1c1
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $20
 	ld [$c282], a
 	ld a, $09
@@ -726,7 +726,7 @@ Func_00_061e:
 	ld c, $08
 Func_00_062b:
 	ld b, $08
-	call Func_00_02d1
+	call WaitForHBlank
 Func_00_0630:
 	ld a, [de]
 	ld [hl+], a
@@ -922,7 +922,7 @@ Func_00_0716:
 	add a, a
 	add a, a
 	ld c, a
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $08
 	ldh [$ffa1], a
 	ei
@@ -945,7 +945,7 @@ Func_00_0732:
 	add a, a
 	add a, a
 	ld c, a
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $08
 	ldh [$ffa2], a
 	ei
@@ -977,7 +977,7 @@ Func_00_07a7:
 	ld de, $c101
 	ld hl, $c201
 	ld c, $80
-	call Func_00_030b
+	call CopyDEtoHL
 	call Func_00_0786
 	ld hl, $0857
 	call Func_00_05ae
@@ -990,7 +990,7 @@ Func_00_07c5:
 	ld de, $c101
 	ld hl, $c201
 	ld c, $80
-	call Func_00_030b
+	call CopyDEtoHL
 	call Func_00_0786
 	ld hl, $0897
 	call Func_00_05ae
@@ -1003,7 +1003,7 @@ Func_00_07e4:
 	ld de, $c101
 	ld hl, $c201
 	ld c, $80
-	call Func_00_030b
+	call CopyDEtoHL
 	call Func_00_0786
 	ld hl, $0857
 	call Func_00_05ca
@@ -1057,7 +1057,7 @@ Func_00_094a:
 	ld [$2fff], a
 	ld d, h
 	ld e, l
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [$c29c]
 	add a, a
 	add a, a
@@ -1065,7 +1065,7 @@ Func_00_094a:
 	ld hl, $c141
 	rst $00
 	ld c, $08
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, [$c29c]
 	ldh [$ffa2], a
 	pop af
@@ -1265,7 +1265,7 @@ Data_00_0b44:
 
 SECTION "analyzed_000b4e", ROM0[$0b4e]
 
-Func_00_0b4e:
+CopyBgMap:
 	ld a, [hl+]
 	ld b, a
 	ld a, [hl+]
@@ -1292,7 +1292,7 @@ Func_00_0b68:
 	push bc
 	ld b, $00
 	push de
-	call Func_00_0394
+	call CopyHLtoDE
 	pop de
 	ld a, $20
 	rst $30
@@ -1312,13 +1312,13 @@ Func_00_0bc9:
 
 SECTION "analyzed_000bd7", ROM0[$0bd7]
 
-Func_00_0bd7:
+HideAllSprites:
 	ld bc, $0000
 	call Func_00_0bc9
 Func_00_0bdd:
 	ld c, $28
 	ld hl, $fe00
-	call Func_00_02d1
+	call WaitForHBlank
 	xor a
 Func_00_0be6:
 	ld [hl+], a
@@ -1767,13 +1767,13 @@ Func_00_1002:
 	push bc
 	push hl
 	ld d, $fc
-	call Func_00_03a5
+	call FillVram
 	pop hl
 	pop bc
 	ld a, $01
 	ldh [rVBK], a
 	ld d, $08
-	call Func_00_03a5
+	call FillVram
 	xor a
 	ldh [rVBK], a
 	ret
@@ -1899,7 +1899,7 @@ Func_00_10f1:
 	push bc
 	push de
 Func_00_10f3:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -1939,7 +1939,7 @@ Func_00_1121:
 	push bc
 	push de
 Func_00_1123:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -2168,7 +2168,7 @@ Func_00_12ab:
 	call Func_00_09f9
 	ld bc, $0245
 	ld hl, $c586
-	call Func_00_0312
+	call CopyDEtoHLLong
 	call Func_00_09ff
 	pop af
 	ld [$2fff], a
@@ -2838,7 +2838,7 @@ Func_00_16ed:
 Func_00_1733:
 	ld a, [$c2ec]
 	ld c, a
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, [$c2ee]
 	rst $00
 	dec b
@@ -2849,20 +2849,20 @@ Func_00_1733:
 Func_00_1748:
 	ld a, [$c2ec]
 	ld c, a
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, [$c2ee]
 	rst $00
 	dec b
 	jr nz, Func_00_1748
 	ld c, $04
 	ld hl, $c4cd
-	call Func_00_030b
+	call CopyDEtoHL
 	ld c, $2d
 	ld hl, $c4d1
-	call Func_00_030b
+	call CopyDEtoHL
 	ld c, $30
 	ld hl, $c4fe
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $05
 	ld hl, Func_05_49ef
 	call CallBankedHL
@@ -2961,7 +2961,7 @@ Func_00_180b:
 	ldh [rVBK], a
 	inc de
 	push hl
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [de]
 	ld [hl+], a
 	add a, $08
@@ -2978,7 +2978,7 @@ Func_00_180b:
 	ld a, $01
 	ldh [rVBK], a
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [de]
 	ld c, a
 	ld [hl+], a
@@ -3067,7 +3067,7 @@ Func_00_1f91:
 	inc de
 	inc de
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [de]
 	ld [hl], a
 	ld a, $01
@@ -3118,7 +3118,7 @@ Func_00_1fd5:
 	add a, $80
 Func_00_1fd9:
 	ld c, a
-	call Func_00_02d1
+	call WaitForHBlank
 	xor a
 	ldh [rVBK], a
 	ld a, c
@@ -3209,7 +3209,7 @@ Func_00_3353:
 Func_00_3355:
 	push bc
 	ld bc, $0001
-	call Func_00_03a5
+	call FillVram
 	inc d
 	pop bc
 	dec c
@@ -3228,7 +3228,7 @@ Func_00_3372:
 Func_00_3374:
 	push bc
 	ld bc, $0001
-	call Func_00_03a5
+	call FillVram
 	pop bc
 	dec c
 	jr nz, Func_00_3374
@@ -3497,7 +3497,7 @@ Func_00_35d4:
 	add a, a
 	rst $00
 	rst $18
-	call Func_00_0b4e
+	call CopyBgMap
 	pop af
 	ld [$2fff], a
 	ret
@@ -3506,7 +3506,7 @@ CopyBgMapBanked:
 	push af
 	ld a, b
 	ld [$2fff], a
-	call Func_00_0b4e
+	call CopyBgMap
 	pop af
 	ld [$2fff], a
 	ret
@@ -3536,13 +3536,13 @@ LoadPalettesBanked:
 	push de
 	ld hl, $c201
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	pop de
 	ld a, $40
 	rst $30
 	ld hl, $c241
 	ld c, $40
-	call Func_00_030b
+	call CopyDEtoHL
 	pop af
 	ld [$2fff], a
 Func_00_3635:
@@ -3564,7 +3564,7 @@ Func_00_3646:
 SECTION "analyzed_00365f", ROM0[$365f]
 
 Func_00_365f:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -3585,7 +3585,7 @@ Func_00_365f:
 	inc de
 	dec c
 	jr z, Func_00_3691
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -3773,7 +3773,7 @@ CopyBytesBanked:
 	push af
 	ld a, [$c29c]
 	ld [$2fff], a
-	call Func_00_0394
+	call CopyHLtoDE
 	pop af
 	ld [$2fff], a
 	ret
@@ -3783,7 +3783,7 @@ Func_00_3942:
 	push af
 	ld a, [$c29c]
 	ld [$2fff], a
-	call Func_00_0b4e
+	call CopyBgMap
 	pop af
 	ld [$2fff], a
 	ret
@@ -4171,7 +4171,7 @@ Func_00_3c28:
 	call Func_00_3c46
 	pop de
 	ld hl, $d621
-	call Func_00_0b4e
+	call CopyBgMap
 	pop hl
 	ret
 Func_00_3c46:
@@ -4262,7 +4262,7 @@ Func_00_3cd3:
 	ld a, $01
 	ldh [rVBK], a
 	di
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $07
 	ld [de], a
 	ld a, $00
@@ -5069,7 +5069,7 @@ Func_01_447f:
 	call Func_00_07e4
 	call Func_00_0e24
 	call Func_00_04c4
-	call Func_00_0bd7
+	call HideAllSprites
 	call WaitForNextFrame
 	call Func_00_1863
 	call Func_01_459a
@@ -5491,7 +5491,7 @@ Func_01_49b3:
 SECTION "analyzed_0049cb", ROMX[$49cb], BANK[$01]
 
 Func_01_49cb:
-	call Func_00_0bd7
+	call HideAllSprites
 	ld a, [$c2d5]
 	bit 0, a
 	jr nz, Func_01_49e0
@@ -10577,7 +10577,7 @@ Func_01_76e2:
 	jr z, Func_01_76f2
 	call Func_01_7715
 	push af
-	call Func_00_02d1
+	call WaitForHBlank
 	pop af
 	ld [de], a
 	inc de
@@ -10603,7 +10603,7 @@ Func_01_770a:
 	ld a, $0f
 Func_01_770c:
 	push af
-	call Func_00_02d1
+	call WaitForHBlank
 	pop af
 	ld [de], a
 	inc de
@@ -10667,7 +10667,7 @@ Func_01_775b:
 	jr z, Func_01_7782
 	ld hl, $c532
 	ld de, $9c02
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -10685,7 +10685,7 @@ Func_01_775b:
 Func_01_7782:
 	ld hl, $c537
 	ld de, $9c0a
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	ld de, $9c0c
@@ -10701,7 +10701,7 @@ Func_01_7782:
 	ld a, [hl+]
 	ld [de], a
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -10716,7 +10716,7 @@ Func_01_7782:
 	ld a, $01
 	ldh [rVBK], a
 	ld de, $9c0c
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -10729,7 +10729,7 @@ Func_01_7782:
 	ld a, [hl+]
 	ld [de], a
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -10762,7 +10762,7 @@ SECTION "analyzed_0077f6", ROMX[$77f6], BANK[$01]
 
 Func_01_77f6:
 	ld hl, $9c04
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $b1
 	ld [hl+], a
 	inc a
@@ -10771,7 +10771,7 @@ Func_01_77f6:
 	ret
 Func_01_7803:
 	ld hl, $9c04
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $b1
 	ld [hl+], a
 	ld [hl+], a
@@ -10780,7 +10780,7 @@ Func_01_7803:
 	ret
 Func_01_7810:
 	ld hl, $9c04
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $b1
 	ld [hl+], a
 	ld [hl+], a
@@ -11032,7 +11032,7 @@ Func_02_4000:
 	ld hl, $40b1
 	ld de, $8000
 	ld bc, $1000
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_02_4010:
 	ld a, $07
@@ -20454,13 +20454,13 @@ Func_05_4884:
 	ld hl, $9800
 	ld bc, $0800
 	ld d, $fc
-	call Func_00_03a5
+	call FillVram
 	ld a, $01
 	ldh [rVBK], a
 	ld hl, $9800
 	ld bc, $0800
 	ld d, $08
-	call Func_00_03a5
+	call FillVram
 	xor a
 	ldh [rVBK], a
 	ret
@@ -21134,7 +21134,7 @@ Func_0f_44dd:
 	push hl
 	ld bc, $0015
 	ld d, $fc
-	call Func_00_03a5
+	call FillVram
 	pop hl
 	pop bc
 	ld de, $0020
@@ -21150,7 +21150,7 @@ Func_0f_44f9:
 	push hl
 	ld bc, $0015
 	ld d, $08
-	call Func_00_03a5
+	call FillVram
 	pop hl
 	pop bc
 	ld de, $0020
@@ -21205,7 +21205,7 @@ Func_0f_4565:
 	ld [$cf67], a
 	ld hl, $52c4
 	ld de, $9c20
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_0f_46d6
 	call Func_0f_4722
 	call Func_0f_476e
@@ -21233,7 +21233,7 @@ Func_0f_45ab:
 	jr nz, Data_0f_45bd
 	ld hl, $5820
 	ld de, $9c20
-	call Func_00_0b4e
+	call CopyBgMap
 	ret
 
 SECTION "analyzed_03c5c7", ROMX[$45c7], BANK[$0f]
@@ -21245,7 +21245,7 @@ Func_0f_45c7:
 	call Func_00_119a
 	or a
 	jr nz, Data_0f_45eb
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [$c2c3]
 	swap a
 	and $0f
@@ -21287,7 +21287,7 @@ Func_0f_462b:
 	ldh [rVBK], a
 	ld de, $9380
 	ld bc, $0480
-	call Func_00_0394
+	call CopyHLtoDE
 	ld a, $bb
 	ld [$cf3a], a
 	ld a, $46
@@ -21354,7 +21354,7 @@ Func_0f_4690:
 	or a
 	jr nz, Data_0f_46b4
 	ld de, $9c87
-	call Func_00_0b4e
+	call CopyBgMap
 	ret
 
 SECTION "analyzed_03c6bb", ROMX[$46bb], BANK[$0f]
@@ -21368,7 +21368,7 @@ SECTION "analyzed_03c6d6", ROMX[$46d6], BANK[$0f]
 Func_0f_46d6:
 	xor a
 	ldh [rVBK], a
-	call Func_00_02d1
+	call WaitForHBlank
 	ld hl, $c2c6
 	ld de, $9c92
 	ld a, [hl]
@@ -21418,7 +21418,7 @@ Func_0f_46d6:
 Func_0f_4722:
 	xor a
 	ldh [rVBK], a
-	call Func_00_02d1
+	call WaitForHBlank
 	ld hl, $cfd2
 	ld de, $9cd2
 	ld a, [hl]
@@ -21492,7 +21492,7 @@ Func_0f_47a2:
 	ld h, [hl]
 	ld l, a
 	ld de, $9c2c
-	call Func_00_0b4e
+	call CopyBgMap
 	pop hl
 	ld a, h
 	add a, a
@@ -21502,7 +21502,7 @@ Func_0f_47a2:
 	ld h, [hl]
 	ld l, a
 	ld de, $9c2d
-	call Func_00_0b4e
+	call CopyBgMap
 	ret
 
 SECTION "analyzed_03c7f8", ROMX[$47f8], BANK[$0f]
@@ -21570,7 +21570,7 @@ Func_0f_4880:
 	jr nz, Func_0f_4889
 	ld hl, $6d76
 Func_0f_4889:
-	call Func_00_0b4e
+	call CopyBgMap
 	ret
 
 SECTION "analyzed_03c89f", ROMX[$489f], BANK[$0f]
@@ -21578,7 +21578,7 @@ SECTION "analyzed_03c89f", ROMX[$489f], BANK[$0f]
 Func_0f_489f:
 	xor a
 	ldh [rVBK], a
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [$cfd8]
 	add a, $9a
 	ld hl, $9c52
@@ -21595,7 +21595,7 @@ Func_0f_489f:
 	add a, $9a
 	ld hl, $9d12
 	ld [hl], a
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [$cfdd]
 	add a, $9a
 	ld hl, $9d52
@@ -21681,7 +21681,7 @@ Func_0f_494b:
 	xor a
 	ldh [rVBK], a
 	ld de, $9d0c
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, l
 	ld [de], a
 	inc de
@@ -21690,11 +21690,11 @@ Func_0f_494b:
 	ld e, $0a
 	call Func_00_3774
 	pop de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, l
 	ld [de], a
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, h
 	ld [de], a
 	ld a, [$c2a3]
@@ -21711,11 +21711,11 @@ Func_0f_494b:
 	ld e, $0a
 	call Func_00_3774
 	ld de, $9d10
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, l
 	ld [de], a
 	inc de
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, h
 	ld [de], a
 	ret
@@ -21775,7 +21775,7 @@ Func_0f_49dc:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_0b4e
+	call CopyBgMap
 	pop hl
 Func_0f_4a05:
 	pop hl
@@ -21918,7 +21918,7 @@ Func_0f_4b02:
 	call CallBankedHL
 	ld hl, $5138
 	ld de, $9de3
-	call Func_00_0b4e
+	call CopyBgMap
 	ld a, [$c2c1]
 	cp $02
 	jr z, Func_0f_4b1d
@@ -21927,7 +21927,7 @@ Func_0f_4b02:
 Func_0f_4b1d:
 	ld hl, $5176
 	ld de, $9cc4
-	call Func_00_0b4e
+	call CopyBgMap
 	ret
 Func_0f_4b27:
 	ld a, $10
@@ -21944,7 +21944,7 @@ Func_0f_4b27:
 	ld hl, $4d38
 	ld de, $8800
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_0f_4b4f:
 	ld a, $10
@@ -22441,7 +22441,7 @@ Func_10_4007:
 	ld hl, $44b7
 	ld de, $9400
 	ld bc, $0400
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_10_4018:
 	xor a
@@ -22449,13 +22449,13 @@ Func_10_4018:
 	ld hl, $40b7
 	ld de, $9000
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 	ld a, $01
 	ld [rVBK], a
 	ld hl, $48b7
 	ld de, $8800
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_04005f", ROMX[$405f], BANK[$10]
@@ -22466,7 +22466,7 @@ Func_10_405f:
 	ld hl, $53b7
 	ld de, $8300
 	ld bc, $0500
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_04008c", ROMX[$408c], BANK[$10]
@@ -22930,7 +22930,7 @@ Func_11_4081:
 	ld e, a
 	pop hl
 	ld bc, $0300
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_11_40b1:
 	ld de, $c4cd
@@ -24007,27 +24007,27 @@ Func_12_40b6:
 	rst $00
 	ld bc, $0001
 	ld d, $02
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr z, Func_12_40ec
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $03
-	call Func_00_03a5
+	call FillVram
 	dec e
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $04
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr z, Func_12_40ec
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $05
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr Func_12_40b6
 Func_12_40ec:
@@ -24040,21 +24040,21 @@ Func_12_40ec:
 Func_12_40f6:
 	ld bc, $0001
 	ld d, $0a
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr z, Func_12_4120
 	ld bc, $0001
 	ld d, $0b
-	call Func_00_03a5
+	call FillVram
 	dec e
 	ld bc, $0001
 	ld d, $0c
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr z, Func_12_4120
 	ld bc, $0001
 	ld d, $0d
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr Func_12_40f6
 Func_12_4120:
@@ -24072,26 +24072,26 @@ Func_12_412f:
 	rst $00
 	ld bc, $0001
 	ld d, $02
-	call Func_00_03a5
+	call FillVram
 	dec e
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $03
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr z, Func_12_4163
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $04
-	call Func_00_03a5
+	call FillVram
 	dec e
 	ld a, $1f
 	rst $00
 	ld bc, $0001
 	ld d, $05
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr nz, Func_12_412f
 Func_12_4163:
@@ -24105,7 +24105,7 @@ Func_12_416e:
 	rst $00
 	ld bc, $0001
 	ld d, $02
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr nz, Func_12_416e
 	ld a, [$d0e8]
@@ -24113,7 +24113,7 @@ Func_12_416e:
 Func_12_4180:
 	ld bc, $0001
 	ld d, $02
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr nz, Func_12_4180
 	ld a, [$d0e7]
@@ -24130,7 +24130,7 @@ Func_12_419a:
 	rst $00
 	ld bc, $0001
 	ld d, $02
-	call Func_00_03a5
+	call FillVram
 	dec e
 	jr nz, Func_12_419a
 	ret
@@ -24507,7 +24507,7 @@ Func_12_4941:
 	ld b, $06
 	ld d, $53
 Func_12_4958:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $1f
 	rst $00
 	xor a
@@ -24520,7 +24520,7 @@ Func_12_4958:
 	dec e
 	jr nz, Func_12_4958
 	ld d, $54
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $1f
 	rst $00
 	xor a
@@ -24536,7 +24536,7 @@ Func_12_4958:
 	ld e, a
 	ld d, $55
 Func_12_4985:
-	call Func_00_02d1
+	call WaitForHBlank
 	xor a
 	ldh [rVBK], a
 	ld [hl], d
@@ -24562,7 +24562,7 @@ Func_12_4985:
 	rst $00
 	ld d, $51
 Func_12_49ad:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, $1f
 	rst $00
 	xor a
@@ -24588,7 +24588,7 @@ Func_12_49e7:
 	push hl
 	ld bc, $0015
 	ld d, $ff
-	call Func_00_03a5
+	call FillVram
 	pop hl
 	pop bc
 	ld de, $0020
@@ -24604,7 +24604,7 @@ Func_12_4a03:
 	push hl
 	ld bc, $0015
 	ld d, $0e
-	call Func_00_03a5
+	call FillVram
 	pop hl
 	pop bc
 	ld de, $0020
@@ -24684,11 +24684,11 @@ Func_12_4b67:
 	ld de, $4b64
 	ld hl, $cfcf
 	ld c, $03
-	call Func_00_030b
+	call CopyDEtoHL
 	ld de, $cfcf
 	ld hl, $a6ed
 	ld bc, $0118
-	call Func_00_0312
+	call CopyDEtoHLLong
 	ld hl, $a6ed
 	ld bc, $0118
 	call Func_00_12ee
@@ -24707,7 +24707,7 @@ Func_12_4ba1:
 	ld de, $a6ed
 	ld hl, $cfcf
 	ld bc, $0118
-	call Func_00_0312
+	call CopyDEtoHLLong
 	call Func_00_09ff
 	ld a, $01
 	ret
@@ -24768,7 +24768,7 @@ Func_12_4c02:
 	ld de, $a6f0
 	ld hl, $cfd2
 	ld c, $05
-	call Func_00_030b
+	call CopyDEtoHL
 	call Func_00_09ff
 	ld a, $01
 	ret
@@ -24807,7 +24807,7 @@ Func_12_4c3e:
 	ld l, a
 	ld de, $4b64
 	ld c, $03
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, [$d0e7]
 	add a, a
 	ld b, a
@@ -24823,7 +24823,7 @@ Func_12_4c3e:
 	ld h, [hl]
 	ld l, a
 	ld c, $06
-	call Func_00_030b
+	call CopyDEtoHL
 	ld d, $ff
 	ld bc, $0008
 	call Func_00_03bc
@@ -24852,7 +24852,7 @@ Func_12_4c83:
 	ld h, [hl]
 	ld l, a
 	ld c, $06
-	call Func_00_030b
+	call CopyDEtoHL
 	ld [hl], $00
 	ld a, [$d0e7]
 	ld hl, $c7f6
@@ -24987,7 +24987,7 @@ SECTION "analyzed_054015", ROMX[$4015], BANK[$15]
 Func_15_4015:
 	ld hl, $6674
 	ld de, $9800
-	call Func_00_0b4e
+	call CopyBgMap
 	ld hl, $c7e1
 	ld bc, $0500
 	ld a, $0e
@@ -25085,7 +25085,7 @@ SECTION "analyzed_054134", ROMX[$4134], BANK[$15]
 Func_15_4134:
 	ld hl, $65ce
 	ld de, $99c0
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_00_3340
 	ret
 
@@ -25146,13 +25146,13 @@ Func_15_41fe:
 	ld bc, $1000
 	ld hl, $424e
 	ld de, $8800
-	call Func_00_0394
+	call CopyHLtoDE
 	ld a, $01
 	ld [rVBK], a
 	ld bc, $1000
 	ld hl, $524e
 	ld de, $8800
-	call Func_00_0394
+	call CopyHLtoDE
 	ld a, [$cfbe]
 	or a
 	ret z
@@ -25780,33 +25780,33 @@ Func_16_4016:
 	jr nc, Func_16_4036
 	ld de, $9000
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_16_4036:
 	ld de, $9000
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $9140
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $9160
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $9760
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $9080
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $91c0
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $91e0
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ld de, $97e0
 	ld bc, $0020
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_05807f", ROMX[$407f], BANK[$16]
@@ -26836,7 +26836,7 @@ Func_17_4135:
 	add a, h
 	ld h, a
 	ld de, $9400
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_05c14c", ROMX[$414c], BANK[$17]
@@ -27138,7 +27138,7 @@ Func_18_4097:
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -27170,7 +27170,7 @@ Func_18_4097:
 	pop af
 	ret
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -27347,7 +27347,7 @@ Func_18_533c:
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -27379,7 +27379,7 @@ Func_18_533c:
 	pop af
 	ret
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -27532,7 +27532,7 @@ Func_18_5f6e:
 	call Func_00_0822
 	ld a, $c7
 	ld [rLCDC], a
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
@@ -27567,7 +27567,7 @@ Func_18_5fbf:
 	ret
 	ld a, $c7
 	ld [rLCDC], a
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
@@ -27695,7 +27695,7 @@ SECTION "analyzed_062bc8", ROMX[$6bc8], BANK[$18]
 
 Func_18_6bc8:
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
@@ -27857,7 +27857,7 @@ Func_19_4000:
 	ld [wYNResult], a
 	ret
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -30841,7 +30841,7 @@ SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
 
 Func_1f_417b:
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
@@ -30879,13 +30879,13 @@ Func_1f_41da:
 	ld de, $4000
 	ld hl, $c101
 	ld c, $08
-	call Func_00_030b
+	call CopyDEtoHL
 	ret
 Func_1f_41e6:
 	ld de, $4000
 	ld hl, $c169
 	ld c, $08
-	call Func_00_030b
+	call CopyDEtoHL
 	ret
 	call Func_1f_4201
 	call Func_1f_41e6
@@ -30901,7 +30901,7 @@ Func_1f_4201:
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $1d
 	ld hl, $5840
 	ld de, $c1c1
@@ -30910,7 +30910,7 @@ Func_1f_4201:
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
-	call Func_00_030b
+	call CopyDEtoHL
 	ret
 Func_1f_4234:
 	ld a, $34
@@ -30976,7 +30976,7 @@ SECTION "analyzed_07c416", ROMX[$4416], BANK[$1f]
 
 Func_1f_4416:
 	call Func_00_0822
-	call Func_00_0bd7
+	call HideAllSprites
 	call Func_00_3971
 	ld a, $00
 	ld [rVBK], a
@@ -31031,7 +31031,7 @@ Func_1f_4497:
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
-	call Func_00_030b
+	call CopyDEtoHL
 	ld a, $35
 	ld hl, $6040
 	ld de, $c1c1
@@ -31040,7 +31040,7 @@ Func_1f_4497:
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
-	call Func_00_030b
+	call CopyDEtoHL
 	ret
 Func_1f_44ca:
 	ld a, $ca
@@ -31174,7 +31174,7 @@ Func_1f_58d7:
 	call ScriptOpcode05Helper
 	ld hl, $5942
 	ld de, $9990
-	call Func_00_0b4e
+	call CopyBgMap
 	xor a
 	ld [wYNResult], a
 Func_1f_58ed:
@@ -31264,7 +31264,7 @@ Func_1f_5985:
 	ld h, [hl]
 	ld l, a
 	ld de, $98eb
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_59ae
 	call HideUnusedOamSprites
 	jp Func_1f_596d
@@ -31335,7 +31335,7 @@ Func_1f_5a08:
 	ld h, [hl]
 	ld l, a
 	ld de, $98eb
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_5a31
 	call HideUnusedOamSprites
 	jp Func_1f_59e0
@@ -31423,7 +31423,7 @@ Func_1f_5af1:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ed
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_5b1a
 	call HideUnusedOamSprites
 	jp Func_1f_5ac9
@@ -31494,7 +31494,7 @@ Func_1f_5b77:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ed
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_5ba0
 	call HideUnusedOamSprites
 	jp Func_1f_5b4f
@@ -31577,7 +31577,7 @@ Func_1f_5d9b:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ed
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_5dc4
 	call HideUnusedOamSprites
 	jp Func_1f_5d83
@@ -31658,7 +31658,7 @@ Func_1f_5f75:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ed
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_5f9e
 	call HideUnusedOamSprites
 	jp Func_1f_5f5d
@@ -31720,7 +31720,7 @@ Func_1f_60b5:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ec
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_60de
 	call HideUnusedOamSprites
 	jp Func_1f_609d
@@ -31788,7 +31788,7 @@ Func_1f_618e:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ec
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_61b7
 	call HideUnusedOamSprites
 	jp Func_1f_6176
@@ -31865,7 +31865,7 @@ Func_1f_6403:
 	ld h, [hl]
 	ld l, a
 	ld de, $98ec
-	call Func_00_0b4e
+	call CopyBgMap
 	call Func_1f_642c
 	call HideUnusedOamSprites
 	jp Func_1f_63db
@@ -33775,7 +33775,7 @@ Data_21_4000:
 SECTION "analyzed_0873ac", ROMX[$73ac], BANK[$21]
 
 Func_21_73ac:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld hl, $c2c6
 	ld de, $98cd
 	ld a, [hl]
@@ -33785,7 +33785,7 @@ Func_21_73ac:
 	call Func_00_3635
 	ld a, [hl]
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
@@ -33794,7 +33794,7 @@ Func_21_73ac:
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl]
 	call Func_00_3635
 	ld a, [hl]
@@ -33802,7 +33802,7 @@ Func_21_73ac:
 	call Func_00_3635
 	ret
 Func_21_73e4:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld hl, $c2d1
 	ld de, $992c
 	ld a, [hl]
@@ -33810,7 +33810,7 @@ Func_21_73e4:
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl]
 	call Func_00_3635
 	ld a, [hl+]
@@ -33820,7 +33820,7 @@ Func_21_73e4:
 	call Func_00_3635
 	ret
 Func_21_7409:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld de, $9927
 	ld a, $00
 	call Func_00_3635
@@ -41091,7 +41091,7 @@ Func_30_401e:
 	ld [$d0f6], a
 	ld [$d0f7], a
 	ld [$d0f8], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $20
@@ -41597,7 +41597,7 @@ Func_30_43a4:
 	xor a
 	ld [$d0fe], a
 	ld [$d0f4], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $22
@@ -41729,7 +41729,7 @@ Func_30_44aa:
 	ld [$d0f5], a
 	ld a, [$c55d]
 	ld [$d0f7], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $23
@@ -42099,7 +42099,7 @@ Func_30_486d:
 	push bc
 	ld b, $00
 	push de
-	call Func_00_0394
+	call CopyHLtoDE
 	pop de
 	ld a, $20
 	rst $30
@@ -42122,7 +42122,7 @@ Func_30_487d:
 	ldh [rWX], a
 	ld a, $58
 	ldh [rWY], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $24
@@ -42651,7 +42651,7 @@ Func_30_503b:
 	ld [$d0f9], a
 	ld a, $88
 	ld [$d0fa], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $21
@@ -42952,7 +42952,7 @@ Func_30_52c4:
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld [$d0f5], a
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $26
@@ -43138,7 +43138,7 @@ Func_30_54b8:
 	ld a, $01
 	ld [$d0f5], a
 Func_30_54df:
-	call Func_00_0bd7
+	call HideAllSprites
 	xor a
 	ldh [rVBK], a
 	ld a, $28
@@ -43323,7 +43323,7 @@ Func_30_5694:
 Func_30_5697:
 	ret
 Func_30_5698:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld hl, $cfd2
 	ld de, $99ad
 	ld a, [hl]
@@ -43331,19 +43331,19 @@ Func_30_5698:
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl]
 	call Func_00_3635
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl]
 	call Func_00_3635
 	ld a, [hl+]
 	swap a
 	call Func_00_3635
-	call Func_00_02d1
+	call WaitForHBlank
 	ld a, [hl]
 	call Func_00_3635
 	ld a, [hl]
@@ -43351,16 +43351,16 @@ Func_30_5698:
 	call Func_00_3635
 	ret
 Func_30_56d3:
-	call Func_00_02d1
+	call WaitForHBlank
 	ld de, $99ad
 	call Func_30_5751
 	call Func_30_5751
 	call Func_30_5751
-	call Func_00_02d1
+	call WaitForHBlank
 	call Func_30_5751
 	call Func_30_5751
 	call Func_30_5751
-	call Func_00_02d1
+	call WaitForHBlank
 	call Func_30_5751
 	call Func_30_5751
 	ret
@@ -46048,7 +46048,7 @@ Func_38_4000:
 	add a, h
 	ld h, a
 	ld de, $9400
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_0e001a", ROMX[$401a], BANK[$38]
@@ -46520,13 +46520,13 @@ Func_3b_4000:
 	ld hl, $4034
 	ld de, $9000
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 	ld a, $01
 	ld [rVBK], a
 	ld hl, $4834
 	ld de, $8780
 	ld bc, $0c00
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 
 SECTION "analyzed_0ec034", ROMX[$4034], BANK[$3b]
@@ -46875,7 +46875,7 @@ Func_3d_4000:
 	jr z, Func_3d_401d
 	ld de, $8000
 	ld bc, $0800
-	call Func_00_0394
+	call CopyHLtoDE
 Func_3d_401d:
 	ld a, [$c2c0]
 	dec a
@@ -46889,7 +46889,7 @@ Func_3d_401d:
 	jr z, Func_3d_4035
 	ld de, $8b80
 	ld bc, $0400
-	call Func_00_0394
+	call CopyHLtoDE
 Func_3d_4035:
 	xor a
 	ld [rVBK], a
@@ -46905,7 +46905,7 @@ Func_3d_4035:
 	ret z
 	ld de, $8d00
 	ld bc, $0300
-	call Func_00_0394
+	call CopyHLtoDE
 	ret
 Func_3d_4051:
 	ld a, [$c2c0]

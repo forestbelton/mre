@@ -7323,6 +7323,27 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	721,
+			"name":	"WaitForHBlank"
+		}, {
+			"addr":	779,
+			"name":	"CopyDEtoHL"
+		}, {
+			"addr":	786,
+			"name":	"CopyDEtoHLLong"
+		}, {
+			"addr":	916,
+			"name":	"CopyHLtoDE"
+		}, {
+			"addr":	933,
+			"name":	"FillVram"
+		}, {
+			"addr":	2894,
+			"name":	"CopyBgMap"
+		}, {
+			"addr":	3031,
+			"name":	"HideAllSprites"
+		}, {
 			"addr":	638976,
 			"name":	"IntroBlankTiles"
 		}, {

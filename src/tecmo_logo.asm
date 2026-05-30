@@ -42,7 +42,7 @@ SECTION "DrawTecmoLogo", ROMX[$5418], BANK[$30]
 DrawTecmoLogo:
 	xor a
 	ld [$d0fe], a               ; fade level := 0
-	call Func_00_0bd7           ; clear OAM / pre-screen init
+	call HideAllSprites         ; clear OAM / pre-screen init
 	xor a
 	ldh [rVBK], a               ; VRAM bank 0
 	ld a, $27
