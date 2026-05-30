@@ -5,6 +5,7 @@ INCLUDE "wram.inc"
 
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "kalum_portrait.asm"
 INCLUDE "padding.asm"
 INCLUDE "script.asm"
 INCLUDE "scripts/kalum.asm"

@@ -1,6 +1,28 @@
 {
 	"files":	[{
 			"type":	"code",
+			"name":	"kalum_portrait.asm",
+			"sections":	[
+					{
+						"type":	"data",
+						"addr":	475136,
+						"len":	6144
+					}, 					{
+						"type":	"data",
+						"addr":	481408,
+						"len":	6
+					}, 					{
+						"type":	"data",
+						"addr":	481414,
+						"len":	220
+					}, 					{
+						"type":	"data",
+						"addr":	481634,
+						"len":	220
+					}
+				]
+		}, {
+			"type":	"code",
 			"name":	"script.asm",
 			"sections":	[
 				{
