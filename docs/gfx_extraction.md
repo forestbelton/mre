@@ -233,8 +233,9 @@ the gfx pipeline on a real asset.
   the descriptor references the two maps by `dw` *label*, so the region is
   internally relocatable — the philosophy litmus test (docs/philosophy.md). The
   region is carved out of `analyzed.asm` via a map.json file entry. `gfxasset`
-  also bakes a composite `assets/tecmo_logo/tecmo_logo.png` (the assembled
-  red-on-white logo) for viewing; the components are the round-trip source.
+  also bakes a composite `assets/tecmo_logo/preview.png` (the assembled
+  red-on-white logo) for viewing — *generated*, gitignored; the components are
+  the round-trip source.
 - Confirmed first-drawn empirically: a ~30 s boot `--watch-vram` trace marked
   bank `$27` (this logo) but never reached the bank `$28` cutscene/title art.
 

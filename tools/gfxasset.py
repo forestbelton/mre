@@ -17,8 +17,8 @@ packing, the $8800 index addressing), so this is our own codec. It round-trips
 each component byte-for-byte and also bakes a *composite* PNG — the assembled,
 full-color image — for viewing.
 
-The components are the editable source of truth; `<name>.png` is a generated
-preview. See docs/philosophy.md.
+The components are the editable source of truth; `preview.png` is a generated
+preview (gitignored, not source). See docs/philosophy.md.
 
 Commands:
     gfxasset.py decode --rom rom.gbc --asset tecmo_logo --out src/gfx/tecmo_logo/
@@ -26,7 +26,7 @@ Commands:
     gfxasset.py encode --in src/gfx/tecmo_logo/ --out-dir <dir>   # write component bytes
 
 Decode writes (into --out): tiles.png, palette.pal, tilemap.bin, attrmap.bin,
-asset.json (layout metadata), and <name>.png (the composite). encode/verify
+asset.json (layout metadata), and preview.png (the composite). encode/verify
 reproduce the exact component bytes from those source files.
 """
 
@@ -296,7 +296,8 @@ def cmd_decode(args) -> int:
     (out / "attrmap.bin").write_bytes(attr)
 
     name = args.asset
-    render_composite(out / f"{name}.png", rows, cols, idx, attr, tiles, pals,
+    # preview.png is a *generated* composite (not source) — gitignored.
+    render_composite(out / "preview.png", rows, cols, idx, attr, tiles, pals,
                      spec["index_base"])
 
     meta = {
@@ -319,7 +320,7 @@ def cmd_decode(args) -> int:
     print(f"decoded {name}: {cols}x{rows} cells, {spec['tiles_count']} tiles, "
           f"{spec['palette_count']} palette(s)")
     print(f"  components -> {out}/  (tiles.png, palette.pal, tilemap.bin, attrmap.bin)")
-    print(f"  composite  -> {out / (name + '.png')}")
+    print(f"  composite  -> {out / 'preview.png'}  (generated preview)")
     return 0
 
 

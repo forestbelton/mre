@@ -2,6 +2,7 @@ rom.gbc
 *.sav
 src/*.bin
 src/gfx/
+assets/*/preview.png
 build/
 tools/analyzer/analyzer
 __pycache__/
