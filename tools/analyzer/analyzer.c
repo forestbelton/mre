@@ -23,6 +23,7 @@
 
 #include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -52,6 +53,10 @@ enum {
 #define HEADER_END                0x0150  /* exclusive */
 /* Max screen we ever need to back: SGB border is 256x224. */
 #define MAX_SCREEN_PIXELS         (256 * 224)
+
+/* --watch-vram provenance bitmask (per ROM byte). */
+#define VSRC_TILEDATA 0x01   /* copied to VRAM tiledata ($8000-$97FF) */
+#define VSRC_TILEMAP  0x02   /* copied to VRAM tilemap  ($9800-$9FFF) */
 
 /* Minimal CGB boot stub.
  *
@@ -146,6 +151,33 @@ typedef struct {
     const char *watch_log_path;  /* --watch-log <path>; NULL -> stderr */
     FILE       *watch_log;
 
+    /* --watch-vram: trace the provenance of bytes copied into VRAM so we
+     * can find, from runtime ground truth, which ROM regions are tile
+     * pixel data ($8000-$97FF) vs tilemap layout ($9800-$9FFF), and which
+     * arrive uncompressed (straight from ROM) vs decompressed (built in
+     * WRAM first). vram_src_kind[flat] accumulates a bitmask per ROM byte:
+     *   bit0 (VSRC_TILEDATA) — this ROM byte was copied to tiledata VRAM
+     *   bit1 (VSRC_TILEMAP)  — ... to tilemap VRAM
+     * last_data_read holds the flat ROM offset of the most recent non-fetch
+     * data read, or UINT32_MAX if that read came from RAM/IO (not ROM); it
+     * is consumed (and cleared) by the next VRAM write so a single ROM read
+     * attributes to at most one VRAM byte and stale offsets can't leak. */
+    bool        watch_vram;
+    const char *vram_log_path;   /* --watch-vram <path>; NULL -> stderr */
+    FILE       *vram_log;
+    uint8_t    *vram_src_kind;   /* rom_size bytes, allocated iff watch_vram */
+    uint32_t    last_data_read;
+    /* A VRAM byte is only credited to its ROM source when the byte written
+     * equals rom[src] — a *verbatim* copy, which is proof the ROM region is
+     * the literal source. "rejected" = a ROM read preceded the write but the
+     * value differs (transformed tile-index, or a coincidental stale read);
+     * "from_ram" = no ROM read preceded it (computed / WRAM->VRAM). Neither
+     * is marked, so map.json only ever gets definite ROM sources. */
+    uint64_t    cpu_tiledata_marked, cpu_tiledata_rejected;
+    uint64_t    cpu_tilemap_marked,  cpu_tilemap_rejected;
+    uint64_t    cpu_vram_from_ram;
+    uint64_t    hdma_from_rom_bytes, hdma_from_ram_bytes;
+
     /* Writer thread */
     pthread_t       writer_thread;
     pthread_mutex_t writer_mtx;
@@ -159,6 +191,12 @@ typedef struct {
 } analyzer_t;
 
 static analyzer_t g;
+
+/* SIGINT/SIGTERM -> request a graceful shutdown so the main loop exits,
+ * the final map.json checkpoint is written, and (with --watch-vram) the
+ * provenance report is emitted. Lets headless/timed runs end cleanly via
+ * `timeout --signal=INT` instead of being killed mid-frame. */
+static void on_signal(int sig) { (void)sig; g.running = 0; }
 
 /* ---------------- Bank/address helpers ---------------- */
 
@@ -230,15 +268,81 @@ static void on_execution(GB_gameboy_t *gb, uint16_t pc, uint8_t opcode) {
  * source reads, etc.). */
 static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
     if (!gb->boot_rom_finished) return data; /* don't analyze the boot stub */
-    if (addr >= 0x8000) return data;          /* outside cart ROM region */
+    if (addr >= 0x8000) {                      /* outside cart ROM region */
+        /* A non-fetch read from RAM/IO/VRAM breaks any ROM->VRAM chain:
+         * the next VRAM write isn't sourced straight from ROM (it's a
+         * WRAM->VRAM copy of decompressed data, a computed value, etc.). */
+        if (g.watch_vram) {
+            GB_registers_t *regs = GB_get_registers(gb);
+            if (addr != (uint16_t)(regs->pc - 1)) g.last_data_read = UINT32_MAX;
+        }
+        return data;
+    }
 
     GB_registers_t *regs = GB_get_registers(gb);
     if (addr == (uint16_t)(regs->pc - 1)) return data; /* fetch read */
 
     uint32_t flat = resolve_rom_addr(addr);
-    if (flat != UINT32_MAX && flat < g.rom_size)
+    if (flat != UINT32_MAX && flat < g.rom_size) {
         mark_data(flat);
+        if (g.watch_vram) g.last_data_read = flat;
+    }
     return data;
+}
+
+/* ---------------- VRAM-write provenance (--watch-vram) ---------------- */
+
+/* A CPU write landed in VRAM ($8000-$9FFF). Attribute it to the ROM byte
+ * most recently read (last_data_read) — but only mark that ROM byte if the
+ * value written is byte-identical to it (a verbatim copy), which is the
+ * "definitely the source" bar. The source is consumed either way so it
+ * can't be credited to a second VRAM byte. */
+static void vram_note_cpu_write(uint16_t addr, uint8_t value) {
+    uint8_t kind = (addr < 0x9800) ? VSRC_TILEDATA : VSRC_TILEMAP;
+    uint32_t src = g.last_data_read;
+    if (src == UINT32_MAX) { g.cpu_vram_from_ram++; return; }
+    g.last_data_read = UINT32_MAX;  /* consume */
+
+    bool verbatim = (src < g.rom_size && g.rom_data[src] == value);
+    if (kind == VSRC_TILEDATA) {
+        if (verbatim) { g.vram_src_kind[src] |= kind; g.cpu_tiledata_marked++; }
+        else            g.cpu_tiledata_rejected++;
+    } else {
+        if (verbatim) { g.vram_src_kind[src] |= kind; g.cpu_tilemap_marked++; }
+        else            g.cpu_tilemap_rejected++;
+    }
+}
+
+/* A GDMA/HDMA transfer was triggered by a write to $FF55. Read the source
+ * ($FF51/52), destination ($FF53/54) and length from the registers and, if
+ * the source is in ROM, mark the whole copied span by destination kind.
+ * A source >= $8000 (WRAM/SRAM) means the data was decompressed/built in
+ * RAM first — the ROM blob feeding it is compressed, so we don't mark it. */
+static void vram_note_hdma(GB_gameboy_t *gb, uint8_t hdma5) {
+    uint16_t src  = ((uint16_t)gb->io_registers[GB_IO_HDMA1] << 8)
+                  | (gb->io_registers[GB_IO_HDMA2] & 0xF0);
+    uint16_t dest = (((uint16_t)(gb->io_registers[GB_IO_HDMA3] & 0x1F)) << 8)
+                  | (gb->io_registers[GB_IO_HDMA4] & 0xF0);   /* VRAM offset */
+    uint32_t len  = ((uint32_t)(hdma5 & 0x7F) + 1) * 0x10;
+
+    fprintf(g.vram_log,
+        "[hdma] src $%04X -> vram $%04X len $%04X bank $%02X%s\n",
+        src, (uint16_t)(0x8000 + dest), len,
+        (unsigned)g.gb.mbc_rom_bank, (hdma5 & 0x80) ? " hblank" : "");
+    fflush(g.vram_log);
+
+    if (src >= 0x8000) { g.hdma_from_ram_bytes += len; return; }
+
+    for (uint32_t i = 0; i < len; i++) {
+        uint16_t s = (uint16_t)(src + i);
+        if (s >= 0x8000) break;          /* ran past the ROM region */
+        uint16_t doff = (uint16_t)((dest + i) & 0x1FFF);
+        uint8_t kind = (doff < 0x1800) ? VSRC_TILEDATA : VSRC_TILEMAP;
+        uint32_t flat = resolve_rom_addr(s);
+        if (flat != UINT32_MAX && flat < g.rom_size)
+            g.vram_src_kind[flat] |= kind;
+    }
+    g.hdma_from_rom_bytes += len;
 }
 
 /* write_memory_callback fires on every CPU write. Used for --watch-write:
@@ -255,8 +359,16 @@ static uint8_t on_read_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
  * were mapped, so the same handler showed up as both "$18:$3ACF" and
  * "$19:$3ACF" in those logs.) */
 static bool on_write_memory(GB_gameboy_t *gb, uint16_t addr, uint8_t data) {
-    if (!g.watch_any) return true;
     if (!gb->boot_rom_finished) return true;
+
+    if (g.watch_vram) {
+        if (addr >= 0x8000 && addr < 0xA000)
+            vram_note_cpu_write(addr, data);
+        else if (addr == (uint16_t)(0xFF00 + GB_IO_HDMA5))
+            vram_note_hdma(gb, data);   /* GDMA or HDMA trigger; same span */
+    }
+
+    if (!g.watch_any) return true;
     if (!g.watch_write[addr]) return true;
     GB_registers_t *regs = GB_get_registers(gb);
     unsigned code_bank = (regs->pc < 0x4000) ? 0u
@@ -700,6 +812,11 @@ static void print_usage(const char *prog) {
         "                      prints the value written and the PC bank:addr.\n"
         "                      Example: --watch-write $D5FF,$D600,$CFF0\n"
         "  --watch-log PATH    Write --watch-write lines to PATH (default stderr).\n"
+        "  --watch-vram [PATH] Trace which ROM regions are copied into VRAM,\n"
+        "                      classifying them as tiledata vs tilemap and as\n"
+        "                      from-ROM (uncompressed) vs from-RAM (decompressed).\n"
+        "                      Logs each HDMA and prints a region report on exit\n"
+        "                      to PATH (default stderr). Does not modify map.json.\n"
         "\n"
         "Controls:\n"
         "  Arrows     D-pad\n"
@@ -752,6 +869,11 @@ static int parse_args(int argc, char **argv) {
             if (parse_watch_list(argv[++i]) != 0) return 1;
         } else if (strcmp(argv[i], "--watch-log") == 0 && i + 1 < argc) {
             g.watch_log_path = argv[++i];
+        } else if (strcmp(argv[i], "--watch-vram") == 0) {
+            g.watch_vram = true;
+            /* Optional path arg: a following token that isn't another flag. */
+            if (i + 1 < argc && argv[i + 1][0] != '-')
+                g.vram_log_path = argv[++i];
         } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
             print_usage(argv[0]);
             return 0;
@@ -765,6 +887,62 @@ static int parse_args(int argc, char **argv) {
         return 1;
     }
     return -1;
+}
+
+/* Coalesce per-byte VRAM-source marks into contiguous same-kind runs and
+ * write a report. Runs shorter than one tile (16 bytes) are noise from the
+ * single-byte CPU heuristic (e.g. a value written to VRAM that happened to
+ * match a stale ROM read) and are summarized, not listed. */
+static const char *vsrc_kind_name(uint8_t k) {
+    switch (k) {
+        case VSRC_TILEDATA:                return "tiledata";
+        case VSRC_TILEMAP:                 return "tilemap";
+        case VSRC_TILEDATA | VSRC_TILEMAP: return "mixed";
+        default:                           return "?";
+    }
+}
+
+static void vram_report(void) {
+    if (!g.watch_vram || !g.vram_src_kind) return;
+    FILE *o = g.vram_log;
+    fprintf(o, "\n[vram] ===== ROM->VRAM provenance report =====\n");
+    fprintf(o, "[vram] CPU verbatim copies (marked): tiledata %llu, tilemap %llu\n",
+        (unsigned long long)g.cpu_tiledata_marked,
+        (unsigned long long)g.cpu_tilemap_marked);
+    fprintf(o, "[vram] CPU rejected (ROM read but value differs — transformed): "
+               "tiledata %llu, tilemap %llu\n",
+        (unsigned long long)g.cpu_tiledata_rejected,
+        (unsigned long long)g.cpu_tilemap_rejected);
+    fprintf(o, "[vram] CPU writes not from ROM (RAM/computed): %llu\n",
+        (unsigned long long)g.cpu_vram_from_ram);
+    fprintf(o, "[vram] HDMA bytes: from ROM %llu, from RAM (decompressed) %llu\n",
+        (unsigned long long)g.hdma_from_rom_bytes,
+        (unsigned long long)g.hdma_from_ram_bytes);
+
+    uint64_t total_marked = 0, listed = 0, noise = 0;
+    uint32_t i = 0, runs = 0;
+    fprintf(o, "[vram] ROM regions feeding VRAM (runs >= 16 bytes):\n");
+    while (i < g.rom_size) {
+        uint8_t k = g.vram_src_kind[i];
+        if (!k) { i++; continue; }
+        uint32_t start = i;
+        while (i < g.rom_size && g.vram_src_kind[i] == k) i++;
+        uint32_t len = i - start;
+        total_marked += len;
+        if (len >= 16) {
+            fprintf(o, "[vram]   0x%06X +0x%-5X (%6u)  %s  bank $%02X\n",
+                start, len, len, vsrc_kind_name(k),
+                (unsigned)(start / 0x4000));
+            listed += len; runs++;
+        } else {
+            noise += len;
+        }
+    }
+    fprintf(o, "[vram] %u runs listed (%llu bytes); %llu bytes in sub-tile "
+               "noise runs; %llu total marked\n",
+        runs, (unsigned long long)listed,
+        (unsigned long long)noise, (unsigned long long)total_marked);
+    fflush(o);
 }
 
 /* ---------------- Main ---------------- */
@@ -845,6 +1023,25 @@ int main(int argc, char **argv) {
         printf("\n");
     }
 
+    if (g.watch_vram) {
+        g.vram_src_kind = calloc(g.rom_size, 1);
+        if (!g.vram_src_kind) { fprintf(stderr, "out of memory\n"); return 1; }
+        g.last_data_read = UINT32_MAX;
+        g.vram_log = stderr;
+        if (g.vram_log_path) {
+            FILE *vf = fopen(g.vram_log_path, "w");
+            if (!vf) {
+                fprintf(stderr, "warning: cannot open %s for vram log (%s); "
+                                "falling back to stderr\n",
+                        g.vram_log_path, strerror(errno));
+            } else {
+                g.vram_log = vf;
+                printf("vram provenance log -> %s\n", g.vram_log_path);
+            }
+        }
+        printf("tracing VRAM-write provenance (--watch-vram)\n");
+    }
+
     g.screen_w = GB_get_screen_width(&g.gb);
     g.screen_h = GB_get_screen_height(&g.gb);
 
@@ -875,6 +1072,8 @@ int main(int argc, char **argv) {
            g.save_interval_sec);
 
     /* Main loop */
+    signal(SIGINT, on_signal);
+    signal(SIGTERM, on_signal);
     g.running = 1;
     uint32_t frame_start = SDL_GetTicks();
     while (g.running) {
@@ -915,6 +1114,8 @@ int main(int argc, char **argv) {
            (unsigned long long)g.total_instructions,
            g.saves_done);
 
+    vram_report();
+
     SDL_DestroyTexture(g.texture);
     SDL_DestroyRenderer(g.renderer);
     SDL_DestroyWindow(g.window);
@@ -924,6 +1125,8 @@ int main(int argc, char **argv) {
     pthread_mutex_destroy(&g.writer_mtx);
     pthread_cond_destroy(&g.writer_cv);
     if (g.watch_log && g.watch_log != stderr) fclose(g.watch_log);
+    if (g.vram_log && g.vram_log != stderr) fclose(g.vram_log);
+    free(g.vram_src_kind);
     free(g.rom_data);
     free(g.rom_map);
     free(g.covered);
