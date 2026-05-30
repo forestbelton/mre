@@ -7323,6 +7323,18 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	15430,
+			"name":	"WriteWindowRow"
+		}, {
+			"addr":	15445,
+			"name":	"DrawTextWindow"
+		}, {
+			"addr":	15938,
+			"name":	"NumberToDecimal3"
+		}, {
+			"addr":	15961,
+			"name":	"DivBySubtraction"
+		}, {
 			"addr":	2659,
 			"name":	"CallLibFuncSaveId"
 		}, {

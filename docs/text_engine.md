@@ -573,3 +573,26 @@ What's missing on the extractor side:
 Once those exist, bank-19 (Nox flashback / Letter from Cox) and the
 unmapped bank-25 scripts can be extracted with their full structure
 preserved.
+
+## Engine labels (map.json)
+
+The HOME-bank engine is now symbolically labeled, so the disassembly reads by
+intent rather than raw `$39xx` addresses:
+
+- Dispatch: `ScriptDispatcherNext` ($39C5), `ScriptOpcodeTable` ($39F0).
+- Opcode handlers: `ScriptOpcode01Handler_InitTextState` … `…11Handler_PrintIndexedString`,
+  plus `ScriptWaitInputCore` ($3A39) and the `$11` `ScriptIndexedStringTable` ($3B75).
+- Glyph path: `PrintCharacterAtCursor` ($3C77) + helpers, `DispatchTextRenderer`
+  ($3CF3, jumps to the `$0E`-configured `wRendererBank`:`wRendererAddr`).
+- Window / number helpers (named while reviewing the subsystem):
+  - `DrawTextWindow` ($3C55) — on message render-start, blits a fixed tilemap
+    (bank $19 `$674b` → VRAM `$9960`) once, guarded by `$D61A`.
+  - `WriteWindowRow` ($3C46) — writes one window row: left tile `c`, then
+    `[$D622]-2` middle tiles `d`, then right tile `e`.
+  - `NumberToDecimal3` ($3E42) — split a byte into 3 decimal digits (hundreds
+    `$D5FD`, tens `wBcdHigh`, units `wBcdLow`) via `DivBySubtraction` ($3E59),
+    divisors 100/10. Backs the `$0F` `[X]` numeric substitution.
+
+Still unnamed (banked, per-context): the `$0E`-configured renderers themselves
+(e.g. bank $19 `$408B`, which draws a window/portrait and sets the render
+config) and the bank-$31 menu/Y-N UI invoked via `$07`.

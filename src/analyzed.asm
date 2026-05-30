@@ -3950,7 +3950,7 @@ ScriptOpcode02Handler_RenderAnchor:
 	ld [wTextCursor], a
 	ld a, h
 	ld [$d617], a
-	call Func_00_3c55
+	call DrawTextWindow
 	pop hl
 	jp ScriptDispatcherNext
 
@@ -4064,7 +4064,7 @@ ScriptOpcode0FHandler_PrintDecimal:
 	push hl
 	ld a, [de]
 	ld c, a
-	call Func_00_3e42
+	call NumberToDecimal3
 	ld a, [wBcdHigh]
 	or a
 	jr z, Func_00_3b31
@@ -4138,43 +4138,43 @@ ScriptOpcode05Helper:
 	ld hl, $d627
 	ld c, $86
 	ld de, $0686
-	call Func_00_3c46
+	call WriteWindowRow
 	ld a, [wTextStateV2]
 	sub $02
 Func_00_3c03:
 	push af
 	ld c, $06
 	ld de, $0606
-	call Func_00_3c46
+	call WriteWindowRow
 	pop af
 	dec a
 	jr nz, Func_00_3c03
 	ld c, $86
 	ld de, $0686
-	call Func_00_3c46
+	call WriteWindowRow
 	ld hl, $d67b
 	ld c, $78
 	ld de, $7e7b
-	call Func_00_3c46
+	call WriteWindowRow
 	ld a, [wTextStateV2]
 	sub $02
 Func_00_3c28:
 	push af
 	ld c, $79
 	ld de, $977c
-	call Func_00_3c46
+	call WriteWindowRow
 	pop af
 	dec a
 	jr nz, Func_00_3c28
 	ld c, $7a
 	ld de, $7f7d
-	call Func_00_3c46
+	call WriteWindowRow
 	pop de
 	ld hl, $d621
 	call CopyBgMap
 	pop hl
 	ret
-Func_00_3c46:
+WriteWindowRow:
 	ld [hl], c
 	inc hl
 	ld a, [$d622]
@@ -4187,7 +4187,7 @@ Func_00_3c4d:
 	ld [hl], e
 	inc hl
 	ret
-Func_00_3c55:
+DrawTextWindow:
 	ld a, [$d61a]
 	or a
 	jr nz, Data_00_3c69
@@ -4403,17 +4403,17 @@ Data_00_3e3e:
 
 SECTION "analyzed_003e42", ROM0[$3e42]
 
-Func_00_3e42:
+NumberToDecimal3:
 	ld hl, $3e68
-	call Func_00_3e59
+	call DivBySubtraction
 	ld [$d5fd], a
 	ld hl, $3e69
-	call Func_00_3e59
+	call DivBySubtraction
 	ld [wBcdHigh], a
 	ld a, c
 	ld [wBcdLow], a
 	ret
-Func_00_3e59:
+DivBySubtraction:
 	ld e, $00
 Func_00_3e5b:
 	ld a, c
@@ -31185,7 +31185,7 @@ Func_1f_58ed:
 	bit 0, a
 	jr z, Func_1f_590b
 	call HideUnusedOamSprites
-	call Func_00_3c55
+	call DrawTextWindow
 	push af
 	ld a, $0d
 	call CallLibFunc
