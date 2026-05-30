@@ -51,6 +51,7 @@ DATA_LIKE_TYPES = {"data", "ascii", "asciz", "gfx"}
 # 8x8 px, each row is two bytes (low bitplane then high bitplane), bit 7 is the
 # leftmost pixel; pixel value = lo_bit | (hi_bit << 1), i.e. an index 0..3.
 GFX_DIR = "gfx"             # subdir under the output dir for PNGs/2bpp
+DATA_DIR = "data"           # subdir for auto gap-fill blobs (keeps src/ tidy)
 GFX_TILE_BYTES = 16
 GFX_DEFAULT_WIDTH = 16      # tiles per PNG row when a section has no `width`
 # Fixed sentinel palette: index i -> these four DISTINCT grays. 2bpp stores
@@ -1657,7 +1658,7 @@ def main(argv: list[str] | None = None) -> int:
     for gap_addr, gap_len in gaps:
         gap_files.append({
             "type": "data",
-            "name": f"data_{gap_addr:06x}.bin",
+            "name": f"{DATA_DIR}/data_{gap_addr:06x}.bin",
             "addr": gap_addr,
             "len": gap_len,
         })

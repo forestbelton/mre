@@ -1,6 +1,7 @@
 rom.gbc
 *.sav
 src/*.bin
+src/data/
 src/gfx/
 assets/*/preview.png
 build/
