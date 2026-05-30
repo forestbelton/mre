@@ -1,6 +1,60 @@
 {
 	"files":	[{
 			"type":	"code",
+			"name":	"script.asm",
+			"sections":	[
+				{
+					"type":	"code",
+					"addr":	14784,
+					"len":	48
+				}, 				{
+					"type":	"data",
+					"addr":	14834,
+					"len":	8
+				}, 				{
+					"type":	"data",
+					"addr":	14844,
+					"len":	22
+				}, 				{
+					"type":	"code",
+					"addr":	14868,
+					"len":	58
+				}, 				{
+					"type":	"code",
+					"addr":	14929,
+					"len":	66
+				}, 				{
+					"type":	"code",
+					"addr":	15009,
+					"len":	178
+				}, 				{
+					"type":	"code",
+					"addr":	15277,
+					"len":	188
+				}, 				{
+					"type":	"code",
+					"addr":	15479,
+					"len":	33
+				}, 				{
+					"type":	"code",
+					"addr":	15523,
+					"len":	7
+				}, 				{
+					"type":	"code",
+					"addr":	15533,
+					"len":	34
+				}, 				{
+					"type":	"code",
+					"addr":	15571,
+					"len":	30
+				}, 				{
+					"type":	"code",
+					"addr":	15603,
+					"len":	29
+				}
+			]
+		}, {
+			"type":	"code",
 			"name":	"tecmo_logo.asm",
 			"sections":	[{
 					"type":	"data",
