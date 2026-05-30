@@ -62,6 +62,11 @@ enum {
 #define VSRC_TILEMAP  0x02   /* copied to VRAM tilemap  ($9800-$9FFF) */
 #define VSRC_PALETTE  0x04   /* copied to CGB palette RAM ($FF69/$FF6B)  */
 
+/* A tiledata run must be at least this many bytes (and a whole number of
+ * 16-byte tiles) to be promoted from `data` to a `gfx` section; shorter
+ * verbatim runs stay `data` to avoid one-tile section clutter. */
+#define GFX_MIN_BYTES 0x40
+
 /* Minimal CGB boot stub.
  *
  * SameBoy requires a boot ROM to be loaded — without one, gb->boot_rom is
@@ -124,6 +129,12 @@ typedef struct {
      * map (CODE -> CONFLICT -> emitted as data, breaking the
      * disassembly into 1-byte slivers). */
     uint8_t  *insn_byte;
+    /* is_gfx[i] = 1 if byte i is verbatim tiledata pixel data (from this
+     * session's --watch-vram trace OR a `gfx` section loaded from map.json).
+     * Persistent and independent of watch_vram so the classification sticks
+     * across sessions; build_analyzed_entry promotes these DATA bytes to
+     * `gfx` sections. */
+    uint8_t  *is_gfx;
 
     /* SameBoy instance + framebuffer big enough for SGB border. */
     GB_gameboy_t gb;
@@ -329,6 +340,7 @@ static void vram_note_cpu_write(uint16_t addr, uint8_t value) {
     if (kind == VSRC_TILEDATA) {
         if (verbatim) {
             g.vram_src_kind[src] |= kind; g.cpu_tiledata_marked++;
+            g.is_gfx[src] = 1;
             uint32_t voff = (uint32_t)(addr - 0x8000)
                           + (g.gb.cgb_vram_bank ? 0x2000 : 0);
             g.vram_byte_src[voff] = src;   /* remember slot's ROM source */
@@ -385,6 +397,7 @@ static void vram_note_hdma(GB_gameboy_t *gb, uint8_t hdma5) {
         if (flat != UINT32_MAX && flat < g.rom_size) {
             g.vram_src_kind[flat] |= kind;
             if (kind == VSRC_TILEDATA) {
+                g.is_gfx[flat] = 1;
                 uint32_t voff = doff + (g.gb.cgb_vram_bank ? 0x2000 : 0);
                 g.vram_byte_src[voff] = flat;
             }
@@ -693,14 +706,17 @@ static void load_prior_rom_map(cJSON *root) {
                 if (!cJSON_IsString(jt) || !cJSON_IsNumber(ja) || !cJSON_IsNumber(jl))
                     continue;
                 uint8_t kind;
+                bool gfx = false;
                 if (strcmp(jt->valuestring, "code") == 0)      kind = REGION_CODE;
                 else if (strcmp(jt->valuestring, "data") == 0) kind = REGION_DATA;
+                else if (strcmp(jt->valuestring, "gfx") == 0) { kind = REGION_DATA; gfx = true; }
                 else continue;
                 uint32_t a = (uint32_t)ja->valuedouble;
                 uint32_t l = (uint32_t)jl->valuedouble;
                 for (uint32_t i = 0; i < l && (a + i) < g.rom_size; i++) {
                     if (g.covered[a + i]) continue;
                     g.rom_map[a + i] = kind;
+                    if (gfx) g.is_gfx[a + i] = 1;   /* persist gfx classification */
                     if (kind == REGION_CODE) code_n++; else data_n++;
                 }
             }
@@ -748,6 +764,24 @@ static const char *section_kind(uint8_t v) {
     }
 }
 
+static void add_section(cJSON *sections, const char *type,
+                        uint32_t start, uint32_t len) {
+    cJSON *sec = cJSON_CreateObject();
+    cJSON_AddStringToObject(sec, "type", type);
+    cJSON_AddNumberToObject(sec, "addr", (double)start);
+    cJSON_AddNumberToObject(sec, "len",  (double)len);
+    cJSON_AddItemToArray(sections, sec);
+}
+
+/* Emit-time kind for byte i: like section_kind(), but a DATA byte that the
+ * VRAM trace proved is verbatim tiledata becomes "gfx". Code/conflict win
+ * over gfx (an executed byte is code, full stop). */
+static const char *effective_kind(uint32_t i, const uint8_t *snapshot) {
+    const char *k = section_kind(snapshot[i]);
+    if (k && snapshot[i] == REGION_DATA && g.is_gfx[i]) return "gfx";
+    return k;
+}
+
 static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
     cJSON *entry = cJSON_CreateObject();
     cJSON_AddStringToObject(entry, "type", "code");
@@ -757,7 +791,7 @@ static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
     uint32_t i = 0;
     while (i < g.rom_size) {
         if (g.covered[i]) { i++; continue; }
-        const char *kind = section_kind(snapshot[i]);
+        const char *kind = effective_kind(i, snapshot);
         if (!kind) { i++; continue; }
         uint32_t start = i;
         while (i < g.rom_size && !g.covered[i]) {
@@ -765,15 +799,25 @@ static cJSON *build_analyzed_entry(const uint8_t *snapshot) {
              * rgbasm SECTION must live in a single bank, so a run that
              * would cross from bank N into bank N+1 has to be split. */
             if (i > start && (i & 0x3FFF) == 0) break;
-            const char *k = section_kind(snapshot[i]);
+            const char *k = effective_kind(i, snapshot);
             if (!k || strcmp(k, kind) != 0) break;
             i++;
         }
-        cJSON *sec = cJSON_CreateObject();
-        cJSON_AddStringToObject(sec, "type", kind);
-        cJSON_AddNumberToObject(sec, "addr", (double)start);
-        cJSON_AddNumberToObject(sec, "len",  (double)(i - start));
-        cJSON_AddItemToArray(sections, sec);
+        uint32_t len = i - start;
+        if (strcmp(kind, "gfx") == 0) {
+            /* gfx must be whole 16-byte tiles and large enough to be worth
+             * it; emit the tile-aligned head as gfx and any leftover as
+             * data, or keep the whole run as data if it's too small. */
+            uint32_t tiles = len & ~(uint32_t)0xF;
+            if (tiles >= GFX_MIN_BYTES) {
+                add_section(sections, "gfx", start, tiles);
+                if (len > tiles)
+                    add_section(sections, "data", start + tiles, len - tiles);
+                continue;
+            }
+            kind = "data";
+        }
+        add_section(sections, kind, start, len);
     }
     return entry;
 }
@@ -1123,7 +1167,8 @@ int main(int argc, char **argv) {
     g.rom_map   = calloc(g.rom_size, 1);
     g.covered   = calloc(g.rom_size, 1);
     g.insn_byte = calloc(g.rom_size, 1);
-    if (!g.rom_map || !g.covered || !g.insn_byte) {
+    g.is_gfx    = calloc(g.rom_size, 1);
+    if (!g.rom_map || !g.covered || !g.insn_byte || !g.is_gfx) {
         fprintf(stderr, "out of memory\n");
         return 1;
     }
@@ -1304,6 +1349,7 @@ int main(int argc, char **argv) {
     free(g.rom_map);
     free(g.covered);
     free(g.insn_byte);
+    free(g.is_gfx);
     free(g.battery_path);
     return 0;
 }

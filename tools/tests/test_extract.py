@@ -765,6 +765,27 @@ class TestPaddingSections(unittest.TestCase):
         self.assertIn("$000250", str(ctx.exception))
         self.assertIn("$42", str(ctx.exception))
 
+    def test_gfx_type_accepted_by_validate_map(self):
+        # The analyzer promotes verbatim tiledata runs to `gfx`; the
+        # extractor must accept the type.
+        extract.validate_map({"files": [
+            {"type": "code", "name": "g.asm", "sections": [
+                {"type": "gfx", "addr": 0x4000, "len": 0x40, "label": "G"}
+            ]}
+        ]}, rom_size=0x8000)
+
+    def test_gfx_subsection_emits_db_bytes(self):
+        # For now gfx is coverage-equivalent to data: emitted as `db` so the
+        # build round-trips byte-exact (PNG rendering comes later).
+        rom = bytes(0x4000) + bytes(range(16)) + bytes(0x4000)
+        lines = extract._build_section_lines(
+            {"type": "gfx", "addr": 0x4000, "len": 16},
+            "gfx_004000", "analyzed.asm", rom, labels={}, hw_symbols={},
+        )
+        body = "\n".join(lines)
+        self.assertIn("db $00, $01, $02, $03", body)
+        self.assertIn("$0f", body)
+
     def test_validate_padding_ignores_non_padding(self):
         # A code or data section with non-zero bytes is fine; only padding
         # sections trigger the zero-check.

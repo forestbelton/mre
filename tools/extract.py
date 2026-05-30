@@ -37,8 +37,12 @@ WRAM_INC     = "wram.inc"
 #   - "data"  : treat as a span of bytes; labels at any byte position.
 # `ascii` and `asciz` are emitted as RGBASM string literals but are
 # coverage-equivalent to `data` (any byte is a valid label position).
-SECTION_TYPES = {"code", "data", "ascii", "asciz", "padding"}
-DATA_LIKE_TYPES = {"data", "ascii", "asciz"}
+# `gfx` marks 2bpp tile pixel data identified by the analyzer's VRAM-write
+# provenance (--watch-vram). It is coverage-equivalent to `data` and, for
+# now, emitted as `db` bytes too; a later stage renders it to a PNG and
+# INCBINs an rgbgfx-built .2bpp instead.
+SECTION_TYPES = {"code", "data", "ascii", "asciz", "padding", "gfx"}
+DATA_LIKE_TYPES = {"data", "ascii", "asciz", "gfx"}
 
 
 def section_coverage_kind(stype: str) -> str:

@@ -61,14 +61,19 @@ use a copy: `cp map.json /tmp/m.json` and `--map /tmp/m.json --no-save`. Always
 
 ## Next steps (Stage 2 + 3)
 
-**Stage 2 — fold the runs into map.json as `gfx` sections.**
-- Decision pending (ask user): have the analyzer write `gfx` regions directly,
-  or keep `--watch-vram` report-only and add a separate tool that ingests the
-  report after review. Leaning report-only for tilemaps (lower confidence),
-  auto for large verbatim tiledata runs.
-- A `gfx` section needs: `type:"gfx"`, `addr`, `len` (multiple of 16), `label`,
-  and a `width` (tiles/row, default 16). len should be width*16*rows; if not, we
-  pad the PNG and slice on INCBIN (below).
+**Stage 2 — fold the runs into map.json as `gfx` sections. DONE.**
+- The analyzer auto-promotes contiguous **verbatim tiledata** runs (whole
+  16-byte tiles, >= `GFX_MIN_BYTES` = 0x40) to `type:"gfx"` sections in the
+  `analyzed.asm` entry on every map.json save. Tilemaps/other stay `data`
+  (report-only), per the agreed confidence split.
+- Persistence: a `gfx` byte is tracked in `is_gfx[]`, set both from the live
+  trace and when **loading** existing `gfx` sections from map.json, so the
+  classification survives later `analyze` runs that don't use `--watch-vram`.
+- `extract.py` accepts `gfx` (coverage = data) and currently emits it as `db`
+  bytes, so `make verify` stays byte-exact. Verified end-to-end: trace →
+  gfx sections in map → extract → assemble → identical sha256.
+- A `gfx` section may later gain an optional `width` (tiles/row, default 16)
+  for the PNG arrangement; len is already a multiple of 16.
 - Coalescing note: adjacent runs separated by tiny gaps may be one image split
   by partial draws; merging heuristics may help. Runs are bank-local already.
 
