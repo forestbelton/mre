@@ -1,0 +1,16 @@
+{
+  "asset": "tecmo_logo",
+  "bank": 39,
+  "rows": 18,
+  "cols": 20,
+  "tiles_count": 128,
+  "palette_count": 1,
+  "index_base": 0,
+  "tiles_addr": 643072,
+  "palette_addr": 645120,
+  "desc_addr": 645128,
+  "attr_ptr": 22902,
+  "idx_ptr": 22542,
+  "attr_addr": 645494,
+  "idx_addr": 645134
+}
