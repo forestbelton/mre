@@ -6123,11 +6123,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x7b3d8",
-					"len":	"0xf"
-				}, {
-					"type":	"data",
-					"addr":	"0x7b3e7",
-					"len":	"0x30"
+					"len":	"0x3f"
 				}, {
 					"type":	"data",
 					"addr":	"0x7b427",
@@ -6519,11 +6515,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x9aff8",
-					"len":	"0x8"
-				}, {
-					"type":	"data",
-					"addr":	"0x9b000",
-					"len":	"0x692"
+					"len":	"0x69a"
 				}, {
 					"type":	"data",
 					"addr":	"0x9b694",

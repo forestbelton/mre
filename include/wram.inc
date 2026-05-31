@@ -19,6 +19,15 @@
 DEF WRAM_INC EQU 1
 
 
+SECTION "wram_floor", WRAM0[$C2C0]
+
+wActiveFloor::      ds 1    ; $C2C0: active tower floor (1-60). Copied from wCFF0 and
+                            ;   capped at $3C(=60). Indexes per-floor tables — tile-gfx
+                            ;   pointers at $3D:$406F/$4079/$4083 — and drives the HUD
+                            ;   floor digits ($0F:$47A2, split via ÷10). Distinct from
+                            ;   wCurrentFloor ($CFF2) and the source wCFF0.
+
+
 SECTION "wram_story_flags", WRAM0[$C2D7]
 ; (story flags are in the always-mapped $C000-$CFFF region)
 

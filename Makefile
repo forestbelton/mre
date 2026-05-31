@@ -95,7 +95,7 @@ $(OUT): $(EXTRACT_STAMP) $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
 
 extract: $(EXTRACT_STAMP)
 
-$(EXTRACT_STAMP): $(EXTRACTOR) $(MAP) $(ROM) | $(BUILD_DIR)
+$(EXTRACT_STAMP): $(EXTRACTOR) $(MAP) $(ROM) $(INCLUDES) | $(BUILD_DIR)
 	$(PYTHON) $(EXTRACTOR) --rom $(ROM) --map $(MAP) --output $(SRC_DIR)/ > /dev/null
 	@touch $@
 
