@@ -62,7 +62,8 @@ The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader u
 post-load routines (`Func_05_49EF`, `Func_01_572D`) finish entity setup.
 
 ### Collision grid cells
-`$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = object cell.
+`$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = **crate**
+(breakable; an open item on a `$22` cell is "in a crate").
 
 ### Piece grid cells
 `$00` = floor. `≥$40` = an object, classified by `DrawFloorPiece` (`$17DE`) on the
@@ -81,7 +82,13 @@ bits: bit 7 → item, bit 6 → exit. Known codes:
 For items (bit 7 set), the low 6 bits are the base id and **bit 6 = placement**:
 set (`$cx-$fx`) = placed in the open, clear (`$8x-$bx`) = crate-hidden (revealed by
 destroying a crate). E.g. COIN_GOLD is `$d3` open / `$93` hidden — confirmed in-game
-(`$8e` = hidden DIAMOND_BLUE = `$ce` with bit 6 clear). KEY_SILVER (`$c1`)
+(`$8e` = hidden DIAMOND_BLUE = `$ce` with bit 6 clear).
+
+An item has **three placement states**, split across both grids: *visible* (bit 6
+set, collision `$00`), *in-crate* (bit 6 set, collision `$22`), *hidden* (bit 6
+clear, collision `$00`). The same item code can be visible or in-crate depending
+only on its collision cell (e.g. `$ce` DIAMOND_BLUE is visible on floor 5, in a
+crate on floor 3). KEY_SILVER (`$c1`)
 is open-coded but gated by progression (the first silver key must be taken at the
 tower top), not by the hidden bit. `$4x` = structural (`$40` EXIT, `$43` obstruction).
 Named codes live in `include/items.inc`; many remain unidentified.
@@ -99,7 +106,8 @@ neighbours (`Func_01_5BA8`/`5BE2`).
 
 Sprite pixel position is `col*16 − 8`, `row*16 − 8`. The displayed **species** is
 selected by **`arr1[gfxIndex]`** (the per-floor sprite/species table) — observed
-`$00` = Tacopi (Octopee), `$01` = Jell, `$05` = Henger, `$07` = Ghost, `$08` = Puncho. The `+2` "type" byte is *not* the species
+`$00` = Tacopi (Octopee), `$01` = Jell, `$03` = Dino, `$05` = Henger, `$07` = Ghost,
+`$08` = Puncho. The `+2` "type" byte is *not* the species
 (a per-instance attribute: floor 1's Jell is `$22`, floor 2's Jell is `$21`).
 Items, by contrast, are baked into the piece grid, so a floor's dynamic content is
 piece-grid items + `arr2` monsters.
