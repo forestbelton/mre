@@ -8223,6 +8223,24 @@
 				}]
 		}],
 	"labels":	[{
+			"addr":	"0x12fa",
+			"name":	"FloorPieceDefs"
+		}, {
+			"addr":	"0x1567",
+			"name":	"FloorBankTable"
+		}, {
+			"addr":	"0x15bf",
+			"name":	"FloorPtrTable"
+		}, {
+			"addr":	"0x16ea",
+			"name":	"LoadFloorData"
+		}, {
+			"addr":	"0x17a2",
+			"name":	"GetFloorIndex"
+		}, {
+			"addr":	"0x17de",
+			"name":	"DrawFloorPiece"
+		}, {
 			"addr":	"0x3942",
 			"name":	"CopyBgMapBankedA"
 		}, {

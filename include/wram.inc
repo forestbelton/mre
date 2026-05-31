@@ -34,6 +34,19 @@ SECTION "wram_story_flags", WRAM0[$C2D7]
 wC2D7::             ds 1    ; story flag read by Naji's entry cascade
 
 
+SECTION "wram_floor_grid", WRAM0[$C2EC]
+; The active floor's layout, expanded from its per-floor record by LoadFloorData
+; ($00:$16EA) — selected via FloorBankTable ($1567) + FloorPtrTable ($15BF). The
+; record's header gives width/height; two parallel 17-wide grids follow.
+
+wFloorWidth::       ds 1    ; $C2EC: floor width in cells (<= 17)
+wFloorHeight::      ds 1    ; $C2ED: floor height in cells (<= 14)
+wFloorRowStride::   ds 1    ; $C2EE: $11 - width (grid rows are 17 cells apart)
+wFloorCollision::   ds 238  ; $C2EF: 17x14 collision/attribute grid
+wFloorGrid::        ds 238  ; $C3DD: 17x14 piece-ID grid (the floor layout; rendered
+                            ;   via DrawFloorPiece + FloorPieceDefs at $12FA)
+
+
 SECTION "wram_floor_state", WRAM0[$CFF0]
 
 wCFF0::             ds 1    ; tower progress; gates Naji's Restart + Ask render

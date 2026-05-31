@@ -326,6 +326,12 @@ def decode(
             if q == 0:
                 nn = imm16()
                 if nn is None: return (f"db ${op:02x}", 1)
+                # Resolve WRAM-range immediates (pointer loads like `ld hl, wFloorGrid`)
+                # to their wram.inc symbol. fmt_target only substitutes addresses that
+                # are actually defined, so undefined WRAM and all ROM/constant
+                # immediates stay raw — avoids mislabeling counts/offsets, byte-exact.
+                if 0xC000 <= nn < 0xE000:
+                    return (f"ld {R16_SP[p]}, {fmt_target('data', nn)}", 3)
                 return (f"ld {R16_SP[p]}, ${nn:04x}", 3)
             return (f"add hl, {R16_SP[p]}", 1)
 

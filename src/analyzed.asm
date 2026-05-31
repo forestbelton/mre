@@ -1822,7 +1822,7 @@ Func_00_101b:
 	add a, c
 	ld c, a
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld a, [hl]
 	ret
@@ -1835,7 +1835,7 @@ Func_00_102b:
 	add a, c
 	ld c, a
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld a, [hl]
 	pop hl
@@ -1849,7 +1849,7 @@ Func_00_103d:
 	add a, c
 	ld c, a
 	ld b, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	ld a, [hl]
 	pop hl
@@ -2302,7 +2302,7 @@ Func_00_12f0:
 
 SECTION "analyzed_0012fa", ROM0[$12fa]
 
-Data_00_12fa:
+FloorPieceDefs:
 	db $00, $76, $0b, $7d, $0b, $21, $00, $02, $50, $02, $22, $06, $01, $56, $01, $23
 	db $10, $01
 
@@ -2771,7 +2771,7 @@ Data_00_152a:
 
 SECTION "analyzed_001567", ROM0[$1567]
 
-Data_00_1567:
+FloorBankTable:
 	db $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d
 	db $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2d, $2e, $2e, $2e, $2e, $2e
 	db $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e, $2e
@@ -2799,7 +2799,7 @@ Data_00_15bc:
 
 SECTION "analyzed_0015bf", ROM0[$15bf]
 
-Data_00_15bf:
+FloorPtrTable:
 	db $00, $40, $45, $42, $8a, $44, $cf, $46, $14, $49, $59, $4b, $9e, $4d, $e3, $4f
 	db $28, $52, $6d, $54, $b2, $56, $f7, $58, $3c, $5b, $81, $5d, $c6, $5f, $0b, $62
 	db $50, $64, $95, $66, $da, $68, $1f, $6b, $64, $6d, $a9, $6f, $ee, $71, $33, $74
@@ -2887,12 +2887,12 @@ Func_00_16d9:
 	jr Func_00_16ed
 Func_00_16e2:
 	cp $05
-	jr nz, Func_00_16ea
+	jr nz, LoadFloorData
 
 SECTION "analyzed_0016ea", ROM0[$16ea]
 
-Func_00_16ea:
-	call Func_00_17a2
+LoadFloorData:
+	call GetFloorIndex
 Func_00_16ed:
 	ld d, a
 	ld hl, $1567
@@ -2921,34 +2921,34 @@ Func_00_16ed:
 	ld a, [hl+]
 	ld [$c4cb], a
 	ld a, [hl+]
-	ld [$c2ed], a
+	ld [wFloorHeight], a
 	ld a, [hl+]
-	ld [$c2ec], a
+	ld [wFloorWidth], a
 	ld c, a
 	ld a, $11
 	sub c
-	ld [$c2ee], a
+	ld [wFloorRowStride], a
 	ld d, h
 	ld e, l
-	ld hl, $c2ef
-	ld a, [$c2ed]
+	ld hl, wFloorCollision
+	ld a, [wFloorHeight]
 	ld b, a
 Func_00_1733:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	call CopyDEtoHL
-	ld a, [$c2ee]
+	ld a, [wFloorRowStride]
 	rst $00
 	dec b
 	jr nz, Func_00_1733
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_00_1748:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	call CopyDEtoHL
-	ld a, [$c2ee]
+	ld a, [wFloorRowStride]
 	rst $00
 	dec b
 	jr nz, Func_00_1748
@@ -2988,7 +2988,7 @@ Data_00_178c:
 
 SECTION "analyzed_0017a2", ROM0[$17a2]
 
-Func_00_17a2:
+GetFloorIndex:
 	ld a, [$c2c2]
 	or a
 	jr nz, Data_00_17bd
@@ -3033,7 +3033,7 @@ Func_00_17d9:
 
 SECTION "analyzed_0017de", ROM0[$17de]
 
-Func_00_17de:
+DrawFloorPiece:
 	ld h, a
 	ld de, $12fa
 	bit 7, a
@@ -3111,11 +3111,11 @@ Func_00_1848:
 	add a, c
 	ld c, a
 	ld b, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	ld a, [hl]
 	ldh [$ffac], a
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld a, [hl]
 	ldh [$ffab], a
@@ -3939,7 +3939,7 @@ Func_00_39ad:
 	ld a, $00
 	ld [$d60e], a
 	ld [$d60f], a
-	ld hl, $d0dc
+	ld hl, wRanchProgress
 	ld c, $0b
 	xor a
 Func_00_39bb:
@@ -5682,20 +5682,20 @@ Func_01_4d95:
 	add a, c
 	ld e, a
 	ld d, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, de
 	pop af
 	ld [hl], a
 	push af
 	push hl
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, de
 	ld a, [hl]
 	pop hl
 	or a
 	jr nz, Func_01_4db6
 	pop af
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_4db6:
 	pop af
@@ -5713,14 +5713,14 @@ Func_01_4dbe:
 	add a, c
 	ld e, a
 	ld d, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, de
 	ld a, [hl]
 	or a
 	jr nz, Func_01_4dd7
 	pop af
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_4dd7:
 	pop af
@@ -6659,12 +6659,12 @@ Func_01_5676:
 	jr z, Func_01_5699
 	ldh [$ffaa], a
 	ld a, c
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	rst $00
 	xor a
 	ld [hl], a
 	pop bc
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5699:
 	pop bc
@@ -6673,11 +6673,11 @@ Func_01_569b:
 	ld a, [$c2d5]
 	bit 1, a
 	ret z
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_01_56a8:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_01_56ad:
@@ -6708,11 +6708,11 @@ Func_01_56c5:
 SECTION "analyzed_0056d5", ROMX[$56d5], BANK[$01]
 
 Func_01_56d5:
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_01_56dc:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_01_56e1:
@@ -6738,11 +6738,11 @@ Func_01_56fb:
 	ld a, [$c2d5]
 	bit 0, a
 	ret nz
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_01_5708:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_01_570d:
@@ -6792,15 +6792,15 @@ Func_01_5749:
 	xor a
 	ld [$cf8e], a
 	ld de, $cf91
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	xor a
 	ld [$cf90], a
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	ld b, a
 Func_01_575b:
 	xor a
 	ld [$cf8f], a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_01_5764:
@@ -7300,7 +7300,7 @@ Func_01_5ba8:
 	and $f0
 	add a, b
 	add a, c
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	rst $00
 	pop bc
 	pop af
@@ -7308,19 +7308,19 @@ Func_01_5ba8:
 	jr nz, Func_01_5bc6
 	ld a, $40
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5bc6:
 	cp $01
 	jr nz, Func_01_5bd1
 	ld a, $44
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5bd1:
 	ld a, $41
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5bd8:
 	push af
@@ -7340,7 +7340,7 @@ Func_01_5be2:
 	and $f0
 	add a, b
 	add a, c
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	rst $00
 	pop bc
 	pop af
@@ -7354,27 +7354,27 @@ Func_01_5be2:
 	jr z, Func_01_5c21
 	ld a, $48
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5c0c:
 	ld a, $49
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5c13:
 	ld a, $4a
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5c1a:
 	ld a, $4b
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5c21:
 	ld a, $00
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_01_5c28:
 	ld a, [$c2c1]
@@ -12701,10 +12701,10 @@ Func_03_44f1:
 	jr nz, Func_03_4519
 Func_03_44fd:
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld [hl], $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	pop bc
 	ld a, [hl]
@@ -12713,7 +12713,7 @@ Func_03_44fd:
 	call Func_00_11dc
 	ld [hl], a
 Func_03_4513:
-	call Func_00_17de
+	call DrawFloorPiece
 	ld a, $01
 	ret
 Func_03_4519:
@@ -12737,12 +12737,12 @@ Func_03_4530:
 	ret
 Func_03_4534:
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld a, $23
 	ld [hl], a
 	pop bc
-	call Func_00_17de
+	call DrawFloorPiece
 	ld a, $01
 	ret
 Func_03_4544:
@@ -12758,10 +12758,10 @@ Func_03_4544:
 	cp $80
 	jr z, Func_03_4530
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld [hl], $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	pop bc
 	ld a, [hl]
@@ -12770,7 +12770,7 @@ Func_03_4544:
 	call Func_00_11dc
 	ld [hl], a
 Func_03_456f:
-	call Func_00_17de
+	call DrawFloorPiece
 	ld a, $00
 	ret
 Func_03_4575:
@@ -18905,17 +18905,17 @@ Func_04_4157:
 	bit 6, a
 	jr nz, Data_04_418f
 	ld a, c
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	rst $00
 	ld [hl], $22
 	pop bc
 	ret
 Func_04_4175:
 	ld b, $00
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	add hl, bc
 	ld [hl], $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	pop bc
 	ld a, [hl]
@@ -18924,7 +18924,7 @@ Func_04_4175:
 	call Func_00_11dc
 	ld [hl], a
 Func_04_418b:
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 
 SECTION "analyzed_010191", ROMX[$4191], BANK[$04]
@@ -18935,7 +18935,7 @@ Func_04_4191:
 	pop bc
 	cp $22
 	ret nz
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_04_419d:
 	ld b, $00
@@ -19037,11 +19037,11 @@ Func_04_4247:
 	add a, c
 	ld e, a
 	ld d, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, de
 	pop af
 	ld [hl], a
-	call Func_00_17de
+	call DrawFloorPiece
 	ret
 Func_04_425c:
 	xor a
@@ -22666,22 +22666,22 @@ Func_05_4931:
 	ld a, [wActiveFloor]
 	cp $04
 	jr nz, Func_05_4956
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	sub $0a
 	swap a
 	ld [$c55b], a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	sub $0b
 	swap a
 	sub $08
 	ld [$c55a], a
 	ret
 Func_05_4956:
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	sub $0a
 	swap a
 	ld [$c55b], a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	sub $0b
 	swap a
 	ld [$c55a], a
@@ -22690,11 +22690,11 @@ Func_05_496b:
 	ld a, [$c2e8]
 	or a
 	ret nz
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_05_4977:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_05_497c:
@@ -22724,11 +22724,11 @@ Func_05_499d:
 	ld a, [$c2aa]
 	or a
 	ret nz
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_05_49a9:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_05_49ae:
@@ -22752,11 +22752,11 @@ Func_05_49bb:
 	jr nz, Func_05_49a9
 	ret
 Func_05_49c8:
-	ld hl, $c3dd
-	ld a, [$c2ed]
+	ld hl, wFloorGrid
+	ld a, [wFloorHeight]
 	ld b, a
 Func_05_49cf:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	ld c, a
 	push hl
 Func_05_49d4:
@@ -25194,14 +25194,14 @@ Func_12_4026:
 	ret
 Func_12_402c:
 	ld bc, $0100
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	ld a, $11
 	rst $00
 Func_12_4035:
 	xor a
 	cp c
 	jr z, Func_12_4042
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	cp c
 	jr z, Func_12_4046
@@ -25213,10 +25213,10 @@ Func_12_4042:
 Func_12_4046:
 	ld c, $00
 	inc b
-	ld a, [$c2ee]
+	ld a, [wFloorRowStride]
 	inc a
 	rst $00
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	dec a
 	cp b
 	jr z, Func_12_406e
@@ -25232,7 +25232,7 @@ Func_12_4057:
 	ld a, [hl]
 	bit 7, a
 	jr z, Func_12_4068
-	call Func_00_17de
+	call DrawFloorPiece
 Func_12_4068:
 	pop hl
 	pop bc
@@ -25257,7 +25257,7 @@ SECTION "analyzed_0480a6", ROMX[$40a6], BANK[$12]
 Func_12_40a6:
 	xor a
 	ldh [rVBK], a
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	dec a
 	add a, a
 	dec a
@@ -25293,7 +25293,7 @@ Func_12_40b6:
 	dec e
 	jr Func_12_40b6
 Func_12_40ec:
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	add a, a
 	dec a
@@ -25323,7 +25323,7 @@ Func_12_4120:
 	ld a, [$d0e7]
 	dec a
 	ld e, a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	add a, a
 	dec a
@@ -25381,7 +25381,7 @@ Func_12_4180:
 	ld a, [$d0e7]
 	dec a
 	ld e, a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	add a, a
 	dec a
@@ -25397,14 +25397,14 @@ Func_12_419a:
 	jr nz, Func_12_419a
 	ret
 	ld bc, $0100
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	ld a, $11
 	rst $00
 Func_12_41b2:
 	xor a
 	cp c
 	jr z, Func_12_41bf
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	cp c
 	jr z, Func_12_41c3
@@ -25416,10 +25416,10 @@ Func_12_41bf:
 Func_12_41c3:
 	ld c, $00
 	inc b
-	ld a, [$c2ee]
+	ld a, [wFloorRowStride]
 	inc a
 	rst $00
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	dec a
 	cp b
 	jr z, Func_12_41e8
@@ -25432,7 +25432,7 @@ Func_12_41d4:
 	jr z, Func_12_41df
 	ld a, $00
 Func_12_41df:
-	call Func_00_17de
+	call DrawFloorPiece
 	pop hl
 	pop bc
 	inc c
@@ -25539,7 +25539,7 @@ Func_12_47e5:
 	ret z
 	cp $06
 	ret z
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	cp $11
 	jr z, Func_12_4804
 	ld a, $44
@@ -25556,14 +25556,14 @@ Func_12_480e:
 	call Func_12_4941
 	call Func_00_2e84
 	ld bc, $0100
-	ld hl, $c2ef
+	ld hl, wFloorCollision
 	ld a, $11
 	rst $00
 Func_12_481d:
 	xor a
 	cp c
 	jr z, Func_12_482a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	cp c
 	jr z, Func_12_482e
@@ -25575,10 +25575,10 @@ Func_12_482a:
 Func_12_482e:
 	ld c, $00
 	inc b
-	ld a, [$c2ee]
+	ld a, [wFloorRowStride]
 	inc a
 	rst $00
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	dec a
 	cp b
 	jr z, Func_12_484d
@@ -25599,7 +25599,7 @@ Func_12_484e:
 	ld hl, $18ce
 	ld bc, $0000
 	call DrawMetasprite
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	cp $11
 	jr z, Func_12_4863
 	ld de, $2028
@@ -25761,7 +25761,7 @@ Func_12_4941:
 	ld h, a
 	inc hl
 	push hl
-	ld a, [$c2ed]
+	ld a, [wFloorHeight]
 	dec a
 	dec a
 	ld e, a
@@ -25792,7 +25792,7 @@ Func_12_4958:
 	ldh [rVBK], a
 	ld a, b
 	ld [hl+], a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	dec a
 	ld e, a
@@ -25818,7 +25818,7 @@ Func_12_4985:
 	ld [hl+], a
 	ld a, [$d0e7]
 	ld e, a
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	dec a
 	pop hl
 	rst $00
@@ -27924,7 +27924,7 @@ Func_17_40e8:
 	add a, c
 	ld c, a
 	ld b, $00
-	ld hl, $c3dd
+	ld hl, wFloorGrid
 	add hl, bc
 	ld d, $04
 	ld e, $30
@@ -30442,7 +30442,7 @@ Func_1f_590b:
 	ld a, [$ff8c]
 	and $c0
 	jr z, Func_1f_5921
-	ld hl, $d5fe
+	ld hl, wYNResult
 	ld a, [hl]
 	inc a
 	and $01
@@ -30496,7 +30496,7 @@ Func_1f_596d:
 	pop af
 	ret
 Func_1f_5985:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $59cd
@@ -30567,7 +30567,7 @@ Func_1f_59e0:
 	pop af
 	ret
 Func_1f_5a08:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0100
 	call Func_1f_5855
 	ld hl, $5a50
@@ -30655,7 +30655,7 @@ Func_1f_5ac9:
 	pop af
 	ret
 Func_1f_5af1:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5b39
@@ -30726,7 +30726,7 @@ Func_1f_5b4f:
 	pop af
 	ret
 Func_1f_5b77:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0300
 	call Func_1f_5855
 	ld hl, $5bbf
@@ -30809,7 +30809,7 @@ Func_1f_5d83:
 	pop af
 	ret
 Func_1f_5d9b:
-	ld hl, $d600
+	ld hl, wSubMenuCursor
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5de3
@@ -30890,7 +30890,7 @@ Func_1f_5f5d:
 	pop af
 	ret
 Func_1f_5f75:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $5fbd
@@ -30952,7 +30952,7 @@ Func_1f_609d:
 	pop af
 	ret
 Func_1f_60b5:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $60fd
@@ -31020,7 +31020,7 @@ Func_1f_6176:
 	pop af
 	ret
 Func_1f_618e:
-	ld hl, $d600
+	ld hl, wSubMenuCursor
 	ld bc, $0200
 	call Func_1f_5855
 	ld hl, $61d6
@@ -31274,7 +31274,7 @@ Func_1f_63db:
 	pop af
 	ret
 Func_1f_6403:
-	ld hl, $d5ff
+	ld hl, wMainMenuResult
 	ld bc, $0300
 	call Func_1f_5855
 	ld hl, $644b
