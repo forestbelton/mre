@@ -6195,23 +6195,11 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x7d9d3",
-					"len":	"0x65"
-				}, {
-					"type":	"code",
-					"addr":	"0x7da3e",
-					"len":	"0x12"
+					"len":	"0x7d"
 				}, {
 					"type":	"data",
 					"addr":	"0x7da50",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	"0x7da54",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x7da56",
-					"len":	"0x66"
+					"len":	"0x6c"
 				}, {
 					"type":	"code",
 					"addr":	"0x7dabc",
@@ -8231,6 +8219,9 @@
 		}, {
 			"addr":	"0x15bf",
 			"name":	"FloorPtrTable"
+		}, {
+			"addr":	"0x16c1",
+			"name":	"LoadFloorByMode"
 		}, {
 			"addr":	"0x16ea",
 			"name":	"LoadFloorData"

@@ -2864,7 +2864,7 @@ Func_00_16ad:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_16c1:
+LoadFloorByMode:
 	ld a, [wActiveFloor]
 	dec a
 	ld d, a
@@ -4624,7 +4624,7 @@ Func_01_439e:
 	ld a, $05
 	ld hl, Func_05_4884
 	call CallBankedHL
-	call Func_00_16c1
+	call LoadFloorByMode
 	ld a, $17
 	ld hl, Func_17_40b1
 	call CallBankedHL
@@ -30590,9 +30590,8 @@ Func_1f_5a31:
 	ld a, [wMainMenuResult]
 	cp $00
 	jr z, Func_1f_5a3e
-
-SECTION "analyzed_07da3e", ROMX[$5a3e], BANK[$1f]
-
+	ld bc, $4858
+	call Func_1f_65ec
 Func_1f_5a3e:
 	ld a, [wMainMenuResult]
 	cp $01
@@ -30607,23 +30606,13 @@ Func_1f_5a4b:
 SECTION "analyzed_07da50", ROMX[$5a50], BANK[$1f]
 
 Data_1f_5a50:
-	db $56, $5a
-
-SECTION "analyzed_07da54", ROMX[$5a54], BANK[$1f]
-
-Data_1f_5a54:
-	db $00
-
-SECTION "analyzed_07da56", ROMX[$5a56], BANK[$1f]
-
-Data_1f_5a56:
-	db $02, $07, $6a, $5a, $5c, $5a, $b8, $c0, $c8, $97, $97, $97, $97, $b9, $c1, $c9
-	db $97, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06
-	db $06, $06, $02, $07, $8c, $5a, $7e, $5a, $d0, $d8, $e0, $e8, $f0, $97, $97, $d1
-	db $d9, $e1, $e9, $f1, $97, $97, $07, $07, $07, $07, $07, $06, $06, $06, $06, $06
-	db $06, $06, $06, $06, $02, $07, $ae, $5a, $a0, $5a, $84, $8e, $97, $97, $97, $97
-	db $97, $85, $8f, $97, $97, $97, $97, $97, $07, $07, $06, $06, $06, $06, $06, $06
-	db $06, $06, $06, $06, $06, $06
+	db $56, $5a, $9a, $5a, $00, $02, $02, $07, $6a, $5a, $5c, $5a, $b8, $c0, $c8, $97
+	db $97, $97, $97, $b9, $c1, $c9, $97, $97, $97, $97, $07, $07, $07, $06, $06, $06
+	db $06, $06, $06, $06, $06, $06, $06, $06, $02, $07, $8c, $5a, $7e, $5a, $d0, $d8
+	db $e0, $e8, $f0, $97, $97, $d1, $d9, $e1, $e9, $f1, $97, $97, $07, $07, $07, $07
+	db $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $02, $07, $ae, $5a, $a0, $5a
+	db $84, $8e, $97, $97, $97, $97, $97, $85, $8f, $97, $97, $97, $97, $97, $07, $07
+	db $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
 
 SECTION "analyzed_07dabc", ROMX[$5abc], BANK[$1f]
 
