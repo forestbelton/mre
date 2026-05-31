@@ -76,10 +76,12 @@ bits: bit 7 → item, bit 6 → exit. Known codes:
 | `$93` | COIN_GOLD (hidden) | | `$d1` | COIN_GRAY |
 | `$c0` | KEY | | `$d2` | NUGGET_GRAY |
 | `$c1` | KEY_SILVER | | `$d3` | COIN_GOLD |
+| `$cc` | CRYSTAL_BLUE | | | |
 
 For items (bit 7 set), the low 6 bits are the base id and **bit 6 = placement**:
 set (`$cx-$fx`) = placed in the open, clear (`$8x-$bx`) = crate-hidden (revealed by
-destroying a crate). E.g. COIN_GOLD is `$d3` open / `$93` hidden. KEY_SILVER (`$c1`)
+destroying a crate). E.g. COIN_GOLD is `$d3` open / `$93` hidden — confirmed in-game
+(`$8e` = hidden DIAMOND_BLUE = `$ce` with bit 6 clear). KEY_SILVER (`$c1`)
 is open-coded but gated by progression (the first silver key must be taken at the
 tower top), not by the hidden bit. `$4x` = structural (`$40` EXIT, `$43` obstruction).
 Named codes live in `include/items.inc`; many remain unidentified.
@@ -97,7 +99,7 @@ neighbours (`Func_01_5BA8`/`5BE2`).
 
 Sprite pixel position is `col*16 − 8`, `row*16 − 8`. The displayed **species** is
 selected by **`arr1[gfxIndex]`** (the per-floor sprite/species table) — observed
-`$00` = Tacopi (Octopee), `$01` = Jell, `$07` = Ghost. The `+2` "type" byte is *not* the species
+`$00` = Tacopi (Octopee), `$01` = Jell, `$05` = Henger, `$07` = Ghost, `$08` = Puncho. The `+2` "type" byte is *not* the species
 (a per-instance attribute: floor 1's Jell is `$22`, floor 2's Jell is `$21`).
 Items, by contrast, are baked into the piece grid, so a floor's dynamic content is
 piece-grid items + `arr2` monsters.

@@ -1,36 +1,34 @@
-; Floor object codes for Monster Rancher Explorer.
+; Floor object codes for Monster Rancher Explorer (tower floor piece grid,
+; wFloorGrid). DrawFloorPiece ($17DE): bit 7 set = item, else a room-piece tile.
 ;
-; These are the values that appear in a tower floor's piece grid (wFloorGrid);
-; see docs/floor_data.md. DrawFloorPiece ($17DE) classifies a cell by its bits:
-; bit 7 set = item, bit 6 set = exit, otherwise it's a plain room-piece tile.
-;
-; $4x are structural (exits/obstacles). For items (bit 7 set), the low 6 bits are
-; the base id and bit 6 marks placement: set ($cx-$fx) = placed in the open, clear
-; ($8x-$bx) = "hidden" (revealed by destroying a crate). E.g. COIN_GOLD is $d3 open
-; / $93 hidden. (KEY_SILVER is open-coded $c1 but gated separately by progression --
-; the first silver key must be taken at the tower top -- not by the hidden bit.)
+; ITEM ENCODING (confirmed): an item byte = placement-flag | base-id (low 6 bits).
+;   ITEM_OPEN   ($C0, bit 6 set)   = lying in the open
+;   ITEM_HIDDEN ($80, bit 6 clear) = revealed by destroying a crate
+; e.g. COIN_GOLD = ITEM_OPEN|$13 = $D3 (open) / ITEM_HIDDEN|$13 = $93 (hidden);
+;      DIAMOND_BLUE = $CE open / $8E hidden.
+; (KEY_SILVER is open-coded but gated separately by progression -- the first
+;  silver key must be taken at the tower top -- not by the hidden bit.)
 
 IF !DEF(ITEMS_INC)
 DEF ITEMS_INC EQU 1
 
-; -- structural ($4x) --
-DEF ITEM_EXIT             EQU $40   ; stairs to the next floor
-DEF OBSTACLE_BAT          EQU $43   ; bat-shaped obstruction (impassable)
+DEF ITEM_OPEN    EQU $C0
+DEF ITEM_HIDDEN  EQU $80
 
-; -- $8x-$9x (incl. hidden variants) --
-DEF ITEM_DIAMOND_RED      EQU $8F
-DEF ITEM_COIN_GOLD_HIDDEN EQU $93   ; hidden variant of COIN_GOLD ($d3)
+; base item ids (low 6 bits); compose with a placement flag: ITEM_OPEN | IID_KEY
+DEF IID_KEY          EQU $00
+DEF IID_KEY_SILVER   EQU $01
+DEF IID_BELL         EQU $02
+DEF IID_BOMB_SMALL   EQU $08
+DEF IID_CRYSTAL_BLUE EQU $0C
+DEF IID_DIAMOND_BLUE EQU $0E
+DEF IID_DIAMOND_RED  EQU $0F
+DEF IID_COIN_GRAY    EQU $11
+DEF IID_NUGGET_GRAY  EQU $12
+DEF IID_COIN_GOLD    EQU $13
 
-; -- $cx tools / usables --
-DEF ITEM_KEY              EQU $C0
-DEF ITEM_KEY_SILVER       EQU $C1
-DEF ITEM_BELL             EQU $C2
-DEF ITEM_BOMB_SMALL       EQU $C8
-DEF ITEM_DIAMOND_BLUE     EQU $CE
-
-; -- $dx coins / nuggets / valuables --
-DEF ITEM_COIN_GRAY        EQU $D1
-DEF ITEM_NUGGET_GRAY      EQU $D2
-DEF ITEM_COIN_GOLD        EQU $D3
+; non-item room-piece tiles (bit 7 clear)
+DEF TILE_EXIT          EQU $40
+DEF TILE_OBSTACLE_BAT  EQU $43
 
 ENDC ; ITEMS_INC
