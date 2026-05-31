@@ -6215,11 +6215,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x7dbbf",
-					"len":	"0x9"
-				}, {
-					"type":	"data",
-					"addr":	"0x7dbc9",
-					"len":	"0x1"
+					"len":	"0xb"
 				}, {
 					"type":	"data",
 					"addr":	"0x7dce0",
@@ -8231,6 +8227,9 @@
 		}, {
 			"addr":	"0x17de",
 			"name":	"DrawFloorPiece"
+		}, {
+			"addr":	"0x4064",
+			"name":	"SpawnFloorMonsters"
 		}, {
 			"addr":	"0x3942",
 			"name":	"CopyBgMapBankedA"

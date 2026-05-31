@@ -4143,9 +4143,9 @@ Func_01_4055:
 	call Func_01_42e6
 	ret
 Func_01_4060:
-	call Func_01_4064
+	call SpawnFloorMonsters
 	ret
-Func_01_4064:
+SpawnFloorMonsters:
 	ld hl, $c4d1
 	ld c, $09
 Func_01_4069:
@@ -30754,12 +30754,7 @@ Func_1f_5bba:
 SECTION "analyzed_07dbbf", ROMX[$5bbf], BANK[$1f]
 
 Data_1f_5bbf:
-	db $e0, $5c, $fe, $5c, $3a, $5d, $58, $5d, $00
-
-SECTION "analyzed_07dbc9", ROMX[$5bc9], BANK[$1f]
-
-Data_1f_5bc9:
-	db $03
+	db $e0, $5c, $fe, $5c, $3a, $5d, $58, $5d, $00, $01, $03
 
 SECTION "analyzed_07dce0", ROMX[$5ce0], BANK[$1f]
 

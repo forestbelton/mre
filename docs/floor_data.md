@@ -53,9 +53,9 @@ against a live `--watch-write` of `$C2C0`/`$C2C1`/`$C2C2`: floor 1 reads
 | 7 | 1 | width | ✅ grid width (≤17) |
 | 8 | H×W | **collision grid** → `wFloorCollision` (`$C2EF`) | room geometry |
 | 8+H×W | H×W | **piece grid** → `wFloorGrid` (`$C3DD`) | visual + object markers |
-| … | 4 | arr1 → `$C4CD` | 🟡 entity/spawn params |
-| … | 45 | arr2 → `$C4D1` | 🟡 entity/monster slots (5-byte-ish entries, `$FF`=empty) |
-| … | 48 | arr3 → `$C4FE` | 🟡 more entity slots |
+| … | 4 | arr1 → `$C4CD` | ✅ per-floor sprite-gfx lookup (indexed by a monster's gfxIndex) |
+| … | 45 | arr2 → `$C4D1` | ✅ **monster table** — 9 slots × 5 bytes (see below) |
+| … | 48 | arr3 → `$C4FE` | 🟡 another entity array (empty on floor 1) |
 
 The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader uses
 `wFloorRowStride = $11 − width` to skip the margin. After the arrays, bank-5/bank-1
@@ -78,6 +78,18 @@ bits: bit 7 → item, bit 6 → exit. Known codes:
 Lower piece IDs index `FloorPieceDefs` (`$12FA`, 5-byte entries) and stamp a 2×2
 metatile `{T, T+8, T+1, T+9}` to the BG (`$00:$180B`); walls auto-tile from
 neighbours (`Func_01_5BA8`/`5BE2`).
+
+### Monster table (arr2)
+`Func_01_4064` spawns monsters from `arr2` — **9 slots × 5 bytes**:
+
+| +0 | +1 | +2 | +3 | +4 |
+|---|---|---|---|---|
+| col | row | type (`$cf81`) | param (`$cf82`) | gfxIndex (`$cf80`); `$FF` = empty slot |
+
+Sprite pixel position is `col*16 − 8`, `row*16 − 8`. `gfxIndex` indexes `arr1`
+(`$C4CD`) to pick the sprite's bank/gfx. Items, by contrast, are baked into the
+piece grid (above), so a floor's dynamic content is: piece-grid items + `arr2`
+monsters.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 
@@ -104,14 +116,15 @@ objects (from the piece grid):
 ```
 
 The collision grid's diagonal wall mass is the same room geometry as a live VRAM
-capture of B1 (orientation differs by scroll). `arr2`'s one live entry
-`06 04 22 00 01` (rest `$FF`) is the monster/entity data — see open questions.
+capture of B1 (orientation differs by scroll). **One monster** (`arr2` entry 0
+`06 04 22 00 01`): col 6, row 4, type `$22`, gfxIndex 1 — confirmed against the
+live game. `arr1 = 00 01 02 0e`. The remaining `arr2`/`arr3` slots are `$FF`.
 
 ## Open questions
 
-- The `arr1`/`arr2`/`arr3` entity format (monster types/positions). `arr2` looks
-  like fixed-capacity slots, `$FF`-empty.
-- Header params at offsets 3–5; the full object-code table beyond the four above.
+- `arr3` (`$C4FE`, 48 bytes) — a second entity array, empty on floor 1.
+- The monster `type`/`param` semantics (what species `$22` is) and the full
+  object-code table beyond the four above; header params at offsets 3–5.
 - Mode-1 path in `Func_00_16c1`; the post-load routines `Func_05_49EF`/`Func_01_572D`.
 
 ## Named in the disassembly
