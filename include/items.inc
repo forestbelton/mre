@@ -18,6 +18,8 @@
 IF !DEF(ITEMS_INC)
 DEF ITEMS_INC EQU 1
 
+INCLUDE "enum.inc"
+
 DEF ITEM_OPEN    EQU $C0
 DEF ITEM_HIDDEN  EQU $80
 
@@ -41,6 +43,7 @@ DEF IID_NUGGET_GRAY  EQU $12
 DEF IID_COIN_GOLD    EQU $13
 DEF IID_NUGGET_GOLD  EQU $14
 DEF IID_HEAL_BADGE   EQU $15   ; 10,000-point pickup
+DEF IID_BATTLE_CARD  EQU $18
 DEF IID_MONSTER_FLAME EQU $1D   ; warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E
 DEF IID_DISC_STONE_PIECE EQU $20
@@ -56,24 +59,30 @@ DEF COLL_WALL    EQU $21
 DEF COLL_CRATE   EQU $22   ; breakable crate (an item on this cell is in-crate)
 
 ; monster species (arr1 / sprite-set ids referenced by the arr2 monster slots)
-DEF MON_TACOPI  EQU $00   ; aka Octopee
-DEF MON_JELL    EQU $01
-DEF MON_NAGA    EQU $02
-DEF MON_DINO    EQU $03
-DEF MON_PLANT   EQU $04
-DEF MON_HENGER  EQU $05
-DEF MON_JOKER   EQU $06
-DEF MON_GHOST   EQU $07
-DEF MON_PUNCHO    EQU $08
-DEF MON_PSIROLLER EQU $09
-DEF MON_DAKKUNG   EQU $0A
-DEF MON_RED_FLAME  EQU $0B
-DEF MON_BLUE_FLAME EQU $0C
-DEF MON_TIGER      EQU $0E   ; bonus-stage friendly monster (floor 56)
-DEF MON_MOCCHI     EQU $0F   ; bonus-stage friendly monster (floor 58)
-DEF MON_HARE       EQU $10   ; bonus-stage friendly monster (floor 6)
-DEF MON_GALI       EQU $11   ; bonus-stage friendly monster (floor 18)
-DEF MON_GOLEM      EQU $12   ; bonus-stage friendly monster (floor 22)
-DEF MON_SUEZO      EQU $13   ; bonus-stage friendly monster (floor 44)
+enum MONSTER
+    case TACOPI ; aka Octopee
+    case JELL
+    case NAGA
+    case DINO
+    case PLANT
+    case HENGER
+    case JOKER
+    case GHOST
+    case PUNCHO
+    case PSIROLLER
+    case DAKKUNG
+    case FLAME_RED
+    case FLAME_BLUE
+
+    skip ; Unused
+
+    ; Friendly monsters available on bonus stages
+    case TIGER  ; Floor 56
+    case MOCCHI ; Floor 58
+    case HARE   ; Floor 06
+    case GALI   ; Floor 18
+    case GOLEM  ; Floor 22
+    case SUEZO  ; Floor 44
+end_enum
 
 ENDC ; ITEMS_INC
