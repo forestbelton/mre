@@ -1071,11 +1071,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x1236",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x1238",
-					"len":	"0x1"
+					"len":	"0x3"
 				}, {
 					"type":	"data",
 					"addr":	"0x123a",
@@ -2139,35 +2135,31 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x5df7",
-					"len":	"0xdf"
+					"len":	"0x15b"
 				}, {
 					"type":	"code",
-					"addr":	"0x5ed9",
-					"len":	"0x14"
-				}, {
-					"type":	"code",
-					"addr":	"0x5f68",
-					"len":	"0x65"
+					"addr":	"0x5f58",
+					"len":	"0x75"
 				}, {
 					"type":	"code",
 					"addr":	"0x5fd3",
 					"len":	"0x65"
 				}, {
 					"type":	"code",
-					"addr":	"0x605e",
-					"len":	"0x65"
+					"addr":	"0x604e",
+					"len":	"0x75"
 				}, {
 					"type":	"code",
 					"addr":	"0x60c9",
-					"len":	"0x41"
+					"len":	"0x75"
 				}, {
 					"type":	"code",
-					"addr":	"0x6154",
-					"len":	"0x65"
+					"addr":	"0x6144",
+					"len":	"0x75"
 				}, {
 					"type":	"code",
 					"addr":	"0x61bf",
-					"len":	"0x41"
+					"len":	"0x75"
 				}, {
 					"type":	"code",
 					"addr":	"0x624a",
@@ -2267,11 +2259,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x6d82",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	"0x6d86",
-					"len":	"0x2"
+					"len":	"0x6"
 				}, {
 					"type":	"data",
 					"addr":	"0x6d8a",
@@ -2359,11 +2347,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x785e",
-					"len":	"0x3"
-				}, {
-					"type":	"data",
-					"addr":	"0x7864",
-					"len":	"0x3"
+					"len":	"0x9"
 				}, {
 					"type":	"data",
 					"addr":	"0x786a",
@@ -2411,11 +2395,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x7998",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	"0x799c",
-					"len":	"0x2"
+					"len":	"0x6"
 				}, {
 					"type":	"data",
 					"addr":	"0x79a0",
@@ -3227,11 +3207,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x10492",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x10494",
-					"len":	"0x1"
+					"len":	"0x3"
 				}, {
 					"type":	"data",
 					"addr":	"0x10496",
@@ -5139,11 +5115,7 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x3c125",
-					"len":	"0x19"
-				}, {
-					"type":	"code",
-					"addr":	"0x3c15b",
-					"len":	"0x173"
+					"len":	"0x1a9"
 				}, {
 					"type":	"code",
 					"addr":	"0x3c2cf",
@@ -8230,6 +8202,9 @@
 		}, {
 			"addr":	"0x4064",
 			"name":	"SpawnFloorMonsters"
+		}, {
+			"addr":	"0x41aa",
+			"name":	"ProcessFloorSpawners"
 		}, {
 			"addr":	"0x3942",
 			"name":	"CopyBgMapBankedA"

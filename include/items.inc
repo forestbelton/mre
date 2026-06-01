@@ -36,6 +36,7 @@ DEF IID_COIN_GRAY    EQU $11
 DEF IID_NUGGET_GRAY  EQU $12
 DEF IID_COIN_GOLD    EQU $13
 DEF IID_MONSTER_FLAME EQU $1D   ; warp to the friendly-monster bonus stage
+DEF IID_DOLL_DUCK    EQU $1E
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40

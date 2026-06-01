@@ -55,7 +55,7 @@ against a live `--watch-write` of `$C2C0`/`$C2C1`/`$C2C2`: floor 1 reads
 | 8+H×W | H×W | **piece grid** → `wFloorGrid` (`$C3DD`) | visual + object markers |
 | … | 4 | arr1 → `$C4CD` | ✅ per-floor sprite-gfx lookup (indexed by a monster's gfxIndex) |
 | … | 45 | arr2 → `$C4D1` | ✅ **monster table** — 9 slots × 5 bytes (see below) |
-| … | 48 | arr3 → `$C4FE` | 🟡 another entity array (empty on floor 1) |
+| … | 48 | arr3 → `$C4FE` | ✅ **monster spawner table** — 4 slots × 6 bytes (see below) |
 
 The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader uses
 `wFloorRowStride = $11 − width` to skip the margin. After the arrays, bank-5/bank-1
@@ -110,7 +110,15 @@ selected by **`arr1[gfxIndex]`** (the per-floor sprite/species table) — observ
 `$07` = Ghost, `$08` = Puncho, `$0a` = Dakkung (full list in `include/items.inc`). The `+2` "type" byte is *not* the species
 (a per-instance attribute: floor 1's Jell is `$22`, floor 2's Jell is `$21`).
 Items, by contrast, are baked into the piece grid, so a floor's dynamic content is
-piece-grid items + `arr2` monsters.
+piece-grid items + `arr2` monsters + `arr3` spawners.
+
+### Monster spawners (arr3)
+`Func_01_41aa` (`ProcessFloorSpawners`) reads `arr3` as **4 slots × 6 bytes**:
+`[col][row][p0][p1][p2][species]`. `col=$ff` = empty slot. `p0`/`p1`/`p2` are packed
+into spawn parameters (the reader takes `p0&7`, `p1&3`, `p2&7` — rate/cap/etc., TBD);
+the last byte is a `gfxIndex` into `arr1` for the spawned species (same as `arr2`).
+Floor 8 has two spawners — `04 02 01 00 03 00` and `02 02 01 00 03 00` — both
+`species=$00` → Tacopi.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 
@@ -143,9 +151,9 @@ live game. `arr1 = 00 01 02 0e`. The remaining `arr2`/`arr3` slots are `$FF`.
 
 ## Open questions
 
-- `arr3` (`$C4FE`, 48 bytes) — a second entity array, empty on floor 1.
-- The monster `type`/`param` semantics (what species `$22` is) and the full
-  object-code table beyond the four above; header params at offsets 3–5.
+- Spawner param bytes (`p0/p1/p2`) — spawn rate/cap/etc. (`Func_01_4219`).
+- The `arr2` `+2` "type" byte (per-instance attribute, not species); header
+  params at offsets 3–5; remaining unnamed item codes / species (see items.inc).
 - Mode-1 path in `Func_00_16c1`; the post-load routines `Func_05_49EF`/`Func_01_572D`.
 
 ## Named in the disassembly
