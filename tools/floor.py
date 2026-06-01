@@ -4,14 +4,14 @@
 A normal tower floor N (screen mode $c2c1 == 0) loads record N-1 via
 FloorBankTable ($1567) + FloorPtrTable ($15bf); see docs/floor_data.md. (Special
 floors use other modes / the $1783 remap and aren't handled here.) Item and
-monster names are parsed from include/items.inc so they stay in sync.
+monster names are parsed from include/room.inc so they stay in sync.
 
 Record layout (581 bytes): 8-byte header [type][spawnX][spawnY][?][?][?][H][W],
 then an H*W collision grid, an H*W piece grid, then arr1 (4B species table),
-arr2 (9 monster slots x 5B), arr3 (4 spawner slots x 6B).
+arr2 (9 monster slots x 5B), arr3 (8 spawner slots x 6B).
 
 Usage:
-    tools/floor.py <floor> [--rom rom.gbc] [--inc include/items.inc] [--grids]
+    tools/floor.py <floor> [--rom rom.gbc] [--inc include/room.inc] [--grids]
 """
 
 import argparse
@@ -51,13 +51,10 @@ def parse_enum(text: str, name: str) -> Names:
 
 
 def parse_legend(inc_path: str) -> tuple[Names, Names]:
-    """Return ({base_id: item_name}, {species_id: monster_name}) from items.inc.
-    Items are `DEF IID_* EQU $xx`; monsters are an `enum MONSTER` block."""
+    """Return ({base_id: item_name}, {species_id: monster_name}) from room.inc.
+    Items are an `enum ITEM` block; monsters are an `enum MONSTER` block."""
     text = Path(inc_path).read_text()
-    items = {
-        int(m.group(2), 16): m.group(1)
-        for m in re.finditer(r"DEF\s+IID_(\w+)\s+EQU\s+\$([0-9A-Fa-f]+)", text)
-    }
+    items = parse_enum(text, "ITEM")
     mons = parse_enum(text, "MONSTER")
     return items, mons
 
@@ -123,7 +120,7 @@ def main() -> None:
     )
     ap.add_argument("floor", type=int)
     ap.add_argument("--rom", default="rom.gbc")
-    ap.add_argument("--inc", default="include/items.inc")
+    ap.add_argument("--inc", default="include/room.inc")
     ap.add_argument("--grids", action="store_true", help="also print the two grids")
     args = ap.parse_args()
 
@@ -178,7 +175,7 @@ def main() -> None:
     # p0/p1/p2 are spawn rate/count (packed for Func_01_4219) -- not decoded yet.
     print("\nspawners (arr3):")
     found = False
-    for s in range(4):
+    for s in range(8):
         e = r["arr3"][s * 6 : s * 6 + 6]
         if e[0] != 0xFF and e[1] != 0xFF:  # both $ff col & row = dead slot
             found = True
