@@ -114,11 +114,11 @@ piece-grid items + `arr2` monsters + `arr3` spawners.
 
 ### Monster spawners (arr3)
 `Func_01_41aa` (`ProcessFloorSpawners`) reads `arr3` as **4 slots × 6 bytes**:
-`[col][row][p0][p1][p2][species]`. `col=$ff` = empty slot. `p0`/`p1`/`p2` are packed
-into spawn parameters (the reader takes `p0&7`, `p1&3`, `p2&7` — rate/cap/etc., TBD);
-the last byte is a `gfxIndex` into `arr1` for the spawned species (same as `arr2`).
-Floor 8 has two spawners — `04 02 01 00 03 00` and `02 02 01 00 03 00` — both
-`species=$00` → Tacopi.
+`[col][row][p0][p1][p2][p3]`. `col=$ff` = empty slot. The reader packs `p0&7`,
+`p1&3`, `p2&7` into a value and passes it to `Func_01_4219` — the spawned species
+and rate/cap live in those params (not a clean `arr1` index), and aren't decoded
+yet. Floor 8's two spawners (`04 02 01 00 03 00`, `02 02 01 00 03 00`) produce
+Tacopi; floor 15's (`… 02 00 02 …`) produce a different species — TBD.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 

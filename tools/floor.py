@@ -107,16 +107,16 @@ def main():
     if not found:
         print("  (none)")
 
+    # arr3 spawner entries are 6 bytes [col][row][p0][p1][p2][p3]; the spawned
+    # species is encoded in the params (decoded by Func_01_4219) -- not yet mapped,
+    # so just show the raw bytes.
     print("\nspawners (arr3):")
     found = False
     for s in range(4):
         e = r["arr3"][s*6:s*6+6]
         if e[0] != 0xff:
             found = True
-            sp = a1[e[5]] if e[5] < len(a1) else None
-            spn = mons.get(sp, "?? NEW ??") if sp is not None else "?"
-            print(f"  col {e[0]:2d}, row {e[1]:2d}  species=${(sp if sp is not None else 0):02x} {spn}"
-                  f"  params={e[2]:02x} {e[3]:02x} {e[4]:02x}")
+            print(f"  col {e[0]:2d}, row {e[1]:2d}  raw={' '.join(f'{b:02x}' for b in e)}")
     if not found:
         print("  (none)")
 
