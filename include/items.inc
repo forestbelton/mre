@@ -51,6 +51,7 @@ DEF IID_BATTLE_CARD  EQU $18
 DEF IID_MONSTER_FLAME EQU $1D    ; Warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E
 DEF IID_DISC_STONE_PIECE EQU $20
+DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 
 ; $16 is a real item, not an unused gap: it has a distinct sprite in FloorPieceDefs
 ; ($d6 -> tiles 40/6b, same structure as its neighbours). But it never appears in
