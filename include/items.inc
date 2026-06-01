@@ -50,7 +50,8 @@ DEF IID_CAKE         EQU $17     ; 100,000-point pickup
 DEF IID_BATTLE_CARD  EQU $18
 DEF IID_PEACH_GOLD   EQU $19     ; 500,000-point pickup
 DEF IID_MONSTER_FLAME EQU $1D    ; Warp to the friendly-monster bonus stage
-DEF IID_DOLL_DUCK    EQU $1E
+DEF IID_DOLL_DUCK    EQU $1E     ; Transforms monsters into entity $08 (effect Func_01_55a6)
+DEF IID_DOLL_ALF     EQU $1F     ; Turns all monsters into Suzurizos (entity $1f, as BELL spawns)
 DEF IID_DISC_STONE_PIECE EQU $20
 DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 
@@ -76,14 +77,14 @@ DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 ;   $1a  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
 ;   $1b  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
 ;   $1c  1,000,000 pts, points-only handler ($53a0)         -- highest-value item
-;   $1f  0 pts, effect handler ($53ab -> Func_01_5544): iterates the entity array
-;        $c823 and rewrites monster type bytes -- a monster-transform DOLL, the
-;        structural sibling of $1e DOLL_DUCK ($5392 -> Func_01_55a6).
+;   $1f  DOLL_ALF (now named above): 0 pts, effect Func_01_5544 ($53ab) kills each
+;        monster and spawns entity $1f (Suzurizo) at its position -- the same entity
+;        BELL spawns. Proven from code (sibling of $1e DOLL_DUCK, which spawns $08).
 ;
 ; Names from the in-game list still to be matched (need in-game confirmation):
 ;   PEACH_SILVER -- 500,000 points  => one of $1a/$1b (both 500k points-only).
-;   DOLL_ALF     -- turns all floor monsters into Suzurizos (BELL's Suzurizo);
-;   DOLL_AYA     -- effect unknown   => $1f is a DOLL (which of ALF/AYA = in-game).
+;   DOLL_AYA     -- effect unknown   => not yet located (no remaining 0-pt DOLL id;
+;                   may be an alias, $1c, or cut). $1f is DOLL_ALF, proven above.
 ;   ($1c at 1,000,000 pts has no name in the player's list yet -- a premium item.)
 ;
 ; These 7 ids ($07 COX_HAT, $17 CAKE, $19 PEACH_GOLD, $1a, $1b, $1c, $1f) share the
