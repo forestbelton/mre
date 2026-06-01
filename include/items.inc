@@ -70,6 +70,7 @@ DEF MON_DAKKUNG   EQU $0A
 DEF MON_RED_FLAME  EQU $0B
 DEF MON_BLUE_FLAME EQU $0C
 DEF MON_TIGER      EQU $0E   ; bonus-stage friendly monster (floor 56)
+DEF MON_MOCCHI     EQU $0F   ; bonus-stage friendly monster (floor 58)
 DEF MON_HARE       EQU $10   ; bonus-stage friendly monster (floor 6)
 DEF MON_GALI       EQU $11   ; bonus-stage friendly monster (floor 18)
 DEF MON_GOLEM      EQU $12   ; bonus-stage friendly monster (floor 22)
