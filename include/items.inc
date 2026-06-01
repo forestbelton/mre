@@ -28,6 +28,7 @@ DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
 DEF IID_BELL         EQU $02
 DEF IID_TORORON_HALF EQU $03     ; Doubles the remaining floor time
+DEF IID_TOROTON_FULL EQU $04     ; Multiplies the remaining floor time by 5
 DEF IID_HOURGLASS_ORANGE EQU $05 ; Sets the timer to 50 seconds
 DEF IID_COX_HAT      EQU $07     ; Extra life (1-UP)
 DEF IID_BOMB_SMALL   EQU $08
