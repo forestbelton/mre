@@ -22,14 +22,34 @@ FLOOR_PTR_TABLE  = 0x15bf   # $00:$15bf, one LE pointer per floor
 COLL_CRATE = 0x22           # collision value for a breakable crate
 
 
+def parse_enum(text, name):
+    """Parse an `enum <name> / case X / skip / end_enum` block (enum.inc) into
+    {discriminant: case_name}, starting at 0 and incrementing per case/skip."""
+    out, in_enum, disc = {}, False, 0
+    for line in text.splitlines():
+        s = line.strip()
+        if not in_enum:
+            m = re.match(r'enum\s+(\w+)', s)
+            if m and m.group(1) == name:
+                in_enum, disc = True, 0
+            continue
+        if s.startswith("end_enum"):
+            break
+        m = re.match(r'case\s+(\w+)', s)
+        if m:
+            out[disc] = m.group(1); disc += 1
+        elif re.match(r'skip\b', s):
+            disc += 1
+    return out
+
+
 def parse_legend(inc_path):
-    """Return ({base_id: item_name}, {species_id: monster_name}) from items.inc."""
+    """Return ({base_id: item_name}, {species_id: monster_name}) from items.inc.
+    Items are `DEF IID_* EQU $xx`; monsters are an `enum MONSTER` block."""
     text = Path(inc_path).read_text()
-    items, mons = {}, {}
-    for m in re.finditer(r'DEF\s+IID_(\w+)\s+EQU\s+\$([0-9A-Fa-f]+)', text):
-        items[int(m.group(2), 16)] = m.group(1)
-    for m in re.finditer(r'DEF\s+MON_(\w+)\s+EQU\s+\$([0-9A-Fa-f]+)', text):
-        mons[int(m.group(2), 16)] = m.group(1)
+    items = {int(m.group(2), 16): m.group(1)
+             for m in re.finditer(r'DEF\s+IID_(\w+)\s+EQU\s+\$([0-9A-Fa-f]+)', text)}
+    mons = parse_enum(text, "MONSTER")
     return items, mons
 
 
