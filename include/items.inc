@@ -69,7 +69,10 @@ DEF MON_PSIROLLER EQU $09
 DEF MON_DAKKUNG   EQU $0A
 DEF MON_RED_FLAME  EQU $0B
 DEF MON_BLUE_FLAME EQU $0C
-DEF MON_GALI       EQU $11   ; friendly monster found in a bonus stage
-DEF MON_GOLEM      EQU $12   ; friendly monster found in a bonus stage
+DEF MON_TIGER      EQU $0E   ; bonus-stage friendly monster (floor 56)
+DEF MON_HARE       EQU $10   ; bonus-stage friendly monster (floor 6)
+DEF MON_GALI       EQU $11   ; bonus-stage friendly monster (floor 18)
+DEF MON_GOLEM      EQU $12   ; bonus-stage friendly monster (floor 22)
+DEF MON_SUEZO      EQU $13   ; bonus-stage friendly monster (floor 44)
 
 ENDC ; ITEMS_INC
