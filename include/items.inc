@@ -54,6 +54,10 @@ DEF IID_DISC_STONE_PIECE EQU $20
 ; play or in reference maps -- even visible-coded on floor 69 -- so it's runtime-
 ; gated like COX_HAT. Unidentified (would need to be triggered in-game, or its
 ; sprite rendered, to name).
+;
+; The item id space is base $00-$23 (FloorPieceDefs covers open codes $c0-$e3;
+; $e4+ have no entry). $21 and $22 are defined there (sprites $e1/$e2) but never
+; placed on any floor or bonus stage -- cut/reserved content.
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40
