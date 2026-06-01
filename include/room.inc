@@ -81,11 +81,11 @@ end_enum
 DEF TILE_EXIT          EQU $40
 DEF TILE_OBSTACLE_BAT  EQU $43   ; "Devil's Seal"
 
-; collision-grid (wFloorCollision) values
-DEF COLL_FLOOR   EQU $00   ; walkable
-DEF COLL_BORDER  EQU $20
-DEF COLL_WALL    EQU $21
-DEF COLL_CRATE   EQU $22   ; breakable crate (an item on this cell is in-crate)
+; collision-grid (wFloorCollision) values -- short names keep grid rows aligned
+DEF COLL_F  EQU $00   ; walkable floor
+DEF COLL_B  EQU $20   ; border
+DEF COLL_W  EQU $21   ; wall
+DEF COLL_C  EQU $22   ; breakable crate (an item on this cell is in-crate)
 
 ; monster species (arr1 / sprite-set ids referenced by a monster slot's GfxIndex)
 enum MONSTER
@@ -114,27 +114,49 @@ enum MONSTER
     case SUEZO  ; Floor 44
 end_enum
 
-; A monster slot (arr2; 9 per floor). Sprite/species = MonsterSprites[GfxIndex];
-; GfxIndex == INERT marks an empty slot.
-struct Monster
-    bytes 1, Col
-    bytes 1, Row
-    bytes 1, Type      ; per-instance attribute (not the species)
-    bytes 1, Param
-    bytes 1, GfxIndex  ; index into the floor's MonsterSprites (arr1)
+; The 8-byte floor-record header. Instantiate with e.g.
+;   dstruct Header, , .Type=$61, .SpawnX=2, .SpawnY=7, .Pad=0, .Param0=0, .Param1=1, .Height=10, .Width=11
+struct Header
+    bytes 1, Type     ; floor theme/type
+    bytes 1, SpawnX   ; player start column
+    bytes 1, SpawnY   ; player start row
+    bytes 1, Pad      ; always $00
+    bytes 1, Param0   ; undecoded (observed 0-5)
+    bytes 1, Param1   ; undecoded (observed 0-6)
+    bytes 1, Height
+    bytes 1, Width
 end_struct
 
-; A monster spawner slot (arr3; 8 per floor). Spawned species = MonsterSprites[GfxIndex];
-; Col == INERT marks an empty slot, GfxIndex == INERT spawns nothing (obstruction).
+; A monster slot (arr2; 9 per floor). Sprite/species = MonsterSprites[Index];
+; Index == INERT marks an empty slot. Instantiate with e.g.
+;   dstruct Monster, , .X=6, .Y=4, .Type=$22, .Param=0, .Index=1
+struct Monster
+    bytes 1, X
+    bytes 1, Y
+    bytes 1, Type      ; per-instance attribute (not the species)
+    bytes 1, Param
+    bytes 1, Index     ; index into the floor's MonsterSprites (arr1)
+end_struct
+
+; A monster spawner slot (arr3; 8 per floor). Spawned species = MonsterSprites[Index];
+; X == INERT marks an empty slot, Index == INERT spawns nothing (obstruction).
 struct Spawner
-    bytes 1, Col
-    bytes 1, Row
+    bytes 1, X
+    bytes 1, Y
     bytes 1, P0        ; rate/count params (undecoded)
     bytes 1, P1
     bytes 1, P2
-    bytes 1, GfxIndex
+    bytes 1, Index
 end_struct
 
 DEF INERT EQU $FF   ; empty/missing monster or spawner slot
+
+; Fixed fillers for unused slots -- byte-identical across all 70 floors.
+MACRO EMPTY_MONSTER_SLOT
+    db INERT, INERT, INERT, $01, INERT
+ENDM
+MACRO EMPTY_SPAWNER_SLOT
+    db INERT, INERT, INERT, INERT, INERT, INERT
+ENDM
 
 ENDC ; ROOM_INC
