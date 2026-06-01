@@ -7,6 +7,76 @@ INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "kalum_portrait.asm"
 INCLUDE "padding.asm"
+INCLUDE "room/room01.asm"
+INCLUDE "room/room02.asm"
+INCLUDE "room/room03.asm"
+INCLUDE "room/room04.asm"
+INCLUDE "room/room05.asm"
+INCLUDE "room/room06.asm"
+INCLUDE "room/room07.asm"
+INCLUDE "room/room08.asm"
+INCLUDE "room/room09.asm"
+INCLUDE "room/room10.asm"
+INCLUDE "room/room11.asm"
+INCLUDE "room/room12.asm"
+INCLUDE "room/room13.asm"
+INCLUDE "room/room14.asm"
+INCLUDE "room/room15.asm"
+INCLUDE "room/room16.asm"
+INCLUDE "room/room17.asm"
+INCLUDE "room/room18.asm"
+INCLUDE "room/room19.asm"
+INCLUDE "room/room20.asm"
+INCLUDE "room/room21.asm"
+INCLUDE "room/room22.asm"
+INCLUDE "room/room23.asm"
+INCLUDE "room/room24.asm"
+INCLUDE "room/room25.asm"
+INCLUDE "room/room26.asm"
+INCLUDE "room/room27.asm"
+INCLUDE "room/room28.asm"
+INCLUDE "room/room29.asm"
+INCLUDE "room/room30.asm"
+INCLUDE "room/room31.asm"
+INCLUDE "room/room32.asm"
+INCLUDE "room/room33.asm"
+INCLUDE "room/room34.asm"
+INCLUDE "room/room35.asm"
+INCLUDE "room/room36.asm"
+INCLUDE "room/room37.asm"
+INCLUDE "room/room38.asm"
+INCLUDE "room/room39.asm"
+INCLUDE "room/room40.asm"
+INCLUDE "room/room41.asm"
+INCLUDE "room/room42.asm"
+INCLUDE "room/room43.asm"
+INCLUDE "room/room44.asm"
+INCLUDE "room/room45.asm"
+INCLUDE "room/room46.asm"
+INCLUDE "room/room47.asm"
+INCLUDE "room/room48.asm"
+INCLUDE "room/room49.asm"
+INCLUDE "room/room50.asm"
+INCLUDE "room/room51.asm"
+INCLUDE "room/room52.asm"
+INCLUDE "room/room53.asm"
+INCLUDE "room/room54.asm"
+INCLUDE "room/room55.asm"
+INCLUDE "room/room56.asm"
+INCLUDE "room/room57.asm"
+INCLUDE "room/room58.asm"
+INCLUDE "room/room59.asm"
+INCLUDE "room/room60.asm"
+INCLUDE "room/roomB01.asm"
+INCLUDE "room/roomB02.asm"
+INCLUDE "room/roomB03.asm"
+INCLUDE "room/roomB04.asm"
+INCLUDE "room/roomB05.asm"
+INCLUDE "room/roomB06.asm"
+INCLUDE "room/roomB07.asm"
+INCLUDE "room/roomB08.asm"
+INCLUDE "room/roomB09.asm"
+INCLUDE "room/roomB10.asm"
 INCLUDE "script.asm"
 INCLUDE "scripts/kalum.asm"
 INCLUDE "scripts/letter_from_cox.asm"
@@ -5644,6 +5714,26 @@ Data_2f_4ee3:
 SECTION "data_0bd128", ROMX[$5128], BANK[$2f]
 Data_2f_5128:
 	INCBIN "data/data_0bd128.bin"
+
+SECTION "data_0bd36d", ROMX[$536d], BANK[$2f]
+Data_2f_536d:
+	INCBIN "data/data_0bd36d.bin"
+
+SECTION "data_0bd5b2", ROMX[$55b2], BANK[$2f]
+Data_2f_55b2:
+	INCBIN "data/data_0bd5b2.bin"
+
+SECTION "data_0bd7f7", ROMX[$57f7], BANK[$2f]
+Data_2f_57f7:
+	INCBIN "data/data_0bd7f7.bin"
+
+SECTION "data_0bda3c", ROMX[$5a3c], BANK[$2f]
+Data_2f_5a3c:
+	INCBIN "data/data_0bda3c.bin"
+
+SECTION "data_0be350", ROMX[$6350], BANK[$2f]
+Data_2f_6350:
+	INCBIN "data/data_0be350.bin"
 
 SECTION "data_0c0000", ROMX[$4000], BANK[$30]
 Data_30_4000:
