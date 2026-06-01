@@ -26,7 +26,7 @@ DEF ITEM_HIDDEN  EQU $80
 ; base item ids (low 6 bits); compose with a placement flag: ITEM_OPEN | IID_KEY
 DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
-DEF IID_BELL         EQU $02
+DEF IID_BELL         EQU $02     ; Spawns a Suzurizo (collect 10 Suzurizos -> 1-up)
 DEF IID_TORORON_HALF EQU $03     ; Doubles the remaining floor time
 DEF IID_TORORON_FULL EQU $04     ; Multiplies the remaining floor time by 5
 DEF IID_HOURGLASS_ORANGE EQU $05 ; Sets the timer to 50 seconds
@@ -62,6 +62,14 @@ DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 ; The item id space is base $00-$23 (FloorPieceDefs covers open codes $c0-$e3;
 ; $e4+ have no entry). $21 and $22 are defined there (sprites $e1/$e2) but never
 ; placed on any floor or bonus stage -- cut/reserved content.
+
+; Known items from the in-game list not yet matched to an id -- candidates for the
+; remaining unmapped ids ($16, $19, $1a, $1b, $1c, $1f):
+;   DOLL_ALF     -- turns all floor monsters into Suzurizos (the entity a BELL
+;                   pickup spawns; collecting 10 Suzurizos = 1-up)
+;   DOLL_AYA     -- effect unknown
+;   PEACH_GOLD   -- 500,000 points
+;   PEACH_SILVER -- 500,000 points
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40
