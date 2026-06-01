@@ -48,6 +48,7 @@ DEF IID_NUGGET_GOLD  EQU $14
 DEF IID_HEAL_BADGE   EQU $15     ; 10,000-point pickup
 DEF IID_CAKE         EQU $17     ; 100,000-point pickup
 DEF IID_BATTLE_CARD  EQU $18
+DEF IID_PEACH_GOLD   EQU $19     ; 500,000-point pickup
 DEF IID_MONSTER_FLAME EQU $1D    ; Warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E
 DEF IID_DISC_STONE_PIECE EQU $20
@@ -64,12 +65,12 @@ DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 ; placed on any floor or bonus stage -- cut/reserved content.
 
 ; Known items from the in-game list not yet matched to an id -- candidates for the
-; remaining unmapped ids ($16, $19, $1a, $1b, $1c, $1f):
+; remaining unmapped ids ($16, $1a, $1b, $1c, $1f):
 ;   DOLL_ALF     -- turns all floor monsters into Suzurizos (the entity a BELL
 ;                   pickup spawns; collecting 10 Suzurizos = 1-up)
 ;   DOLL_AYA     -- effect unknown
-;   PEACH_GOLD   -- 500,000 points
 ;   PEACH_SILVER -- 500,000 points
+; ($19 PEACH_GOLD confirmed in-game on floor 45 (r6,c1, hidden).)
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40

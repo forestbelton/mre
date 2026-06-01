@@ -27,11 +27,10 @@ Companion to `docs/floor_data.md` (the format reference). This tracks the
 - **All 19 monster species named** ($00-$13, incl. the 6 bonus-stage recruits).
 - **Most items named** — see items.inc.
 
-## Remaining unidentified item ids (6) — coordinates
+## Remaining unidentified item ids (5) — coordinates
 | id | where to find it (floor, row, col, state) |
 |---|---|
 | `$16` | gated/suppressed: in data on fl 33/40/69/70 but NEVER appears in play (has a real sprite `$d6`). Can't observe normally. |
-| `$19` | fl 45 (r6,c1) hidden · fl 70 (r8,c5) hidden — *player investigating fl 45's "strange" cell here* |
 | `$1a` | fl 62 (r4,c9) **visible** · fl 68 (r12,c6) visible · fl 63 (r3,c5) in-crate |
 | `$1b` | fl 60 (r7,c8) hidden |
 | `$1c` | fl 47 (r2,c8) hidden |
@@ -42,8 +41,9 @@ From the player's in-game item list — candidates for the ids above:
 - **DOLL_ALF** — turns all floor monsters into Suzurizos (the entity a BELL `$02`
   pickup spawns; collecting 10 Suzurizos = 1-up)
 - **DOLL_AYA** — effect unknown
-- **PEACH_GOLD** — 500,000 points
 - **PEACH_SILVER** — 500,000 points
+
+(Matched: **PEACH_GOLD** = `$19`, confirmed in-game on floor 45 (r6,c1, hidden).)
 
 (`$16` may be one of these or cut. `$21`/`$22` are defined-but-unplaced — cut/reserved.)
 
