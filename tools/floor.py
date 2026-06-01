@@ -116,7 +116,7 @@ def main():
     found = False
     for s in range(4):
         e = r["arr3"][s*6:s*6+6]
-        if e[0] != 0xff:
+        if e[0] != 0xff and e[1] != 0xff:   # both $ff col & row = dead slot
             found = True
             gi = e[5]
             if gi < len(a1):
