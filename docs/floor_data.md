@@ -117,13 +117,12 @@ piece-grid items + `arr2` monsters + `arr3` spawners.
 
 ### Monster spawners (arr3)
 `Func_01_41aa` (`ProcessFloorSpawners`) reads `arr3` as **4 slots × 6 bytes**:
-`[col][row][p0][p1][p2][p3]`. `col=$ff` = empty slot. The reader packs `p0&7`,
-`p1&3`, `p2&7` into a value and passes it to `Func_01_4219` — the spawned species
-and rate/cap live in those params (not a clean `arr1` index), and aren't decoded
-yet. Floor 8's two spawners (`04 02 01 00 03 00`, `02 02 01 00 03 00`) produce
-Tacopi. The reader `jr z`-skips when `Func_01_4219` returns 0, so a slot can be
-**inert** — present but spawning nothing, acting like an obstruction (e.g. floor
-15's `… 02 00 02 …`). Active/species/rate decode is TBD.
+`[col][row][p0][p1][p2][gfxIndex]`. `col=$ff` = empty slot. The spawned **species is
+`arr1[gfxIndex]`** (same mechanism as `arr2` monsters); `gfxIndex = $ff` ⇒ **inert**
+(present but spawns nothing — acts like an obstruction). `p0`/`p1`/`p2` are the spawn
+rate/count (the reader packs `p0&7`,`p1&3`,`p2&7` for `Func_01_4219`) — not decoded
+yet, but observed counts are small (floor 23's two spawners each make 3 Naga).
+Examples: floor 8 → Tacopi, floor 23 → 3 Naga, floor 25 → Tacopi, floor 15 → inert.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 

@@ -109,16 +109,23 @@ def main():
     if not found:
         print("  (none)")
 
-    # arr3 spawner entries are 6 bytes [col][row][p0][p1][p2][p3]; the spawned
-    # species is encoded in the params (decoded by Func_01_4219) -- not yet mapped,
-    # so just show the raw bytes.
+    # arr3 spawner entries are 6 bytes [col][row][p0][p1][p2][gfxIndex]. The species
+    # is arr1[gfxIndex] (same as arr2); gfxIndex $ff = inert (spawns nothing).
+    # p0/p1/p2 are spawn rate/count (packed for Func_01_4219) -- not decoded yet.
     print("\nspawners (arr3):")
     found = False
     for s in range(4):
         e = r["arr3"][s*6:s*6+6]
         if e[0] != 0xff:
             found = True
-            print(f"  col {e[0]:2d}, row {e[1]:2d}  raw={' '.join(f'{b:02x}' for b in e)}")
+            gi = e[5]
+            if gi < len(a1):
+                sp = a1[gi]
+                who = mons.get(sp, "?? NEW ??")
+                print(f"  col {e[0]:2d}, row {e[1]:2d}  spawns ${sp:02x} {who}"
+                      f"  rate={e[2]:02x} {e[3]:02x} {e[4]:02x}")
+            else:
+                print(f"  col {e[0]:2d}, row {e[1]:2d}  inert (gfxIndex=${gi:02x})")
     if not found:
         print("  (none)")
 
