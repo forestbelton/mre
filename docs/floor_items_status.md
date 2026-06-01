@@ -27,42 +27,45 @@ Companion to `docs/floor_data.md` (the format reference). This tracks the
 - **All 19 monster species named** ($00-$13, incl. the 6 bonus-stage recruits).
 - **Most items named** — see items.inc.
 
-## Remaining unidentified item ids (4) — coordinates + static decode
+## Remaining unidentified item ids (3) — coordinates + static decode
 Points/effect are statically decoded from the pickup tables (`Data_01_51aa` points,
 `$523a` handlers) — byte-exact certain. See docs/floor_data.md.
 
 | id | static: points · effect | where to find it (floor, row, col, state) |
 |---|---|---|
 | `$16` | 20,000 · points-only | in data fl 33/40/69/70 but never appears (sprite `$d6`); **not** in the `$5162` gate — separate, still-unknown suppression. Can't observe normally. |
-| `$1a` | 500,000 · points-only | fl 62 (r4,c9) **visible** · fl 68 (r12,c6) visible · fl 63 (r3,c5) in-crate |
-| `$1b` | 500,000 · points-only | fl 60 (r7,c8) hidden |
+| `$1b` | 500,000 · points-only | fl 60 (r7,c8) hidden — a second "peach" (not in editor legend), still unnamed |
 | `$1c` | **1,000,000** · points-only | fl 47 (r2,c8) — was phantom on that visit (`$5162`/bit-0 gate, not permanent) |
 
-**Identified by code (no climb needed):** `$1f` = **DOLL_ALF** — its effect
-`Func_01_5544` kills each monster and spawns entity `$1f` (Suzurizo, the same entity
-BELL spawns) at its position. DOLL_DUCK `$1e` is the structural sibling but spawns a
-different entity (`$08`). (Floor coords for `$1f`: fl 58 r7,c5.)
+**Identified:** `$1a` = **PEACH_SILVER** (confirmed in-game on **fl 62 / basement B2**,
+r4,c9 visible). `$1f` = **DOLL_ALF** (proven from code: effect `Func_01_5544` kills
+each monster and spawns entity `$1f` = Suzurin, the entity BELL spawns; DOLL_DUCK
+`$1e` is the sibling but spawns a different entity `$08`). Coords for `$1f`: fl 58 r7,c5.
 
-**`$1a`/`$1b`/`$1c` are observable, not permanently phantom.** They share the `$5162`
-conditional-appearance flag (with `$07` COX_HAT, `$17` CAKE, `$19` PEACH_GOLD, `$1f`)
-and are removed at floor-load only when `wC2D5` bit 0 is clear — i.e. when you
-*didn't* reach the floor by the normal up-stairs path. PEACH_GOLD (same class)
-appeared on fl 45, so the rest will too under the right approach. **`$16` is the only
-true can't-observe id** (separate mechanism). "Hidden" (coded placement) ≠ "phantom"
-(doesn't manifest); a hidden item is still obtainable.
+> Floor numbering: tower floors 61–70 are displayed as **basement B1–B10** in-game
+> (so fl 62 = B2). Records are still `record = floor − 1`.
+
+**`$1b`/`$1c` are observable, not permanently phantom.** They share the `$5162`
+conditional-appearance flag (with `$07` COX_HAT, `$17` CAKE, `$19` PEACH_GOLD, `$1a`
+PEACH_SILVER, `$1f`) and are removed at floor-load only when `wC2D5` bit 0 is clear —
+i.e. when you *didn't* reach the floor by the normal up-stairs path. PEACH_GOLD/SILVER
+(same class) appeared, so the rest will too under the right approach. **`$16` is the
+only true can't-observe id** (separate mechanism). "Hidden" (coded placement) ≠
+"phantom" (doesn't manifest); a hidden item is still obtainable.
 
 ## Known item names not yet matched to an id
-From the player's in-game item list — candidates for the ids above:
-- **DOLL_AYA** — effect unknown; not yet located (no remaining 0-pt DOLL id — may be
-  an alias, `$1c`, or cut content).
-- **PEACH_SILVER** — 500,000 points.
-
-Static cross-check (still needs in-game confirmation for the exact name):
-- **PEACH_SILVER** (500,000) ⇒ `$1a` or `$1b` (both 500,000 points-only). The other
-  500k id is a second points-only "peach" not yet in the player's list.
-- `$1c` (1,000,000) has **no name in the player's list yet** — a premium item.
+The level editor's legend (`src/data/data_05d278.bin`) is the authoritative name
+list. Cross-referenced against it:
+- `$1b` (500,000) is a **second peach** — same points/handler as `$19` PEACH_GOLD /
+  `$1a` PEACH_SILVER, but **absent from the editor legend** (not editor-placeable),
+  so it has no authoritative name. Still unnamed.
+- `$16` and `$1c` (1,000,000) are **absent from the editor legend** — no
+  authoritative name from that source; still unknown.
+- **DOLL_AYA** — in the player's in-game list but not in the editor legend, and no
+  remaining 0-pt DOLL id; may be an alias/cut content.
 - Matched: **PEACH_GOLD** = `$19` (500,000), confirmed in-game on fl 45 (r6,c1).
-- Matched: **DOLL_ALF** = `$1f`, proven from code (spawns Suzurizo `$1f` per monster).
+- Matched: **PEACH_SILVER** = `$1a` (500,000), confirmed in-game on fl 62 / B2 (r4,c9).
+- Matched: **DOLL_ALF** = `$1f`, proven from code (spawns Suzurin `$1f` per monster).
 
 (`$21`/`$22` are defined-but-unplaced — cut/reserved.)
 

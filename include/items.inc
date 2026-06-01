@@ -7,7 +7,7 @@
 ;   ITEM_OPEN   ($C0, bit 6 set)   = present (lying out, or inside a crate)
 ;   ITEM_HIDDEN ($80, bit 6 clear) = phantom; appears only after a crate is made
 ;                                    and destroyed on the cell
-; e.g. COIN_GOLD = $D3 open / $93 hidden; DIAMOND_BLUE = $CE open / $8E hidden.
+; e.g. MEDAL_GOLD = $D3 open / $93 hidden; DIAMOND_BLUE = $CE open / $8E hidden.
 ;
 ; Placement is driven by the cell's COLLISION value, not just bit 6:
 ;   in-crate: collision $22 (a crate hides the item) -- for EITHER bit 6 value
@@ -26,7 +26,7 @@ DEF ITEM_HIDDEN  EQU $80
 ; base item ids (low 6 bits); compose with a placement flag: ITEM_OPEN | IID_KEY
 DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
-DEF IID_BELL         EQU $02     ; Spawns a Suzurizo (collect 10 Suzurizos -> 1-up)
+DEF IID_BELL         EQU $02     ; Spawns a Suzurin (collect 10 Suzurins -> 1-up)
 DEF IID_TORORON_HALF EQU $03     ; Doubles the remaining floor time
 DEF IID_TORORON_FULL EQU $04     ; Multiplies the remaining floor time by 5
 DEF IID_HOURGLASS_ORANGE EQU $05 ; Sets the timer to 50 seconds
@@ -41,17 +41,18 @@ DEF IID_CRYSTAL_RED  EQU $0D
 DEF IID_DIAMOND_BLUE EQU $0E
 DEF IID_DIAMOND_RED  EQU $0F
 DEF IID_RING_PLATINUM EQU $10    ; 50,000-point pickup
-DEF IID_COIN_GRAY    EQU $11
-DEF IID_NUGGET_GRAY  EQU $12
-DEF IID_COIN_GOLD    EQU $13
+DEF IID_MEDAL_SILVER EQU $11     ; "Silver Medal" — 100-point pickup (editor legend)
+DEF IID_NUGGET_SILVER EQU $12    ; "Silver Nugget" — 200-point pickup (editor legend)
+DEF IID_MEDAL_GOLD   EQU $13     ; "Gold Medal" — 1,000-point pickup (editor legend)
 DEF IID_NUGGET_GOLD  EQU $14
 DEF IID_HEAL_BADGE   EQU $15     ; 10,000-point pickup
 DEF IID_CAKE         EQU $17     ; 100,000-point pickup
 DEF IID_BATTLE_CARD  EQU $18
-DEF IID_PEACH_GOLD   EQU $19     ; 500,000-point pickup
+DEF IID_PEACH_GOLD   EQU $19     ; "Golden Peach" — 500,000-point pickup
+DEF IID_PEACH_SILVER EQU $1A     ; "Silver Peach" — 500,000-point pickup (confirmed fl 62/B2)
 DEF IID_MONSTER_FLAME EQU $1D    ; Warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E     ; Transforms monsters into entity $08 (effect Func_01_55a6)
-DEF IID_DOLL_ALF     EQU $1F     ; Turns all monsters into Suzurizos (entity $1f, as BELL spawns)
+DEF IID_DOLL_ALF     EQU $1F     ; Turns all monsters into Suzurins (entity $1f, as BELL spawns)
 DEF IID_DISC_STONE_PIECE EQU $20
 DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 
@@ -74,18 +75,19 @@ DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 ; Statically decoded facts for the remaining unmapped ids (points + handler kind):
 ;   $16  20,000 pts, generic handler -- but phantom (see above); NOT in the $5162
 ;        conditional-appearance table, so its suppression is a separate mechanism.
-;   $1a  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
-;   $1b  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
-;   $1c  1,000,000 pts, points-only handler ($53a0)         -- highest-value item
-;   $1f  DOLL_ALF (now named above): 0 pts, effect Func_01_5544 ($53ab) kills each
-;        monster and spawns entity $1f (Suzurizo) at its position -- the same entity
+;   $16  20,000 pts, generic handler -- but phantom (see above); NOT in the $5162
+;        table; absent from the editor legend. Still unknown.
+;   $1b  500,000 pts, generic points-only handler ($5282) -- a second "peach" (same
+;        points/handler as $19 PEACH_GOLD / $1a PEACH_SILVER) but absent from the
+;        editor legend (not editor-placeable). Still unnamed.
+;   $1c  1,000,000 pts, points-only handler ($53a0) -- highest-value item; absent
+;        from the editor legend. Still unknown.
+;   $1f  DOLL_ALF (named above): 0 pts, effect Func_01_5544 ($53ab) kills each
+;        monster and spawns entity $1f (Suzurin) at its position -- the same entity
 ;        BELL spawns. Proven from code (sibling of $1e DOLL_DUCK, which spawns $08).
 ;
-; Names from the in-game list still to be matched (need in-game confirmation):
-;   PEACH_SILVER -- 500,000 points  => one of $1a/$1b (both 500k points-only).
-;   DOLL_AYA     -- effect unknown   => not yet located (no remaining 0-pt DOLL id;
-;                   may be an alias, $1c, or cut). $1f is DOLL_ALF, proven above.
-;   ($1c at 1,000,000 pts has no name in the player's list yet -- a premium item.)
+; DOLL_AYA is in the player's in-game list but not in the editor legend and there is
+; no remaining 0-pt DOLL id; may be an alias/cut content.
 ;
 ; These 7 ids ($07 COX_HAT, $17 CAKE, $19 PEACH_GOLD, $1a, $1b, $1c, $1f) share the
 ; $5162 conditional-appearance flag and are removed at floor-load by Func_01_56fb
@@ -113,8 +115,8 @@ enum MONSTER
     case JOKER
     case GHOST
     case PUNCHO
-    case PSIROLLER
-    case DAKKUNG
+    case PSYLORA ; aka Psiroller
+    case DUCKEN ; aka Dakkung
     case FLAME_RED
     case FLAME_BLUE
 

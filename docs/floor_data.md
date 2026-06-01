@@ -41,6 +41,10 @@ So **floor 1 → record 0**, **floor 2 → record 1**, and *every* normal floor 
 `record = floor − 1`. Verified against a live `--watch-write` of
 `$C2C0`/`$C2C1`/`$C2C2` (floor 1 = `$C2C0=1, $C2C1=0` → index 0).
 
+Internal floors **61–70 are displayed in-game as basement B1–B10** (so internal
+floor 62 = "B2"); the `record = floor − 1` mapping is unchanged — only the on-screen
+label differs.
+
 ## Record format (581-byte slot)
 
 `LoadFloorData`/`Func_00_16ed` parses the record sequentially:
@@ -79,16 +83,16 @@ bits: bit 7 → item, bit 6 → exit. Known codes:
 | code | object | | code | object |
 |---|---|---|---|---|
 | `$40` | EXIT (stairs) | | `$c2` | BELL |
-| `$43` | bat obstruction | | `$c8` | BOMB_SMALL |
+| `$43` | Devil's Seal (obstruction) | | `$c8` | BOMB_SMALL |
 | `$8f` | DIAMOND_RED | | `$ce` | DIAMOND_BLUE |
-| `$93` | COIN_GOLD (hidden) | | `$d1` | COIN_GRAY |
-| `$c0` | KEY | | `$d2` | NUGGET_GRAY |
-| `$c1` | KEY_SILVER | | `$d3` | COIN_GOLD |
+| `$93` | MEDAL_GOLD (hidden) | | `$d1` | MEDAL_SILVER |
+| `$c0` | KEY | | `$d2` | NUGGET_SILVER |
+| `$c1` | KEY_SILVER | | `$d3` | MEDAL_GOLD |
 | `$cc` | CRYSTAL_BLUE | | | |
 
 For items (bit 7 set), the low 6 bits are the base id and **bit 6 = placement**:
 set (`$cx-$fx`) = placed in the open, clear (`$8x-$bx`) = crate-hidden (revealed by
-destroying a crate). E.g. COIN_GOLD is `$d3` open / `$93` hidden — confirmed in-game
+destroying a crate). E.g. MEDAL_GOLD is `$d3` open / `$93` hidden — confirmed in-game
 (`$8e` = hidden DIAMOND_BLUE = `$ce` with bit 6 clear).
 
 An item has **three placement states**, decided by the cell's **collision** value
@@ -185,7 +189,7 @@ collision (20 border, 21 wall, 00 walkable, 22 object):
 objects (from the piece grid):
   col 8,row 2 = $40 EXIT
   col 3,row 3 = $c0 KEY
-  col 3,row 4 = $d1 COIN_GRAY
+  col 3,row 4 = $d1 MEDAL_SILVER
   col 5,row 5 = $c8 BOMB_SMALL
 ```
 
