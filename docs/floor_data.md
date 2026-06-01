@@ -118,7 +118,9 @@ piece-grid items + `arr2` monsters + `arr3` spawners.
 `p1&3`, `p2&7` into a value and passes it to `Func_01_4219` — the spawned species
 and rate/cap live in those params (not a clean `arr1` index), and aren't decoded
 yet. Floor 8's two spawners (`04 02 01 00 03 00`, `02 02 01 00 03 00`) produce
-Tacopi; floor 15's (`… 02 00 02 …`) produce a different species — TBD.
+Tacopi. The reader `jr z`-skips when `Func_01_4219` returns 0, so a slot can be
+**inert** — present but spawning nothing, acting like an obstruction (e.g. floor
+15's `… 02 00 02 …`). Active/species/rate decode is TBD.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 
