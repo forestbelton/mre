@@ -104,10 +104,38 @@ tower top), not by the hidden bit.
 item is still obtainable in play (floor 45's PEACH_GOLD `$19`, coded hidden, was
 picked up). *Phantom* is the separate, empirical case where an item is in the floor
 *definition data* but **nothing appears at its cell at all** in play — not even a
-hidden pickup (floor 47 (r2,c8) `$1c`; `$16` on every floor it's coded on). Phantom
-is runtime non-manifestation (likely the same progression/runtime gating as `$16`),
-orthogonal to the coded visible/hidden/in-crate state. `$4x` = structural (`$40` EXIT, `$43` obstruction).
-Named codes live in `include/items.inc`; many remain unidentified.
+hidden pickup (floor 47 (r2,c8) `$1c`). Phantom is runtime non-manifestation,
+orthogonal to the coded visible/hidden/in-crate state, and (for `$1c`) has a known
+cause — the conditional-appearance gate below. `$4x` = structural (`$40` EXIT,
+`$43` obstruction). Named codes live in `include/items.inc`; many remain unidentified.
+
+#### Conditional-appearance gate (why some items are phantom)
+At floor load, `Func_00_166f` runs three grid-cleanup passes (bank `$01`):
+- `Func_01_569b` — removes KEY (`$00`) when `wC2D5` (`$c2d5`) bit 1 is set.
+- `Func_01_56d5` — removes KEY_SILVER (`$01`) until a progress flag (`Func_00_119a $09`).
+- `Func_01_56fb` — the **conditional-item** pass: for each item cell it indexes a
+  per-base-id flag table **`Data_01_5162`** (`$5162`); if the flag is nonzero it
+  **zeroes the cell** (item gone) — but the whole pass is skipped when `wC2D5` bit 0
+  is *set* (`ret nz`). Flagged ids: `$07` COX_HAT, `$17` CAKE, `$19` PEACH_GOLD,
+  `$1a`, `$1b`, `$1c`, `$1f`. So these seven appear **only while bit 0 is set**.
+
+`wC2D5` bit 0 is set by `Func_00_1219` (`= $01`) on the normal stair-advance/new-run
+setup (`Func_05_4785` at floor 1; `Func_01_4748/4759/476d`) and cleared by
+`Func_01_459a` (via the stair-transition `Func_01_447f`, triggered by bit 7) and on
+the `$c2d6 ∈ {0,2}` advance branch (`Func_01_4782`, which skips the re-set). Net:
+the flagged items show when you reach a floor by the normal up-stairs path and are
+suppressed otherwise — which is why PEACH_GOLD appeared on fl 45 but `$1c` did not
+on fl 47. (`$16` is **not** in `$5162`; its non-appearance is a separate, still-
+unidentified mechanism.)
+
+#### Item points + effect tables
+The pickup dispatch `Func_01_5060` (bank `$01`) resolves a collected item by base id:
+- **`Data_01_51aa`** (`$51aa`) — 4 bytes/id, **big-endian BCD** point value added to
+  the score (`Func_01_5074`). E.g. RING_PLATINUM `00 05 00 00` = 50,000; PEACH_GOLD
+  `00 50 00 00` = 500,000; `$1a`/`$1b` = 500,000; `$1c` = 1,000,000; `$16` = 20,000.
+- **`$523a`** — 2 bytes/id, LE pointer to the per-id effect handler. `$5282` is the
+  generic points-only handler (gems/coins/peaches). Effect items dispatch elsewhere
+  (e.g. `$1f` → `$5544`, a monster-transform like `$1e` DOLL_DUCK → `$55a6`).
 
 Lower piece IDs index `FloorPieceDefs` (`$12FA`, 5-byte entries) and stamp a 2×2
 metatile `{T, T+8, T+1, T+9}` to the BG (`$00:$180B`); walls auto-tile from

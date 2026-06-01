@@ -64,13 +64,32 @@ DEF IID_RED_DISC_STONE EQU $23   ; Contains Phoenix
 ; $e4+ have no entry). $21 and $22 are defined there (sprites $e1/$e2) but never
 ; placed on any floor or bonus stage -- cut/reserved content.
 
-; Known items from the in-game list not yet matched to an id -- candidates for the
-; remaining unmapped ids ($16, $1a, $1b, $1c, $1f):
-;   DOLL_ALF     -- turns all floor monsters into Suzurizos (the entity a BELL
-;                   pickup spawns; collecting 10 Suzurizos = 1-up)
-;   DOLL_AYA     -- effect unknown
-;   PEACH_SILVER -- 500,000 points
-; ($19 PEACH_GOLD confirmed in-game on floor 45 (r6,c1, hidden).)
+; Item points + effect tables (bank $01, used by the pickup dispatch Func_01_5060):
+;   Data_01_51aa ($51aa) -- 4 bytes/id, big-endian BCD point value added to score.
+;   $523a               -- 2 bytes/id, LE pointer to the per-id effect handler.
+;   ($19 PEACH_GOLD = 500,000 here, matching its known name -- confirmed in-game on
+;    floor 45 (r6,c1, hidden), so the decode's id<->value mapping is trustworthy.)
+;
+; Statically decoded facts for the remaining unmapped ids (points + handler kind):
+;   $16  20,000 pts, generic handler -- but phantom (see above); NOT in the $5162
+;        conditional-appearance table, so its suppression is a separate mechanism.
+;   $1a  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
+;   $1b  500,000 pts, generic points-only handler ($5282)  -- PEACH-class
+;   $1c  1,000,000 pts, points-only handler ($53a0)         -- highest-value item
+;   $1f  0 pts, effect handler ($53ab -> Func_01_5544): iterates the entity array
+;        $c823 and rewrites monster type bytes -- a monster-transform DOLL, the
+;        structural sibling of $1e DOLL_DUCK ($5392 -> Func_01_55a6).
+;
+; Names from the in-game list still to be matched (need in-game confirmation):
+;   PEACH_SILVER -- 500,000 points  => one of $1a/$1b (both 500k points-only).
+;   DOLL_ALF     -- turns all floor monsters into Suzurizos (BELL's Suzurizo);
+;   DOLL_AYA     -- effect unknown   => $1f is a DOLL (which of ALF/AYA = in-game).
+;   ($1c at 1,000,000 pts has no name in the player's list yet -- a premium item.)
+;
+; These 7 ids ($07 COX_HAT, $17 CAKE, $19 PEACH_GOLD, $1a, $1b, $1c, $1f) share the
+; $5162 conditional-appearance flag and are removed at floor-load by Func_01_56fb
+; when wC2D5 bit 0 is clear -- see docs/floor_data.md. They DO appear in normal play
+; (PEACH_GOLD did), so $1a/$1b/$1c/$1f are observable, not permanently phantom.
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40

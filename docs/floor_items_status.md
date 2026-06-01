@@ -27,19 +27,25 @@ Companion to `docs/floor_data.md` (the format reference). This tracks the
 - **All 19 monster species named** ($00-$13, incl. the 6 bonus-stage recruits).
 - **Most items named** — see items.inc.
 
-## Remaining unidentified item ids (5) — coordinates
-| id | where to find it (floor, row, col, state) |
-|---|---|
-| `$16` | **phantom**: in data on fl 33/40/69/70 but NEVER appears in play (has a real sprite `$d6`). Can't observe normally. |
-| `$1a` | fl 62 (r4,c9) **visible** · fl 68 (r12,c6) visible · fl 63 (r3,c5) in-crate |
-| `$1b` | fl 60 (r7,c8) hidden |
-| `$1c` | **phantom**: fl 47 (r2,c8) coded hidden, but nothing appears at the cell in play (confirmed in-game). Only location — can't observe normally, like `$16`. |
-| `$1f` | fl 58 (r7,c5) hidden |
+## Remaining unidentified item ids (5) — coordinates + static decode
+Points/effect are statically decoded from the pickup tables (`Data_01_51aa` points,
+`$523a` handlers) — byte-exact certain. See docs/floor_data.md.
 
-**"Hidden" (coded placement) ≠ "phantom" (doesn't appear in play at all).** A hidden
-item is still obtainable (PEACH_GOLD `$19` on fl 45 was). Phantom is runtime
-non-manifestation — nothing at the cell — and currently affects `$16` and `$1c`.
-See docs/floor_data.md.
+| id | static: points · effect | where to find it (floor, row, col, state) |
+|---|---|---|
+| `$16` | 20,000 · points-only | in data fl 33/40/69/70 but never appears (sprite `$d6`); **not** in the `$5162` gate — separate, still-unknown suppression. Can't observe normally. |
+| `$1a` | 500,000 · points-only | fl 62 (r4,c9) **visible** · fl 68 (r12,c6) visible · fl 63 (r3,c5) in-crate |
+| `$1b` | 500,000 · points-only | fl 60 (r7,c8) hidden |
+| `$1c` | **1,000,000** · points-only | fl 47 (r2,c8) — was phantom on that visit (`$5162`/bit-0 gate, not permanent) |
+| `$1f` | 0 · monster-transform DOLL (`$5544`, sibling of `$1e` DOLL_DUCK) | fl 58 (r7,c5) hidden |
+
+**`$1a`/`$1b`/`$1c`/`$1f` are observable, not permanently phantom.** They share the
+`$5162` conditional-appearance flag (with `$07` COX_HAT, `$17` CAKE, `$19`
+PEACH_GOLD) and are removed at floor-load only when `wC2D5` bit 0 is clear — i.e.
+when you *didn't* reach the floor by the normal up-stairs path. PEACH_GOLD (same
+class) appeared on fl 45, so the rest will too under the right approach. **`$16` is
+the only true can't-observe id** (separate mechanism). "Hidden" (coded placement) ≠
+"phantom" (doesn't manifest); a hidden item is still obtainable.
 
 ## Known item names not yet matched to an id
 From the player's in-game item list — candidates for the ids above:
@@ -48,15 +54,23 @@ From the player's in-game item list — candidates for the ids above:
 - **DOLL_AYA** — effect unknown
 - **PEACH_SILVER** — 500,000 points
 
-(Matched: **PEACH_GOLD** = `$19`, confirmed in-game on floor 45 (r6,c1, hidden).)
+Static cross-check (still needs in-game confirmation for the exact name):
+- **PEACH_SILVER** (500,000) ⇒ `$1a` or `$1b` (both 500,000 points-only). The other
+  500k id is a second points-only "peach" not yet in the player's list.
+- `$1f` is a **DOLL** (0 pts, monster-transform) ⇒ DOLL_ALF *or* DOLL_AYA.
+- `$1c` (1,000,000) has **no name in the player's list yet** — a premium item.
+- Matched: **PEACH_GOLD** = `$19` (500,000), confirmed in-game on fl 45 (r6,c1).
 
-(`$16` may be one of these or cut. `$21`/`$22` are defined-but-unplaced — cut/reserved.)
+(`$21`/`$22` are defined-but-unplaced — cut/reserved.)
 
 ## Open threads / next steps
-- **Faster matching (offered, not started):** decode the item-pickup/points-effect
-  table (effects are keyed by item id) to match the remaining ids ↔ names
-  statically — e.g. the id that awards 500,000 pts is a PEACH, ×2-time is
-  TORORON_HALF — instead of reaching each floor.
+- **Static decode — DONE:** the item-pickup/points-effect tables (`Data_01_51aa`
+  points, `$523a` handlers) are decoded; points + effect kind for every id are in
+  the table above and in docs/floor_data.md. Remaining work is only matching the
+  player's *names* to ids (`$1a`/`$1b`/`$1c`/`$1f`) — confirm in-game when reachable.
+- **`$16` only true unknown:** in data but never appears, and (unlike `$1c`) not in
+  the `$5162` gate. Needs its separate suppression mechanism traced, or sprite
+  rendered, to name.
 - **Spawner params** `p0/p1/p2` (rate/count) are undecoded — see `Func_01_4219`.
   Spawner species = `arr1[byte5]`, `$ff` = inert.
 - **Convert `IID_*` defs to an `enum ITEM`** (like the monsters) once all item ids
