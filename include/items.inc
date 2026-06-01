@@ -26,6 +26,7 @@ DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
 DEF IID_BELL         EQU $02
 DEF IID_HOURGLASS_ORANGE EQU $05   ; sets the timer to 50 seconds
+DEF IID_COX_HAT      EQU $07   ; extra life; gated like KEY_SILVER (stored but not always shown)
 DEF IID_BOMB_SMALL   EQU $08
 DEF IID_BOMB_LARGE   EQU $09
 DEF IID_FIREPLACE    EQU $0A
@@ -69,5 +70,6 @@ DEF MON_DAKKUNG   EQU $0A
 DEF MON_RED_FLAME  EQU $0B
 DEF MON_BLUE_FLAME EQU $0C
 DEF MON_GALI       EQU $11   ; friendly monster found in a bonus stage
+DEF MON_GOLEM      EQU $12   ; friendly monster found in a bonus stage
 
 ENDC ; ITEMS_INC
