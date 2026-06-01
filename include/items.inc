@@ -9,11 +9,10 @@
 ;                                    and destroyed on the cell
 ; e.g. COIN_GOLD = $D3 open / $93 hidden; DIAMOND_BLUE = $CE open / $8E hidden.
 ;
-; visible vs in-crate is in the COLLISION grid, not the item byte: an open item on
-; COLL_CRATE ($22) is inside a crate; on COLL_FLOOR ($00) it lies in the open. So:
-;   visible : item bit6=1, collision $00
-;   in-crate: item bit6=1, collision $22
-;   hidden  : item bit6=0, collision $00
+; Placement is driven by the cell's COLLISION value, not just bit 6:
+;   in-crate: collision $22 (a crate hides the item) -- for EITHER bit 6 value
+;   visible : collision $00, bit 6 set
+;   hidden  : collision $00, bit 6 clear (phantom; appears via make+break crate)
 ; (KEY_SILVER is open-coded but gated separately by progression, not these flags.)
 
 IF !DEF(ITEMS_INC)
@@ -26,6 +25,7 @@ DEF ITEM_HIDDEN  EQU $80
 DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
 DEF IID_BELL         EQU $02
+DEF IID_HOURGLASS_ORANGE EQU $05   ; sets the timer to 50 seconds
 DEF IID_BOMB_SMALL   EQU $08
 DEF IID_BOMB_LARGE   EQU $09
 DEF IID_FIREPLACE    EQU $0A
@@ -34,6 +34,7 @@ DEF IID_CRYSTAL_BLUE EQU $0C
 DEF IID_CRYSTAL_RED  EQU $0D
 DEF IID_DIAMOND_BLUE EQU $0E
 DEF IID_DIAMOND_RED  EQU $0F
+DEF IID_RING_PLATINUM EQU $10   ; 50,000-point pickup
 DEF IID_COIN_GRAY    EQU $11
 DEF IID_NUGGET_GRAY  EQU $12
 DEF IID_COIN_GOLD    EQU $13
@@ -56,6 +57,7 @@ DEF COLL_CRATE   EQU $22   ; breakable crate (an item on this cell is in-crate)
 ; monster species (arr1 / sprite-set ids referenced by the arr2 monster slots)
 DEF MON_TACOPI  EQU $00   ; aka Octopee
 DEF MON_JELL    EQU $01
+DEF MON_NAGA    EQU $02
 DEF MON_DINO    EQU $03
 DEF MON_PLANT   EQU $04
 DEF MON_HENGER  EQU $05

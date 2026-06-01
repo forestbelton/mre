@@ -53,9 +53,11 @@ def read_record(rom, floor):
 
 
 def item_state(byte, collision):
-    if not (byte & 0x40):
-        return "hidden"
-    return "in-crate" if collision == COLL_CRATE else "visible"
+    # A crate ($22 collision) hides the item regardless of bit 6; otherwise bit 6
+    # picks visible (set) vs hidden/phantom (clear).
+    if collision == COLL_CRATE:
+        return "in-crate"
+    return "visible" if (byte & 0x40) else "hidden"
 
 
 def main():
