@@ -27,8 +27,8 @@ DEF ITEM_HIDDEN  EQU $80
 DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
 DEF IID_BELL         EQU $02
-DEF IID_HOURGLASS_ORANGE EQU $05   ; sets the timer to 50 seconds
-DEF IID_COX_HAT      EQU $07   ; extra life (1-UP)
+DEF IID_HOURGLASS_ORANGE EQU $05 ; Sets the timer to 50 seconds
+DEF IID_COX_HAT      EQU $07     ; Extra life (1-UP)
 DEF IID_BOMB_SMALL   EQU $08
 DEF IID_BOMB_LARGE   EQU $09
 DEF IID_FIREPLACE    EQU $0A
@@ -37,21 +37,23 @@ DEF IID_CRYSTAL_BLUE EQU $0C
 DEF IID_CRYSTAL_RED  EQU $0D
 DEF IID_DIAMOND_BLUE EQU $0E
 DEF IID_DIAMOND_RED  EQU $0F
-DEF IID_RING_PLATINUM EQU $10   ; 50,000-point pickup
+DEF IID_RING_PLATINUM EQU $10    ; 50,000-point pickup
 DEF IID_COIN_GRAY    EQU $11
 DEF IID_NUGGET_GRAY  EQU $12
 DEF IID_COIN_GOLD    EQU $13
 DEF IID_NUGGET_GOLD  EQU $14
-DEF IID_HEAL_BADGE   EQU $15   ; 10,000-point pickup
-DEF IID_CAKE         EQU $17
+DEF IID_HEAL_BADGE   EQU $15     ; 10,000-point pickup
+DEF IID_CAKE         EQU $17     ; 100,000-point pickup
 DEF IID_BATTLE_CARD  EQU $18
-DEF IID_MONSTER_FLAME EQU $1D   ; warp to the friendly-monster bonus stage
+DEF IID_MONSTER_FLAME EQU $1D    ; Warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E
 DEF IID_DISC_STONE_PIECE EQU $20
 
-; $16 is present in floor data (33/40/69/70) but never appears in play or in
-; reference maps -- even where it's visible-coded (floor 69). Unidentified;
-; likely gated/suppressed at runtime (cf. COX_HAT) or an unused id.
+; $16 is a real item, not an unused gap: it has a distinct sprite in FloorPieceDefs
+; ($d6 -> tiles 40/6b, same structure as its neighbours). But it never appears in
+; play or in reference maps -- even visible-coded on floor 69 -- so it's runtime-
+; gated like COX_HAT. Unidentified (would need to be triggered in-game, or its
+; sprite rendered, to name).
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40
