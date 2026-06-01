@@ -30,11 +30,16 @@ Companion to `docs/floor_data.md` (the format reference). This tracks the
 ## Remaining unidentified item ids (5) — coordinates
 | id | where to find it (floor, row, col, state) |
 |---|---|
-| `$16` | gated/suppressed: in data on fl 33/40/69/70 but NEVER appears in play (has a real sprite `$d6`). Can't observe normally. |
+| `$16` | **phantom**: in data on fl 33/40/69/70 but NEVER appears in play (has a real sprite `$d6`). Can't observe normally. |
 | `$1a` | fl 62 (r4,c9) **visible** · fl 68 (r12,c6) visible · fl 63 (r3,c5) in-crate |
 | `$1b` | fl 60 (r7,c8) hidden |
-| `$1c` | fl 47 (r2,c8) hidden |
+| `$1c` | **phantom**: fl 47 (r2,c8) coded hidden, but nothing appears at the cell in play (confirmed in-game). Only location — can't observe normally, like `$16`. |
 | `$1f` | fl 58 (r7,c5) hidden |
+
+**"Hidden" (coded placement) ≠ "phantom" (doesn't appear in play at all).** A hidden
+item is still obtainable (PEACH_GOLD `$19` on fl 45 was). Phantom is runtime
+non-manifestation — nothing at the cell — and currently affects `$16` and `$1c`.
+See docs/floor_data.md.
 
 ## Known item names not yet matched to an id
 From the player's in-game item list — candidates for the ids above:

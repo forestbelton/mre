@@ -94,11 +94,19 @@ destroying a crate). E.g. COIN_GOLD is `$d3` open / `$93` hidden — confirmed i
 An item has **three placement states**, decided by the cell's **collision** value
 (and only then bit 6): collision `$22` (crate) ⇒ *in-crate* for either bit 6;
 collision `$00` with bit 6 set ⇒ *visible*; collision `$00` with bit 6 clear ⇒
-*hidden* (phantom). So a crate hides any item — bit 6 only matters off a crate.
+*hidden*. So a crate hides any item — bit 6 only matters off a crate.
 (`$ce` DIAMOND_BLUE is visible on floor 5, in a crate on floor 3; `$90`
 RING_PLATINUM and `$85` HOURGLASS, both bit-6-clear, are in crates on floor 20.) KEY_SILVER (`$c1`)
 is open-coded but gated by progression (the first silver key must be taken at the
-tower top), not by the hidden bit. `$4x` = structural (`$40` EXIT, `$43` obstruction).
+tower top), not by the hidden bit.
+
+**"Hidden" ≠ "phantom".** *Hidden* is just this coded placement state and a hidden
+item is still obtainable in play (floor 45's PEACH_GOLD `$19`, coded hidden, was
+picked up). *Phantom* is the separate, empirical case where an item is in the floor
+*definition data* but **nothing appears at its cell at all** in play — not even a
+hidden pickup (floor 47 (r2,c8) `$1c`; `$16` on every floor it's coded on). Phantom
+is runtime non-manifestation (likely the same progression/runtime gating as `$16`),
+orthogonal to the coded visible/hidden/in-crate state. `$4x` = structural (`$40` EXIT, `$43` obstruction).
 Named codes live in `include/items.inc`; many remain unidentified.
 
 Lower piece IDs index `FloorPieceDefs` (`$12FA`, 5-byte entries) and stamp a 2×2
