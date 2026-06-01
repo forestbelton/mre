@@ -106,8 +106,8 @@ neighbours (`Func_01_5BA8`/`5BE2`).
 
 Sprite pixel position is `col*16 − 8`, `row*16 − 8`. The displayed **species** is
 selected by **`arr1[gfxIndex]`** (the per-floor sprite/species table) — observed
-`$00` = Tacopi (Octopee), `$01` = Jell, `$03` = Dino, `$05` = Henger, `$07` = Ghost,
-`$08` = Puncho. The `+2` "type" byte is *not* the species
+`$00` = Tacopi (Octopee), `$01` = Jell, `$03` = Dino, `$05` = Henger, `$06` = Joker,
+`$07` = Ghost, `$08` = Puncho, `$0a` = Dakkung (full list in `include/items.inc`). The `+2` "type" byte is *not* the species
 (a per-instance attribute: floor 1's Jell is `$22`, floor 2's Jell is `$21`).
 Items, by contrast, are baked into the piece grid, so a floor's dynamic content is
 piece-grid items + `arr2` monsters.

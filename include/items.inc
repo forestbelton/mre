@@ -27,6 +27,7 @@ DEF IID_KEY          EQU $00
 DEF IID_KEY_SILVER   EQU $01
 DEF IID_BELL         EQU $02
 DEF IID_BOMB_SMALL   EQU $08
+DEF IID_GUNPOWDER    EQU $0B
 DEF IID_CRYSTAL_BLUE EQU $0C
 DEF IID_CRYSTAL_RED  EQU $0D
 DEF IID_DIAMOND_BLUE EQU $0E
@@ -45,5 +46,15 @@ DEF COLL_FLOOR   EQU $00   ; walkable
 DEF COLL_BORDER  EQU $20
 DEF COLL_WALL    EQU $21
 DEF COLL_CRATE   EQU $22   ; breakable crate (an item on this cell is in-crate)
+
+; monster species (arr1 / sprite-set ids referenced by the arr2 monster slots)
+DEF MON_TACOPI  EQU $00   ; aka Octopee
+DEF MON_JELL    EQU $01
+DEF MON_DINO    EQU $03
+DEF MON_HENGER  EQU $05
+DEF MON_JOKER   EQU $06
+DEF MON_GHOST   EQU $07
+DEF MON_PUNCHO  EQU $08
+DEF MON_DAKKUNG EQU $0A
 
 ENDC ; ITEMS_INC
