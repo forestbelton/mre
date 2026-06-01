@@ -48,6 +48,10 @@ DEF IID_MONSTER_FLAME EQU $1D   ; warp to the friendly-monster bonus stage
 DEF IID_DOLL_DUCK    EQU $1E
 DEF IID_DISC_STONE_PIECE EQU $20
 
+; $16 is present in floor data (33/40/69/70) but never appears in play or in
+; reference maps -- even where it's visible-coded (floor 69). Unidentified;
+; likely gated/suppressed at runtime (cf. COX_HAT) or an unused id.
+
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40
 DEF TILE_OBSTACLE_BAT  EQU $43
