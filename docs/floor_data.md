@@ -65,7 +65,12 @@ post-load routines (`Func_05_49EF`, `Func_01_572D`) finish entity setup.
 
 ### Collision grid cells
 `$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = **crate**
-(breakable; an open item on a `$22` cell is "in a crate").
+(breakable; an open item on a `$22` cell is "in a crate"). There is no separate
+"hard crate" code — whether a crate can be *fully* broken is runtime physics, not
+data: a crate boxed in by walls with another crate stacked directly on top only
+half-breaks when jumped into from below (e.g. floor 41 (2,2)), though a monster
+from an adjacent spawner can break the stacked one. The half-broken state lives in
+WRAM, not the record.
 
 ### Piece grid cells
 `$00` = floor. `≥$40` = an object, classified by `DrawFloorPiece` (`$17DE`) on the
