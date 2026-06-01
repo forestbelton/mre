@@ -14,7 +14,7 @@ d = wActiveFloor - 1                  ; wActiveFloor ($C2C0) = floor number, 1-b
 mode = [$c2c1]
   mode == 0 :  index = d              ; ✅ normal tower floors  (records 0..~70)
   mode == 2 :  index = $46 + d        ; 🟡 a higher block
-  mode == 5 :  -> LoadFloorData / GetFloorIndex  ; special/boss floors (see below)
+  mode == 5 :  -> LoadFloorData / GetFloorIndex  ; bonus stages (see below)
 ```
 
 Then (`Func_00_16ed`):
@@ -28,16 +28,18 @@ ptr  = [FloorPtrTable + index*2]      ; $15BF, one LE word per floor
 
 ✅ **`FloorBankTable` (`$1567`)** / **`FloorPtrTable` (`$15BF`)** have 88 entries:
 records 0–~70 in banks `$2D`/`$2E`/`$2F` (normal floors), and a `$12`-bank tail
-(records ~76–87) for the **special/boss floors**.
+(records ~76–87) for the **bonus stages** (reached via MONSTER_FLAME).
 
-**Special floors** (mode 5): `GetFloorIndex` (`$17A2`) scans the 6-entry exception
-table **`$1783`** — floors **6, 18, 22, 44, 56, 58** remap to records **82–87**
-(bank `$12`); anything else defaults to record 82. (`$c2c2 != 0` also routes here.)
+**Bonus stages** (mode 5): six floors — **6, 18, 22, 44, 56, 58** — contain a
+`MONSTER_FLAME` item (`$1d`) that warps to a bonus stage with a friendly monster.
+The bonus-stage layout is its own record: `GetFloorIndex` (`$17A2`) scans the
+6-entry table **`$1783`** to remap those floors to records **82–87** (bank `$12`).
+The normal floor and its bonus stage are different records (floor 18 = record 17;
+its bonus stage = record 83, where the friendly monster is GALI `$11`).
 
-So **floor 1 → record 0**, **floor 2 → record 1**, normal floors are
-`record = floor − 1`, and the named special floors take the `$1783` path. Verified
-against a live `--watch-write` of `$C2C0`/`$C2C1`/`$C2C2`: floor 1 reads
-`$C2C0=1, $C2C1=0` → index 0.
+So **floor 1 → record 0**, **floor 2 → record 1**, and *every* normal floor is
+`record = floor − 1`. Verified against a live `--watch-write` of
+`$C2C0`/`$C2C1`/`$C2C2` (floor 1 = `$C2C0=1, $C2C1=0` → index 0).
 
 ## Record format (581-byte slot)
 
