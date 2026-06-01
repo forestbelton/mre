@@ -52,6 +52,7 @@ DEF COLL_CRATE   EQU $22   ; breakable crate (an item on this cell is in-crate)
 DEF MON_TACOPI  EQU $00   ; aka Octopee
 DEF MON_JELL    EQU $01
 DEF MON_DINO    EQU $03
+DEF MON_PLANT   EQU $04
 DEF MON_HENGER  EQU $05
 DEF MON_JOKER   EQU $06
 DEF MON_GHOST   EQU $07
