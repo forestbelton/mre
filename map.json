@@ -121,6 +121,30 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"ferious_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0xd4000",
+					"len":	"0x800"
+				}, {
+					"type":	"data",
+					"addr":	"0xd4800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0xd6080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0xd6086",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0xd6162",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"script.asm",
 			"sections":	[{
 					"type":	"code",
@@ -2692,7 +2716,7 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x4748",
-					"len":	"0xbb"
+					"len":	"0xd3"
 				}, {
 					"type":	"code",
 					"addr":	"0x4833",
@@ -2700,11 +2724,11 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x4849",
-					"len":	"0x7"
+					"len":	"0x17"
 				}, {
 					"type":	"code",
 					"addr":	"0x486d",
-					"len":	"0x12"
+					"len":	"0x2a"
 				}, {
 					"type":	"code",
 					"addr":	"0x48af",
@@ -2756,11 +2780,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x5162",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x5164",
-					"len":	"0x2"
+					"len":	"0x4"
 				}, {
 					"type":	"data",
 					"addr":	"0x5167",
@@ -2768,11 +2788,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x517f",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x5181",
-					"len":	"0x2"
+					"len":	"0x4"
 				}, {
 					"type":	"data",
 					"addr":	"0x5186",
@@ -3672,11 +3688,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0xf109",
-					"len":	"0x5"
-				}, {
-					"type":	"data",
-					"addr":	"0xf111",
-					"len":	"0x15"
+					"len":	"0x1d"
 				}, {
 					"type":	"data",
 					"addr":	"0xf131",
@@ -7250,10 +7262,6 @@
 					"addr":	"0x67fff",
 					"len":	"0x1"
 				}, {
-					"type":	"gfx",
-					"addr":	"0x68000",
-					"len":	"0x1800"
-				}, {
 					"type":	"data",
 					"addr":	"0x69800",
 					"len":	"0x30"
@@ -7263,12 +7271,8 @@
 					"len":	"0x30"
 				}, {
 					"type":	"data",
-					"addr":	"0x69880",
-					"len":	"0x268"
-				}, {
-					"type":	"gfx",
-					"addr":	"0x69ae8",
-					"len":	"0x1800"
+					"addr":	"0x69a3e",
+					"len":	"0xaa"
 				}, {
 					"type":	"data",
 					"addr":	"0x6b2e8",
@@ -7279,16 +7283,12 @@
 					"len":	"0x30"
 				}, {
 					"type":	"data",
-					"addr":	"0x6b368",
-					"len":	"0x2c4"
+					"addr":	"0x6b526",
+					"len":	"0x106"
 				}, {
 					"type":	"data",
 					"addr":	"0x6bfff",
 					"len":	"0x1"
-				}, {
-					"type":	"gfx",
-					"addr":	"0x6c000",
-					"len":	"0x1800"
 				}, {
 					"type":	"data",
 					"addr":	"0x6d800",
@@ -7299,8 +7299,8 @@
 					"len":	"0x30"
 				}, {
 					"type":	"data",
-					"addr":	"0x6d880",
-					"len":	"0x38d"
+					"addr":	"0x6da3e",
+					"len":	"0x1cf"
 				}, {
 					"type":	"data",
 					"addr":	"0x6dc1d",
@@ -7378,10 +7378,6 @@
 					"addr":	"0x75a3e",
 					"len":	"0xdb"
 				}, {
-					"type":	"gfx",
-					"addr":	"0x75b19",
-					"len":	"0x1800"
-				}, {
 					"type":	"data",
 					"addr":	"0x77319",
 					"len":	"0x30"
@@ -7391,8 +7387,8 @@
 					"len":	"0x30"
 				}, {
 					"type":	"data",
-					"addr":	"0x77399",
-					"len":	"0x253"
+					"addr":	"0x77557",
+					"len":	"0x95"
 				}, {
 					"type":	"data",
 					"addr":	"0x77fff",
@@ -7422,25 +7418,17 @@
 					"addr":	"0x79bd9",
 					"len":	"0xe"
 				}, {
-					"type":	"gfx",
-					"addr":	"0x79be7",
-					"len":	"0x800"
-				}, {
-					"type":	"gfx",
-					"addr":	"0x7a4e8",
-					"len":	"0xef0"
-				}, {
 					"type":	"data",
-					"addr":	"0x7b3d8",
-					"len":	"0x3f"
+					"addr":	"0x7b3e7",
+					"len":	"0x30"
 				}, {
 					"type":	"data",
 					"addr":	"0x7b427",
 					"len":	"0x30"
 				}, {
 					"type":	"data",
-					"addr":	"0x7b467",
-					"len":	"0x273"
+					"addr":	"0x7b625",
+					"len":	"0xb5"
 				}, {
 					"type":	"data",
 					"addr":	"0x7bfff",

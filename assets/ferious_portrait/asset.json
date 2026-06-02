@@ -1,0 +1,19 @@
+{
+  "asset": "ferious_portrait",
+  "bank": 53,
+  "rows": 11,
+  "cols": 20,
+  "tiles_count": 384,
+  "palette_count": 0,
+  "index_base": 0,
+  "addressing": "8800",
+  "tiles_addr": 870400,
+  "palette_addr": null,
+  "desc_addr": 876672,
+  "attr_ptr": 24930,
+  "idx_ptr": 24710,
+  "attr_addr": 876898,
+  "idx_addr": 876678,
+  "tiles2_addr": 868352,
+  "tiles2_count": 128
+}

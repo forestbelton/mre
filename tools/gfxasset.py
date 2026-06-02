@@ -115,6 +115,17 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x6d880, "index_base": 0, "addressing": "8800",
     },
+    # Ferious, the monster Mistral summons ("Ferious! Come!"). A two-VRAM-bank
+    # CGB portrait: the loader (Func_1f_4416) copies $35:$4800 (384t) to VRAM
+    # bank 1 $8000 and $35:$4000 (128t) to VRAM bank 0 $9000; the attr map's bit 3
+    # selects the bank per cell. Found via tools/find_portraits.py.
+    "ferious_portrait": {
+        "bank": 0x35,
+        "tiles_addr": 0xd4800, "tiles_count": 384,    # $35:$4800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0xd4000, "tiles2_count": 128,  # $35:$4000 -> VRAM bank 0 $9000
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0xd6080, "index_base": 0, "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).
@@ -307,7 +318,7 @@ def map_index_to_tile(v: int, index_base: int, addressing: str) -> int:
 
 def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
                      tiles: list[bytes], pals: list[list[int]], index_base: int,
-                     addressing: str = "direct") -> None:
+                     addressing: str = "direct", tiles2: list[bytes] | None = None) -> None:
     W, H = cols * 8, rows * 8
     grayscale = not pals
     # Build a 256-color RGB palette from the CGB palettes (palette p, color k
@@ -324,8 +335,16 @@ def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
         a = attr[cell]
         pal_no = 0 if grayscale else (a & 0x07)
         xflip, yflip = (a >> 5) & 1, (a >> 6) & 1
-        tile_no = map_index_to_tile(v, index_base, addressing)
-        ind = tile_to_indices(tiles[tile_no]) if tile_no < len(tiles) else [[0] * 8] * 8
+        # CGB BG attribute bit 3 selects the VRAM tile bank. With a second sheet
+        # (bank 0, loaded at VRAM $9000) present, bit-3-clear cells read from it
+        # at tile = signed(index); else the primary sheet ($8000 base).
+        if tiles2 is not None and not (a >> 3) & 1:
+            tile_no = v if v < 0x80 else v - 0x100
+            sheet = tiles2
+        else:
+            tile_no = map_index_to_tile(v, index_base, addressing)
+            sheet = tiles
+        ind = tile_to_indices(sheet[tile_no]) if 0 <= tile_no < len(sheet) else [[0] * 8] * 8
         for r in range(8):
             sr = 7 - r if yflip else r
             for c in range(8):
@@ -356,8 +375,12 @@ def cmd_decode(args) -> int:
     rows, cols = desc["rows"], desc["cols"]
     n_cells = rows * cols
 
-    tiles = [rom[spec["tiles_addr"] + t * TILE_BYTES: spec["tiles_addr"] + (t + 1) * TILE_BYTES]
-             for t in range(spec["tiles_count"])]
+    def read_tiles(addr, count):
+        return [rom[addr + t * TILE_BYTES: addr + (t + 1) * TILE_BYTES] for t in range(count)]
+    tiles = read_tiles(spec["tiles_addr"], spec["tiles_count"])
+    # Optional second tile blob: a CGB portrait that also loads VRAM bank 0
+    # ($9000) tiles, selected per-cell by attr bit 3 (e.g. Mistral's Ferious).
+    tiles2 = read_tiles(spec["tiles2_addr"], spec["tiles2_count"]) if spec.get("tiles2_addr") else None
     pals = (read_palettes(rom, spec["palette_addr"], spec["palette_count"])
             if spec["palette_count"] else [])
     idx = rom[desc["idx_addr"]: desc["idx_addr"] + n_cells]
@@ -365,6 +388,8 @@ def cmd_decode(args) -> int:
 
     pal_rgb = [rgb555_to_rgb888(w) for w in pals[0]] if pals else list(GRAY)
     tiles_to_sheet_png(out / "tiles.png", tiles, pal_rgb)
+    if tiles2 is not None:
+        tiles_to_sheet_png(out / "tiles_bank0.png", tiles2, pal_rgb)
     if pals:
         write_pal_file(out / "palette.pal", pals)
     (out / "tilemap.bin").write_bytes(idx)
@@ -373,7 +398,7 @@ def cmd_decode(args) -> int:
     name = args.asset
     # preview.png is a *generated* composite (not source) — gitignored.
     render_composite(out / "preview.png", rows, cols, idx, attr, tiles, pals,
-                     spec["index_base"], spec.get("addressing", "direct"))
+                     spec["index_base"], spec.get("addressing", "direct"), tiles2)
 
     meta = {
         "asset": name,
@@ -391,6 +416,9 @@ def cmd_decode(args) -> int:
         "attr_ptr": desc["attr_ptr"], "idx_ptr": desc["idx_ptr"],
         "attr_addr": desc["attr_addr"], "idx_addr": desc["idx_addr"],
     }
+    if tiles2 is not None:
+        meta["tiles2_addr"] = spec["tiles2_addr"]
+        meta["tiles2_count"] = spec["tiles2_count"]
     (out / "asset.json").write_text(json.dumps(meta, indent=2) + "\n")
 
     print(f"decoded {name}: {cols}x{rows} cells, {spec['tiles_count']} tiles, "
@@ -409,7 +437,7 @@ def encode_components(src: Path) -> dict[str, bytes]:
     pals = read_pal_file(src / "palette.pal") if (src / "palette.pal").exists() else []
     idx = (src / "tilemap.bin").read_bytes()
     attr = (src / "attrmap.bin").read_bytes()
-    return {
+    comps = {
         "_meta": meta,
         "tiles": b"".join(tiles),
         "palette": palettes_to_bytes(pals),
@@ -418,13 +446,19 @@ def encode_components(src: Path) -> dict[str, bytes]:
         "tilemap": idx,
         "attrmap": attr,
     }
+    if meta.get("tiles2_count"):
+        comps["tiles2"] = b"".join(sheet_png_to_tiles(src / "tiles_bank0.png", meta["tiles2_count"]))
+    return comps
 
 
 def cmd_encode(args) -> int:
     comps = encode_components(Path(args.input))
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    for key in ("tiles", "palette", "descriptor", "tilemap", "attrmap"):
+    keys = ["tiles", "palette", "descriptor", "tilemap", "attrmap"]
+    if "tiles2" in comps:
+        keys.append("tiles2")
+    for key in keys:
         (out / f"{key}.bin").write_bytes(comps[key])
         print(f"  {key}.bin: {len(comps[key])} bytes")
     return 0
@@ -458,6 +492,8 @@ def cmd_verify(args) -> int:
         ("tilemap", meta["idx_addr"]),
         ("attrmap", meta["attr_addr"]),
     ]
+    if meta.get("tiles2_count"):
+        regions.append(("tiles2", meta["tiles2_addr"]))
     if meta.get("palette_count") and meta.get("palette_addr") is not None:
         regions.insert(1, ("palette", meta["palette_addr"]))
     ok = True

@@ -5,6 +5,7 @@ INCLUDE "wram.inc"
 
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "ferious_portrait.asm"
 INCLUDE "kalum_portrait.asm"
 INCLUDE "naji_portrait.asm"
 INCLUDE "padding.asm"
@@ -1113,21 +1114,21 @@ SECTION "data_004706", ROMX[$4706], BANK[$01]
 Data_01_4706:
 	INCBIN "data/data_004706.bin"
 
-SECTION "data_004803", ROMX[$4803], BANK[$01]
-Data_01_4803:
-	INCBIN "data/data_004803.bin"
+SECTION "data_00481b", ROMX[$481b], BANK[$01]
+Data_01_481b:
+	INCBIN "data/data_00481b.bin"
 
 SECTION "data_00483e", ROMX[$483e], BANK[$01]
 Data_01_483e:
 	INCBIN "data/data_00483e.bin"
 
-SECTION "data_004850", ROMX[$4850], BANK[$01]
-Data_01_4850:
-	INCBIN "data/data_004850.bin"
+SECTION "data_004860", ROMX[$4860], BANK[$01]
+Data_01_4860:
+	INCBIN "data/data_004860.bin"
 
-SECTION "data_00487f", ROMX[$487f], BANK[$01]
-Data_01_487f:
-	INCBIN "data/data_00487f.bin"
+SECTION "data_004897", ROMX[$4897], BANK[$01]
+Data_01_4897:
+	INCBIN "data/data_004897.bin"
 
 SECTION "data_004951", ROMX[$4951], BANK[$01]
 Data_01_4951:
@@ -1157,10 +1158,6 @@ SECTION "data_004dba", ROMX[$4dba], BANK[$01]
 Data_01_4dba:
 	INCBIN "data/data_004dba.bin"
 
-SECTION "data_005163", ROMX[$5163], BANK[$01]
-Data_01_5163:
-	INCBIN "data/data_005163.bin"
-
 SECTION "data_005166", ROMX[$5166], BANK[$01]
 Data_01_5166:
 	INCBIN "data/data_005166.bin"
@@ -1168,10 +1165,6 @@ Data_01_5166:
 SECTION "data_00517e", ROMX[$517e], BANK[$01]
 Data_01_517e:
 	INCBIN "data/data_00517e.bin"
-
-SECTION "data_005180", ROMX[$5180], BANK[$01]
-Data_01_5180:
-	INCBIN "data/data_005180.bin"
 
 SECTION "data_005183", ROMX[$5183], BANK[$01]
 Data_01_5183:
@@ -1960,10 +1953,6 @@ Data_03_70f9:
 SECTION "data_00f106", ROMX[$7106], BANK[$03]
 Data_03_7106:
 	INCBIN "data/data_00f106.bin"
-
-SECTION "data_00f10e", ROMX[$710e], BANK[$03]
-Data_03_710e:
-	INCBIN "data/data_00f10e.bin"
 
 SECTION "data_00f126", ROMX[$7126], BANK[$03]
 Data_03_7126:
