@@ -52,30 +52,40 @@ enum ITEM
     case GOLD_MEDAL        ; Awards 1K points
     case GOLD_NUGGET
     case HEAL_BADGE        ; Awards 10K points
-    skip                   ; $16 unknown (20,000 pts; removed in-game, separate gate)
+    case WALKING_COIN      ; $16 (20,000 pts); a gold coin with legs (tentative name).
+                           ;   Force-hidden on every floor by Func_05_49c8, so never
+                           ;   collectible in normal play (observed only via ROM hack).
     case CAKE              ; Awards 100K points
     case BATTLE_CARD
     case GOLD_PEACH        ; Awards 500K points
     case SILVER_PEACH      ; Awards 500K points
     case HARE_ICON         ; Awards 500K points
-    skip                   ; $1c unknown (1,000,000 pts; removed in-game)
+    case AYA_DOLL          ; $1c (1,000,000 pts); gated by $5162 + force-hidden by
+                           ;   Func_05_496b, so never collectible in normal play
+                           ;   (observed only via ROM hack). Confirmed in-game.
     case MONSTER_FLAME     ; Exit goes to bonus stage with friendly monster
     case DUCK_DOLL         ; Transforms all monsters into entity $08 (effect Func_01_55a6) & they die
-    case ALF_DOLL          ; Transforms all monsters into Suzurins
+    case ALF_DOLL          ; Transforms all monsters into Suzurins (confirmed in-game)
     case DISC_STONE_PIECE  ; Collect 4 for a full disc stone
-    skip
-    skip
-    case RED_DISC_STONE    ; Contains Phoenix
+    skip                   ; $21 special-stage item: floors 75/76 corners (record
+                           ;   $12:$574d), visible, 0 pts, effect $01:$5462; no encyclopedia entry
+    skip                   ; $22 unused/reserved: no encyclopedia entry, 0 pts, never placed
+    case RED_DISC_STONE    ; Contains Phoenix (gives a Phenix disc stone on pickup)
 end_enum
 
-; $16/$1c are real items (distinct FloorPieceDefs sprites) but never appear in play:
-; they are stripped at floor-load by a separate, still-unidentified suppressor (not
-; the $5162 conditional-appearance gate). $1b HARE_ICON is a real unique item that
-; only shows if not yet collected. See docs/floor_data.md for the points/effect
-; tables (Data_01_51aa / $523a) and the conditional-appearance gate.
+; $16/$1c are real items (distinct FloorPieceDefs sprites) but never collectible in
+; normal play: every floor-load forces them hidden (bit 6 clear), and the pickup
+; check (RemoveOpenItemAtCell) only takes open items. The suppressors are bank-$05
+; grid passes run by FloorPostLoadCleanup: Func_05_49c8 re-hides $16 (always),
+; Func_05_496b re-hides $1c/$1f (when $c2e8==0); $1c/$1f/etc. are also stripped by
+; the $5162 conditional-appearance gate (RemoveConditionalItemsPass) unless wC2D5
+; bit 0 is set. $1b HARE_ICON is removed by Func_05_499d unless $c2aa!=0. All three
+; were collected (encyclopedia) only after NOPing those passes -- see git history.
+; See docs/floor_data.md for the points/effect tables (Data_01_51aa / $523a).
 ;
 ; The item id space is base $00-$23 (FloorPieceDefs covers open codes $c0-$e3;
-; $e4+ have no entry). $21/$22 are defined there (sprites $e1/$e2) but never placed.
+; $e4+ have no entry). $21 (sprite $e1) appears only on the special floors 75/76;
+; $22 (sprite $e2) is defined but never placed.
 
 ; non-item room-piece tiles (bit 7 clear)
 DEF TILE_EXIT          EQU $40

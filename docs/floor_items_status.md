@@ -27,59 +27,60 @@ Companion to `docs/floor_data.md` (the format reference). This tracks the
 - **All 19 monster species named** ($00-$13, incl. the 6 bonus-stage recruits).
 - **Most items named** — see items.inc.
 
-## Remaining unidentified item ids (3) — coordinates + static decode
-Points/effect are statically decoded from the pickup tables (`Data_01_51aa` points,
-`$523a` handlers) — byte-exact certain. See docs/floor_data.md.
+## All placed item ids now identified
 
-| id | static: points · effect | where to find it (floor, row, col, state) |
-|---|---|---|
-| `$16` | 20,000 · points-only | in data fl 33/40/69/70 but never appears (sprite `$d6`); **not** in the `$5162` gate — separate, still-unknown suppression. Can't observe normally. |
-| `$1b` | 500,000 · points-only | fl 60 (r7,c8) hidden — a second "peach" (not in editor legend), still unnamed |
-| `$1c` | **1,000,000** · points-only | fl 47 (r2,c8) — was phantom on that visit (`$5162`/bit-0 gate, not permanent) |
+The last three unknowns were resolved by collecting them in a ROM hack (force the
+floor-58 placements visible + NOP the hide/removal passes — see git history) and
+reading the encyclopedia:
 
-**Identified:** `$1a` = **PEACH_SILVER** (confirmed in-game on **fl 62 / basement B2**,
-r4,c9 visible). `$1f` = **DOLL_ALF** (proven from code: effect `Func_01_5544` kills
-each monster and spawns entity `$1f` = Suzurin, the entity BELL spawns; DOLL_DUCK
-`$1e` is the sibling but spawns a different entity `$08`). Coords for `$1f`: fl 58 r7,c5.
+| id | name | pts | notes |
+|---|---|---|---|
+| `$16` | **WALKING_COIN** *(tentative)* | 20,000 | a gold coin with legs; in data fl 33/40/69/70 |
+| `$1b` | **HARE_ICON** | 500,000 | fl 60 (r7,c8) |
+| `$1c` | **AYA_DOLL** | 1,000,000 | fl 47 (r2,c8); the player-list "DOLL_AYA" |
+| `$1f` | **ALF_DOLL** | — | fl 58 (r7,c5); kills all monsters, spawns Suzurin |
+| `$1a` | PEACH_SILVER | 500,000 | fl 62/B2 (r4,c9, visible) |
+| `$19` | GOLD_PEACH | 500,000 | fl 45; also fl 70/B10 (r8,c5) |
 
 > Floor numbering: tower floors 61–70 are displayed as **basement B1–B10** in-game
 > (so fl 62 = B2). Records are still `record = floor − 1`.
 
-**`$1b`/`$1c` are observable, not permanently phantom.** They share the `$5162`
-conditional-appearance flag (with `$07` COX_HAT, `$17` CAKE, `$19` PEACH_GOLD, `$1a`
-PEACH_SILVER, `$1f`) and are removed at floor-load only when `wC2D5` bit 0 is clear —
-i.e. when you *didn't* reach the floor by the normal up-stairs path. PEACH_GOLD/SILVER
-(same class) appeared, so the rest will too under the right approach. **`$16` is the
-only true can't-observe id** (separate mechanism). "Hidden" (coded placement) ≠
-"phantom" (doesn't manifest); a hidden item is still obtainable.
+### Why $16/$1c/$1f are never collectible in normal play (mechanism resolved)
+Pickup (`RemoveOpenItemAtCell`) only takes **open** (bit-6) items, and these are
+forced **hidden** at every floor-load by bank-$05 grid passes run from
+`FloorPostLoadCleanup`:
+- `Func_05_49c8` re-hides `$16` (**unconditional** — this is the once-"unknown"
+  separate suppressor).
+- `Func_05_496b` re-hides `$1c`/`$1f` when `$c2e8==0`.
+- the `$5162` gate (`RemoveConditionalItemsPass`) also strips `$1c`/`$1f`/peaches/
+  etc. unless `wC2D5` bit 0 is set (normal up-stairs path).
+- `Func_05_499d` *removes* `$1b` HARE_ICON unless `$c2aa!=0`.
 
-## Known item names not yet matched to an id
-The level editor's legend (`src/data/data_05d278.bin`) is the authoritative name
-list. Cross-referenced against it:
-- `$1b` (500,000) is a **second peach** — same points/handler as `$19` PEACH_GOLD /
-  `$1a` PEACH_SILVER, but **absent from the editor legend** (not editor-placeable),
-  so it has no authoritative name. Still unnamed.
-- `$16` and `$1c` (1,000,000) are **absent from the editor legend** — no
-  authoritative name from that source; still unknown.
-- **DOLL_AYA** — in the player's in-game list but not in the editor legend, and no
-  remaining 0-pt DOLL id; may be an alias/cut content.
-- Matched: **PEACH_GOLD** = `$19` (500,000), confirmed in-game on fl 45 (r6,c1).
-- Matched: **PEACH_SILVER** = `$1a` (500,000), confirmed in-game on fl 62 / B2 (r4,c9).
-- Matched: **DOLL_ALF** = `$1f`, proven from code (spawns Suzurin `$1f` per monster).
+### Encyclopedia ("items seen") mapping
+`wItemsSeen` ($CFF4, 4 bytes) is set on pickup by `TrackItemCollection`: for base
+id K, descriptor `d = Data_01_5186[K]` (`$ff` = not tracked), and the flag is bit
+`d&7` of byte `d>>4`. Items still unseen in the current save: **`$18` BATTLE_CARD**
+(fl 31, r4c2) and **`$1b` HARE_ICON** (fl 60).
 
-(`$21`/`$22` are defined-but-unplaced — cut/reserved.)
+## Unused / special ids
+- `$21` (sprite `$e1`): **not** cut — placed in the four corners of the special
+  floors **75/76** (shared record `$12:$574d`), visible, 0 pts, effect `$01:$5462`,
+  no encyclopedia entry.
+- `$22` (sprite `$e2`): genuinely unused — 0 pts, never placed, no encyclopedia
+  entry (its `$523a` pointer points into bank-$04 data, i.e. junk).
+- `DOLL_AYA` in the player list = `$1c` AYA_DOLL (was thought possibly an alias).
 
 ## Open threads / next steps
-- **Static decode — DONE:** the item-pickup/points-effect tables (`Data_01_51aa`
-  points, `$523a` handlers) are decoded; points + effect kind for every id are in
-  the table above and in docs/floor_data.md. Remaining work is only matching the
-  player's *names* to ids (`$1a`/`$1b`/`$1c`/`$1f`) — confirm in-game when reachable.
-- **`$16` only true unknown:** in data but never appears, and (unlike `$1c`) not in
-  the `$5162` gate. Needs its separate suppression mechanism traced, or sprite
-  rendered, to name.
+- **All placed ids identified, `enum ITEM` exists — DONE.** Names live in
+  `include/room.inc`; `$1a`/`$19`/`$1b`/`$1c`/`$1f` confirmed in-game (the last
+  three via the ROM hack). Only `$16` = WALKING_COIN is a **tentative** name (a
+  gold coin with legs; no authoritative name in the editor legend) — rename if a
+  real one surfaces.
+- **Encyclopedia completion:** still unseen are `$18` BATTLE_CARD (fl 31, r4c2)
+  and `$1b` HARE_ICON (fl 60, r7c8) — both normal floors, collectible on a fresh
+  visit.
+- **`$21` effect** (`$01:$5462`, the special-floor 75/76 item) is undecoded.
 - **Spawner params** `p0/p1/p2` (rate/count) are undecoded — see `Func_01_4219`.
   Spawner species = `arr1[byte5]`, `$ff` = inert.
-- **Convert `IID_*` defs to an `enum ITEM`** (like the monsters) once all item ids
-  are identified — the player requested this for the final form.
 - Floor 41 (2,2) crate is unbreakable-by-jump due to geometry, not data (noted in
   floor_data.md); no action needed.
