@@ -58,7 +58,7 @@ SECTION "wram_npc_state", WRAMX[$D0DC], BANK[1]
 
 wRanchProgress::    ds 1    ; $D0DC: Toamuna's cascade — 0/1/2/3/4 = first/cyclic/Pashute/Verde/AllBack
 wNajiState::        ds 1    ; $D0DD: 0/1/2/4 = first / greeted / progress / end-game
-                    ds 1    ; $D0DE
+wPashuteState::     ds 1    ; $D0DE: Pashute's NPC cascade (0/2/3/4, mirrors the other NPC states)
 wTowerExplained::   ds 1    ; $D0DF: set by NajiAskTower (Tower-explanation given)
                     ds 2    ; $D0E0-$D0E1
 wNajiMenuShown::    ds 1    ; $D0E2: Naji's "menu already rendered" gate (uncertain)

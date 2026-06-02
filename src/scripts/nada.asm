@@ -288,7 +288,7 @@ NadaScript:
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wNajiMenuShown, .Value=$01
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$04
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$03
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$03
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$03
     SCRIPT_END
 .NadaDefeat:

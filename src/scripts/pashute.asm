@@ -14,10 +14,10 @@ SECTION "pashute_060272", ROMX[$4272], BANK[$18]
 
 PashuteScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$04, .Target=PashuteGameDone
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$03, .Target=PashuteGreetProgress
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$02, .Target=PashuteGreetReturning
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$01, .Target=PashuteGreetingCycle
+    SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$04, .Target=PashuteGameDone
+    SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$03, .Target=PashuteGreetProgress
+    SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$02, .Target=PashuteGreetReturning
+    SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$01, .Target=PashuteGreetingCycle
     SCRIPT_FAR_CALL .Addr=$40f3, .Bank=$18
     SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
     db "Waaaaaaaa!"
@@ -165,7 +165,7 @@ PashuteScript:
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e0, .Value=$01
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$02
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
     SCRIPT_END
 
 PashuteGreetingCycle:
@@ -236,7 +236,7 @@ PashuteGreetReturning:
     SCRIPT_NEWLINE
     db "go sometime!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreetProgress:
@@ -283,7 +283,7 @@ PashuteGreetProgress:
     SCRIPT_WAIT
     db "Visit there."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGameDone:
@@ -313,7 +313,7 @@ PashuteGameDone:
     SCRIPT_NEWLINE
     db "and play more!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteMenu:

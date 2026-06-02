@@ -138,7 +138,7 @@ VerdeEntry:
     SCRIPT_WRITE_WRAM .Addr=$d0e1, .Value=$01
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$03
     SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$02
-    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$02
+    SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$02
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
     SCRIPT_END
 
