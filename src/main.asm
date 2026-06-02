@@ -292,10 +292,6 @@ SECTION "data_00124b", ROM0[$124b]
 Data_00_124b:
 	INCBIN "data/data_00124b.bin"
 
-SECTION "data_001260", ROM0[$1260]
-Data_00_1260:
-	INCBIN "data/data_001260.bin"
-
 SECTION "data_001266", ROM0[$1266]
 Data_00_1266:
 	INCBIN "data/data_001266.bin"
@@ -700,10 +696,6 @@ SECTION "data_0015b4", ROM0[$15b4]
 Data_00_15b4:
 	INCBIN "data/data_0015b4.bin"
 
-SECTION "data_0015bd", ROM0[$15bd]
-Data_00_15bd:
-	INCBIN "data/data_0015bd.bin"
-
 SECTION "data_00163b", ROM0[$163b]
 Data_00_163b:
 	INCBIN "data/data_00163b.bin"
@@ -715,10 +707,6 @@ Data_00_1655:
 SECTION "data_001659", ROM0[$1659]
 Data_00_1659:
 	INCBIN "data/data_001659.bin"
-
-SECTION "data_00166b", ROM0[$166b]
-Data_00_166b:
-	INCBIN "data/data_00166b.bin"
 
 SECTION "data_0018a7", ROM0[$18a7]
 Data_00_18a7:
@@ -1100,13 +1088,9 @@ SECTION "data_0042d1", ROMX[$42d1], BANK[$01]
 Data_01_42d1:
 	INCBIN "data/data_0042d1.bin"
 
-SECTION "data_00450d", ROMX[$450d], BANK[$01]
-Data_01_450d:
-	INCBIN "data/data_00450d.bin"
-
-SECTION "data_004543", ROMX[$4543], BANK[$01]
-Data_01_4543:
-	INCBIN "data/data_004543.bin"
+SECTION "data_004552", ROMX[$4552], BANK[$01]
+Data_01_4552:
+	INCBIN "data/data_004552.bin"
 
 SECTION "data_00458e", ROMX[$458e], BANK[$01]
 Data_01_458e:
@@ -1155,10 +1139,6 @@ Data_01_4acd:
 SECTION "data_004b6a", ROMX[$4b6a], BANK[$01]
 Data_01_4b6a:
 	INCBIN "data/data_004b6a.bin"
-
-SECTION "data_004c29", ROMX[$4c29], BANK[$01]
-Data_01_4c29:
-	INCBIN "data/data_004c29.bin"
 
 SECTION "data_004d5c", ROMX[$4d5c], BANK[$01]
 Data_01_4d5c:
@@ -1280,29 +1260,13 @@ SECTION "data_005a5e", ROMX[$5a5e], BANK[$01]
 Data_01_5a5e:
 	INCBIN "data/data_005a5e.bin"
 
-SECTION "data_005aa1", ROMX[$5aa1], BANK[$01]
-Data_01_5aa1:
-	INCBIN "data/data_005aa1.bin"
+SECTION "data_005aad", ROMX[$5aad], BANK[$01]
+Data_01_5aad:
+	INCBIN "data/data_005aad.bin"
 
-SECTION "data_005aa5", ROMX[$5aa5], BANK[$01]
-Data_01_5aa5:
-	INCBIN "data/data_005aa5.bin"
-
-SECTION "data_005aab", ROMX[$5aab], BANK[$01]
-Data_01_5aab:
-	INCBIN "data/data_005aab.bin"
-
-SECTION "data_005aed", ROMX[$5aed], BANK[$01]
-Data_01_5aed:
-	INCBIN "data/data_005aed.bin"
-
-SECTION "data_005b35", ROMX[$5b35], BANK[$01]
-Data_01_5b35:
-	INCBIN "data/data_005b35.bin"
-
-SECTION "data_005b7b", ROMX[$5b7b], BANK[$01]
-Data_01_5b7b:
-	INCBIN "data/data_005b7b.bin"
+SECTION "data_005b4d", ROMX[$5b4d], BANK[$01]
+Data_01_5b4d:
+	INCBIN "data/data_005b4d.bin"
 
 SECTION "data_005ba6", ROMX[$5ba6], BANK[$01]
 Data_01_5ba6:
@@ -1388,9 +1352,9 @@ SECTION "data_0066f2", ROMX[$66f2], BANK[$01]
 Data_01_66f2:
 	INCBIN "data/data_0066f2.bin"
 
-SECTION "data_0066f6", ROMX[$66f6], BANK[$01]
-Data_01_66f6:
-	INCBIN "data/data_0066f6.bin"
+SECTION "data_0066f8", ROMX[$66f8], BANK[$01]
+Data_01_66f8:
+	INCBIN "data/data_0066f8.bin"
 
 SECTION "data_006742", ROMX[$6742], BANK[$01]
 Data_01_6742:
@@ -1452,10 +1416,6 @@ SECTION "data_006dac", ROMX[$6dac], BANK[$01]
 Data_01_6dac:
 	INCBIN "data/data_006dac.bin"
 
-SECTION "data_006dd6", ROMX[$6dd6], BANK[$01]
-Data_01_6dd6:
-	INCBIN "data/data_006dd6.bin"
-
 SECTION "data_006de2", ROMX[$6de2], BANK[$01]
 Data_01_6de2:
 	INCBIN "data/data_006de2.bin"
@@ -1496,10 +1456,6 @@ SECTION "data_00789d", ROMX[$789d], BANK[$01]
 Data_01_789d:
 	INCBIN "data/data_00789d.bin"
 
-SECTION "data_0078dc", ROMX[$78dc], BANK[$01]
-Data_01_78dc:
-	INCBIN "data/data_0078dc.bin"
-
 SECTION "data_0078ee", ROMX[$78ee], BANK[$01]
 Data_01_78ee:
 	INCBIN "data/data_0078ee.bin"
@@ -1531,10 +1487,6 @@ Data_01_79b8:
 SECTION "data_0079c2", ROMX[$79c2], BANK[$01]
 Data_01_79c2:
 	INCBIN "data/data_0079c2.bin"
-
-SECTION "data_0079ec", ROMX[$79ec], BANK[$01]
-Data_01_79ec:
-	INCBIN "data/data_0079ec.bin"
 
 SECTION "data_0079f8", ROMX[$79f8], BANK[$01]
 Data_01_79f8:
@@ -1592,10 +1544,6 @@ SECTION "data_0090b1", ROMX[$50b1], BANK[$02]
 Data_02_50b1:
 	INCBIN "data/data_0090b1.bin"
 
-SECTION "data_009139", ROMX[$5139], BANK[$02]
-Data_02_5139:
-	INCBIN "data/data_009139.bin"
-
 SECTION "data_0092cd", ROMX[$52cd], BANK[$02]
 Data_02_52cd:
 	INCBIN "data/data_0092cd.bin"
@@ -1619,10 +1567,6 @@ Data_02_55b1:
 SECTION "data_00961d", ROMX[$561d], BANK[$02]
 Data_02_561d:
 	INCBIN "data/data_00961d.bin"
-
-SECTION "data_009665", ROMX[$5665], BANK[$02]
-Data_02_5665:
-	INCBIN "data/data_009665.bin"
 
 SECTION "data_009689", ROMX[$5689], BANK[$02]
 Data_02_5689:
@@ -1840,13 +1784,33 @@ SECTION "data_00e40b", ROMX[$640b], BANK[$03]
 Data_03_640b:
 	INCBIN "data/data_00e40b.bin"
 
-SECTION "data_00e4dd", ROMX[$64dd], BANK[$03]
-Data_03_64dd:
-	INCBIN "data/data_00e4dd.bin"
+SECTION "data_00e4f3", ROMX[$64f3], BANK[$03]
+Data_03_64f3:
+	INCBIN "data/data_00e4f3.bin"
 
-SECTION "data_00e5ea", ROMX[$65ea], BANK[$03]
-Data_03_65ea:
-	INCBIN "data/data_00e5ea.bin"
+SECTION "data_00e519", ROMX[$6519], BANK[$03]
+Data_03_6519:
+	INCBIN "data/data_00e519.bin"
+
+SECTION "data_00e53f", ROMX[$653f], BANK[$03]
+Data_03_653f:
+	INCBIN "data/data_00e53f.bin"
+
+SECTION "data_00e5a4", ROMX[$65a4], BANK[$03]
+Data_03_65a4:
+	INCBIN "data/data_00e5a4.bin"
+
+SECTION "data_00e5b5", ROMX[$65b5], BANK[$03]
+Data_03_65b5:
+	INCBIN "data/data_00e5b5.bin"
+
+SECTION "data_00e5c2", ROMX[$65c2], BANK[$03]
+Data_03_65c2:
+	INCBIN "data/data_00e5c2.bin"
+
+SECTION "data_00e5ee", ROMX[$65ee], BANK[$03]
+Data_03_65ee:
+	INCBIN "data/data_00e5ee.bin"
 
 SECTION "data_00e604", ROMX[$6604], BANK[$03]
 Data_03_6604:
@@ -2084,9 +2048,17 @@ SECTION "data_00fa4b", ROMX[$7a4b], BANK[$03]
 Data_03_7a4b:
 	INCBIN "data/data_00fa4b.bin"
 
-SECTION "data_00fb00", ROMX[$7b00], BANK[$03]
-Data_03_7b00:
-	INCBIN "data/data_00fb00.bin"
+SECTION "data_00fa69", ROMX[$7a69], BANK[$03]
+Data_03_7a69:
+	INCBIN "data/data_00fa69.bin"
+
+SECTION "data_00fa8c", ROMX[$7a8c], BANK[$03]
+Data_03_7a8c:
+	INCBIN "data/data_00fa8c.bin"
+
+SECTION "data_00fb0e", ROMX[$7b0e], BANK[$03]
+Data_03_7b0e:
+	INCBIN "data/data_00fb0e.bin"
 
 SECTION "data_00fb80", ROMX[$7b80], BANK[$03]
 Data_03_7b80:
@@ -2207,10 +2179,6 @@ Data_04_44a2:
 SECTION "data_0104a7", ROMX[$44a7], BANK[$04]
 Data_04_44a7:
 	INCBIN "data/data_0104a7.bin"
-
-SECTION "data_0104bc", ROMX[$44bc], BANK[$04]
-Data_04_44bc:
-	INCBIN "data/data_0104bc.bin"
 
 SECTION "data_0104c2", ROMX[$44c2], BANK[$04]
 Data_04_44c2:
@@ -3356,25 +3324,13 @@ SECTION "data_011211", ROMX[$5211], BANK[$04]
 Data_04_5211:
 	INCBIN "data/data_011211.bin"
 
-SECTION "data_011214", ROMX[$5214], BANK[$04]
-Data_04_5214:
-	INCBIN "data/data_011214.bin"
-
 SECTION "data_011219", ROMX[$5219], BANK[$04]
 Data_04_5219:
 	INCBIN "data/data_011219.bin"
 
-SECTION "data_01121c", ROMX[$521c], BANK[$04]
-Data_04_521c:
-	INCBIN "data/data_01121c.bin"
-
 SECTION "data_011221", ROMX[$5221], BANK[$04]
 Data_04_5221:
 	INCBIN "data/data_011221.bin"
-
-SECTION "data_011224", ROMX[$5224], BANK[$04]
-Data_04_5224:
-	INCBIN "data/data_011224.bin"
 
 SECTION "data_011229", ROMX[$5229], BANK[$04]
 Data_04_5229:
@@ -3387,10 +3343,6 @@ Data_04_5234:
 SECTION "data_011267", ROMX[$5267], BANK[$04]
 Data_04_5267:
 	INCBIN "data/data_011267.bin"
-
-SECTION "data_011274", ROMX[$5274], BANK[$04]
-Data_04_5274:
-	INCBIN "data/data_011274.bin"
 
 SECTION "data_011290", ROMX[$5290], BANK[$04]
 Data_04_5290:
@@ -3628,9 +3580,25 @@ SECTION "data_01167f", ROMX[$567f], BANK[$04]
 Data_04_567f:
 	INCBIN "data/data_01167f.bin"
 
-SECTION "data_0116e0", ROMX[$56e0], BANK[$04]
-Data_04_56e0:
-	INCBIN "data/data_0116e0.bin"
+SECTION "data_0116e7", ROMX[$56e7], BANK[$04]
+Data_04_56e7:
+	INCBIN "data/data_0116e7.bin"
+
+SECTION "data_0116ef", ROMX[$56ef], BANK[$04]
+Data_04_56ef:
+	INCBIN "data/data_0116ef.bin"
+
+SECTION "data_0116f7", ROMX[$56f7], BANK[$04]
+Data_04_56f7:
+	INCBIN "data/data_0116f7.bin"
+
+SECTION "data_011726", ROMX[$5726], BANK[$04]
+Data_04_5726:
+	INCBIN "data/data_011726.bin"
+
+SECTION "data_011753", ROMX[$5753], BANK[$04]
+Data_04_5753:
+	INCBIN "data/data_011753.bin"
 
 SECTION "data_01177c", ROMX[$577c], BANK[$04]
 Data_04_577c:
@@ -3652,13 +3620,13 @@ SECTION "data_01179c", ROMX[$579c], BANK[$04]
 Data_04_579c:
 	INCBIN "data/data_01179c.bin"
 
-SECTION "data_0117bd", ROMX[$57bd], BANK[$04]
-Data_04_57bd:
-	INCBIN "data/data_0117bd.bin"
+SECTION "data_0117bf", ROMX[$57bf], BANK[$04]
+Data_04_57bf:
+	INCBIN "data/data_0117bf.bin"
 
-SECTION "data_0117f5", ROMX[$57f5], BANK[$04]
-Data_04_57f5:
-	INCBIN "data/data_0117f5.bin"
+SECTION "data_01180c", ROMX[$580c], BANK[$04]
+Data_04_580c:
+	INCBIN "data/data_01180c.bin"
 
 SECTION "data_01182d", ROMX[$582d], BANK[$04]
 Data_04_582d:
@@ -4084,10 +4052,6 @@ SECTION "data_011f41", ROMX[$5f41], BANK[$04]
 Data_04_5f41:
 	INCBIN "data/data_011f41.bin"
 
-SECTION "data_0140b2", ROMX[$40b2], BANK[$05]
-Data_05_40b2:
-	INCBIN "data/data_0140b2.bin"
-
 SECTION "data_0140cf", ROMX[$40cf], BANK[$05]
 Data_05_40cf:
 	INCBIN "data/data_0140cf.bin"
@@ -4104,9 +4068,9 @@ SECTION "data_0141e9", ROMX[$41e9], BANK[$05]
 Data_05_41e9:
 	INCBIN "data/data_0141e9.bin"
 
-SECTION "data_01422c", ROMX[$422c], BANK[$05]
-Data_05_422c:
-	INCBIN "data/data_01422c.bin"
+SECTION "data_014242", ROMX[$4242], BANK[$05]
+Data_05_4242:
+	INCBIN "data/data_014242.bin"
 
 SECTION "data_0142a7", ROMX[$42a7], BANK[$05]
 Data_05_42a7:
@@ -4116,109 +4080,41 @@ SECTION "data_014327", ROMX[$4327], BANK[$05]
 Data_05_4327:
 	INCBIN "data/data_014327.bin"
 
-SECTION "data_01443d", ROMX[$443d], BANK[$05]
-Data_05_443d:
-	INCBIN "data/data_01443d.bin"
-
 SECTION "data_0144aa", ROMX[$44aa], BANK[$05]
 Data_05_44aa:
 	INCBIN "data/data_0144aa.bin"
 
-SECTION "data_0145da", ROMX[$45da], BANK[$05]
-Data_05_45da:
-	INCBIN "data/data_0145da.bin"
+SECTION "data_0145e6", ROMX[$45e6], BANK[$05]
+Data_05_45e6:
+	INCBIN "data/data_0145e6.bin"
 
-SECTION "data_0145de", ROMX[$45de], BANK[$05]
-Data_05_45de:
-	INCBIN "data/data_0145de.bin"
+SECTION "data_0145f6", ROMX[$45f6], BANK[$05]
+Data_05_45f6:
+	INCBIN "data/data_0145f6.bin"
 
-SECTION "data_0145e4", ROMX[$45e4], BANK[$05]
-Data_05_45e4:
-	INCBIN "data/data_0145e4.bin"
+SECTION "data_014600", ROMX[$4600], BANK[$05]
+Data_05_4600:
+	INCBIN "data/data_014600.bin"
 
-SECTION "data_0145ea", ROMX[$45ea], BANK[$05]
-Data_05_45ea:
-	INCBIN "data/data_0145ea.bin"
+SECTION "data_014608", ROMX[$4608], BANK[$05]
+Data_05_4608:
+	INCBIN "data/data_014608.bin"
 
-SECTION "data_0145ee", ROMX[$45ee], BANK[$05]
-Data_05_45ee:
-	INCBIN "data/data_0145ee.bin"
+SECTION "data_014610", ROMX[$4610], BANK[$05]
+Data_05_4610:
+	INCBIN "data/data_014610.bin"
 
-SECTION "data_0145f4", ROMX[$45f4], BANK[$05]
-Data_05_45f4:
-	INCBIN "data/data_0145f4.bin"
+SECTION "data_014618", ROMX[$4618], BANK[$05]
+Data_05_4618:
+	INCBIN "data/data_014618.bin"
 
-SECTION "data_0145fa", ROMX[$45fa], BANK[$05]
-Data_05_45fa:
-	INCBIN "data/data_0145fa.bin"
+SECTION "data_014626", ROMX[$4626], BANK[$05]
+Data_05_4626:
+	INCBIN "data/data_014626.bin"
 
-SECTION "data_0145fc", ROMX[$45fc], BANK[$05]
-Data_05_45fc:
-	INCBIN "data/data_0145fc.bin"
-
-SECTION "data_0145ff", ROMX[$45ff], BANK[$05]
-Data_05_45ff:
-	INCBIN "data/data_0145ff.bin"
-
-SECTION "data_014602", ROMX[$4602], BANK[$05]
-Data_05_4602:
-	INCBIN "data/data_014602.bin"
-
-SECTION "data_014604", ROMX[$4604], BANK[$05]
-Data_05_4604:
-	INCBIN "data/data_014604.bin"
-
-SECTION "data_014607", ROMX[$4607], BANK[$05]
-Data_05_4607:
-	INCBIN "data/data_014607.bin"
-
-SECTION "data_01460a", ROMX[$460a], BANK[$05]
-Data_05_460a:
-	INCBIN "data/data_01460a.bin"
-
-SECTION "data_01460c", ROMX[$460c], BANK[$05]
-Data_05_460c:
-	INCBIN "data/data_01460c.bin"
-
-SECTION "data_01460f", ROMX[$460f], BANK[$05]
-Data_05_460f:
-	INCBIN "data/data_01460f.bin"
-
-SECTION "data_014612", ROMX[$4612], BANK[$05]
-Data_05_4612:
-	INCBIN "data/data_014612.bin"
-
-SECTION "data_014614", ROMX[$4614], BANK[$05]
-Data_05_4614:
-	INCBIN "data/data_014614.bin"
-
-SECTION "data_014617", ROMX[$4617], BANK[$05]
-Data_05_4617:
-	INCBIN "data/data_014617.bin"
-
-SECTION "data_01461a", ROMX[$461a], BANK[$05]
-Data_05_461a:
-	INCBIN "data/data_01461a.bin"
-
-SECTION "data_01461e", ROMX[$461e], BANK[$05]
-Data_05_461e:
-	INCBIN "data/data_01461e.bin"
-
-SECTION "data_014624", ROMX[$4624], BANK[$05]
-Data_05_4624:
-	INCBIN "data/data_014624.bin"
-
-SECTION "data_01462a", ROMX[$462a], BANK[$05]
-Data_05_462a:
-	INCBIN "data/data_01462a.bin"
-
-SECTION "data_01462e", ROMX[$462e], BANK[$05]
-Data_05_462e:
-	INCBIN "data/data_01462e.bin"
-
-SECTION "data_014634", ROMX[$4634], BANK[$05]
-Data_05_4634:
-	INCBIN "data/data_014634.bin"
+SECTION "data_014636", ROMX[$4636], BANK[$05]
+Data_05_4636:
+	INCBIN "data/data_014636.bin"
 
 SECTION "data_01485f", ROMX[$485f], BANK[$05]
 Data_05_485f:
@@ -4228,21 +4124,25 @@ SECTION "data_0149fb", ROMX[$49fb], BANK[$05]
 Data_05_49fb:
 	INCBIN "data/data_0149fb.bin"
 
+SECTION "data_014b46", ROMX[$4b46], BANK[$05]
+Data_05_4b46:
+	INCBIN "data/data_014b46.bin"
+
 SECTION "data_014be2", ROMX[$4be2], BANK[$05]
 Data_05_4be2:
 	INCBIN "data/data_014be2.bin"
 
-SECTION "data_014c07", ROMX[$4c07], BANK[$05]
-Data_05_4c07:
-	INCBIN "data/data_014c07.bin"
+SECTION "data_014c13", ROMX[$4c13], BANK[$05]
+Data_05_4c13:
+	INCBIN "data/data_014c13.bin"
 
 SECTION "data_014d53", ROMX[$4d53], BANK[$05]
 Data_05_4d53:
 	INCBIN "data/data_014d53.bin"
 
-SECTION "data_014d60", ROMX[$4d60], BANK[$05]
-Data_05_4d60:
-	INCBIN "data/data_014d60.bin"
+SECTION "data_015057", ROMX[$5057], BANK[$05]
+Data_05_5057:
+	INCBIN "data/data_015057.bin"
 
 SECTION "data_01542c", ROMX[$542c], BANK[$05]
 Data_05_542c:
@@ -4252,9 +4152,45 @@ SECTION "data_01596d", ROMX[$596d], BANK[$05]
 Data_05_596d:
 	INCBIN "data/data_01596d.bin"
 
-SECTION "data_0159b2", ROMX[$59b2], BANK[$05]
-Data_05_59b2:
-	INCBIN "data/data_0159b2.bin"
+SECTION "data_0159b4", ROMX[$59b4], BANK[$05]
+Data_05_59b4:
+	INCBIN "data/data_0159b4.bin"
+
+SECTION "data_015b9a", ROMX[$5b9a], BANK[$05]
+Data_05_5b9a:
+	INCBIN "data/data_015b9a.bin"
+
+SECTION "data_015d80", ROMX[$5d80], BANK[$05]
+Data_05_5d80:
+	INCBIN "data/data_015d80.bin"
+
+SECTION "data_015f66", ROMX[$5f66], BANK[$05]
+Data_05_5f66:
+	INCBIN "data/data_015f66.bin"
+
+SECTION "data_01614c", ROMX[$614c], BANK[$05]
+Data_05_614c:
+	INCBIN "data/data_01614c.bin"
+
+SECTION "data_016332", ROMX[$6332], BANK[$05]
+Data_05_6332:
+	INCBIN "data/data_016332.bin"
+
+SECTION "data_016518", ROMX[$6518], BANK[$05]
+Data_05_6518:
+	INCBIN "data/data_016518.bin"
+
+SECTION "data_0166fe", ROMX[$66fe], BANK[$05]
+Data_05_66fe:
+	INCBIN "data/data_0166fe.bin"
+
+SECTION "data_0168e4", ROMX[$68e4], BANK[$05]
+Data_05_68e4:
+	INCBIN "data/data_0168e4.bin"
+
+SECTION "data_016aca", ROMX[$6aca], BANK[$05]
+Data_05_6aca:
+	INCBIN "data/data_016aca.bin"
 
 SECTION "data_01b211", ROMX[$7211], BANK[$06]
 Data_06_7211:
@@ -4288,57 +4224,121 @@ SECTION "data_01bf59", ROMX[$7f59], BANK[$06]
 Data_06_7f59:
 	INCBIN "data/data_01bf59.bin"
 
-SECTION "data_01c000", ROMX[$4000], BANK[$07]
-Data_07_4000:
-	INCBIN "data/data_01c000.bin"
-
-SECTION "data_01d080", ROMX[$5080], BANK[$07]
-Data_07_5080:
-	INCBIN "data/data_01d080.bin"
-
-SECTION "data_01e840", ROMX[$6840], BANK[$07]
-Data_07_6840:
-	INCBIN "data/data_01e840.bin"
-
-SECTION "data_01ffff", ROMX[$7fff], BANK[$07]
-Data_07_7fff:
-	INCBIN "data/data_01ffff.bin"
-
-SECTION "data_020000", ROMX[$4000], BANK[$08]
-Data_08_4000:
-	INCBIN "data/data_020000.bin"
-
-SECTION "data_022400", ROMX[$6400], BANK[$08]
-Data_08_6400:
-	INCBIN "data/data_022400.bin"
-
-SECTION "data_023fff", ROMX[$7fff], BANK[$08]
-Data_08_7fff:
-	INCBIN "data/data_023fff.bin"
+SECTION "data_01f262", ROMX[$7262], BANK[$07]
+Data_07_7262:
+	INCBIN "data/data_01f262.bin"
 
 SECTION "data_02735e", ROMX[$735e], BANK[$09]
 Data_09_735e:
 	INCBIN "data/data_02735e.bin"
 
-SECTION "data_028000", ROMX[$4000], BANK[$0a]
-Data_0a_4000:
-	INCBIN "data/data_028000.bin"
+SECTION "data_02b39f", ROMX[$739f], BANK[$0a]
+Data_0a_739f:
+	INCBIN "data/data_02b39f.bin"
 
-SECTION "data_0290a4", ROMX[$50a4], BANK[$0a]
-Data_0a_50a4:
-	INCBIN "data/data_0290a4.bin"
+SECTION "data_02b3d5", ROMX[$73d5], BANK[$0a]
+Data_0a_73d5:
+	INCBIN "data/data_02b3d5.bin"
 
-SECTION "data_02a860", ROMX[$6860], BANK[$0a]
-Data_0a_6860:
-	INCBIN "data/data_02a860.bin"
+SECTION "data_02b40b", ROMX[$740b], BANK[$0a]
+Data_0a_740b:
+	INCBIN "data/data_02b40b.bin"
 
-SECTION "data_02b0a0", ROMX[$70a0], BANK[$0a]
-Data_0a_70a0:
-	INCBIN "data/data_02b0a0.bin"
+SECTION "data_02b441", ROMX[$7441], BANK[$0a]
+Data_0a_7441:
+	INCBIN "data/data_02b441.bin"
 
-SECTION "data_02bfff", ROMX[$7fff], BANK[$0a]
-Data_0a_7fff:
-	INCBIN "data/data_02bfff.bin"
+SECTION "data_02b477", ROMX[$7477], BANK[$0a]
+Data_0a_7477:
+	INCBIN "data/data_02b477.bin"
+
+SECTION "data_02b4ad", ROMX[$74ad], BANK[$0a]
+Data_0a_74ad:
+	INCBIN "data/data_02b4ad.bin"
+
+SECTION "data_02b4e3", ROMX[$74e3], BANK[$0a]
+Data_0a_74e3:
+	INCBIN "data/data_02b4e3.bin"
+
+SECTION "data_02b519", ROMX[$7519], BANK[$0a]
+Data_0a_7519:
+	INCBIN "data/data_02b519.bin"
+
+SECTION "data_02b583", ROMX[$7583], BANK[$0a]
+Data_0a_7583:
+	INCBIN "data/data_02b583.bin"
+
+SECTION "data_02b5ed", ROMX[$75ed], BANK[$0a]
+Data_0a_75ed:
+	INCBIN "data/data_02b5ed.bin"
+
+SECTION "data_02b657", ROMX[$7657], BANK[$0a]
+Data_0a_7657:
+	INCBIN "data/data_02b657.bin"
+
+SECTION "data_02b6c1", ROMX[$76c1], BANK[$0a]
+Data_0a_76c1:
+	INCBIN "data/data_02b6c1.bin"
+
+SECTION "data_02b72b", ROMX[$772b], BANK[$0a]
+Data_0a_772b:
+	INCBIN "data/data_02b72b.bin"
+
+SECTION "data_02b795", ROMX[$7795], BANK[$0a]
+Data_0a_7795:
+	INCBIN "data/data_02b795.bin"
+
+SECTION "data_02b7ff", ROMX[$77ff], BANK[$0a]
+Data_0a_77ff:
+	INCBIN "data/data_02b7ff.bin"
+
+SECTION "data_02b825", ROMX[$7825], BANK[$0a]
+Data_0a_7825:
+	INCBIN "data/data_02b825.bin"
+
+SECTION "data_02b84b", ROMX[$784b], BANK[$0a]
+Data_0a_784b:
+	INCBIN "data/data_02b84b.bin"
+
+SECTION "data_02b871", ROMX[$7871], BANK[$0a]
+Data_0a_7871:
+	INCBIN "data/data_02b871.bin"
+
+SECTION "data_02b897", ROMX[$7897], BANK[$0a]
+Data_0a_7897:
+	INCBIN "data/data_02b897.bin"
+
+SECTION "data_02b8bb", ROMX[$78bb], BANK[$0a]
+Data_0a_78bb:
+	INCBIN "data/data_02b8bb.bin"
+
+SECTION "data_02b8e3", ROMX[$78e3], BANK[$0a]
+Data_0a_78e3:
+	INCBIN "data/data_02b8e3.bin"
+
+SECTION "data_02b929", ROMX[$7929], BANK[$0a]
+Data_0a_7929:
+	INCBIN "data/data_02b929.bin"
+
+SECTION "data_02b96f", ROMX[$796f], BANK[$0a]
+Data_0a_796f:
+	INCBIN "data/data_02b96f.bin"
+
+SECTION "data_02b9b5", ROMX[$79b5], BANK[$0a]
+Data_0a_79b5:
+	INCBIN "data/data_02b9b5.bin"
+
+SECTION "data_02b9fb", ROMX[$79fb], BANK[$0a]
+Data_0a_79fb:
+	INCBIN "data/data_02b9fb.bin"
+
+SECTION "data_02ba41", ROMX[$7a41], BANK[$0a]
+Data_0a_7a41:
+	INCBIN "data/data_02ba41.bin"
+
+SECTION "data_02ba87", ROMX[$7a87], BANK[$0a]
+Data_0a_7a87:
+	INCBIN "data/data_02ba87.bin"
 
 SECTION "data_030002", ROMX[$4002], BANK[$0c]
 Data_0c_4002:
@@ -4476,10 +4476,6 @@ SECTION "data_03cbea", ROMX[$4bea], BANK[$0f]
 Data_0f_4bea:
 	INCBIN "data/data_03cbea.bin"
 
-SECTION "data_03cc3d", ROMX[$4c3d], BANK[$0f]
-Data_0f_4c3d:
-	INCBIN "data/data_03cc3d.bin"
-
 SECTION "data_03cc49", ROMX[$4c49], BANK[$0f]
 Data_0f_4c49:
 	INCBIN "data/data_03cc49.bin"
@@ -4543,6 +4539,14 @@ Data_0f_70ec:
 SECTION "data_03f12f", ROMX[$712f], BANK[$0f]
 Data_0f_712f:
 	INCBIN "data/data_03f12f.bin"
+
+SECTION "data_03f1c9", ROMX[$71c9], BANK[$0f]
+Data_0f_71c9:
+	INCBIN "data/data_03f1c9.bin"
+
+SECTION "data_03f1e9", ROMX[$71e9], BANK[$0f]
+Data_0f_71e9:
+	INCBIN "data/data_03f1e9.bin"
 
 SECTION "data_03f249", ROMX[$7249], BANK[$0f]
 Data_0f_7249:
@@ -4836,6 +4840,10 @@ SECTION "data_04a11a", ROMX[$611a], BANK[$12]
 Data_12_611a:
 	INCBIN "data/data_04a11a.bin"
 
+SECTION "data_04a35f", ROMX[$635f], BANK[$12]
+Data_12_635f:
+	INCBIN "data/data_04a35f.bin"
+
 SECTION "data_04a5a4", ROMX[$65a4], BANK[$12]
 Data_12_65a4:
 	INCBIN "data/data_04a5a4.bin"
@@ -4860,10 +4868,6 @@ SECTION "data_04ffff", ROMX[$7fff], BANK[$13]
 Data_13_7fff:
 	INCBIN "data/data_04ffff.bin"
 
-SECTION "data_050000", ROMX[$4000], BANK[$14]
-Data_14_4000:
-	INCBIN "data/data_050000.bin"
-
 SECTION "data_050030", ROMX[$4030], BANK[$14]
 Data_14_4030:
 	INCBIN "data/data_050030.bin"
@@ -4879,10 +4883,6 @@ Data_14_404b:
 SECTION "data_050228", ROMX[$4228], BANK[$14]
 Data_14_4228:
 	INCBIN "data/data_050228.bin"
-
-SECTION "data_0528a4", ROMX[$68a4], BANK[$14]
-Data_14_68a4:
-	INCBIN "data/data_0528a4.bin"
 
 SECTION "data_0529ba", ROMX[$69ba], BANK[$14]
 Data_14_69ba:
@@ -4992,9 +4992,9 @@ SECTION "data_05c096", ROMX[$4096], BANK[$17]
 Data_17_4096:
 	INCBIN "data/data_05c096.bin"
 
-SECTION "data_05c0a2", ROMX[$40a2], BANK[$17]
-Data_17_40a2:
-	INCBIN "data/data_05c0a2.bin"
+SECTION "data_05c0a6", ROMX[$40a6], BANK[$17]
+Data_17_40a6:
+	INCBIN "data/data_05c0a6.bin"
 
 SECTION "data_05c0ae", ROMX[$40ae], BANK[$17]
 Data_17_40ae:
@@ -5099,10 +5099,6 @@ Data_18_6e21:
 SECTION "data_062f2b", ROMX[$6f2b], BANK[$18]
 Data_18_6f2b:
 	INCBIN "data/data_062f2b.bin"
-
-SECTION "data_06687b", ROMX[$687b], BANK[$19]
-Data_19_687b:
-	INCBIN "data/data_06687b.bin"
 
 SECTION "data_06688f", ROMX[$688f], BANK[$19]
 Data_19_688f:
@@ -5212,21 +5208,9 @@ SECTION "data_07d00c", ROMX[$500c], BANK[$1f]
 Data_1f_500c:
 	INCBIN "data/data_07d00c.bin"
 
-SECTION "data_07d8a2", ROMX[$58a2], BANK[$1f]
-Data_1f_58a2:
-	INCBIN "data/data_07d8a2.bin"
-
-SECTION "data_07d8b5", ROMX[$58b5], BANK[$1f]
-Data_1f_58b5:
-	INCBIN "data/data_07d8b5.bin"
-
 SECTION "data_07dc51", ROMX[$5c51], BANK[$1f]
 Data_1f_5c51:
 	INCBIN "data/data_07dc51.bin"
-
-SECTION "data_07dcd9", ROMX[$5cd9], BANK[$1f]
-Data_1f_5cd9:
-	INCBIN "data/data_07dcd9.bin"
 
 SECTION "data_07dcdc", ROMX[$5cdc], BANK[$1f]
 Data_1f_5cdc:
@@ -5240,25 +5224,9 @@ SECTION "data_07dfc3", ROMX[$5fc3], BANK[$1f]
 Data_1f_5fc3:
 	INCBIN "data/data_07dfc3.bin"
 
-SECTION "data_07e2bb", ROMX[$62bb], BANK[$1f]
-Data_1f_62bb:
-	INCBIN "data/data_07e2bb.bin"
-
-SECTION "data_07e2d1", ROMX[$62d1], BANK[$1f]
-Data_1f_62d1:
-	INCBIN "data/data_07e2d1.bin"
-
-SECTION "data_07e316", ROMX[$6316], BANK[$1f]
-Data_1f_6316:
-	INCBIN "data/data_07e316.bin"
-
 SECTION "data_07e322", ROMX[$6322], BANK[$1f]
 Data_1f_6322:
 	INCBIN "data/data_07e322.bin"
-
-SECTION "data_07e326", ROMX[$6326], BANK[$1f]
-Data_1f_6326:
-	INCBIN "data/data_07e326.bin"
 
 SECTION "data_07e386", ROMX[$6386], BANK[$1f]
 Data_1f_6386:
@@ -5271,10 +5239,6 @@ Data_1f_6457:
 SECTION "data_07e524", ROMX[$6524], BANK[$1f]
 Data_1f_6524:
 	INCBIN "data/data_07e524.bin"
-
-SECTION "data_07e5f5", ROMX[$65f5], BANK[$1f]
-Data_1f_65f5:
-	INCBIN "data/data_07e5f5.bin"
 
 SECTION "data_07ffc5", ROMX[$7fc5], BANK[$1f]
 Data_1f_7fc5:
@@ -5744,10 +5708,6 @@ SECTION "data_0c0188", ROMX[$4188], BANK[$30]
 Data_30_4188:
 	INCBIN "data/data_0c0188.bin"
 
-SECTION "data_0c0191", ROMX[$4191], BANK[$30]
-Data_30_4191:
-	INCBIN "data/data_0c0191.bin"
-
 SECTION "data_0c0195", ROMX[$4195], BANK[$30]
 Data_30_4195:
 	INCBIN "data/data_0c0195.bin"
@@ -5924,10 +5884,6 @@ SECTION "data_0c4292", ROMX[$4292], BANK[$31]
 Data_31_4292:
 	INCBIN "data/data_0c4292.bin"
 
-SECTION "data_0c8000", ROMX[$4000], BANK[$32]
-Data_32_4000:
-	INCBIN "data/data_0c8000.bin"
-
 SECTION "data_0c800c", ROMX[$400c], BANK[$32]
 Data_32_400c:
 	INCBIN "data/data_0c800c.bin"
@@ -5940,17 +5896,9 @@ SECTION "data_0c809d", ROMX[$409d], BANK[$32]
 Data_32_409d:
 	INCBIN "data/data_0c809d.bin"
 
-SECTION "data_0c81f7", ROMX[$41f7], BANK[$32]
-Data_32_41f7:
-	INCBIN "data/data_0c81f7.bin"
-
 SECTION "data_0c8203", ROMX[$4203], BANK[$32]
 Data_32_4203:
 	INCBIN "data/data_0c8203.bin"
-
-SECTION "data_0c8217", ROMX[$4217], BANK[$32]
-Data_32_4217:
-	INCBIN "data/data_0c8217.bin"
 
 SECTION "data_0c8223", ROMX[$4223], BANK[$32]
 Data_32_4223:
@@ -5960,9 +5908,37 @@ SECTION "data_0c82bb", ROMX[$42bb], BANK[$32]
 Data_32_42bb:
 	INCBIN "data/data_0c82bb.bin"
 
-SECTION "data_0c83bb", ROMX[$43bb], BANK[$32]
-Data_32_43bb:
-	INCBIN "data/data_0c83bb.bin"
+SECTION "data_0c83c1", ROMX[$43c1], BANK[$32]
+Data_32_43c1:
+	INCBIN "data/data_0c83c1.bin"
+
+SECTION "data_0c83c7", ROMX[$43c7], BANK[$32]
+Data_32_43c7:
+	INCBIN "data/data_0c83c7.bin"
+
+SECTION "data_0c83d1", ROMX[$43d1], BANK[$32]
+Data_32_43d1:
+	INCBIN "data/data_0c83d1.bin"
+
+SECTION "data_0c83d9", ROMX[$43d9], BANK[$32]
+Data_32_43d9:
+	INCBIN "data/data_0c83d9.bin"
+
+SECTION "data_0c83df", ROMX[$43df], BANK[$32]
+Data_32_43df:
+	INCBIN "data/data_0c83df.bin"
+
+SECTION "data_0c83e9", ROMX[$43e9], BANK[$32]
+Data_32_43e9:
+	INCBIN "data/data_0c83e9.bin"
+
+SECTION "data_0c83f1", ROMX[$43f1], BANK[$32]
+Data_32_43f1:
+	INCBIN "data/data_0c83f1.bin"
+
+SECTION "data_0c83f7", ROMX[$43f7], BANK[$32]
+Data_32_43f7:
+	INCBIN "data/data_0c83f7.bin"
 
 SECTION "data_0c83ff", ROMX[$43ff], BANK[$32]
 Data_32_43ff:
@@ -6220,10 +6196,6 @@ SECTION "data_0c85f7", ROMX[$45f7], BANK[$32]
 Data_32_45f7:
 	INCBIN "data/data_0c85f7.bin"
 
-SECTION "data_0ca613", ROMX[$6613], BANK[$32]
-Data_32_6613:
-	INCBIN "data/data_0ca613.bin"
-
 SECTION "data_0ca96d", ROMX[$696d], BANK[$32]
 Data_32_696d:
 	INCBIN "data/data_0ca96d.bin"
@@ -6235,10 +6207,6 @@ Data_32_6ab7:
 SECTION "data_0cab0b", ROMX[$6b0b], BANK[$32]
 Data_32_6b0b:
 	INCBIN "data/data_0cab0b.bin"
-
-SECTION "data_0cab2f", ROMX[$6b2f], BANK[$32]
-Data_32_6b2f:
-	INCBIN "data/data_0cab2f.bin"
 
 SECTION "data_0cf030", ROMX[$7030], BANK[$33]
 Data_33_7030:
@@ -6307,10 +6275,6 @@ Data_3b_4022:
 SECTION "data_0ed434", ROMX[$5434], BANK[$3b]
 Data_3b_5434:
 	INCBIN "data/data_0ed434.bin"
-
-SECTION "data_0f0000", ROMX[$4000], BANK[$3c]
-Data_3c_4000:
-	INCBIN "data/data_0f0000.bin"
 
 SECTION "data_0f3000", ROMX[$7000], BANK[$3c]
 Data_3c_7000:
