@@ -747,6 +747,9 @@ _COV_CATEGORIES = [
     ("user_gfx",      "user-curated gfx"),
     ("analyzed_code", "analyzer code"),
     ("analyzed_data", "analyzer data"),
+    ("analyzed_ascii", "analyzer ascii"),
+    ("analyzed_asciz", "analyzer asciz"),
+    ("analyzed_padding", "analyzer padding"),
     ("analyzed_gfx",  "analyzer gfx"),
     ("conflict",      "conflict bytes"),
     ("header",        "cartridge header"),
@@ -760,7 +763,10 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
     Every ROM byte is assigned to exactly one category. The priority order
     (later wins, so user-curated entries take precedence over the analyzer's
     view, and the header always wins) is:
-      analyzer (code, data, gfx) <- conflicts <- user-curated <- header
+      analyzer <- conflicts <- user-curated <- header
+    Both the analyzer and user branches handle all section types
+    (code/data/ascii/asciz/padding/gfx); a type left unhandled in either branch
+    would leave its bytes UNMARKED and miscounted as "uncovered".
     """
     keys = [k for k, _ in _COV_CATEGORIES]
     cat_id = {k: i for i, k in enumerate(keys)}
@@ -789,6 +795,12 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
                     fill(s["addr"], s["len"], "analyzed_code")
                 elif t == "data":
                     fill(s["addr"], s["len"], "analyzed_data")
+                elif t == "ascii":
+                    fill(s["addr"], s["len"], "analyzed_ascii")
+                elif t == "asciz":
+                    fill(s["addr"], s["len"], "analyzed_asciz")
+                elif t == "padding":
+                    fill(s["addr"], s["len"], "analyzed_padding")
                 elif t == "gfx":
                     fill(s["addr"], s["len"], "analyzed_gfx")
 

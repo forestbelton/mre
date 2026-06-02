@@ -862,6 +862,29 @@ class TestComputeCoverage(unittest.TestCase):
         self.assertEqual(c["user_asciz"], 6)
         self.assertEqual(c["user_gfx"], 7)
 
+    def test_all_section_types_counted_in_analyzed(self):
+        # Regression: the analyzed.asm branch must handle every section type too,
+        # not just code/data/gfx -- ascii/asciz/padding sections in analyzed.asm
+        # were silently counted as "uncovered".
+        spec = {"files": [{"type": "code", "name": "analyzed.asm", "sections": [
+            {"type": "code",    "addr": 0x200, "len": 4},
+            {"type": "data",    "addr": 0x300, "len": 8},
+            {"type": "ascii",   "addr": 0x400, "len": 5},
+            {"type": "asciz",   "addr": 0x500, "len": 6},
+            {"type": "padding", "addr": 0x600, "len": 7},
+            {"type": "gfx",     "addr": 0x700, "len": 9},
+        ]}]}
+        c = extract.compute_coverage(spec, self.ROM)
+        self.assertEqual(c["analyzed_code"], 4)
+        self.assertEqual(c["analyzed_data"], 8)
+        self.assertEqual(c["analyzed_ascii"], 5)
+        self.assertEqual(c["analyzed_asciz"], 6)
+        self.assertEqual(c["analyzed_padding"], 7)
+        self.assertEqual(c["analyzed_gfx"], 9)
+        # None of them leak into "uncovered".
+        self.assertEqual(c["uncovered"], self.ROM - (4 + 8 + 5 + 6 + 7 + 9)
+                         - (extract.HEADER_END - extract.HEADER_START))
+
     def test_gfx_counted_for_analyzer_and_user(self):
         # gfx sections are covered (not left "uncovered"), from any file, and
         # attributed to analyzer vs user like code/data are.
