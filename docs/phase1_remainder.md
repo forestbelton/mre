@@ -3,13 +3,28 @@
 Goal of phase 1: classify **every** ROM byte (code / data / gfx / padding) so the
 map is complete; phase 2 is the semantic conversion to a real source project.
 
-**Snapshot:** 91.1% covered, **93,265 bytes uncovered** in **1,701 gaps** across 57
-banks (`make extract` coverage summary). This note is a *carve plan* for the
-remainder: what each gap is (from static analysis) and which tool finishes it.
+**Status (after the static carve-out): 96.4% mapped, ~37.6 KB uncovered, and the
+remainder is essentially all graphics.** The static categories below have been
+carved into `analyzed.asm` sections (padding/`$ff`-filler/screens/text/xref-code/
+banked-call targets) — see git log `map: carve ...`. What's left needs runtime
+VRAM provenance.
+
+> Historical snapshot (start of this effort): 91.1% / 93,265 bytes / 1,701 gaps.
 
 Regenerate the analysis any time with the scripts described under "Method" — the
 exact offsets drift as carving and analyzer runs proceed, so treat the tables as
 a snapshot and re-run before acting.
+
+## What remains (~37.6 KB) — graphics, needs `--watch-vram`
+Concentrated in banks `$34` (8.9 KB), `$2d`/`$2e` (~5 KB each), `$2f`, `$3e`/`$3f`,
+`$0f`, `$12`. These read as tile pixel data (`$ff` fills, bit-plane patterns) with
+no static signature, so only the analyzer's VRAM-write trace can attribute them:
+play widely under `--watch-vram` (every monster encounter, all basement rooms, the
+special floors 75/76, shops, the encyclopedia, cutscenes/endings, the level
+editor). A final sliver may be never-displayed art/data that no trace reaches —
+classify those by hand at the very end.
+
+## Original carve plan (static categories — now done)
 
 ## The split: static vs. runtime trace
 
