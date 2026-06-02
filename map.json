@@ -2118,11 +2118,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x135e",
-					"len":	"0x33"
-				}, {
-					"type":	"data",
-					"addr":	"0x1395",
-					"len":	"0x8"
+					"len":	"0x3f"
 				}, {
 					"type":	"data",
 					"addr":	"0x139f",
@@ -2130,15 +2126,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x13ae",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x13b3",
-					"len":	"0xb"
-				}, {
-					"type":	"data",
-					"addr":	"0x13c2",
-					"len":	"0x8"
+					"len":	"0x1c"
 				}, {
 					"type":	"data",
 					"addr":	"0x13cc",
@@ -2986,11 +2974,11 @@
 				}, {
 					"type":	"code",
 					"addr":	"0x54d0",
-					"len":	"0x74"
+					"len":	"0x83"
 				}, {
 					"type":	"code",
-					"addr":	"0x55a6",
-					"len":	"0x2b"
+					"addr":	"0x559c",
+					"len":	"0x35"
 				}, {
 					"type":	"code",
 					"addr":	"0x55db",
@@ -6470,19 +6458,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x3ca0b",
-					"len":	"0x6f"
-				}, {
-					"type":	"data",
-					"addr":	"0x3ca7e",
-					"len":	"0xb"
-				}, {
-					"type":	"data",
-					"addr":	"0x3ca8d",
-					"len":	"0x1"
-				}, {
-					"type":	"data",
-					"addr":	"0x3ca92",
-					"len":	"0x1a"
+					"len":	"0xa1"
 				}, {
 					"type":	"code",
 					"addr":	"0x3caac",
@@ -6526,15 +6502,7 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x3eeb0",
-					"len":	"0x1b0"
-				}, {
-					"type":	"data",
-					"addr":	"0x3f06e",
-					"len":	"0x1c"
-				}, {
-					"type":	"data",
-					"addr":	"0x3f0a6",
-					"len":	"0x46"
+					"len":	"0x23c"
 				}, {
 					"type":	"data",
 					"addr":	"0x3f116",
