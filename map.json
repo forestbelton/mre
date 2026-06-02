@@ -9104,6 +9104,10 @@
 					"addr":	296570,
 					"len":	27
 				}, {
+					"type":	"data",
+					"addr":	"0x48695",
+					"len":	"0x3b"
+				}, {
 					"type":	"code",
 					"addr":	296656,
 					"len":	24
@@ -9155,6 +9159,10 @@
 					"type":	"code",
 					"addr":	297747,
 					"len":	49
+				}, {
+					"type":	"data",
+					"addr":	"0x48b44",
+					"len":	"0x20"
 				}, {
 					"type":	"data",
 					"addr":	297828,
@@ -11735,6 +11743,10 @@
 					"type":	"data",
 					"addr":	851967,
 					"len":	1
+				}, {
+					"type":	"data",
+					"addr":	"0xd0000",
+					"len":	"0x680"
 				}, {
 					"type":	"data",
 					"addr":	864424,

@@ -2234,10 +2234,6 @@ SECTION "data_048636", ROMX[$4636], BANK[$12]
 Data_12_4636:
 	INCBIN "data/data_048636.bin"
 
-SECTION "data_048695", ROMX[$4695], BANK[$12]
-Data_12_4695:
-	INCBIN "data/data_048695.bin"
-
 SECTION "data_0486e8", ROMX[$46e8], BANK[$12]
 Data_12_46e8:
 	INCBIN "data/data_0486e8.bin"
@@ -2249,10 +2245,6 @@ Data_12_48e8:
 SECTION "data_048a75", ROMX[$4a75], BANK[$12]
 Data_12_4a75:
 	INCBIN "data/data_048a75.bin"
-
-SECTION "data_048b44", ROMX[$4b44], BANK[$12]
-Data_12_4b44:
-	INCBIN "data/data_048b44.bin"
 
 SECTION "data_048b9c", ROMX[$4b9c], BANK[$12]
 Data_12_4b9c:
@@ -2821,10 +2813,6 @@ Data_31_408c:
 SECTION "data_0cf030", ROMX[$7030], BANK[$33]
 Data_33_7030:
 	INCBIN "data/data_0cf030.bin"
-
-SECTION "data_0d0000", ROMX[$4000], BANK[$34]
-Data_34_4000:
-	INCBIN "data/data_0d0000.bin"
 
 SECTION "data_0d08a8", ROMX[$48a8], BANK[$34]
 Data_34_48a8:
