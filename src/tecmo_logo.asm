@@ -8,6 +8,11 @@
 ; so this region would relocate cleanly if the offsets were ever dropped
 ; (see docs/philosophy.md).
 
+; NB: Can't use TECMO_LOGO_GFX_BANK when declaring sections below because it
+; doesn't play nicely with the extractor. Can either fix the extractor or wait
+; until extractor is simplified out after ROM mapping.
+DEF TECMO_LOGO_GFX_BANK EQU $27
+
 SECTION "TecmoLogoTiles", ROMX[$5000], BANK[$27]
 TecmoLogoTiles:
 	INCBIN "assets/tecmo_logo/tiles.bin"       ; 128 tiles; land at VRAM $9000 ($8800 mode)
@@ -41,29 +46,29 @@ TecmoLogoAttrMap:
 SECTION "DrawTecmoLogo", ROMX[$5418], BANK[$30]
 DrawTecmoLogo:
 	xor a
-	ld [$d0fe], a               ; fade level := 0
+	ld [wFadeLevel], a          ; fade level := 0
 	call HideAllSprites         ; clear OAM / pre-screen init
 	xor a
 	ldh [rVBK], a               ; VRAM bank 0
-	ld a, $27
+	ld a, TECMO_LOGO_GFX_BANK
 	ld hl, $4000                ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a               ; VRAM bank 1
-	ld a, $27
+	ld a, TECMO_LOGO_GFX_BANK
 	ld hl, $5800                ; bank-1 plane (palette/maps/tail ride along, unused as tiles)
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	ld b, $27
-	ld hl, $5808                ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
+	ld b, TECMO_LOGO_GFX_BANK
+	ld hl, TecmoLogoMapDesc     ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
 	ld de, $9800
 	call CopyBgMapBanked
 	call Func_00_0822
-	ld b, $27
-	ld de, $5800                ; TecmoLogoPalette -> BG/OBJ palette buffers
+	ld b, TECMO_LOGO_GFX_BANK
+	ld de, TecmoLogoPalette     ; TecmoLogoPalette -> BG/OBJ palette buffers
 	call LoadPalettesBanked
 	call Func_00_0794           ; show screen + apply palettes
 .fadeLoop:
@@ -72,12 +77,12 @@ DrawTecmoLogo:
 	ldh a, [$ff8d]              ; held buttons
 	cp $00
 	jr nz, .done                ; any press skips the fade
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $b4                      ; held ~180 frames (~3 s)
 	jr nc, .done
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a               ; advance fade level (per-frame palette dim)
+	ld [wFadeLevel], a          ; advance fade level (per-frame palette dim)
 	jp .fadeLoop
 .done:
 	call Func_00_07a7           ; fade out

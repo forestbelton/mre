@@ -42523,7 +42523,7 @@ Func_20_7980:
 SECTION "analyzed_083990", ROMX[$7990], BANK[$20]
 
 Func_20_7990:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	srl a
 	srl a
 	srl a
@@ -45457,7 +45457,7 @@ SECTION "analyzed_0c001e", ROMX[$401e], BANK[$30]
 
 Func_30_401e:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0f6], a
 	ld [$d0f7], a
 	ld [$d0f8], a
@@ -45557,7 +45557,7 @@ Func_30_40e4:
 	ld a, [$d0f3]
 	cp $00
 	jp z, Func_30_40f7
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_4104
 Func_30_40f7:
@@ -45571,7 +45571,7 @@ Func_30_4104:
 	ld a, [$d0f3]
 	cp $00
 	jp z, Func_30_411b
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr nc, Func_30_411b
 	ld a, [$c287]
@@ -45599,9 +45599,9 @@ Func_30_4129:
 	ld c, $08
 	call DrawMetasprite
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_40ab
 Func_30_4152:
 	call Func_00_0400
@@ -45704,16 +45704,16 @@ Func_30_41c9:
 	call CallLibFunc
 	pop af
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 Func_30_41d8:
 	ret
 	call Func_30_42c2
 	ret
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_41ef
 	ld a, $11
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $04
 	add a, $0f
 	jr Func_30_41fe
@@ -45729,11 +45729,11 @@ Func_30_41fe:
 	ld d, $2c
 	call Func_30_428f
 	ret
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_4218
 	ld a, $11
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $04
 	add a, $05
 	jr Func_30_4227
@@ -45749,11 +45749,11 @@ Func_30_4227:
 	ld d, $60
 	call Func_30_428f
 	ret
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_423f
 	ld a, $11
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $04
 	jr Func_30_424c
 Func_30_423f:
@@ -45767,11 +45767,11 @@ Func_30_424c:
 	ld d, $60
 	call Func_30_428f
 	ret
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_4266
 	ld a, $11
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $04
 	add a, $0a
 	jr Func_30_4275
@@ -45788,7 +45788,7 @@ Func_30_4275:
 	call Func_30_428f
 	ret
 Func_30_427d:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	ld d, a
 	ld c, $00
 Func_30_4283:
@@ -45945,7 +45945,7 @@ Func_30_4387:
 	ret
 Func_30_43a4:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0f4], a
 	call HideAllSprites
 	xor a
@@ -46000,7 +46000,7 @@ Func_30_4403:
 	pop af
 	call Func_30_42c2
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $01
 	ld [$d0f3], a
 Func_30_442e:
@@ -46011,7 +46011,7 @@ Func_30_442e:
 	call Func_30_4487
 	jp Func_30_444a
 Func_30_443d:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $48
 	jr nc, Func_30_445a
 	call Func_30_4461
@@ -46019,16 +46019,16 @@ Func_30_443d:
 Func_30_444a:
 	call Func_30_4494
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_4403
 Func_30_445a:
 	call Func_00_0786
 	call Func_00_07c5
 	ret
 Func_30_4461:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $1f
 	cp $1f
 	jr nz, Func_30_4475
@@ -46072,7 +46072,7 @@ SECTION "analyzed_0c04aa", ROMX[$44aa], BANK[$30]
 Func_30_44aa:
 	call Func_00_083c
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	xor a
 	ld [$d0f3], a
 	ld [$d0f4], a
@@ -46173,7 +46173,7 @@ Func_30_456a:
 	ld a, [$d0f4]
 	cp $03
 	jr nc, Func_30_45e2
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	srl a
 	srl a
 	srl a
@@ -46195,7 +46195,7 @@ Func_30_45a1:
 	ld de, $9810
 	ld b, $23
 	call Func_00_35d4
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	srl a
 	srl a
 	push af
@@ -46214,9 +46214,9 @@ Func_30_45a1:
 	ld e, $89
 	call Func_00_35f9
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_4540
 Func_30_45e2:
 	call Func_00_0786
@@ -46259,7 +46259,7 @@ Func_30_4629:
 	cp $f0
 	jr c, Func_30_463d
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, $01
 	ld [$d0f3], a
 Func_30_463d:
@@ -46301,7 +46301,7 @@ Func_30_4672:
 	call Func_00_07c5
 Func_30_468c:
 	ret
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $48
 	jr nc, Func_30_469d
 	ld b, $50
@@ -46503,7 +46503,7 @@ Data_30_484d:
 SECTION "analyzed_0c0855", ROMX[$4855], BANK[$30]
 
 Func_30_4855:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $0f
 	srl a
 	srl a
@@ -46529,7 +46529,7 @@ Func_30_486d:
 	ret
 Func_30_487d:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0ff], a
 	ld [$d0f3], a
 	ld [$d0f8], a
@@ -46623,7 +46623,7 @@ Func_30_4931:
 	call Func_00_09d5
 Func_30_4946:
 	call WaitForNextFrame
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $2c
 	jr nz, Func_30_4957
 	ld a, [$d0ff]
@@ -46645,7 +46645,7 @@ Func_30_4957:
 	pop af
 Func_30_4973:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0ff], a
 	ld a, $01
 	ld [$d0f3], a
@@ -46654,7 +46654,7 @@ Func_30_4982:
 	ld a, [$d0f3]
 	cp $01
 	jp nz, Func_30_4997
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $48
 	jr nc, Func_30_4994
 	jp Func_30_4997
@@ -46667,7 +46667,7 @@ Func_30_4997:
 	ld a, [$c2c1]
 	cp $00
 	jr z, Func_30_49bc
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $0f
 	srl a
 	srl a
@@ -46688,7 +46688,7 @@ Func_30_49c6:
 	jr c, Func_30_49d1
 	add a, a
 Func_30_49d1:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	ld c, a
 	ld a, [$d0ff]
 	ld b, a
@@ -46696,7 +46696,7 @@ Func_30_49d1:
 	ld a, b
 	ld [$d0ff], a
 	ld a, c
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_4946
 Func_30_49e5:
 	ldh a, [rLCDC]
@@ -46828,7 +46828,7 @@ Func_30_4de3:
 	ld a, [$d0ff]
 	cp $00
 	jp nz, Func_30_4df3
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $3c
 	jp c, Func_30_4e46
 Func_30_4df3:
@@ -46841,7 +46841,7 @@ Func_30_4df3:
 	ld b, $68
 	ld c, $78
 	call DrawMetasprite
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $0f
 	srl a
 	srl a
@@ -46922,7 +46922,7 @@ Data_30_4e86:
 SECTION "analyzed_0c0e9e", ROMX[$4e9e], BANK[$30]
 
 Func_30_4e9e:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	bit 4, a
 	jp z, Func_30_4f0f
 	ld a, [$c2c1]
@@ -47162,7 +47162,7 @@ SECTION "analyzed_0c103b", ROMX[$503b], BANK[$30]
 
 Func_30_503b:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld [$d0f5], a
@@ -47257,9 +47257,9 @@ Func_30_50d7:
 	call Func_30_4855
 Func_30_5121:
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_50d7
 Func_30_512e:
 	call Func_00_07c5
@@ -47488,7 +47488,7 @@ Func_30_52bf:
 	ret
 Func_30_52c4:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld [$d0f5], a
@@ -47540,7 +47540,7 @@ Func_30_5324:
 	ld a, $01
 	ld [$d0f3], a
 Func_30_5341:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $14
 	jr c, Func_30_53a0
 	jr nz, Func_30_5351
@@ -47549,7 +47549,7 @@ Func_30_5341:
 	call CallLibFunc
 	pop af
 Func_30_5351:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	cp $ff
 	jr nc, Func_30_53b7
 	ld a, [$d0f4]
@@ -47595,12 +47595,12 @@ Func_30_53a0:
 	call Func_30_53dd
 	call Func_30_5408
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	ld b, a
 	and $80
 	inc b
 	or b
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jp Func_30_5324
 Func_30_53b7:
 	call Func_00_0786
@@ -47622,7 +47622,7 @@ Func_30_53cd:
 	call Func_00_35f9
 	ret
 Func_30_53dd:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	ld b, a
 	ld c, $00
 Func_30_53e3:
@@ -47663,7 +47663,7 @@ SECTION "analyzed_0c14b8", ROMX[$54b8], BANK[$30]
 
 Func_30_54b8:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0ff], a
 	ld [$d0f3], a
 	ld [$d0f5], a
@@ -47723,9 +47723,9 @@ SECTION "analyzed_0c1547", ROMX[$5547], BANK[$30]
 
 Func_30_5547:
 	call Func_30_565c
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	add a, $01
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld a, [$d0ff]
 	adc a, $00
 	ld [$d0ff], a
@@ -47847,7 +47847,7 @@ Func_30_566c:
 	ld e, a
 	ld a, [$d0f7]
 	call Func_00_35f9
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $07
 	cp $04
 	jr nz, Func_30_5697
@@ -47929,7 +47929,7 @@ SECTION "analyzed_0c177e", ROMX[$577e], BANK[$30]
 
 Func_30_577e:
 	xor a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld [$d0f5], a
@@ -47985,9 +47985,9 @@ Func_30_57ef:
 	rst $18
 	jp hl
 	call HideUnusedOamSprites
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	inc a
-	ld [$d0fe], a
+	ld [wFadeLevel], a
 	jr Func_30_57d4
 Func_30_5809:
 	call Func_00_07a7
@@ -48094,7 +48094,7 @@ Func_30_5904:
 	ld [$d0f4], a
 	ret
 Func_30_590c:
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $03
 	cp $03
 	jr nz, Func_30_5921
@@ -48939,7 +48939,7 @@ Func_30_5f78:
 Func_30_5f84:
 	cp $0a
 	jr nc, Data_30_5f92
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $01
 	ld [$d0f6], a
 	jr Func_30_5f9a
@@ -48961,7 +48961,7 @@ Func_30_5fa2:
 Func_30_5fad:
 	cp $0a
 	jr nc, Data_30_5fbb
-	ld a, [$d0fe]
+	ld a, [wFadeLevel]
 	and $01
 	ld [$d0f6], a
 	jr Func_30_5fc3

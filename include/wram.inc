@@ -66,6 +66,10 @@ wTradehouseState::  ds 1    ; $D0E3: empty-tradehouse cascade
 wVerdeState::       ds 1    ; $D0E4: Verde's NPC cascade
 
 
+SECTION "wram_fade_state", WRAMX[$D0FE], BANK[1]
+wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade)
+
+
 SECTION "wram_menu_results", WRAMX[$D5FB], BANK[1]
 
 wBcdLow::           ds 1    ; $D5FB: $0F's low-digit BCD output
