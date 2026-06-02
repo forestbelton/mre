@@ -1,0 +1,17 @@
+{
+  "asset": "naji_portrait",
+  "bank": 26,
+  "rows": 11,
+  "cols": 20,
+  "tiles_count": 384,
+  "palette_count": 0,
+  "index_base": 0,
+  "addressing": "8800",
+  "tiles_addr": 432872,
+  "palette_addr": null,
+  "desc_addr": 439144,
+  "attr_ptr": 29770,
+  "idx_ptr": 29550,
+  "attr_addr": 439370,
+  "idx_addr": 439150
+}

@@ -93,6 +93,28 @@ ASSETS = {
         "index_base": 0,
         "addressing": "8800",
     },
+    # More tower-NPC encounter portraits, all the same 20x11 single-blob Kalum
+    # layout, located via tools/find_portraits.py from each NPC's script far-calls.
+    "rafaga_portrait": {
+        "bank": 0x1d, "tiles_addr": 0x75b19, "tiles_count": 384,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x77399, "index_base": 0, "addressing": "8800",
+    },
+    "tempest_portrait": {
+        "bank": 0x1e, "tiles_addr": 0x79be7, "tiles_count": 384,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x7b467, "index_base": 0, "addressing": "8800",
+    },
+    "naji_portrait": {
+        "bank": 0x1a, "tiles_addr": 0x69ae8, "tiles_count": 384,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x6b368, "index_base": 0, "addressing": "8800",
+    },
+    "pashute_portrait": {
+        "bank": 0x1b, "tiles_addr": 0x6c000, "tiles_count": 384,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x6d880, "index_base": 0, "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).

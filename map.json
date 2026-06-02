@@ -41,6 +41,86 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"rafaga_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x75b19",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x77399",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x7739f",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x7747b",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"tempest_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x79be7",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x7b467",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x7b46d",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x7b549",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"naji_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x69ae8",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x6b368",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x6b36e",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x6b44a",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"pashute_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x6c000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x6d880",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x6d886",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x6d962",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"script.asm",
 			"sections":	[{
 					"type":	"code",
@@ -580,11 +660,6 @@
 					"addr":	"0x78500",
 					"len":	"0x300",
 					"label":	"Padding_078500"
-				}, {
-					"type":	"padding",
-					"addr":	"0x7a3e7",
-					"len":	"0x101",
-					"label":	"Padding_07a3e7"
 				}, {
 					"type":	"padding",
 					"addr":	"0x7b6da",
