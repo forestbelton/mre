@@ -137,14 +137,25 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x73080, "index_base": 0, "addressing": "8800",
     },
-    # Nada's recurring talking portrait (full image; the $1e:$5bd9 2x2 descriptor
-    # used elsewhere is just a mouth-animation overlay). Single-blob Kalum layout,
+    # Bodka's portrait (the older man in Nada's dialogue; the $1e:$5bd9 2x2
+    # descriptor elsewhere is a mouth-animation overlay). Single-blob Kalum layout,
     # tiles $1e:$4000, descriptor $1e:$5880.
-    "nada_portrait": {
+    "bodka_portrait": {
         "bank": 0x1e,
         "tiles_addr": 0x78000, "tiles_count": 384,   # $1e:$4000
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x79880, "index_base": 0, "addressing": "8800",
+    },
+    # Nada's second pose (shown by Func_1f_4e65). Two-bank like the intro and
+    # *reuses the intro's $1c:$4000 sheet* as its bank-0 half (tiles2_ref), so this
+    # asset owns only the bank-1 sheet $1f:$6607 + descriptor/maps at $1f:$7e07.
+    "nada_scene2": {
+        "bank": 0x1f,
+        "tiles_addr": 0x7e607, "tiles_count": 384,    # $1f:$6607 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x70000, "tiles2_count": 384,  # $1c:$4000 -> VRAM bank 0 $8000 (shared)
+        "tiles2_vram": 0x8000, "tiles2_ref": "nada_intro",
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x7fe07, "index_base": 0, "addressing": "8800",
     },
 }
 
@@ -410,7 +421,10 @@ def cmd_decode(args) -> int:
 
     pal_rgb = [rgb555_to_rgb888(w) for w in pals[0]] if pals else list(GRAY)
     tiles_to_sheet_png(out / "tiles.png", tiles, pal_rgb)
-    if tiles2 is not None:
+    # When the bank-0 sheet is shared with another asset (tiles2_ref), we read it
+    # from the ROM only to render this composite -- it isn't owned/carved/emitted
+    # here (the other asset's section already provides those ROM bytes).
+    if tiles2 is not None and not spec.get("tiles2_ref"):
         tiles_to_sheet_png(out / "tiles_bank0.png", tiles2, pal_rgb)
     if pals:
         write_pal_file(out / "palette.pal", pals)
@@ -443,6 +457,8 @@ def cmd_decode(args) -> int:
         meta["tiles2_addr"] = spec["tiles2_addr"]
         meta["tiles2_count"] = spec["tiles2_count"]
         meta["tiles2_vram"] = spec.get("tiles2_vram", 0x9000)
+        if spec.get("tiles2_ref"):
+            meta["tiles2_ref"] = spec["tiles2_ref"]  # owning asset of the shared sheet
     (out / "asset.json").write_text(json.dumps(meta, indent=2) + "\n")
 
     print(f"decoded {name}: {cols}x{rows} cells, {spec['tiles_count']} tiles, "
@@ -470,7 +486,9 @@ def encode_components(src: Path) -> dict[str, bytes]:
         "tilemap": idx,
         "attrmap": attr,
     }
-    if meta.get("tiles2_count"):
+    # A shared (tiles2_ref) bank-0 sheet isn't owned here, so it's not a component
+    # this asset reproduces/verifies; it's pulled from the owning asset for preview.
+    if meta.get("tiles2_count") and not meta.get("tiles2_ref"):
         comps["tiles2"] = b"".join(sheet_png_to_tiles(src / "tiles_bank0.png", meta["tiles2_count"]))
     return comps
 
@@ -500,8 +518,13 @@ def cmd_preview(args) -> int:
     out = Path(args.out)
     tiles2 = None
     if meta.get("tiles2_count"):
-        t2 = comps["tiles2"]
-        tiles2 = [t2[i:i + TILE_BYTES] for i in range(0, len(t2), TILE_BYTES)]
+        if meta.get("tiles2_ref"):
+            # shared bank-0 sheet: read it from the owning sibling asset
+            tiles2 = sheet_png_to_tiles(src.parent / meta["tiles2_ref"] / "tiles_bank0.png",
+                                        meta["tiles2_count"])
+        else:
+            t2 = comps["tiles2"]
+            tiles2 = [t2[i:i + TILE_BYTES] for i in range(0, len(t2), TILE_BYTES)]
     render_composite(out, meta["rows"], meta["cols"], comps["tilemap"],
                      comps["attrmap"], tiles, pals, meta["index_base"],
                      meta.get("addressing", "direct"), tiles2,
@@ -521,7 +544,7 @@ def cmd_verify(args) -> int:
         ("tilemap", meta["idx_addr"]),
         ("attrmap", meta["attr_addr"]),
     ]
-    if meta.get("tiles2_count"):
+    if meta.get("tiles2_count") and not meta.get("tiles2_ref"):
         regions.append(("tiles2", meta["tiles2_addr"]))
     if meta.get("palette_count") and meta.get("palette_addr") is not None:
         regions.insert(1, ("palette", meta["palette_addr"]))

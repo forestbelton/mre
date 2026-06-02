@@ -169,7 +169,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"nada_portrait.asm",
+			"name":	"bodka_portrait.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	"0x78000",
@@ -185,6 +185,26 @@
 				}, {
 					"type":	"data",
 					"addr":	"0x79962",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"nada_scene2.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x7e607",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x7fe07",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x7fe0d",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x7fee9",
 					"len":	"0xdc"
 				}]
 		}, {
@@ -718,16 +738,6 @@
 					"addr":	"0x7b6da",
 					"len":	"0x925",
 					"label":	"Padding_07b6da"
-				}, {
-					"type":	"padding",
-					"addr":	"0x7f746",
-					"len":	"0x27d",
-					"label":	"Padding_07f746"
-				}, {
-					"type":	"padding",
-					"addr":	"0x7fc27",
-					"len":	"0x1e0",
-					"label":	"Padding_07fc27"
 				}, {
 					"type":	"padding",
 					"addr":	"0x839ad",
