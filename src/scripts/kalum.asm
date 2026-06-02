@@ -1,5 +1,5 @@
 ; Kalum (tower NPC).
-; 
+;
 ; References "climb up here" — Kalum is a tower-level NPC the player
 ; encounters during their ascent.
 ;
@@ -40,8 +40,8 @@ KalumScript:
     SCRIPT_NEWLINE
     db "Selketo!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $41f2, $1f
-    SCRIPT_FAR_CALL $41fb, $1f
+    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait, $1f
+    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait2, $1f
     SCRIPT_REPEAT_CHAR 90
     SCRIPT_END
     db "Unbelievable..."
