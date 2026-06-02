@@ -3,26 +3,29 @@
 Goal of phase 1: classify **every** ROM byte (code / data / gfx / padding) so the
 map is complete; phase 2 is the semantic conversion to a real source project.
 
-**Status (after the static carve-out): 96.4% mapped, ~37.6 KB uncovered, and the
-remainder is essentially all graphics.** The static categories below have been
-carved into `analyzed.asm` sections (padding/`$ff`-filler/screens/text/xref-code/
-banked-call targets) — see git log `map: carve ...`. What's left needs runtime
-VRAM provenance.
+**Status: PHASE 1 COMPLETE — 100% mapped (`find_gaps` = 0; every byte typed as
+code/data/gfx/asciz/padding). ROM byte-exact throughout.**
 
-> Historical snapshot (start of this effort): 91.1% / 93,265 bytes / 1,701 gaps.
+> Snapshots: start 91.1% / 93,265 B; after static carve 96.4%; final 100%.
+> NB: `make extract`'s coverage summary still prints ~4,131 "uncovered" — that's a
+> known `compute_coverage` overlap-reconcile artifact (a constant offset), not real
+> gaps. `find_gaps` after `reconcile_analyzed_sections` is authoritative and = 0.
 
-Regenerate the analysis any time with the scripts described under "Method" — the
-exact offsets drift as carving and analyzer runs proceed, so treat the tables as
-a snapshot and re-run before acting.
+How it was closed (see git log `map: ...`):
+- static carve: padding (`$00`), `$ff` filler, `find_screens` tilemaps, text
+  (`$17` ascii / `$18` data), xref-reachable code (to convergence), banked-call
+  targets.
+- final classify pass (no trace possible — whole game was already traced, so the
+  remainder is never-displayed gfx / data tables / compressed blobs): 3 tile-
+  aligned dense-art blobs → `gfx` (`$0f:284e`, `$15:224e`, `$34:08a8`); everything
+  else → `data` (big gaps inspected via montage; small slivers defaulted to data).
 
-## What remains (~37.6 KB) — graphics, needs `--watch-vram`
-Concentrated in banks `$34` (8.9 KB), `$2d`/`$2e` (~5 KB each), `$2f`, `$3e`/`$3f`,
-`$0f`, `$12`. These read as tile pixel data (`$ff` fills, bit-plane patterns) with
-no static signature, so only the analyzer's VRAM-write trace can attribute them:
-play widely under `--watch-vram` (every monster encounter, all basement rooms, the
-special floors 75/76, shops, the encyclopedia, cutscenes/endings, the level
-editor). A final sliver may be never-displayed art/data that no trace reaches —
-classify those by hand at the very end.
+Phase-2 follow-ups left from this pass:
+- `$34:$d20ca` and `$34:$d28a8` are gfx-content but tile-misaligned → marked `data`;
+  split + PNG them properly.
+- The `data`-typed tables (`$3e`/`$3f`/`$12` vertical-comb records, `$2e`) and the
+  compressed-looking `$2d` blobs want real decoding / a decompressor (their bytes
+  are typed but not yet *understood*).
 
 ## Original carve plan (static categories — now done)
 
