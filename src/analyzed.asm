@@ -643,6 +643,52 @@ Func_00_03bc:
 	jr nz, Func_00_03bc
 	ret
 
+SECTION "analyzed_0003c4", ROM0[$03c4]
+
+Func_00_03c4:
+	push bc
+	push de
+	push hl
+	ld a, [$c288]
+	ld c, a
+	ld de, $006b
+	ld hl, $0000
+	ld a, $0f
+Func_00_03d3:
+	sla e
+	rl d
+	jr nc, Func_00_03da
+	add hl, bc
+Func_00_03da:
+	add hl, hl
+	dec a
+	jr nz, Func_00_03d3
+	bit 7, d
+	jr z, Func_00_03e3
+	add hl, bc
+Func_00_03e3:
+	ldh a, [rDIV]
+	ld de, $0403
+	add hl, de
+	add a, l
+	ld [$c288], a
+	ld hl, $c287
+	add a, [hl]
+	pop hl
+	pop de
+	pop bc
+	ret
+	ld c, b
+	ld b, $00
+	add hl, bc
+	add hl, bc
+	add hl, bc
+	ld a, [hl+]
+	ld b, a
+	rst $18
+	ret
+	reti
+
 SECTION "analyzed_000400", ROM0[$0400]
 
 Func_00_0400:
@@ -1623,7 +1669,13 @@ LibFuncTable:
 SECTION "analyzed_000b02", ROM0[$0b02]
 
 Data_00_0b02:
-	db $3f, $15, $3f, $16, $3f, $17, $3f, $18, $3f, $19, $3f, $1a, $3f, $1b, $3f, $1c
+	db $3f, $15, $3f
+Data_00_0b05:
+	db $16, $3f, $17
+Data_00_0b08:
+	db $3f, $18, $3f, $19, $3f, $1a
+Data_00_0b0e:
+	db $3f, $1b, $3f, $1c
 
 SECTION "analyzed_000b12", ROM0[$0b12]
 
@@ -2408,6 +2460,7 @@ Func_00_0ff2:
 Func_00_1002:
 	xor a
 	ldh [rVBK], a
+Data_00_1005:
 	push bc
 	push hl
 	ld d, $fc
@@ -2424,6 +2477,7 @@ Func_00_1002:
 Func_00_101b:
 	ld a, b
 	swap a
+Data_00_101e:
 	and $f0
 	add a, b
 	add a, c
@@ -3760,6 +3814,14 @@ SECTION "analyzed_001bd9", ROM0[$1bd9]
 
 Data_00_1bd9:
 	db $06, $08, $0a, $08, $00, $02, $04, $02
+
+SECTION "analyzed_001be1", ROM0[$1be1]
+
+Func_00_1be1:
+	ld a, h
+	ld a, d
+	ld a, b
+	ld a, d
 
 SECTION "analyzed_001be5", ROM0[$1be5]
 
@@ -6226,6 +6288,14 @@ Func_00_2e56:
 	ld [$c56f], a
 	ret
 
+SECTION "analyzed_002e62", ROM0[$2e62]
+
+Func_00_2e62:
+	ld a, [$c565]
+	ld b, a
+	ld a, [$c564]
+	ld c, a
+
 SECTION "analyzed_002e6a", ROM0[$2e6a]
 
 Func_00_2e6a:
@@ -6627,7 +6697,7 @@ Func_00_30f1:
 	ld hl, $4c00
 	ld de, $4c48
 	ld bc, $4c90
-	call Data_00_342a
+	call Func_00_342a
 	ret
 	nop
 	ld bc, $0000
@@ -7076,6 +7146,28 @@ Func_00_340c:
 	ld a, d
 	ld [$c7d9], a
 	ld a, $02
+	ld [$c7dd], a
+	call Func_00_3386
+	ret
+
+SECTION "analyzed_00342a", ROM0[$342a]
+
+Func_00_342a:
+	ld a, $78
+	ld [$c7de], a
+	ld a, l
+	ld [$c7d6], a
+	ld a, h
+	ld [$c7d7], a
+	ld a, e
+	ld [$c7d8], a
+	ld a, d
+	ld [$c7d9], a
+	ld a, c
+	ld [$c7da], a
+	ld a, b
+	ld [$c7db], a
+	ld a, $03
 	ld [$c7dd], a
 	call Func_00_3386
 	ret
@@ -9632,7 +9724,7 @@ Func_01_4d7b:
 SECTION "analyzed_004d89", ROMX[$4d89], BANK[$01]
 
 Func_01_4d89:
-	jr nc, $4dbc
+	jr nc, Func_01_4dbc
 
 SECTION "analyzed_004d8b", ROMX[$4d8b], BANK[$01]
 
@@ -9669,6 +9761,14 @@ Func_01_4db6:
 	pop af
 	bit 7, a
 	ret z
+
+SECTION "analyzed_004dba", ROMX[$4dba], BANK[$01]
+
+Func_01_4dba:
+	set 6, a
+Func_01_4dbc:
+	ld [hl], a
+	ret
 
 SECTION "analyzed_004dbe", ROMX[$4dbe], BANK[$01]
 
@@ -17773,7 +17873,7 @@ Func_03_4bde:
 	ld a, $21
 	call CallLibFunc
 	pop af
-	call Data_03_6704
+	call Func_03_6704
 	jr Func_03_4c00
 
 SECTION "analyzed_00cbea", ROMX[$4bea], BANK[$03]
@@ -21994,6 +22094,18 @@ Func_03_66f6:
 	pop hl
 	jr Func_03_6710
 
+SECTION "analyzed_00e704", ROMX[$6704], BANK[$03]
+
+Func_03_6704:
+	push hl
+	ld de, $0018
+	add hl, de
+	ld a, $0e
+	ld [hl+], a
+	ld a, $7b
+	ld [hl], a
+	pop hl
+
 SECTION "analyzed_00e710", ROMX[$6710], BANK[$03]
 
 Func_03_6710:
@@ -23586,25 +23698,67 @@ Data_03_719b:
 	db $49, $20, $eb, $72, $01, $06, $16, $64, $4a, $07, $07, $08, $0a, $0b, $16, $6a
 	db $4a, $08, $0c, $0b, $16, $5e, $4a, $16, $15, $49, $18, $8b, $ff, $1a, $30, $22
 	db $36, $74, $20, $2a, $74, $01, $07, $02, $07, $05, $16, $65, $4c, $08, $0e, $16
-	db $f9, $48, $0a, $7a, $73, $16, $15, $49, $20, $df, $72, $01, $08, $02, $07, $06
-	db $16, $65, $4c, $08, $0e, $16, $f9, $48, $0a, $90, $73, $16, $15, $49, $20, $eb
-	db $72, $01, $09, $16, $64, $4a, $07, $05, $16, $65, $4c, $08, $0e, $0b, $16, $5e
-	db $4a, $16, $15, $49, $18, $8b, $ff, $1a, $30, $22, $36, $74, $20, $2a, $74, $01
-	db $0a, $02, $07, $05, $08, $0e, $16, $f9, $48, $0a, $c1, $73, $17, $01, $ae, $5d
-	db $16, $15, $49, $20, $df, $72
+	db $f9, $48, $0a, $7a, $73, $16, $15, $49, $20, $df, $72, $01, $08, $02
+Func_03_7389:
+	db $07, $06, $16, $65, $4c, $08, $0e, $16, $f9, $48, $0a, $90, $73, $16, $15, $49
+	db $20, $eb, $72, $01, $09, $16, $64, $4a, $07, $05, $16, $65, $4c, $08, $0e, $0b
+	db $16, $5e, $4a, $16, $15, $49, $18, $8b, $ff, $1a, $30, $22, $36, $74, $20, $2a
+	db $74, $01, $0a, $02, $07, $05, $08, $0e, $16, $f9, $48, $0a, $c1, $73, $17, $01
+	db $ae, $5d, $16, $15, $49, $20, $df, $72
+
+SECTION "analyzed_00f3d1", ROMX[$73d1], BANK[$03]
+
+Func_03_73d1:
+	ld bc, $020b
+	rlca
+	ld b, $08
+	ld c, $16
+	ld sp, hl
+	ld c, b
+	ld a, [bc]
+	ret c
+	ld [hl], e
+	rla
+	ld bc, $5dae
+	ld d, $15
+	ld c, c
+	jr nz, $73d2
+	ld [hl], d
+	ld bc, $160c
+	ld h, h
+	ld c, d
+	rlca
+	dec b
+	ld [Data_00_0b0e], sp
+	ld d, $5e
+	ld c, d
+	rla
+	ld bc, $5dae
+	ld d, $15
+	ld c, c
+	jr Func_03_7389
+	rst $38
+	ld a, [de]
+	jr nc, Func_03_7424
+	ld [hl], $74
+	jr nz, Func_03_7430
+	ld [hl], h
 
 SECTION "analyzed_00f407", ROMX[$7407], BANK[$03]
 
 Data_03_7407:
 	db $01, $0d, $02, $07, $09, $16, $10, $49, $08, $07, $16, $cb, $48, $0a, $11, $74
-	db $16, $46, $4a, $16, $ed, $47, $20, $2a, $74, $01, $0e, $02, $16, $10, $49, $0f
-	db $16, $f4, $47, $01, $0f, $02, $07, $0a, $16, $10, $48, $0c, $20, $2f, $74, $01
-	db $10, $04, $d8, $6f, $07, $0b, $16, $3e, $48, $0c, $20, $3d, $74, $01, $11, $02
-	db $07, $0c, $16, $cb, $48, $0c, $08, $04, $16, $68, $48, $0a, $4f, $74, $16, $73
-	db $48, $01, $12, $16, $64, $4a, $07, $0a, $08, $0a, $16, $cb, $48, $0a, $61, $74
-	db $16, $5e, $4a, $20, $2f, $74, $01, $13, $16, $64, $4a, $07, $0b, $08, $0a, $16
-	db $cb, $48, $0a, $76, $74, $16, $5e, $4a, $20, $3d, $74, $01, $14, $02, $07, $10
-	db $08, $a8, $16, $0a, $4f, $0a, $89, $74, $16, $58, $4a, $0c
+	db $16, $46, $4a, $16, $ed, $47, $20, $2a, $74, $01, $0e, $02, $16
+Func_03_7424:
+	db $10, $49, $0f, $16, $f4, $47, $01, $0f, $02, $07, $0a, $16
+Func_03_7430:
+	db $10, $48, $0c, $20, $2f, $74, $01, $10, $04, $d8, $6f, $07, $0b, $16, $3e, $48
+	db $0c, $20, $3d, $74, $01, $11, $02, $07, $0c, $16, $cb, $48, $0c, $08, $04, $16
+	db $68, $48, $0a, $4f, $74, $16, $73, $48, $01, $12, $16, $64, $4a, $07, $0a, $08
+	db $0a, $16, $cb, $48, $0a, $61, $74, $16, $5e, $4a, $20, $2f, $74, $01, $13, $16
+	db $64, $4a, $07, $0b, $08, $0a, $16, $cb, $48, $0a, $76, $74, $16, $5e, $4a, $20
+	db $3d, $74, $01, $14, $02, $07, $10, $08, $a8, $16, $0a, $4f, $0a, $89, $74, $16
+	db $58, $4a, $0c
 
 SECTION "analyzed_00f496", ROMX[$7496], BANK[$03]
 
@@ -23659,13 +23813,21 @@ Data_03_74e6:
 	db $0c, $21, $05, $77, $01, $ff, $02, $07, $09, $08, $3c, $0b, $00, $01, $00, $02
 	db $07, $01, $08, $3c, $16, $71, $5b, $0a, $1a, $77, $20, $36, $77
 
+SECTION "analyzed_00f723", ROMX[$7723], BANK[$03]
+
+Func_03_7723:
+	inc c
+	jr nz, Func_03_7740
+	ld [hl], a
+
 SECTION "analyzed_00f727", ROMX[$7727], BANK[$03]
 
 Data_03_7727:
 	db $01, $01, $02, $07, $01, $08, $3c, $16, $97, $5b, $0a, $2e, $77, $05, $ff, $01
-	db $02, $04, $00, $70, $06, $fe, $07, $02, $16, $bd, $5b, $0c, $20, $3f, $77, $01
-	db $03, $02, $07, $03, $08, $3c, $10, $21, $63, $77, $0a, $4d, $77, $16, $83, $54
-	db $08, $05, $10, $21
+	db $02, $04, $00, $70, $06, $fe, $07, $02, $16
+Func_03_7740:
+	db $bd, $5b, $0c, $20, $3f, $77, $01, $03, $02, $07, $03, $08, $3c, $10, $21, $63
+	db $77, $0a, $4d, $77, $16, $83, $54, $08, $05, $10, $21
 
 SECTION "analyzed_00f75d", ROMX[$775d], BANK[$03]
 
@@ -23685,6 +23847,19 @@ Data_03_7793:
 	db $de, $77, $01, $ff, $02, $07, $04, $0f, $10, $0c, $21, $eb, $77, $02, $07, $09
 	db $08, $3c, $0b, $00, $01, $00, $02, $07, $01, $08, $3c, $16, $76, $5c, $0a, $fe
 	db $77, $20, $16, $78
+
+SECTION "analyzed_00f807", ROMX[$7807], BANK[$03]
+
+Func_03_7807:
+	ld bc, $0201
+	rlca
+	ld bc, $3c08
+	ld d, $76
+	ld e, h
+	ld a, [bc]
+	ld c, $78
+	dec b
+	rst $38
 
 SECTION "analyzed_00f816", ROMX[$7816], BANK[$03]
 
@@ -23751,20 +23926,66 @@ SECTION "analyzed_00fa59", ROMX[$7a59], BANK[$03]
 Data_03_7a59:
 	db $01, $00, $02, $07, $01, $08, $3c, $16, $dd, $64, $0a, $60, $7a, $20, $7c, $7a
 
+SECTION "analyzed_00fa69", ROMX[$7a69], BANK[$03]
+
+Func_03_7a69:
+	inc c
+	jr nz, Func_03_7acc
+	ld a, d
+
 SECTION "analyzed_00fa6d", ROMX[$7a6d], BANK[$03]
 
 Data_03_7a6d:
 	db $01, $01, $02, $07, $01, $08, $3c, $16, $03, $65, $0a, $74, $7a, $05, $ff, $01
 	db $02, $04, $00, $70, $06, $fe, $07, $02, $16, $29, $65, $0c, $20, $85, $7a
 
+SECTION "analyzed_00fa8c", ROMX[$7a8c], BANK[$03]
+
+Func_03_7a8c:
+	ld bc, $0203
+	rlca
+	inc bc
+	ld [Data_00_101e], sp
+	ld hl, $7aa9
+	ld a, [bc]
+	sub e
+	ld a, d
+	ld d, $6c
+	ld d, h
+	ld [Data_00_1005], sp
+	ld hl, $7aa9
+	ld a, [bc]
+	sbc a, a
+	ld a, d
+	jr nz, $7b24
+	ld a, d
+	ld bc, $0204
+	rlca
+	inc b
+	rrca
+	db $10
+	inc c
+	ld hl, $7aaf
+	ld bc, $02ff
+	rlca
+	add hl, bc
+	ld [Data_00_10f0], sp
+	ld hl, $7aa9
+	ld a, [bc]
+	cp e
+	ld a, d
+	jr nz, Func_03_7b1d
+	ld a, d
+
 SECTION "analyzed_00fac5", ROMX[$7ac5], BANK[$03]
 
 Data_03_7ac5:
-	db $01, $00, $02, $07, $01, $08, $3c, $16, $dc, $65, $0a, $cc, $7a, $20, $e4, $7a
-	db $01, $01, $02, $07, $01, $08, $3c, $16, $dc, $65, $0a, $dc, $7a, $05, $ff, $01
-	db $02, $04, $00, $70, $06, $fe, $07, $02, $16, $f2, $65, $0c, $20, $ed, $7a, $01
-	db $03, $02, $07, $03, $16, $10, $66, $0c, $20, $f9, $7a, $01, $04, $02, $07, $04
-	db $0f, $10, $0c, $21, $06, $7b, $20
+	db $01, $00, $02, $07, $01, $08, $3c
+Func_03_7acc:
+	db $16, $dc, $65, $0a, $cc, $7a, $20, $e4, $7a, $01, $01, $02, $07, $01, $08, $3c
+	db $16, $dc, $65, $0a, $dc, $7a, $05, $ff, $01, $02, $04, $00, $70, $06, $fe, $07
+	db $02, $16, $f2, $65, $0c, $20, $ed, $7a, $01, $03, $02, $07, $03, $16, $10, $66
+	db $0c, $20, $f9, $7a, $01, $04, $02, $07, $04, $0f, $10, $0c, $21, $06, $7b, $20
 Func_03_7b0c:
 	db $c5, $7a
 
@@ -23781,6 +24002,7 @@ Func_03_7b0e:
 	ld h, [hl]
 	inc c
 	jr nz, Func_03_7b34
+Func_03_7b1d:
 	ld a, e
 	dec b
 	rst $38
@@ -23824,6 +24046,25 @@ SECTION "analyzed_00fb82", ROMX[$7b82], BANK[$03]
 Data_03_7b82:
 	db $0a, $7e, $7b, $16, $61, $44, $08, $05, $0b, $20, $67, $7b
 
+SECTION "analyzed_00fb8e", ROMX[$7b8e], BANK[$03]
+
+Func_03_7b8e:
+	ld bc, $0207
+	rlca
+	inc bc
+	ld [Data_00_101e], sp
+	ld hl, $7ba7
+	ld a, [bc]
+	sub l
+	ld a, e
+	ld d, $61
+	ld b, h
+	ld [Data_00_0b05], sp
+	dec b
+	rst $38
+	jr nz, Func_03_7c0d
+	ld a, e
+
 SECTION "analyzed_00fba7", ROMX[$7ba7], BANK[$03]
 
 Data_03_7ba7:
@@ -23836,27 +24077,116 @@ SECTION "analyzed_00fbd0", ROMX[$7bd0], BANK[$03]
 Data_03_7bd0:
 	db $0a, $cc, $7b, $20, $48, $7b, $01, $00, $02, $07, $01, $08, $3c, $0b, $20, $f4
 	db $7b, $01, $01, $02, $07, $03, $16, $88, $53, $08, $09, $0b, $16, $61, $44, $08
-	db $0f, $0b, $05, $ff, $01, $02, $04, $00, $70, $06, $fe, $07, $02, $16, $9a, $52
-	db $27, $03, $e1, $7b, $0c, $20, $fd, $7b
+	db $0f, $0b, $05, $ff, $01, $02
+Func_03_7bf6:
+	db $04, $00, $70, $06, $fe, $07, $02, $16, $9a, $52, $27, $03, $e1, $7b, $0c, $20
+	db $fd, $7b
+
+SECTION "analyzed_00fc08", ROMX[$7c08], BANK[$03]
+
+Func_03_7c08:
+	ld bc, $02ff
+	rlca
+	inc b
+Func_03_7c0d:
+	rrca
+	db $10
+	inc c
+	ld hl, $7c0e
+	rlca
+	add hl, bc
+	ld [Data_00_10f0], sp
+	ld hl, $7c08
+	ld a, [bc]
+	rla
+	ld a, h
+	jr nz, Func_03_7bf6
+	ld a, e
 
 SECTION "analyzed_00fc21", ROMX[$7c21], BANK[$03]
 
 Data_03_7c21:
-	db $01, $00, $02, $07, $01, $08, $3c, $16, $55, $68, $0a, $28, $7c, $20, $40, $7c
-	db $01, $01, $02, $07, $01, $08, $3c, $16, $37, $68, $0a, $38, $7c, $05, $ff, $01
-	db $02, $04, $ec, $6f, $06, $fe, $07, $02, $16, $55, $68, $0c, $20, $49, $7c
+	db $01, $00, $02, $07, $01, $08, $3c, $16, $55, $68
+Func_03_7c2b:
+	db $0a, $28, $7c, $20, $40, $7c, $01, $01, $02, $07, $01, $08, $3c, $16, $37, $68
+	db $0a, $38, $7c, $05, $ff, $01, $02, $04, $ec, $6f, $06, $fe, $07, $02, $16, $55
+	db $68, $0c, $20, $49, $7c
+
+SECTION "analyzed_00fc50", ROMX[$7c50], BANK[$03]
+
+Func_03_7c50:
+	ld bc, $0203
+	rlca
+	inc bc
+	ld [Data_00_101e], sp
+	ld hl, $7c80
+	ld a, [bc]
+	ld d, a
+	ld a, h
+	ld d, $61
+	ld b, h
+	ld [Data_00_0b08], sp
+	jr nz, Func_03_7ca6
+	ld a, h
+	ld bc, $0207
+	rlca
+	inc bc
+	ld [Data_00_101e], sp
+	ld hl, $7c80
+	ld a, [bc]
+	ld l, [hl]
+	ld a, h
+	ld d, $61
+	ld b, h
+	ld [Data_00_0b08], sp
+	dec b
+	rst $38
+	jr nz, Func_03_7cbf
+	ld a, h
+	ld bc, $0204
+	rlca
+	inc b
+	rrca
+	db $10
+	inc c
+	ld hl, $7c86
+	jr nz, Func_03_7c2b
+	ld a, h
 
 SECTION "analyzed_00fc8e", ROMX[$7c8e], BANK[$03]
 
 Data_03_7c8e:
 	db $01, $06, $04, $f6, $6f, $06, $fe, $07, $02, $16, $83, $68, $0c, $20, $97, $7c
 
+SECTION "analyzed_00fc9e", ROMX[$7c9e], BANK[$03]
+
+Func_03_7c9e:
+	ld bc, $02ff
+	rlca
+	add hl, bc
+	ld [Data_00_10f0], sp
+Func_03_7ca6:
+	ld hl, $7c80
+	ld a, [bc]
+	and l
+	ld a, h
+	jr nz, Func_03_7ccf
+	ld a, h
+
 SECTION "analyzed_00fcaf", ROMX[$7caf], BANK[$03]
 
 Data_03_7caf:
 	db $01, $00, $02, $07, $01, $08, $3c, $16, $49, $67, $0a, $b6, $7c, $20, $ce, $7c
+Func_03_7cbf:
 	db $01, $01, $02, $07, $01, $08, $3c, $16, $49, $67, $0a, $c6, $7c, $05, $ff, $01
+Func_03_7ccf:
 	db $02, $04, $00, $70, $06, $fe, $07, $02, $16, $6f, $67, $0c, $20, $d7, $7c
+
+SECTION "analyzed_00fcde", ROMX[$7cde], BANK[$03]
+
+Func_03_7cde:
+	dec b
+	rst $38
 
 SECTION "analyzed_00fce0", ROMX[$7ce0], BANK[$03]
 
@@ -23873,6 +24203,38 @@ SECTION "analyzed_00fcfd", ROMX[$7cfd], BANK[$03]
 Data_03_7cfd:
 	db $0a, $f9, $7c, $16, $b4, $57, $20, $ce, $7c
 
+SECTION "analyzed_00fd06", ROMX[$7d06], BANK[$03]
+
+Func_03_7d06:
+	ld bc, $0204
+	rlca
+	ld bc, $100f
+	inc c
+	ld hl, $7d0c
+	ld d, $e2
+	ld b, [hl]
+	inc hl
+	ld e, $7d
+	ld b, $00
+	dec b
+	nop
+	jr nz, Data_03_7ceb
+	ld a, h
+	ld b, $01
+	dec b
+	ld bc, $ce20
+	ld a, h
+	ld bc, $02ff
+	rlca
+	add hl, bc
+	ld [Data_00_10f0], sp
+	ld hl, $7d06
+	ld a, [bc]
+	inc l
+	ld a, l
+	jr nz, Func_03_7d46
+	ld a, l
+
 SECTION "analyzed_00fd36", ROMX[$7d36], BANK[$03]
 
 Data_03_7d36:
@@ -23881,9 +24243,11 @@ Data_03_7d36:
 SECTION "analyzed_00fd43", ROMX[$7d43], BANK[$03]
 
 Data_03_7d43:
-	db $0a, $3f, $7d, $20, $67, $7d, $05, $ff, $06, $fe, $01, $01, $04, $28, $70, $07
-	db $02, $08, $5a, $16, $1b, $69, $27, $ff, $93, $7d, $27, $03, $49, $7d, $0a, $56
-	db $7d, $20, $38, $7d, $01, $02, $02, $07, $03, $08, $14, $10, $21
+	db $0a, $3f, $7d
+Func_03_7d46:
+	db $20, $67, $7d, $05, $ff, $06, $fe, $01, $01, $04, $28, $70, $07, $02, $08, $5a
+	db $16, $1b, $69, $27, $ff, $93, $7d, $27, $03, $49, $7d, $0a, $56, $7d, $20, $38
+	db $7d, $01, $02, $02, $07, $03, $08, $14, $10, $21
 
 SECTION "analyzed_00fd72", ROMX[$7d72], BANK[$03]
 
@@ -39247,7 +39611,7 @@ Func_12_465e:
 	jr z, Func_12_4686
 	cp $c0
 	call z, Func_00_2efb
-	call Data_00_2e62
+	call Func_00_2e62
 	jr Func_12_4686
 
 SECTION "analyzed_04867a", ROMX[$467a], BANK[$12]
@@ -55371,6 +55735,16 @@ SECTION "analyzed_0c3fff", ROMX[$7fff], BANK[$30]
 Data_30_7fff:
 	db $30
 
+SECTION "analyzed_0c4000", ROMX[$4000], BANK[$31]
+
+Func_31_4000:
+	nop
+	and b
+	ld c, a
+	and d
+	sbc a, [hl]
+	and h
+
 SECTION "analyzed_0c4006", ROMX[$4006], BANK[$31]
 
 Func_31_4006:
@@ -55394,6 +55768,23 @@ Func_31_4010:
 Func_31_4022:
 	ld hl, $c297
 	ld a, $7e
+	ld [hl+], a
+	ld a, $3e
+	ld [hl], a
+	ret
+
+SECTION "analyzed_0c402c", ROMX[$402c], BANK[$31]
+
+Func_31_402c:
+	ld hl, $c297
+	ld a, $a3
+	ld [hl+], a
+	ld a, $3e
+	ld [hl], a
+	ret
+Func_31_4036:
+	ld hl, $c297
+	ld a, $b8
 	ld [hl+], a
 	ld a, $3e
 	ld [hl], a
@@ -55474,7 +55865,7 @@ Func_31_40a1:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	call $43db
+	call Func_31_43db
 	ld a, [$d10e]
 	cp $f3
 	jp z, Func_31_4098
@@ -55496,7 +55887,7 @@ Func_31_40c4:
 	jp z, Func_31_4098
 	jp Func_31_4040
 Func_31_40e6:
-	call Data_31_402c
+	call Func_31_402c
 	call Func_31_4006
 	xor a
 	ld [$d5c3], a
@@ -55514,7 +55905,7 @@ Func_31_40f0:
 	ld a, [$d5c3]
 	cp $04
 	jr c, Func_31_410f
-	call Data_31_4292
+	call Func_31_4292
 Func_31_410f:
 	call WaitForNextFrame
 	ld a, [$d10e]
@@ -55554,7 +55945,7 @@ Func_31_4144:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	call $43db
+	call Func_31_43db
 	ld a, [$d10e]
 	cp $f1
 	jp z, Func_31_41bb
@@ -55584,13 +55975,13 @@ Func_31_4189:
 	ld [hl], a
 	ld a, [$d5f9]
 	ldh [rSB], a
-	call $4434
+	call Func_31_4434
 	call Func_00_3e74
 	ld a, [$d10e]
 	ld [$d5c5], a
 	ld a, [$d5fa]
 	ldh [rSB], a
-	call $4434
+	call Func_31_4434
 	call Func_00_3e74
 	ld a, [$d10e]
 	ld [$d5c6], a
@@ -55604,17 +55995,18 @@ Func_31_41bb:
 	ld [hl], a
 	ld a, [$d5f9]
 	ldh [rSB], a
-	call $4423
+	call Func_31_4423
 	ld a, [$d10e]
 	ld [$d5c5], a
 	ld a, [$d5fa]
 	ldh [rSB], a
-	call $4423
+	call Func_31_4423
 	ld a, [$d10e]
 	ld [$d5c6], a
 	call Func_31_4010
 	ret
-	call $4036
+Func_31_41e4:
+	call Func_31_4036
 	call Func_31_4006
 	xor a
 	ld [$d5c3], a
@@ -55632,7 +56024,7 @@ Func_31_41ee:
 	ld a, [$d5c3]
 	cp $04
 	jr c, Func_31_420d
-	call $429b
+	call Func_31_429b
 Func_31_420d:
 	push bc
 	call WaitForNextFrame
@@ -55674,10 +56066,10 @@ Func_31_4244:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	call $43db
+	call Func_31_43db
 	ld a, [$d10e]
 	cp $f1
-	jp z, $434a
+	jp z, Func_31_434a
 	jp Func_31_4040
 Func_31_4267:
 	ld hl, $c297
@@ -55693,7 +56085,7 @@ Func_31_4267:
 	call WaitForNextFrame
 	ld a, [$d10e]
 	cp $f0
-	jp z, $42a4
+	jp z, Func_31_42a4
 	jp Func_31_4040
 
 SECTION "analyzed_0c4289", ROMX[$4289], BANK[$31]
@@ -55703,6 +56095,795 @@ Func_31_4289:
 	ldh [rSB], a
 	ld a, $81
 	ldh [rSC], a
+	ret
+
+SECTION "analyzed_0c4292", ROMX[$4292], BANK[$31]
+
+Func_31_4292:
+	ld a, $f3
+	ldh [rSB], a
+	ld a, $81
+	ldh [rSC], a
+	ret
+Func_31_429b:
+	ld a, $f5
+	ldh [rSB], a
+	ld a, $81
+	ldh [rSC], a
+	ret
+Func_31_42a4:
+	call Func_00_3e74
+	call Func_00_3e74
+	call Func_00_3e74
+	ld hl, $c297
+	ld a, $e3
+	ld [hl+], a
+	ld a, $3e
+	ld [hl], a
+	ld bc, $0255
+	ld bc, $0258
+	ld de, $d112
+	ld hl, $d36a
+	dec de
+Func_31_42c3:
+	push bc
+	push de
+	push hl
+	call ReadJoypad
+	pop hl
+	pop de
+	pop bc
+	ldh a, [$ff8c]
+	bit 1, a
+	jr nz, Func_31_4341
+	call Func_31_443c
+	dec bc
+	ld a, b
+	or c
+	jr nz, Func_31_42c3
+	ld hl, $d363
+	ld a, [hl+]
+	ld b, a
+	ld a, [hl]
+	cpl
+	cp b
+	jr z, Func_31_42e9
+	call Func_31_44b0
+	jr Func_31_42f8
+Func_31_42e9:
+	call Func_31_44b0
+	and a
+	jr nz, Func_31_42f8
+	ld a, $f8
+	ldh [rSB], a
+	ld [$d10d], a
+	jr Func_31_42ff
+Func_31_42f8:
+	ld a, $f9
+	ldh [rSB], a
+	ld [$d10d], a
+Func_31_42ff:
+	call Func_31_4434
+	ld a, [$d10e]
+	ld b, a
+	ld a, [$d10d]
+	cp $f8
+	jr nz, Func_31_433e
+	xor b
+	and a
+	jr nz, Func_31_433e
+	ld a, [$d112]
+	cp $0a
+	jr nz, Func_31_431f
+	ld a, [$d362]
+	cp $0b
+	jr z, Func_31_4325
+Func_31_431f:
+	ld a, $fb
+	ldh [rSB], a
+	jr Func_31_4329
+Func_31_4325:
+	ld a, $fa
+	ldh [rSB], a
+Func_31_4329:
+	call Func_00_3e74
+	call Func_31_4434
+	ld a, [$d10e]
+	cp $fa
+	jr nz, Func_31_433e
+	xor a
+	ld [$d5c2], a
+	call Func_31_4010
+	ret
+Func_31_433e:
+	jp Func_31_41e4
+Func_31_4341:
+	ld a, $03
+	ld [$d5c2], a
+	call Func_31_4010
+	ret
+Func_31_434a:
+	ld hl, $c297
+	ld a, $cd
+	ld [hl+], a
+	ld a, $3e
+	ld [hl], a
+	ld bc, $0255
+	ld bc, $0258
+	ld de, $d112
+	ld hl, $d36a
+	dec de
+Func_31_4360:
+	call Func_31_4427
+	ld a, [$d109]
+	and a
+	jr nz, Func_31_43d2
+	dec bc
+	ld a, b
+	or c
+	jr nz, Func_31_4360
+	ld hl, $d363
+	ld a, [hl+]
+	ld b, a
+	ld a, [hl]
+	cpl
+	cp b
+	jr z, Func_31_437d
+	call Func_31_44b0
+	jr Func_31_438c
+Func_31_437d:
+	call Func_31_44b0
+	and a
+	jr nz, Func_31_438c
+	ld a, $f8
+	ldh [rSB], a
+	ld [$d10d], a
+	jr Func_31_4393
+Func_31_438c:
+	ld a, $f9
+	ldh [rSB], a
+	ld [$d10d], a
+Func_31_4393:
+	call Func_31_4423
+	ld a, [$d10e]
+	ld b, a
+	ld a, [$d10d]
+	cp $f8
+	jr nz, Func_31_43cf
+	xor b
+	and a
+	jr nz, Func_31_43cf
+	ld a, [$d112]
+	cp $0a
+	jr nz, Func_31_43b3
+	ld a, [$d362]
+	cp $0b
+	jr z, Func_31_43b9
+Func_31_43b3:
+	ld a, $fb
+	ldh [rSB], a
+	jr Func_31_43bd
+Func_31_43b9:
+	ld a, $fa
+	ldh [rSB], a
+Func_31_43bd:
+	call Func_31_4423
+	ld a, [$d10e]
+	cp $fa
+	jr nz, Func_31_43cf
+	xor a
+	ld [$d5c2], a
+	call Func_31_4010
+	ret
+Func_31_43cf:
+	jp Func_31_41e4
+Func_31_43d2:
+	ld a, $03
+	ld [$d5c2], a
+	call Func_31_4010
+	ret
+Func_31_43db:
+	xor a
+	ld [$d109], a
+	ld [$d10a], a
+	ld a, $80
+	ldh [rSC], a
+Func_31_43e6:
+	push bc
+	push de
+	push hl
+	call ReadJoypad
+	pop hl
+	pop de
+	pop bc
+	ldh a, [$ff8c]
+	bit 1, a
+	jr nz, Func_31_43fc
+	ld a, [$d10a]
+	and a
+	jr z, Func_31_43e6
+	ret
+Func_31_43fc:
+	ld a, $aa
+	ld [$d109], a
+	ld a, [$d10a]
+	and a
+	ret
+	xor a
+	ld [$d10a], a
+	ld a, $80
+	ldh [rSC], a
+	ld b, $00
+	ld c, $00
+Func_31_4412:
+	ld a, c
+	add a, $01
+	ld c, a
+	ld a, b
+	adc a, $00
+	ld b, a
+	and c
+	ret z
+	ld a, [$d10a]
+	and a
+	jr z, Func_31_4412
+	ret
+Func_31_4423:
+	call Func_31_43db
+	ret
+Func_31_4427:
+	ld a, [hl+]
+	ld [$d10f], a
+	call Func_31_4423
+	ld a, [$d10e]
+	ld [de], a
+	inc de
+	ret
+Func_31_4434:
+	ld a, $81
+	ldh [rSC], a
+	call Func_00_3e74
+	ret
+Func_31_443c:
+	ld a, [hl+]
+	ld [$d10f], a
+	call Func_31_4434
+	ld a, [$d10e]
+	ld [de], a
+	inc de
+	ret
+Func_31_4449:
+	ld a, $0a
+	ld [Data_00_1fff], a
+	ld a, [$d5f9]
+	res 2, a
+	add a, a
+	ld hl, $4000
+	rst $00
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld d, h
+	ld e, l
+	ld bc, $024f
+	ld hl, $d36b
+	call CopyDEtoHLLong
+	xor a
+	ld [Data_00_1fff], a
+	call Func_31_4496
+	ret
+Func_31_446e:
+	ld hl, $d113
+	ld bc, $024e
+	call Func_00_12e1
+	ret nz
+	ld a, $0a
+	ld [Data_00_1fff], a
+	ld a, [$d5fa]
+	add a, a
+	ld hl, $4000
+	rst $00
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld bc, $024f
+	ld de, $d113
+	call CopyDEtoHLLong
+	xor a
+	ld [Data_00_1fff], a
+	ret
+Func_31_4496:
+	ld a, $0a
+	ld [$d36a], a
+	ld a, $0b
+	ld [$d5ba], a
+	ld bc, $024f
+	ld hl, $d36a
+	ld bc, $0251
+	call Func_31_44bd
+	ld [hl+], a
+	cpl
+	ld [hl], a
+	ret
+Func_31_44b0:
+	ld hl, $d112
+	ld bc, $0251
+	call Func_31_44bd
+	ld b, a
+	ld a, [hl]
+	xor b
+	ret
+Func_31_44bd:
+	ld d, $00
+Func_31_44bf:
+	ld a, [hl+]
+	add a, d
+	ld d, a
+	dec bc
+	ld a, b
+	or c
+	jr nz, Func_31_44bf
+	ld a, d
+	ret
+	call Func_31_40e6
+	ld a, [$d5c2]
+	cp $03
+	ret z
+	ld a, [$d5f9]
+	bit 2, a
+	jr z, Func_31_44e1
+	ld a, [$d5fa]
+	bit 2, a
+	jr z, Func_31_44e1
+	ret
+Func_31_44e1:
+	ld a, [$d5f9]
+	bit 2, a
+	jr z, Func_31_44f0
+	ld a, [$d5c5]
+	bit 2, a
+	jr z, Func_31_44f0
+	ret
+Func_31_44f0:
+	call Func_31_47aa
+	ld a, [$d5f9]
+	bit 2, a
+	jr nz, Func_31_44fd
+	call Func_31_452e
+Func_31_44fd:
+	call Func_31_4449
+	call Func_31_41e4
+	ld a, [$d5c2]
+	cp $03
+	jr z, Func_31_452a
+	ld a, [$d5c5]
+	bit 2, a
+	jr nz, Func_31_4526
+	ld a, [$d5fa]
+	bit 2, a
+	jr nz, Func_31_4526
+	call Func_31_446e
+	ld a, $12
+	ld hl, Func_12_4c13
+	call CallBankedHL
+	call Func_31_456f
+Func_31_4526:
+	xor a
+	ld [$d5c2], a
+Func_31_452a:
+	call HideAllSprites
+	ret
+Func_31_452e:
+	xor a
+	ld [$d5c7], a
+	ld [$d5f8], a
+	ld [$d5f7], a
+	ld a, $a0
+	ld [$d5f5], a
+	ld a, $28
+	ld [$d5f6], a
+Func_31_4542:
+	call Func_31_4644
+	call Func_31_4697
+	ld a, $34
+	ld hl, $4034
+	call CallBankedHL
+	call Func_31_462b
+	call HideUnusedOamSprites
+	ld b, $00
+	ld a, $34
+	ld hl, Data_34_4000
+	call CallBankedHL
+	call WaitForNextFrame
+	ld a, [$d5c7]
+	inc a
+	ld [$d5c7], a
+	cp $64
+	jr nz, Func_31_4542
+	ret
+Func_31_456f:
+	xor a
+	ld [$d5c7], a
+	ld [$d5f8], a
+	ld [$d5f7], a
+	ld a, $f0
+	ld [$d5f6], a
+Func_31_457e:
+	call Func_31_46e0
+	call HideUnusedOamSprites
+	ld b, $01
+	ld a, $34
+	ld hl, Data_34_4000
+	call CallBankedHL
+	call WaitForNextFrame
+	ld a, [$d5c7]
+	inc a
+	ld [$d5c7], a
+	cp $ff
+	jr nz, Func_31_457e
+	ret
+	ld c, $03
+	ld b, $10
+	ld hl, $d5eb
+Func_31_45a4:
+	ld a, [hl+]
+	ld d, a
+	ld a, [hl-]
+	ld e, a
+	ld a, d
+	ld [hl+], a
+	ld a, e
+	ld [hl+], a
+	push bc
+	push hl
+	ld a, $34
+	ld [$c100], a
+	ld hl, $7914
+	ld c, d
+	call DrawMetasprite
+	pop hl
+	pop bc
+	ld a, b
+	add a, $0c
+	ld b, a
+	dec c
+	ld a, c
+	and a
+	jr nz, Func_31_45a4
+	ret
+	ld a, [$d5c7]
+	cp $2c
+	ret c
+	ld c, $08
+Func_31_45ce:
+	ld hl, $d5c9
+	ld a, c
+	dec a
+	sla a
+	sla a
+	rst $00
+	ld a, [hl+]
+	ld e, a
+	ld a, [hl+]
+	ld d, a
+	ld a, [hl+]
+	add a, e
+	ld e, a
+	ld a, [hl]
+	sub $01
+	ld [hl], a
+	ld b, a
+	ld a, d
+	sub b
+	ld d, a
+	ld a, d
+	srl a
+	ld b, a
+	ld a, $50
+	sub b
+	cp $70
+	jr c, Func_31_45fe
+	ld a, [hl]
+	ld b, a
+	xor a
+	sub b
+	ld a, b
+	srl a
+	srl a
+	srl a
+	ld [hl], a
+Func_31_45fe:
+	ld hl, $d5c9
+	ld a, c
+	dec a
+	sla a
+	sla a
+	rst $00
+	ld a, e
+	ld [hl+], a
+	ld a, d
+	ld [hl], a
+	push bc
+	ld a, d
+	add a, $50
+	ld b, a
+	ld a, e
+	sra a
+	ld c, a
+	add a, $68
+	sub c
+	ld c, a
+	ld a, $34
+	ld [$c100], a
+	ld hl, $7973
+	call DrawMetasprite
+	pop bc
+	dec c
+	ld a, c
+	and a
+	jr nz, Func_31_45ce
+	ret
+Func_31_462b:
+	ld a, [$d5c7]
+	cp $2c
+	ret c
+	cp $40
+	ret nc
+	ld a, $34
+	ld [$c100], a
+	ld hl, $7921
+	ld b, $28
+	ld c, $60
+	call DrawMetasprite
+	ret
+Func_31_4644:
+	ld a, [$d5c7]
+	ld c, a
+	cp $2c
+	ret c
+	cp $3b
+	ret nc
+	ld a, [$d5e9]
+	dec a
+	ld [$d5e9], a
+	ld b, a
+	ld a, [$d5ea]
+	add a, b
+	ld [$d5ea], a
+	bit 0, c
+	ret z
+	ld a, $34
+	ld [$c100], a
+	ld hl, $7985
+	ld a, [$d5ea]
+	swap a
+	and $0f
+	ld c, a
+	ld a, $38
+	sub c
+	ld b, a
+	ld a, $60
+	sub c
+	ld c, a
+	call DrawMetasprite
+	ld a, $34
+	ld [$c100], a
+	ld hl, $7985
+	ld a, [$d5ea]
+	swap a
+	and $0f
+	ld c, a
+	ld a, $38
+	sub c
+	ld b, a
+	ld a, $80
+	add a, c
+	ld c, a
+	call DrawMetasprite
+	ret
+Func_31_4697:
+	ld a, [$d5c7]
+	cp $20
+	jr nz, Func_31_46a5
+	push af
+	ld a, $22
+	call CallLibFunc
+	pop af
+Func_31_46a5:
+	ld a, [$d5c7]
+	cp $2c
+	ret c
+	ld a, [$d5f6]
+	cp $f0
+	jr nc, Func_31_46b5
+	cp $b0
+	ret nc
+Func_31_46b5:
+	ld b, a
+	ld c, $68
+	ld a, $34
+	ld [$c100], a
+	ld a, [$d5c7]
+	bit 2, a
+	jr nz, Func_31_46c9
+	ld hl, $7952
+	jr Func_31_46d4
+Func_31_46c9:
+	ld hl, $7973
+	ld a, b
+	add a, $08
+	ld b, a
+	ld a, c
+	add a, $08
+	ld c, a
+Func_31_46d4:
+	call DrawMetasprite
+	ld a, [$d5f6]
+	sub $04
+	ld [$d5f6], a
+	ret
+Func_31_46e0:
+	ld a, [$d5c7]
+	cp $7c
+	jr nz, Func_31_46ee
+	push af
+	ld a, $26
+	call CallLibFunc
+	pop af
+Func_31_46ee:
+	ld a, [$d5c7]
+	cp $28
+	jr c, Func_31_46fe
+	cp $6e
+	jr c, Func_31_4718
+	cp $86
+	jr c, Func_31_4749
+	ret
+Func_31_46fe:
+	ld b, $08
+	ld a, [$d5c7]
+	add a, b
+	ld b, a
+	ld a, [$d5f5]
+	sub $04
+	sub $02
+	ld [$d5f5], a
+	ld c, a
+	ld a, $01
+	ld [$d5f6], a
+	jp Func_31_4782
+Func_31_4718:
+	ld a, [$d5c7]
+	cp $44
+	jr c, Func_31_4725
+	ld a, $f0
+	ld [$d5f6], a
+	ret
+Func_31_4725:
+	ld a, [$d5f5]
+	add a, $04
+	add a, $04
+	ld [$d5f5], a
+	ld c, a
+	ld a, [$d5c7]
+	ld b, $28
+	sub b
+	srl a
+	srl a
+	ld b, a
+	ld a, [$d5f6]
+	add a, b
+	ld [$d5f6], a
+	ld b, a
+	ld a, $80
+	sub b
+	ld b, a
+	jr Func_31_4762
+Func_31_4749:
+	ld a, [$d5f6]
+	cp $40
+	jr c, Func_31_4755
+	cp $a0
+	jr nc, Func_31_4755
+	ret
+Func_31_4755:
+	ld a, [$d5f6]
+	add a, $04
+	add a, $02
+	ld [$d5f6], a
+	ld b, a
+	ld c, $68
+Func_31_4762:
+	ld a, $34
+	ld [$c100], a
+	ld a, [$d5c7]
+	bit 2, a
+	jr nz, Func_31_4773
+	ld hl, $7952
+	jr Func_31_477e
+Func_31_4773:
+	ld hl, $7973
+	ld a, b
+	add a, $08
+	ld b, a
+	ld a, c
+	add a, $08
+	ld c, a
+Func_31_477e:
+	call DrawMetasprite
+	ret
+Func_31_4782:
+	ld a, $34
+	ld [$c100], a
+	ld a, [$d5c7]
+	bit 2, a
+	jr nz, Func_31_479b
+	ld hl, $797c
+	ld a, b
+	add a, $08
+	ld b, a
+	ld a, c
+	add a, $08
+	ld c, a
+	jr Func_31_47a6
+Func_31_479b:
+	ld hl, $7973
+	ld a, b
+	add a, $08
+	ld b, a
+	ld a, c
+	add a, $08
+	ld c, a
+Func_31_47a6:
+	call DrawMetasprite
+	ret
+Func_31_47aa:
+	ldh a, [rLCDC]
+	res 7, a
+	res 5, a
+	ldh [rLCDC], a
+	ld a, $34
+	ld hl, $406a
+	call CallBankedHL
+	ld c, $03
+	ld hl, $d5eb
+Func_31_47bf:
+	call Func_00_03c4
+	ld [hl+], a
+	ld [hl+], a
+	dec c
+	ld a, c
+	and a
+	jr nz, Func_31_47bf
+	ld c, $08
+	ld hl, $d5c9
+Func_31_47ce:
+	call Func_00_03c4
+	and $1f
+	sub $0f
+	ld [hl+], a
+	ld b, a
+	xor a
+	ld [hl+], a
+	ld a, b
+	ld [hl+], a
+	call Func_00_03c4
+	and $03
+	add a, $04
+	ld [hl+], a
+	dec c
+	ld a, c
+	and a
+	jr nz, Func_31_47ce
+	xor a
+	ld [$d5f8], a
+	ld [$d5f7], a
+	ld [$d5ea], a
+	ld a, $0f
+	ld [$d5e9], a
+	ldh a, [rLCDC]
+	set 7, a
+	ldh [rLCDC], a
 	ret
 
 SECTION "analyzed_0c7fff", ROMX[$7fff], BANK[$31]
