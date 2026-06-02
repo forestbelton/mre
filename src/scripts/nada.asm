@@ -22,10 +22,8 @@ SECTION "nada_07d0d6", ROMX[$50d6], BANK[$1f]
 
 
 NadaScript:
-    ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.NadaVictory
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.NadaDefeat
-    ; Default greeting — was the mislabeled start at $50e2:
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.NadaVictory
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.NadaDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
     SCRIPT_RENDERER .Addr=$4f14, .Bank=$1f

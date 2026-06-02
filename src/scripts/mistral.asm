@@ -16,10 +16,8 @@ SECTION "mistral_07c5a5", ROMX[$45a5], BANK[$1f]
 
 
 MistralScript:
-    ; Greeting selector on $d60f (encounter state); launcher enters here at $45a5.
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.MistralVictory
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.MistralDefeat
-    ; Default greeting — was the mislabeled start at $45b1:
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.MistralVictory
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.MistralDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Oh?"
     SCRIPT_NEWLINE

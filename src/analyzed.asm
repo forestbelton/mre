@@ -5817,7 +5817,7 @@ Func_00_397a:
 Func_00_39ad:
 	ld a, $00
 	ld [$d60e], a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld hl, wRanchProgress
 	ld c, $0b
 	xor a
@@ -8954,7 +8954,7 @@ SECTION "analyzed_005c42", ROMX[$5c42], BANK[$01]
 
 Func_01_5c42:
 	ld a, $01
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, [wActiveFloor]
 	cp $01
 	jr z, Func_01_5c5f
@@ -9058,7 +9058,7 @@ Func_01_5ce2:
 	xor a
 	ld [$d60e], a
 	xor a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, $1f
 	ld hl, Func_1f_4109
 	call CallBankedHL
@@ -9073,7 +9073,7 @@ Func_01_5cff:
 	ld a, $01
 	ld [$d60e], a
 	xor a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, $1f
 	ld hl, Func_1f_4109
 	call CallBankedHL
@@ -9088,7 +9088,7 @@ Func_01_5d1d:
 	ld a, $02
 	ld [$d60e], a
 	xor a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, $1f
 	ld hl, Func_1f_4109
 	call CallBankedHL
@@ -9103,7 +9103,7 @@ Func_01_5d3b:
 	ld a, $03
 	ld [$d60e], a
 	xor a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, $1f
 	ld hl, Func_1f_4109
 	call CallBankedHL
@@ -9118,7 +9118,7 @@ Func_01_5d59:
 	ld a, $04
 	ld [$d60e], a
 	xor a
-	ld [$d60f], a
+	ld [wBossState], a
 	ld a, $1f
 	ld hl, Func_1f_4109
 	call CallBankedHL

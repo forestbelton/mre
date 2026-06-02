@@ -84,6 +84,8 @@ SECTION "wram_cycle", WRAMX[$D60D], BANK[1]
 
 wCycleCounter::     ds 1    ; $D60D: $0C opcode advances this mod N for cyclic dispatch
 
+SECTION "boss_state", WRAMX[$D60F], BANK[1]
+wBossState::        ds 1    ; $D60F: Boss victory/defeat state, used to conditionally display text
 
 SECTION "wram_text_engine", WRAMX[$D614], BANK[1]
 

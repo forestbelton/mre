@@ -1,5 +1,5 @@
 ; Rafaga (tower NPC, third encounter).
-; 
+;
 ; Introduces himself as "Nada's servant" and acknowledges the
 ; player's prior victories ("You beat Kalum and Mistral. I must ask
 ; you to leave."). Same tower-battle shape as Kalum and Mistral —
@@ -16,10 +16,8 @@ SECTION "rafaga_07c857", ROMX[$4857], BANK[$1f]
 
 
 RafagaScript:
-    ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=$495f
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=$49f3
-    ; Default greeting — was the mislabeled start at $4863:
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.RafagaVictory
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.RafagaDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Hello. You're"
     SCRIPT_NEWLINE
@@ -57,6 +55,7 @@ RafagaScript:
     SCRIPT_FAR_CALL .Addr=$47b1, .Bank=$1f
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
+.RafagaVictory:
     db "This is bad."
     SCRIPT_NEWLINE
     db "I've lost, too."
@@ -78,6 +77,7 @@ RafagaScript:
     db "this defeat."
     SCRIPT_WAIT
     SCRIPT_END
+.RafagaDefeat:
     db "Whew."
     SCRIPT_NEWLINE
     db "I guess"

@@ -14,10 +14,8 @@ SECTION "kalum_07c2b1", ROMX[$42b1], BANK[$1f]
 
 
 KalumScript:
-    ; Greeting selector on $d60f (encounter state), set before the script runs.
-    ; Kalum_StartEncounter enters the script here at $42b1.
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.KalumVictory
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.KalumDefeat
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.KalumVictory
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.KalumDefeat
     ; Default greeting (first visit) — was the mislabeled start at $42bd:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Wow! I can't"

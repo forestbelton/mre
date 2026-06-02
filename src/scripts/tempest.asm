@@ -1,9 +1,9 @@
 ; Tempest (tower NPC, fourth of Nada's henchmen).
-; 
+;
 ; Identifies himself in his first message ("I, Tempest, must fight
 ; now. Dragon, help me again..."). Fourth tower battle in the chain
 ; (Kalum -> Mistral -> Rafaga -> Tempest), monster: Dragon.
-; 
+;
 ; Same three-end shape as the other tower NPCs.
 ;
 ; Carved out of analyzed.asm via map.json; see docs/text_engine.md
@@ -17,10 +17,8 @@ SECTION "tempest_07cb82", ROMX[$4b82], BANK[$1f]
 
 
 TempestScript:
-    ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=$4c46
-    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=$4ce7
-    ; Default greeting — was the mislabeled start at $4b8e:
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.TempestVictory
+    SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.TempestDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "You've defeated"
     SCRIPT_NEWLINE
@@ -53,6 +51,7 @@ TempestScript:
     db "Let's fight."
     SCRIPT_WAIT
     SCRIPT_END
+.TempestVictory:
     db "You are strong,"
     SCRIPT_NEWLINE
     db "A good fight."
@@ -76,6 +75,7 @@ TempestScript:
     db "Good luck."
     SCRIPT_WAIT
     SCRIPT_END
+.TempestDefeat:
     db "Hmm."
     SCRIPT_WAIT
     db "Guess this is it"
