@@ -133,13 +133,19 @@ on fl 47. (`$16` is **not** in `$5162`; its non-appearance is a separate, still-
 unidentified mechanism.)
 
 #### Item points + effect tables
-The pickup dispatch `Func_01_5060` (bank `$01`) resolves a collected item by base id:
-- **`Data_01_51aa`** (`$51aa`) — 4 bytes/id, **big-endian BCD** point value added to
-  the score (`Func_01_5074`). E.g. RING_PLATINUM `00 05 00 00` = 50,000; PEACH_GOLD
-  `00 50 00 00` = 500,000; `$1a`/`$1b` = 500,000; `$1c` = 1,000,000; `$16` = 20,000.
-- **`$523a`** — 2 bytes/id, LE pointer to the per-id effect handler. `$5282` is the
-  generic points-only handler (gems/coins/peaches). Effect items dispatch elsewhere
-  (e.g. `$1f` → `$5544`, a monster-transform like `$1e` DOLL_DUCK → `$55a6`).
+The pickup dispatch `CollectItem` (bank `$01`, in `src/room.asm`) resolves a
+collected item by base id through four parallel per-id tables, now carved as a
+readable database in **`src/item_data.asm`** ($00-$23, 36 entries each):
+- **`ItemGateFlags`** (`$5162`) — 1 byte/id; the conditional-appearance gate above.
+- **`ItemCollectibleDesc`** (`$5186`) — 1 byte/id; `TrackItemCollection`'s "collect
+  a set" descriptor (`$ff` = untracked).
+- **`ItemPoints`** (`$51aa`) — 4 bytes/id, **big-endian BCD** score (`AddItemScore`).
+  E.g. PLATINUM_RING = 50,000; CAKE = 100,000; GOLD_PEACH/SILVER_PEACH/HARE_ICON =
+  500,000; `$1c` = 1,000,000.
+- **`ItemEffectHandlers`** (`$523a`) — 2 bytes/id, LE pointer to the bank-`$01`
+  effect handler. `$5282` is the generic points-only handler (gems/coins/peaches);
+  special items (keys, bombs, tororon/hourglass time, dolls, disc stones) each have
+  their own handler at `$5282`+ (still in `analyzed.asm`).
 
 Lower piece IDs index `FloorPieceDefs` (`$12FA`, 5-byte entries) and stamp a 2×2
 metatile `{T, T+8, T+1, T+9}` to the BG (`$00:$180B`); walls auto-tile from

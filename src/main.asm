@@ -7,6 +7,7 @@ INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "bodka_portrait.asm"
 INCLUDE "ferious_portrait.asm"
+INCLUDE "item_data.asm"
 INCLUDE "kalum_portrait.asm"
 INCLUDE "nada_intro.asm"
 INCLUDE "nada_scene2.asm"
@@ -1160,70 +1161,6 @@ Data_01_4d89:
 SECTION "data_004dba", ROMX[$4dba], BANK[$01]
 Data_01_4dba:
 	INCBIN "data/data_004dba.bin"
-
-SECTION "data_005166", ROMX[$5166], BANK[$01]
-Data_01_5166:
-	INCBIN "data/data_005166.bin"
-
-SECTION "data_00517e", ROMX[$517e], BANK[$01]
-Data_01_517e:
-	INCBIN "data/data_00517e.bin"
-
-SECTION "data_005183", ROMX[$5183], BANK[$01]
-Data_01_5183:
-	INCBIN "data/data_005183.bin"
-
-SECTION "data_00519c", ROMX[$519c], BANK[$01]
-Data_01_519c:
-	INCBIN "data/data_00519c.bin"
-
-SECTION "data_0051a0", ROMX[$51a0], BANK[$01]
-Data_01_51a0:
-	INCBIN "data/data_0051a0.bin"
-
-SECTION "data_0051a2", ROMX[$51a2], BANK[$01]
-Data_01_51a2:
-	INCBIN "data/data_0051a2.bin"
-
-SECTION "data_0051a5", ROMX[$51a5], BANK[$01]
-Data_01_51a5:
-	INCBIN "data/data_0051a5.bin"
-
-SECTION "data_0051a7", ROMX[$51a7], BANK[$01]
-Data_01_51a7:
-	INCBIN "data/data_0051a7.bin"
-
-SECTION "data_005202", ROMX[$5202], BANK[$01]
-Data_01_5202:
-	INCBIN "data/data_005202.bin"
-
-SECTION "data_00521a", ROMX[$521a], BANK[$01]
-Data_01_521a:
-	INCBIN "data/data_00521a.bin"
-
-SECTION "data_005226", ROMX[$5226], BANK[$01]
-Data_01_5226:
-	INCBIN "data/data_005226.bin"
-
-SECTION "data_005236", ROMX[$5236], BANK[$01]
-Data_01_5236:
-	INCBIN "data/data_005236.bin"
-
-SECTION "data_005266", ROMX[$5266], BANK[$01]
-Data_01_5266:
-	INCBIN "data/data_005266.bin"
-
-SECTION "data_005272", ROMX[$5272], BANK[$01]
-Data_01_5272:
-	INCBIN "data/data_005272.bin"
-
-SECTION "data_005278", ROMX[$5278], BANK[$01]
-Data_01_5278:
-	INCBIN "data/data_005278.bin"
-
-SECTION "data_005280", ROMX[$5280], BANK[$01]
-Data_01_5280:
-	INCBIN "data/data_005280.bin"
 
 SECTION "data_0053a0", ROMX[$53a0], BANK[$01]
 Data_01_53a0:

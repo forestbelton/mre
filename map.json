@@ -21,6 +21,26 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"item_data.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x5162",
+					"len":	"0x24"
+				}, {
+					"type":	"data",
+					"addr":	"0x5186",
+					"len":	"0x24"
+				}, {
+					"type":	"data",
+					"addr":	"0x51aa",
+					"len":	"0x90"
+				}, {
+					"type":	"data",
+					"addr":	"0x523a",
+					"len":	"0x48"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"toamuna_portrait.asm",
 			"sections":	[{
 					"type":	"data",
