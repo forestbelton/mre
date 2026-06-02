@@ -62,12 +62,20 @@ id K, descriptor `d = Data_01_5186[K]` (`$ff` = not tracked), and the flag is bi
 `d&7` of byte `d>>4`. Items still unseen in the current save: **`$18` BATTLE_CARD**
 (fl 31, r4c2) and **`$1b` HARE_ICON** (fl 60).
 
-## Unused / special ids
-- `$21` (sprite `$e1`): **not** cut — placed in the four corners of the special
-  floors **75/76** (shared record `$12:$574d`), visible, 0 pts, effect `$01:$5462`,
-  no encyclopedia entry.
-- `$22` (sprite `$e2`): genuinely unused — 0 pts, never placed, no encyclopedia
-  entry (its `$523a` pointer points into bank-$04 data, i.e. junk).
+## Special ids ($21/$22) — confirmed via a floor-59 ROM hack
+Both were placed visible on fl 59 and picked up; both are safe (real handlers).
+- `$21` (sprite `$e1`, **bomb icon**): a special-stage **collect-4 token**, *not* a
+  real bomb (pickup adds no bombs — confirmed in-game). Placed 4× in the corners of
+  the no-monster special floors **75/76** (shared record `$12:$574d`), 0 pts, no
+  encyclopedia entry. `ItemEffect_Item21` (`$01:$5462`) increments `$cf7e`; only the
+  4th pickup sets `$cf40=1` and calls `Func_01_5854(c=4)` (GOLD_KEY's exit/unlock) —
+  i.e. collect all four to open the way.
+- `$22` (sprite `$e2`, **silver-key icon**): a silver-key **stage-advance token**,
+  never placed in normal play. `ItemEffect_Item22` (`$01:$5485` — a real bank-$01
+  handler, *not* the bank-$04 junk I first misread) runs the silver-key unlock
+  (`Func_01_47a9`) then sets `$c2d6=1`, which the main loop (`Func_01_45ad`) reads as
+  "stage complete" → cleanup + `$c2a7=$13`. So pickup **instantly ends/advances the
+  stage**; tied to basement-room (mode `$c2c1==2`) descent. No encyclopedia entry.
 - `DOLL_AYA` in the player list = `$1c` AYA_DOLL (was thought possibly an alias).
 
 ## Open threads / next steps

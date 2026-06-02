@@ -67,9 +67,17 @@ enum ITEM
     case DUCK_DOLL         ; Transforms all monsters into entity $08 (effect Func_01_55a6) & they die
     case ALF_DOLL          ; Transforms all monsters into Suzurins (confirmed in-game)
     case DISC_STONE_PIECE  ; Collect 4 for a full disc stone
-    skip                   ; $21 special-stage item: floors 75/76 corners (record
-                           ;   $12:$574d), visible, 0 pts, effect $01:$5462; no encyclopedia entry
-    skip                   ; $22 unused/reserved: no encyclopedia entry, 0 pts, never placed
+    skip                   ; $21 special-stage "collect 4" token (bomb art, NOT a real
+                           ;   bomb -- pickup adds no bombs): 4x in the corners of the
+                           ;   no-monster floors 75/76 (record $12:$574d), 0 pts, no
+                           ;   encyclopedia entry. ItemEffect_Item21 ($5462) bumps $cf7e;
+                           ;   the 4th sets $cf40=1 + Func_01_5854(c=4) (GOLD_KEY's unlock).
+    skip                   ; $22 silver-key stage-advance token (silver-key art): not placed
+                           ;   in normal play. ItemEffect_Item22 ($5485, a real handler) runs
+                           ;   the silver-key unlock (Func_01_47a9) then sets $c2d6=1, which
+                           ;   the main loop reads as "stage complete" (Func_01_45ad -> $c2a7
+                           ;   =$13). Pickup instantly ends the stage; tied to basement-room
+                           ;   ($c2c1==2) descent. No encyclopedia entry.
     case RED_DISC_STONE    ; Contains Phoenix (gives a Phenix disc stone on pickup)
 end_enum
 
