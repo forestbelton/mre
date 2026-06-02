@@ -95,9 +95,9 @@ NajiScript:
 
 NajiCycler:
     SCRIPT_CYCLE .Count=4
-    SCRIPT_JUMP_TABLE wCycleCounter, naji_734a, naji_736d, naji_7394, naji_73bc
+    SCRIPT_JUMP_TABLE wCycleCounter, .greet0, .greet1, .greet2, .greet3
 
-naji_734a:
+.greet0:
     SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
     db "Oh, you're here."
     SCRIPT_NEWLINE
@@ -105,7 +105,7 @@ naji_734a:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
-naji_736d:
+.greet1:
     SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "It's you. Good"
     SCRIPT_NEWLINE
@@ -113,7 +113,7 @@ naji_736d:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
-naji_7394:
+.greet2:
     SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
     db "It's you. We're"
     SCRIPT_NEWLINE
@@ -121,7 +121,7 @@ naji_7394:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
-naji_73bc:
+.greet3:
     SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "Hey. It's you!"
     SCRIPT_NEWLINE
