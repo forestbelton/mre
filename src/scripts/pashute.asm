@@ -15,8 +15,8 @@ SECTION "pashute_060272", ROMX[$4272], BANK[$18]
 PashuteScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_IF_EQ .Addr=$d0de, .Value=$04, .Target=PashuteGameDone
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$03, .Target=pashute_47fe
-    SCRIPT_IF_EQ .Addr=$d0de, .Value=$02, .Target=pashute_471d
+    SCRIPT_IF_EQ .Addr=$d0de, .Value=$03, .Target=PashuteGreetProgress
+    SCRIPT_IF_EQ .Addr=$d0de, .Value=$02, .Target=PashuteGreetReturning
     SCRIPT_IF_EQ .Addr=$d0de, .Value=$01, .Target=PashuteGreetingCycle
     SCRIPT_FAR_CALL .Addr=$40f3, .Bank=$18
     SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
@@ -171,7 +171,7 @@ PashuteScript:
 PashuteGreetingCycle:
     SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
     SCRIPT_CYCLE .Count=4
-    SCRIPT_JUMP_TABLE wCycleCounter, PashuteGreeting1, PashuteGreeting2, pashute_46d4, pashute_46fa
+    SCRIPT_JUMP_TABLE wCycleCounter, PashuteGreeting1, PashuteGreeting2, PashuteGreeting3, PashuteGreeting4
 
 PashuteGreeting1:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -189,7 +189,7 @@ PashuteGreeting2:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
-pashute_46d4:
+PashuteGreeting3:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Welcome to the"
     SCRIPT_NEWLINE
@@ -197,7 +197,7 @@ pashute_46d4:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
-pashute_46fa:
+PashuteGreeting4:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Well, well"
     SCRIPT_NEWLINE
@@ -205,7 +205,7 @@ pashute_46fa:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
-pashute_471d:
+PashuteGreetReturning:
     SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Oh, yes. I heard"
@@ -239,7 +239,7 @@ pashute_471d:
     SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$01
     SCRIPT_GOTO .Target=PashuteMenu
 
-pashute_47fe:
+PashuteGreetProgress:
     SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
     SCRIPT_RENDERER .Addr=$4225, .Bank=$18
     db "Oh! Well,"
@@ -353,8 +353,8 @@ PashuteStone:
     SCRIPT_NEWLINE
     db "saucer stone?"
     SCRIPT_WAIT
-    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=pashute_4b6c
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=pashute_4b6c
+    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteStoneCheck
+    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteStoneCheck
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "If the new"
     SCRIPT_NEWLINE
@@ -369,7 +369,7 @@ PashuteStone:
     db "replaced, okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=pashute_4b6c
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteStoneCheck
     SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
     db "Until recently,"
     SCRIPT_WAIT
@@ -387,14 +387,14 @@ PashuteStone:
     SCRIPT_WAIT
     SCRIPT_END
 
-pashute_4b6c:
-    SCRIPT_IF_NEQ .Addr=$cfda, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfdb, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfdc, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfdd, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfde, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfdf, .Value=$00, .Target=pashute_4c00
-    SCRIPT_IF_NEQ .Addr=$cfe0, .Value=$00, .Target=pashute_4c00
+PashuteStoneCheck:
+    SCRIPT_IF_NEQ .Addr=$cfda, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfdb, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfdc, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfdd, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfde, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfdf, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfe0, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
     db "But you"
     SCRIPT_WAIT
@@ -412,7 +412,7 @@ pashute_4b6c:
     SCRIPT_WAIT
     SCRIPT_END
 
-pashute_4c00:
+PashuteStoneReady:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Then..."
     SCRIPT_NEWLINE
@@ -434,14 +434,14 @@ pashute_4c00:
     SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
     SCRIPT_FAR_CALL .Addr=$404d, .Bank=$14
     SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
-    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=pashute_4c78
+    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenSetup
     SCRIPT_FAR_CALL .Addr=$4054, .Bank=$18
-    SCRIPT_GOTO .Target=pashute_4c7c
+    SCRIPT_GOTO .Target=PashuteRegenPick
 
-pashute_4c78:
+PashuteRegenSetup:
     SCRIPT_FAR_CALL .Addr=$4074, .Bank=$18
 
-pashute_4c7c:
+PashuteRegenPick:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Regeneration"
     SCRIPT_NEWLINE
@@ -469,7 +469,7 @@ PashuteTiger:
     SCRIPT_NEWLINE
     db "a cool monster."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteMocchi:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -477,7 +477,7 @@ PashuteMocchi:
     SCRIPT_NEWLINE
     db "a cute monster."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteHare:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -485,7 +485,7 @@ PashuteHare:
     SCRIPT_NEWLINE
     db "a fast monster."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGali:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -493,7 +493,7 @@ PashuteGali:
     SCRIPT_NEWLINE
     db "mystery monster."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGolem:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -501,7 +501,7 @@ PashuteGolem:
     SCRIPT_NEWLINE
     db "powerful monster"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteSuezo:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
@@ -509,7 +509,7 @@ PashuteSuezo:
     SCRIPT_NEWLINE
     db "a funny monster"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_4e28
+    SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashutePhenix:
     SCRIPT_RENDERER .Addr=$4225, .Bank=$18
@@ -528,11 +528,11 @@ PashutePhenix:
     db "A wonder monster"
     SCRIPT_WAIT
 
-pashute_4e28:
-    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=pashute_4eb4
+PashuteRegenConfirm:
+    SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenTake
     SCRIPT_FAR_CALL .Addr=$4027, .Bank=$18
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=pashute_4e80
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=pashute_4e80
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
+    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Then I will"
     SCRIPT_NEWLINE
@@ -548,9 +548,9 @@ pashute_4e28:
     db "."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4e80:
+PashuteRegenDoNow:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Now I will"
     SCRIPT_NEWLINE
@@ -561,19 +561,19 @@ pashute_4e80:
     db "monster."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4eb4:
+PashuteRegenTake:
     SCRIPT_FAR_CALL .Addr=$403c, .Bank=$18
-    SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=pashute_4f97
+    SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=PashuteRegenNow
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Will you take"
     SCRIPT_NEWLINE
     db "the newborn now?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=pashute_4f5e
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=pashute_4f2a
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=PashuteRegenPlace
+    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow2
     db "Then let's put"
     SCRIPT_NEWLINE
     db "this "
@@ -584,9 +584,9 @@ pashute_4eb4:
     db "Checkroom."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4f2a:
+PashuteRegenDoNow2:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Now I will"
     SCRIPT_NEWLINE
@@ -597,9 +597,9 @@ pashute_4f2a:
     db "monster."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4f5e:
+PashuteRegenPlace:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "Then let's put"
     SCRIPT_NEWLINE
@@ -610,11 +610,11 @@ pashute_4f5e:
     SCRIPT_NEWLINE
     db "Checkroom."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4f97:
+PashuteRegenNow:
     SCRIPT_FAR_CALL .Addr=$4027, .Bank=$18
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=pashute_4fe0
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenNow2
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
     db " in the"
@@ -627,9 +627,9 @@ pashute_4f97:
     SCRIPT_NEWLINE
     db "usable moves."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_4fe0:
+PashuteRegenNow2:
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
     SCRIPT_NEWLINE
@@ -642,9 +642,9 @@ pashute_4fe0:
     SCRIPT_NEWLINE
     db "usable moves."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=pashute_5018
+    SCRIPT_GOTO .Target=PashuteRegenDone
 
-pashute_5018:
+PashuteRegenDone:
     SCRIPT_RENDERER .Addr=$4150, .Bank=$18
     db "We are all done."
     SCRIPT_NEWLINE
