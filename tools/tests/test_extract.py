@@ -853,12 +853,30 @@ class TestComputeCoverage(unittest.TestCase):
             {"type": "data",  "addr": 0x300, "len": 8},
             {"type": "ascii", "addr": 0x400, "len": 5},
             {"type": "asciz", "addr": 0x500, "len": 6},
+            {"type": "gfx",   "addr": 0x600, "len": 7},
         ]}]}
         c = extract.compute_coverage(spec, self.ROM)
         self.assertEqual(c["user_code"], 4)
         self.assertEqual(c["user_data"], 8)
         self.assertEqual(c["user_ascii"], 5)
         self.assertEqual(c["user_asciz"], 6)
+        self.assertEqual(c["user_gfx"], 7)
+
+    def test_gfx_counted_for_analyzer_and_user(self):
+        # gfx sections are covered (not left "uncovered"), from any file, and
+        # attributed to analyzer vs user like code/data are.
+        spec = {"files": [
+            {"type": "code", "name": "x.asm", "sections": [
+                {"type": "gfx", "addr": 0x800, "len": 0x40},
+            ]},
+            {"type": "code", "name": "analyzed.asm", "sections": [
+                {"type": "gfx", "addr": 0x900, "len": 0x80},
+            ]},
+        ]}
+        c = extract.compute_coverage(spec, self.ROM)
+        self.assertEqual(c["user_gfx"], 0x40)
+        self.assertEqual(c["analyzed_gfx"], 0x80)
+        self.assertEqual(c["uncovered"], self.ROM - c["header"] - 0x40 - 0x80)
 
     def test_counts_sum_to_rom_size(self):
         spec = {

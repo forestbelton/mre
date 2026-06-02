@@ -744,8 +744,10 @@ _COV_CATEGORIES = [
     ("user_ascii",    "user-curated ascii"),
     ("user_asciz",    "user-curated asciz"),
     ("user_padding",  "user-curated padding"),
+    ("user_gfx",      "user-curated gfx"),
     ("analyzed_code", "analyzer code"),
     ("analyzed_data", "analyzer data"),
+    ("analyzed_gfx",  "analyzer gfx"),
     ("conflict",      "conflict bytes"),
     ("header",        "cartridge header"),
     ("uncovered",     "uncovered (gap-fill .bin)"),
@@ -758,7 +760,7 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
     Every ROM byte is assigned to exactly one category. The priority order
     (later wins, so user-curated entries take precedence over the analyzer's
     view, and the header always wins) is:
-      analyzer (code, data) <- conflicts <- user-curated <- header
+      analyzer (code, data, gfx) <- conflicts <- user-curated <- header
     """
     keys = [k for k, _ in _COV_CATEGORIES]
     cat_id = {k: i for i, k in enumerate(keys)}
@@ -787,6 +789,8 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
                     fill(s["addr"], s["len"], "analyzed_code")
                 elif t == "data":
                     fill(s["addr"], s["len"], "analyzed_data")
+                elif t == "gfx":
+                    fill(s["addr"], s["len"], "analyzed_gfx")
 
     # Conflicts overlay any analyzed range.
     for c in spec.get("conflicts", []) or []:
@@ -813,6 +817,8 @@ def compute_coverage(spec: dict[str, Any], rom_size: int) -> dict[str, int]:
                     fill(s["addr"], s["len"], "user_asciz")
                 elif t == "padding":
                     fill(s["addr"], s["len"], "user_padding")
+                elif t == "gfx":
+                    fill(s["addr"], s["len"], "user_gfx")
         elif ftype == "data":
             fill(f["addr"], f["len"], "user_data")
 
