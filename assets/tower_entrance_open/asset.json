@@ -1,0 +1,20 @@
+{
+  "asset": "tower_entrance_open",
+  "bank": 38,
+  "rows": 18,
+  "cols": 20,
+  "tiles_count": 384,
+  "palette_count": 0,
+  "index_base": 0,
+  "addressing": "8800",
+  "tiles_addr": 628736,
+  "palette_addr": null,
+  "desc_addr": 635008,
+  "attr_ptr": 29166,
+  "idx_ptr": 28806,
+  "attr_addr": 635374,
+  "idx_addr": 635014,
+  "tiles2_addr": 622592,
+  "tiles2_count": 384,
+  "tiles2_vram": 32768
+}

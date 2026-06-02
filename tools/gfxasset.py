@@ -190,6 +190,38 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x8f080, "index_base": 0, "addressing": "8800",
     },
+    "room_clear": {  # bank $21, drawn by Func_30_503b -- "STAGE CLEAR!" results (shown after a room)
+        "bank": 0x21,
+        "tiles_addr": 0x85800, "tiles_count": 384,    # $21:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x84000, "tiles2_count": 384,  # $21:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x87080, "index_base": 0, "addressing": "8800",
+    },
+    "tower_entrance_open": {  # bank $26, drawn by Func_30_52c4 -- tower entrance, door open
+        "bank": 0x26,
+        "tiles_addr": 0x99800, "tiles_count": 384,    # $26:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x98000, "tiles2_count": 384,  # $26:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x9b080, "index_base": 0, "addressing": "8800",
+    },
+    "title_screen": {  # bank $28, drawn by Func_30_54df -- title screen (has $7356 overlay)
+        "bank": 0x28,
+        "tiles_addr": 0xa1800, "tiles_count": 384,    # $28:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0xa0000, "tiles2_count": 384,  # $28:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0xa3080, "index_base": 0, "addressing": "8800",
+    },
+    "intro_book": {  # bank $29, drawn by Func_30_577e -- intro-cutscene book (10x20)
+        "bank": 0x29,
+        "tiles_addr": 0xa5800, "tiles_count": 384,    # $29:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0xa4000, "tiles2_count": 384,  # $29:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0xa7080, "index_base": 0, "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).

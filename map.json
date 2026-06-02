@@ -310,6 +310,102 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"room_clear.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x84000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x85800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x87080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x87086",
+					"len":	"0x168"
+				}, {
+					"type":	"data",
+					"addr":	"0x871ee",
+					"len":	"0x168"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"tower_entrance_open.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x98000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x99800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x9b080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x9b086",
+					"len":	"0x168"
+				}, {
+					"type":	"data",
+					"addr":	"0x9b1ee",
+					"len":	"0x168"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"title_screen.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0xa0000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0xa1800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0xa3080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0xa3086",
+					"len":	"0x168"
+				}, {
+					"type":	"data",
+					"addr":	"0xa31ee",
+					"len":	"0x168"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"intro_book.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0xa4000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0xa5800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0xa7080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0xa7086",
+					"len":	"0xc8"
+				}, {
+					"type":	"data",
+					"addr":	"0xa714e",
+					"len":	"0xc8"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"script.asm",
 			"sections":	[{
 					"type":	"code",
@@ -879,16 +975,6 @@
 					"addr":	"0x972f0",
 					"len":	"0xd0f",
 					"label":	"Padding_0972f0"
-				}, {
-					"type":	"padding",
-					"addr":	"0x98455",
-					"len":	"0x3ab",
-					"label":	"Padding_098455"
-				}, {
-					"type":	"padding",
-					"addr":	"0x99800",
-					"len":	"0x808",
-					"label":	"Padding_099800"
 				}, {
 					"type":	"padding",
 					"addr":	"0x9b6ba",
