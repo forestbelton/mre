@@ -1,0 +1,20 @@
+{
+  "asset": "nada_intro",
+  "bank": 28,
+  "rows": 11,
+  "cols": 20,
+  "tiles_count": 384,
+  "palette_count": 0,
+  "index_base": 0,
+  "addressing": "8800",
+  "tiles_addr": 464896,
+  "palette_addr": null,
+  "desc_addr": 471168,
+  "attr_ptr": 29026,
+  "idx_ptr": 28806,
+  "attr_addr": 471394,
+  "idx_addr": 471174,
+  "tiles2_addr": 458752,
+  "tiles2_count": 384,
+  "tiles2_vram": 32768
+}

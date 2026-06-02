@@ -126,6 +126,26 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0xd6080, "index_base": 0, "addressing": "8800",
     },
+    # Nada's intro scene (shown by Func_1f_4d97). Two-bank, but unlike Ferious
+    # both sheets load to VRAM $8000 (different VBK): $1c:$4000 (bank 0) and
+    # $1c:$5800 (bank 1); attr bit 3 picks per cell. Located via find_portraits.
+    "nada_intro": {
+        "bank": 0x1c,
+        "tiles_addr": 0x71800, "tiles_count": 384,    # $1c:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x70000, "tiles2_count": 384,  # $1c:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x73080, "index_base": 0, "addressing": "8800",
+    },
+    # Nada's recurring talking portrait (full image; the $1e:$5bd9 2x2 descriptor
+    # used elsewhere is just a mouth-animation overlay). Single-blob Kalum layout,
+    # tiles $1e:$4000, descriptor $1e:$5880.
+    "nada_portrait": {
+        "bank": 0x1e,
+        "tiles_addr": 0x78000, "tiles_count": 384,   # $1e:$4000
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x79880, "index_base": 0, "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).
@@ -318,7 +338,8 @@ def map_index_to_tile(v: int, index_base: int, addressing: str) -> int:
 
 def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
                      tiles: list[bytes], pals: list[list[int]], index_base: int,
-                     addressing: str = "direct", tiles2: list[bytes] | None = None) -> None:
+                     addressing: str = "direct", tiles2: list[bytes] | None = None,
+                     tiles2_vram: int = 0x9000) -> None:
     W, H = cols * 8, rows * 8
     grayscale = not pals
     # Build a 256-color RGB palette from the CGB palettes (palette p, color k
@@ -336,10 +357,11 @@ def render_composite(path: Path, rows: int, cols: int, idx: bytes, attr: bytes,
         pal_no = 0 if grayscale else (a & 0x07)
         xflip, yflip = (a >> 5) & 1, (a >> 6) & 1
         # CGB BG attribute bit 3 selects the VRAM tile bank. With a second sheet
-        # (bank 0, loaded at VRAM $9000) present, bit-3-clear cells read from it
-        # at tile = signed(index); else the primary sheet ($8000 base).
+        # (bank 0) present, bit-3-clear cells read from it; a sheet based at VRAM
+        # `base` maps an $8800 index to tile (0x9000-base)//16 + signed(index)
+        # (so base $9000 -> signed(index), base $8000 -> same as the primary).
         if tiles2 is not None and not (a >> 3) & 1:
-            tile_no = v if v < 0x80 else v - 0x100
+            tile_no = (0x9000 - tiles2_vram) // 0x10 + (v if v < 0x80 else v - 0x100)
             sheet = tiles2
         else:
             tile_no = map_index_to_tile(v, index_base, addressing)
@@ -398,7 +420,8 @@ def cmd_decode(args) -> int:
     name = args.asset
     # preview.png is a *generated* composite (not source) — gitignored.
     render_composite(out / "preview.png", rows, cols, idx, attr, tiles, pals,
-                     spec["index_base"], spec.get("addressing", "direct"), tiles2)
+                     spec["index_base"], spec.get("addressing", "direct"), tiles2,
+                     spec.get("tiles2_vram", 0x9000))
 
     meta = {
         "asset": name,
@@ -419,6 +442,7 @@ def cmd_decode(args) -> int:
     if tiles2 is not None:
         meta["tiles2_addr"] = spec["tiles2_addr"]
         meta["tiles2_count"] = spec["tiles2_count"]
+        meta["tiles2_vram"] = spec.get("tiles2_vram", 0x9000)
     (out / "asset.json").write_text(json.dumps(meta, indent=2) + "\n")
 
     print(f"decoded {name}: {cols}x{rows} cells, {spec['tiles_count']} tiles, "
@@ -474,9 +498,14 @@ def cmd_preview(args) -> int:
     tiles = [tiles_blob[i:i + TILE_BYTES] for i in range(0, len(tiles_blob), TILE_BYTES)]
     pals = read_pal_file(src / "palette.pal") if (src / "palette.pal").exists() else []
     out = Path(args.out)
+    tiles2 = None
+    if meta.get("tiles2_count"):
+        t2 = comps["tiles2"]
+        tiles2 = [t2[i:i + TILE_BYTES] for i in range(0, len(t2), TILE_BYTES)]
     render_composite(out, meta["rows"], meta["cols"], comps["tilemap"],
                      comps["attrmap"], tiles, pals, meta["index_base"],
-                     meta.get("addressing", "direct"))
+                     meta.get("addressing", "direct"), tiles2,
+                     meta.get("tiles2_vram", 0x9000))
     print(f"preview -> {out}")
     return 0
 

@@ -145,6 +145,50 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"nada_intro.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x70000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x71800",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x73080",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x73086",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x73162",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
+			"name":	"nada_portrait.asm",
+			"sections":	[{
+					"type":	"data",
+					"addr":	"0x78000",
+					"len":	"0x1800"
+				}, {
+					"type":	"data",
+					"addr":	"0x79880",
+					"len":	"0x6"
+				}, {
+					"type":	"data",
+					"addr":	"0x79886",
+					"len":	"0xdc"
+				}, {
+					"type":	"data",
+					"addr":	"0x79962",
+					"len":	"0xdc"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"script.asm",
 			"sections":	[{
 					"type":	"code",
@@ -661,16 +705,6 @@
 					"label":	"Padding_06f8de"
 				}, {
 					"type":	"padding",
-					"addr":	"0x700d9",
-					"len":	"0x730",
-					"label":	"Padding_0700d9"
-				}, {
-					"type":	"padding",
-					"addr":	"0x70b26",
-					"len":	"0x544",
-					"label":	"Padding_070b26"
-				}, {
-					"type":	"padding",
 					"addr":	"0x73756",
 					"len":	"0x8a9",
 					"label":	"Padding_073756"
@@ -679,11 +713,6 @@
 					"addr":	"0x775ec",
 					"len":	"0xa13",
 					"label":	"Padding_0775ec"
-				}, {
-					"type":	"padding",
-					"addr":	"0x78500",
-					"len":	"0x300",
-					"label":	"Padding_078500"
 				}, {
 					"type":	"padding",
 					"addr":	"0x7b6da",
