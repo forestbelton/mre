@@ -125,42 +125,42 @@ ItemPoints:
     db $00,$00,$00,$00  ; $22 (unused)         = 0
     db $00,$00,$00,$00  ; $23 RED_DISC_STONE   = 0
 
-SECTION "item_effects", ROMX[$523a], BANK[$01]
+SECTION "item_effect_table", ROMX[$523a], BANK[$01]
 ; 2 bytes/id, LE pointer to the bank-1 effect handler ($5282 = generic score-only).
 ItemEffectHandlers:
-    dw $541e  ; $00 GOLD_KEY        
-    dw $5429  ; $01 SILVER_KEY      
-    dw $535c  ; $02 BELL            
-    dw $53b9  ; $03 HALF_TORORON    
-    dw $53cc  ; $04 FULL_TORORON    
-    dw $53df  ; $05 ORANGE_HOURGLASS
-    dw $53f4  ; $06 BLUE_HOURGLASS  
-    dw $5408  ; $07 COX_HAT         
-    dw $52dc  ; $08 BOMB_SMALL      
-    dw $5308  ; $09 BOMB_LARGE      
-    dw $52b4  ; $0a FIREPLACE       
-    dw $52c7  ; $0b GUNPOWDER       
-    dw $5330  ; $0c BLUE_CRYSTAL    
-    dw $5346  ; $0d RED_CRYSTAL     
-    dw $5282  ; $0e BLUE_DIAMOND     (score only)
-    dw $5282  ; $0f RED_DIAMOND      (score only)
-    dw $5282  ; $10 PLATINUM_RING    (score only)
-    dw $5282  ; $11 SILVER_MEDAL     (score only)
-    dw $5282  ; $12 SILVER_NUGGET    (score only)
-    dw $5282  ; $13 GOLD_MEDAL       (score only)
-    dw $5282  ; $14 GOLD_NUGGET      (score only)
-    dw $5282  ; $15 HEAL_BADGE       (score only)
-    dw $5282  ; $16 (unused)         (score only)
-    dw $5282  ; $17 CAKE             (score only)
-    dw $5437  ; $18 BATTLE_CARD     
-    dw $5282  ; $19 GOLD_PEACH       (score only)
-    dw $5282  ; $1a SILVER_PEACH     (score only)
-    dw $5282  ; $1b HARE_ICON        (score only)
-    dw $53a0  ; $1c (unused)        
-    dw $5452  ; $1d MONSTER_FLAME   
-    dw $5392  ; $1e DUCK_DOLL       
-    dw $53ab  ; $1f ALF_DOLL        
-    dw $528d  ; $20 DISC_STONE_PIECE
-    dw $5462  ; $21 (unused)        
-    dw $5485  ; $22 (unused)        
-    dw $549d  ; $23 RED_DISC_STONE  
+    dw ItemEffect_GoldKey  ; $00 GOLD_KEY        
+    dw ItemEffect_SilverKey  ; $01 SILVER_KEY      
+    dw ItemEffect_Bell  ; $02 BELL            
+    dw ItemEffect_HalfTororon  ; $03 HALF_TORORON    
+    dw ItemEffect_FullTororon  ; $04 FULL_TORORON    
+    dw ItemEffect_OrangeHourglass  ; $05 ORANGE_HOURGLASS
+    dw ItemEffect_BlueHourglass  ; $06 BLUE_HOURGLASS  
+    dw ItemEffect_CoxHat  ; $07 COX_HAT         
+    dw ItemEffect_BombSmall  ; $08 BOMB_SMALL      
+    dw ItemEffect_BombLarge  ; $09 BOMB_LARGE      
+    dw ItemEffect_Fireplace  ; $0a FIREPLACE       
+    dw ItemEffect_Gunpowder  ; $0b GUNPOWDER       
+    dw ItemEffect_BlueCrystal  ; $0c BLUE_CRYSTAL    
+    dw ItemEffect_RedCrystal  ; $0d RED_CRYSTAL     
+    dw ItemEffect_ScoreOnly  ; $0e BLUE_DIAMOND     (score only)
+    dw ItemEffect_ScoreOnly  ; $0f RED_DIAMOND      (score only)
+    dw ItemEffect_ScoreOnly  ; $10 PLATINUM_RING    (score only)
+    dw ItemEffect_ScoreOnly  ; $11 SILVER_MEDAL     (score only)
+    dw ItemEffect_ScoreOnly  ; $12 SILVER_NUGGET    (score only)
+    dw ItemEffect_ScoreOnly  ; $13 GOLD_MEDAL       (score only)
+    dw ItemEffect_ScoreOnly  ; $14 GOLD_NUGGET      (score only)
+    dw ItemEffect_ScoreOnly  ; $15 HEAL_BADGE       (score only)
+    dw ItemEffect_ScoreOnly  ; $16 (unused)         (score only)
+    dw ItemEffect_ScoreOnly  ; $17 CAKE             (score only)
+    dw ItemEffect_BattleCard  ; $18 BATTLE_CARD     
+    dw ItemEffect_ScoreOnly  ; $19 GOLD_PEACH       (score only)
+    dw ItemEffect_ScoreOnly  ; $1a SILVER_PEACH     (score only)
+    dw ItemEffect_ScoreOnly  ; $1b HARE_ICON        (score only)
+    dw ItemEffect_Item1c  ; $1c (unused)        
+    dw ItemEffect_MonsterFlame  ; $1d MONSTER_FLAME   
+    dw ItemEffect_DuckDoll  ; $1e DUCK_DOLL       
+    dw ItemEffect_AlfDoll  ; $1f ALF_DOLL        
+    dw ItemEffect_DiscPiece  ; $20 DISC_STONE_PIECE
+    dw ItemEffect_Item21  ; $21 (unused)        
+    dw ItemEffect_Item22  ; $22 (unused)        
+    dw ItemEffect_RedDiscStone  ; $23 RED_DISC_STONE  

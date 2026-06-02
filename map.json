@@ -41,6 +41,15 @@
 				}]
 		}, {
 			"type":	"code",
+			"name":	"item_effects.asm",
+			"sections":	[{
+					"type":	"code",
+					"addr":	"0x5282",
+					"len":	"0x24e",
+					"label":	"ItemEffect_ScoreOnly"
+				}]
+		}, {
+			"type":	"code",
 			"name":	"toamuna_portrait.asm",
 			"sections":	[{
 					"type":	"data",

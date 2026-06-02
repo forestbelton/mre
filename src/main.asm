@@ -8,6 +8,7 @@ INCLUDE "analyzed.asm"
 INCLUDE "bodka_portrait.asm"
 INCLUDE "ferious_portrait.asm"
 INCLUDE "item_data.asm"
+INCLUDE "item_effects.asm"
 INCLUDE "kalum_portrait.asm"
 INCLUDE "nada_intro.asm"
 INCLUDE "nada_scene2.asm"
@@ -1161,14 +1162,6 @@ Data_01_4d89:
 SECTION "data_004dba", ROMX[$4dba], BANK[$01]
 Data_01_4dba:
 	INCBIN "data/data_004dba.bin"
-
-SECTION "data_0053a0", ROMX[$53a0], BANK[$01]
-Data_01_53a0:
-	INCBIN "data/data_0053a0.bin"
-
-SECTION "data_00549d", ROMX[$549d], BANK[$01]
-Data_01_549d:
-	INCBIN "data/data_00549d.bin"
 
 SECTION "data_005544", ROMX[$5544], BANK[$01]
 Data_01_5544:
