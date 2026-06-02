@@ -53,7 +53,7 @@ SECTION "wram_monsters", WRAM0[$CFBB]
 ; from the 19 floor-monster species in the `enum MONSTER` (include/room.inc).
 
 wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partner
-                            ;   monster. Indexes wMonsterUses / wMonsterRegenStock,
+                            ;   monster. Indexes wMonsterUses / wMonsterDiscStones,
                             ;   the name table (ScriptPrintMonsterName), and the
                             ;   bank-$32 portrait table ($32:$40A5). Set by Pashute's
                             ;   and Verde's menus (SCRIPT_JUMP_TABLE $cfbb). Transient:
@@ -62,7 +62,7 @@ wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partn
 
 ; --- Persistent save block ($CFCF..$D0E6, $118 bytes) ------------------------
 ; The game's saved state. On save (Func_12_4b67, bank $12) this block is stamped
-; with the "V03UTS" tag and copied verbatim to SRAM $A6ED; on load (Func_12_4BA1)
+; with the "V03" signature and copied verbatim to SRAM $A6ED; on load (Func_12_4BA1)
 ; it is copied back. Integrity is a one-byte XOR of every block byte (Func_00_12EE
 ; computes+stores it, Func_00_12E1 recomputes+verifies it), kept in the byte right
 ; after the block. The .sav file is the raw 8KB SRAM image, so the block lives at
@@ -70,18 +70,27 @@ wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partn
 ; /2/3" blocks earlier in the file are the level editor's saved rooms. The block
 ; spans several of the sections below (wCFF0, the $D0DC NPC cascade, ...).
 wSaveSignature::    ds 3    ; $CFCF: "V03" save-format signature
-wSaveTag::          ds 4    ; $CFD2: "UTS\0" block tag (the main game save)
-                    ds 4    ; $CFD6-$CFD9
-wMonsterDiscStones:: ds 7   ; $CFDA: per-monster (0-6) disc-stone count. A disc stone
-                            ;   is earned by collecting 4 disc-stone pieces and then
-                            ;   touching that monster on its bonus stage; Pashute's
-                            ;   shrine spends one to regenerate uses (Func_18_4088
-                            ;   decrements it as Func_18_4074 adds 5 to wMonsterUses).
+wHiScore::          ds 4    ; $CFD2: hi-score, 4-byte BCD little-endian (max 99999999).
+                            ;   e.g. bytes 55 54 53 00 read as the number 535455. (The
+                            ;   low three bytes spell "UTS" in ASCII — a coincidence.)
+                    ds 1    ; $CFD6
+wDiscStoneFragments:: ds 1  ; $CFD7: loose disc-stone pieces held (4 pieces = 1 stone)
+wFreeDiscStones::   ds 1    ; $CFD8: assembled disc stones not yet bound to a monster
+                    ds 1    ; $CFD9
+wMonsterDiscStones:: ds 7   ; $CFDA: per-monster (0-6) count of disc stones bound to
+                            ;   that monster. A free disc stone (wFreeDiscStones) is
+                            ;   bound by touching the monster on its bonus stage;
+                            ;   Pashute's shrine spends one bound stone to regenerate
+                            ;   uses (Func_18_4088 decrements it as Func_18_4074 adds
+                            ;   5 to wMonsterUses).
 wMonsterUses::      ds 7    ; $CFE1: per-monster (0-6) summon uses remaining, stored
                             ;   as BCD (0-99). Pashute's shrine adds 5 via `add a,$05`
                             ;   + `daa` (Func_18_4074); read through wActiveMonster
                             ;   (Func_18_403C). Tiger=$CFE1 … Suezo=$CFE6, Phenix=$CFE7.
-                    ds 8    ; $CFE8-$CFEF
+                    ds 7    ; $CFE8-$CFEE
+wSilverKeys::       ds 1    ; $CFEF: silver keys held (unlock tower doors). Identified
+                            ;   by value-match (the sole "10" in the block); code
+                            ;   xref still TBD.
 
 
 SECTION "wram_floor_state", WRAM0[$CFF0]
@@ -89,6 +98,11 @@ SECTION "wram_floor_state", WRAM0[$CFF0]
 wCFF0::             ds 1    ; tower progress; gates Naji's Restart + Ask render
                     ds 1    ; $CFF1
 wCurrentFloor::     ds 1    ; current tower floor — rendered by $0F in "Level [X]"
+                    ds 1    ; $CFF3
+wItemsSeen::        ds 4    ; $CFF4: item-encyclopedia "seen" bitfield (up to 32 items),
+                            ;   little-endian. Bit i set = item (i+1) has been seen
+                            ;   (so item 1 = bit 0). Drives the encyclopedia's seen/
+                            ;   unseen list.
 
 
 SECTION "wram_npc_state", WRAMX[$D0DC], BANK[1]

@@ -6471,7 +6471,7 @@ Func_01_46f8:
 	cp $0a
 	jr z, Func_01_470d
 	ld c, a
-	ld a, [$cfef]
+	ld a, [wSilverKeys]
 	cp c
 	jr nz, Func_01_4748
 
@@ -6556,9 +6556,9 @@ Func_01_47a9:
 	ret z
 	or a
 	ret nz
-	ld a, [$cfef]
+	ld a, [wSilverKeys]
 	inc a
-	ld [$cfef], a
+	ld [wSilverKeys], a
 	call Func_01_4833
 	ret
 Func_01_47bc:
@@ -7083,7 +7083,7 @@ Func_01_4b7c:
 	jr nz, Func_01_4b96
 	ld a, [wActiveFloor]
 	ld c, a
-	ld a, [$cfef]
+	ld a, [wSilverKeys]
 	cp c
 	jr z, Func_01_4ba8
 	jr Func_01_4ba3
@@ -10255,7 +10255,7 @@ Func_01_6862:
 	pop af
 	ret
 Func_01_686f:
-	ld a, [$cfd8]
+	ld a, [wFreeDiscStones]
 	or a
 	ret z
 	ld a, [hl]
@@ -10268,7 +10268,7 @@ Func_01_686f:
 	jr z, Data_01_68c8
 	inc a
 	ld [hl], a
-	ld hl, $cfd8
+	ld hl, wFreeDiscStones
 	dec [hl]
 	pop hl
 	push hl
@@ -24973,12 +24973,12 @@ Func_05_463a:
 	xor a
 	ld [wCFF0], a
 	ld [wCurrentFloor], a
-	ld [$cfef], a
+	ld [wSilverKeys], a
 	ld [$cff3], a
 	ld [$cfed], a
 	ld [$cfee], a
-	ld [$cfd7], a
-	ld [$cfd8], a
+	ld [wDiscStoneFragments], a
+	ld [wFreeDiscStones], a
 	ld [$cfe8], a
 	ld hl, wMonsterDiscStones
 	ld [hl+], a
@@ -25012,7 +25012,7 @@ Func_05_4690:
 	ret
 Func_05_4699:
 	xor a
-	ld [$cff4], a
+	ld [wItemsSeen], a
 	ld [$cff5], a
 	ld [$cff6], a
 	ld [$cff7], a
@@ -25059,7 +25059,7 @@ Func_05_46c2:
 	ret
 Func_05_46e1:
 	ld hl, $c2c6
-	ld de, wSaveTag
+	ld de, wHiScore
 	ld c, $05
 Func_05_46e9:
 	ld a, [hl+]
@@ -25073,9 +25073,9 @@ Func_05_46f0:
 	cp $05
 	ret nz
 	ld hl, $c2ae
-	ld a, [$cfd7]
+	ld a, [wDiscStoneFragments]
 	ld [hl+], a
-	ld a, [$cfd8]
+	ld a, [wFreeDiscStones]
 	ld [hl+], a
 	ld a, [$cfd9]
 	ld [hl+], a
@@ -25132,9 +25132,9 @@ Func_05_473d:
 	ret nz
 	ld hl, $c2ae
 	ld a, [hl+]
-	ld [$cfd7], a
+	ld [wDiscStoneFragments], a
 	ld a, [hl+]
-	ld [$cfd8], a
+	ld [wFreeDiscStones], a
 	ld a, [hl+]
 	ld [$cfd9], a
 	ld de, wMonsterDiscStones
@@ -25304,7 +25304,7 @@ Func_05_4865:
 	xor a
 	ret
 Func_05_486a:
-	ld hl, wSaveTag
+	ld hl, wHiScore
 	ld de, $487f
 	ld a, [de]
 	ld [hl+], a
@@ -32588,7 +32588,7 @@ Func_0f_4604:
 	ret z
 	xor a
 	ldh [rVBK], a
-	ld a, [$cfef]
+	ld a, [wSilverKeys]
 	ld d, a
 	ld e, $0a
 	call Func_00_3774
@@ -32609,7 +32609,7 @@ Func_0f_462b:
 	ld [$cf3c], a
 	ld [$cf3d], a
 	ld [$cf3e], a
-	ld a, [$cfd7]
+	ld a, [wDiscStoneFragments]
 	or a
 	jr z, Func_0f_465c
 	dec a
@@ -32754,7 +32754,7 @@ Func_0f_4722:
 	xor a
 	ldh [rVBK], a
 	call WaitForHBlank
-	ld hl, wSaveTag
+	ld hl, wHiScore
 	ld de, $9cd2
 	ld a, [hl]
 	and $0f
@@ -32959,7 +32959,7 @@ Func_0f_489f:
 	xor a
 	ldh [rVBK], a
 	call WaitForHBlank
-	ld a, [$cfd8]
+	ld a, [wFreeDiscStones]
 	add a, $9a
 	ld hl, $9c52
 	ld [hl], a
@@ -33139,7 +33139,7 @@ Func_0f_49dc:
 	push hl
 	swap a
 	and $0f
-	ld hl, $cff4
+	ld hl, wItemsSeen
 	rst $00
 	ld d, [hl]
 	ld a, b
@@ -36209,7 +36209,7 @@ SECTION "analyzed_048c02", ROMX[$4c02], BANK[$12]
 
 Func_12_4c02:
 	ld de, $a6f0
-	ld hl, wSaveTag
+	ld hl, wHiScore
 	ld c, $05
 	call CopyDEtoHL
 	call Func_00_09ff
@@ -49614,7 +49614,7 @@ Func_30_5697:
 	ret
 Func_30_5698:
 	call WaitForHBlank
-	ld hl, wSaveTag
+	ld hl, wHiScore
 	ld de, $99ad
 	ld a, [hl]
 	call Func_00_3635
