@@ -79,6 +79,20 @@ ASSETS = {
         # index >=$80 -> tile=index; index <$80 -> tile=index+$100 (the $9000 set).
         "addressing": "8800",
     },
+    # Toamuna's portrait (ranch save NPC; shown by her "what do you want to do?"
+    # menu). Same descriptor layout as Kalum (20x11, tiles at $1a:$4000 -> VRAM
+    # bank 1 $8000, $8800 addressing), one bank further along at $1a. Found by
+    # following her script's far-calls (tools/find_portraits.py).
+    "toamuna_portrait": {
+        "bank": 0x1a,
+        "tiles_addr": 0x68000,    # $1a:$4000
+        "tiles_count": 384,
+        "palette_addr": None,
+        "palette_count": 0,
+        "desc_addr": 0x69880,     # $1a:$5880
+        "index_base": 0,
+        "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).
