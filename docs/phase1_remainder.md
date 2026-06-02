@@ -6,10 +6,12 @@ map is complete; phase 2 is the semantic conversion to a real source project.
 **Status: PHASE 1 COMPLETE — 100% mapped (`find_gaps` = 0; every byte typed as
 code/data/gfx/asciz/padding). ROM byte-exact throughout.**
 
-> Snapshots: start 91.1% / 93,265 B; after static carve 96.4%; final 100%.
-> NB: `make extract`'s coverage summary still prints ~4,131 "uncovered" — that's a
-> known `compute_coverage` overlap-reconcile artifact (a constant offset), not real
-> gaps. `find_gaps` after `reconcile_analyzed_sections` is authoritative and = 0.
+> Snapshots: start 91.1% / 93,265 B; after static carve 96.4%; final 100.0% / 0
+> uncovered (both `make extract`'s summary and `find_gaps` agree).
+> (During the carve the summary briefly under-reported by ~4,131 B because
+> `compute_coverage`'s analyzed.asm branch didn't handle `ascii`/`asciz`/`padding`
+> sections — fixed, with a regression test, in the `extract: fix compute_coverage`
+> commit.)
 
 How it was closed (see git log `map: ...`):
 - static carve: padding (`$00`), `$ff` filler, `find_screens` tilemaps, text
