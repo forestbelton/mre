@@ -29,22 +29,22 @@ SECTION "verde_0614f5", ROMX[$54f5], BANK[$18]
 
 
 VerdeEntry:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_IF_EQ wVerdeState, $04, verde_5929
-    SCRIPT_IF_EQ wVerdeState, $03, verde_5833
-    SCRIPT_IF_EQ wVerdeState, $01, verde_57cc
-    SCRIPT_FAR_CALL $5398, $18
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
+    SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$04, .Target=verde_5929
+    SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$03, .Target=verde_5833
+    SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$01, .Target=verde_57cc
+    SCRIPT_FAR_CALL .Addr=$5398, .Bank=$18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Oh?"
     SCRIPT_NEWLINE
     db "Never seen you."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $547f, $18
+    SCRIPT_RENDERER .Addr=$547f, .Bank=$18
     db "What?"
     SCRIPT_NEWLINE
     db "Came to help?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Hmm... I see."
     SCRIPT_NEWLINE
     db "Naji did, huh?"
@@ -57,17 +57,17 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "monster breeder"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $54ba, $18
+    SCRIPT_RENDERER .Addr=$54ba, .Bank=$18
     db "I am the owner"
     SCRIPT_NEWLINE
     db "of the checkroom"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "I'm here just"
     SCRIPT_NEWLINE
     db "like the others"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $54ba, $18
+    SCRIPT_RENDERER .Addr=$54ba, .Bank=$18
     db "Made it up here"
     SCRIPT_NEWLINE
     db "with my energy"
@@ -88,7 +88,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "of what to do."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "You're amazing,"
     SCRIPT_NEWLINE
     db "here in a flash."
@@ -101,7 +101,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "help each other"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $54ba, $18
+    SCRIPT_RENDERER .Addr=$54ba, .Bank=$18
     db "from here on."
     SCRIPT_NEWLINE
     db "But I'd be"
@@ -110,7 +110,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "than help."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Instead, I'll be"
     SCRIPT_NEWLINE
     db "a supporter."
@@ -135,49 +135,49 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "Good luck!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $d0e1, $01
-    SCRIPT_WRITE_WRAM wRanchProgress, $03
-    SCRIPT_WRITE_WRAM wNajiState, $02
-    SCRIPT_WRITE_WRAM $d0de, $02
-    SCRIPT_WRITE_WRAM wVerdeState, $01
+    SCRIPT_WRITE_WRAM .Addr=$d0e1, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$03
+    SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$02
+    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$02
+    SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
     SCRIPT_END
 
 verde_57cc:
-    SCRIPT_FAR_CALL $5345, $18
-    SCRIPT_CYCLE 4
+    SCRIPT_FAR_CALL .Addr=$5345, .Bank=$18
+    SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, verde_57dd, verde_57fc, verde_580a, verde_5823
 
 verde_57dd:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Oh, hi!"
     SCRIPT_NEWLINE
     db "How's it going?"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_57fc:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Hello!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_580a:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Welcome!"
     SCRIPT_NEWLINE
     db "I'm glad"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_5823:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Welcome!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_5833:
-    SCRIPT_FAR_CALL $5345, $18
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_FAR_CALL .Addr=$5345, .Bank=$18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "You're here."
     SCRIPT_NEWLINE
     db "I thank you."
@@ -210,12 +210,12 @@ verde_5833:
     SCRIPT_NEWLINE
     db "Go try it out!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wVerdeState, $01
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_5929:
-    SCRIPT_FAR_CALL $5345, $18
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_FAR_CALL .Addr=$5345, .Bank=$18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Oh!"
     SCRIPT_NEWLINE
     db "You're here!"
@@ -242,48 +242,48 @@ verde_5929:
     SCRIPT_NEWLINE
     db "more of them."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wVerdeState, $01
-    SCRIPT_GOTO verde_59d4
+    SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
+    SCRIPT_GOTO .Target=verde_59d4
 
 verde_59d4:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Let's see."
     SCRIPT_NEWLINE
     db "What can I"
     SCRIPT_WAIT
     db "do for you?"
-    SCRIPT_FAR_CALL $63ce, $1f
-    SCRIPT_FAR_CALL $53eb, $18
+    SCRIPT_FAR_CALL .Addr=$63ce, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$53eb, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, verde_5a3a, verde_5adb, verde_5bf1, verde_5c9c, verde_5da4
 
 verde_5a0f:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Do you want"
     SCRIPT_NEWLINE
     db "something else?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
     SCRIPT_JUMP_TABLE wYNResult, verde_59d4, verde_5da4
 
 verde_5a3a:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "OK!"
     SCRIPT_NEWLINE
     db "I'll take care"
     SCRIPT_WAIT
     db "of it!"
     SCRIPT_WAIT
-    SCRIPT_IF_EQ $cfd9, $ff, verde_5a81
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=verde_5a81
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "OK! It's "
-    SCRIPT_INDEXED_STR $cfd9
+    SCRIPT_INDEXED_STR .Addr=$cfd9
     db "."
     SCRIPT_NEWLINE
     db "I got it."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $cfd9, $ff
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_WRITE_WRAM .Addr=$cfd9, .Value=$ff
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5a81:
     db "Hm? Looks like"
@@ -298,10 +298,10 @@ verde_5a81:
     SCRIPT_NEWLINE
     db "the checkroom."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5adb:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "OK!"
     SCRIPT_NEWLINE
     db "You'll take"
@@ -312,24 +312,24 @@ verde_5adb:
     SCRIPT_NEWLINE
     db "Your monster is?"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5321, $18
-    SCRIPT_IF_NEQ wYNResult, $00, verde_5b43
-    SCRIPT_RENDERER $54ba, $18
+    SCRIPT_FAR_CALL .Addr=$5321, .Bank=$18
+    SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$00, .Target=verde_5b43
+    SCRIPT_RENDERER .Addr=$54ba, .Bank=$18
     db "Oh yes,"
     SCRIPT_NEWLINE
     db "I have it here."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5b43:
-    SCRIPT_IF_NEQ wYNResult, $01, verde_5b6b
+    SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$01, .Target=verde_5b6b
     db "Yes! It's "
-    SCRIPT_INDEXED_STR $cfbb
+    SCRIPT_INDEXED_STR .Addr=$cfbb
     db "."
     SCRIPT_NEWLINE
     db "I have it here."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_5baf
+    SCRIPT_GOTO .Target=verde_5baf
 
 verde_5b6b:
     db "Oh yes,"
@@ -339,10 +339,10 @@ verde_5b6b:
     db "So, which one"
     SCRIPT_NEWLINE
     db "are you taking?"
-    SCRIPT_FAR_CALL $658a, $1f
-    SCRIPT_FAR_CALL $53eb, $18
+    SCRIPT_FAR_CALL .Addr=$658a, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$53eb, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_IF_EQ $cfbb, $07, verde_5a0f
+    SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=verde_5a0f
 
 verde_5baf:
     db "This one, right?"
@@ -353,13 +353,13 @@ verde_5baf:
     SCRIPT_NEWLINE
     db "of it, okay?"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $404d, $18
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5bf1:
-    SCRIPT_FAR_CALL $5321, $18
-    SCRIPT_IF_EQ wYNResult, $01, verde_5c4d
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_FAR_CALL .Addr=$5321, .Bank=$18
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=verde_5c4d
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "OK! Switch of"
     SCRIPT_NEWLINE
     db "monsters, right?"
@@ -367,14 +367,14 @@ verde_5bf1:
     db "Okay, choose the"
     SCRIPT_NEWLINE
     db "next monster"
-    SCRIPT_FAR_CALL $658a, $1f
-    SCRIPT_FAR_CALL $53eb, $18
+    SCRIPT_FAR_CALL .Addr=$658a, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$53eb, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_IF_EQ $cfbb, $07, verde_5a0f
-    SCRIPT_GOTO verde_5baf
+    SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=verde_5a0f
+    SCRIPT_GOTO .Target=verde_5baf
 
 verde_5c4d:
-    SCRIPT_RENDERER $54ba, $18
+    SCRIPT_RENDERER .Addr=$54ba, .Bank=$18
     db "Well."
     SCRIPT_NEWLINE
     db "What?"
@@ -387,10 +387,10 @@ verde_5c4d:
     SCRIPT_NEWLINE
     db "checked in."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5c9c:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "Let me explain."
     SCRIPT_WAIT
     db "This checkroom"
@@ -427,10 +427,10 @@ verde_5c9c:
     SCRIPT_NEWLINE
     db "It's simple."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_5a0f
+    SCRIPT_GOTO .Target=verde_5a0f
 
 verde_5da4:
-    SCRIPT_RENDERER $53f7, $18
+    SCRIPT_RENDERER .Addr=$53f7, .Bank=$18
     db "OK!"
     SCRIPT_NEWLINE
     db "That's it."
@@ -447,9 +447,9 @@ SECTION "verde_062092_empty", ROMX[$6092], BANK[$18]
 
 
 VerdeEmptyEntry:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_IF_EQ wTradehouseState, $01, verde_60f9
-    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
+    SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=verde_60f9
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
     db "Nobody seems"
     SCRIPT_NEWLINE
     db "to be here."
@@ -458,24 +458,24 @@ VerdeEmptyEntry:
     SCRIPT_NEWLINE
     db "There's a note!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5fcb, $18
+    SCRIPT_FAR_CALL .Addr=$5fcb, .Bank=$18
     db "Link function"
     SCRIPT_NEWLINE
     db "seems usable."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wTradehouseState, $01
-    SCRIPT_FAR_CALL $5f71, $18
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_WRITE_WRAM .Addr=wTradehouseState, .Value=$01
+    SCRIPT_FAR_CALL .Addr=$5f71, .Bank=$18
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_60f9:
-    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
 
 verde_60fd:
     db "What would you"
     SCRIPT_NEWLINE
     db "like to play?"
-    SCRIPT_FAR_CALL $5f50, $1f
-    SCRIPT_FAR_CALL $5fbf, $18
+    SCRIPT_FAR_CALL .Addr=$5f50, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$5fbf, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, verde_612b, verde_6190, verde_646b
 
@@ -484,28 +484,28 @@ verde_612b:
     SCRIPT_NEWLINE
     db "the room, then."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $18f7, $00
-    SCRIPT_FAR_CALL $5f6e, $18
-    SCRIPT_IF_EQ $c2c0, $04, verde_616d
-    SCRIPT_IF_EQ $c2c0, $05, verde_616d
-    SCRIPT_IF_EQ $c2c0, $06, verde_616d
-    SCRIPT_FAR_CALL $195e, $00
-    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_FAR_CALL .Addr=$18f7, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$04, .Target=verde_616d
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$05, .Target=verde_616d
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$06, .Target=verde_616d
+    SCRIPT_FAR_CALL .Addr=$195e, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
 
 verde_616d:
     db "Done. OK, let's"
     SCRIPT_NEWLINE
     db "leave the room."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_6190:
     db "Okay. Let me try"
     SCRIPT_NEWLINE
     db "the exchange."
     SCRIPT_YN_CUE
-    SCRIPT_WRITE_WRAM $d5c2, $00
-    SCRIPT_FAR_CALL $4040, $31
+    SCRIPT_WRITE_WRAM .Addr=$d5c2, .Value=$00
+    SCRIPT_FAR_CALL .Addr=$4040, .Bank=$31
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE $d5c2, verde_624e, verde_61c3, verde_6203, verde_6238
 
@@ -518,7 +518,7 @@ verde_61c3:
     SCRIPT_NEWLINE
     db "both ready."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_6203:
     db "You don't seem"
@@ -529,14 +529,14 @@ verde_6203:
     SCRIPT_NEWLINE
     db "Link Cable!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_6238:
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_624e:
     db "But before that,"
@@ -547,24 +547,24 @@ verde_624e:
     SCRIPT_NEWLINE
     db "Okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ wYNResult, $00, verde_62b3
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=verde_62b3
     db "Hmmm..."
     SCRIPT_WAIT
     db "Let's not do it"
     SCRIPT_NEWLINE
     db "this time."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_62b3:
     db "Now saving."
     SCRIPT_NEWLINE
     db "Leave Game Pak."
     SCRIPT_WAIT
-    SCRIPT_REPEAT_CHAR 120
+    SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL $4b67, $12
+    SCRIPT_FAR_CALL .Addr=$4b67, .Bank=$12
     db "We're ready! Now"
     SCRIPT_NEWLINE
     db "start exchange!"
@@ -575,18 +575,18 @@ verde_62b3:
     SCRIPT_NEWLINE
     db "room to exchange"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $cfbe, $02
-    SCRIPT_FAR_CALL $1937, $00
-    SCRIPT_FAR_CALL $5dec, $18
-    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
+    SCRIPT_FAR_CALL .Addr=$1937, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5dec, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
     db "Next, choose a"
     SCRIPT_NEWLINE
     db "room to receive."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $cfbe, $01
-    SCRIPT_FAR_CALL $1937, $00
-    SCRIPT_FAR_CALL $5df3, $18
-    SCRIPT_FAR_CALL $5f6e, $18
+    SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
+    SCRIPT_FAR_CALL .Addr=$1937, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5df3, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
     db "You're both OK?"
     SCRIPT_NEWLINE
     db "Let's start!"
@@ -603,9 +603,9 @@ verde_62b3:
     SCRIPT_NEWLINE
     db "a little while."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $44c9, $31
-    SCRIPT_FAR_CALL $5f6e, $18
-    SCRIPT_FAR_CALL $5de3, $18
+    SCRIPT_FAR_CALL .Addr=$44c9, .Bank=$31
+    SCRIPT_FAR_CALL .Addr=$5f6e, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5de3, .Bank=$18
     SCRIPT_JUMP_TABLE $d5c2, verde_63f5, verde_6424, verde_6455, verde_6455
 
 verde_63f5:
@@ -617,7 +617,7 @@ verde_63f5:
     SCRIPT_NEWLINE
     db "a success!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_6424:
     db "Uh-oh. Something"
@@ -626,14 +626,14 @@ verde_6424:
     SCRIPT_WAIT
     db "Let's try again."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_6455:
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_60fd
+    SCRIPT_GOTO .Target=verde_60fd
 
 verde_646b:
     db "I should stop"
@@ -641,116 +641,116 @@ verde_646b:
     db "for now."
     SCRIPT_WAIT
     SCRIPT_END
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_CYCLE 4
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, verde_6499, verde_64b5, verde_64d7, verde_64fd
 
 verde_6499:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Hey!"
     SCRIPT_NEWLINE
     db "How's it going?"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_64b5:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Hey! Howdy?"
     SCRIPT_NEWLINE
     db "Have some fun!"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_64d7:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Oh! You again!"
     SCRIPT_NEWLINE
     db "Take your time!"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_64fd:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Wow!"
     SCRIPT_NEWLINE
     db "Doing your best?"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 VerdeSharedMenu:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
-    SCRIPT_FAR_CALL $5e43, $1f
-    SCRIPT_FAR_CALL $5ebc, $18
+    SCRIPT_FAR_CALL .Addr=$5e43, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$5ebc, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, verde_654b, verde_659a, verde_6614, verde_6641, verde_69ab
 
 verde_654b:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Leave it to me!"
     SCRIPT_NEWLINE
     db "I got it ready."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $1982, $00
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_FAR_CALL .Addr=$1982, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Oh, you're done?"
     SCRIPT_NEWLINE
     db "Great job!"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_659a:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Want to try a"
     SCRIPT_NEWLINE
     db "room. Good luck!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $18f7, $00
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_IF_EQ $c2c0, $04, verde_65fd
-    SCRIPT_IF_EQ $c2c0, $05, verde_65fd
-    SCRIPT_IF_EQ $c2c0, $06, verde_65fd
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_FAR_CALL .Addr=$18f7, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$04, .Target=verde_65fd
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$05, .Target=verde_65fd
+    SCRIPT_IF_EQ .Addr=$c2c0, .Value=$06, .Target=verde_65fd
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Okay! Now enter"
     SCRIPT_NEWLINE
     db "the room!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $195e, $00
-    SCRIPT_FAR_CALL $5e03, $18
+    SCRIPT_FAR_CALL .Addr=$195e, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
 
 verde_65fd:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Not today, huh?"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_6614:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Now,"
     SCRIPT_NEWLINE
     db "let me explain."
-    SCRIPT_FAR_CALL $5fc3, $1f
-    SCRIPT_FAR_CALL $5ebc, $18
+    SCRIPT_FAR_CALL .Addr=$5fc3, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$5ebc, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, verde_69c9, verde_6a9b, verde_6b62
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_6641:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Well then,"
     SCRIPT_NEWLINE
     db "let's exchange!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $4040, $31
+    SCRIPT_FAR_CALL .Addr=$4040, .Bank=$31
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE $d5c2, verde_66f9, verde_6670, verde_66a6, verde_66df
 
 verde_6670:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Opponent not"
     SCRIPT_NEWLINE
     db "ready yet."
@@ -759,10 +759,10 @@ verde_6670:
     SCRIPT_NEWLINE
     db "when ready."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_66a6:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "You don't look"
     SCRIPT_NEWLINE
     db "ready yet."
@@ -771,27 +771,27 @@ verde_66a6:
     SCRIPT_NEWLINE
     db "Link Cable."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_66df:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_66f9:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "First, I'll save"
     SCRIPT_NEWLINE
     db "current status."
     SCRIPT_WAIT
     db "Okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ wYNResult, $00, verde_676b
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=verde_676b
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "I see. How"
     SCRIPT_NEWLINE
     db "disappointing."
@@ -800,10 +800,10 @@ verde_66f9:
     SCRIPT_NEWLINE
     db "if you like."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_676b:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Okay. Looks like"
     SCRIPT_NEWLINE
     db "you're ready."
@@ -812,44 +812,44 @@ verde_676b:
     SCRIPT_NEWLINE
     db "Wait a second."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "I'm saving now."
     SCRIPT_NEWLINE
     db "Leave Game Pak."
-    SCRIPT_REPEAT_CHAR 120
+    SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL $4b67, $12
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_FAR_CALL .Addr=$4b67, .Bank=$12
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Sorry you waited"
     SCRIPT_NEWLINE
     db "Let's exchange."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Okay, now choose"
     SCRIPT_WAIT
     db "the room you"
     SCRIPT_NEWLINE
     db "want to exchange"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $cfbe, $02
-    SCRIPT_FAR_CALL $1937, $00
-    SCRIPT_FAR_CALL $5dec, $18
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
+    SCRIPT_FAR_CALL .Addr=$1937, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5dec, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Now, choose a"
     SCRIPT_NEWLINE
     db "room to receive."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM $cfbe, $01
-    SCRIPT_FAR_CALL $1937, $00
-    SCRIPT_FAR_CALL $5df3, $18
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
+    SCRIPT_FAR_CALL .Addr=$1937, .Bank=$00
+    SCRIPT_FAR_CALL .Addr=$5df3, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Are you both OK?"
     SCRIPT_NEWLINE
     db "Let's get going."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Leave Link Cable"
     SCRIPT_NEWLINE
     db "and Game Pak."
@@ -862,28 +862,28 @@ verde_676b:
     SCRIPT_NEWLINE
     db "a second."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $44c9, $31
-    SCRIPT_FAR_CALL $5e03, $18
-    SCRIPT_FAR_CALL $5de3, $18
+    SCRIPT_FAR_CALL .Addr=$44c9, .Bank=$31
+    SCRIPT_FAR_CALL .Addr=$5e03, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=$5de3, .Bank=$18
     SCRIPT_JUMP_TABLE $d5c2, verde_68fc, verde_6958, verde_6991, verde_6991
 
 verde_68fc:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Whoa! Looks like"
     SCRIPT_NEWLINE
     db "it was a success"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Exchange done."
     SCRIPT_WAIT
     db "Call if you need"
     SCRIPT_NEWLINE
     db "anything else."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_6958:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Hmmm. Looks"
     SCRIPT_NEWLINE
     db "like we failed."
@@ -892,18 +892,18 @@ verde_6958:
     SCRIPT_NEWLINE
     db "it again?"
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_6991:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu
 
 verde_69ab:
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Okay! Please"
     SCRIPT_NEWLINE
     db "come again!"
@@ -911,7 +911,7 @@ verde_69ab:
     SCRIPT_END
 
 verde_69c9:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "You can make 3"
     SCRIPT_NEWLINE
     db "rooms. Choose a"
@@ -940,15 +940,15 @@ verde_69c9:
     SCRIPT_NEWLINE
     db "Have fun!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_6614
+    SCRIPT_GOTO .Target=verde_6614
 
 verde_6a9b:
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Link Exchange,"
     SCRIPT_NEWLINE
     db "right?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "This lets you"
     SCRIPT_NEWLINE
     db "exchange"
@@ -973,7 +973,7 @@ verde_6a9b:
     SCRIPT_WAIT
     db "Enjoy!"
     SCRIPT_WAIT
-    SCRIPT_GOTO verde_6614
+    SCRIPT_GOTO .Target=verde_6614
 
 verde_6b62:
-    SCRIPT_GOTO VerdeSharedMenu
+    SCRIPT_GOTO .Target=VerdeSharedMenu

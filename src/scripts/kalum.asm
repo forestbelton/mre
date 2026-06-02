@@ -16,10 +16,10 @@ SECTION "kalum_07c2b1", ROMX[$42b1], BANK[$1f]
 KalumScript:
     ; Greeting selector on $d60f (encounter state), set before the script runs.
     ; Kalum_StartEncounter enters the script here at $42b1.
-    SCRIPT_IF_EQ $d60f, $01, $4345
-    SCRIPT_IF_EQ $d60f, $02, $43a0
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.KalumVictory
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.KalumDefeat
     ; Default greeting (first visit) — was the mislabeled start at $42bd:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Wow! I can't"
     SCRIPT_NEWLINE
     db "believe people"
@@ -40,10 +40,11 @@ KalumScript:
     SCRIPT_NEWLINE
     db "Selketo!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait, $1f
-    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait2, $1f
-    SCRIPT_REPEAT_CHAR 90
+    SCRIPT_FAR_CALL .Addr=Kalum_ShowMonsterPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Kalum_ShowMonsterPortrait2, .Bank=$1f
+    SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
+.KalumVictory:
     db "Unbelievable..."
     SCRIPT_WAIT
     db "My Selketo"
@@ -59,6 +60,7 @@ KalumScript:
     db "are up here!"
     SCRIPT_WAIT
     SCRIPT_END
+.KalumDefeat:
     db "Hm. Im sorry"
     SCRIPT_NEWLINE
     db "to say, but..."

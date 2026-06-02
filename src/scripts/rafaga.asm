@@ -17,10 +17,10 @@ SECTION "rafaga_07c857", ROMX[$4857], BANK[$1f]
 
 RafagaScript:
     ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ $d60f, $01, $495f
-    SCRIPT_IF_EQ $d60f, $02, $49f3
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=$495f
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=$49f3
     ; Default greeting — was the mislabeled start at $4863:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Hello. You're"
     SCRIPT_NEWLINE
     db "finally here."
@@ -53,9 +53,9 @@ RafagaScript:
     SCRIPT_NEWLINE
     db "Time to fight."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $47a8, $1f
-    SCRIPT_FAR_CALL $47b1, $1f
-    SCRIPT_REPEAT_CHAR 90
+    SCRIPT_FAR_CALL .Addr=$47a8, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$47b1, .Bank=$1f
+    SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
     db "This is bad."
     SCRIPT_NEWLINE

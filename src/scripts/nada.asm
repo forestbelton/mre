@@ -1,11 +1,11 @@
 ; Nada (final tower boss).
-; 
+;
 ; References her henchmen — "I heard about you from Rafaga" — and
 ; expects the player to have defeated them. She's the tower's
 ; antagonist, the priest who corrupted it (per Toamuna's intro
 ; text: "a priest named Nada came here, and this tower became
 ; full of Baddies").
-; 
+;
 ; Note: the literal string "Zan" (her monster per game lore) does
 ; not appear in the ROM as ASCII — likely encoded as an indexed
 ; glyph via the $11 INDEXED_STR opcode the engine uses for monster
@@ -23,12 +23,12 @@ SECTION "nada_07d0d6", ROMX[$50d6], BANK[$1f]
 
 NadaScript:
     ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ $d60f, $01, $5473
-    SCRIPT_IF_EQ $d60f, $02, $57ea
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.NadaVictory
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.NadaDefeat
     ; Default greeting — was the mislabeled start at $50e2:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
-    SCRIPT_FAR_CALL $4d97, $1f
-    SCRIPT_RENDERER $4f14, $1f
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
+    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
+    SCRIPT_RENDERER .Addr=$4f14, .Bank=$1f
     db "Wow. It took you"
     SCRIPT_NEWLINE
     db "a while. I heard"
@@ -77,18 +77,18 @@ NadaScript:
     SCRIPT_NEWLINE
     db "you should know."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5e5b, $18
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Hm, I don't know"
     SCRIPT_WAIT
     db "Ask the tower."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $4dfe, $1f
-    SCRIPT_RENDERER $4f2f, $1f
+    SCRIPT_FAR_CALL .Addr=$4dfe, .Bank=$1f
+    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP!"
-    SCRIPT_WRITE_WRAM $d611, $01
+    SCRIPT_WRITE_WRAM .Addr=$d611, .Value=$01
     SCRIPT_WAIT
     db "You hear that?!"
     SCRIPT_NEWLINE
@@ -98,8 +98,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "spare your life!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5e5b, $18
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "Heh! I don't"
     SCRIPT_NEWLINE
     db "think so."
@@ -112,8 +112,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "fool me."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $4dfe, $1f
-    SCRIPT_RENDERER $4f2f, $1f
+    SCRIPT_FAR_CALL .Addr=$4dfe, .Bank=$1f
+    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP, SNAP!"
@@ -126,8 +126,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "any angrier!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5e5b, $18
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "Sorry, but this"
     SCRIPT_NEWLINE
     db "is how it goes."
@@ -138,7 +138,7 @@ NadaScript:
     SCRIPT_WAIT
     db "be gone soon."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $4e65, $1f
+    SCRIPT_FAR_CALL .Addr=$4e65, .Bank=$1f
     db "!!!"
     SCRIPT_NEWLINE
     db "SNAAAAAAAP!"
@@ -163,20 +163,21 @@ NadaScript:
     SCRIPT_NEWLINE
     db "see what you got"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $4ed2, $1f
-    SCRIPT_FAR_CALL $4edb, $1f
-    SCRIPT_REPEAT_CHAR 90
+    SCRIPT_FAR_CALL .Addr=$4ed2, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$4edb, .Bank=$1f
+    SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
-    SCRIPT_FAR_CALL $4d97, $1f
-    SCRIPT_RENDERER $4f2f, $1f
+.NadaVictory:
+    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
+    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
     db "Unbelievable."
     SCRIPT_WAIT
     db "If I only had"
     SCRIPT_NEWLINE
     db "the great power."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL $5e5b, $18
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "I didn't think"
     SCRIPT_NEWLINE
     db "that this day"
@@ -203,7 +204,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "legendary power."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5ec8, $18
+    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
     db "But just because"
     SCRIPT_NEWLINE
     db "you got here"
@@ -224,7 +225,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "give is that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $5f3c, $18
+    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
     db "silver key you"
     SCRIPT_NEWLINE
     db "picked up. That"
@@ -287,13 +288,14 @@ NadaScript:
     SCRIPT_WAIT
     db "time. See ya!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wNajiMenuShown, $01
-    SCRIPT_WRITE_WRAM wRanchProgress, $04
-    SCRIPT_WRITE_WRAM $d0de, $03
-    SCRIPT_WRITE_WRAM wVerdeState, $03
+    SCRIPT_WRITE_WRAM .Addr=wNajiMenuShown, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$04
+    SCRIPT_WRITE_WRAM .Addr=$d0de, .Value=$03
+    SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$03
     SCRIPT_END
-    SCRIPT_FAR_CALL $4d97, $1f
-    SCRIPT_RENDERER $4f2f, $1f
+.NadaDefeat:
+    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
+    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
     db "No one beats me"
     SCRIPT_NEWLINE
     db "when I'm serious"
@@ -302,7 +304,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "fighting me!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4f14, $1f
+    SCRIPT_RENDERER .Addr=$4f14, .Bank=$1f
     db "After this, I'll"
     SCRIPT_NEWLINE
     db "destroy the land"

@@ -18,10 +18,10 @@ SECTION "tempest_07cb82", ROMX[$4b82], BANK[$1f]
 
 TempestScript:
     ; Greeting selector on $d60f (encounter state); launcher enters here.
-    SCRIPT_IF_EQ $d60f, $01, $4c46
-    SCRIPT_IF_EQ $d60f, $02, $4ce7
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=$4c46
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=$4ce7
     ; Default greeting — was the mislabeled start at $4b8e:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "You've defeated"
     SCRIPT_NEWLINE
     db "them and you"
@@ -38,9 +38,9 @@ TempestScript:
     SCRIPT_NEWLINE
     db "help me again."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $4ad3, $1f
-    SCRIPT_FAR_CALL $4adc, $1f
-    SCRIPT_REPEAT_CHAR 30
+    SCRIPT_FAR_CALL .Addr=$4ad3, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$4adc, .Bank=$1f
+    SCRIPT_REPEAT_CHAR .Count=30
     SCRIPT_ANCHOR
     db "Young one."
     SCRIPT_WAIT

@@ -27,8 +27,8 @@ SECTION "nox_04c449", ROMX[$4449], BANK[$13]
 
 
 NoxScript:
-    SCRIPT_OPEN_TEXTBOX $9c22, $10, $04
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_OPEN_TEXTBOX .Pos=$9c22, .Width=$10, .Height=$04
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Wow, you were"
     SCRIPT_NEWLINE
     db "cool back then."
@@ -37,12 +37,12 @@ NoxScript:
     SCRIPT_NEWLINE
     db "so cool now."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $429c, $13
+    SCRIPT_RENDERER .Addr=$429c, .Bank=$13
     db "Ugh..."
     SCRIPT_NEWLINE
     db "That's harsh."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Cool! I want"
     SCRIPT_NEWLINE
     db "adventure like"
@@ -51,7 +51,7 @@ NoxScript:
     SCRIPT_NEWLINE
     db "tower there now?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $429c, $13
+    SCRIPT_RENDERER .Addr=$429c, .Bank=$13
     db "Of course, Alf."
     SCRIPT_WAIT
     db "You should go"
@@ -62,7 +62,7 @@ NoxScript:
     SCRIPT_NEWLINE
     db "a great time."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Hmmm..."
     SCRIPT_NEWLINE
     db "After I grow up?"
@@ -71,7 +71,7 @@ NoxScript:
     SCRIPT_NEWLINE
     db "to go there now!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $429c, $13
+    SCRIPT_RENDERER .Addr=$429c, .Bank=$13
     db "Whoa whoa whoa!"
     SCRIPT_NEWLINE
     db "It's dangerous."
@@ -80,21 +80,21 @@ NoxScript:
     SCRIPT_NEWLINE
     db "you get lost?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Gimme a break!"
     SCRIPT_WAIT
     db "You're the"
     SCRIPT_NEWLINE
     db "one who's lost!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $429c, $13
+    SCRIPT_RENDERER .Addr=$429c, .Bank=$13
     db "Ugh..."
     SCRIPT_NEWLINE
     db "Alf..."
     SCRIPT_WAIT
     db "You're harsh..."
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Will you take me"
     SCRIPT_NEWLINE
     db "when I'm grown?"
@@ -105,7 +105,7 @@ NoxScript:
     SCRIPT_NEWLINE
     db "wait till then!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $429c, $13
+    SCRIPT_RENDERER .Addr=$429c, .Bank=$13
     db "Okay."
     SCRIPT_NEWLINE
     db "I promise."
@@ -114,7 +114,7 @@ NoxScript:
     SCRIPT_NEWLINE
     db "between men!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER $4284, $13
+    SCRIPT_RENDERER .Addr=$4284, .Bank=$13
     db "Okay! Now I'll"
     SCRIPT_NEWLINE
     db "practice and"
@@ -128,7 +128,7 @@ NoxScript:
     db "see you later!"
     SCRIPT_WAIT
     SCRIPT_END
-    SCRIPT_RENDERER $42b4, $13
+    SCRIPT_RENDERER .Addr=$42b4, .Bank=$13
     db "Whew! I forgot"
     SCRIPT_NEWLINE
     db "just how much"
@@ -144,7 +144,7 @@ NoxScript:
     db "everyone is."
     SCRIPT_WAIT
     SCRIPT_END
-    SCRIPT_RENDERER $42cc, $13
+    SCRIPT_RENDERER .Addr=$42cc, .Bank=$13
     db "I know!"
     SCRIPT_WAIT
     db "I'll go see"
@@ -166,7 +166,7 @@ NoxScript:
     db "Okay, off I go!"
     SCRIPT_WAIT
     SCRIPT_END
-    SCRIPT_RENDERER $42e4, $13
+    SCRIPT_RENDERER .Addr=$42e4, .Bank=$13
     db "Wait, I forgot."
     SCRIPT_NEWLINE
     db "Withouta note,"

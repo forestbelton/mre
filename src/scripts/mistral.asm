@@ -1,5 +1,5 @@
 ; Mistral (tower NPC).
-; 
+;
 ; References Kalum in her first message ("That means Kalum lost"),
 ; placing her as a tower NPC the player encounters after defeating
 ; Kalum. Sics her monster Ferious on the player; three SCRIPT_END
@@ -17,10 +17,10 @@ SECTION "mistral_07c5a5", ROMX[$45a5], BANK[$1f]
 
 MistralScript:
     ; Greeting selector on $d60f (encounter state); launcher enters here at $45a5.
-    SCRIPT_IF_EQ $d60f, $01, $4646
-    SCRIPT_IF_EQ $d60f, $02, $46b6
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$01, .Target=.MistralVictory
+    SCRIPT_IF_EQ .Addr=$d60f, .Value=$02, .Target=.MistralDefeat
     ; Default greeting — was the mislabeled start at $45b1:
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     db "Oh?"
     SCRIPT_NEWLINE
     db "I haven't had a"
@@ -41,10 +41,11 @@ MistralScript:
     SCRIPT_WAIT
     db "Ferious! Come!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $4488, $1f
-    SCRIPT_FAR_CALL $4491, $1f
-    SCRIPT_REPEAT_CHAR 90
+    SCRIPT_FAR_CALL .Addr=$4488, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$4491, .Bank=$1f
+    SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
+.MistralVictory:
     db "I... lost?"
     SCRIPT_WAIT
     db "Don't boast"
@@ -64,6 +65,7 @@ MistralScript:
     db "pass this time."
     SCRIPT_WAIT
     SCRIPT_END
+.MistralDefeat:
     db "Hmph!"
     SCRIPT_WAIT
     db "After all,"

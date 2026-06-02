@@ -27,17 +27,17 @@ SECTION "naji_06317e", ROMX[$717e], BANK[$18]
 NajiScript:
     ; Dialog box at BG tilemap $9982, 16 tiles wide × 4 tiles tall.
     ; Every NPC script starts with this $01 textbox-setup opcode.
-    SCRIPT_OPEN_TEXTBOX $9982, $10, $04
+    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
 
     ; Branch on Naji's NPC state. $D0DD progresses 0 -> 1 (after first
     ; intro) -> 2 (mid-quest "made it half-way" message available once)
     ; -> 4 (end-game). $C2D7 is a separate story flag. The fall-through
     ; is the long first-visit intro below.
-    SCRIPT_IF_EQ wNajiState, $04, NajiCycler
-    SCRIPT_IF_EQ wC2D7, $01, NajiCycler
-    SCRIPT_IF_EQ wNajiState, $02, NajiProgress
-    SCRIPT_IF_EQ wNajiState, $01, NajiCycler
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_IF_EQ .Addr=wNajiState, .Value=$04, .Target=NajiCycler
+    SCRIPT_IF_EQ .Addr=wC2D7, .Value=$01, .Target=NajiCycler
+    SCRIPT_IF_EQ .Addr=wNajiState, .Value=$02, .Target=NajiProgress
+    SCRIPT_IF_EQ .Addr=wNajiState, .Value=$01, .Target=NajiCycler
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "Did you come to"
     SCRIPT_NEWLINE
     db "climb the tower?"
@@ -90,47 +90,47 @@ NajiScript:
     SCRIPT_WAIT
     db "Please help!"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wNajiState, $01
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$01
+    SCRIPT_GOTO .Target=NajiMenu
 
 NajiCycler:
-    SCRIPT_CYCLE 4
+    SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, naji_734a, naji_736d, naji_7394, naji_73bc
 
 naji_734a:
-    SCRIPT_RENDERER $6c9f, $18
+    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
     db "Oh, you're here."
     SCRIPT_NEWLINE
     db "Good luck."
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_GOTO .Target=NajiMenu
 
 naji_736d:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "It's you. Good"
     SCRIPT_NEWLINE
     db "luck, my friend."
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_GOTO .Target=NajiMenu
 
 naji_7394:
-    SCRIPT_RENDERER $6c9f, $18
+    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
     db "It's you. We're"
     SCRIPT_NEWLINE
     db "counting on you."
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_GOTO .Target=NajiMenu
 
 naji_73bc:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "Hey. It's you!"
     SCRIPT_NEWLINE
     db "Take it easy!"
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_GOTO .Target=NajiMenu
 
 NajiProgress:
-    SCRIPT_RENDERER $6c9f, $18
+    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
     db "Oh, it's you"
     SCRIPT_NEWLINE
     db "again. You made"
@@ -151,51 +151,51 @@ NajiProgress:
     SCRIPT_NEWLINE
     db "It gets harder."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wNajiState, $01
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$01
+    SCRIPT_GOTO .Target=NajiMenu
 
 NajiMenu:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "What are your"
     SCRIPT_NEWLINE
     db "plans this time?"
-    SCRIPT_IF_EQ wNajiMenuShown, $01, .checkAsk
-    SCRIPT_IF_NEQ wCFF0, $00, .renderClimb
-    SCRIPT_FAR_CALL $5abc, $1f
-    SCRIPT_GOTO .menuFinalize
+    SCRIPT_IF_EQ .Addr=wNajiMenuShown, .Value=$01, .Target=.checkAsk
+    SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderClimb
+    SCRIPT_FAR_CALL .Addr=$5abc, .Bank=$1f
+    SCRIPT_GOTO .Target=.menuFinalize
 .renderClimb:
-    SCRIPT_FAR_CALL $5b42, $1f
-    SCRIPT_GOTO .menuFinalize
+    SCRIPT_FAR_CALL .Addr=$5b42, .Bank=$1f
+    SCRIPT_GOTO .Target=.menuFinalize
 .checkAsk:
-    SCRIPT_IF_NEQ wCFF0, $00, .renderLeave
-    SCRIPT_FAR_CALL $5bcb, $1f
-    SCRIPT_GOTO .menuFinalize
+    SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderLeave
+    SCRIPT_FAR_CALL .Addr=$5bcb, .Bank=$1f
+    SCRIPT_GOTO .Target=.menuFinalize
 .renderLeave:
-    SCRIPT_FAR_CALL $5c54, $1f
+    SCRIPT_FAR_CALL .Addr=$5c54, .Bank=$1f
 .menuFinalize:
-    SCRIPT_FAR_CALL $6c1b, $18
+    SCRIPT_FAR_CALL .Addr=$6c1b, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
 NajiRestart:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "You've climbed"
     SCRIPT_NEWLINE
     db "till Level "
-    SCRIPT_DECIMAL wCurrentFloor
+    SCRIPT_DECIMAL .Addr=wCurrentFloor
     SCRIPT_WAIT
     db "Want to"
     SCRIPT_NEWLINE
     db "start there?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
-    SCRIPT_FAR_CALL $4094, $1f
-    SCRIPT_FAR_CALL $6ba6, $18
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
+    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$6ba6, .Bank=$18
     SCRIPT_END
 
 NajiClimb:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "I understand."
     SCRIPT_NEWLINE
     db "I'll open the"
@@ -204,31 +204,31 @@ NajiClimb:
     SCRIPT_NEWLINE
     db "are you ready?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
-    SCRIPT_FAR_CALL $4094, $1f
-    SCRIPT_FAR_CALL $6b95, $18
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
+    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$6b95, .Bank=$18
     SCRIPT_END
 
 NajiAskMenu:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "What do you"
     SCRIPT_NEWLINE
     db "want to know?"
-    SCRIPT_FAR_CALL $5d76, $1f
-    SCRIPT_FAR_CALL $6c1b, $18
+    SCRIPT_FAR_CALL .Addr=$5d76, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$6c1b, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, NajiAskTower, NajiAskItem, NajiAskStop
 
 NajiLeave:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "See you later."
     SCRIPT_WAIT
     SCRIPT_END
 
 NajiTowerLong:
-    SCRIPT_IF_EQ wTowerExplained, $01, NajiTowerShort
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_IF_EQ .Addr=wTowerExplained, .Value=$01, .Target=NajiTowerShort
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "10 underground"
     SCRIPT_NEWLINE
     db "levels here. The"
@@ -239,13 +239,13 @@ NajiTowerLong:
     SCRIPT_WAIT
     db "Don't misjudge."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM wTowerExplained, $01
-    SCRIPT_FAR_CALL $4094, $1f
-    SCRIPT_FAR_CALL $6bb7, $18
+    SCRIPT_WRITE_WRAM .Addr=wTowerExplained, .Value=$01
+    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$6bb7, .Bank=$18
     SCRIPT_END
 
 NajiTowerShort:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "You again! Going"
     SCRIPT_NEWLINE
     db "to try again?"
@@ -258,14 +258,14 @@ NajiTowerShort:
     SCRIPT_NEWLINE
     db "show you the way"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL $58d7, $1f
-    SCRIPT_IF_EQ wYNResult, $01, NajiMenu
-    SCRIPT_FAR_CALL $4094, $1f
-    SCRIPT_FAR_CALL $6bb7, $18
+    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
+    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=$6bb7, .Bank=$18
     SCRIPT_END
 
 NajiAskTower:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "Find the golden"
     SCRIPT_NEWLINE
     db "key in each"
@@ -318,10 +318,10 @@ NajiAskTower:
     SCRIPT_NEWLINE
     db "Good luck!"
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiAskMenu
+    SCRIPT_GOTO .Target=NajiAskMenu
 
 NajiAskItem:
-    SCRIPT_RENDERER $6c27, $18
+    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
     db "Let me explain."
     SCRIPT_NEWLINE
     db "There are over"
@@ -370,7 +370,7 @@ NajiAskItem:
     SCRIPT_NEWLINE
     db "more. Bye!"
     SCRIPT_WAIT
-    SCRIPT_GOTO NajiAskMenu
+    SCRIPT_GOTO .Target=NajiAskMenu
 
 NajiAskStop:
-    SCRIPT_GOTO NajiMenu
+    SCRIPT_GOTO .Target=NajiMenu
