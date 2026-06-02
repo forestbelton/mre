@@ -8,3 +8,4 @@ build/
 tools/analyzer/analyzer
 __pycache__/
 *.swp
+rom.gbc.sav.bak-*
