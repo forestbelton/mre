@@ -47,14 +47,10 @@ Room27:
     EMPTY_MONSTER_SLOT
     assert @ - .monsters == sizeof_Monster * 9
 
-    ; arr3: 8 spawner slots (Spawner: X,Y,P0,P1,P2,Index)
+    ; arr3: 4 spawner slots (Spawner: X,Y,P0,P1,P2,Spawn0..5,End)
 .spawners
-    dstruct Spawner, , .X=1, .Y=1, .P0=$01, .P1=$02, .P2=$03, .Index=1
-    dstruct Spawner, , .X=1, .Y=255, .P0=$ff, .P1=$ff, .P2=$ff, .Index=255
-    dstruct Spawner, , .X=9, .Y=1, .P0=$01, .P1=$02, .P2=$03, .Index=1
-    dstruct Spawner, , .X=1, .Y=255, .P0=$ff, .P1=$ff, .P2=$ff, .Index=255
-    dstruct Spawner, , .X=7, .Y=7, .P0=$02, .P1=$00, .P2=$02, .Index=255
+    dstruct Spawner, , .X=1, .Y=1, .P0=$01, .P1=$02, .P2=$03, .Spawn0=1, .Spawn1=1, .Spawn2=SPAWN_NONE, .Spawn3=SPAWN_NONE, .Spawn4=SPAWN_NONE, .Spawn5=SPAWN_NONE, .End=INERT
+    dstruct Spawner, , .X=9, .Y=1, .P0=$01, .P1=$02, .P2=$03, .Spawn0=1, .Spawn1=1, .Spawn2=SPAWN_NONE, .Spawn3=SPAWN_NONE, .Spawn4=SPAWN_NONE, .Spawn5=SPAWN_NONE, .End=INERT
+    dstruct Spawner, , .X=7, .Y=7, .P0=$02, .P1=$00, .P2=$02, .Spawn0=SPAWN_NONE, .Spawn1=SPAWN_NONE, .Spawn2=SPAWN_NONE, .Spawn3=SPAWN_NONE, .Spawn4=SPAWN_NONE, .Spawn5=SPAWN_NONE, .End=INERT
     EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    assert @ - .spawners == sizeof_Spawner * 8
+    assert @ - .spawners == sizeof_Spawner * 4

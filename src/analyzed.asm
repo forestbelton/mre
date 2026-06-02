@@ -1787,7 +1787,7 @@ Func_00_0f41:
 	ld [$c2a8], a
 	ld a, $01
 	ld [$c2a7], a
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, $05
 	ld hl, Func_05_463a
 	call CallBankedHL
@@ -2413,12 +2413,7 @@ Data_00_1340:
 SECTION "analyzed_001345", ROM0[$1345]
 
 Data_00_1345:
-	db $c7, $12, $09
-
-SECTION "analyzed_00134a", ROM0[$134a]
-
-Data_00_134a:
-	db $c8, $14, $09, $61, $01, $c9, $16, $09
+	db $c7, $12, $09, $60, $01, $c8, $14, $09, $61, $01, $c9, $16, $09
 
 SECTION "analyzed_001354", ROM0[$1354]
 
@@ -2930,303 +2925,6 @@ SECTION "analyzed_00166d", ROM0[$166d]
 Data_00_166d:
 	db $5f, $64
 
-SECTION "analyzed_00166f", ROM0[$166f]
-
-Func_00_166f:
-	ld a, $01
-	ld hl, Func_01_569b
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_56c5
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_56fb
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_496b
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_49c8
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_499d
-	call CallBankedHL
-	ld a, $ff
-	ld [$c530], a
-	ld [$c531], a
-	ld [$c52e], a
-	ld [$c52f], a
-Func_00_16ad:
-	ld a, [$7fff]
-	push af
-	ld a, $12
-	ld [$2fff], a
-	call Func_12_4094
-	call $41a9
-	pop af
-	ld [$2fff], a
-	ret
-LoadFloorByMode:
-	ld a, [wActiveFloor]
-	dec a
-	ld d, a
-	ld a, [$c2c1]
-	cp $00
-	jr nz, Func_00_16d0
-	ld a, d
-	jr Func_00_16ed
-Func_00_16d0:
-	cp $01
-	jr nz, Func_00_16d9
-	ld a, $3c
-	add a, d
-	jr Func_00_16ed
-Func_00_16d9:
-	cp $02
-	jr nz, Func_00_16e2
-	ld a, $46
-	add a, d
-	jr Func_00_16ed
-Func_00_16e2:
-	cp $05
-	jr nz, LoadFloorData
-	ld a, $51
-	jr Func_00_16ed
-LoadFloorData:
-	call GetFloorIndex
-Func_00_16ed:
-	ld d, a
-	ld hl, $1567
-	rst $00
-	ld a, [$7fff]
-	push af
-	ld a, [hl]
-	ld [$2fff], a
-	ld a, d
-	add a, a
-	ld hl, $15bf
-	rst $00
-	ld a, [hl+]
-	ld h, [hl]
-	ld l, a
-	ld a, [hl+]
-	ld [$cfbd], a
-	ld a, [hl+]
-	ld [$c2ea], a
-	ld a, [hl+]
-	ld [$c2eb], a
-	ld a, [hl+]
-	ld [$c2e9], a
-	ld a, [hl+]
-	ld [$c4cc], a
-	ld a, [hl+]
-	ld [$c4cb], a
-	ld a, [hl+]
-	ld [wFloorHeight], a
-	ld a, [hl+]
-	ld [wFloorWidth], a
-	ld c, a
-	ld a, $11
-	sub c
-	ld [wFloorRowStride], a
-	ld d, h
-	ld e, l
-	ld hl, wFloorCollision
-	ld a, [wFloorHeight]
-	ld b, a
-Func_00_1733:
-	ld a, [wFloorWidth]
-	ld c, a
-	call CopyDEtoHL
-	ld a, [wFloorRowStride]
-	rst $00
-	dec b
-	jr nz, Func_00_1733
-	ld hl, wFloorGrid
-	ld a, [wFloorHeight]
-	ld b, a
-Func_00_1748:
-	ld a, [wFloorWidth]
-	ld c, a
-	call CopyDEtoHL
-	ld a, [wFloorRowStride]
-	rst $00
-	dec b
-	jr nz, Func_00_1748
-	ld c, $04
-	ld hl, $c4cd
-	call CopyDEtoHL
-	ld c, $2d
-	ld hl, $c4d1
-	call CopyDEtoHL
-	ld c, $30
-	ld hl, $c4fe
-	call CopyDEtoHL
-	ld a, $05
-	ld hl, Func_05_49ef
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_572d
-	call CallBankedHL
-	pop af
-	ld [$2fff], a
-	ret
-
-SECTION "analyzed_001783", ROM0[$1783]
-
-Data_00_1783:
-	db $06, $52, $46, $12, $53, $47, $16, $54, $48, $2c, $55, $49, $38
-
-SECTION "analyzed_001792", ROM0[$1792]
-
-Data_00_1792:
-	db $3a, $57, $4b
-
-SECTION "analyzed_0017a2", ROM0[$17a2]
-
-GetFloorIndex:
-	ld a, [$c2c2]
-	or a
-	jr nz, Data_00_17bd
-	ld a, [wActiveFloor]
-	ld c, a
-	ld hl, $1783
-Func_00_17af:
-	ld a, [hl+]
-	cp $ff
-	jr z, Data_00_17bd
-	cp c
-	jr z, Func_00_17bb
-	inc hl
-	inc hl
-	jr Func_00_17af
-Func_00_17bb:
-	ld a, [hl]
-	ret
-
-SECTION "analyzed_0017c0", ROM0[$17c0]
-
-Func_00_17c0:
-	ld a, [$c2c2]
-	or a
-	jr nz, Data_00_17dc
-	ld a, [wActiveFloor]
-	ld c, a
-	ld hl, $1783
-Func_00_17cd:
-	ld a, [hl+]
-	cp $ff
-	jr z, Data_00_17dc
-	cp c
-	jr z, Func_00_17d9
-	inc hl
-	inc hl
-	jr Func_00_17cd
-Func_00_17d9:
-	inc hl
-	ld a, [hl]
-	ret
-
-SECTION "analyzed_0017de", ROM0[$17de]
-
-DrawFloorPiece:
-	ld h, a
-	ld de, $12fa
-	bit 7, a
-	jr z, Func_00_17ec
-	bit 6, a
-	jr nz, Func_00_17ec
-	ld h, $00
-Func_00_17ec:
-	ld a, $05
-	ld l, a
-Func_00_17ef:
-	ld a, [de]
-	cp h
-	jr z, Func_00_17f7
-	ld a, l
-	rst $30
-	jr Func_00_17ef
-Func_00_17f7:
-	sla b
-	dec b
-	ld hl, $9800
-Func_00_17fd:
-	ld a, $20
-	rst $00
-	dec b
-	jr nz, Func_00_17fd
-	ld a, c
-	rlca
-	dec a
-	rst $00
-	call Func_00_180b
-	ret
-Func_00_180b:
-	xor a
-	ldh [rVBK], a
-	inc de
-	push hl
-	call WaitForHBlank
-	ld a, [de]
-	ld [hl+], a
-	add a, $08
-	ld c, a
-	ld [hl+], a
-	ld a, $1e
-	rst $00
-	ld a, c
-	sub $07
-	ld [hl+], a
-	add a, $08
-	ld [hl], a
-	pop hl
-	ld a, $01
-	ldh [rVBK], a
-	inc de
-	call WaitForHBlank
-	ld a, [de]
-	ld c, a
-	ld [hl+], a
-	ld [hl+], a
-	ld a, $1e
-	rst $00
-	ld a, c
-	ld [hl+], a
-	ld [hl], a
-	ret
-
-SECTION "analyzed_001848", ROM0[$1848]
-
-Func_00_1848:
-	push hl
-	ld a, b
-	swap a
-	and $f0
-	add a, b
-	add a, c
-	ld c, a
-	ld b, $00
-	ld hl, wFloorGrid
-	add hl, bc
-	ld a, [hl]
-	ldh [$ffac], a
-	ld hl, wFloorCollision
-	add hl, bc
-	ld a, [hl]
-	ldh [$ffab], a
-	pop hl
-	ret
-Func_00_1863:
-	xor a
-	ld [$c289], a
-	ld [$c28a], a
-	ldh [$ffa8], a
-	ldh [$ffa9], a
-	ldh [rSCX], a
-	ldh [rSCY], a
-	ret
-
 SECTION "analyzed_001873", ROM0[$1873]
 
 Data_00_1873:
@@ -3363,7 +3061,7 @@ Func_00_1a1e:
 	ld a, $01
 	ld hl, Func_01_439e
 	call CallBankedHL
-	call Func_00_1863
+	call ResetFloorScroll
 	call LoadFloorByMode
 	ld a, $10
 	ld hl, Func_10_4041
@@ -4047,7 +3745,7 @@ Func_00_1f65:
 	jr nz, Func_00_1f65
 	ld a, c
 	rst $00
-	call Func_00_180b
+	call StampFloorMetatile
 Func_00_1f70:
 	ret
 Func_00_1f71:
@@ -4779,7 +4477,7 @@ Func_00_2dc1:
 	ld a, [hl]
 	ld b, a
 	push bc
-	call Func_00_1848
+	call ReadFloorCell
 	pop bc
 	cp $00
 	jr nz, Data_00_2dda
@@ -5653,7 +5351,7 @@ Func_00_34bc:
 	ld a, $00
 	ld hl, Func_00_1219
 	call CallBankedHL
-	call Func_00_1863
+	call ResetFloorScroll
 	push af
 	ld a, $2f
 	call CallLibFuncSaveId
@@ -5663,7 +5361,7 @@ Func_00_34bc:
 	call Func_30_401e
 	ret
 Func_00_34e3:
-	call Func_00_1863
+	call ResetFloorScroll
 	push af
 	ld a, $28
 	call CallLibFuncSaveId
@@ -5681,7 +5379,7 @@ Func_00_34e3:
 SECTION "analyzed_003508", ROM0[$3508]
 
 Func_00_3508:
-	call Func_00_1863
+	call ResetFloorScroll
 	push af
 	ld a, $28
 	call CallLibFuncSaveId
@@ -5695,7 +5393,7 @@ Func_00_3508:
 	ld a, $12
 	ld [$c2a7], a
 	ret
-	call Func_00_1863
+	call ResetFloorScroll
 	push af
 	ld a, $31
 	call CallLibFuncSaveId
@@ -5710,7 +5408,7 @@ Func_00_3508:
 	call CallLibFuncSaveId
 	pop af
 	ret
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_503b
@@ -5722,7 +5420,7 @@ Func_00_3508:
 	ld a, $28
 	call CallLibFuncSaveId
 	pop af
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, [wC2D7]
 	cp $00
 	jr nz, Func_00_3572
@@ -5737,14 +5435,14 @@ Func_00_3572:
 	ld [$c2a7], a
 	ret
 IntroScene_TecmoLogo:
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
 	call DrawTecmoLogo
 	ld a, $02
 	ld [$c2a7], a
 	ret
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_577e
@@ -5755,7 +5453,7 @@ IntroScene_TecmoLogo:
 	call CallLibFuncSaveId
 	pop af
 	ret
-	call Func_00_1863
+	call ResetFloorScroll
 	push af
 	ld a, $37
 	call CallLibFuncSaveId
@@ -5771,7 +5469,7 @@ IntroScene_TecmoLogo:
 	ld [$c2a9], a
 	ret
 Func_00_35c8:
-	call Func_00_1863
+	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_547f
@@ -6276,449 +5974,6 @@ SECTION "analyzed_003fff", ROM0[$3fff]
 Data_00_3fff:
 	db $00
 
-SECTION "analyzed_004000", ROMX[$4000], BANK[$01]
-
-Func_01_4000:
-	call Func_01_400d
-	call Func_01_4019
-	call Func_01_4055
-	call ProcessFloorSpawners
-	ret
-Func_01_400d:
-	ld hl, $c7f9
-	ld bc, $0498
-	ld d, $00
-	call Func_00_03bc
-	ret
-Func_01_4019:
-	ld a, [$c2eb]
-	swap a
-	and $f0
-	add a, $07
-	ld d, a
-	ld a, [$c2ea]
-	swap a
-	and $f0
-	ld e, a
-	ld a, $01
-	ld bc, $0000
-	ld [$c29c], a
-	ld a, h
-	ld [$c2a1], a
-	ld a, l
-	ld [$c2a2], a
-	ld a, $03
-	ld hl, $4593
-	call Func_00_0467
-	push hl
-	ld de, $0021
-	add hl, de
-	ld a, $02
-	ld [hl], a
-	pop hl
-	push hl
-	ld de, $0006
-	add hl, de
-	set 3, [hl]
-	pop hl
-	ret
-Func_01_4055:
-	ld a, [$c2c1]
-	cp $02
-	jr nz, Func_01_4060
-	call Func_01_42e6
-	ret
-Func_01_4060:
-	call SpawnFloorMonsters
-	ret
-SpawnFloorMonsters:
-	ld hl, $c4d1
-	ld c, $09
-Func_01_4069:
-	push bc
-	ld a, [hl+]
-	swap a
-	and $f0
-	sub $08
-	ld e, a
-	ld a, [hl+]
-	swap a
-	and $f0
-	sub $08
-	ld d, a
-	ld a, [hl+]
-	ld [$cf81], a
-	ld a, [hl+]
-	ld [$cf82], a
-	ld a, [hl+]
-	ld [$cf80], a
-	cp $ff
-	jr z, Func_01_40c1
-	push hl
-	ld c, a
-	ld b, $00
-	ld hl, $c4cd
-	add hl, bc
-	ld a, [hl]
-	add a, $30
-	cp $3e
-	jr c, Func_01_409b
-	add a, $02
-Func_01_409b:
-	ld bc, $0000
-	ld [$c29c], a
-	ld a, h
-	ld [$c2a1], a
-	ld a, l
-	ld [$c2a2], a
-	ld a, $03
-	ld hl, $4593
-	call Func_00_0467
-	call Func_01_40c6
-	call Func_01_40da
-	call Func_01_40e7
-	call Func_01_412d
-	call Func_01_4154
-	pop hl
-Func_01_40c1:
-	pop bc
-	dec c
-	jr nz, Func_01_4069
-	ret
-Func_01_40c6:
-	ld a, [$cf80]
-	and $03
-	ld e, a
-	ld a, [$cf81]
-	and $70
-	or e
-	push hl
-	ld de, $0020
-	add hl, de
-	ld [hl], a
-	pop hl
-	ret
-Func_01_40da:
-	ld a, [$cf81]
-	and $07
-	push hl
-	ld de, $0021
-	add hl, de
-	ld [hl], a
-	pop hl
-	ret
-Func_01_40e7:
-	push hl
-	ld de, $0006
-	add hl, de
-	ld b, [hl]
-	set 3, b
-	ld a, [$cf82]
-	cp $04
-	jr c, Func_01_40fa
-	set 2, b
-	jr Func_01_40fc
-Func_01_40fa:
-	res 2, b
-Func_01_40fc:
-	ld a, [$cf82]
-	and $03
-	cp $01
-	jr z, Func_01_4110
-	cp $02
-	jr z, Func_01_4118
-	cp $03
-	jr z, Func_01_411e
-	ld [hl], b
-	pop hl
-	ret
-Func_01_4110:
-	ld a, b
-	set 7, a
-	or $01
-	ld [hl], a
-	pop hl
-	ret
-Func_01_4118:
-	ld a, b
-	or $02
-	ld [hl], a
-	pop hl
-	ret
-Func_01_411e:
-	ld a, b
-	or $03
-	ld [hl], a
-	pop hl
-	ret
-Func_01_4124:
-	ld a, [$cf83]
-	or a
-	ret z
-	ld [$c2e4], a
-	ret
-Func_01_412d:
-	push hl
-	ld a, [hl]
-	call Func_00_1290
-	bit 6, a
-	jr nz, Func_01_4145
-	ld de, $000c
-	add hl, de
-	ld a, [hl]
-	add a, $08
-	ld [hl+], a
-	inc hl
-	ld a, [hl]
-	add a, $0f
-	ld [hl], a
-	pop hl
-	ret
-Func_01_4145:
-	ld de, $000c
-	add hl, de
-	ld a, [hl]
-	add a, $08
-	ld [hl+], a
-	inc hl
-	ld a, [hl]
-	add a, $08
-	ld [hl], a
-	pop hl
-	ret
-Func_01_4154:
-	ld a, [hl]
-	cp $39
-	ret nz
-	push bc
-	push de
-	push hl
-	ld de, $0006
-	add hl, de
-	ld b, [hl]
-	pop hl
-	bit 2, b
-	jr nz, Func_01_4176
-	ld a, b
-	and $03
-	cp $01
-	jr z, Func_01_418e
-	cp $03
-	jr z, Func_01_4197
-	cp $02
-	jr z, Func_01_41a0
-	jr Func_01_4185
-Func_01_4176:
-	ld a, b
-	and $03
-	cp $00
-	jr z, Func_01_418e
-	cp $03
-	jr z, Func_01_41a0
-	cp $02
-	jr z, Func_01_4197
-Func_01_4185:
-	push hl
-	ld de, $000e
-	add hl, de
-	dec [hl]
-	pop hl
-	jr Func_01_41a7
-Func_01_418e:
-	push hl
-	ld de, $000e
-	add hl, de
-	inc [hl]
-	pop hl
-	jr Func_01_41a7
-Func_01_4197:
-	push hl
-	ld de, $000c
-	add hl, de
-	inc [hl]
-	pop hl
-	jr Func_01_41a7
-Func_01_41a0:
-	push hl
-	ld de, $000c
-	add hl, de
-	dec [hl]
-	pop hl
-Func_01_41a7:
-	pop de
-	pop bc
-	ret
-ProcessFloorSpawners:
-	ld a, [$c2c1]
-	cp $02
-	ret z
-	ld hl, $c4fe
-	ld c, $04
-Func_01_41b5:
-	push bc
-	push hl
-	ld a, [hl+]
-	swap a
-	and $f0
-	sub $08
-	ld e, a
-	ld a, [hl+]
-	swap a
-	and $f0
-	sub $08
-	ld d, a
-	ld a, [hl+]
-	and $07
-	sla a
-	sla a
-	ld c, a
-	ld a, [hl+]
-	and $03
-	or c
-	ld c, a
-	ld a, [hl+]
-	and $07
-	swap a
-	sla a
-	or c
-	ld c, a
-	call Func_01_4219
-	call Func_01_423e
-	or a
-	jr z, Func_01_420f
-	push bc
-	ld a, $1e
-	ld bc, $0000
-	ld [$c29c], a
-	ld a, h
-	ld [$c2a1], a
-	ld a, l
-	ld [$c2a2], a
-	ld a, $03
-	ld hl, $4593
-	call Func_00_0467
-	pop bc
-	call Func_01_426d
-	call Func_01_42a2
-	call Func_01_42aa
-	call Func_01_42d9
-	call Func_01_412d
-Func_01_420f:
-	pop hl
-	ld bc, $000c
-	add hl, bc
-	pop bc
-	dec c
-	jr nz, Func_01_41b5
-	ret
-Func_01_4219:
-	ld a, [hl+]
-	and $03
-	ld [$cf84], a
-	ld a, [hl+]
-	and $03
-	ld [$cf85], a
-	ld a, [hl+]
-	and $03
-	ld [$cf86], a
-	ld a, [hl+]
-	and $03
-	ld [$cf87], a
-	ld a, [hl+]
-	and $03
-	ld [$cf88], a
-	ld a, [hl+]
-	and $03
-	ld [$cf89], a
-	ret
-Func_01_423e:
-	ld a, [$cf84]
-	cp $03
-	jr nz, Func_01_426a
-	ld a, [$cf85]
-	cp $03
-	jr nz, Func_01_426a
-	ld a, [$cf86]
-	cp $03
-	jr nz, Func_01_426a
-	ld a, [$cf87]
-	cp $03
-	jr nz, Func_01_426a
-	ld a, [$cf88]
-	cp $03
-	jr nz, Func_01_426a
-	ld a, [$cf89]
-	cp $03
-	jr nz, Func_01_426a
-	xor a
-	ret
-Func_01_426a:
-	ld a, $01
-	ret
-Func_01_426d:
-	ld a, [$cf84]
-	ld e, a
-	ld a, [$cf85]
-	sla a
-	sla a
-	or e
-	ld e, a
-	ld a, [$cf86]
-	swap a
-	or e
-	push hl
-	ld de, $0020
-	add hl, de
-	ld [hl], a
-	pop hl
-	ld a, [$cf87]
-	ld e, a
-	ld a, [$cf88]
-	sla a
-	sla a
-	or e
-	ld e, a
-	ld a, [$cf89]
-	swap a
-	or e
-	push hl
-	ld de, $0021
-	add hl, de
-	ld [hl], a
-	pop hl
-	ret
-Func_01_42a2:
-	push hl
-	ld de, $0006
-	add hl, de
-	ld [hl], c
-	pop hl
-	ret
-Func_01_42aa:
-	push hl
-	ld de, $0005
-	add hl, de
-	xor a
-	ld [hl], a
-	pop hl
-	ret
-Func_01_42b3:
-	push hl
-	ld a, c
-	and $1c
-	sra a
-	sra a
-	sla a
-	ld c, a
-	ld b, $00
-	ld hl, $42c9
-	add hl, bc
-	ld a, [hl+]
-	ld c, a
-	ld b, [hl]
-	pop hl
-	ret
-
 SECTION "analyzed_0042c9", ROMX[$42c9], BANK[$01]
 
 Data_01_42c9:
@@ -6810,14 +6065,14 @@ Func_01_439e:
 	ld a, $17
 	ld hl, Func_17_40b1
 	call CallBankedHL
-	call Func_00_166f
+	call FloorPostLoadCleanup
 	ld a, $05
 	ld hl, Func_05_4931
 	call CallBankedHL
 	xor a
 	call Func_01_5bd8
 	call Func_01_75ad
-	call Func_01_4000
+	call SpawnFloorEntities
 	call Func_01_4a71
 	ld a, $05
 	ld hl, Func_05_48a5
@@ -6893,7 +6148,7 @@ Func_01_447f:
 	call Func_00_04c4
 	call HideAllSprites
 	call WaitForNextFrame
-	call Func_00_1863
+	call ResetFloorScroll
 	call Func_01_459a
 	ld a, $05
 	ld hl, Func_05_473d
@@ -8277,232 +7532,6 @@ Data_01_4f5b:
 	db $20, $20, $20, $20, $20, $20, $00, $20, $20, $20, $20, $20, $59, $45, $53, $20
 	db $20, $20, $20, $4e, $4f, $20, $20, $20, $20, $20, $20, $00
 
-SECTION "analyzed_005007", ROMX[$5007], BANK[$01]
-
-Func_01_5007:
-	ldh a, [$ffb4]
-	bit 0, a
-	ret nz
-	ldh a, [$ffbc]
-	ld c, a
-	ldh a, [$ffbe]
-	ld b, a
-	ldh a, [$ffd7]
-	add a, b
-	inc a
-	ld b, a
-	push bc
-	ld a, c
-	add a, $08
-	swap a
-	and $0f
-	ld c, a
-	ld a, b
-	add a, $08
-	swap a
-	and $0f
-	ld b, a
-	call Func_01_5676
-	pop bc
-	ldh a, [$ffac]
-	cp $41
-	call z, Func_01_5538
-	ldh a, [$ffaa]
-	cp $ff
-	jr nz, Func_01_5060
-	ldh a, [$ffd9]
-	dec a
-	add a, b
-	dec a
-	ld b, a
-	push bc
-	ld a, c
-	add a, $08
-	swap a
-	and $0f
-	ld c, a
-	ld a, b
-	add a, $08
-	swap a
-	and $0f
-	ld b, a
-	call Func_01_5676
-	pop bc
-	ldh a, [$ffac]
-	cp $41
-	call z, Func_01_5538
-	ldh a, [$ffaa]
-	cp $ff
-	ret z
-Func_01_5060:
-	sub $c0
-	call Func_01_5074
-	call Func_01_50c4
-	add a, a
-	ld e, a
-	ld d, $00
-	ld hl, $523a
-	add hl, de
-	ld a, [hl+]
-	ld h, [hl]
-	ld l, a
-	jp hl
-Func_01_5074:
-	push af
-	push bc
-	ld e, a
-	ld d, $00
-	sla e
-	rl d
-	sla e
-	rl d
-	ld hl, $51aa
-	add hl, de
-	ld a, [hl+]
-	ld b, a
-	ld a, [hl+]
-	ld c, a
-	ld a, [hl+]
-	ld d, a
-	ld e, [hl]
-	ld hl, $c2c6
-	ld a, [hl]
-	add a, e
-	daa
-	ld [hl+], a
-	ld a, [hl]
-	adc a, d
-	daa
-	ld [hl+], a
-	ld a, [hl]
-	adc a, c
-	daa
-	ld [hl+], a
-	ld a, [hl]
-	adc a, b
-	daa
-	ld [hl+], a
-	ld a, [hl]
-	adc a, $00
-	daa
-	ld [hl], a
-	or a
-	jr z, Func_01_50b2
-
-SECTION "analyzed_0050b2", ROMX[$50b2], BANK[$01]
-
-Func_01_50b2:
-	ld a, [$c2c1]
-	cp $05
-	jr z, Func_01_50c1
-	ld a, $05
-	ld hl, Func_05_46ba
-	call CallBankedHL
-Func_01_50c1:
-	pop bc
-	pop af
-	ret
-Func_01_50c4:
-	push af
-	push bc
-	ld e, a
-	ld a, [$c2c1]
-	cp $05
-	jr z, Func_01_5109
-	cp $02
-	jr z, Func_01_5109
-	ld a, c
-	add a, $08
-	swap a
-	and $0f
-	ld [$cf8f], a
-	ld a, b
-	add a, $08
-	swap a
-	and $0f
-	ld [$cf90], a
-	ld d, $00
-	ld hl, $5186
-	add hl, de
-	ld a, [hl]
-	cp $ff
-	jr z, Func_01_5109
-	ld d, a
-	ld a, d
-	and $07
-	ld hl, $1209
-	rst $00
-	ld b, [hl]
-	ld a, d
-	swap a
-	and $0f
-	ld hl, $cff4
-	rst $00
-	ld a, [hl]
-	or b
-	ld [hl], a
-	call Func_01_510c
-Func_01_5109:
-	pop bc
-	pop af
-	ret
-Func_01_510c:
-	xor a
-	ld [$cf8e], a
-	ld a, [$cf8f]
-	ld e, a
-	ld a, [$cf90]
-	ld d, a
-	ld hl, $cf91
-	ld c, $10
-Func_01_511d:
-	push hl
-	ld a, [hl+]
-	cp e
-	jr nz, Func_01_5131
-	ld a, [hl]
-	cp d
-	jr nz, Func_01_5131
-	pop hl
-	xor a
-	ld [hl+], a
-	ld [hl], a
-	call Func_01_57f3
-	call Func_01_513f
-	ret
-Func_01_5131:
-	pop hl
-	inc hl
-	inc hl
-	ld a, [$cf8e]
-	inc a
-	ld [$cf8e], a
-	dec c
-	jr nz, Func_01_511d
-	ret
-Func_01_513f:
-	ld a, [$c2c1]
-	cp $00
-	jr z, Func_01_5151
-	cp $01
-	jr z, Func_01_5157
-	call Func_00_17c0
-	or a
-	ret z
-	jr Func_01_515c
-Func_01_5151:
-	ld a, [wActiveFloor]
-	dec a
-	jr Func_01_515c
-Func_01_5157:
-	ld a, [wActiveFloor]
-	add a, $3b
-Func_01_515c:
-	ld hl, $cff8
-	rst $00
-	inc [hl]
-	ret
-
 SECTION "analyzed_005162", ROMX[$5162], BANK[$01]
 
 Data_01_5162:
@@ -9095,134 +8124,8 @@ Func_01_562b:
 	and $f0
 	ret z
 
-SECTION "analyzed_005676", ROMX[$5676], BANK[$01]
+SECTION "analyzed_00572d", ROMX[$572d], BANK[$01]
 
-Func_01_5676:
-	ld a, $ff
-	ldh [$ffaa], a
-	push bc
-	call Func_00_1848
-	or a
-	jr nz, Func_01_5699
-	ldh a, [$ffac]
-	bit 7, a
-	jr z, Func_01_5699
-	bit 6, a
-	jr z, Func_01_5699
-	ldh [$ffaa], a
-	ld a, c
-	ld hl, wFloorGrid
-	rst $00
-	xor a
-	ld [hl], a
-	pop bc
-	call DrawFloorPiece
-	ret
-Func_01_5699:
-	pop bc
-	ret
-Func_01_569b:
-	ld a, [$c2d5]
-	bit 1, a
-	ret z
-	ld hl, wFloorGrid
-	ld a, [wFloorHeight]
-	ld b, a
-Func_01_56a8:
-	ld a, [wFloorWidth]
-	ld c, a
-	push hl
-Func_01_56ad:
-	ld a, [hl]
-	cp $c0
-	jr z, Func_01_56b6
-	cp $80
-	jr nz, Func_01_56b8
-Func_01_56b6:
-	xor a
-	ld [hl], a
-Func_01_56b8:
-	inc hl
-	dec c
-	jr nz, Func_01_56ad
-	pop hl
-	ld de, $0011
-	add hl, de
-	dec b
-	jr nz, Func_01_56a8
-	ret
-Func_01_56c5:
-	ld a, $09
-	call Func_00_119a
-	or a
-	jr z, Func_01_56d5
-	call Func_01_47bc
-	or a
-	ret z
-	cp $ff
-	ret z
-Func_01_56d5:
-	ld hl, wFloorGrid
-	ld a, [wFloorHeight]
-	ld b, a
-Func_01_56dc:
-	ld a, [wFloorWidth]
-	ld c, a
-	push hl
-Func_01_56e1:
-	ld a, [hl]
-	bit 7, a
-	jr z, Func_01_56ee
-	set 6, a
-	cp $c1
-	jr nz, Func_01_56ee
-	xor a
-	ld [hl], a
-Func_01_56ee:
-	inc hl
-	dec c
-	jr nz, Func_01_56e1
-	pop hl
-	ld de, $0011
-	add hl, de
-	dec b
-	jr nz, Func_01_56dc
-	ret
-Func_01_56fb:
-	ld a, [$c2d5]
-	bit 0, a
-	ret nz
-	ld hl, wFloorGrid
-	ld a, [wFloorHeight]
-	ld b, a
-Func_01_5708:
-	ld a, [wFloorWidth]
-	ld c, a
-	push hl
-Func_01_570d:
-	ld a, [hl]
-	bit 7, a
-	jr z, Func_01_5720
-	and $3f
-	push hl
-	ld hl, $5162
-	rst $00
-	ld a, [hl]
-	pop hl
-	or a
-	jr z, Func_01_5720
-	xor a
-	ld [hl], a
-Func_01_5720:
-	inc hl
-	dec c
-	jr nz, Func_01_570d
-	pop hl
-	ld de, $0011
-	add hl, de
-	dec b
-	jr nz, Func_01_5708
-	ret
 Func_01_572d:
 	call Func_01_573d
 	ld a, [$c2c1]
@@ -9816,7 +8719,7 @@ SECTION "analyzed_005b4e", ROMX[$5b4e], BANK[$01]
 Func_01_5b4e:
 	push bc
 	push bc
-	call Func_00_1848
+	call ReadFloorCell
 	or a
 	jr z, Func_01_5b77
 	cp $20
@@ -12321,13 +11224,20 @@ Func_01_6ce0:
 	ld a, [hl]
 	pop hl
 	cp $03
-	jr nz, $6cf5
+	jr nz, Func_01_6cf5
 	ld a, [hl]
 	cp $38
 	jr z, Func_01_6cfe
 
-SECTION "analyzed_006cfe", ROMX[$6cfe], BANK[$01]
+SECTION "analyzed_006cf5", ROMX[$6cf5], BANK[$01]
 
+Func_01_6cf5:
+	call Func_01_6592
+	pop bc
+	pop hl
+	pop bc
+	ld a, $01
+	ret
 Func_01_6cfe:
 	push hl
 	ld bc, $0018
@@ -12494,7 +11404,7 @@ Func_01_6ebd:
 	call Func_01_6f3a
 	call Func_01_6fff
 	call Func_01_6eda
-	call Func_01_5007
+	call CheckItemPickup
 	ret
 	call Func_01_6f07
 	call Func_01_716f
@@ -15513,7 +14423,7 @@ Func_03_44cb:
 	ret
 Func_03_44f1:
 	push bc
-	call Func_00_1848
+	call ReadFloorCell
 	cp $22
 	jr z, Func_03_44fd
 	cp $23
@@ -16381,7 +15291,7 @@ Func_03_4a8c:
 	cp $01
 	jr z, Func_03_4b03
 	push bc
-	call Func_00_1848
+	call ReadFloorCell
 	pop bc
 	or a
 	jr z, Func_03_4ac2
@@ -22488,7 +21398,7 @@ Func_04_4138:
 	ret
 Func_04_4157:
 	push bc
-	call Func_00_1848
+	call ReadFloorCell
 	cp $22
 	jr z, Func_04_4175
 	cp $23
@@ -31122,7 +30032,7 @@ Data_0f_4be0:
 SECTION "analyzed_03cbe4", ROMX[$4be4], BANK[$0f]
 
 Data_0f_4be4:
-	db $11, $73, $91, $73
+	db $11, $73, $91, $73, $11, $74
 
 SECTION "analyzed_03cbec", ROMX[$4bec], BANK[$0f]
 
@@ -31609,6 +30519,9 @@ SECTION "analyzed_03f459", ROMX[$7459], BANK[$0f]
 
 Data_0f_7459:
 	db $00, $00, $de, $7b, $32, $46, $80, $4d, $00, $00, $1b, $01, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_03f579", ROMX[$7579], BANK[$0f]
 
@@ -33183,7 +32096,7 @@ Func_12_452d:
 SECTION "analyzed_048548", ROMX[$4548], BANK[$12]
 
 Func_12_4548:
-	call Func_00_1848
+	call ReadFloorCell
 	ld a, c
 	ld hl, wFloorCollision
 	rst $00
@@ -55698,7 +54611,7 @@ Data_3f_5ca3:
 	db $f0, $af, $11, $f0, $8a, $12, $f0, $7d, $13, $f0, $20, $15, $fb, $00, $fd, $07
 	db $ef, $00, $ed, $05, $f9, $39, $00, $f9, $4e, $00, $f9, $33, $00, $f9, $48, $00
 	db $f9, $60, $00, $f9, $75, $00, $f9, $5a, $00, $f9, $6f, $00, $f9, $21, $00, $f9
-	db $36, $00, $f9, $1b, $00
+	db $36, $00, $f9, $1b, $00, $f9, $30, $00
 
 SECTION "analyzed_0fdcf0", ROMX[$5cf0], BANK[$3f]
 
@@ -55716,7 +54629,7 @@ SECTION "analyzed_0fdd8a", ROMX[$5d8a], BANK[$3f]
 Data_3f_5d8a:
 	db $fb, $00, $fd, $07, $ef, $00, $ed, $04, $f9, $39, $00, $f9, $57, $00, $f9, $33
 	db $00, $f9, $51, $00, $f9, $6b, $00, $f9, $85, $00, $f9, $65, $00, $f9, $7f, $00
-	db $f9, $21, $00, $f9, $3f, $00, $f9, $1b, $00
+	db $f9, $21, $00, $f9, $3f, $00, $f9, $1b, $00, $f9, $39, $00
 
 SECTION "analyzed_0fddcb", ROMX[$5dcb], BANK[$3f]
 
@@ -55735,7 +54648,7 @@ SECTION "analyzed_0fde7d", ROMX[$5e7d], BANK[$3f]
 Data_3f_5e7d:
 	db $fd, $07, $fb, $00, $ef, $00, $f9, $39, $00, $f9, $65, $00, $f9, $33, $00, $f9
 	db $5f, $00, $f9, $8b, $00, $f9, $b7, $00, $f9, $85, $00, $f9, $b1, $00, $f9, $21
-	db $00, $f9, $4d, $00, $f9, $1b, $00
+	db $00, $f9, $4d, $00, $f9, $1b, $00, $f9, $47, $00
 
 SECTION "analyzed_0fdebc", ROMX[$5ebc], BANK[$3f]
 
@@ -55758,7 +54671,7 @@ SECTION "analyzed_0fe020", ROMX[$6020], BANK[$3f]
 Data_3f_6020:
 	db $fb, $00, $91, $fd, $07, $ef, $00, $f9, $39, $00, $f9, $55, $00, $f9, $33, $00
 	db $f9, $4f, $00, $f9, $2d, $00, $f9, $49, $00, $f9, $27, $00, $f9, $43, $00, $f9
-	db $21, $00, $f9, $3d, $00, $f9, $1b, $00
+	db $21, $00, $f9, $3d, $00, $f9, $1b, $00, $f9, $37, $00
 
 SECTION "analyzed_0fe060", ROMX[$6060], BANK[$3f]
 

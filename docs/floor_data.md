@@ -61,7 +61,7 @@ label differs.
 | 8+H×W | H×W | **piece grid** → `wFloorGrid` (`$C3DD`) | visual + object markers |
 | … | 4 | arr1 → `$C4CD` | ✅ per-floor sprite-gfx lookup (indexed by a monster's gfxIndex) |
 | … | 45 | arr2 → `$C4D1` | ✅ **monster table** — 9 slots × 5 bytes (see below) |
-| … | 48 | arr3 → `$C4FE` | ✅ **monster spawner table** — 4 slots × 6 bytes (see below) |
+| … | 48 | arr3 → `$C4FE` | ✅ **monster spawner table** — 4 slots × 12 bytes (see below) |
 
 The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader uses
 `wFloorRowStride = $11 − width` to skip the margin. After the arrays, bank-5/bank-1
@@ -161,13 +161,30 @@ Items, by contrast, are baked into the piece grid, so a floor's dynamic content 
 piece-grid items + `arr2` monsters + `arr3` spawners.
 
 ### Monster spawners (arr3)
-`Func_01_41aa` (`ProcessFloorSpawners`) reads `arr3` as **4 slots × 6 bytes**:
-`[col][row][p0][p1][p2][gfxIndex]`. `col=$ff` = empty slot. The spawned **species is
-`arr1[gfxIndex]`** (same mechanism as `arr2` monsters); `gfxIndex = $ff` ⇒ **inert**
-(present but spawns nothing — acts like an obstruction). `p0`/`p1`/`p2` are the spawn
-rate/count (the reader packs `p0&7`,`p1&3`,`p2&7` for `Func_01_4219`) — not decoded
-yet, but observed counts are small (floor 23's two spawners each make 3 Naga).
-Examples: floor 8 → Tacopi, floor 23 → 3 Naga, floor 25 → Tacopi, floor 15 → inert.
+`Func_01_41aa` (`ProcessFloorSpawners`) reads `arr3` as **4 slots × 12 bytes**
+(4×12 = 48 — *not* the 8×6 the room data files originally modelled; byte-identical
+only because empty slots are all `$FF`). Per slot:
+
+| Offset | Field | Meaning |
+|---|---|---|
+| +0 | col | spawn cell column |
+| +1 | row | spawn cell row |
+| +2..+4 | p0/p1/p2 | spawn timing, packed into one rate value (`p0&7`,`p1&3`,`p2&7`) — undecoded detail |
+| +5..+10 | **schedule** | six steps; each `& 3` indexes `arr1`, value `3` (or `$FF`) = no spawn |
+| +11 | — | unused trailing byte |
+
+The six schedule bytes (`ReadSpawnerParams` → `$cf84..$cf89`, packed into the
+entity's `+$20`/`+$21` by `Func_01_426d`) are a **spawn list**: each step spawns
+`arr1[value]`, and a `$FF`/`3` step spawns nothing. A slot whose six steps are all
+`3` is empty (`SpawnerSlotActive` returns 0). This exactly reproduces play:
+
+- **Floor 23** — both spawners carry `{2,2,2,-,-,-}` → 3× `arr1[2]` = **3 Naga** each.
+- **Floor 47** — one spawner `{0,2,-,-,-,-}` (Tacopi→Naga), the other `{2,0,-,-,-,-}`
+  (Naga→Tacopi).
+
+Validated across all 70 floors: every non-empty 12-byte slot has a valid cell, a
+schedule of `{0..3,$FF}` values, and `$FF` in `[+11]`. The `Spawner` struct in
+`include/room.inc` and every `room/roomNN.asm` now model this 12-byte layout.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 

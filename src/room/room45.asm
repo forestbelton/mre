@@ -47,14 +47,10 @@ Room45:
     EMPTY_MONSTER_SLOT
     assert @ - .monsters == sizeof_Monster * 9
 
-    ; arr3: 8 spawner slots (Spawner: X,Y,P0,P1,P2,Index)
+    ; arr3: 4 spawner slots (Spawner: X,Y,P0,P1,P2,Spawn0..5,End)
 .spawners
     EMPTY_SPAWNER_SLOT
     EMPTY_SPAWNER_SLOT
     EMPTY_SPAWNER_SLOT
     EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    EMPTY_SPAWNER_SLOT
-    assert @ - .spawners == sizeof_Spawner * 8
+    assert @ - .spawners == sizeof_Spawner * 4

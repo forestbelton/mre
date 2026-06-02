@@ -138,25 +138,37 @@ struct Monster
     bytes 1, Index     ; index into the floor's MonsterSprites (arr1)
 end_struct
 
-; A monster spawner slot (arr3; 8 per floor). Spawned species = MonsterSprites[Index];
-; X == INERT marks an empty slot, Index == INERT spawns nothing (obstruction).
+; A monster spawner slot (arr3; 4 per floor, 12 bytes each). ProcessFloorSpawners
+; ($41aa) reads X/Y (the spawn cell), the P0-P2 timing params, then a 6-step spawn
+; schedule. Each schedule step is an index into the floor's MonsterSprites table
+; (arr1), taken as the low 2 bits; SPAWN_NONE ($FF, i.e. index 3) means "spawn
+; nothing this step". So {2,2,2,-,-,-} spawns MonsterSprites[2] three times
+; (floor 23 = 3x Naga); {0,2,-,-,-,-} spawns sprites[0] then sprites[2] (floor 47).
+; End is an unused trailing byte; an all-$FF slot is empty. See docs/floor_data.md.
 struct Spawner
     bytes 1, X
     bytes 1, Y
-    bytes 1, P0        ; rate/count params (undecoded)
+    bytes 1, P0        ; spawn-timing params (rate/interval; packed, undecoded)
     bytes 1, P1
     bytes 1, P2
-    bytes 1, Index
+    bytes 1, Spawn0    ; spawn schedule: each step = arr1 index (low 2 bits),
+    bytes 1, Spawn1    ;   SPAWN_NONE = no spawn this step
+    bytes 1, Spawn2
+    bytes 1, Spawn3
+    bytes 1, Spawn4
+    bytes 1, Spawn5
+    bytes 1, End       ; unused trailing byte
 end_struct
 
-DEF INERT EQU $FF   ; empty/missing monster or spawner slot
+DEF INERT EQU $FF        ; empty/missing monster or spawner slot
+DEF SPAWN_NONE EQU $FF   ; spawner schedule: no spawn this step (arr1 index 3)
 
 ; Fixed fillers for unused slots -- byte-identical across all 70 floors.
 MACRO EMPTY_MONSTER_SLOT
     db INERT, INERT, INERT, $01, INERT
 ENDM
 MACRO EMPTY_SPAWNER_SLOT
-    db INERT, INERT, INERT, INERT, INERT, INERT
+    db INERT, INERT, INERT, INERT, INERT, INERT, INERT, INERT, INERT, INERT, INERT, INERT
 ENDM
 
 ENDC ; ROOM_INC
