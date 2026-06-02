@@ -157,6 +157,39 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x7fe07, "index_base": 0, "addressing": "8800",
     },
+    # Full-screen game screens (18x20), each drawn by a bank-$30 routine
+    # (dispatched from the ROM0 $34xx-$35xx screen-transition handlers). Each
+    # copies $X:$4000 -> VRAM bank 0 $8000 and $X:$5800 -> VRAM bank 1 $8000
+    # (384 tiles each, $8800 addressing) then blits the descriptor at $X:$7080 ->
+    # $9800. Same two-VRAM-bank CGB layout as nada_intro; attr bit 3 selects the
+    # per-cell tile bank. These backgrounds are static; the game overlays
+    # animated sprites/text on top at runtime (animated door, room number, etc.).
+    # Palettes are lib-dispatched (not yet located) -> grayscale composite, tiles
+    # + tilemap round-trip byte-exact.
+    "town_screen": {  # bank $20, drawn by Func_30_401e -- the town
+        "bank": 0x20,
+        "tiles_addr": 0x81800, "tiles_count": 384,    # $20:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x80000, "tiles2_count": 384,  # $20:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x83080, "index_base": 0, "addressing": "8800",
+    },
+    "tower_entrance": {  # bank $22, drawn by Func_30_43a4 -- tower entrance
+        "bank": 0x22,
+        "tiles_addr": 0x89800, "tiles_count": 384,    # $22:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x88000, "tiles2_count": 384,  # $22:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x8b080, "index_base": 0, "addressing": "8800",
+    },
+    "room_start": {  # bank $23, drawn by Func_30_44aa -- per-room start screen
+        "bank": 0x23,
+        "tiles_addr": 0x8d800, "tiles_count": 384,    # $23:$5800 -> VRAM bank 1 $8000
+        "tiles2_addr": 0x8c000, "tiles2_count": 384,  # $23:$4000 -> VRAM bank 0 $8000
+        "tiles2_vram": 0x8000,
+        "palette_addr": None, "palette_count": 0,
+        "desc_addr": 0x8f080, "index_base": 0, "addressing": "8800",
+    },
 }
 
 # Grayscale ramp for palette-less assets (composite + tile sheet).
