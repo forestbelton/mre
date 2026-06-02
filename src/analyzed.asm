@@ -8797,7 +8797,7 @@ Func_01_5d99:
 	ret z
 	ld c, a
 	ld b, $00
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	add hl, bc
 	ld a, [hl]
 	or a
@@ -8818,7 +8818,7 @@ Func_01_5d99:
 	ld a, [$cfd9]
 	ld c, a
 	ld b, $00
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	add hl, bc
 	ld a, [hl]
 	or a
@@ -10220,7 +10220,7 @@ Func_01_686f:
 	ld a, [hl]
 	sub $40
 	push hl
-	ld hl, $cfda
+	ld hl, wMonsterDiscStones
 	rst $00
 	ld a, [hl]
 	cp $09
@@ -25000,7 +25000,7 @@ Func_05_463a:
 	ld [$cfd7], a
 	ld [$cfd8], a
 	ld [$cfe8], a
-	ld hl, $cfda
+	ld hl, wMonsterDiscStones
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl+], a
@@ -25008,7 +25008,7 @@ Func_05_463a:
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl], a
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl+], a
@@ -25079,7 +25079,7 @@ Func_05_46c2:
 	ret
 Func_05_46e1:
 	ld hl, $c2c6
-	ld de, $cfd2
+	ld de, wSaveTag
 	ld c, $05
 Func_05_46e9:
 	ld a, [hl+]
@@ -25099,7 +25099,7 @@ Func_05_46f0:
 	ld [hl+], a
 	ld a, [$cfd9]
 	ld [hl+], a
-	ld de, $cfda
+	ld de, wMonsterDiscStones
 	ld a, [de]
 	inc de
 	ld [hl+], a
@@ -25120,7 +25120,7 @@ Func_05_46f0:
 	ld [hl+], a
 	ld a, [de]
 	ld [hl+], a
-	ld de, $cfe1
+	ld de, wMonsterUses
 	ld a, [de]
 	inc de
 	ld [hl+], a
@@ -25157,7 +25157,7 @@ Func_05_473d:
 	ld [$cfd8], a
 	ld a, [hl+]
 	ld [$cfd9], a
-	ld de, $cfda
+	ld de, wMonsterDiscStones
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -25178,7 +25178,7 @@ Func_05_473d:
 	inc de
 	ld a, [hl+]
 	ld [de], a
-	ld de, $cfe1
+	ld de, wMonsterUses
 	ld a, [hl+]
 	ld [de], a
 	inc de
@@ -25324,7 +25324,7 @@ Func_05_4865:
 	xor a
 	ret
 Func_05_486a:
-	ld hl, $cfd2
+	ld hl, wSaveTag
 	ld de, $487f
 	ld a, [de]
 	ld [hl+], a
@@ -31851,7 +31851,7 @@ Func_0f_4722:
 	xor a
 	ldh [rVBK], a
 	call WaitForHBlank
-	ld hl, $cfd2
+	ld hl, wSaveTag
 	ld de, $9cd2
 	ld a, [hl]
 	and $0f
@@ -31982,7 +31982,7 @@ Func_0f_480c:
 	ldh [rVBK], a
 	call WaitForHBlank
 	ld a, [$cfd9]
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	rst $00
 	ld a, [hl]
 	ld b, a
@@ -32055,7 +32055,7 @@ Func_0f_489f:
 	add a, $9a
 	ld hl, $9c52
 	ld [hl], a
-	ld a, [$cfda]
+	ld a, [wMonsterDiscStones]
 	add a, $9a
 	ld hl, $9c92
 	ld [hl], a
@@ -35229,10 +35229,10 @@ SECTION "analyzed_048b67", ROMX[$4b67], BANK[$12]
 Func_12_4b67:
 	call Func_00_09f9
 	ld de, $4b64
-	ld hl, $cfcf
+	ld hl, wSaveSignature
 	ld c, $03
 	call CopyDEtoHL
-	ld de, $cfcf
+	ld de, wSaveSignature
 	ld hl, $a6ed
 	ld bc, $0118
 	call CopyDEtoHLLong
@@ -35252,7 +35252,7 @@ SECTION "analyzed_048ba1", ROMX[$4ba1], BANK[$12]
 
 Func_12_4ba1:
 	ld de, $a6ed
-	ld hl, $cfcf
+	ld hl, wSaveSignature
 	ld bc, $0118
 	call CopyDEtoHLLong
 	call Func_00_09ff
@@ -35313,7 +35313,7 @@ SECTION "analyzed_048c02", ROMX[$4c02], BANK[$12]
 
 Func_12_4c02:
 	ld de, $a6f0
-	ld hl, $cfd2
+	ld hl, wSaveTag
 	ld c, $05
 	call CopyDEtoHL
 	call Func_00_09ff
@@ -35816,7 +35816,7 @@ Func_14_404d:
 	ld hl, $6853
 	ld bc, $1008
 	call DrawMetasprite
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	add a, a
 	ld hl, $403f
 	rst $00
@@ -35833,7 +35833,7 @@ Func_14_404d:
 	ld hl, $63ab
 	call Func_00_0547
 	ld hl, $4000
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	swap a
 	rrca
 	rst $00
@@ -36209,7 +36209,7 @@ Func_14_4320:
 	jr nz, Func_14_4320
 	ret
 Func_14_4329:
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	ld d, a
 	ld hl, $4038
 	rst $00
@@ -38467,8 +38467,8 @@ Data_17_7fff:
 SECTION "analyzed_06003c", ROMX[$403c], BANK[$18]
 
 Func_18_403c:
-	ld hl, $cfe1
-	ld a, [$cfbb]
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
 	add a, l
 	ld l, a
 	ld a, h
@@ -38477,15 +38477,15 @@ Func_18_403c:
 	ld a, [hl]
 	ld [wYNResult], a
 	ret
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	ld [$cfd9], a
 	ret
 
 SECTION "analyzed_060074", ROMX[$4074], BANK[$18]
 
 Func_18_4074:
-	ld hl, $cfe1
-	ld a, [$cfbb]
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
 	add a, l
 	ld l, a
 	ld a, h
@@ -38500,8 +38500,8 @@ SECTION "analyzed_060088", ROMX[$4088], BANK[$18]
 
 Func_18_4088:
 	ld [hl], a
-	ld hl, $cfda
-	ld a, [$cfbb]
+	ld hl, wMonsterDiscStones
+	ld a, [wActiveMonster]
 	add a, l
 	ld l, a
 	ld a, h
@@ -38700,7 +38700,7 @@ Func_18_41cc:
 SECTION "analyzed_061321", ROMX[$5321], BANK[$18]
 
 Func_18_5321:
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	ld c, $00
 	ld b, $00
 Func_18_5328:
@@ -38708,7 +38708,7 @@ Func_18_5328:
 	or a
 	jr z, Func_18_5331
 	ld a, c
-	ld [$cfbb], a
+	ld [wActiveMonster], a
 	inc b
 Func_18_5331:
 	inc c
@@ -42026,7 +42026,7 @@ Func_1f_6266:
 	adc a, $00
 	ld h, a
 	ld a, [hl]
-	ld [$cfbb], a
+	ld [wActiveMonster], a
 	push af
 	ld a, $0d
 	call CallLibFunc
@@ -42142,7 +42142,7 @@ Func_1f_63a6:
 	ld c, $00
 	ld b, $00
 Func_1f_63ad:
-	ld hl, $cfda
+	ld hl, wMonsterDiscStones
 	ld a, l
 	add a, c
 	ld l, a
@@ -42263,7 +42263,7 @@ Func_1f_6590:
 	ld c, $00
 	ld b, $00
 Func_1f_6597:
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	ld a, l
 	add a, c
 	ld l, a
@@ -47594,7 +47594,7 @@ Func_30_5697:
 	ret
 Func_30_5698:
 	call WaitForHBlank
-	ld hl, $cfd2
+	ld hl, wSaveTag
 	ld de, $99ad
 	ld a, [hl]
 	call Func_00_3635
@@ -48863,7 +48863,7 @@ SECTION "analyzed_0c8034", ROMX[$4034], BANK[$32]
 
 Func_32_4034:
 	ld a, [$cfd9]
-	ld hl, $cfe1
+	ld hl, wMonsterUses
 	add a, l
 	ld l, a
 	ld a, h
@@ -48916,7 +48916,7 @@ SECTION "analyzed_0c80a5", ROMX[$40a5], BANK[$32]
 Func_32_40a5:
 	ld a, [$cfd9]
 	push af
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	ld [$cfd9], a
 	call Func_00_083c
 	call HideAllSprites
@@ -48944,7 +48944,7 @@ Func_32_40a5:
 	ld de, $9800
 	call CopyBgMapBankedA
 	ld hl, $4000
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	sla a
 	add a, l
 	ld l, a
@@ -48958,7 +48958,7 @@ Func_32_40a5:
 	ld de, $9827
 	call CopyBgMapBankedA
 	ld hl, $400e
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	sla a
 	add a, l
 	ld l, a
@@ -49084,7 +49084,7 @@ SECTION "analyzed_0c8205", ROMX[$4205], BANK[$32]
 
 Func_32_4205:
 	ld hl, $4217
-	ld a, [$cfbb]
+	ld a, [wActiveMonster]
 	sla a
 	add a, l
 	ld l, a

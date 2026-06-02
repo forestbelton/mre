@@ -47,6 +47,43 @@ wFloorGrid::        ds 238  ; $C3DD: 17x14 piece-ID grid (the floor layout; rend
                             ;   via DrawFloorPiece + FloorPieceDefs at $12FA)
 
 
+SECTION "wram_monsters", WRAM0[$CFBB]
+; The seven summonable partner monsters: Tiger, Mocchi, Hare, Gali, Golem, Suezo,
+; Phenix (indices 0-6, the order of MONSTER_NAME_POINTERS in script.asm). Distinct
+; from the 19 floor-monster species in the `enum MONSTER` (include/room.inc).
+
+wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partner
+                            ;   monster. Indexes wMonsterUses / wMonsterRegenStock,
+                            ;   the name table (ScriptPrintMonsterName), and the
+                            ;   bank-$32 portrait table ($32:$40A5). Set by Pashute's
+                            ;   and Verde's menus (SCRIPT_JUMP_TABLE $cfbb). Transient:
+                            ;   it sits below the saved block, so it is NOT persisted.
+                    ds 19   ; $CFBC-$CFCE
+
+; --- Persistent save block ($CFCF..$D0E6, $118 bytes) ------------------------
+; The game's saved state. On save (Func_12_4b67, bank $12) this block is stamped
+; with the "V03UTS" tag and copied verbatim to SRAM $A6ED; on load (Func_12_4BA1)
+; it is copied back. Integrity is a one-byte XOR of every block byte (Func_00_12EE
+; computes+stores it, Func_00_12E1 recomputes+verifies it), kept in the byte right
+; after the block. The .sav file is the raw 8KB SRAM image, so the block lives at
+; file offset $A6ED-$A000 = 0x6ED with its checksum at 0x805; the three "V03ROOM1
+; /2/3" blocks earlier in the file are the level editor's saved rooms. The block
+; spans several of the sections below (wCFF0, the $D0DC NPC cascade, ...).
+wSaveSignature::    ds 3    ; $CFCF: "V03" save-format signature
+wSaveTag::          ds 4    ; $CFD2: "UTS\0" block tag (the main game save)
+                    ds 4    ; $CFD6-$CFD9
+wMonsterDiscStones:: ds 7   ; $CFDA: per-monster (0-6) disc-stone count. A disc stone
+                            ;   is earned by collecting 4 disc-stone pieces and then
+                            ;   touching that monster on its bonus stage; Pashute's
+                            ;   shrine spends one to regenerate uses (Func_18_4088
+                            ;   decrements it as Func_18_4074 adds 5 to wMonsterUses).
+wMonsterUses::      ds 7    ; $CFE1: per-monster (0-6) summon uses remaining, stored
+                            ;   as BCD (0-99). Pashute's shrine adds 5 via `add a,$05`
+                            ;   + `daa` (Func_18_4074); read through wActiveMonster
+                            ;   (Func_18_403C). Tiger=$CFE1 … Suezo=$CFE6, Phenix=$CFE7.
+                    ds 8    ; $CFE8-$CFEF
+
+
 SECTION "wram_floor_state", WRAM0[$CFF0]
 
 wCFF0::             ds 1    ; tower progress; gates Naji's Restart + Ask render
