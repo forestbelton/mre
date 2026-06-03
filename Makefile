@@ -62,19 +62,19 @@ SDL_LIBS   := $(shell pkg-config --libs sdl2)
 
 verify: $(OUT)
 	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
-	rom_sum=$$(sha256sum $(ROM)  | awk '{print $$1}'); \
+	rom_sum=8f66b5972bf76ed15985815ccdecc459fab9e84221454139b05d1d6654b69e7a; \
 	if [ "$$built_sum" = "$$rom_sum" ]; then \
 		printf 'verify: OK — sha256 %s\n' "$$built_sum"; \
 	else \
-		printf 'verify: FAIL\n  built (%s): %s\n  rom   (%s): %s\n' \
-			$(OUT) "$$built_sum" $(ROM) "$$rom_sum"; \
+		printf 'verify: FAIL\n  built (%s): %s\n  rom: %s\n' \
+			$(OUT) "$$built_sum" "$$rom_sum"; \
 		exit 1; \
 	fi
 
 rom: $(OUT)
 
-$(OUT): $(EXTRACT_STAMP) $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
-	@# Build every gfx PNG the extractor emitted into its 2bpp tile data.
+$(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
+	@# Build every gfx PNG into its 2bpp tile data.
 	@# `-c embedded` maps PNG pixels back to 2bpp values by the embedded
 	@# palette's index order, so the round-trip is byte-exact (the asm
 	@# INCBINs only the leading bytes; rgbgfx zero-pads the last tile-row).
