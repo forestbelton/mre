@@ -1,7 +1,7 @@
 {
 	"files":	[{
 			"type":	"code",
-			"name":	"kalum_portrait.asm",
+			"name":	"gfx/portrait/kalum.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	475136,
@@ -50,7 +50,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"toamuna_portrait.asm",
+			"name":	"gfx/portrait/toamuna.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	425984,
@@ -70,7 +70,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"rafaga_portrait.asm",
+			"name":	"gfx/portrait/rafaga.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	482073,
@@ -90,7 +90,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"tempest_portrait.asm",
+			"name":	"gfx/portrait/tempest.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	498663,
@@ -110,7 +110,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"naji_portrait.asm",
+			"name":	"gfx/portrait/naji.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	432872,
@@ -130,7 +130,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"pashute_portrait.asm",
+			"name":	"gfx/portrait/pashute.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	442368,
@@ -150,7 +150,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"ferious_portrait.asm",
+			"name":	"gfx/portrait/ferious.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	868352,
@@ -198,7 +198,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"bodka_portrait.asm",
+			"name":	"gfx/portrait/bodka.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	491520,
