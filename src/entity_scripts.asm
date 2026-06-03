@@ -1481,7 +1481,7 @@ EScript_7a4b:
     ent_jr_busy .l7a51
     ent_jump FlameBlue_Hidden
 
-Mob12_StandR:
+Tiger_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -1490,50 +1490,50 @@ Mob12_StandR:
 EScript_7a60:
     ent_call $64dd
     ent_loop_timer EScript_7a60
-    ent_jump Mob12_Chase
+    ent_jump Tiger_Chase
 
 EScript_7a69:
     ent_yield
     ent_jump EScript_7a60
 
-Mob12_StandL:
+Tiger_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7a74
-    ent_call Mob12_Think
+    ent_call Tiger_Think
     ent_loop_timer .l7a74
     ent_set_xflip $ff
 
-Mob12_Chase:
+Tiger_Chase:
     ent_set_type $02
     ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7a85
-    ent_call Mob12_ThinkProbe
+    ent_call Tiger_ThinkProbe
     ent_yield
     ent_jump .l7a85
 
-Mob12_Windup:
+Tiger_Windup:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l7a93
     ent_update_action
-    ent_jr_busy Mob12_Hurt
+    ent_jr_busy Tiger_Hurt
     ent_loop_timer .l7a93
-    ent_call Mob12_FireMissile
+    ent_call Tiger_FireMissile
     ent_set_timer $05
 .l7a9f
     ent_update_action
-    ent_jr_busy Mob12_Hurt
+    ent_jr_busy Tiger_Hurt
     ent_loop_timer .l7a9f
-    ent_jump Mob12_Chase
+    ent_jump Tiger_Chase
 
-Mob12_Hurt:
+Tiger_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -1548,50 +1548,50 @@ Mob12_Hurt:
     ent_set_timer $f0
 .l7abb
     ent_update_action
-    ent_jr_busy Mob12_Hurt
+    ent_jr_busy Tiger_Hurt
     ent_loop_timer .l7abb
-    ent_jump Mob12_StandR
+    ent_jump Tiger_StandR
 
-Mob13_StandR:
+Mocchi_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7acc
-    ent_call Mob13_Think
+    ent_call Mocchi_Think
     ent_loop_timer .l7acc
-    ent_jump Mob13_Chase
+    ent_jump Mocchi_Chase
 
-Mob13_StandL:
+Mocchi_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7adc
-    ent_call Mob13_Think
+    ent_call Mocchi_Think
     ent_loop_timer .l7adc
     ent_set_xflip $ff
 
-Mob13_Chase:
+Mocchi_Chase:
     ent_set_type $02
     ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7aed
-    ent_call Mob13_ThinkB
+    ent_call Mocchi_ThinkB
     ent_yield
     ent_jump .l7aed
 
-Mob13_Attack:
+Mocchi_Attack:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
 .l7af9
-    ent_call Mob13_ThinkC
+    ent_call Mocchi_ThinkC
     ent_yield
     ent_jump .l7af9
 
-Mob13_Hurt:
+Mocchi_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -1600,23 +1600,23 @@ Mob13_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l7b06
-    ent_jump Mob13_StandR
+    ent_jump Mocchi_StandR
 
-Mob13_Charge:
+Mocchi_Charge:
     ent_set_type $05
     ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $05
 .l7b17
-    ent_call Mob13_ThinkD
+    ent_call Mocchi_ThinkD
     ent_yield
     ent_jump .l7b17
 
 EScript_7b1e:
     ent_set_xflip $ff
-    ent_jump Mob13_Charge
+    ent_jump Mocchi_Charge
 
-Mob13_Special:
+Mocchi_Special:
     ent_set_type $06
     ent_vel_x_zero
     ent_gfx $05
@@ -1637,70 +1637,70 @@ Mob13_Special:
     ent_set_timer $f0
 .l7b3e
     ent_update_action
-    ent_jr_busy Mob13_Hurt
+    ent_jr_busy Mocchi_Hurt
     ent_loop_timer .l7b3e
-    ent_jump Mob13_StandR
+    ent_jump Mocchi_StandR
 
-Mob14_StandR:
+Hare_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7b4f
-    ent_call Mob14_Think5
+    ent_call Hare_Think5
     ent_loop_timer .l7b4f
-    ent_jump Mob14_Chase
+    ent_jump Hare_Chase
 
-Mob14_StandL:
+Hare_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7b5f
-    ent_call Mob14_Think3
+    ent_call Hare_Think3
     ent_loop_timer .l7b5f
     ent_set_xflip $ff
 
-Mob14_Chase:
+Hare_Chase:
     ent_set_type $02
     ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7b70
-    ent_call Mob14_Think5
+    ent_call Hare_Think5
     ent_yield
     ent_jump .l7b70
 
-Mob14_WindupR:
+Hare_WindupR:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l7b7e
     ent_update_action
-    ent_jr_busy Mob14_Hurt
+    ent_jr_busy Hare_Hurt
     ent_loop_timer .l7b7e
     ent_call MonsterBreakTileInFront
     ent_set_timer $05
     ent_wait_timer
-    ent_jump Mob14_Chase
+    ent_jump Hare_Chase
 
-Mob14_WindupL:
+Hare_WindupL:
     ent_set_type $07
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l7b95
     ent_update_action
-    ent_jr_busy Mob14_Hurt
+    ent_jr_busy Hare_Hurt
     ent_loop_timer .l7b95
     ent_call MonsterBreakTileInFront
     ent_set_timer $05
     ent_wait_timer
     ent_set_xflip $ff
-    ent_jump Mob14_Chase
+    ent_jump Hare_Chase
 
-Mob14_Hurt:
+Hare_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -1711,13 +1711,13 @@ Mob14_Hurt:
     ent_jr_busy .l7bad
     ent_jump EScript_7bc5
 
-Mob14_Charge:
+Hare_Charge:
     ent_set_type $06
     ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $02
 .l7bbe
-    ent_call Mob14_ThinkB
+    ent_call Hare_ThinkB
     ent_yield
     ent_jump .l7bbe
 
@@ -1728,23 +1728,23 @@ EScript_7bc5:
     ent_set_timer $f0
 .l7bcc
     ent_update_action
-    ent_jr_busy Mob14_Hurt
+    ent_jr_busy Hare_Hurt
     ent_loop_timer .l7bcc
-    ent_jump Mob14_StandR
+    ent_jump Hare_StandR
 
-Mob15_StandR:
+Gali_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
     ent_wait_timer
-    ent_jump Mob15_Chase
+    ent_jump Gali_Chase
 
-Mob15_Windup:
+Gali_Windup:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
-    ent_call Mob15_FireShot
+    ent_call Gali_FireShot
     ent_set_timer $09
     ent_wait_timer
     ent_call MonsterBreakTileInFront
@@ -1752,18 +1752,18 @@ Mob15_Windup:
     ent_wait_timer
     ent_set_xflip $ff
 
-Mob15_Chase:
+Gali_Chase:
     ent_set_type $02
     ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7bfd
     ent_call ProbeFrontTile
-    ent_jr_b8_eq $03, Mob15_Windup
+    ent_jr_b8_eq $03, Gali_Windup
     ent_yield
     ent_jump .l7bfd
 
-Mob15_Die:
+Gali_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -1776,70 +1776,70 @@ Mob15_Die:
     ent_set_timer $f0
 .l7c17
     ent_update_action
-    ent_jr_busy Mob15_Die
+    ent_jr_busy Gali_Die
     ent_loop_timer .l7c17
-    ent_jump Mob15_StandR
+    ent_jump Gali_StandR
 
-Mob16_StandR:
+Golem_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7c28
-    ent_call Mob16_Think5
+    ent_call Golem_Think5
     ent_loop_timer .l7c28
-    ent_jump Mob16_Chase
+    ent_jump Golem_Chase
 
-Mob16_StandL:
+Golem_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7c38
-    ent_call Mob16_Think3
+    ent_call Golem_Think3
     ent_loop_timer .l7c38
     ent_set_xflip $ff
 
-Mob16_Chase:
+Golem_Chase:
     ent_set_type $02
-    ent_vel_x_indexed Mob16WalkVel
+    ent_vel_x_indexed GolemWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7c49
-    ent_call Mob16_Think5
+    ent_call Golem_Think5
     ent_yield
     ent_jump .l7c49
 
-Mob16_WindupR:
+Golem_WindupR:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l7c57
     ent_update_action
-    ent_jr_busy Mob16_Hurt
+    ent_jr_busy Golem_Hurt
     ent_loop_timer .l7c57
     ent_call MonsterBreakTileInFront
     ent_set_timer $08
     ent_wait_timer
-    ent_jump Mob16_Chase
+    ent_jump Golem_Chase
 
-Mob16_WindupL:
+Golem_WindupL:
     ent_set_type $07
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l7c6e
     ent_update_action
-    ent_jr_busy Mob16_Hurt
+    ent_jr_busy Golem_Hurt
     ent_loop_timer .l7c6e
     ent_call MonsterBreakTileInFront
     ent_set_timer $08
     ent_wait_timer
     ent_set_xflip $ff
-    ent_jump Mob16_Chase
+    ent_jump Golem_Chase
 
-Mob16_Hurt:
+Golem_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -1850,13 +1850,13 @@ Mob16_Hurt:
     ent_jr_busy .l7c86
     ent_jump EScript_7c9e
 
-Mob16_Charge:
+Golem_Charge:
     ent_set_type $06
-    ent_vel_x_indexed Mob16ChargeVel
+    ent_vel_x_indexed GolemChargeVel
     ent_set_facing $fe
     ent_gfx $02
 .l7c97
-    ent_call Mob16_ThinkB
+    ent_call Golem_ThinkB
     ent_yield
     ent_jump .l7c97
 
@@ -1867,41 +1867,41 @@ EScript_7c9e:
     ent_set_timer $f0
 .l7ca5
     ent_update_action
-    ent_jr_busy Mob16_Hurt
+    ent_jr_busy Golem_Hurt
     ent_loop_timer .l7ca5
-    ent_jump Mob16_StandR
+    ent_jump Golem_StandR
 
-Mob17_StandR:
+Suezo_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7cb6
-    ent_call Mob17_Think4
+    ent_call Suezo_Think4
     ent_loop_timer .l7cb6
-    ent_jump Mob17_Chase
+    ent_jump Suezo_Chase
 
-Mob17_StandL:
+Suezo_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7cc6
-    ent_call Mob17_Think4
+    ent_call Suezo_Think4
     ent_loop_timer .l7cc6
     ent_set_xflip $ff
 
-Mob17_Chase:
+Suezo_Chase:
     ent_set_type $02
     ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7cd7
-    ent_call Mob17_Think5
+    ent_call Suezo_Think5
     ent_yield
     ent_jump .l7cd7
 
-Mob17_Windup:
+Suezo_Windup:
     ent_set_xflip $ff
 
 EScript_7ce0:
@@ -1911,7 +1911,7 @@ EScript_7ce0:
     ent_set_timer $1e
 .l7ce7
     ent_update_action
-    ent_jr_busy Mob17_HurtFlip
+    ent_jr_busy Suezo_HurtFlip
     ent_loop_timer .l7ce7
     ent_call SpawnProjectile21
     ent_call MonsterBreakTileInFront
@@ -1920,12 +1920,12 @@ EScript_7ce0:
     ent_set_timer $05
 .l7cf9
     ent_update_action
-    ent_jr_busy Mob17_HurtFlip
+    ent_jr_busy Suezo_HurtFlip
     ent_loop_timer .l7cf9
     ent_call SetTimer120
-    ent_jump Mob17_Chase
+    ent_jump Suezo_Chase
 
-Mob17_HurtFlip:
+Suezo_HurtFlip:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $01
@@ -1938,9 +1938,9 @@ Mob17_HurtFlip:
     ent_jr_hit EScript_7d1e
     ent_set_facing $00
     ent_set_xflip $00
-    ent_jump Mob17_Chase
+    ent_jump Suezo_Chase
 
 EScript_7d1e:
     ent_set_facing $01
     ent_set_xflip $01
-    ent_jump Mob17_Chase
+    ent_jump Suezo_Chase

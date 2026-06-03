@@ -6,10 +6,10 @@ driven by a tiny **bytecode script** interpreted by the bank-`$03` engine (see
 document specifies the script VM and its instruction set.
 
 The scripts occupy **`$71d5`–`$7d25`** plus one isolated 28-byte script at
-**`$7092`** (~1410 instructions across ~332 labels) in bank `$03`. The `$7092`
-script and the `$71d5` one are spawn types 15 and 14 — non-editor entities
-reached only through `MonsterSpawnScriptTable`, hidden among the velocity tables
-below the selector-reachable region.
+**`$7092`** (~1410 instructions across ~332 labels) in bank `$03`. `$71d5` and
+`$7092` are `MonsterSpawnScriptTable` slots 18/19 — the unreachable gap (no
+monster spawns into them; see "Resolving monster species" below), hidden among
+the velocity tables below the selector-reachable region.
 
 ## The VM
 
@@ -183,17 +183,28 @@ missiles") is the stationary turret group, and **Psylora** ("moves along wall")
 is the 8-direction walker — both land exactly where index = id + 4 predicts,
 with the flyers (Henger/Joker/Ghost) and shooters (Plant/Dino) corroborating.
 
-| id | species | group entry | | id | species | group entry |
-|----|---------|-------------|-|----|---------|-------------|
-| 0 | Tacopi | `$74f1` | | 7 | Ghost | `$77f7` |
-| 1 | Jell | `$756c` | | 8 | Puncho | `$785c` |
-| 2 | Naga | `$7615` | | 9 | Psylora | `$78d7` |
-| 3 | Dino | `$76a8` | | 10 | Ducken | `$797f` |
-| 4 | Plant | `$7713` | | 11 | FlameRed | `$79df` |
-| 5 | Henger | `$7777` | | 12 | FlameBlue | `$7a1f` |
-| 6 | Joker | `$77b7` | | | | |
+| id | species | entry | | id | species | entry |
+|----|---------|-------|-|----|---------|-------|
+| 0 | Tacopi | `$74f1` | | 10 | Ducken | `$797f` |
+| 1 | Jell | `$756c` | | 11 | FlameRed | `$79df` |
+| 2 | Naga | `$7615` | | 12 | FlameBlue | `$7a1f` |
+| 3 | Dino | `$76a8` | | 14 | **Tiger** | `$7a59` |
+| 4 | Plant | `$7713` | | 15 | **Mocchi** | `$7ac5` |
+| 5 | Henger | `$7777` | | 16 | **Hare** | `$7b48` |
+| 6 | Joker | `$77b7` | | 17 | **Gali** | `$7bd6` |
+| 7 | Ghost | `$77f7` | | 18 | **Golem** | `$7c21` |
+| 8 | Puncho | `$785c` | | 19 | **Suezo** | `$7caf` |
+| 9 | Psylora | `$78d7` | | | | |
+
+Species **14–19 are the friendly Monster Rancher breeds** (Tiger, Mocchi, Hare,
+Gali, Golem, Suezo) that appear on the bonus stages — named in `room.inc`'s
+`enum MONSTER` and confirmed by the floor scan (special floors 83–88). The index
+relation is `table_slot = $ffb0 - $2c`, and `SpawnFloorMonsters` gives a monster
+`$ffb0 = species + $30`, **plus 2 if species ≥ 14** (`cp $3e; jr c; add $02`).
+That `+2` skips `$ffb0 = $3e/$3f`, so the friendly breeds land in slots 20–25
+(not 18/19), and table slots 18/19 (`$71d5`, `$7092`) are the unreachable gap —
+left as `EScript_*` since no monster ever spawns into them.
 
 So each monster's scripts are named `<Species>_<Role>` (e.g. `Ducken_FireR`,
-`Naga_Windup`). Table slots 16–21 (`Mob12`–`Mob17`) are non-editor entity types
-(bonus-stage / internal) with no legend names, so they keep numbered prefixes.
-The player avatar is fully resolved (walk/push/pull/grab/carry/throw/kick).
+`Suezo_Chase`). The player avatar is fully resolved (walk/push/pull/grab/carry/
+throw/kick).

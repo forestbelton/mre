@@ -148,5 +148,6 @@ the editor legend), and the ~110 native routines/tables the scripts `ent_call`
 shared helpers, velocity tables) are named too; see
 [`entity_scripts.md`](entity_scripts.md). Good next targets: the shared internal
 probes (`$59aa`, `$663c`, …) and the 8-direction locomotion cores
-(`$5de3`–`$62e8`) those selectors call, and identifying the non-editor entity
-types (`Mob12`–`Mob17`, spawn types 14/15 — likely bonus-stage monsters).
+(`$5de3`–`$62e8`) those selectors call. (The bonus-stage friendly breeds —
+Tiger, Mocchi, Hare, Gali, Golem, Suezo — are now resolved; only the two
+unreachable gap scripts `$71d5`/`$7092` remain unnamed.)

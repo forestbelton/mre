@@ -3114,7 +3114,7 @@ SpawnProjectile24:
 	ld c, $24
 	call SpawnProjectileInFront
 	ret
-Mob15_FireShot:
+Gali_FireShot:
 	ld c, $25
 	call SpawnProjectileInFront
 	ret
@@ -3240,7 +3240,7 @@ SECTION "room_00d468", ROMX[$5468], BANK[$03]
 
 Data_03_5468:
 	db $3c, $00, $3c, $00
-Mob12_FireMissile:
+Tiger_FireMissile:
 	db $f0, $b6, $cb, $7f, $28, $04, $0e, $f0, $18, $02, $0e, $10, $3e, $26, $06, $f8
 	db $cd, $94, $53, $cd, $47, $54, $c9
 
@@ -5946,7 +5946,7 @@ Func_03_64d8:
 	ld a, $01
 	ldh [$ffb8], a
 	ret
-	call Mob12_ProbeFireWindow
+	call Tiger_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_64f3
@@ -5975,8 +5975,8 @@ Func_03_64ff:
 
 SECTION "room_00e503", ROMX[$6503], BANK[$03]
 
-Mob12_Think:
-	call Mob12_ProbeFireWindow
+Tiger_Think:
+	call Tiger_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6519
@@ -6005,8 +6005,8 @@ Func_03_6525:
 
 SECTION "room_00e529", ROMX[$6529], BANK[$03]
 
-Mob12_ThinkProbe:
-	call Mob12_ProbeFireOrTurn
+Tiger_ThinkProbe:
+	call Tiger_ProbeFireOrTurn
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_653f
@@ -6035,8 +6035,8 @@ SECTION "room_00e54b", ROMX[$654b], BANK[$03]
 Func_03_654b:
 	ld de, $7a6d
 	ret
-Mob12_ProbeFireOrTurn:
-	call Mob12_ProbeFireWindow
+Tiger_ProbeFireOrTurn:
+	call Tiger_ProbeFireWindow
 	or a
 	ret nz
 	ld a, b
@@ -6103,7 +6103,7 @@ Func_03_65a9:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Mob12_ProbeFireWindow:
+Tiger_ProbeFireWindow:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_65bc
@@ -6129,7 +6129,7 @@ Data_03_65c2:
 
 SECTION "room_00e5dc", ROMX[$65dc], BANK[$03]
 
-Mob13_Think:
+Mocchi_Think:
 	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
@@ -6149,7 +6149,7 @@ Func_03_65ee:
 
 SECTION "room_00e5f2", ROMX[$65f2], BANK[$03]
 
-Mob13_ThinkB:
+Mocchi_ThinkB:
 	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
@@ -6174,7 +6174,7 @@ Func_03_6608:
 Func_03_660c:
 	ld de, $7ad5
 	ret
-Mob13_ThinkC:
+Mocchi_ThinkC:
 	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
@@ -6191,7 +6191,7 @@ Func_03_661e:
 Func_03_6622:
 	ld de, $7ac5
 	ret
-Mob13_ThinkD:
+Mocchi_ThinkD:
 	call ProbeAimedOrCrate
 	ldh a, [$ffb8]
 	cp $ff
@@ -6397,8 +6397,8 @@ MonsterBreakTileUnder:
 	call BreakTileAtCell
 	pop de
 	ret
-Mob17_Think4:
-	call Mob17_ProbeChargeAlign
+Suezo_Think4:
+	call Suezo_ProbeChargeAlign
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_675f
@@ -6427,8 +6427,8 @@ Func_03_676b:
 
 SECTION "room_00e76f", ROMX[$676f], BANK[$03]
 
-Mob17_Think5:
-	call Mob17_ProbeChargeOrWall
+Suezo_Think5:
+	call Suezo_ProbeChargeOrWall
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6789
@@ -6474,8 +6474,8 @@ Func_03_6799:
 
 SECTION "room_00e79d", ROMX[$679d], BANK[$03]
 
-Mob17_ProbeChargeOrWall:
-	call Mob17_ProbeChargeAlign
+Suezo_ProbeChargeOrWall:
+	call Suezo_ProbeChargeAlign
 	cp $ff
 	ret z
 	cp $02
@@ -6551,7 +6551,7 @@ Func_03_67f7:
 
 SECTION "room_00e803", ROMX[$6803], BANK[$03]
 
-Mob17_ProbeChargeAlign:
+Suezo_ProbeChargeAlign:
 	call DecGenTimer16
 	call UpdateActionTimer
 	bit 0, a
@@ -6578,7 +6578,7 @@ Data_03_6816:
 
 SECTION "room_00e837", ROMX[$6837], BANK[$03]
 
-Mob16_Think3:
+Golem_Think3:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -6603,7 +6603,7 @@ Func_03_6851:
 
 SECTION "room_00e855", ROMX[$6855], BANK[$03]
 
-Mob16_Think5:
+Golem_Think5:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -6638,7 +6638,7 @@ Func_03_687b:
 Func_03_687f:
 	ld de, $7c8e
 	ret
-Mob16_ThinkB:
+Golem_ThinkB:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -6668,7 +6668,7 @@ SECTION "room_00e8a5", ROMX[$68a5], BANK[$03]
 Func_03_68a5:
 	ld de, $7c31
 	ret
-Mob14_Think3:
+Hare_Think3:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -6693,7 +6693,7 @@ Func_03_68c3:
 
 SECTION "room_00e8c7", ROMX[$68c7], BANK[$03]
 
-Mob14_Think5:
+Hare_Think5:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -6734,7 +6734,7 @@ Func_03_68ed:
 Func_03_68f1:
 	ld de, $7bb5
 	ret
-Mob14_ThinkB:
+Hare_ThinkB:
 	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
@@ -7873,7 +7873,7 @@ SECTION "room_00efde", ROMX[$6fde], BANK[$03]
 
 Data_03_6fde:
 	db $9c, $00, $9c, $00, $80, $00, $c0, $00, $00, $01, $80, $01, $00, $02
-Mob16WalkVel:
+GolemWalkVel:
 	db $2a, $00, $3f, $00
 
 SECTION "room_00eff0", ROMX[$6ff0], BANK[$03]
@@ -7885,7 +7885,7 @@ SECTION "room_00eff2", ROMX[$6ff2], BANK[$03]
 
 Data_03_6ff2:
 	db $7f, $00, $aa, $00
-Mob16ChargeVel:
+GolemChargeVel:
 	db $55, $00, $7f, $00
 
 SECTION "room_00effa", ROMX[$6ffa], BANK[$03]

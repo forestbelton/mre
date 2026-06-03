@@ -18134,7 +18134,7 @@
 			"name":	"EScript_7a4b"
 		}, {
 			"addr":	64089,
-			"name":	"Mob12_StandR"
+			"name":	"Tiger_StandR"
 		}, {
 			"addr":	64096,
 			"name":	"EScript_7a60"
@@ -18143,118 +18143,118 @@
 			"name":	"EScript_7a69"
 		}, {
 			"addr":	64109,
-			"name":	"Mob12_StandL"
+			"name":	"Tiger_StandL"
 		}, {
 			"addr":	64124,
-			"name":	"Mob12_Chase"
+			"name":	"Tiger_Chase"
 		}, {
 			"addr":	64140,
-			"name":	"Mob12_Windup"
+			"name":	"Tiger_Windup"
 		}, {
 			"addr":	64169,
-			"name":	"Mob12_Hurt"
+			"name":	"Tiger_Hurt"
 		}, {
 			"addr":	64197,
-			"name":	"Mob13_StandR"
+			"name":	"Mocchi_StandR"
 		}, {
 			"addr":	64213,
-			"name":	"Mob13_StandL"
+			"name":	"Mocchi_StandL"
 		}, {
 			"addr":	64228,
-			"name":	"Mob13_Chase"
+			"name":	"Mocchi_Chase"
 		}, {
 			"addr":	64244,
-			"name":	"Mob13_Attack"
+			"name":	"Mocchi_Attack"
 		}, {
 			"addr":	64256,
-			"name":	"Mob13_Hurt"
+			"name":	"Mocchi_Hurt"
 		}, {
 			"addr":	64270,
-			"name":	"Mob13_Charge"
+			"name":	"Mocchi_Charge"
 		}, {
 			"addr":	64286,
 			"name":	"EScript_7b1e"
 		}, {
 			"addr":	64291,
-			"name":	"Mob13_Special"
+			"name":	"Mocchi_Special"
 		}, {
 			"addr":	64328,
-			"name":	"Mob14_StandR"
+			"name":	"Hare_StandR"
 		}, {
 			"addr":	64344,
-			"name":	"Mob14_StandL"
+			"name":	"Hare_StandL"
 		}, {
 			"addr":	64359,
-			"name":	"Mob14_Chase"
+			"name":	"Hare_Chase"
 		}, {
 			"addr":	64375,
-			"name":	"Mob14_WindupR"
+			"name":	"Hare_WindupR"
 		}, {
 			"addr":	64398,
-			"name":	"Mob14_WindupL"
+			"name":	"Hare_WindupL"
 		}, {
 			"addr":	64423,
-			"name":	"Mob14_Hurt"
+			"name":	"Hare_Hurt"
 		}, {
 			"addr":	64437,
-			"name":	"Mob14_Charge"
+			"name":	"Hare_Charge"
 		}, {
 			"addr":	64453,
 			"name":	"EScript_7bc5"
 		}, {
 			"addr":	64470,
-			"name":	"Mob15_StandR"
+			"name":	"Gali_StandR"
 		}, {
 			"addr":	64481,
-			"name":	"Mob15_Windup"
+			"name":	"Gali_Windup"
 		}, {
 			"addr":	64500,
-			"name":	"Mob15_Chase"
+			"name":	"Gali_Chase"
 		}, {
 			"addr":	64520,
-			"name":	"Mob15_Die"
+			"name":	"Gali_Die"
 		}, {
 			"addr":	64545,
-			"name":	"Mob16_StandR"
+			"name":	"Golem_StandR"
 		}, {
 			"addr":	64561,
-			"name":	"Mob16_StandL"
+			"name":	"Golem_StandL"
 		}, {
 			"addr":	64576,
-			"name":	"Mob16_Chase"
+			"name":	"Golem_Chase"
 		}, {
 			"addr":	64592,
-			"name":	"Mob16_WindupR"
+			"name":	"Golem_WindupR"
 		}, {
 			"addr":	64615,
-			"name":	"Mob16_WindupL"
+			"name":	"Golem_WindupL"
 		}, {
 			"addr":	64640,
-			"name":	"Mob16_Hurt"
+			"name":	"Golem_Hurt"
 		}, {
 			"addr":	64654,
-			"name":	"Mob16_Charge"
+			"name":	"Golem_Charge"
 		}, {
 			"addr":	64670,
 			"name":	"EScript_7c9e"
 		}, {
 			"addr":	64687,
-			"name":	"Mob17_StandR"
+			"name":	"Suezo_StandR"
 		}, {
 			"addr":	64703,
-			"name":	"Mob17_StandL"
+			"name":	"Suezo_StandL"
 		}, {
 			"addr":	64718,
-			"name":	"Mob17_Chase"
+			"name":	"Suezo_Chase"
 		}, {
 			"addr":	64734,
-			"name":	"Mob17_Windup"
+			"name":	"Suezo_Windup"
 		}, {
 			"addr":	64736,
 			"name":	"EScript_7ce0"
 		}, {
 			"addr":	64774,
-			"name":	"Mob17_HurtFlip"
+			"name":	"Suezo_HurtFlip"
 		}, {
 			"addr":	64798,
 			"name":	"EScript_7d1e"
@@ -18347,7 +18347,7 @@
 			"name":	"SpawnProjectile24"
 		}, {
 			"addr":	54152,
-			"name":	"Mob15_FireShot"
+			"name":	"Gali_FireShot"
 		}, {
 			"addr":	54158,
 			"name":	"SpawnProjectile21"
@@ -18362,7 +18362,7 @@
 			"name":	"SetProjectileSpeed"
 		}, {
 			"addr":	54380,
-			"name":	"Mob12_FireMissile"
+			"name":	"Tiger_FireMissile"
 		}, {
 			"addr":	54403,
 			"name":	"Plant_FireMissile"
@@ -18470,46 +18470,46 @@
 			"name":	"Naga_Think5"
 		}, {
 			"addr":	58627,
-			"name":	"Mob12_Think"
+			"name":	"Tiger_Think"
 		}, {
 			"addr":	58665,
-			"name":	"Mob12_ThinkProbe"
+			"name":	"Tiger_ThinkProbe"
 		}, {
 			"addr":	58844,
-			"name":	"Mob13_Think"
+			"name":	"Mocchi_Think"
 		}, {
 			"addr":	58866,
-			"name":	"Mob13_ThinkB"
+			"name":	"Mocchi_ThinkB"
 		}, {
 			"addr":	58896,
-			"name":	"Mob13_ThinkC"
+			"name":	"Mocchi_ThinkC"
 		}, {
 			"addr":	58918,
-			"name":	"Mob13_ThinkD"
+			"name":	"Mocchi_ThinkD"
 		}, {
 			"addr":	59209,
-			"name":	"Mob17_Think4"
+			"name":	"Suezo_Think4"
 		}, {
 			"addr":	59247,
-			"name":	"Mob17_Think5"
+			"name":	"Suezo_Think5"
 		}, {
 			"addr":	59447,
-			"name":	"Mob16_Think3"
+			"name":	"Golem_Think3"
 		}, {
 			"addr":	59477,
-			"name":	"Mob16_Think5"
+			"name":	"Golem_Think5"
 		}, {
 			"addr":	59523,
-			"name":	"Mob16_ThinkB"
+			"name":	"Golem_ThinkB"
 		}, {
 			"addr":	59561,
-			"name":	"Mob14_Think3"
+			"name":	"Hare_Think3"
 		}, {
 			"addr":	59591,
-			"name":	"Mob14_Think5"
+			"name":	"Hare_Think5"
 		}, {
 			"addr":	59637,
-			"name":	"Mob14_ThinkB"
+			"name":	"Hare_ThinkB"
 		}, {
 			"addr":	53623,
 			"name":	"Shard_HomeFaceRight"
@@ -18563,10 +18563,10 @@
 			"name":	"PlayerCarryWalkVel"
 		}, {
 			"addr":	61420,
-			"name":	"Mob16WalkVel"
+			"name":	"GolemWalkVel"
 		}, {
 			"addr":	61430,
-			"name":	"Mob16ChargeVel"
+			"name":	"GolemChargeVel"
 		}, {
 			"addr":	61440,
 			"name":	"MonsterWalkVel"
@@ -18638,10 +18638,10 @@
 			"name":	"Naga_ProbeChargeAlign"
 		}, {
 			"addr":	58798,
-			"name":	"Mob12_ProbeFireWindow"
+			"name":	"Tiger_ProbeFireWindow"
 		}, {
 			"addr":	58703,
-			"name":	"Mob12_ProbeFireOrTurn"
+			"name":	"Tiger_ProbeFireOrTurn"
 		}, {
 			"addr":	59079,
 			"name":	"ProbeAimedRetreat"
@@ -18653,10 +18653,10 @@
 			"name":	"ProbeAimedOrCrate"
 		}, {
 			"addr":	59395,
-			"name":	"Mob17_ProbeChargeAlign"
+			"name":	"Suezo_ProbeChargeAlign"
 		}, {
 			"addr":	59293,
-			"name":	"Mob17_ProbeChargeOrWall"
+			"name":	"Suezo_ProbeChargeOrWall"
 		}, {
 			"addr":	56803,
 			"name":	"WallFollow_DownRight"
