@@ -256,18 +256,18 @@ Func_00_0153:
 	ld [$c285], a
 	call Func_00_01ca
 	call Func_00_018f
-	call Func_00_0a30
+	call ResetSoundEngine
 	call HideAllSprites
 	ld a, $c7
 	ldh [rLCDC], a
 	ei
 	push af
 	ld a, $00
-	call CallLibFunc
+	call PlaySound
 	pop af
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld c, $0a
 Func_00_017f:
@@ -387,11 +387,11 @@ Func_00_01fe:
 	call Func_00_0822
 	call WaitForNextFrame
 	call Func_00_018f
-	call Func_00_0a30
+	call ResetSoundEngine
 	call HideAllSprites
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call WaitForNextFrame
 	di
@@ -499,7 +499,7 @@ Func_00_02b9:
 	ld a, $01
 	ld [$c286], a
 	ei
-	call Func_00_0a45
+	call UpdateSoundEngine
 	pop hl
 	pop de
 	pop bc
@@ -1650,7 +1650,7 @@ Data_00_0a1a:
 
 SECTION "analyzed_000a30", ROM0[$0a30]
 
-Func_00_0a30:
+ResetSoundEngine:
 	ld a, [$7fff]
 	push af
 	ld a, $3f
@@ -1661,7 +1661,7 @@ Func_00_0a30:
 	xor a
 	ld [$c28c], a
 	ret
-Func_00_0a45:
+UpdateSoundEngine:
 	ld a, [$7fff]
 	push af
 	ld a, $3f
@@ -1670,17 +1670,17 @@ Func_00_0a45:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_0a56:
+PlaySoundIfChanged:
 	push hl
 	ld hl, $c28c
 	cp [hl]
 	jr z, Func_00_0a61
 	ld [hl], a
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 Func_00_0a61:
 	pop hl
 	ret
-CallLibFuncSaveId:
+PlaySoundTracked:
 	ld [$c28c], a
 	push bc
 	push de
@@ -1702,7 +1702,7 @@ CallLibFuncSaveId:
 	pop de
 	pop bc
 	ret
-CallLibFunc:
+PlaySound:
 	push bc
 	push de
 	push hl
@@ -1734,7 +1734,7 @@ Data_00_0aa4:
 
 SECTION "analyzed_000ad8", ROM0[$0ad8]
 
-LibFuncTable:
+SoundCommandTable:
 	db $3f, $00, $3f, $01, $3f, $02, $3f, $03, $3f, $04, $3f, $05, $3f, $06, $3f, $07
 	db $3f, $08, $3f, $09, $3f, $0a, $3f, $0b, $3f, $0c, $3f, $0d, $3f, $0e, $3f, $0f
 	db $3f, $10, $3f, $11, $3f, $12, $3f, $13
@@ -3903,7 +3903,7 @@ SECTION "analyzed_001982", ROM0[$1982]
 OpenRoomArrangeMenu:
 	push af
 	ld a, $30
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $00
 	ld [$c55d], a
@@ -3997,7 +3997,7 @@ Func_00_1a1e:
 	call CallBankedHL
 	push af
 	ld a, $30
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_19ba
 Func_00_1a66:
@@ -4215,7 +4215,7 @@ Func_00_1be5:
 	jr z, Func_00_1c20
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c562]
 	inc a
@@ -4249,7 +4249,7 @@ Func_00_1c20:
 	jr z, Func_00_1c57
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c562]
 	dec a
@@ -4284,7 +4284,7 @@ Func_00_1c57:
 	jr z, Func_00_1c6c
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $02
 	ld [$d0e9], a
@@ -4296,7 +4296,7 @@ Func_00_1c6c:
 	jr z, Func_00_1c7e
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $00
 	ld [$d0e9], a
@@ -4325,7 +4325,7 @@ Func_00_1c9d:
 	jr z, Func_00_1cdc
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c562]
 	inc a
@@ -4361,7 +4361,7 @@ Func_00_1cdc:
 	jr z, Func_00_1d17
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c562]
 	dec a
@@ -4402,7 +4402,7 @@ Func_00_1d17:
 	jr nc, Func_00_1d69
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	cp $03
 	jr nz, Func_00_1d40
@@ -4452,7 +4452,7 @@ Func_00_1d69:
 	jr nc, Func_00_1db8
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	cp $03
 	jr nz, Func_00_1d92
@@ -4504,7 +4504,7 @@ Func_00_1dd0:
 	jr z, Func_00_1de5
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $00
 	ld [$d0e9], a
@@ -4607,7 +4607,7 @@ Func_00_1e72:
 	jr z, Func_00_1e93
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c565]
 	inc a
@@ -4629,7 +4629,7 @@ Func_00_1e93:
 	jr z, Func_00_1eb0
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c565]
 	dec a
@@ -4651,7 +4651,7 @@ Func_00_1eb0:
 	jr z, Func_00_1ecd
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c564]
 	dec a
@@ -4676,7 +4676,7 @@ Func_00_1ecd:
 	jr z, Func_00_1eeb
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c564]
 	inc a
@@ -4698,7 +4698,7 @@ Func_00_1eeb:
 	jr z, Func_00_1f07
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld [$d0e9], a
@@ -5175,7 +5175,7 @@ Func_00_21a5:
 	jr nc, Func_00_21a5
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor $01
 	jr Func_00_221e
@@ -5186,7 +5186,7 @@ Func_00_21c4:
 	jr nc, Func_00_21a5
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor $01
 	jr Func_00_221e
@@ -5219,7 +5219,7 @@ Func_00_2201:
 	jr z, Func_00_220d
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_00_220d:
@@ -5267,7 +5267,7 @@ Func_00_2253:
 	jr z, Func_00_228f
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	cp $20
 	jr nc, Func_00_227f
@@ -5320,7 +5320,7 @@ Func_00_228f:
 	jr z, Func_00_22bb
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	cp $20
 	jr nc, Func_00_22ad
@@ -5359,7 +5359,7 @@ Func_00_22bb:
 	jr z, Func_00_22d0
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	add a, $10
 	cp $30
@@ -5389,7 +5389,7 @@ Func_00_22e5:
 	jp z, Func_00_22f7
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_00_313d
 	ret z
@@ -5486,7 +5486,7 @@ Func_00_2391:
 	jr z, Func_00_23a2
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_00_23c3
 	ret nz
@@ -6050,7 +6050,7 @@ Func_00_28fb:
 	jr z, Func_00_2922
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c56a]
 	ld c, a
@@ -6069,7 +6069,7 @@ Func_00_2922:
 	jr z, Func_00_2945
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c566]
 	dec a
@@ -6087,7 +6087,7 @@ Func_00_2945:
 	jr z, Func_00_296d
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c56d]
 	ld c, a
@@ -6109,7 +6109,7 @@ Func_00_296d:
 	jr z, Func_00_2994
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c567]
 	dec a
@@ -6133,7 +6133,7 @@ Func_00_2994:
 	jr nz, Func_00_29c1
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c7d3]
 	ld [$c7cf], a
@@ -6154,7 +6154,7 @@ Func_00_29c1:
 Func_00_29cb:
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $00
 	ld [$d0e9], a
@@ -6189,7 +6189,7 @@ Func_00_2a05:
 	jr z, Func_00_2a25
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_00_2a13:
 	ld a, [$c567]
@@ -6206,7 +6206,7 @@ Func_00_2a25:
 	jr z, Func_00_2a41
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_00_2a30:
 	ld a, [$c567]
@@ -6223,7 +6223,7 @@ Func_00_2a41:
 	jr z, Func_00_2a60
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c56a]
 	ld c, a
@@ -6241,7 +6241,7 @@ Func_00_2a60:
 	jr z, Func_00_2a7f
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$c566]
 	dec a
@@ -6258,7 +6258,7 @@ Func_00_2a7f:
 	jr z, Func_00_2a9d
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [$c566], a
@@ -6277,7 +6277,7 @@ Func_00_2a9d:
 Func_00_2aa7:
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $00
 	ld [$d0e9], a
@@ -7853,7 +7853,7 @@ Func_00_3450:
 	ld [$c7de], a
 	push af
 	ld a, $02
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_00_3386
 	ret
@@ -7923,7 +7923,7 @@ Func_00_34bc:
 	call ResetFloorScroll
 	push af
 	ld a, $2f
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -7933,7 +7933,7 @@ Func_00_34e3:
 	call ResetFloorScroll
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -7958,7 +7958,7 @@ Func_00_3508:
 	call ResetFloorScroll
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -7972,7 +7972,7 @@ Func_00_3508:
 	call ResetFloorScroll
 	push af
 	ld a, $31
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
@@ -7981,7 +7981,7 @@ Func_00_3508:
 	ld [$c2a7], a
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 	call ResetFloorScroll
@@ -7994,7 +7994,7 @@ Func_00_3508:
 	ret
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call ResetFloorScroll
 	ld a, [wC2D7]
@@ -8026,20 +8026,20 @@ IntroScene_TecmoLogo:
 	ld [$c2a7], a
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 	call ResetFloorScroll
 	push af
 	ld a, $37
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_54b8
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $03
 	ld [$c2a9], a
@@ -9157,13 +9157,13 @@ Func_01_449d:
 	jr z, Func_01_44b5
 	push af
 	ld a, $2a
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44b5:
 	push af
 	ld a, $2d
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44bd:
@@ -9174,7 +9174,7 @@ Func_01_44bd:
 	jr z, Func_01_44e7
 	push af
 	ld a, $29
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44d0:
@@ -9183,19 +9183,19 @@ Func_01_44d0:
 	jr z, Func_01_44df
 	push af
 	ld a, $2c
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44df:
 	push af
 	ld a, $2e
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44e7:
 	push af
 	ld a, $2b
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44ef:
@@ -9239,7 +9239,7 @@ Func_01_4530:
 	ret nz
 	push af
 	ld a, $2d
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $01
 	ld [$c2e6], a
@@ -9250,7 +9250,7 @@ Func_01_4543:
 	jr z, Func_01_4552
 	push af
 	ld a, $29
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 
@@ -9259,7 +9259,7 @@ SECTION "analyzed_004552", ROMX[$4552], BANK[$01]
 Func_01_4552:
 	push af
 	ld a, $2b
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 
@@ -9268,7 +9268,7 @@ SECTION "analyzed_00455a", ROMX[$455a], BANK[$01]
 Func_01_455a:
 	push af
 	ld a, $2a
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_4562:
@@ -10119,7 +10119,7 @@ Func_01_4b07:
 Func_01_4b0e:
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	xor a
 	ld [$c80f], a
@@ -11322,13 +11322,13 @@ Func_01_5922:
 Func_01_5934:
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_01_593c:
 	push af
 	ld a, $09
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 
@@ -11353,7 +11353,7 @@ Func_01_5949:
 	ret nz
 	push af
 	ld a, $0a
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld [$c2dd], a
@@ -11500,7 +11500,7 @@ Func_01_5a5f:
 	jr nz, Func_01_5a7a
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $05
 	ld hl, Func_05_4000
@@ -13584,7 +13584,7 @@ Func_01_67ee:
 	call Func_00_0467
 	push af
 	ld a, $06
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_01_6829:
@@ -13615,7 +13615,7 @@ Func_01_6856:
 	ld [$c2c4], a
 	push af
 	ld a, $08
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_01_6862:
@@ -13624,7 +13624,7 @@ Func_01_6862:
 	ret z
 	push af
 	ld a, $24
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_01_686f:
@@ -18137,7 +18137,7 @@ Func_03_45a0:
 	ret
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $02
 	ld [$c2e6], a
@@ -18382,7 +18382,7 @@ Func_03_4726:
 	ret
 	push af
 	ld a, $25
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_03_48cb
 	and $03
@@ -18623,7 +18623,7 @@ Func_03_4978:
 	jr z, Func_03_4985
 	push af
 	ld a, $02
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_03_4985:
 	ld a, $14
@@ -18980,7 +18980,7 @@ Func_03_4ba1:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_03_63bf
 	jr Func_03_4c00
@@ -18994,7 +18994,7 @@ Func_03_4bb8:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_03_63d4
 	jr Func_03_4c00
@@ -19013,7 +19013,7 @@ Func_03_4bcf:
 Func_03_4bde:
 	push af
 	ld a, $21
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_03_6704
 	jr Func_03_4c00
@@ -19030,7 +19030,7 @@ Func_03_4bea:
 	jp nz, Func_03_4c07
 	push af
 	ld a, $21
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_03_66f6
 Func_03_4c00:
@@ -19086,7 +19086,7 @@ Func_03_4c39:
 	pop de
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ret
@@ -19098,7 +19098,7 @@ Func_03_4c4c:
 	pop de
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ret
@@ -23976,7 +23976,7 @@ Func_03_6a89:
 	ld [$c2e5], a
 	push af
 	ld a, $15
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 	ld bc, $0000
@@ -25806,7 +25806,7 @@ Func_04_405f:
 	jr Func_04_4006
 	inc de
 	ld a, [de]
-	call CallLibFunc
+	call PlaySound
 	inc de
 	jr Func_04_4006
 	inc de
@@ -30051,7 +30051,7 @@ Func_05_4103:
 Func_05_4128:
 	push af
 	ld a, $00
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, [$cf40]
 	set 7, a
@@ -30060,7 +30060,7 @@ Func_05_4128:
 Func_05_4138:
 	inc hl
 	ld a, [hl+]
-	call CallLibFunc
+	call PlaySound
 	ld a, l
 	ld [$cf41], a
 	ld a, h
@@ -30239,7 +30239,7 @@ Func_05_4252:
 Func_05_4261:
 	inc hl
 	ld a, [hl+]
-	call CallLibFunc
+	call PlaySound
 	ld a, l
 	ld [$cf4b], a
 	ld a, h
@@ -38165,7 +38165,7 @@ Func_0f_4000:
 	call CallBankedHL
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld hl, $c2d5
 	set 5, [hl]
@@ -38174,7 +38174,7 @@ Func_0f_4000:
 	call Func_0f_43bb
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_0f_403b:
@@ -38233,7 +38233,7 @@ Func_0f_4097:
 	ret z
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld [$c2da], a
@@ -38250,7 +38250,7 @@ Func_0f_40b2:
 	ret z
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [$c2da], a
@@ -38267,7 +38267,7 @@ Func_0f_40cb:
 	call CallBankedHL
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $11
 	ld [$c2d8], a
@@ -38278,7 +38278,7 @@ Func_0f_40e8:
 	jr nz, Func_0f_40cb
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_0f_427b
 	ret
@@ -38307,7 +38307,7 @@ Func_0f_4125:
 	ret z
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [$c2da], a
@@ -38324,7 +38324,7 @@ Func_0f_413e:
 	call CallBankedHL
 	push af
 	ld a, $0e
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $11
 	ld [$c2d8], a
@@ -38335,7 +38335,7 @@ Func_0f_415b:
 	jr nz, Func_0f_413e
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_0f_4265
 	ret
@@ -38364,7 +38364,7 @@ Func_0f_416c:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_0f_41a3:
@@ -38378,7 +38378,7 @@ Func_0f_41a3:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_0f_41bd:
@@ -38392,7 +38392,7 @@ Func_0f_41bd:
 	call CallBankedHL
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_0f_41d6:
@@ -38407,7 +38407,7 @@ Func_0f_41d6:
 	ld [$c2d8], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld hl, Func_01_4e55
@@ -38429,7 +38429,7 @@ Func_0f_420f:
 	call Func_00_04bc
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ldh a, [$ffa8]
 	ld [$cf6d], a
@@ -38442,7 +38442,7 @@ Func_0f_4229:
 	call Func_00_04bc
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ldh a, [$ffa8]
 	ld [$cf6d], a
@@ -38454,7 +38454,7 @@ Func_0f_4243:
 	ld [$c2d8], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld hl, Func_01_4e55
@@ -38479,7 +38479,7 @@ Func_0f_427b:
 	call Func_0f_42a2
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $03
 	ld hl, Func_03_4a58
@@ -38500,7 +38500,7 @@ Func_0f_42a2:
 	ld [$c2d8], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld hl, Func_01_449d
@@ -38543,7 +38543,7 @@ Func_0f_42dd:
 	ld [$c2d8], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_0f_42f9:
@@ -38567,7 +38567,7 @@ Func_0f_4307:
 	ld [$c2d8], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_0f_4329:
@@ -41823,7 +41823,7 @@ Func_12_41f5:
 	jr nc, Func_12_41f5
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	inc a
 	cp $03
@@ -41843,7 +41843,7 @@ Func_12_4218:
 	jr nc, Func_12_41f5
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	dec a
 	cp $80
@@ -41861,7 +41861,7 @@ Func_12_4230:
 	jr z, Func_12_423f
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor $04
 	jr Func_12_4271
@@ -41881,7 +41881,7 @@ Func_12_424e:
 	jr z, Func_12_425b
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_12_4287
 Func_12_425b:
@@ -41937,7 +41937,7 @@ Func_12_42a2:
 	jr nc, Func_12_42a2
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor $01
 	jr Func_12_431d
@@ -41948,7 +41948,7 @@ Func_12_42c4:
 	jr nc, Func_12_42a2
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor $01
 	jr Func_12_431d
@@ -41957,7 +41957,7 @@ Func_12_42d7:
 	jr z, Func_12_42ec
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	add a, $02
 	cp $06
@@ -41975,7 +41975,7 @@ Func_12_42ec:
 	jr z, Func_12_4301
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	sub $02
 	cp $80
@@ -41993,7 +41993,7 @@ Func_12_4301:
 	jr z, Func_12_430e
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_12_432a
 Func_12_430e:
@@ -42098,7 +42098,7 @@ Func_12_4390:
 	call CallBankedHL
 	push af
 	ld a, $30
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_12_429a
 
@@ -42278,7 +42278,7 @@ SECTION "analyzed_0484cf", ROMX[$44cf], BANK[$12]
 Func_12_44cf:
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_12_44d6:
 	ld e, b
@@ -42412,7 +42412,7 @@ Func_12_4597:
 	pop de
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [hl], a
@@ -42466,7 +42466,7 @@ Func_12_45fa:
 	ld [$c569], a
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ldh a, [$ffab]
 	cp $21
@@ -42494,7 +42494,7 @@ Func_12_461e:
 	call z, Func_00_2f65
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_12_4686
 
@@ -42527,7 +42527,7 @@ SECTION "analyzed_048655", ROMX[$4655], BANK[$12]
 Func_12_4655:
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_12_4686
 Func_12_465e:
@@ -42535,7 +42535,7 @@ Func_12_465e:
 	ld [de], a
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_00_2ea8
 	ldh a, [$ffac]
@@ -42553,7 +42553,7 @@ Func_12_467a:
 	ld [de], a
 	push af
 	ld a, $01
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_00_2ea8
 Func_12_4686:
@@ -43932,7 +43932,7 @@ SECTION "analyzed_04c000", ROMX[$4000], BANK[$13]
 Func_13_4000:
 	push af
 	ld a, $39
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_13_4061
 	ld a, $01
@@ -43965,7 +43965,7 @@ Func_13_4000:
 	call Func_13_4434
 	push af
 	ld a, $3a
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $c7
 	ldh [rLCDC], a
@@ -44130,7 +44130,7 @@ Func_13_41a7:
 	jr nz, Func_13_41a7
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld d, $b4
 	call Func_13_4442
@@ -44210,7 +44210,7 @@ Func_13_4232:
 	call Func_00_07c5
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Func_13_4266:
@@ -45094,7 +45094,7 @@ SECTION "analyzed_05004d", ROMX[$404d], BANK[$14]
 ShowRegeneratedMonster:
 	push af
 	ld a, $35
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_00_07c5
 	xor a
@@ -45232,7 +45232,7 @@ Func_14_4158:
 Func_14_417b:
 	push af
 	ld a, $32
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 
@@ -45555,7 +45555,7 @@ Func_14_4351:
 Func_14_4363:
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 
@@ -48158,7 +48158,7 @@ Pashute_LoadShrineScene:
 	call WaitForNextFrame
 	push af
 	ld a, $32
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Pashute_LoadIntroScene:
@@ -48187,7 +48187,7 @@ Pashute_LoadIntroScene:
 	call Func_00_3913
 	push af
 	ld a, $32
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld a, $1f
 	ld hl, Func_1f_4008
@@ -48371,7 +48371,7 @@ Verde_BuildPortraitScene:
 	call WaitForNextFrame
 	push af
 	ld a, $33
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Verde_BuildIntroScene:
@@ -48404,7 +48404,7 @@ Verde_BuildIntroScene:
 	call WaitForNextFrame
 	push af
 	ld a, $33
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Verde_LoadBgMap:
@@ -48573,7 +48573,7 @@ Bodka_BuildStudioScene:
 	call WaitForNextFrame
 	push af
 	ld a, $30
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ret
 Bodka_BuildTowerScene:
@@ -48900,7 +48900,7 @@ Func_18_6bc8:
 	call WaitForNextFrame
 	push af
 	ld a, $2f
-	call Func_00_0a56
+	call PlaySoundIfChanged
 	pop af
 	ret
 Naji_LoadPortraitTilemap:
@@ -49335,7 +49335,7 @@ Toamuna_CheckSaveExists:
 	call WaitForNextFrame
 	push af
 	ld a, $34
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	ld hl, $40dd
 	call ScriptDispatcherEnterAfterCall
@@ -50124,7 +50124,7 @@ Func_1f_4121:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4133:
@@ -50133,7 +50133,7 @@ Func_1f_4133:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4145:
@@ -50142,7 +50142,7 @@ Func_1f_4145:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4157:
@@ -50151,7 +50151,7 @@ Func_1f_4157:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4169:
@@ -50160,7 +50160,7 @@ Func_1f_4169:
 	call CallBankedHL
 	push af
 	ld a, $28
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Kalum_StartEncounter:
@@ -50194,7 +50194,7 @@ Kalum_StartEncounter:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
 	ld hl, $42b1
@@ -50333,7 +50333,7 @@ Mistral_StartEncounter:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
 	ld hl, $45a5
@@ -50488,7 +50488,7 @@ Rafaga_StartEncounter:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
 	ld hl, $4857
@@ -50600,7 +50600,7 @@ Tempest_StartEncounter:
 	call Func_1f_41e6
 	push af
 	ld a, $36
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
 	ld hl, $4b82
@@ -50743,7 +50743,7 @@ Nada_ShowScene:
 	call Func_00_3913
 	push af
 	ld a, $36
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
 	ret
@@ -51052,7 +51052,7 @@ Func_1f_5855:
 	inc [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_1f_5868:
 	ld a, [$ff8c]
@@ -51064,7 +51064,7 @@ Func_1f_5868:
 	dec [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_1f_587b:
 	ret
@@ -51088,7 +51088,7 @@ Func_1f_587c:
 	inc [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_58a2:
@@ -51096,7 +51096,7 @@ Func_1f_58a2:
 	inc [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_58ae:
@@ -51114,7 +51114,7 @@ Func_1f_58ae:
 	dec [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_58ca:
@@ -51122,7 +51122,7 @@ Func_1f_58ca:
 	dec [hl]
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_58d6:
@@ -51147,7 +51147,7 @@ Func_1f_58ed:
 	call DrawTextWindow
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_590b:
@@ -51161,7 +51161,7 @@ Func_1f_590b:
 	ld [hl], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_1f_5921:
 	call Func_1f_592a
@@ -51204,7 +51204,7 @@ Func_1f_596d:
 	jr z, Func_1f_5985
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5985:
@@ -51275,7 +51275,7 @@ Func_1f_59e0:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5a08:
@@ -51352,7 +51352,7 @@ Func_1f_5ac9:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5af1:
@@ -51423,7 +51423,7 @@ Func_1f_5b4f:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5b77:
@@ -51494,7 +51494,7 @@ Func_1f_5bd8:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5c00:
@@ -51570,7 +51570,7 @@ Func_1f_5c61:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5c89:
@@ -51642,7 +51642,7 @@ Func_1f_5d83:
 	jr z, Func_1f_5d9b
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5d9b:
@@ -51709,7 +51709,7 @@ Func_1f_5e50:
 	jr z, Func_1f_5e68
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5e68:
@@ -51780,7 +51780,7 @@ Func_1f_5f5d:
 	jr z, Func_1f_5f75
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5f75:
@@ -51842,7 +51842,7 @@ Func_1f_5fd0:
 	jr z, Func_1f_5fe8
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_5fe8:
@@ -51909,7 +51909,7 @@ Func_1f_609d:
 	jr z, Func_1f_60b5
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_60b5:
@@ -51977,7 +51977,7 @@ Func_1f_6176:
 	jr z, Func_1f_618e
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_618e:
@@ -52066,7 +52066,7 @@ Func_1f_6266:
 	ld [wActiveMonster], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_628e:
@@ -52220,7 +52220,7 @@ Func_1f_63db:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_6403:
@@ -52291,7 +52291,7 @@ Func_1f_6464:
 	ld [wMainMenuResult], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ret
 Func_1f_648c:
@@ -56804,7 +56804,7 @@ Func_30_40e4:
 Func_30_40f7:
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_30_42c2
 	jp Func_30_4152
@@ -56989,7 +56989,7 @@ Func_30_41a9:
 	jr nz, Func_30_41c9
 	push af
 	ld a, $02
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_30_41d8
 Func_30_41c9:
@@ -56997,7 +56997,7 @@ Func_30_41c9:
 	ld [$d0f3], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [wFadeLevel], a
@@ -57302,7 +57302,7 @@ Func_30_4403:
 	jp z, Func_30_4403
 	push af
 	ld a, $11
-	call CallLibFunc
+	call PlaySound
 	pop af
 	call Func_30_42c2
 	xor a
@@ -57464,7 +57464,7 @@ Func_30_4554:
 	ld [$d0f3], a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_30_456a
 Func_30_456a:
@@ -57980,7 +57980,7 @@ Func_30_4957:
 	jp z, Func_30_4982
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_30_4973:
 	xor a
@@ -58671,7 +58671,7 @@ Func_30_514b:
 Func_30_516b:
 	push af
 	ld a, $0b
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $01
 	ld [$d0f4], a
@@ -58800,7 +58800,7 @@ Func_30_5219:
 Func_30_5236:
 	push af
 	ld a, $00
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $02
 	ld [$d0f4], a
@@ -58811,7 +58811,7 @@ Func_30_5242:
 	jr nz, Func_30_5251
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_30_5251:
 	cp $02
@@ -58831,7 +58831,7 @@ Func_30_5259:
 	ld [$d0f3], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $98
 	ld [$d0fa], a
@@ -58844,7 +58844,7 @@ Func_30_527e:
 	jr z, Func_30_52b0
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $88
 	ld [$d0fa], a
@@ -58856,7 +58856,7 @@ Func_30_529c:
 	jr z, Func_30_52b0
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [$d0f5], a
@@ -58934,7 +58934,7 @@ Func_30_5341:
 	jr nz, Func_30_5351
 	push af
 	ld a, $11
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_30_5351:
 	ld a, [wFadeLevel]
@@ -58953,7 +58953,7 @@ Func_30_5368:
 	jr z, Func_30_537e
 	push af
 	ld a, $00
-	call CallLibFunc
+	call PlaySound
 	pop af
 	xor a
 	ld [$d0f3], a
@@ -59202,7 +59202,7 @@ Func_30_55fa:
 	ld [$d0f5], a
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	jr Func_30_5646
 Func_30_561d:
@@ -59213,7 +59213,7 @@ Func_30_561d:
 	jr z, Func_30_5646
 	push af
 	ld a, $04
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $00
 	ld [$d0f5], a
@@ -59223,7 +59223,7 @@ Func_30_5636:
 	jr z, Func_30_5646
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld a, $02
 	ld [$d0f3], a
@@ -59380,7 +59380,7 @@ Func_30_577e:
 	call Func_00_0794
 	push af
 	ld a, $38
-	call CallLibFuncSaveId
+	call PlaySoundTracked
 	pop af
 Func_30_57d4:
 	call WaitForNextFrame
@@ -61441,7 +61441,7 @@ Func_31_4697:
 	jr nz, Func_31_46a5
 	push af
 	ld a, $22
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_31_46a5:
 	ld a, [$d5c7]
@@ -61482,7 +61482,7 @@ Func_31_46e0:
 	jr nz, Func_31_46ee
 	push af
 	ld a, $26
-	call CallLibFunc
+	call PlaySound
 	pop af
 Func_31_46ee:
 	ld a, [$d5c7]
@@ -65169,7 +65169,7 @@ Data_3e_4000:
 SECTION "analyzed_0f8006", ROMX[$4006], BANK[$3e]
 
 Func_3e_4006:
-	jp Func_3e_409c
+	jp Sound_StartTracked_3e
 
 SECTION "analyzed_0f8009", ROMX[$4009], BANK[$3e]
 
@@ -65202,9 +65202,9 @@ Data_3e_4076:
 
 SECTION "analyzed_0f809c", ROMX[$409c], BANK[$3e]
 
-Func_3e_409c:
+Sound_StartTracked_3e:
 	ld [$dec0], a
-	call Func_3e_40c4
+	call Sound_ResolveCmdPtr_3e
 	ld de, $dee0
 	ld bc, $df00
 	call Func_3e_40d2
@@ -65216,12 +65216,12 @@ Func_3e_409c:
 
 SECTION "analyzed_0f80b4", ROMX[$40b4], BANK[$3e]
 
-Data_3e_40b4:
+Sound_Start_3e:
 	db $ea, $c1, $de, $cd, $c4, $40, $11, $f0, $de, $01, $80, $df, $cd, $d2, $40, $c9
 
 SECTION "analyzed_0f80c4", ROMX[$40c4], BANK[$3e]
 
-Func_3e_40c4:
+Sound_ResolveCmdPtr_3e:
 	sla a
 	ld l, a
 	ld h, $00
@@ -67704,11 +67704,11 @@ Data_3e_7fff:
 SECTION "analyzed_0fc000", ROMX[$4000], BANK[$3f]
 
 Func_3f_4000:
-	jp Func_3f_4012
+	jp Sound_Reset_3f
 Func_3f_4003:
-	jp Func_3f_4059
-	jp Func_3f_409c
-	jp Func_3f_40b4
+	jp Sound_Update_3f
+	jp Sound_StartTracked_3f
+	jp Sound_Start_3f
 
 SECTION "analyzed_0fc00c", ROMX[$400c], BANK[$3f]
 
@@ -67717,7 +67717,7 @@ Data_3f_400c:
 
 SECTION "analyzed_0fc012", ROMX[$4012], BANK[$3f]
 
-Func_3f_4012:
+Sound_Reset_3f:
 	ld hl, $de80
 	ld de, $0180
 Func_3f_4018:
@@ -67741,10 +67741,10 @@ Func_3f_4025:
 	ld a, $8f
 	ldh [rAUDENA], a
 	xor a
-	call Func_3f_409c
+	call Sound_StartTracked_3f
 	xor a
-	call Func_3f_40b4
-	call Func_3f_4059
+	call Sound_Start_3f
+	call Sound_Update_3f
 	xor a
 	ld [$dee0], a
 	ld [$dee4], a
@@ -67755,7 +67755,7 @@ Func_3f_4025:
 	ld [$def8], a
 	ld [$defc], a
 	ret
-Func_3f_4059:
+Sound_Update_3f:
 	ld hl, $de92
 	ld a, [hl+]
 	or [hl]
@@ -67784,9 +67784,9 @@ Data_3f_4076:
 
 SECTION "analyzed_0fc09c", ROMX[$409c], BANK[$3f]
 
-Func_3f_409c:
+Sound_StartTracked_3f:
 	ld [$dec0], a
-	call Func_3f_40c4
+	call Sound_ResolveCmdPtr_3f
 	ld de, $dee0
 	ld bc, $df00
 	call Func_3f_40d2
@@ -67795,14 +67795,14 @@ Func_3f_409c:
 	ld a, $77
 	ldh [rAUDVOL], a
 	ret
-Func_3f_40b4:
+Sound_Start_3f:
 	ld [$dec1], a
-	call Func_3f_40c4
+	call Sound_ResolveCmdPtr_3f
 	ld de, $def0
 	ld bc, $df80
 	call Func_3f_40d2
 	ret
-Func_3f_40c4:
+Sound_ResolveCmdPtr_3f:
 	sla a
 	ld l, a
 	ld h, $00

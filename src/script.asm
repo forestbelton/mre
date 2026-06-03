@@ -101,7 +101,7 @@ Func_00_3a51:
 	jr z, Func_00_3a3a
 	push af
 	ld a, $0d
-	call CallLibFunc
+	call PlaySound
 	pop af
 	ld hl, wTextAnchor
 	ld a, [hl+]

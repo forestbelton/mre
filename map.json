@@ -16261,13 +16261,13 @@
 			"name":	"DivBySubtraction"
 		}, {
 			"addr":	2659,
-			"name":	"CallLibFuncSaveId"
+			"name":	"PlaySoundTracked"
 		}, {
 			"addr":	2693,
-			"name":	"CallLibFunc"
+			"name":	"PlaySound"
 		}, {
 			"addr":	2776,
-			"name":	"LibFuncTable"
+			"name":	"SoundCommandTable"
 		}, {
 			"addr":	3081,
 			"name":	"DrawMetasprite"
@@ -16700,6 +16700,39 @@
 		}, {
 			"addr":	819365,
 			"name":	"ShowMonsterDetailScreen"
+		}, {
+			"addr":	2608,
+			"name":	"ResetSoundEngine"
+		}, {
+			"addr":	2629,
+			"name":	"UpdateSoundEngine"
+		}, {
+			"addr":	2646,
+			"name":	"PlaySoundIfChanged"
+		}, {
+			"addr":	1032210,
+			"name":	"Sound_Reset_3f"
+		}, {
+			"addr":	1032281,
+			"name":	"Sound_Update_3f"
+		}, {
+			"addr":	1032348,
+			"name":	"Sound_StartTracked_3f"
+		}, {
+			"addr":	1032372,
+			"name":	"Sound_Start_3f"
+		}, {
+			"addr":	1032388,
+			"name":	"Sound_ResolveCmdPtr_3f"
+		}, {
+			"addr":	1015964,
+			"name":	"Sound_StartTracked_3e"
+		}, {
+			"addr":	1015988,
+			"name":	"Sound_Start_3e"
+		}, {
+			"addr":	1016004,
+			"name":	"Sound_ResolveCmdPtr_3e"
 		}],
 	"conflicts":	[{
 			"addr":	0,
