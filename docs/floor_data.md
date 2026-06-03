@@ -133,7 +133,7 @@ on fl 47. (`$16` is **not** in `$5162`; its non-appearance is a separate, still-
 unidentified mechanism.)
 
 #### Item points + effect tables
-The pickup dispatch `CollectItem` (bank `$01`, in `src/room.asm`) resolves a
+The pickup dispatch `CollectItem` (bank `$01`, in `src/layout.asm`) resolves a
 collected item by base id through four parallel per-id tables, now carved as a
 readable database in **`src/item_data.asm`** ($00-$23, 36 entries each):
 - **`ItemGateFlags`** (`$5162`) — 1 byte/id; the conditional-appearance gate above.
@@ -190,7 +190,7 @@ entity's `+$20`/`+$21` by `Func_01_426d`) are a **spawn list**: each step spawns
 
 Validated across all 70 floors: every non-empty 12-byte slot has a valid cell, a
 schedule of `{0..3,$FF}` values, and `$FF` in `[+11]`. The `Spawner` struct in
-`include/room.inc` and every `room/roomNN.asm` now model this 12-byte layout.
+`include/room.inc` and every `layout/roomNN.asm` now model this 12-byte layout.
 
 ## Worked example — Floor 1 (record 0, `$2D:$4000`, 10×11)
 

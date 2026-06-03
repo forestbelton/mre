@@ -228,7 +228,6 @@
 					"addr":	498018,
 					"len":	220
 				}]
-
 		}, {
 			"type":	"code",
 			"name":	"gfx/screen/town.asm",
@@ -1165,7 +1164,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room.asm",
+			"name":	"layout.asm",
 			"sections":	[{
 					"type":	"code",
 					"addr":	5743,
@@ -1189,7 +1188,1059 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room01.asm",
+			"name":	"room.asm",
+			"sections":	[{
+					"type":	"code",
+					"addr":	49152,
+					"len":	152
+				}, {
+					"type":	"data",
+					"addr":	49304,
+					"len":	18
+				}, {
+					"type":	"data",
+					"addr":	"0xc0aa",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	49324,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	"0xc0b4",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	49334,
+					"len":	4
+				}, {
+					"type":	"padding",
+					"addr":	49338,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	49348,
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	"0xc0ca",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	49356,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xc0ce",
+					"len":	"0x4"
+				}, {
+					"type":	"data",
+					"addr":	49362,
+					"len":	2
+				}, {
+					"type":	"padding",
+					"addr":	49364,
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	49368,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	49376,
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	49382,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xc0e8",
+					"len":	"0x2"
+				}, {
+					"type":	"code",
+					"addr":	49386,
+					"len":	129
+				}, {
+					"type":	"data",
+					"addr":	"0xc16b",
+					"len":	"0x4"
+				}, {
+					"type":	"code",
+					"addr":	49519,
+					"len":	61
+				}, {
+					"type":	"data",
+					"addr":	"0xc1ac",
+					"len":	"0xd"
+				}, {
+					"type":	"code",
+					"addr":	49593,
+					"len":	39
+				}, {
+					"type":	"data",
+					"addr":	"0xc1e0",
+					"len":	"0xc"
+				}, {
+					"type":	"code",
+					"addr":	49644,
+					"len":	34
+				}, {
+					"type":	"data",
+					"addr":	"0xc20e",
+					"len":	"0xf"
+				}, {
+					"type":	"code",
+					"addr":	49693,
+					"len":	13
+				}, {
+					"type":	"data",
+					"addr":	"0xc22a",
+					"len":	"0xd"
+				}, {
+					"type":	"code",
+					"addr":	49719,
+					"len":	15
+				}, {
+					"type":	"data",
+					"addr":	"0xc246",
+					"len":	"0x15"
+				}, {
+					"type":	"code",
+					"addr":	49755,
+					"len":	98
+				}, {
+					"type":	"data",
+					"addr":	"0xc2bd",
+					"len":	"0x22"
+				}, {
+					"type":	"code",
+					"addr":	49887,
+					"len":	14
+				}, {
+					"type":	"data",
+					"addr":	"0xc2ed",
+					"len":	"0xe"
+				}, {
+					"type":	"code",
+					"addr":	49915,
+					"len":	652
+				}, {
+					"type":	"data",
+					"addr":	"0xc587",
+					"len":	"0x7"
+				}, {
+					"type":	"code",
+					"addr":	50574,
+					"len":	12
+				}, {
+					"type":	"data",
+					"addr":	"0xc59a",
+					"len":	"0x6"
+				}, {
+					"type":	"code",
+					"addr":	50592,
+					"len":	751
+				}, {
+					"type":	"code",
+					"addr":	51343,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	51351,
+					"len":	114
+				}, {
+					"type":	"data",
+					"addr":	"0xc909",
+					"len":	"0x7"
+				}, {
+					"type":	"code",
+					"addr":	51472,
+					"len":	319
+				}, {
+					"type":	"data",
+					"addr":	"0xca4f",
+					"len":	"0x9"
+				}, {
+					"type":	"code",
+					"addr":	51800,
+					"len":	375
+				}, {
+					"type":	"code",
+					"addr":	52175,
+					"len":	27
+				}, {
+					"type":	"code",
+					"addr":	52202,
+					"len":	77
+				}, {
+					"type":	"code",
+					"addr":	52279,
+					"len":	2
+				}, {
+					"type":	"code",
+					"addr":	52281,
+					"len":	526
+				}, {
+					"type":	"data",
+					"addr":	"0xce47",
+					"len":	"0x37"
+				}, {
+					"type":	"code",
+					"addr":	52862,
+					"len":	123
+				}, {
+					"type":	"data",
+					"addr":	"0xcef9",
+					"len":	"0x11"
+				}, {
+					"type":	"code",
+					"addr":	53002,
+					"len":	469
+				}, {
+					"type":	"padding",
+					"addr":	53471,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	53473,
+					"len":	126
+				}, {
+					"type":	"data",
+					"addr":	"0xd15f",
+					"len":	"0x2"
+				}, {
+					"type":	"code",
+					"addr":	53601,
+					"len":	143
+				}, {
+					"type":	"data",
+					"addr":	"0xd1f0",
+					"len":	"0x5b"
+				}, {
+					"type":	"code",
+					"addr":	53835,
+					"len":	210
+				}, {
+					"type":	"code",
+					"addr":	54045,
+					"len":	5
+				}, {
+					"type":	"code",
+					"addr":	54050,
+					"len":	78
+				}, {
+					"type":	"data",
+					"addr":	"0xd370",
+					"len":	"0x6"
+				}, {
+					"type":	"code",
+					"addr":	54134,
+					"len":	153
+				}, {
+					"type":	"data",
+					"addr":	"0xd40f",
+					"len":	"0x38"
+				}, {
+					"type":	"code",
+					"addr":	54343,
+					"len":	23
+				}, {
+					"type":	"data",
+					"addr":	54366,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	"0xd468",
+					"len":	"0x1b"
+				}, {
+					"type":	"code",
+					"addr":	54403,
+					"len":	403
+				}, {
+					"type":	"data",
+					"addr":	"0xd616",
+					"len":	"0x1"
+				}, {
+					"type":	"code",
+					"addr":	54807,
+					"len":	636
+				}, {
+					"type":	"data",
+					"addr":	55443,
+					"len":	6
+				}, {
+					"type":	"code",
+					"addr":	55449,
+					"len":	54
+				}, {
+					"type":	"data",
+					"addr":	55503,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	"0xd8d7",
+					"len":	"0x8"
+				}, {
+					"type":	"code",
+					"addr":	55519,
+					"len":	83
+				}, {
+					"type":	"data",
+					"addr":	55602,
+					"len":	6
+				}, {
+					"type":	"code",
+					"addr":	55608,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	55634,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	55638,
+					"len":	68
+				}, {
+					"type":	"code",
+					"addr":	55706,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	55710,
+					"len":	239
+				}, {
+					"type":	"code",
+					"addr":	55949,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	55953,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	55979,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	55983,
+					"len":	224
+				}, {
+					"type":	"code",
+					"addr":	56207,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	56215,
+					"len":	30
+				}, {
+					"type":	"code",
+					"addr":	56245,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	56253,
+					"len":	22
+				}, {
+					"type":	"code",
+					"addr":	56275,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	56279,
+					"len":	206
+				}, {
+					"type":	"code",
+					"addr":	56485,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	56489,
+					"len":	64
+				}, {
+					"type":	"code",
+					"addr":	56553,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	56557,
+					"len":	92
+				}, {
+					"type":	"code",
+					"addr":	56649,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	56653,
+					"len":	1618
+				}, {
+					"type":	"code",
+					"addr":	58271,
+					"len":	6
+				}, {
+					"type":	"code",
+					"addr":	58277,
+					"len":	102
+				}, {
+					"type":	"code",
+					"addr":	58379,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	58383,
+					"len":	228
+				}, {
+					"type":	"code",
+					"addr":	58611,
+					"len":	16
+				}, {
+					"type":	"code",
+					"addr":	58627,
+					"len":	22
+				}, {
+					"type":	"code",
+					"addr":	58649,
+					"len":	16
+				}, {
+					"type":	"code",
+					"addr":	58665,
+					"len":	22
+				}, {
+					"type":	"code",
+					"addr":	58687,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	58699,
+					"len":	89
+				}, {
+					"type":	"data",
+					"addr":	"0xe5a4",
+					"len":	"0x5"
+				}, {
+					"type":	"code",
+					"addr":	58793,
+					"len":	12
+				}, {
+					"type":	"data",
+					"addr":	"0xe5b5",
+					"len":	"0x7"
+				}, {
+					"type":	"code",
+					"addr":	58812,
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	"0xe5c2",
+					"len":	"0x1a"
+				}, {
+					"type":	"code",
+					"addr":	58844,
+					"len":	18
+				}, {
+					"type":	"code",
+					"addr":	58862,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	58866,
+					"len":	18
+				}, {
+					"type":	"code",
+					"addr":	58884,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	58888,
+					"len":	22
+				}, {
+					"type":	"code",
+					"addr":	58910,
+					"len":	30
+				}, {
+					"type":	"code",
+					"addr":	58940,
+					"len":	200
+				}, {
+					"type":	"code",
+					"addr":	59140,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59152,
+					"len":	79
+				}, {
+					"type":	"code",
+					"addr":	59231,
+					"len":	16
+				}, {
+					"type":	"code",
+					"addr":	59247,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	59273,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59277,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59281,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59285,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59289,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59293,
+					"len":	90
+				}, {
+					"type":	"code",
+					"addr":	59383,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59395,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	"0xe80d",
+					"len":	"0x5"
+				}, {
+					"type":	"code",
+					"addr":	59410,
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	"0xe816",
+					"len":	"0x21"
+				}, {
+					"type":	"code",
+					"addr":	59447,
+					"len":	18
+				}, {
+					"type":	"code",
+					"addr":	59465,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59477,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	59503,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59515,
+					"len":	30
+				}, {
+					"type":	"code",
+					"addr":	59545,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59557,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	59583,
+					"len":	8
+				}, {
+					"type":	"code",
+					"addr":	59591,
+					"len":	26
+				}, {
+					"type":	"code",
+					"addr":	59617,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59621,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59625,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	59629,
+					"len":	30
+				}, {
+					"type":	"code",
+					"addr":	59659,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	59671,
+					"len":	108
+				}, {
+					"type":	"code",
+					"addr":	59779,
+					"len":	9
+				}, {
+					"type":	"code",
+					"addr":	59788,
+					"len":	139
+				}, {
+					"type":	"data",
+					"addr":	"0xea17",
+					"len":	"0x5"
+				}, {
+					"type":	"code",
+					"addr":	59932,
+					"len":	452
+				}, {
+					"type":	"code",
+					"addr":	60384,
+					"len":	4
+				}, {
+					"type":	"code",
+					"addr":	60388,
+					"len":	785
+				}, {
+					"type":	"data",
+					"addr":	61173,
+					"len":	36
+				}, {
+					"type":	"code",
+					"addr":	61209,
+					"len":	171
+				}, {
+					"type":	"data",
+					"addr":	"0xefc4",
+					"len":	"0x4"
+				}, {
+					"type":	"data",
+					"addr":	61384,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xefca",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61394,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xefd4",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61404,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xefde",
+					"len":	"0x12"
+				}, {
+					"type":	"data",
+					"addr":	61424,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xeff2",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61434,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xeffc",
+					"len":	"0x4"
+				}, {
+					"type":	"data",
+					"addr":	61440,
+					"len":	18
+				}, {
+					"type":	"data",
+					"addr":	"0xf012",
+					"len":	"0xc"
+				}, {
+					"type":	"data",
+					"addr":	61470,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	"0xf028",
+					"len":	"0x4"
+				}, {
+					"type":	"data",
+					"addr":	61484,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xf02e",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61494,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xf038",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61504,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	"0xf042",
+					"len":	"0x4"
+				}, {
+					"type":	"data",
+					"addr":	61510,
+					"len":	136
+				}, {
+					"type":	"data",
+					"addr":	"0xf0ce",
+					"len":	"0x3"
+				}, {
+					"type":	"data",
+					"addr":	61649,
+					"len":	13
+				}, {
+					"type":	"data",
+					"addr":	"0xf0de",
+					"len":	"0x3"
+				}, {
+					"type":	"data",
+					"addr":	61665,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	"0xf0e9",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61681,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	"0xf0f9",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61697,
+					"len":	5
+				}, {
+					"type":	"data",
+					"addr":	"0xf106",
+					"len":	"0x3"
+				}, {
+					"type":	"data",
+					"addr":	61705,
+					"len":	29
+				}, {
+					"type":	"data",
+					"addr":	"0xf126",
+					"len":	"0xb"
+				}, {
+					"type":	"data",
+					"addr":	61745,
+					"len":	8
+				}, {
+					"type":	"data",
+					"addr":	"0xf139",
+					"len":	"0x8"
+				}, {
+					"type":	"data",
+					"addr":	61761,
+					"len":	22
+				}, {
+					"type":	"data",
+					"addr":	"0xf157",
+					"len":	"0x7"
+				}, {
+					"type":	"data",
+					"addr":	61790,
+					"len":	21
+				}, {
+					"type":	"data",
+					"addr":	"0xf173",
+					"len":	"0xb"
+				}, {
+					"type":	"data",
+					"addr":	61822,
+					"len":	20
+				}, {
+					"type":	"data",
+					"addr":	"0xf192",
+					"len":	"0x9"
+				}, {
+					"type":	"data",
+					"addr":	61851,
+					"len":	566
+				}, {
+					"type":	"code",
+					"addr":	62417,
+					"len":	54
+				}, {
+					"type":	"data",
+					"addr":	62471,
+					"len":	140
+				}, {
+					"type":	"data",
+					"addr":	"0xf493",
+					"len":	"0x3"
+				}, {
+					"type":	"data",
+					"addr":	62614,
+					"len":	28
+				}, {
+					"type":	"data",
+					"addr":	"0xf4b2",
+					"len":	"0x3"
+				}, {
+					"type":	"data",
+					"addr":	62645,
+					"len":	48
+				}, {
+					"type":	"padding",
+					"addr":	62693,
+					"len":	1
+				}, {
+					"type":	"data",
+					"addr":	62694,
+					"len":	573
+				}, {
+					"type":	"code",
+					"addr":	63267,
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	63271,
+					"len":	52
+				}, {
+					"type":	"data",
+					"addr":	"0xf75b",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	63325,
+					"len":	37
+				}, {
+					"type":	"data",
+					"addr":	"0xf782",
+					"len":	"0x11"
+				}, {
+					"type":	"data",
+					"addr":	63379,
+					"len":	116
+				}, {
+					"type":	"code",
+					"addr":	63495,
+					"len":	15
+				}, {
+					"type":	"data",
+					"addr":	63510,
+					"len":	396
+				}, {
+					"type":	"data",
+					"addr":	"0xf9a2",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	63908,
+					"len":	21
+				}, {
+					"type":	"data",
+					"addr":	"0xf9b9",
+					"len":	"0x11"
+				}, {
+					"type":	"data",
+					"addr":	63946,
+					"len":	43
+				}, {
+					"type":	"data",
+					"addr":	"0xf9f5",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	63991,
+					"len":	20
+				}, {
+					"type":	"data",
+					"addr":	"0xfa0b",
+					"len":	"0xb"
+				}, {
+					"type":	"data",
+					"addr":	64022,
+					"len":	31
+				}, {
+					"type":	"data",
+					"addr":	"0xfa35",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64055,
+					"len":	20
+				}, {
+					"type":	"data",
+					"addr":	"0xfa4b",
+					"len":	"0xe"
+				}, {
+					"type":	"data",
+					"addr":	64089,
+					"len":	16
+				}, {
+					"type":	"code",
+					"addr":	64105,
+					"len":	4
+				}, {
+					"type":	"data",
+					"addr":	64109,
+					"len":	31
+				}, {
+					"type":	"code",
+					"addr":	64140,
+					"len":	57
+				}, {
+					"type":	"data",
+					"addr":	64197,
+					"len":	73
+				}, {
+					"type":	"code",
+					"addr":	64270,
+					"len":	58
+				}, {
+					"type":	"data",
+					"addr":	64328,
+					"len":	56
+				}, {
+					"type":	"data",
+					"addr":	"0xfb80",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64386,
+					"len":	12
+				}, {
+					"type":	"code",
+					"addr":	64398,
+					"len":	25
+				}, {
+					"type":	"data",
+					"addr":	64423,
+					"len":	39
+				}, {
+					"type":	"data",
+					"addr":	"0xfbce",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64464,
+					"len":	56
+				}, {
+					"type":	"code",
+					"addr":	64520,
+					"len":	25
+				}, {
+					"type":	"data",
+					"addr":	64545,
+					"len":	47
+				}, {
+					"type":	"code",
+					"addr":	64592,
+					"len":	62
+				}, {
+					"type":	"data",
+					"addr":	64654,
+					"len":	16
+				}, {
+					"type":	"code",
+					"addr":	64670,
+					"len":	17
+				}, {
+					"type":	"data",
+					"addr":	64687,
+					"len":	47
+				}, {
+					"type":	"code",
+					"addr":	64734,
+					"len":	2
+				}, {
+					"type":	"data",
+					"addr":	64736,
+					"len":	9
+				}, {
+					"type":	"data",
+					"addr":	"0xfce9",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64747,
+					"len":	16
+				}, {
+					"type":	"data",
+					"addr":	"0xfcfb",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64765,
+					"len":	9
+				}, {
+					"type":	"code",
+					"addr":	64774,
+					"len":	48
+				}, {
+					"type":	"data",
+					"addr":	64822,
+					"len":	11
+				}, {
+					"type":	"data",
+					"addr":	"0xfd41",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64835,
+					"len":	45
+				}, {
+					"type":	"data",
+					"addr":	"0xfd70",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64882,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	"0xfd7c",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64894,
+					"len":	10
+				}, {
+					"type":	"data",
+					"addr":	"0xfd88",
+					"len":	"0x2"
+				}, {
+					"type":	"data",
+					"addr":	64906,
+					"len":	610
+				}, {
+					"type":	"padding",
+					"addr":	65516,
+					"len":	19
+				}, {
+					"type":	"data",
+					"addr":	65535,
+					"len":	1
+				}]
+		}, {
+			"type":	"code",
+			"name":	"layout/room01.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	737280,
@@ -1198,7 +2249,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room02.asm",
+			"name":	"layout/room02.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	737861,
@@ -1207,7 +2258,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room03.asm",
+			"name":	"layout/room03.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	738442,
@@ -1216,7 +2267,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room04.asm",
+			"name":	"layout/room04.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	739023,
@@ -1225,7 +2276,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room05.asm",
+			"name":	"layout/room05.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	739604,
@@ -1234,7 +2285,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room06.asm",
+			"name":	"layout/room06.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	740185,
@@ -1243,7 +2294,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room07.asm",
+			"name":	"layout/room07.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	740766,
@@ -1252,7 +2303,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room08.asm",
+			"name":	"layout/room08.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	741347,
@@ -1261,7 +2312,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room09.asm",
+			"name":	"layout/room09.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	741928,
@@ -1270,7 +2321,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room10.asm",
+			"name":	"layout/room10.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	742509,
@@ -1279,7 +2330,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room11.asm",
+			"name":	"layout/room11.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	743090,
@@ -1288,7 +2339,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room12.asm",
+			"name":	"layout/room12.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	743671,
@@ -1297,7 +2348,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room13.asm",
+			"name":	"layout/room13.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	744252,
@@ -1306,7 +2357,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room14.asm",
+			"name":	"layout/room14.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	744833,
@@ -1315,7 +2366,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room15.asm",
+			"name":	"layout/room15.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	745414,
@@ -1324,7 +2375,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room16.asm",
+			"name":	"layout/room16.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	745995,
@@ -1333,7 +2384,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room17.asm",
+			"name":	"layout/room17.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	746576,
@@ -1342,7 +2393,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room18.asm",
+			"name":	"layout/room18.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	747157,
@@ -1351,7 +2402,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room19.asm",
+			"name":	"layout/room19.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	747738,
@@ -1360,7 +2411,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room20.asm",
+			"name":	"layout/room20.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	748319,
@@ -1369,7 +2420,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room21.asm",
+			"name":	"layout/room21.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	748900,
@@ -1378,7 +2429,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room22.asm",
+			"name":	"layout/room22.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	749481,
@@ -1387,7 +2438,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room23.asm",
+			"name":	"layout/room23.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	750062,
@@ -1396,7 +2447,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room24.asm",
+			"name":	"layout/room24.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	750643,
@@ -1405,7 +2456,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room25.asm",
+			"name":	"layout/room25.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	751224,
@@ -1414,7 +2465,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room26.asm",
+			"name":	"layout/room26.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	751805,
@@ -1423,7 +2474,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room27.asm",
+			"name":	"layout/room27.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	752386,
@@ -1432,7 +2483,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room28.asm",
+			"name":	"layout/room28.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	753664,
@@ -1441,7 +2492,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room29.asm",
+			"name":	"layout/room29.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	754245,
@@ -1450,7 +2501,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room30.asm",
+			"name":	"layout/room30.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	754826,
@@ -1459,7 +2510,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room31.asm",
+			"name":	"layout/room31.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	755407,
@@ -1468,7 +2519,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room32.asm",
+			"name":	"layout/room32.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	755988,
@@ -1477,7 +2528,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room33.asm",
+			"name":	"layout/room33.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	756569,
@@ -1486,7 +2537,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room34.asm",
+			"name":	"layout/room34.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	757150,
@@ -1495,7 +2546,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room35.asm",
+			"name":	"layout/room35.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	757731,
@@ -1504,7 +2555,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room36.asm",
+			"name":	"layout/room36.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	758312,
@@ -1513,7 +2564,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room37.asm",
+			"name":	"layout/room37.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	758893,
@@ -1522,7 +2573,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room38.asm",
+			"name":	"layout/room38.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	759474,
@@ -1531,7 +2582,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room39.asm",
+			"name":	"layout/room39.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	760055,
@@ -1540,7 +2591,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room40.asm",
+			"name":	"layout/room40.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	760636,
@@ -1549,7 +2600,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room41.asm",
+			"name":	"layout/room41.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	761217,
@@ -1558,7 +2609,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room42.asm",
+			"name":	"layout/room42.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	761798,
@@ -1567,7 +2618,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room43.asm",
+			"name":	"layout/room43.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	762379,
@@ -1576,7 +2627,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room44.asm",
+			"name":	"layout/room44.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	762960,
@@ -1585,7 +2636,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room45.asm",
+			"name":	"layout/room45.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	763541,
@@ -1594,7 +2645,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room46.asm",
+			"name":	"layout/room46.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	764122,
@@ -1603,7 +2654,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room47.asm",
+			"name":	"layout/room47.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	764703,
@@ -1612,7 +2663,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room48.asm",
+			"name":	"layout/room48.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	765284,
@@ -1621,7 +2672,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room49.asm",
+			"name":	"layout/room49.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	765865,
@@ -1630,7 +2681,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room50.asm",
+			"name":	"layout/room50.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	766446,
@@ -1639,7 +2690,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room51.asm",
+			"name":	"layout/room51.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	767027,
@@ -1648,7 +2699,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room52.asm",
+			"name":	"layout/room52.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	767608,
@@ -1657,7 +2708,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room53.asm",
+			"name":	"layout/room53.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	768189,
@@ -1666,7 +2717,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room54.asm",
+			"name":	"layout/room54.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	768770,
@@ -1675,7 +2726,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room55.asm",
+			"name":	"layout/room55.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	770048,
@@ -1684,7 +2735,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room56.asm",
+			"name":	"layout/room56.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	770629,
@@ -1693,7 +2744,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room57.asm",
+			"name":	"layout/room57.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	771210,
@@ -1702,7 +2753,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room58.asm",
+			"name":	"layout/room58.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	771791,
@@ -1711,7 +2762,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room59.asm",
+			"name":	"layout/room59.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	772372,
@@ -1720,7 +2771,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/room60.asm",
+			"name":	"layout/room60.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	772953,
@@ -1729,7 +2780,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB01.asm",
+			"name":	"layout/roomB01.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	773534,
@@ -1738,7 +2789,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB02.asm",
+			"name":	"layout/roomB02.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	774115,
@@ -1747,7 +2798,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB03.asm",
+			"name":	"layout/roomB03.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	774696,
@@ -1756,7 +2807,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB04.asm",
+			"name":	"layout/roomB04.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	775277,
@@ -1765,7 +2816,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB05.asm",
+			"name":	"layout/roomB05.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	775858,
@@ -1774,7 +2825,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB06.asm",
+			"name":	"layout/roomB06.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	776439,
@@ -1783,7 +2834,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB07.asm",
+			"name":	"layout/roomB07.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	777020,
@@ -1792,7 +2843,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB08.asm",
+			"name":	"layout/roomB08.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	777601,
@@ -1801,7 +2852,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB09.asm",
+			"name":	"layout/roomB09.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	778182,
@@ -1810,7 +2861,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room/roomB10.asm",
+			"name":	"layout/roomB10.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	778763,
@@ -16733,6 +17784,60 @@
 		}, {
 			"addr":	1016004,
 			"name":	"Sound_ResolveCmdPtr_3e"
+		}, {
+			"addr":	49152,
+			"name":	"UpdateEntities"
+		}, {
+			"addr":	49207,
+			"name":	"RunEntity"
+		}, {
+			"addr":	49218,
+			"name":	"RunEntityScript"
+		}, {
+			"addr":	49231,
+			"name":	"EndEntityFrame"
+		}, {
+			"addr":	49304,
+			"name":	"EntityOpcodeTable"
+		}, {
+			"addr":	49928,
+			"name":	"LoadEntityRegs"
+		}, {
+			"addr":	50061,
+			"name":	"SaveEntityRegs"
+		}, {
+			"addr":	50188,
+			"name":	"SpawnEntityRelative"
+		}, {
+			"addr":	50207,
+			"name":	"UpdateActionTimer"
+		}, {
+			"addr":	50363,
+			"name":	"BreakTileAtPixel"
+		}, {
+			"addr":	50379,
+			"name":	"BreakTileAtCell"
+		}, {
+			"addr":	50417,
+			"name":	"TryBreakCrateCell"
+		}, {
+			"addr":	50460,
+			"name":	"BreakOrChainCrateCell"
+		}, {
+			"addr":	50549,
+			"name":	"FindFreeEntitySlot"
+		}, {
+			"addr":	50579,
+			"name":	"SpawnEntity"
+		}, {
+			"addr":	50908,
+			"name":	"OrderPair"
+		}, {
+			"addr":	51800,
+			"name":	"RequestFloorExit"
+		}, {
+			"addr":	52862,
+			"name":	"FindEntityHittingRect"
 		}],
 	"conflicts":	[{
 			"addr":	0,
