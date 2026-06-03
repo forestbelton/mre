@@ -51765,7 +51765,7 @@ Data_1f_5eb0:
 
 SECTION "analyzed_07df50", ROMX[$5f50], BANK[$1f]
 
-Verde_ShowMenu2:
+Tradehouse_ShowMenu:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper

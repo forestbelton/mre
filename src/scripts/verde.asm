@@ -11,7 +11,7 @@
 ;   VerdeEntry       $0614F5  D0E4 cascade; first-time intro is
 ;                             the long "I am Verde..." monologue
 ;                             referencing Naji as the referrer.
-;   VerdeEmptyEntry  $062092  D0E3 cascade; building is empty,
+;   TradehouseEntry  $062092  D0E3 cascade; building is empty,
 ;                             player finds a note about the link
 ;                             function. The two ROM regions are
 ;                             ~2 KB apart but represent the same
@@ -446,9 +446,9 @@ VerdeLeave:
 SECTION "verde_062092_empty", ROMX[$6092], BANK[$18]
 
 
-VerdeEmptyEntry:
+TradehouseEntry:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=VerdeEmptyReady
+    SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=TradehouseReady
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
     db "Nobody seems"
     SCRIPT_NEWLINE
@@ -465,41 +465,41 @@ VerdeEmptyEntry:
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wTradehouseState, .Value=$01
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildSceneNoInit, .Bank=$18
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeEmptyReady:
+TradehouseReady:
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
 
-VerdeEmptyMenu:
+TradehouseMenu:
     db "What would you"
     SCRIPT_NEWLINE
     db "like to play?"
-    SCRIPT_FAR_CALL .Addr=Verde_ShowMenu2, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Tradehouse_ShowMenu, .Bank=$1f
     SCRIPT_FAR_CALL .Addr=Tradehouse_LoadBgMap, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, VerdeEmptyEnter, VerdeEmptySave, BodkaGreet
+    SCRIPT_JUMP_TABLE wMainMenuResult, TradehouseEnter, TradehouseSave, BodkaGreet
 
-VerdeEmptyEnter:
+TradehouseEnter:
     db "OK. Let's enter"
     SCRIPT_NEWLINE
     db "the room, then."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=$00
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=VerdeEnterDone
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=VerdeEnterDone
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=VerdeEnterDone
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=TradehouseEnterDone
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=TradehouseEnterDone
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=TradehouseEnterDone
     SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=$00
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
 
-VerdeEnterDone:
+TradehouseEnterDone:
     db "Done. OK, let's"
     SCRIPT_NEWLINE
     db "leave the room."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeEmptySave:
+TradehouseSave:
     db "Okay. Let me try"
     SCRIPT_NEWLINE
     db "the exchange."
@@ -507,9 +507,9 @@ VerdeEmptySave:
     SCRIPT_WRITE_WRAM .Addr=$d5c2, .Value=$00
     SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=$31
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5c2, VerdeSaveConfirm, VerdeSaveNoFriend, VerdeSaveNotReady, VerdeSaveProcess
+    SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveConfirm, TradehouseSaveNoFriend, TradehouseSaveNotReady, TradehouseSaveProcess
 
-VerdeSaveNoFriend:
+TradehouseSaveNoFriend:
     db "Your friend does"
     SCRIPT_NEWLINE
     db "not seem ready."
@@ -518,9 +518,9 @@ VerdeSaveNoFriend:
     SCRIPT_NEWLINE
     db "both ready."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaveNotReady:
+TradehouseSaveNotReady:
     db "You don't seem"
     SCRIPT_NEWLINE
     db "ready yet."
@@ -529,16 +529,16 @@ VerdeSaveNotReady:
     SCRIPT_NEWLINE
     db "Link Cable!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaveProcess:
+TradehouseSaveProcess:
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaveConfirm:
+TradehouseSaveConfirm:
     db "But before that,"
     SCRIPT_NEWLINE
     db "current status"
@@ -548,16 +548,16 @@ VerdeSaveConfirm:
     db "Okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=VerdeSaving
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=TradehouseSaving
     db "Hmmm..."
     SCRIPT_WAIT
     db "Let's not do it"
     SCRIPT_NEWLINE
     db "this time."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaving:
+TradehouseSaving:
     db "Now saving."
     SCRIPT_NEWLINE
     db "Leave Game Pak."
@@ -606,9 +606,9 @@ VerdeSaving:
     SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=$31
     SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
     SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=$18
-    SCRIPT_JUMP_TABLE $d5c2, VerdeSaveOk, VerdeSaveErr, VerdeSaveProcess2, VerdeSaveProcess2
+    SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveOk, TradehouseSaveErr, TradehouseSaveProcess2, TradehouseSaveProcess2
 
-VerdeSaveOk:
+TradehouseSaveOk:
     db "Yes!"
     SCRIPT_NEWLINE
     db "We did it!"
@@ -617,23 +617,23 @@ VerdeSaveOk:
     SCRIPT_NEWLINE
     db "a success!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaveErr:
+TradehouseSaveErr:
     db "Uh-oh. Something"
     SCRIPT_NEWLINE
     db "went wrong."
     SCRIPT_WAIT
     db "Let's try again."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
-VerdeSaveProcess2:
+TradehouseSaveProcess2:
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeEmptyMenu
+    SCRIPT_GOTO .Target=TradehouseMenu
 
 BodkaGreet:
     db "I should stop"
