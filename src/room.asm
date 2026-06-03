@@ -1300,18 +1300,12 @@ Func_03_4887:
 Func_03_488b:
 	ld de, $73ba
 	ret
-
-SECTION "room_00c88f", ROMX[$488f], BANK[$03]
-
 Func_03_488f:
 	ld de, $73d1
 	ret
 Func_03_4893:
 	ld de, $73e8
 	ret
-
-SECTION "room_00c897", ROMX[$4897], BANK[$03]
-
 Func_03_4897:
 	ld de, $7313
 	ret
@@ -1396,14 +1390,9 @@ Player_LatchActionPressed:
 	ldh a, [$ff8b]
 	bit 6, a
 	ret z
-
-SECTION "room_00c909", ROMX[$4909], BANK[$03]
-
+; TODO: Disassemble
 Data_03_4909:
 	db $21, $7f, $cf, $cb, $c6, $c9, $c9
-
-SECTION "room_00c910", ROMX[$4910], BANK[$03]
-
 Player_ClearActionFlag:
 	xor a
 	ld [$cf7f], a
@@ -1602,12 +1591,9 @@ Player_BeginAction:
 	ldh [$ffc7], a
 	ret
 
-SECTION "room_00ca4f", ROMX[$4a4f], BANK[$03]
-
+; TODO: Disassemble
 Data_03_4a4f:
 	db $21, $b4, $ff, $cb, $be, $af, $e0, $c7, $c9
-
-SECTION "room_00ca58", ROMX[$4a58], BANK[$03]
 
 RequestFloorExit:
 	ld hl, $c2d5
@@ -1847,8 +1833,6 @@ Func_03_4bb8:
 	call Func_03_63d4
 	jr Func_03_4c00
 
-SECTION "room_00cbcf", ROMX[$4bcf], BANK[$03]
-
 Func_03_4bcf:
 	push hl
 	ld de, $0003
@@ -1865,8 +1849,6 @@ Func_03_4bde:
 	pop af
 	call Func_03_6704
 	jr Func_03_4c00
-
-SECTION "room_00cbea", ROMX[$4bea], BANK[$03]
 
 Func_03_4bea:
 	push hl
@@ -1917,15 +1899,9 @@ Func_03_4c33:
 	ld a, $01
 	or a
 	ret
-
-SECTION "room_00cc37", ROMX[$4c37], BANK[$03]
-
 Func_03_4c37:
 	xor a
 	ret
-
-SECTION "room_00cc39", ROMX[$4c39], BANK[$03]
-
 Func_03_4c39:
 	push de
 	ld a, $01
@@ -2224,15 +2200,11 @@ AttackChild_CopyAttackPos:
 	pop hl
 	ret
 
-SECTION "room_00ce47", ROMX[$4e47], BANK[$03]
-
 Data_03_4e47:
 	db $f5, $3e, $21, $cd, $85, $0a, $f1, $e5, $7e, $d6, $40, $87, $4f, $06, $00, $21
 	db $70, $4e, $09, $2a, $56, $5f, $e1, $e5, $01, $18, $00, $09, $7b, $22, $72, $e1
 	db $e5, $11, $16, $00, $19, $af, $77, $e1, $c9, $b4, $7a, $37, $7b, $c5, $7b, $08
 	db $7c, $9e, $7c, $25, $7d, $25, $7d
-
-SECTION "room_00ce7e", ROMX[$4e7e], BANK[$03]
 
 FindEntityHittingRect:
 	push bc
@@ -2320,13 +2292,9 @@ Func_03_4ef4:
 	ld a, [hl]
 	ret
 
-SECTION "room_00cef9", ROMX[$4ef9], BANK[$03]
-
 Data_03_4ef9:
 	db $fa, $71, $cf, $b9, $20, $09, $fa, $72, $cf, $b8, $20, $03, $3e, $01, $c9, $af
 	db $c9
-
-SECTION "room_00cf0a", ROMX[$4f0a], BANK[$03]
 
 PlayerHit_BeginStun:
 	ld hl, $ffb4
@@ -2623,12 +2591,8 @@ Data_03_50e1:
 	db $91, $00, $98, $00, $9e, $00, $a4, $00, $a9, $00, $af, $00, $b3, $00, $b7, $00
 	db $bb, $00, $bf, $00, $c1, $00, $c4, $00, $c6, $00, $c7, $00, $c8, $00
 
-SECTION "room_00d15f", ROMX[$515f], BANK[$03]
-
 Data_03_515f:
 	db $c9, $00
-
-SECTION "room_00d161", ROMX[$5161], BANK[$03]
 
 FaceDir0Right:
 	ld c, $b6
@@ -2729,8 +2693,6 @@ Func_03_51e9:
 	ldh [$ffc0], a
 	ret
 
-SECTION "room_00d1f0", ROMX[$51f0], BANK[$03]
-
 Data_03_51f0:
 	db $cd, $1f, $44, $cb, $47, $28, $05, $3e, $ff, $e0, $b8, $c9, $f0, $be, $47, $f0
 	db $bc, $4f, $f0, $d2, $81, $4f, $f0, $b6, $cb, $7f, $20, $06, $f0, $d4, $81, $4f
@@ -2738,8 +2700,6 @@ Data_03_51f0:
 	db $e6, $0f, $47, $c5, $cd, $1b, $10, $c1, $b7, $20, $1b, $f0, $be, $47, $f0, $d3
 	db $80, $47, $f0, $d5, $80, $c6, $08, $cb, $37, $e6, $0f, $47, $cd, $1b, $10, $b7
 	db $28, $04, $af, $e0, $b8, $c9, $3e, $03, $e0, $b8, $c9
-
-SECTION "room_00d24b", ROMX[$524b], BANK[$03]
 
 Tacopi_ProbeFrontTile:
 	call UpdateActionTimer
@@ -2885,14 +2845,10 @@ Func_03_5318:
 	ldh [$ffb8], a
 	ret
 
-SECTION "room_00d31d", ROMX[$531d], BANK[$03]
-
 Func_03_531d:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-
-SECTION "room_00d322", ROMX[$5322], BANK[$03]
 
 SpawnProjectileInFront:
 	push de
@@ -2946,12 +2902,8 @@ Func_03_5352:
 	pop de
 	ret
 
-SECTION "room_00d370", ROMX[$5370], BANK[$03]
-
 Henger_FireShot:
 	db $0e, $22, $cd, $22, $53, $c9
-
-SECTION "room_00d376", ROMX[$5376], BANK[$03]
 
 SpawnProjectile20:
 	ld c, $20
@@ -3055,15 +3007,11 @@ Func_03_540b:
 	call SetProjectileSpeed
 	ret
 
-SECTION "room_00d40f", ROMX[$540f], BANK[$03]
-
 Ducken_FireMissileB:
 	db $f0, $b6, $cb, $7f, $20, $17, $06, $f0, $3e, $2b, $0e, $00, $cd, $94, $53, $e5
 	db $01, $06, $00, $09, $7e, $e6, $fc, $f6, $02, $77, $e1, $18, $17, $06, $10, $3e
 	db $2b, $0e, $00, $cd, $94, $53, $e5, $01, $06, $00, $09, $7e, $e6, $fc, $f6, $03
 	db $cb, $ff, $77, $e1, $cd, $47, $54, $c9
-
-SECTION "room_00d447", ROMX[$5447], BANK[$03]
 
 SetProjectileSpeed:
 	push hl
@@ -3082,20 +3030,14 @@ SetProjectileSpeed:
 	pop hl
 	ret
 
-SECTION "room_00d45e", ROMX[$545e], BANK[$03]
-
 Data_03_545e:
 	db $2c, $01, $f0, $00, $b4, $00, $78, $00, $3c, $00
-
-SECTION "room_00d468", ROMX[$5468], BANK[$03]
 
 Data_03_5468:
 	db $3c, $00, $3c, $00
 Tiger_FireMissile:
 	db $f0, $b6, $cb, $7f, $28, $04, $0e, $f0, $18, $02, $0e, $10, $3e, $26, $06, $f8
 	db $cd, $94, $53, $cd, $47, $54, $c9
-
-SECTION "room_00d483", ROMX[$5483], BANK[$03]
 
 Plant_FireMissile:
 	ldh a, [$ffb6]
@@ -3311,12 +3253,8 @@ SpawnBossSegment:
 	cp $09
 	jp z, Func_03_56ad
 
-SECTION "room_00d616", ROMX[$5616], BANK[$03]
-
 Data_03_5616:
 	db $c9
-
-SECTION "room_00d617", ROMX[$5617], BANK[$03]
 
 Func_03_5617:
 	ldh a, [$ffbb]
@@ -3751,12 +3689,8 @@ SetSpawnScriptBySpecies:
 	pop hl
 	ret
 
-SECTION "room_00d893", ROMX[$5893], BANK[$03]
-
 Data_03_5893:
 	db $46, $75, $df, $75, $71, $76
-
-SECTION "room_00d899", ROMX[$5899], BANK[$03]
 
 SetOamAttrByFacing:
 	push af
@@ -3798,17 +3732,11 @@ SetSpriteTileByFacing:
 	pop hl
 	ret
 
-SECTION "room_00d8cf", ROMX[$58cf], BANK[$03]
-
 Data_03_58cf:
 	db $40, $01, $80, $02, $c0, $03, $00, $05
 
-SECTION "room_00d8d7", ROMX[$58d7], BANK[$03]
-
 Data_03_58d7:
 	db $40, $06, $80, $07, $c0, $08, $00, $0a
-
-SECTION "room_00d8df", ROMX[$58df], BANK[$03]
 
 SetAnimSelByFacing:
 	ldh a, [$ffb6]
@@ -3871,12 +3799,8 @@ Func_03_591c:
 	ldh [$ffc6], a
 	ret
 
-SECTION "room_00d932", ROMX[$5932], BANK[$03]
-
 Data_03_5932:
 	db $63, $75, $0c, $76, $9f, $76
-
-SECTION "room_00d938", ROMX[$5938], BANK[$03]
 
 Jell_Think3:
 	call MonsterProbeWalkAhead
@@ -3895,13 +3819,9 @@ Func_03_594e:
 	ld de, $759b
 	ret
 
-SECTION "room_00d952", ROMX[$5952], BANK[$03]
-
 Func_03_5952:
 	ld de, $75b5
 	ret
-
-SECTION "room_00d956", ROMX[$5956], BANK[$03]
 
 Jell_Think5:
 	call MonsterProbeWalkAhead
@@ -3945,13 +3865,9 @@ Jell_Think4:
 	jr z, Func_03_59a6
 	ret
 
-SECTION "room_00d99a", ROMX[$599a], BANK[$03]
-
 Func_03_599a:
 	ld de, $75d1
 	ret
-
-SECTION "room_00d99e", ROMX[$599e], BANK[$03]
 
 Func_03_599e:
 	ld de, $759b
@@ -4113,13 +4029,9 @@ Func_03_5a89:
 	ld de, $76d7
 	ret
 
-SECTION "room_00da8d", ROMX[$5a8d], BANK[$03]
-
 Func_03_5a8d:
 	ld de, $76b8
 	ret
-
-SECTION "room_00da91", ROMX[$5a91], BANK[$03]
 
 Dino_Think5:
 	call Dino_ProbeChargeOrWall
@@ -4136,13 +4048,9 @@ Dino_Think5:
 	jr z, Func_03_5abb
 	ret
 
-SECTION "room_00daab", ROMX[$5aab], BANK[$03]
-
 Func_03_5aab:
 	ld de, $76ff
 	ret
-
-SECTION "room_00daaf", ROMX[$5aaf], BANK[$03]
 
 Func_03_5aaf:
 	ld de, $76d9
@@ -4292,16 +4200,12 @@ Func_03_5b8b:
 	ld de, $7746
 	ret
 
-SECTION "room_00db8f", ROMX[$5b8f], BANK[$03]
-
 Func_03_5b8f:
 	ld de, $7723
 	ret
 Func_03_5b93:
 	ld de, $7727
 	ret
-
-SECTION "room_00db97", ROMX[$5b97], BANK[$03]
 
 Plant_ThinkB:
 	call Plant_ProbeFireWindow
@@ -4322,16 +4226,12 @@ Func_03_5bb1:
 	ld de, $7746
 	ret
 
-SECTION "room_00dbb5", ROMX[$5bb5], BANK[$03]
-
 Func_03_5bb5:
 	ld de, $7713
 	ret
 Func_03_5bb9:
 	ld de, $7727
 	ret
-
-SECTION "room_00dbbd", ROMX[$5bbd], BANK[$03]
 
 Plant_ThinkC:
 	call Plant_ProbeFireOrTurn
@@ -4346,13 +4246,9 @@ Plant_ThinkC:
 	jr z, Func_03_5bdf
 	ret
 
-SECTION "room_00dbd3", ROMX[$5bd3], BANK[$03]
-
 Func_03_5bd3:
 	ld de, $7763
 	ret
-
-SECTION "room_00dbd7", ROMX[$5bd7], BANK[$03]
 
 Func_03_5bd7:
 	ld de, $7746
@@ -4492,13 +4388,9 @@ Func_03_5ca1:
 	ld de, $7837
 	ret
 
-SECTION "room_00dca5", ROMX[$5ca5], BANK[$03]
-
 Func_03_5ca5:
 	ld de, $7807
 	ret
-
-SECTION "room_00dca9", ROMX[$5ca9], BANK[$03]
 
 Henger_Think:
 	call ProbeFrontTile
@@ -4539,13 +4431,9 @@ Puncho_ThinkB:
 	jr z, Func_03_5cf1
 	ret
 
-SECTION "room_00dce9", ROMX[$5ce9], BANK[$03]
-
 Func_03_5ce9:
 	ld de, $7897
 	ret
-
-SECTION "room_00dced", ROMX[$5ced], BANK[$03]
 
 Func_03_5ced:
 	ld de, $788b
@@ -4607,13 +4495,9 @@ Func_03_5d45:
 	ld de, $7900
 	ret
 
-SECTION "room_00dd49", ROMX[$5d49], BANK[$03]
-
 Func_03_5d49:
 	ld de, $790b
 	ret
-
-SECTION "room_00dd4d", ROMX[$5d4d], BANK[$03]
 
 Psylora_DispatchMoveB:
 	and $03
@@ -5574,14 +5458,10 @@ Func_03_6399:
 	ld de, $7982
 	ret
 
-SECTION "room_00e39f", ROMX[$639f], BANK[$03]
-
 Func_03_639f:
 	res 7, [hl]
 	ld de, $7995
 	ret
-
-SECTION "room_00e3a5", ROMX[$63a5], BANK[$03]
 
 Func_03_63a5:
 	set 7, [hl]
@@ -5653,13 +5533,9 @@ Func_03_6407:
 	ld de, $7644
 	ret
 
-SECTION "room_00e40b", ROMX[$640b], BANK[$03]
-
 Func_03_640b:
 	ld de, $7625
 	ret
-
-SECTION "room_00e40f", ROMX[$640f], BANK[$03]
 
 Naga_Think5:
 	call Naga_ProbeChargeOrWall
@@ -5809,8 +5685,6 @@ Func_03_64d8:
 	jr z, Func_03_64ff
 	ret
 
-SECTION "room_00e4f3", ROMX[$64f3], BANK[$03]
-
 Func_03_64f3:
 	ld de, $7aa9
 	ret
@@ -5823,8 +5697,6 @@ Func_03_64fb:
 Func_03_64ff:
 	ld de, $7a6d
 	ret
-
-SECTION "room_00e503", ROMX[$6503], BANK[$03]
 
 Tiger_Think:
 	call Tiger_ProbeFireWindow
@@ -5839,8 +5711,6 @@ Tiger_Think:
 	jr z, Func_03_6525
 	ret
 
-SECTION "room_00e519", ROMX[$6519], BANK[$03]
-
 Func_03_6519:
 	ld de, $7aa9
 	ret
@@ -5853,8 +5723,6 @@ Func_03_6521:
 Func_03_6525:
 	ld de, $7a6d
 	ret
-
-SECTION "room_00e529", ROMX[$6529], BANK[$03]
 
 Tiger_ThinkProbe:
 	call Tiger_ProbeFireOrTurn
@@ -5869,8 +5737,6 @@ Tiger_ThinkProbe:
 	jr z, Func_03_654b
 	ret
 
-SECTION "room_00e53f", ROMX[$653f], BANK[$03]
-
 Func_03_653f:
 	ld de, $7aa9
 	ret
@@ -5880,8 +5746,6 @@ Func_03_6543:
 Func_03_6547:
 	ld de, $7a59
 	ret
-
-SECTION "room_00e54b", ROMX[$654b], BANK[$03]
 
 Func_03_654b:
 	ld de, $7a6d
@@ -5943,12 +5807,8 @@ Func_03_659e:
 	or a
 	jr z, Func_03_65a9
 
-SECTION "room_00e5a4", ROMX[$65a4], BANK[$03]
-
 Data_03_65a4:
 	db $3e, $02, $e0, $b8, $c9
-
-SECTION "room_00e5a9", ROMX[$65a9], BANK[$03]
 
 Func_03_65a9:
 	ld a, $03
@@ -5959,12 +5819,8 @@ Tiger_ProbeFireWindow:
 	bit 0, a
 	jr z, Func_03_65bc
 
-SECTION "room_00e5b5", ROMX[$65b5], BANK[$03]
-
 Data_03_65b5:
 	db $3e, $ff, $e0, $b8, $06, $00, $c9
-
-SECTION "room_00e5bc", ROMX[$65bc], BANK[$03]
 
 Func_03_65bc:
 	xor a
@@ -5972,13 +5828,9 @@ Func_03_65bc:
 	ld b, $00
 	ret
 
-SECTION "room_00e5c2", ROMX[$65c2], BANK[$03]
-
 Data_03_65c2:
 	db $21, $c3, $ff, $2a, $4f, $46, $b0, $28, $0a, $0b, $78, $32, $71, $af, $e0, $b8
 	db $06, $01, $c9, $3e, $01, $e0, $b8, $06, $01, $c9
-
-SECTION "room_00e5dc", ROMX[$65dc], BANK[$03]
 
 Mocchi_Think:
 	call ProbeAimedOrLedge
@@ -5992,13 +5844,9 @@ Func_03_65ea:
 	ld de, $7b00
 	ret
 
-SECTION "room_00e5ee", ROMX[$65ee], BANK[$03]
-
 Func_03_65ee:
 	ld de, $7af4
 	ret
-
-SECTION "room_00e5f2", ROMX[$65f2], BANK[$03]
 
 Mocchi_ThinkB:
 	call ProbeAimedOrLedge
@@ -6011,13 +5859,9 @@ Mocchi_ThinkB:
 	jr z, Func_03_660c
 	ret
 
-SECTION "room_00e604", ROMX[$6604], BANK[$03]
-
 Func_03_6604:
 	ld de, $7b00
 	ret
-
-SECTION "room_00e608", ROMX[$6608], BANK[$03]
 
 Func_03_6608:
 	ld de, $7af4
@@ -6033,8 +5877,6 @@ Mocchi_ThinkC:
 	cp $02
 	jr z, Func_03_6622
 	ret
-
-SECTION "room_00e61e", ROMX[$661e], BANK[$03]
 
 Func_03_661e:
 	ld de, $7b00
@@ -6056,8 +5898,6 @@ Func_03_6634:
 Func_03_6638:
 	ld de, $7b1e
 	ret
-
-SECTION "room_00e63c", ROMX[$663c], BANK[$03]
 
 ProbeAimedOrLedge:
 	call ProbeAimedRetreat
@@ -6195,8 +6035,6 @@ Func_03_66f6:
 	pop hl
 	jr Func_03_6710
 
-SECTION "room_00e704", ROMX[$6704], BANK[$03]
-
 Func_03_6704:
 	push hl
 	ld de, $0018
@@ -6206,8 +6044,6 @@ Func_03_6704:
 	ld a, $7b
 	ld [hl], a
 	pop hl
-
-SECTION "room_00e710", ROMX[$6710], BANK[$03]
 
 Func_03_6710:
 	push hl
@@ -6261,8 +6097,6 @@ Suezo_Think4:
 	jr z, Func_03_676b
 	ret
 
-SECTION "room_00e75f", ROMX[$675f], BANK[$03]
-
 Func_03_675f:
 	ld de, $7d06
 	ret
@@ -6275,8 +6109,6 @@ Func_03_6767:
 Func_03_676b:
 	ld de, $7cbf
 	ret
-
-SECTION "room_00e76f", ROMX[$676f], BANK[$03]
 
 Suezo_Think5:
 	call Suezo_ProbeChargeOrWall
@@ -6293,37 +6125,25 @@ Suezo_Think5:
 	jr z, Func_03_6799
 	ret
 
-SECTION "room_00e789", ROMX[$6789], BANK[$03]
-
 Func_03_6789:
 	ld de, $7d06
 	ret
-
-SECTION "room_00e78d", ROMX[$678d], BANK[$03]
 
 Func_03_678d:
 	ld de, $7ce0
 	ret
 
-SECTION "room_00e791", ROMX[$6791], BANK[$03]
-
 Func_03_6791:
 	ld de, $7cde
 	ret
-
-SECTION "room_00e795", ROMX[$6795], BANK[$03]
 
 Func_03_6795:
 	ld de, $7cbf
 	ret
 
-SECTION "room_00e799", ROMX[$6799], BANK[$03]
-
 Func_03_6799:
 	ld de, $7caf
 	ret
-
-SECTION "room_00e79d", ROMX[$679d], BANK[$03]
 
 Suezo_ProbeChargeOrWall:
 	call Suezo_ProbeChargeAlign
@@ -6388,8 +6208,6 @@ Func_03_67ed:
 	ldh [$ffb8], a
 	ret
 
-SECTION "room_00e7f7", ROMX[$67f7], BANK[$03]
-
 Func_03_67f7:
 	ldh a, [$ffc3]
 	ld l, a
@@ -6400,34 +6218,24 @@ Func_03_67f7:
 	ldh [$ffb8], a
 	ret
 
-SECTION "room_00e803", ROMX[$6803], BANK[$03]
-
 Suezo_ProbeChargeAlign:
 	call DecGenTimer16
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_6812
 
-SECTION "room_00e80d", ROMX[$680d], BANK[$03]
-
 Data_03_680d:
 	db $3e, $ff, $e0, $b8, $c9
-
-SECTION "room_00e812", ROMX[$6812], BANK[$03]
 
 Func_03_6812:
 	xor a
 	ldh [$ffb8], a
 	ret
 
-SECTION "room_00e816", ROMX[$6816], BANK[$03]
-
 Data_03_6816:
 	db $cd, $e2, $46, $f0, $b7, $cb, $4f, $20, $08, $f0, $b6, $cb, $7f, $28, $0d, $18
 	db $06, $f0, $b6, $cb, $7f, $20, $05, $3e, $02, $e0, $b8, $c9, $3e, $01, $e0, $b8
 	db $c9
-
-SECTION "room_00e837", ROMX[$6837], BANK[$03]
 
 Golem_Think3:
 	call MonsterProbeWalkAhead
@@ -6440,8 +6248,6 @@ Golem_Think3:
 	jr z, Func_03_6851
 	ret
 
-SECTION "room_00e849", ROMX[$6849], BANK[$03]
-
 Func_03_6849:
 	ld de, $7c80
 	ret
@@ -6451,8 +6257,6 @@ Func_03_684d:
 Func_03_6851:
 	ld de, $7c67
 	ret
-
-SECTION "room_00e855", ROMX[$6855], BANK[$03]
 
 Golem_Think5:
 	call MonsterProbeWalkAhead
@@ -6469,8 +6273,6 @@ Golem_Think5:
 	jr z, Func_03_687f
 	ret
 
-SECTION "room_00e86f", ROMX[$686f], BANK[$03]
-
 Func_03_686f:
 	ld de, $7c80
 	ret
@@ -6480,8 +6282,6 @@ Func_03_6873:
 Func_03_6877:
 	ld de, $7c67
 	ret
-
-SECTION "room_00e87b", ROMX[$687b], BANK[$03]
 
 Func_03_687b:
 	ld de, $7c31
@@ -6502,8 +6302,6 @@ Golem_ThinkB:
 	jr z, Func_03_68a5
 	ret
 
-SECTION "room_00e899", ROMX[$6899], BANK[$03]
-
 Func_03_6899:
 	ld de, $7c80
 	ret
@@ -6513,8 +6311,6 @@ Func_03_689d:
 Func_03_68a1:
 	ld de, $7c67
 	ret
-
-SECTION "room_00e8a5", ROMX[$68a5], BANK[$03]
 
 Func_03_68a5:
 	ld de, $7c31
@@ -6533,16 +6329,12 @@ Func_03_68bb:
 	ld de, $7ba7
 	ret
 
-SECTION "room_00e8bf", ROMX[$68bf], BANK[$03]
-
 Func_03_68bf:
 	ld de, $7b77
 	ret
 Func_03_68c3:
 	ld de, $7b8e
 	ret
-
-SECTION "room_00e8c7", ROMX[$68c7], BANK[$03]
 
 Hare_Think5:
 	call MonsterProbeWalkAhead
@@ -6559,25 +6351,17 @@ Hare_Think5:
 	jr z, Func_03_68f1
 	ret
 
-SECTION "room_00e8e1", ROMX[$68e1], BANK[$03]
-
 Func_03_68e1:
 	ld de, $7ba7
 	ret
-
-SECTION "room_00e8e5", ROMX[$68e5], BANK[$03]
 
 Func_03_68e5:
 	ld de, $7b77
 	ret
 
-SECTION "room_00e8e9", ROMX[$68e9], BANK[$03]
-
 Func_03_68e9:
 	ld de, $7b8e
 	ret
-
-SECTION "room_00e8ed", ROMX[$68ed], BANK[$03]
 
 Func_03_68ed:
 	ld de, $7b58
@@ -6598,8 +6382,6 @@ Hare_ThinkB:
 	jr z, Func_03_6917
 	ret
 
-SECTION "room_00e90b", ROMX[$690b], BANK[$03]
-
 Func_03_690b:
 	ld de, $7ba7
 	ret
@@ -6609,8 +6391,6 @@ Func_03_690f:
 Func_03_6913:
 	ld de, $7b8e
 	ret
-
-SECTION "room_00e917", ROMX[$6917], BANK[$03]
 
 Func_03_6917:
 	ld de, $7b58
@@ -6679,16 +6459,12 @@ Func_03_6917:
 	ldh [$ffc0], a
 	ret
 
-SECTION "room_00e983", ROMX[$6983], BANK[$03]
-
 Func_03_6983:
 	ld a, $aa
 	ldh [$ffbf], a
 	ld a, $00
 	ldh [$ffc0], a
 	ret
-
-SECTION "room_00e98c", ROMX[$698c], BANK[$03]
 
 Func_03_698c:
 	ldh a, [$ffc7]
@@ -6780,12 +6556,8 @@ Func_03_6a11:
 	cp $87
 	jr z, Func_03_6a1c
 
-SECTION "room_00ea17", ROMX[$6a17], BANK[$03]
-
 Data_03_6a17:
 	db $3e, $01, $e0, $b8, $c9
-
-SECTION "room_00ea1c", ROMX[$6a1c], BANK[$03]
 
 Func_03_6a1c:
 	ld a, $02
@@ -7073,14 +6845,10 @@ Func_03_6bdb:
 	ldh [$ffb8], a
 	ret
 
-SECTION "room_00ebe0", ROMX[$6be0], BANK[$03]
-
 Func_03_6be0:
 	xor a
 	ldh [$ffb8], a
 	ret
-
-SECTION "room_00ebe4", ROMX[$6be4], BANK[$03]
 
 Func_03_6be4:
 	ld a, $ff
@@ -7567,14 +7335,10 @@ Func_03_6ee6:
 	pop de
 	ret
 
-SECTION "room_00eef5", ROMX[$6ef5], BANK[$03]
-
 Data_03_6ef5:
 	db $00, $01, $00, $00, $01, $00, $00, $00, $80, $01, $80, $01, $80, $01, $80, $01
 	db $00, $00, $01, $00, $00, $01, $01, $00, $40, $01, $40, $01, $40, $01, $40, $01
 	db $40, $01, $40, $01
-
-SECTION "room_00ef19", ROMX[$6f19], BANK[$03]
 
 Stairs_PollOpenDown:
 	ld a, [$cf77]
@@ -7686,122 +7450,78 @@ AdvanceArcPhase:
 	ldh [$ffc1], a
 	ret
 
-SECTION "room_00efc4", ROMX[$6fc4], BANK[$03]
-
 PlayerWalkVelR:
 	db $00, $01, $00, $01
 
-SECTION "room_00efc8", ROMX[$6fc8], BANK[$03]
-
 Data_03_6fc8:
 	db $00, $01
-
-SECTION "room_00efca", ROMX[$6fca], BANK[$03]
 
 Data_03_6fca:
 	db $00, $01, $00, $02
 PlayerWalkVelL:
 	db $55, $00, $55, $00
 
-SECTION "room_00efd2", ROMX[$6fd2], BANK[$03]
-
 Data_03_6fd2:
 	db $55, $00
-
-SECTION "room_00efd4", ROMX[$6fd4], BANK[$03]
 
 Data_03_6fd4:
 	db $55, $00, $aa, $00
 PlayerCarryWalkVel:
 	db $9c, $00, $9c, $00
 
-SECTION "room_00efdc", ROMX[$6fdc], BANK[$03]
-
 Data_03_6fdc:
 	db $9c, $00
-
-SECTION "room_00efde", ROMX[$6fde], BANK[$03]
 
 Data_03_6fde:
 	db $9c, $00, $9c, $00, $80, $00, $c0, $00, $00, $01, $80, $01, $00, $02
 GolemWalkVel:
 	db $2a, $00, $3f, $00
 
-SECTION "room_00eff0", ROMX[$6ff0], BANK[$03]
-
 Data_03_6ff0:
 	db $55, $00
-
-SECTION "room_00eff2", ROMX[$6ff2], BANK[$03]
 
 Data_03_6ff2:
 	db $7f, $00, $aa, $00
 GolemChargeVel:
 	db $55, $00, $7f, $00
 
-SECTION "room_00effa", ROMX[$6ffa], BANK[$03]
-
 Data_03_6ffa:
 	db $aa, $00
 
-SECTION "room_00effc", ROMX[$6ffc], BANK[$03]
-
 Data_03_6ffc:
 	db $ff, $00, $54, $01
-
-SECTION "room_00f000", ROMX[$7000], BANK[$03]
 
 MonsterWalkVel:
 	db $40, $00, $60, $00, $80, $00, $c0, $00, $00, $01
 MonsterChargeVel:
 	db $60, $00, $90, $00, $c0, $00, $20, $01
 
-SECTION "room_00f012", ROMX[$7012], BANK[$03]
-
 Data_03_7012:
 	db $80, $01, $50, $00, $78, $00, $a0, $00, $f0, $00, $40, $01
-
-SECTION "room_00f01e", ROMX[$701e], BANK[$03]
 
 PsyloraWalkVel:
 	db $40, $00, $60, $00, $80, $00, $00, $01, $80, $01
 
-SECTION "room_00f028", ROMX[$7028], BANK[$03]
-
 Data_03_7028:
 	db $20, $00, $30, $00
-
-SECTION "room_00f02c", ROMX[$702c], BANK[$03]
 
 Data_03_702c:
 	db $40, $00
 
-SECTION "room_00f02e", ROMX[$702e], BANK[$03]
-
 Data_03_702e:
 	db $60, $00, $80, $00, $60, $00, $90, $00
-
-SECTION "room_00f036", ROMX[$7036], BANK[$03]
 
 Data_03_7036:
 	db $c0, $00
 
-SECTION "room_00f038", ROMX[$7038], BANK[$03]
-
 Data_03_7038:
 	db $20, $01, $80, $01, $00, $01, $80, $01
-
-SECTION "room_00f040", ROMX[$7040], BANK[$03]
 
 Data_03_7040:
 	db $00, $02
 
-SECTION "room_00f042", ROMX[$7042], BANK[$03]
-
 Data_03_7042:
 	db $70, $00, $70, $01
-
-SECTION "room_00f046", ROMX[$7046], BANK[$03]
 
 Data_03_7046:
 	db $02, $07, $01, $08, $04, $0b, $00, $02, $07, $02, $08, $0a, $0b, $00, $02, $07
@@ -7816,106 +7536,66 @@ Data_03_70ae:
 	db $02, $07, $0c, $08, $0f, $0b, $00, $02, $07, $19, $08, $15, $0b, $16, $5f, $4c
 	db $00, $02, $07, $10, $08, $1f, $0b, $16, $5f, $4c, $00, $06, $00, $07, $11, $1d
 
-SECTION "room_00f0ce", ROMX[$70ce], BANK[$03]
-
 Data_03_70ce:
 	db $20, $bf, $70
-
-SECTION "room_00f0d1", ROMX[$70d1], BANK[$03]
 
 Data_03_70d1:
 	db $06, $00, $07, $12, $1d, $20, $bf, $70, $06, $01, $07, $13, $1d
 
-SECTION "room_00f0de", ROMX[$70de], BANK[$03]
-
 Data_03_70de:
 	db $20, $bf, $70
-
-SECTION "room_00f0e1", ROMX[$70e1], BANK[$03]
 
 Data_03_70e1:
 	db $06, $01, $07, $14, $1d, $20, $bf, $70
 
-SECTION "room_00f0e9", ROMX[$70e9], BANK[$03]
-
 Data_03_70e9:
 	db $06, $02, $07, $15, $1d, $20, $bf, $70
-
-SECTION "room_00f0f1", ROMX[$70f1], BANK[$03]
 
 Data_03_70f1:
 	db $06, $02, $07, $16, $1d, $20, $bf, $70
 
-SECTION "room_00f0f9", ROMX[$70f9], BANK[$03]
-
 Data_03_70f9:
 	db $06, $03, $07, $17, $1d, $20, $bf, $70
-
-SECTION "room_00f101", ROMX[$7101], BANK[$03]
 
 Data_03_7101:
 	db $06, $03, $07, $18, $1d
 
-SECTION "room_00f106", ROMX[$7106], BANK[$03]
-
 Data_03_7106:
 	db $20, $bf, $70
-
-SECTION "room_00f109", ROMX[$7109], BANK[$03]
 
 Data_03_7109:
 	db $06, $00, $07, $1a, $1d, $20, $b5, $70, $06, $00, $07, $1b, $1d, $20, $b5, $70
 	db $06, $01, $07, $1c, $1d, $20, $b5, $70, $06, $01, $07, $1d, $1d
 
-SECTION "room_00f126", ROMX[$7126], BANK[$03]
-
 Data_03_7126:
 	db $20, $b5, $70, $06, $02, $07, $1e, $1d, $20, $b5, $70
-
-SECTION "room_00f131", ROMX[$7131], BANK[$03]
 
 Data_03_7131:
 	db $06, $02, $07, $1f, $1d, $20, $b5, $70
 
-SECTION "room_00f139", ROMX[$7139], BANK[$03]
-
 Data_03_7139:
 	db $06, $03, $07, $20, $1d, $20, $b5, $70
-
-SECTION "room_00f141", ROMX[$7141], BANK[$03]
 
 Data_03_7141:
 	db $06, $03, $07, $21, $1d, $20, $b5, $70, $02, $07, $30, $08, $28, $0b, $00, $02
 	db $07, $31, $08, $28, $0b, $00
 
-SECTION "room_00f157", ROMX[$7157], BANK[$03]
-
 Data_03_7157:
 	db $02, $07, $32, $08, $2a, $0b, $00
-
-SECTION "room_00f15e", ROMX[$715e], BANK[$03]
 
 Data_03_715e:
 	db $02, $07, $33, $08, $09, $0b, $00, $02, $07, $34, $08, $06, $0b, $00, $02, $07
 	db $35, $08, $10, $0b, $00
 
-SECTION "room_00f173", ROMX[$7173], BANK[$03]
-
 Data_03_7173:
 	db $06, $fe, $03, $00, $02, $07, $36, $0c, $20, $7a, $71
-
-SECTION "room_00f17e", ROMX[$717e], BANK[$03]
 
 Data_03_717e:
 	db $06, $fe, $03, $00, $02, $07, $37, $0c, $20, $85, $71, $03, $00, $02, $07, $3a
 	db $0c, $20, $8e, $71
 
-SECTION "room_00f192", ROMX[$7192], BANK[$03]
-
 Data_03_7192:
 	db $03, $00, $02, $07, $3b, $0c, $20, $97, $71
-
-SECTION "room_00f19b", ROMX[$719b], BANK[$03]
 
 Data_03_719b:
 	db $06, $03, $03, $00, $02, $07, $3c, $0c, $20, $a2, $71, $02, $07, $3d, $08, $15
@@ -7939,17 +7619,11 @@ Func_03_7d25:
 	jr nz, Func_03_7d46
 	ld a, l
 
-SECTION "room_00fd36", ROMX[$7d36], BANK[$03]
-
 Data_03_7d36:
 	db $05, $01, $01, $00, $02, $07, $01, $08, $3c, $10, $21
 
-SECTION "room_00fd41", ROMX[$7d41], BANK[$03]
-
 Data_03_7d41:
 	db $93, $7d
-
-SECTION "room_00fd43", ROMX[$7d43], BANK[$03]
 
 Data_03_7d43:
 	db $0a, $3f, $7d
@@ -7958,32 +7632,20 @@ Func_03_7d46:
 	db $16, $1b, $69, $27, $ff, $93, $7d, $27, $03, $49, $7d, $0a, $56, $7d, $20, $38
 	db $7d, $01, $02, $02, $07, $03, $08, $14, $10, $21
 
-SECTION "room_00fd70", ROMX[$7d70], BANK[$03]
-
 Data_03_7d70:
 	db $93, $7d
-
-SECTION "room_00fd72", ROMX[$7d72], BANK[$03]
 
 Data_03_7d72:
 	db $0a, $6e, $7d, $16, $9a, $54, $08, $0a, $10, $21
 
-SECTION "room_00fd7c", ROMX[$7d7c], BANK[$03]
-
 Data_03_7d7c:
 	db $93, $7d
-
-SECTION "room_00fd7e", ROMX[$7d7e], BANK[$03]
 
 Data_03_7d7e:
 	db $0a, $7a, $7d, $16, $ae, $54, $08, $0a, $10, $21
 
-SECTION "room_00fd88", ROMX[$7d88], BANK[$03]
-
 Data_03_7d88:
 	db $93, $7d
-
-SECTION "room_00fd8a", ROMX[$7d8a], BANK[$03]
 
 Data_03_7d8a:
 	db $0a, $86, $7d, $16, $b8, $54, $20, $4b, $7d, $16, $22, $46, $01, $04, $02, $07
@@ -8026,7 +7688,5 @@ Data_03_7d8a:
 	db $20, $22, $7f, $16, $22, $46, $01, $ff, $02, $07, $09, $08, $78, $0b, $16, $6e
 	db $55, $00
 
-SECTION "room_00ffff", ROMX[$7fff], BANK[$03]
-
-Data_03_7fff:
+SECTION "BANK_TAG_3", ROMX[$7fff], BANK[$03]
 	db $03
