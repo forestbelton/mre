@@ -16672,13 +16672,13 @@
 			"name":	"Naji_ShowSubMenu2"
 		}, {
 			"addr":	515651,
-			"name":	"Verde_ShowSharedMenu"
+			"name":	"Bodka_ShowMenu"
 		}, {
 			"addr":	515920,
 			"name":	"Verde_ShowMenu2"
 		}, {
 			"addr":	516035,
-			"name":	"Verde_ShowItemsSubMenu"
+			"name":	"Bodka_ShowItemsSubMenu"
 		}, {
 			"addr":	516240,
 			"name":	"Pashute_ShowMenu"

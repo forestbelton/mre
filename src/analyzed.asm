@@ -51694,7 +51694,7 @@ Data_1f_5de3:
 
 SECTION "analyzed_07de43", ROMX[$5e43], BANK[$1f]
 
-Verde_ShowSharedMenu:
+Bodka_ShowMenu:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51827,7 +51827,7 @@ Data_1f_5fbd:
 
 SECTION "analyzed_07dfc3", ROMX[$5fc3], BANK[$1f]
 
-Verde_ShowItemsSubMenu:
+Bodka_ShowItemsSubMenu:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper

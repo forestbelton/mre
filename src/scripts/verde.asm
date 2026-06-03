@@ -477,7 +477,7 @@ VerdeEmptyMenu:
     SCRIPT_FAR_CALL .Addr=Verde_ShowMenu2, .Bank=$1f
     SCRIPT_FAR_CALL .Addr=Tradehouse_LoadBgMap, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, VerdeEmptyEnter, VerdeEmptySave, VerdeSharedGreet
+    SCRIPT_JUMP_TABLE wMainMenuResult, VerdeEmptyEnter, VerdeEmptySave, BodkaGreet
 
 VerdeEmptyEnter:
     db "OK. Let's enter"
@@ -635,7 +635,7 @@ VerdeSaveProcess2:
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeEmptyMenu
 
-VerdeSharedGreet:
+BodkaGreet:
     db "I should stop"
     SCRIPT_NEWLINE
     db "for now."
@@ -644,51 +644,51 @@ VerdeSharedGreet:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
     SCRIPT_CYCLE .Count=4
-    SCRIPT_JUMP_TABLE wCycleCounter, VerdeSharedGreetA, VerdeSharedGreetB, VerdeSharedGreetC, VerdeSharedGreetD
+    SCRIPT_JUMP_TABLE wCycleCounter, BodkaGreetA, BodkaGreetB, BodkaGreetC, BodkaGreetD
 
-VerdeSharedGreetA:
+BodkaGreetA:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Hey!"
     SCRIPT_NEWLINE
     db "How's it going?"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedGreetB:
+BodkaGreetB:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Hey! Howdy?"
     SCRIPT_NEWLINE
     db "Have some fun!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedGreetC:
+BodkaGreetC:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Oh! You again!"
     SCRIPT_NEWLINE
     db "Take your time!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedGreetD:
+BodkaGreetD:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Wow!"
     SCRIPT_NEWLINE
     db "Doing your best?"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedMenu:
+BodkaMenu:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
-    SCRIPT_FAR_CALL .Addr=Verde_ShowSharedMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Bodka_ShowMenu, .Bank=$1f
     SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, VerdeSharedLeave, VerdeSharedEnter, VerdeSharedItems, VerdeSharedSave, VerdeSharedExit
+    SCRIPT_JUMP_TABLE wMainMenuResult, BodkaLeave, BodkaEnter, BodkaItems, BodkaSave, BodkaExit
 
-VerdeSharedLeave:
+BodkaLeave:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Leave it to me!"
     SCRIPT_NEWLINE
@@ -701,9 +701,9 @@ VerdeSharedLeave:
     SCRIPT_NEWLINE
     db "Great job!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedEnter:
+BodkaEnter:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Want to try a"
     SCRIPT_NEWLINE
@@ -711,9 +711,9 @@ VerdeSharedEnter:
     SCRIPT_WAIT
     SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=$00
     SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=VerdeSharedEnterNo
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=VerdeSharedEnterNo
-    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=VerdeSharedEnterNo
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=BodkaEnterNo
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=BodkaEnterNo
+    SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=BodkaEnterNo
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Okay! Now enter"
     SCRIPT_NEWLINE
@@ -722,24 +722,24 @@ VerdeSharedEnter:
     SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=$00
     SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
 
-VerdeSharedEnterNo:
+BodkaEnterNo:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Not today, huh?"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedItems:
+BodkaItems:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Now,"
     SCRIPT_NEWLINE
     db "let me explain."
-    SCRIPT_FAR_CALL .Addr=Verde_ShowItemsSubMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Bodka_ShowItemsSubMenu, .Bank=$1f
     SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=$18
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wSubMenuCursor, VerdeItemDisc, VerdeItemLink, VerdeItemStop
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_JUMP_TABLE wSubMenuCursor, BodkaItemDisc, BodkaItemLink, BodkaItemStop
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSave:
+BodkaSave:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Well then,"
     SCRIPT_NEWLINE
@@ -747,9 +747,9 @@ VerdeSharedSave:
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=$31
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5c2, VerdeSharedSaveConfirm, VerdeSharedSaveNoOpp, VerdeSharedSaveNotReady, VerdeSharedSaveProcess
+    SCRIPT_JUMP_TABLE $d5c2, BodkaSaveConfirm, BodkaSaveNoOpp, BodkaSaveNotReady, BodkaSaveProcess
 
-VerdeSharedSaveNoOpp:
+BodkaSaveNoOpp:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Opponent not"
     SCRIPT_NEWLINE
@@ -759,9 +759,9 @@ VerdeSharedSaveNoOpp:
     SCRIPT_NEWLINE
     db "when ready."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaveNotReady:
+BodkaSaveNotReady:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "You don't look"
     SCRIPT_NEWLINE
@@ -771,17 +771,17 @@ VerdeSharedSaveNotReady:
     SCRIPT_NEWLINE
     db "Link Cable."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaveProcess:
+BodkaSaveProcess:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaveConfirm:
+BodkaSaveConfirm:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "First, I'll save"
     SCRIPT_NEWLINE
@@ -790,7 +790,7 @@ VerdeSharedSaveConfirm:
     db "Okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
-    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=VerdeSharedSaving
+    SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=BodkaSaving
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "I see. How"
     SCRIPT_NEWLINE
@@ -800,9 +800,9 @@ VerdeSharedSaveConfirm:
     SCRIPT_NEWLINE
     db "if you like."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaving:
+BodkaSaving:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Okay. Looks like"
     SCRIPT_NEWLINE
@@ -865,9 +865,9 @@ VerdeSharedSaving:
     SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=$31
     SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
     SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=$18
-    SCRIPT_JUMP_TABLE $d5c2, VerdeSharedSaveOk, VerdeSharedSaveErr, VerdeSharedSaveProcess2, VerdeSharedSaveProcess2
+    SCRIPT_JUMP_TABLE $d5c2, BodkaSaveOk, BodkaSaveErr, BodkaSaveProcess2, BodkaSaveProcess2
 
-VerdeSharedSaveOk:
+BodkaSaveOk:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Whoa! Looks like"
     SCRIPT_NEWLINE
@@ -880,9 +880,9 @@ VerdeSharedSaveOk:
     SCRIPT_NEWLINE
     db "anything else."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaveErr:
+BodkaSaveErr:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Hmmm. Looks"
     SCRIPT_NEWLINE
@@ -892,17 +892,17 @@ VerdeSharedSaveErr:
     SCRIPT_NEWLINE
     db "it again?"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedSaveProcess2:
+BodkaSaveProcess2:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+    SCRIPT_GOTO .Target=BodkaMenu
 
-VerdeSharedExit:
+BodkaExit:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Okay! Please"
     SCRIPT_NEWLINE
@@ -910,7 +910,7 @@ VerdeSharedExit:
     SCRIPT_WAIT
     SCRIPT_END
 
-VerdeItemDisc:
+BodkaItemDisc:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "You can make 3"
     SCRIPT_NEWLINE
@@ -940,9 +940,9 @@ VerdeItemDisc:
     SCRIPT_NEWLINE
     db "Have fun!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedItems
+    SCRIPT_GOTO .Target=BodkaItems
 
-VerdeItemLink:
+BodkaItemLink:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Link Exchange,"
     SCRIPT_NEWLINE
@@ -973,7 +973,7 @@ VerdeItemLink:
     SCRIPT_WAIT
     db "Enjoy!"
     SCRIPT_WAIT
-    SCRIPT_GOTO .Target=VerdeSharedItems
+    SCRIPT_GOTO .Target=BodkaItems
 
-VerdeItemStop:
-    SCRIPT_GOTO .Target=VerdeSharedMenu
+BodkaItemStop:
+    SCRIPT_GOTO .Target=BodkaMenu
