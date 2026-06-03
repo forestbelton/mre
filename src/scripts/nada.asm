@@ -75,8 +75,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "you should know."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
-    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildTowerScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Hm, I don't know"
     SCRIPT_WAIT
     db "Ask the tower."
@@ -96,8 +96,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "spare your life!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
-    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildTowerScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "Heh! I don't"
     SCRIPT_NEWLINE
     db "think so."
@@ -124,8 +124,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "any angrier!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
-    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildTowerScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Sorry, but this"
     SCRIPT_NEWLINE
     db "is how it goes."
@@ -174,8 +174,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "the great power."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
-    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildTowerScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "I didn't think"
     SCRIPT_NEWLINE
     db "that this day"
@@ -202,7 +202,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "legendary power."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "But just because"
     SCRIPT_NEWLINE
     db "you got here"
@@ -223,7 +223,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "give is that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "silver key you"
     SCRIPT_NEWLINE
     db "picked up. That"

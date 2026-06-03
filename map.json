@@ -16516,19 +16516,19 @@
 			"name":	"Verde_RenderPortraitCalm"
 		}, {
 			"addr":	400899,
-			"name":	"Studio_BuildHostScene"
+			"name":	"Bodka_BuildStudioScene"
 		}, {
 			"addr":	400987,
-			"name":	"Studio_BuildHostSceneWithTiles"
+			"name":	"Bodka_BuildTowerScene"
 		}, {
 			"addr":	401084,
-			"name":	"Studio_LoadBgMap"
+			"name":	"Bodka_LoadStudioBgMap"
 		}, {
 			"addr":	401096,
-			"name":	"Studio_RenderPortrait"
+			"name":	"Bodka_RenderPortrait"
 		}, {
 			"addr":	401212,
-			"name":	"Studio_RenderPortraitAlt"
+			"name":	"Bodka_RenderPortraitAlt"
 		}, {
 			"addr":	401262,
 			"name":	"Tradehouse_BuildScene"

@@ -48541,7 +48541,7 @@ Func_18_5dfa:
 	ld hl, $608c
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
-Studio_BuildHostScene:
+Bodka_BuildStudioScene:
 	call Func_00_0822
 	ld a, $c7
 	ld [rLCDC], a
@@ -48554,8 +48554,8 @@ Studio_BuildHostScene:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Studio_LoadBgMap
-	call Studio_RenderPortrait
+	call Bodka_LoadStudioBgMap
+	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5800
@@ -48576,7 +48576,7 @@ Studio_BuildHostScene:
 	call CallLibFuncSaveId
 	pop af
 	ret
-Studio_BuildHostSceneWithTiles:
+Bodka_BuildTowerScene:
 	ld a, $1f
 	ld hl, Func_1f_4d66
 	call CallBankedHL
@@ -48591,12 +48591,12 @@ Studio_BuildHostSceneWithTiles:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Studio_LoadBgMap
+	call Bodka_LoadStudioBgMap
 	ld hl, $5bd9
 	ld a, $1e
 	ld de, $9845
 	call CopyBgMapBankedA
-	call Studio_RenderPortrait
+	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5b59
@@ -48613,13 +48613,13 @@ Studio_BuildHostSceneWithTiles:
 	ld [$ffa2], a
 	call WaitForNextFrame
 	ret
-Studio_LoadBgMap:
+Bodka_LoadStudioBgMap:
 	ld hl, $5880
 	ld a, $1e
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Studio_RenderPortrait:
+Bodka_RenderPortrait:
 	ld a, $c8
 	ld [wRendererAddr], a
 	ld a, $5e
@@ -48670,7 +48670,7 @@ Func_18_5f27:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
-Studio_RenderPortraitAlt:
+Bodka_RenderPortraitAlt:
 	ld a, $3c
 	ld [wRendererAddr], a
 	ld a, $5f
