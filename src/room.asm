@@ -107,7 +107,7 @@ EndEntityFrame:
 	ldh a, [$ffb3]
 	cp $ff
 	jr z, Func_03_4077
-	call Func_03_590e
+	call DecFreezeTimerElseReset
 	jr Func_03_4077
 Func_03_4071:
 	ldh a, [$ffe4]
@@ -1564,7 +1564,7 @@ Player_ClearMoveSub:
 	ret
 Player_TryGrab:
 	push de
-	call Func_03_492e
+	call Player_ScanGrabTargets
 	pop de
 	or a
 	jr z, Func_03_4928
@@ -1576,7 +1576,7 @@ Func_03_4928:
 	set 0, a
 	ldh [$ffb7], a
 	ret
-Func_03_492e:
+Player_ScanGrabTargets:
 	ldh a, [$ffb4]
 	bit 7, a
 	jp z, Func_03_498c
@@ -1859,18 +1859,18 @@ Func_03_4af3:
 	ldh a, [$ffb3]
 	cp $05
 	jr z, Func_03_4afe
-	call Func_03_4b08
+	call CellXAheadByFacing
 	pop de
 	ret
 Func_03_4afe:
-	call Func_03_4b3c
+	call SpawnPushSprite6
 	pop de
 	ret
 Func_03_4b03:
-	call Func_03_4b56
+	call SpawnPushSprite7
 	pop de
 	ret
-Func_03_4b08:
+CellXAheadByFacing:
 	ldh a, [$ffb6]
 	bit 7, a
 	jr z, Func_03_4b18
@@ -1904,7 +1904,7 @@ Func_03_4b20:
 	rst $00
 	set 7, [hl]
 	ret
-Func_03_4b3c:
+SpawnPushSprite6:
 	ld a, c
 	swap a
 	and $f0
@@ -1921,7 +1921,7 @@ Func_03_4b3c:
 	ld a, $06
 	call SpawnEntity
 	ret
-Func_03_4b56:
+SpawnPushSprite7:
 	ld a, c
 	swap a
 	and $f0
@@ -2119,13 +2119,13 @@ Player_FireShot:
 	ldh a, [$ffb4]
 	bit 7, a
 	jr nz, Func_03_4c8d
-	call Func_03_4cbb
+	call Player_SpawnShot16
 	jp Func_03_4cab
 Func_03_4c88:
-	call Func_03_4d19
+	call Player_SpawnShot18
 	jr Func_03_4cab
 Func_03_4c8d:
-	call Func_03_4d83
+	call Player_SpawnShot1a
 	jr Func_03_4cab
 Func_03_4c92:
 	ldh a, [$ffb3]
@@ -2134,13 +2134,13 @@ Func_03_4c92:
 	ldh a, [$ffb4]
 	bit 7, a
 	jr nz, Func_03_4ca8
-	call Func_03_4cea
+	call Player_SpawnShot10
 	jr Func_03_4cab
 Func_03_4ca3:
-	call Func_03_4d4e
+	call Player_SpawnShot12
 	jr Func_03_4cab
 Func_03_4ca8:
-	call Func_03_4db2
+	call Player_SpawnShot14
 Func_03_4cab:
 	ld hl, $ffb4
 	set 2, [hl]
@@ -2150,7 +2150,7 @@ Func_03_4cab:
 	srl [hl]
 	pop de
 	ret
-Func_03_4cbb:
+Player_SpawnShot16:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -2173,7 +2173,7 @@ Func_03_4cbb:
 	call AttackChild_CopyAlignFlag
 	call AttackChild_CopyAttackPos
 	ret
-Func_03_4cea:
+Player_SpawnShot10:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -2196,7 +2196,7 @@ Func_03_4cea:
 	call AttackChild_CopyAlignFlag
 	call AttackChild_CopyAttackPos
 	ret
-Func_03_4d19:
+Player_SpawnShot18:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -2222,7 +2222,7 @@ Func_03_4d19:
 	add hl, de
 	set 3, [hl]
 	ret
-Func_03_4d4e:
+Player_SpawnShot12:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -2248,7 +2248,7 @@ Func_03_4d4e:
 	add hl, de
 	set 3, [hl]
 	ret
-Func_03_4d83:
+Player_SpawnShot1a:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -2271,7 +2271,7 @@ Func_03_4d83:
 	call AttackChild_CopyAlignFlag
 	call AttackChild_CopyAttackPos
 	ret
-Func_03_4db2:
+Player_SpawnShot14:
 	ldh a, [$ffbe]
 	add a, $08
 	and $f0
@@ -3868,16 +3868,16 @@ Func_03_5840:
 	pop af
 	call SpawnEntity
 	pop af
-	call Func_03_5878
-	call Func_03_58af
+	call SetSpawnScriptBySpecies
+	call SetSpriteTileByFacing
 	pop af
-	call Func_03_5899
-	call Func_03_58df
-	call Func_03_58ef
+	call SetOamAttrByFacing
+	call SetAnimSelByFacing
+	call UpdateFacingField
 	pop hl
 	pop de
 	ret
-Func_03_5878:
+SetSpawnScriptBySpecies:
 	push hl
 	sub $30
 	add a, a
@@ -3907,7 +3907,7 @@ Data_03_5893:
 
 SECTION "room_00d899", ROMX[$5899], BANK[$03]
 
-Func_03_5899:
+SetOamAttrByFacing:
 	push af
 	ldh a, [$ffb6]
 	and $e0
@@ -3923,7 +3923,7 @@ Func_03_5899:
 	ld [hl], a
 	pop hl
 	ret
-Func_03_58af:
+SetSpriteTileByFacing:
 	push hl
 	ldh a, [$ffb6]
 	and $1c
@@ -3959,7 +3959,7 @@ Data_03_58d7:
 
 SECTION "room_00d8df", ROMX[$58df], BANK[$03]
 
-Func_03_58df:
+SetAnimSelByFacing:
 	ldh a, [$ffb6]
 	and $e0
 	swap a
@@ -3970,7 +3970,7 @@ Func_03_58df:
 	ld [hl], a
 	pop hl
 	ret
-Func_03_58ef:
+UpdateFacingField:
 	push hl
 	ld de, $0006
 	add hl, de
@@ -3992,7 +3992,7 @@ Func_03_590b:
 	ld [hl], b
 	pop hl
 	ret
-Func_03_590e:
+DecFreezeTimerElseReset:
 	ld hl, $ffc1
 	ld a, [hl+]
 	ld c, a
@@ -4734,12 +4734,12 @@ Psylora_SelectMoveScript:
 	ldh a, [$ffb6]
 	bit 2, a
 	jr z, Func_03_5d2b
-	call Func_03_5d2f
+	call Psylora_DispatchMoveA
 	ret
 Func_03_5d2b:
-	call Func_03_5d4d
+	call Psylora_DispatchMoveB
 	ret
-Func_03_5d2f:
+Psylora_DispatchMoveA:
 	and $03
 	cp $00
 	jr z, Func_03_5d41
@@ -4764,7 +4764,7 @@ Func_03_5d49:
 
 SECTION "room_00dd4d", ROMX[$5d4d], BANK[$03]
 
-Func_03_5d4d:
+Psylora_DispatchMoveB:
 	and $03
 	cp $00
 	jr z, Func_03_5d5f
@@ -7562,7 +7562,7 @@ Func_03_6e01:
 	ld [$cf7b], a
 	ld [$cf7a], a
 	ret
-Func_03_6e12:
+ApplyKnockbackX:
 	ld a, [$cf7b]
 	ld c, a
 	ld b, $00
@@ -7613,7 +7613,7 @@ Func_03_6e38:
 	ld a, h
 	ldh [$ffbc], a
 	ret
-Func_03_6e55:
+ApplyKnockbackY:
 	ld a, [$cf7b]
 	ld c, a
 	ld b, $00
@@ -7667,8 +7667,8 @@ Func_03_6e7b:
 	ld a, [$cf78]
 	or a
 	jr nz, Func_03_6ec4
-	call Func_03_6e12
-	call Func_03_6e55
+	call ApplyKnockbackX
+	call ApplyKnockbackY
 	ld a, [$cf7a]
 	inc a
 	ld [$cf7a], a

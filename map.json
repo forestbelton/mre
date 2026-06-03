@@ -18798,6 +18798,66 @@
 		}, {
 			"addr":	51698,
 			"name":	"Player_GrabOrBreakCell"
+		}, {
+			"addr":	51502,
+			"name":	"Player_ScanGrabTargets"
+		}, {
+			"addr":	51976,
+			"name":	"CellXAheadByFacing"
+		}, {
+			"addr":	52028,
+			"name":	"SpawnPushSprite6"
+		}, {
+			"addr":	52054,
+			"name":	"SpawnPushSprite7"
+		}, {
+			"addr":	52411,
+			"name":	"Player_SpawnShot16"
+		}, {
+			"addr":	52458,
+			"name":	"Player_SpawnShot10"
+		}, {
+			"addr":	52505,
+			"name":	"Player_SpawnShot18"
+		}, {
+			"addr":	52558,
+			"name":	"Player_SpawnShot12"
+		}, {
+			"addr":	52611,
+			"name":	"Player_SpawnShot1a"
+		}, {
+			"addr":	52658,
+			"name":	"Player_SpawnShot14"
+		}, {
+			"addr":	55416,
+			"name":	"SetSpawnScriptBySpecies"
+		}, {
+			"addr":	55449,
+			"name":	"SetOamAttrByFacing"
+		}, {
+			"addr":	55471,
+			"name":	"SetSpriteTileByFacing"
+		}, {
+			"addr":	55519,
+			"name":	"SetAnimSelByFacing"
+		}, {
+			"addr":	55535,
+			"name":	"UpdateFacingField"
+		}, {
+			"addr":	55566,
+			"name":	"DecFreezeTimerElseReset"
+		}, {
+			"addr":	56623,
+			"name":	"Psylora_DispatchMoveA"
+		}, {
+			"addr":	56653,
+			"name":	"Psylora_DispatchMoveB"
+		}, {
+			"addr":	60946,
+			"name":	"ApplyKnockbackX"
+		}, {
+			"addr":	61013,
+			"name":	"ApplyKnockbackY"
 		}],
 	"conflicts":	[{
 			"addr":	0,
