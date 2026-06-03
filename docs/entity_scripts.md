@@ -7,9 +7,13 @@ document specifies the script VM and its instruction set.
 
 The scripts occupy **`$71d5`–`$7d25`** plus one isolated 28-byte script at
 **`$7092`** (~1410 instructions across ~332 labels) in bank `$03`. `$71d5` and
-`$7092` are `MonsterSpawnScriptTable` slots 18/19 — the unreachable gap (no
-monster spawns into them; see "Resolving monster species" below), hidden among
-the velocity tables below the selector-reachable region.
+`$7092` are `MonsterSpawnScriptTable` slots 18/19 ($ffb0 `$3e`/`$3f`) — outside
+the floor monster-array path (see "Resolving monster species"), hidden among the
+velocity tables below the selector-reachable region. `$71d5` (type `$3e`) is
+spawned on **floor 5** by `SpawnFloorFlameOrFX` inside a boss-assembly routine
+(six `SpawnBossSegment` calls + the flame); `$7092` (type `$3f`) has no found
+spawn site and appears vestigial. Both keep `EScript_*` names pending a clearer
+identity.
 
 ## The VM
 
@@ -202,8 +206,9 @@ Gali, Golem, Suezo) that appear on the bonus stages — named in `room.inc`'s
 relation is `table_slot = $ffb0 - $2c`, and `SpawnFloorMonsters` gives a monster
 `$ffb0 = species + $30`, **plus 2 if species ≥ 14** (`cp $3e; jr c; add $02`).
 That `+2` skips `$ffb0 = $3e/$3f`, so the friendly breeds land in slots 20–25
-(not 18/19), and table slots 18/19 (`$71d5`, `$7092`) are the unreachable gap —
-left as `EScript_*` since no monster ever spawns into them.
+(not 18/19). Slots 18/19 (`$71d5`, `$7092`) therefore hold no *floor* monster;
+`$71d5` is instead spawned directly on floor 5 (the boss flame, type `$3e`) and
+`$7092` (type `$3f`) has no found spawn site — both stay `EScript_*`.
 
 So each monster's scripts are named `<Species>_<Role>` (e.g. `Ducken_FireR`,
 `Suezo_Chase`). The player avatar is fully resolved (walk/push/pull/grab/carry/
