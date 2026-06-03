@@ -1441,6 +1441,14 @@ def _build_section_lines(
     return lines
 
 
+def _has_emittable_sections(file_spec: dict[str, Any]) -> bool:
+    """True if a code file would emit any content. Padding sections claim a
+    range for coverage but emit nothing (rgblink's -p 0 fills the bytes), so a
+    file whose sections are all padding (or which has none) produces an empty
+    .asm — not worth writing or INCLUDEing."""
+    return any(s.get("type") != "padding" for s in file_spec.get("sections", []))
+
+
 def emit_code_file(
     file_spec: dict[str, Any],
     rom: bytes,
@@ -1718,6 +1726,17 @@ def main(argv: list[str] | None = None) -> int:
 
     for f in spec["files"]:
         if f["type"] == "code":
+            if not _has_emittable_sections(f):
+                # Padding-only (or empty) entry: claims its range for coverage
+                # but emits nothing. Don't write or INCLUDE it. Remove a stale
+                # auto-generated copy (one with no SECTION directives) so it
+                # doesn't linger; never delete a file the user added content to.
+                stale = output_dir / f["name"]
+                if stale.exists() and not _existing_section_extents(stale):
+                    stale.unlink()
+                    print(f"  {f['name']}: removed (no emittable content)",
+                          file=sys.stderr)
+                continue
             written.append(emit_code_file(f, rom, output_dir, labels, hw_symbols,
                                            wram_symbols, bank_rewrites))
             code_asms.append(f["name"])
