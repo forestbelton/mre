@@ -3,8 +3,9 @@
 49 unidentified graphics sheets the analyzer classified as `gfx` (~239 KB), plus
 1 already named. All 16 tiles (128 px) wide. Browse them together in
 **`build/gfx_catalog.png`** (each scaled 3x and labelled). Fill in **Identification**
-as you recognise them; once named we promote each from `analyzed.asm` into a named
-`src/gfx` asset.
+as you recognise them; once named we promote each from the analyzer's raw tiles
+(`src/raw_gfx/`, INCBIN'd by `analyzed.asm`) into a named, hand-authored asset
+under `src/gfx/` (e.g. `gfx/portrait/` or `gfx/screen/`).
 
 | PNG | bank:addr | tiles | px | Notes / guess | Identification |
 |---|---|---:|---|---|---|

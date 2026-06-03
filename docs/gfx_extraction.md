@@ -100,14 +100,15 @@ you actually save in-game and don't want to overwrite the user's `.sav`.
 - `tools/extract.py`: `gfx` is in SECTION_TYPES / DATA_LIKE_TYPES (coverage
   kind = data). `_build_section_lines` decodes a gfx section → **indexed** PNG
   (`gfx_to_indexed_png`, sentinel grays, palette index == 2bpp value) into
-  `src/gfx/<label>.png` and emits `INCBIN "gfx/<label>.2bpp", 0, <len>`. The
-  filename/label is the section's start label. gfx is INCBIN-like for label
+  `src/raw_gfx/<label>.png` and emits `INCBIN "raw_gfx/<label>.2bpp", 0, <len>`.
+  The filename/label is the section's start label. gfx is INCBIN-like for label
   assignment (owner `gfx-section`): only the section start can carry a label,
   same as a `.bin`/string span — interior refs fall back to raw hex.
   An optional per-section `width` (tiles/row, default 16) sets the PNG layout.
-- `Makefile`: the ROM target builds every `src/gfx/*.png` → `.2bpp` with
-  `rgbgfx -c embedded` before assembling. `src/gfx/` is gitignored (generated
-  from ROM by extract, like the `.bin` gap files).
+- `Makefile`: the ROM target builds every `src/raw_gfx/*.png` → `.2bpp` with
+  `rgbgfx -c embedded` before assembling. `src/raw_gfx/` is gitignored (generated
+  from ROM by extract, like the `.bin` gap files). It is kept separate from
+  `src/gfx/`, which holds hand-authored graphics carve files (portraits, screens).
 - **Verified end-to-end:** a boot trace folded 4 real gfx sections (logo
   `0x9c000`, font `0xa4000` = `bg{0,1,2,3}`, sprites `0xa8000`/`0xa9410`) into
   map.json; `make verify` rebuilds the exact sha256
@@ -126,7 +127,7 @@ rgbgfx -c embedded -o out.2bpp in.png      # -c embedded uses the PNG palette or
 ```
 
 rgbgfx pads the final partial tile-row, so its output can be longer than the
-ROM region. Handle by slicing in the asm: `INCBIN "gfx/x.2bpp", 0, <len>`
+ROM region. Handle by slicing in the asm: `INCBIN "raw_gfx/x.2bpp", 0, <len>`
 (rgbasm supports the start,len form). The first `len` bytes are byte-identical
 to the ROM. A 16-wide PNG is fine and human-viewable regardless of the real
 in-game tile width (linear tile order is width-independent when fully packed).

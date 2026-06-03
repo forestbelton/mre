@@ -21,9 +21,9 @@ The components are the editable source of truth; `preview.png` is a generated
 preview (gitignored, not source). See docs/philosophy.md.
 
 Commands:
-    gfxasset.py decode --rom rom.gbc --asset tecmo_logo --out src/gfx/tecmo_logo/
-    gfxasset.py verify --rom rom.gbc --in  src/gfx/tecmo_logo/
-    gfxasset.py encode --in src/gfx/tecmo_logo/ --out-dir <dir>   # write component bytes
+    gfxasset.py decode --rom rom.gbc --asset tecmo_logo --out assets/tecmo_logo/
+    gfxasset.py verify --rom rom.gbc --in  assets/tecmo_logo/
+    gfxasset.py encode --in assets/tecmo_logo/ --out-dir <dir>   # write component bytes
 
 Decode writes (into --out): tiles.png, palette.pal, tilemap.bin, attrmap.bin,
 asset.json (layout metadata), and preview.png (the composite). encode/verify
