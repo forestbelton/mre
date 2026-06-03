@@ -35,7 +35,7 @@ PYTHON   := python3
 RGBASM   := rgbasm
 RGBLINK  := rgblink
 RGBGFX   := rgbgfx
-GFX_DIR  := $(SRC_DIR)/gfx
+GFX_DIR  := $(SRC_DIR)/raw_gfx
 
 # Assembler inputs — a change to any of these rebuilds the ROM (no `make clean`
 # needed). Wildcards are evaluated at parse time, which is fine: these are all

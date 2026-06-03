@@ -16643,7 +16643,7 @@ Func_02_4096:
 SECTION "analyzed_0080b1", ROMX[$40b1], BANK[$02]
 
 Data_02_40b1:
-	INCBIN "gfx/Data_02_40b1.2bpp", 0, 4096
+	INCBIN "raw_gfx/Data_02_40b1.2bpp", 0, 4096
 
 SECTION "analyzed_0090b1", ROMX[$50b1], BANK[$02]
 
@@ -38046,7 +38046,7 @@ Data_0d_7fff:
 SECTION "analyzed_038000", ROMX[$4000], BANK[$0e]
 
 Data_0e_4000:
-	INCBIN "gfx/Data_0e_4000.2bpp", 0, 5088
+	INCBIN "raw_gfx/Data_0e_4000.2bpp", 0, 5088
 
 SECTION "analyzed_0393e0", ROMX[$53e0], BANK[$0e]
 
@@ -38056,7 +38056,7 @@ Data_0e_53e0:
 SECTION "analyzed_039800", ROMX[$5800], BANK[$0e]
 
 Data_0e_5800:
-	INCBIN "gfx/Data_0e_5800.2bpp", 0, 384
+	INCBIN "raw_gfx/Data_0e_5800.2bpp", 0, 384
 
 SECTION "analyzed_039980", ROMX[$5980], BANK[$0e]
 
@@ -39717,7 +39717,7 @@ Data_0f_4ce8:
 SECTION "analyzed_03cd38", ROMX[$4d38], BANK[$0f]
 
 Data_0f_4d38:
-	INCBIN "gfx/Data_0f_4d38.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_0f_4d38.2bpp", 0, 2048
 
 SECTION "analyzed_03d538", ROMX[$5538], BANK[$0f]
 
@@ -39960,12 +39960,12 @@ Data_0f_5538:
 SECTION "analyzed_03e3ce", ROMX[$63ce], BANK[$0f]
 
 Data_0f_63ce:
-	INCBIN "gfx/Data_0f_63ce.2bpp", 0, 1152
+	INCBIN "raw_gfx/Data_0f_63ce.2bpp", 0, 1152
 
 SECTION "analyzed_03e84e", ROMX[$684e], BANK[$0f]
 
 Data_0f_684e:
-	INCBIN "gfx/Data_0f_684e.2bpp", 0, 1152
+	INCBIN "raw_gfx/Data_0f_684e.2bpp", 0, 1152
 
 SECTION "analyzed_03ecce", ROMX[$6cce], BANK[$0f]
 
@@ -40408,7 +40408,7 @@ Func_10_40a4:
 SECTION "analyzed_0400b7", ROMX[$40b7], BANK[$10]
 
 Data_10_40b7:
-	INCBIN "gfx/Data_10_40b7.2bpp", 0, 4096
+	INCBIN "raw_gfx/Data_10_40b7.2bpp", 0, 4096
 
 SECTION "analyzed_0410b7", ROMX[$50b7], BANK[$10]
 
@@ -40465,7 +40465,7 @@ Data_10_50b7:
 SECTION "analyzed_0413b7", ROMX[$53b7], BANK[$10]
 
 Data_10_53b7:
-	INCBIN "gfx/Data_10_53b7.2bpp", 0, 1280
+	INCBIN "raw_gfx/Data_10_53b7.2bpp", 0, 1280
 
 SECTION "analyzed_0418b7", ROMX[$58b7], BANK[$10]
 
@@ -41246,7 +41246,7 @@ Data_11_4133:
 SECTION "analyzed_04415c", ROMX[$415c], BANK[$11]
 
 Data_11_415c:
-	INCBIN "gfx/Data_11_415c.2bpp", 0, 2304
+	INCBIN "raw_gfx/Data_11_415c.2bpp", 0, 2304
 
 SECTION "analyzed_044a5c", ROMX[$4a5c], BANK[$11]
 
@@ -41303,7 +41303,7 @@ Data_11_4a5c:
 SECTION "analyzed_044d5c", ROMX[$4d5c], BANK[$11]
 
 Data_11_4d5c:
-	INCBIN "gfx/Data_11_4d5c.2bpp", 0, 3072
+	INCBIN "raw_gfx/Data_11_4d5c.2bpp", 0, 3072
 
 SECTION "analyzed_04595c", ROMX[$595c], BANK[$11]
 
@@ -41360,7 +41360,7 @@ Data_11_595c:
 SECTION "analyzed_045c5c", ROMX[$5c5c], BANK[$11]
 
 Data_11_5c5c:
-	INCBIN "gfx/Data_11_5c5c.2bpp", 0, 3072
+	INCBIN "raw_gfx/Data_11_5c5c.2bpp", 0, 3072
 
 SECTION "analyzed_04685c", ROMX[$685c], BANK[$11]
 
@@ -41379,7 +41379,7 @@ Data_11_685c:
 SECTION "analyzed_046b5c", ROMX[$6b5c], BANK[$11]
 
 Data_11_6b5c:
-	INCBIN "gfx/Data_11_6b5c.2bpp", 0, 768
+	INCBIN "raw_gfx/Data_11_6b5c.2bpp", 0, 768
 
 SECTION "analyzed_046e5c", ROMX[$6e5c], BANK[$11]
 
@@ -41484,7 +41484,7 @@ Data_11_6e5c:
 SECTION "analyzed_04745c", ROMX[$745c], BANK[$11]
 
 Data_11_745c:
-	INCBIN "gfx/Data_11_745c.2bpp", 0, 2304
+	INCBIN "raw_gfx/Data_11_745c.2bpp", 0, 2304
 
 SECTION "analyzed_047d5c", ROMX[$7d5c], BANK[$11]
 
@@ -45562,7 +45562,7 @@ Func_14_4363:
 SECTION "analyzed_05036b", ROMX[$436b], BANK[$14]
 
 Data_14_436b:
-	INCBIN "gfx/Data_14_436b.2bpp", 0, 7344
+	INCBIN "raw_gfx/Data_14_436b.2bpp", 0, 7344
 
 SECTION "analyzed_05201b", ROMX[$601b], BANK[$14]
 
@@ -46567,7 +46567,7 @@ Data_15_424e:
 SECTION "analyzed_05624e", ROMX[$624e], BANK[$15]
 
 Data_15_624e:
-	INCBIN "gfx/Data_15_624e.2bpp", 0, 768
+	INCBIN "raw_gfx/Data_15_624e.2bpp", 0, 768
 
 SECTION "analyzed_05654e", ROMX[$654e], BANK[$15]
 
@@ -46894,7 +46894,7 @@ Func_16_4036:
 SECTION "analyzed_05807f", ROMX[$407f], BANK[$16]
 
 Data_16_407f:
-	INCBIN "gfx/Data_16_407f.2bpp", 0, 12800
+	INCBIN "raw_gfx/Data_16_407f.2bpp", 0, 12800
 
 SECTION "analyzed_05b27f", ROMX[$727f], BANK[$16]
 
@@ -47918,7 +47918,7 @@ Data_17_6118:
 SECTION "analyzed_05e918", ROMX[$6918], BANK[$17]
 
 Data_17_6918:
-	INCBIN "gfx/Data_17_6918.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_17_6918.2bpp", 0, 2048
 
 SECTION "analyzed_05f118", ROMX[$7118], BANK[$17]
 
@@ -49389,7 +49389,7 @@ Data_19_46ca:
 SECTION "analyzed_0646cb", ROMX[$46cb], BANK[$19]
 
 Data_19_46cb:
-	INCBIN "gfx/Data_19_46cb.2bpp", 0, 8192
+	INCBIN "raw_gfx/Data_19_46cb.2bpp", 0, 8192
 
 SECTION "analyzed_0666cb", ROMX[$66cb], BANK[$19]
 
@@ -49570,7 +49570,7 @@ Data_1b_5c1d:
 SECTION "analyzed_06dc5d", ROMX[$5c5d], BANK[$1b]
 
 Data_1b_5c5d:
-	INCBIN "gfx/Data_1b_5c5d.2bpp", 0, 1424
+	INCBIN "raw_gfx/Data_1b_5c5d.2bpp", 0, 1424
 
 SECTION "analyzed_06e1ed", ROMX[$61ed], BANK[$1b]
 
@@ -49580,7 +49580,7 @@ Data_1b_61ed:
 SECTION "analyzed_06e45d", ROMX[$645d], BANK[$1b]
 
 Data_1b_645d:
-	INCBIN "gfx/Data_1b_645d.2bpp", 0, 3696
+	INCBIN "raw_gfx/Data_1b_645d.2bpp", 0, 3696
 
 SECTION "analyzed_06f2cd", ROMX[$72cd], BANK[$1b]
 
@@ -53004,7 +53004,7 @@ Data_23_7fff:
 SECTION "analyzed_090000", ROMX[$4000], BANK[$24]
 
 Data_24_4000:
-	INCBIN "gfx/Data_24_4000.2bpp", 0, 6144
+	INCBIN "raw_gfx/Data_24_4000.2bpp", 0, 6144
 
 SECTION "analyzed_091800", ROMX[$5800], BANK[$24]
 
@@ -53265,7 +53265,7 @@ Data_24_7fff:
 SECTION "analyzed_094000", ROMX[$4000], BANK[$25]
 
 Data_25_4000:
-	INCBIN "gfx/Data_25_4000.2bpp", 0, 6144
+	INCBIN "raw_gfx/Data_25_4000.2bpp", 0, 6144
 
 SECTION "analyzed_095800", ROMX[$5800], BANK[$25]
 
@@ -53651,12 +53651,12 @@ Data_26_7fff:
 SECTION "analyzed_09c000", ROMX[$4000], BANK[$27]
 
 IntroBlankTiles:
-	INCBIN "gfx/IntroBlankTiles.2bpp", 0, 4096
+	INCBIN "raw_gfx/IntroBlankTiles.2bpp", 0, 4096
 
 SECTION "analyzed_09dade", ROMX[$5ade], BANK[$27]
 
 Data_27_5ade:
-	INCBIN "gfx/Data_27_5ade.2bpp", 0, 5408
+	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408
 
 SECTION "analyzed_09effe", ROMX[$6ffe], BANK[$27]
 
@@ -53968,7 +53968,7 @@ Data_29_7fff:
 SECTION "analyzed_0a8000", ROMX[$4000], BANK[$2a]
 
 Data_2a_4000:
-	INCBIN "gfx/Data_2a_4000.2bpp", 0, 5120
+	INCBIN "raw_gfx/Data_2a_4000.2bpp", 0, 5120
 
 SECTION "analyzed_0a9400", ROMX[$5400], BANK[$2a]
 
@@ -53978,7 +53978,7 @@ Data_2a_5400:
 SECTION "analyzed_0a9410", ROMX[$5410], BANK[$2a]
 
 Data_2a_5410:
-	INCBIN "gfx/Data_2a_5410.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_2a_5410.2bpp", 0, 2048
 
 SECTION "analyzed_0a9c10", ROMX[$5c10], BANK[$2a]
 
@@ -62502,12 +62502,12 @@ Data_32_460b:
 SECTION "analyzed_0c8613", ROMX[$4613], BANK[$32]
 
 Data_32_4613:
-	INCBIN "gfx/Data_32_4613.2bpp", 0, 736
+	INCBIN "raw_gfx/Data_32_4613.2bpp", 0, 736
 
 SECTION "analyzed_0c9613", ROMX[$5613], BANK[$32]
 
 Data_32_5613:
-	INCBIN "gfx/Data_32_5613.2bpp", 0, 1392
+	INCBIN "raw_gfx/Data_32_5613.2bpp", 0, 1392
 
 SECTION "analyzed_0c9b83", ROMX[$5b83], BANK[$32]
 
@@ -62517,7 +62517,7 @@ Data_32_5b83:
 SECTION "analyzed_0c9dd3", ROMX[$5dd3], BANK[$32]
 
 Data_32_5dd3:
-	INCBIN "gfx/Data_32_5dd3.2bpp", 0, 2112
+	INCBIN "raw_gfx/Data_32_5dd3.2bpp", 0, 2112
 
 SECTION "analyzed_0ca613", ROMX[$6613], BANK[$32]
 
@@ -62618,7 +62618,7 @@ Data_32_7fff:
 SECTION "analyzed_0cc000", ROMX[$4000], BANK[$33]
 
 Data_33_4000:
-	INCBIN "gfx/Data_33_4000.2bpp", 0, 12288
+	INCBIN "raw_gfx/Data_33_4000.2bpp", 0, 12288
 
 SECTION "analyzed_0cf000", ROMX[$7000], BANK[$33]
 
@@ -62822,7 +62822,7 @@ Func_34_406a:
 SECTION "analyzed_0d08a8", ROMX[$48a8], BANK[$34]
 
 Data_34_48a8:
-	INCBIN "gfx/Data_34_48a8.2bpp", 0, 4096
+	INCBIN "raw_gfx/Data_34_48a8.2bpp", 0, 4096
 
 SECTION "analyzed_0d20ca", ROMX[$60ca], BANK[$34]
 
@@ -63561,7 +63561,7 @@ Data_38_401a:
 SECTION "analyzed_0e101a", ROMX[$501a], BANK[$38]
 
 Data_38_501a:
-	INCBIN "gfx/Data_38_501a.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_38_501a.2bpp", 0, 2048
 
 SECTION "analyzed_0e181a", ROMX[$581a], BANK[$38]
 
@@ -63634,7 +63634,7 @@ Data_38_581a:
 SECTION "analyzed_0e1c1a", ROMX[$5c1a], BANK[$38]
 
 Data_38_5c1a:
-	INCBIN "gfx/Data_38_5c1a.2bpp", 0, 1024
+	INCBIN "raw_gfx/Data_38_5c1a.2bpp", 0, 1024
 
 SECTION "analyzed_0e201a", ROMX[$601a], BANK[$38]
 
@@ -63707,7 +63707,7 @@ Data_38_601a:
 SECTION "analyzed_0e241a", ROMX[$641a], BANK[$38]
 
 Data_38_641a:
-	INCBIN "gfx/Data_38_641a.2bpp", 0, 1024
+	INCBIN "raw_gfx/Data_38_641a.2bpp", 0, 1024
 
 SECTION "analyzed_0e281a", ROMX[$681a], BANK[$38]
 
@@ -63818,7 +63818,7 @@ Data_3b_4022:
 SECTION "analyzed_0ec034", ROMX[$4034], BANK[$3b]
 
 Data_3b_4034:
-	INCBIN "gfx/Data_3b_4034.2bpp", 0, 5120
+	INCBIN "raw_gfx/Data_3b_4034.2bpp", 0, 5120
 
 SECTION "analyzed_0ed434", ROMX[$5434], BANK[$3b]
 
@@ -64340,7 +64340,7 @@ Data_3c_6000:
 SECTION "analyzed_0f28a1", ROMX[$68a1], BANK[$3c]
 
 Data_3c_68a1:
-	INCBIN "gfx/Data_3c_68a1.2bpp", 0, 1296
+	INCBIN "raw_gfx/Data_3c_68a1.2bpp", 0, 1296
 
 SECTION "analyzed_0f2db1", ROMX[$6db1], BANK[$3c]
 
@@ -64920,7 +64920,7 @@ Data_3d_4065:
 SECTION "analyzed_0f5bcd", ROMX[$5bcd], BANK[$3d]
 
 Data_3d_5bcd:
-	INCBIN "gfx/Data_3d_5bcd.2bpp", 0, 2288
+	INCBIN "raw_gfx/Data_3d_5bcd.2bpp", 0, 2288
 
 SECTION "analyzed_0f64bd", ROMX[$64bd], BANK[$3d]
 
@@ -64936,7 +64936,7 @@ Data_3d_67cf:
 SECTION "analyzed_0f67ed", ROMX[$67ed], BANK[$3d]
 
 Data_3d_67ed:
-	INCBIN "gfx/Data_3d_67ed.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_3d_67ed.2bpp", 0, 2048
 
 SECTION "analyzed_0f6fed", ROMX[$6fed], BANK[$3d]
 

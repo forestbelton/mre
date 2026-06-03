@@ -46,11 +46,13 @@ SECTION_TYPES = {"code", "data", "ascii", "asciz", "padding", "gfx"}
 DATA_LIKE_TYPES = {"data", "ascii", "asciz", "gfx"}
 
 # --- gfx (2bpp tile data) ---------------------------------------------------
-# A gfx section is rendered to `src/gfx/<label>.png` and INCBIN'd back as
-# `gfx/<label>.2bpp` (built by rgbgfx in the Makefile). 2bpp = 16 bytes/tile,
-# 8x8 px, each row is two bytes (low bitplane then high bitplane), bit 7 is the
-# leftmost pixel; pixel value = lo_bit | (hi_bit << 1), i.e. an index 0..3.
-GFX_DIR = "gfx"             # subdir under the output dir for PNGs/2bpp
+# A gfx section is rendered to `src/raw_gfx/<label>.png` and INCBIN'd back as
+# `raw_gfx/<label>.2bpp` (built by rgbgfx in the Makefile). These are the
+# analyzer-found ("raw") tiles, regenerated every extract and gitignored — kept
+# separate from hand-authored assets. 2bpp = 16 bytes/tile, 8x8 px, each row is
+# two bytes (low bitplane then high bitplane), bit 7 is the leftmost pixel;
+# pixel value = lo_bit | (hi_bit << 1), i.e. an index 0..3.
+GFX_DIR = "raw_gfx"         # subdir under the output dir for PNGs/2bpp
 DATA_DIR = "data"           # subdir for auto gap-fill blobs (keeps src/ tidy)
 GFX_TILE_BYTES = 16
 GFX_DEFAULT_WIDTH = 16      # tiles per PNG row when a section has no `width`
@@ -1351,7 +1353,7 @@ def _build_section_lines(
     (including the SECTION directive at the top).
 
     For a `gfx` section this also writes the decoded PNG under
-    `output_dir/gfx/` as a side effect (output_dir is required in that case).
+    `output_dir/raw_gfx/` as a side effect (output_dir is required in that case).
 
     `bank_rewrites` maps an instruction's flat offset to a cross-bank target
     flat offset; the instruction's address operand is re-rendered as that
