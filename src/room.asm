@@ -21,9 +21,10 @@
 ;     docs/entity_scripts.md. The selectors below load a script with
 ;     `ld de, $7xxx` (the matching label is in entity_scripts.asm).
 ;   * SpawnEntity ($4593: A=type, D=Ypx, E=Xpx, BC=param) allocates a free slot
-;     (FindFreeEntitySlot) and initialises it. The long run of routines from
-;     ~$5938 on are the per-species AI think/probe selectors (<Species>_Think,
-;     Psylora_MoveDir*, ...) and projectile spawners the scripts ent_call into.
+;     (FindFreeEntitySlot) and initialises it. The bulk of the bank is the AI:
+;     per-species think/probe selectors (<Species>_Think, *Probe*), the
+;     8-direction WallFollow_* / WallTurn_* locomotion, SpawnProjectileRel and
+;     the per-species fire routines -- all reached from the scripts' ent_call.
 ;
 ; Public API (called cross-bank via CallBankedHL):
 ;   UpdateEntities ($4000), BreakTileAtPixel ($44bb) / BreakTileAtCell ($44cb)
@@ -379,7 +380,7 @@ EntityOp_AndB8:
 	ldh a, [c]
 	and b
 	ldh [c], a
-	call Func_03_42fb
+	call PackCmpFlagsToMoveResult
 	inc de
 	jp RunEntityScript
 
@@ -391,7 +392,7 @@ EntityOp_TestB8:
 	ld b, a
 	ldh a, [$ffb8]
 	and b
-	call Func_03_42fb
+	call PackCmpFlagsToMoveResult
 	inc de
 	jp RunEntityScript
 
@@ -403,7 +404,7 @@ EntityOp_CmpB8:
 	ld b, a
 	ldh a, [$ffb8]
 	cp b
-	call Func_03_42fb
+	call PackCmpFlagsToMoveResult
 	inc de
 	jp RunEntityScript
 
@@ -569,7 +570,7 @@ EntityOp_JrB8Ne:
 
 SECTION "room_00c2fb", ROMX[$42fb], BANK[$03]
 
-Func_03_42fb:
+PackCmpFlagsToMoveResult:
 	ld a, $00
 	jr nc, Func_03_4301
 	set 1, a
@@ -1122,7 +1123,7 @@ Func_03_45a0:
 	ld a, $02
 	ld [$c2e6], a
 	ret
-Func_03_462f:
+PlayerSameRowInRange:
 	ld a, [$c807]
 	sub $08
 	add a, $08
@@ -1151,7 +1152,7 @@ Func_03_464a:
 Func_03_465b:
 	xor a
 	ret
-Func_03_465d:
+PlayerAheadSameRow:
 	ld a, [$c807]
 	sub $08
 	add a, $08
@@ -1187,7 +1188,7 @@ Func_03_468f:
 Func_03_4692:
 	xor a
 	ret
-Func_03_4694:
+PlayerAheadAndFacingUs:
 	ld a, [$c807]
 	sub $08
 	add a, $08
@@ -1243,9 +1244,9 @@ FacePlayerX:
 	ld c, a
 	ld a, [$c805]
 	cp c
-	call Func_03_42fb
+	call PackCmpFlagsToMoveResult
 	ret
-Func_03_46ed:
+ApplyPlayerInputFacingX:
 	ldh a, [$ff8b]
 	bit 5, a
 	jr nz, Func_03_46ff
@@ -1266,7 +1267,7 @@ Func_03_46ff:
 	ldh [c], a
 	ret
 Player_StandThinkDown:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
 	ldh a, [$ff8c]
 	bit 6, a
@@ -1296,7 +1297,7 @@ Func_03_4726:
 	jp nz, Func_03_4883
 	ret
 Player_StandThinkUp:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
 	ldh a, [$ff8c]
 	bit 6, a
@@ -1319,7 +1320,7 @@ Player_StandThinkUp:
 	jp nz, Func_03_4887
 	ret
 Player_WalkThinkRight:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
 	ldh a, [$ff8c]
 	bit 6, a
@@ -1342,7 +1343,7 @@ Player_WalkThinkRight:
 	jp z, Func_03_487b
 	ret
 Player_WalkThinkLeft:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
 	ldh a, [$ff8c]
 	bit 6, a
@@ -1383,7 +1384,7 @@ Player_ThrowWindupThink:
 	jp nz, Func_03_48bb
 	ret
 Player_CarryStandThink:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_TryGrab
 	bit 0, a
 	jp z, Func_03_48c3
@@ -1403,7 +1404,7 @@ Player_CarryStandThink:
 	jp z, Func_03_48bf
 	ret
 Player_CarryWalkThink:
-	call Func_03_46ed
+	call ApplyPlayerInputFacingX
 	call Player_TryGrab
 	bit 0, a
 	jp z, Func_03_48c7
@@ -1593,16 +1594,16 @@ Func_03_492e:
 	ldh a, [$ffb6]
 	bit 7, a
 	jr z, Func_03_4961
-	call Func_03_498e
+	call Player_ProbeGrabCellL
 	or a
 	jr nz, Func_03_496a
-	call Func_03_49c0
+	call Player_ProbeGrabCellR
 	jr Func_03_496a
 Func_03_4961:
-	call Func_03_49c0
+	call Player_ProbeGrabCellR
 	or a
 	jr nz, Func_03_496a
-	call Func_03_498e
+	call Player_ProbeGrabCellL
 Func_03_496a:
 	ld a, [$cf65]
 	cp $ff
@@ -1626,7 +1627,7 @@ Func_03_4985:
 Func_03_498c:
 	xor a
 	ret
-Func_03_498e:
+Player_ProbeGrabCellL:
 	ld a, [$cf74]
 	sub $0d
 	ld b, a
@@ -1648,7 +1649,7 @@ Func_03_498e:
 	pop bc
 	or a
 	jr z, Func_03_49bb
-	call Func_03_49f2
+	call Player_GrabOrBreakCell
 	ld [$cf65], a
 	or a
 	jr nz, Func_03_49bd
@@ -1658,7 +1659,7 @@ Func_03_49bb:
 Func_03_49bd:
 	ld a, $01
 	ret
-Func_03_49c0:
+Player_ProbeGrabCellR:
 	ld a, [$cf74]
 	sub $0d
 	ld b, a
@@ -1680,7 +1681,7 @@ Func_03_49c0:
 	pop bc
 	or a
 	jr z, Func_03_49ed
-	call Func_03_49f2
+	call Player_GrabOrBreakCell
 	ld [$cf66], a
 	or a
 	jr nz, Func_03_49ef
@@ -1690,7 +1691,7 @@ Func_03_49ed:
 Func_03_49ef:
 	ld a, $01
 	ret
-Func_03_49f2:
+Player_GrabOrBreakCell:
 	ld a, c
 	add a, $08
 	swap a
@@ -1807,7 +1808,7 @@ Func_03_4a8c:
 	ld [$cf72], a
 	ld a, c
 	ld [$cf71], a
-	call Func_03_4b6e
+	call CheckCellHitsEntity
 	cp $ff
 	jr z, Func_03_4ad8
 	cp $01
@@ -1936,7 +1937,7 @@ Func_03_4b56:
 	ld a, $07
 	call SpawnEntity
 	ret
-Func_03_4b6e:
+CheckCellHitsEntity:
 	push bc
 	ld hl, $ffda
 	ld a, c
@@ -2165,12 +2166,12 @@ Func_03_4cbb:
 	and $01
 	add a, $16
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4dee
-	call Func_03_4e04
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_ClearFlag2
+	call AttackChild_SetDir1
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ret
 Func_03_4cea:
 	ldh a, [$ffbe]
@@ -2188,12 +2189,12 @@ Func_03_4cea:
 	and $01
 	add a, $10
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4e11
-	call Func_03_4df7
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_SetFlag2
+	call AttackChild_SetDir0
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ret
 Func_03_4d19:
 	ldh a, [$ffbe]
@@ -2211,12 +2212,12 @@ Func_03_4d19:
 	and $01
 	add a, $18
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4dee
-	call Func_03_4e04
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_ClearFlag2
+	call AttackChild_SetDir1
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ld de, $0006
 	add hl, de
 	set 3, [hl]
@@ -2237,12 +2238,12 @@ Func_03_4d4e:
 	and $01
 	add a, $12
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4e11
-	call Func_03_4df7
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_SetFlag2
+	call AttackChild_SetDir0
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ld de, $0006
 	add hl, de
 	set 3, [hl]
@@ -2263,12 +2264,12 @@ Func_03_4d83:
 	and $01
 	add a, $1a
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4e11
-	call Func_03_4e04
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_SetFlag2
+	call AttackChild_SetDir1
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ret
 Func_03_4db2:
 	ldh a, [$ffbe]
@@ -2286,14 +2287,14 @@ Func_03_4db2:
 	and $01
 	add a, $14
 	call SpawnEntity
-	call Func_03_4de1
-	call Func_03_4dee
-	call Func_03_4df7
-	call Func_03_4e1a
-	call Func_03_4e21
-	call Func_03_4e34
+	call AttackChild_SetVelLow
+	call AttackChild_ClearFlag2
+	call AttackChild_SetDir0
+	call AttackChild_StashPtr
+	call AttackChild_CopyAlignFlag
+	call AttackChild_CopyAttackPos
 	ret
-Func_03_4de1:
+AttackChild_SetVelLow:
 	push hl
 	ld bc, $000f
 	add hl, bc
@@ -2303,14 +2304,14 @@ Func_03_4de1:
 	ld [hl], a
 	pop hl
 	ret
-Func_03_4dee:
+AttackChild_ClearFlag2:
 	push hl
 	ld bc, $0006
 	add hl, bc
 	res 2, [hl]
 	pop hl
 	ret
-Func_03_4df7:
+AttackChild_SetDir0:
 	push hl
 	ld bc, $0006
 	add hl, bc
@@ -2320,7 +2321,7 @@ Func_03_4df7:
 	ld [hl], a
 	pop hl
 	ret
-Func_03_4e04:
+AttackChild_SetDir1:
 	push hl
 	ld bc, $0006
 	add hl, bc
@@ -2330,20 +2331,20 @@ Func_03_4e04:
 	ld [hl], a
 	pop hl
 	ret
-Func_03_4e11:
+AttackChild_SetFlag2:
 	push hl
 	ld bc, $0006
 	add hl, bc
 	set 2, [hl]
 	pop hl
 	ret
-Func_03_4e1a:
+AttackChild_StashPtr:
 	ld a, l
 	ldh [$ffe7], a
 	ld a, h
 	ldh [$ffe8], a
 	ret
-Func_03_4e21:
+AttackChild_CopyAlignFlag:
 	ld a, [$c2cd]
 	bit 0, a
 	ret z
@@ -2357,7 +2358,7 @@ Func_03_4e21:
 	set 3, [hl]
 	pop hl
 	ret
-Func_03_4e34:
+AttackChild_CopyAttackPos:
 	push hl
 	ld a, $11
 	add a, l
@@ -2629,7 +2630,7 @@ Func_03_4fe8:
 	ldh a, [$ffbe]
 	ld h, a
 	ld a, [$cf70]
-	call Func_03_509f
+	call PlayerYDeltaScaled
 	or a
 	jr nz, Func_03_502a
 	ld a, l
@@ -2642,7 +2643,7 @@ Func_03_4fe8:
 Func_03_502a:
 	add hl, bc
 Func_03_502b:
-	call Func_03_50c8
+	call ApplyArcYOffset
 	ld a, l
 	ldh [$ffbd], a
 	ld a, h
@@ -2673,7 +2674,7 @@ Func_03_502b:
 	ldh a, [$ffbe]
 	ld h, a
 	ld a, [$c52f]
-	call Func_03_509f
+	call PlayerYDeltaScaled
 	or a
 	jr nz, Func_03_5070
 	ld a, l
@@ -2686,7 +2687,7 @@ Func_03_502b:
 Func_03_5070:
 	add hl, bc
 Func_03_5071:
-	call Func_03_50c8
+	call ApplyArcYOffset
 	ld a, l
 	ldh [$ffbd], a
 	ld a, h
@@ -2712,7 +2713,7 @@ Func_03_5071:
 	xor a
 	ldh [$ffb0], a
 	ret
-Func_03_509f:
+PlayerYDeltaScaled:
 	swap a
 	and $f0
 	sub $08
@@ -2740,7 +2741,7 @@ Func_03_50b3:
 	rr c
 	pop af
 	ret
-Func_03_50c8:
+ApplyArcYOffset:
 	ldh a, [$ffc1]
 	cp $40
 	ret z
@@ -2778,7 +2779,7 @@ Data_03_515f:
 
 SECTION "room_00d161", ROMX[$5161], BANK[$03]
 
-Func_03_5161:
+FaceDir0Right:
 	ld c, $b6
 	ldh a, [c]
 	and $fc
@@ -2786,7 +2787,7 @@ Func_03_5161:
 	res 7, a
 	ldh [c], a
 	ret
-Func_03_516c:
+FaceDir1Left:
 	ld c, $b6
 	ldh a, [c]
 	and $fc
@@ -2795,20 +2796,20 @@ Func_03_516c:
 	ldh [c], a
 	ret
 Shard_HomeFaceRight:
-	call Func_03_516c
-	call Func_03_5193
+	call FaceDir1Left
+	call ShardHomeVelX_Fast
 	ret
-	call Func_03_5161
-	call Func_03_5193
+	call FaceDir0Right
+	call ShardHomeVelX_Fast
 	ret
-	call Func_03_516c
-	call Func_03_51c4
+	call FaceDir1Left
+	call ShardHomeVelX_Slow
 	ret
 Shard_HomeFaceLeft:
-	call Func_03_5161
-	call Func_03_51c4
+	call FaceDir0Right
+	call ShardHomeVelX_Slow
 	ret
-Func_03_5193:
+ShardHomeVelX_Fast:
 	ldh a, [$ffbc]
 	ld c, a
 	ld a, [$c805]
@@ -2843,7 +2844,7 @@ Func_03_51bd:
 	ld a, b
 	ldh [$ffc0], a
 	ret
-Func_03_51c4:
+ShardHomeVelX_Slow:
 	ldh a, [$ffbc]
 	ld c, a
 	ld a, [$c805]
@@ -2889,7 +2890,7 @@ Data_03_51f0:
 
 SECTION "room_00d24b", ROMX[$524b], BANK[$03]
 
-Func_03_524b:
+Tacopi_ProbeFrontTile:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_5257
@@ -2980,7 +2981,7 @@ Func_03_52cb:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_52d0:
+Ghost_ProbeFrontTileDir:
 	ldh a, [$ffbe]
 	ld b, a
 	ldh a, [$ffd3]
@@ -3042,7 +3043,7 @@ Func_03_531d:
 
 SECTION "room_00d322", ROMX[$5322], BANK[$03]
 
-Func_03_5322:
+SpawnProjectileInFront:
 	push de
 	ldh a, [$ffbe]
 	ld d, a
@@ -3103,25 +3104,25 @@ SECTION "room_00d376", ROMX[$5376], BANK[$03]
 
 SpawnProjectile20:
 	ld c, $20
-	call Func_03_5322
+	call SpawnProjectileInFront
 	ret
 Joker_FireShot:
 	ld c, $23
-	call Func_03_5322
+	call SpawnProjectileInFront
 	ret
 SpawnProjectile24:
 	ld c, $24
-	call Func_03_5322
+	call SpawnProjectileInFront
 	ret
 Mob15_FireShot:
 	ld c, $25
-	call Func_03_5322
+	call SpawnProjectileInFront
 	ret
 SpawnProjectile21:
 	ld c, $21
-	call Func_03_5322
+	call SpawnProjectileInFront
 	ret
-Func_03_5394:
+SpawnProjectileRel:
 	push de
 	push af
 	ldh a, [$ffbe]
@@ -3176,7 +3177,7 @@ Ducken_FireMissileA:
 	ld c, $f0
 	ld a, $2a
 	ld b, $00
-	call Func_03_5394
+	call SpawnProjectileRel
 	push hl
 	ld bc, $0006
 	add hl, bc
@@ -3190,7 +3191,7 @@ Func_03_53f6:
 	ld c, $10
 	ld a, $2a
 	ld b, $00
-	call Func_03_5394
+	call SpawnProjectileRel
 	push hl
 	ld bc, $0006
 	add hl, bc
@@ -3256,7 +3257,7 @@ Func_03_548d:
 Func_03_548f:
 	ld a, $27
 	ld b, $f8
-	call Func_03_5394
+	call SpawnProjectileRel
 	call SetProjectileSpeed
 	ret
 	ldh a, [$ffb6]
@@ -3269,12 +3270,12 @@ Func_03_54a4:
 Func_03_54a6:
 	ld b, $18
 	ld a, $29
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ld a, $29
 	ld b, $18
 	ld c, $00
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffb6]
 	bit 7, a
@@ -3286,7 +3287,7 @@ Func_03_54c2:
 Func_03_54c4:
 	ld b, $18
 	ld a, $29
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffb6]
 	bit 7, a
@@ -3298,7 +3299,7 @@ Func_03_54d6:
 Func_03_54d8:
 	ld b, $08
 	ld a, $28
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffb6]
 	bit 7, a
@@ -3310,7 +3311,7 @@ Func_03_54ea:
 Func_03_54ec:
 	ld b, $08
 	ld a, $28
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffb6]
 	bit 7, a
@@ -3322,9 +3323,9 @@ Func_03_54fe:
 Func_03_5500:
 	ld b, $08
 	ld a, $28
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
-Func_03_5508:
+SpawnFloorFlameOrFX:
 	ld a, [wActiveFloor]
 	cp $05
 	jr z, Func_03_5518
@@ -3404,25 +3405,25 @@ Func_03_5518:
 	ret
 	push de
 	ld a, $01
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $02
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $03
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $04
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $06
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $07
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $08
-	call Func_03_55cf
+	call SpawnBossSegment
 	ld a, $09
-	call Func_03_55cf
-	call Func_03_5508
+	call SpawnBossSegment
+	call SpawnFloorFlameOrFX
 	pop de
 	ret
-Func_03_55cf:
+SpawnBossSegment:
 	push af
 	ldh a, [$ffbc]
 	ld e, a
@@ -3754,7 +3755,7 @@ SetTimer120:
 	xor a
 	ldh [$ffc4], a
 	ret
-Func_03_57bc:
+DecGenTimer16:
 	ldh a, [$ffc3]
 	ld l, a
 	ldh a, [$ffc4]
@@ -4027,7 +4028,7 @@ Data_03_5932:
 SECTION "room_00d938", ROMX[$5938], BANK[$03]
 
 Jell_Think3:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_594a
@@ -4052,7 +4053,7 @@ Func_03_5952:
 SECTION "room_00d956", ROMX[$5956], BANK[$03]
 
 Jell_Think5:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5970
@@ -4081,7 +4082,7 @@ Func_03_5980:
 	ld de, $75fc
 	ret
 Jell_Think4:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_599a
@@ -4110,7 +4111,7 @@ Func_03_59a2:
 Func_03_59a6:
 	ld de, $757c
 	ret
-Func_03_59aa:
+MonsterProbeWalkAhead:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_59b6
@@ -4161,7 +4162,7 @@ Func_03_59cd:
 	call Func_00_101b
 	or a
 	jr z, Func_03_5a19
-	call Func_03_5a1e
+	call PlayerInFrontInRange
 	or a
 	jr nz, Func_03_5a02
 	xor a
@@ -4188,7 +4189,7 @@ Func_03_5a19:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_5a1e:
+PlayerInFrontInRange:
 	ldh a, [$ffb6]
 	bit 7, a
 	jr nz, Func_03_5a2f
@@ -4221,7 +4222,7 @@ Func_03_5a4a:
 	ld a, $01
 	ret
 Tacopi_Think:
-	call Func_03_524b
+	call Tacopi_ProbeFrontTile
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5a5f
@@ -4240,7 +4241,7 @@ Func_03_5a67:
 	ld de, $7502
 	ret
 Dino_Think4:
-	call Func_03_5b38
+	call MonsterProbeChargeAlign
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5a81
@@ -4270,7 +4271,7 @@ Func_03_5a8d:
 SECTION "room_00da91", ROMX[$5a91], BANK[$03]
 
 Dino_Think5:
-	call Func_03_5abf
+	call Dino_ProbeChargeOrWall
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5aab
@@ -4304,8 +4305,8 @@ Func_03_5ab7:
 Func_03_5abb:
 	ld de, $76a8
 	ret
-Func_03_5abf:
-	call Func_03_5b38
+Dino_ProbeChargeOrWall:
+	call MonsterProbeChargeAlign
 	cp $ff
 	ret z
 	cp $02
@@ -4386,8 +4387,8 @@ Func_03_5b2c:
 	ld a, $04
 	ldh [$ffb8], a
 	ret
-Func_03_5b38:
-	call Func_03_57bc
+MonsterProbeChargeAlign:
+	call DecGenTimer16
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_5b47
@@ -4395,7 +4396,7 @@ Func_03_5b38:
 	ldh [$ffb8], a
 	ret
 Func_03_5b47:
-	call Func_03_462f
+	call PlayerSameRowInRange
 	or a
 	jr nz, Func_03_5b51
 	xor a
@@ -4422,7 +4423,7 @@ Func_03_5b6c:
 	ldh [$ffb8], a
 	ret
 Plant_Think:
-	call Func_03_5c42
+	call Plant_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5b87
@@ -4452,7 +4453,7 @@ Func_03_5b93:
 SECTION "room_00db97", ROMX[$5b97], BANK[$03]
 
 Plant_ThinkB:
-	call Func_03_5c42
+	call Plant_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5bad
@@ -4482,7 +4483,7 @@ Func_03_5bb9:
 SECTION "room_00dbbd", ROMX[$5bbd], BANK[$03]
 
 Plant_ThinkC:
-	call Func_03_5be3
+	call Plant_ProbeFireOrTurn
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5bd3
@@ -4511,8 +4512,8 @@ Func_03_5bdb:
 Func_03_5bdf:
 	ld de, $7727
 	ret
-Func_03_5be3:
-	call Func_03_5c42
+Plant_ProbeFireOrTurn:
+	call Plant_ProbeFireWindow
 	or a
 	ret nz
 	ld a, b
@@ -4574,7 +4575,7 @@ Func_03_5c3d:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_5c42:
+Plant_ProbeFireWindow:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_5c50
@@ -4583,7 +4584,7 @@ Func_03_5c42:
 	ld b, $00
 	ret
 Func_03_5c50:
-	call Func_03_465d
+	call PlayerAheadSameRow
 	or a
 	jr nz, Func_03_5c5c
 	xor a
@@ -4623,7 +4624,7 @@ Func_03_5c85:
 	set 7, [hl]
 	ret
 Ghost_Think:
-	call Func_03_52d0
+	call Ghost_ProbeFrontTileDir
 	call Ghost_ThinkB
 	ldh a, [$ffb8]
 	cp $01
@@ -4663,7 +4664,7 @@ Joker_Think:
 	ld de, $77c2
 	ret
 Puncho_Think:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5ccf
@@ -4677,7 +4678,7 @@ Func_03_5cd3:
 	ld de, $788b
 	ret
 Puncho_ThinkB:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5ce9
@@ -4702,7 +4703,7 @@ Func_03_5cf1:
 	ld de, $786c
 	ret
 Puncho_ThinkC:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5d03
@@ -4716,7 +4717,7 @@ Func_03_5d07:
 	ld de, $785c
 	ret
 Puncho_ThinkD:
-	call Func_03_6688
+	call ProbeAimedOrCrate
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_5d19
@@ -4788,18 +4789,18 @@ Psylora_MoveDirA:
 	jr nz, Func_03_5d7d
 	bit 3, a
 	jr z, Func_03_5d79
-	call Func_03_5de3
+	call WallFollow_DownRight
 	ret
 Func_03_5d79:
-	call Func_03_61bb
+	call WallTurn_DownToLeft
 	ret
 Func_03_5d7d:
 	bit 3, a
 	jr z, Func_03_5d85
-	call Func_03_5e5e
+	call WallFollow_DownLeft
 	ret
 Func_03_5d85:
-	call Func_03_61e6
+	call WallTurn_DownToRight
 	ret
 Psylora_MoveDirB:
 	ldh a, [$ffb6]
@@ -4807,18 +4808,18 @@ Psylora_MoveDirB:
 	jr nz, Func_03_5d9b
 	bit 3, a
 	jr z, Func_03_5d97
-	call Func_03_5ed9
+	call WallFollow_UpLeft
 	ret
 Func_03_5d97:
-	call Func_03_6211
+	call WallTurn_UpToLeft
 	ret
 Func_03_5d9b:
 	bit 3, a
 	jr z, Func_03_5da3
-	call Func_03_5f54
+	call WallFollow_UpRight
 	ret
 Func_03_5da3:
-	call Func_03_623c
+	call WallTurn_UpToRight
 	ret
 Psylora_MoveDirC:
 	ldh a, [$ffb6]
@@ -4826,18 +4827,18 @@ Psylora_MoveDirC:
 	jr nz, Func_03_5db9
 	bit 3, a
 	jr z, Func_03_5db5
-	call Func_03_5fcf
+	call WallFollow_RightUp
 	ret
 Func_03_5db5:
-	call Func_03_6267
+	call WallTurn_RightToDown
 	ret
 Func_03_5db9:
 	bit 3, a
 	jr z, Func_03_5dc1
-	call Func_03_604a
+	call WallFollow_RightDown
 	ret
 Func_03_5dc1:
-	call Func_03_6292
+	call WallTurn_RightToUp
 	ret
 Psylora_MoveDirD:
 	ldh a, [$ffb6]
@@ -4845,20 +4846,20 @@ Psylora_MoveDirD:
 	jr nz, Func_03_5dd7
 	bit 3, a
 	jr z, Func_03_5dd3
-	call Func_03_60c5
+	call WallFollow_LeftUp
 	ret
 Func_03_5dd3:
-	call Func_03_62bd
+	call WallTurn_LeftToDown
 	ret
 Func_03_5dd7:
 	bit 3, a
 	jr z, Func_03_5ddf
-	call Func_03_6140
+	call WallFollow_LeftDown
 	ret
 Func_03_5ddf:
-	call Func_03_62e8
+	call WallTurn_LeftToUp
 	ret
-Func_03_5de3:
+WallFollow_DownRight:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -4916,7 +4917,7 @@ Func_03_5de3:
 	and $fc
 	or $02
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
 Func_03_5e48:
 	ld hl, $ffb6
@@ -4929,9 +4930,9 @@ Func_03_5e4e:
 	and $fc
 	or $03
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
-Func_03_5e5e:
+WallFollow_DownLeft:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -4989,7 +4990,7 @@ Func_03_5e5e:
 	and $fc
 	or $03
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
 Func_03_5ec3:
 	ld hl, $ffb6
@@ -5002,9 +5003,9 @@ Func_03_5ec9:
 	and $fc
 	or $02
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
-Func_03_5ed9:
+WallFollow_UpLeft:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5062,7 +5063,7 @@ Func_03_5ed9:
 	and $fc
 	or $03
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
 Func_03_5f3e:
 	ld hl, $ffb6
@@ -5075,9 +5076,9 @@ Func_03_5f44:
 	and $fc
 	or $02
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
-Func_03_5f54:
+WallFollow_UpRight:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5135,7 +5136,7 @@ Func_03_5f54:
 	and $fc
 	or $02
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
 Func_03_5fb9:
 	ld hl, $ffb6
@@ -5148,9 +5149,9 @@ Func_03_5fbf:
 	and $fc
 	or $03
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
-Func_03_5fcf:
+WallFollow_RightUp:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -5208,7 +5209,7 @@ Func_03_5fcf:
 	and $fc
 	or $01
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
 Func_03_6034:
 	ld hl, $ffb6
@@ -5221,9 +5222,9 @@ Func_03_603a:
 	and $fc
 	or $00
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
-Func_03_604a:
+WallFollow_RightDown:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5281,7 +5282,7 @@ Func_03_604a:
 	and $fc
 	or $00
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
 Func_03_60af:
 	ld hl, $ffb6
@@ -5294,9 +5295,9 @@ Func_03_60b5:
 	and $fc
 	or $01
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
-Func_03_60c5:
+WallFollow_LeftUp:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5354,7 +5355,7 @@ Func_03_60c5:
 	and $fc
 	or $00
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
 Func_03_612a:
 	ld hl, $ffb6
@@ -5367,9 +5368,9 @@ Func_03_6130:
 	and $fc
 	or $01
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
-Func_03_6140:
+WallFollow_LeftDown:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -5427,7 +5428,7 @@ Func_03_6140:
 	and $fc
 	or $01
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
 Func_03_61a5:
 	ld hl, $ffb6
@@ -5440,9 +5441,9 @@ Func_03_61ab:
 	and $fc
 	or $00
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
-Func_03_61bb:
+WallTurn_DownToLeft:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -5464,9 +5465,9 @@ Func_03_61bb:
 	or $03
 	set 3, a
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
-Func_03_61e6:
+WallTurn_DownToRight:
 	ldh a, [$ffbc]
 	add a, $07
 	add a, $08
@@ -5488,9 +5489,9 @@ Func_03_61e6:
 	or $02
 	set 3, a
 	ld [hl], a
-	call Func_03_6329
+	call SnapXToCellHigh
 	ret
-Func_03_6211:
+WallTurn_UpToLeft:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5512,9 +5513,9 @@ Func_03_6211:
 	or $02
 	set 3, a
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
-Func_03_623c:
+WallTurn_UpToRight:
 	ldh a, [$ffbc]
 	sub $08
 	add a, $08
@@ -5536,9 +5537,9 @@ Func_03_623c:
 	or $03
 	set 3, a
 	ld [hl], a
-	call Func_03_6313
+	call SnapXToCellLow
 	ret
-Func_03_6267:
+WallTurn_RightToDown:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5560,9 +5561,9 @@ Func_03_6267:
 	or $00
 	set 3, a
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
-Func_03_6292:
+WallTurn_RightToUp:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5584,9 +5585,9 @@ Func_03_6292:
 	or $01
 	set 3, a
 	ld [hl], a
-	call Func_03_633f
+	call SnapYToCellLow
 	ret
-Func_03_62bd:
+WallTurn_LeftToDown:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5608,9 +5609,9 @@ Func_03_62bd:
 	or $01
 	set 3, a
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
-Func_03_62e8:
+WallTurn_LeftToUp:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5632,9 +5633,9 @@ Func_03_62e8:
 	or $00
 	set 3, a
 	ld [hl], a
-	call Func_03_6355
+	call SnapYToCellHigh
 	ret
-Func_03_6313:
+SnapXToCellLow:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5647,7 +5648,7 @@ Func_03_6313:
 	xor a
 	ldh [$ffbb], a
 	ret
-Func_03_6329:
+SnapXToCellHigh:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -5660,7 +5661,7 @@ Func_03_6329:
 	xor a
 	ldh [$ffbb], a
 	ret
-Func_03_633f:
+SnapYToCellLow:
 	ldh a, [$ffbe]
 	add a, $08
 	swap a
@@ -5673,7 +5674,7 @@ Func_03_633f:
 	xor a
 	ldh [$ffbd], a
 	ret
-Func_03_6355:
+SnapYToCellHigh:
 	ldh a, [$ffbe]
 	add a, $08
 	swap a
@@ -5780,7 +5781,7 @@ Func_03_63d4:
 	pop hl
 	ret
 Naga_Think4:
-	call Func_03_64a3
+	call Naga_ProbeChargeAlign
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_63ff
@@ -5810,7 +5811,7 @@ Func_03_640b:
 SECTION "room_00e40f", ROMX[$640f], BANK[$03]
 
 Naga_Think5:
-	call Func_03_643d
+	call Naga_ProbeChargeOrWall
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6429
@@ -5838,8 +5839,8 @@ Func_03_6435:
 Func_03_6439:
 	ld de, $7615
 	ret
-Func_03_643d:
-	call Func_03_64a3
+Naga_ProbeChargeOrWall:
+	call Naga_ProbeChargeAlign
 	cp $ff
 	ret z
 	cp $02
@@ -5909,8 +5910,8 @@ Func_03_6497:
 	ld a, $04
 	ldh [$ffb8], a
 	ret
-Func_03_64a3:
-	call Func_03_57bc
+Naga_ProbeChargeAlign:
+	call DecGenTimer16
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_64b2
@@ -5918,7 +5919,7 @@ Func_03_64a3:
 	ldh [$ffb8], a
 	ret
 Func_03_64b2:
-	call Func_03_462f
+	call PlayerSameRowInRange
 	or a
 	jr nz, Func_03_64bc
 	xor a
@@ -5945,7 +5946,7 @@ Func_03_64d8:
 	ld a, $01
 	ldh [$ffb8], a
 	ret
-	call Func_03_65ae
+	call Mob12_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_64f3
@@ -5975,7 +5976,7 @@ Func_03_64ff:
 SECTION "room_00e503", ROMX[$6503], BANK[$03]
 
 Mob12_Think:
-	call Func_03_65ae
+	call Mob12_ProbeFireWindow
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6519
@@ -6005,7 +6006,7 @@ Func_03_6525:
 SECTION "room_00e529", ROMX[$6529], BANK[$03]
 
 Mob12_ThinkProbe:
-	call Func_03_654f
+	call Mob12_ProbeFireOrTurn
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_653f
@@ -6034,8 +6035,8 @@ SECTION "room_00e54b", ROMX[$654b], BANK[$03]
 Func_03_654b:
 	ld de, $7a6d
 	ret
-Func_03_654f:
-	call Func_03_65ae
+Mob12_ProbeFireOrTurn:
+	call Mob12_ProbeFireWindow
 	or a
 	ret nz
 	ld a, b
@@ -6102,7 +6103,7 @@ Func_03_65a9:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_65ae:
+Mob12_ProbeFireWindow:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_65bc
@@ -6129,7 +6130,7 @@ Data_03_65c2:
 SECTION "room_00e5dc", ROMX[$65dc], BANK[$03]
 
 Mob13_Think:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_65ea
@@ -6149,7 +6150,7 @@ Func_03_65ee:
 SECTION "room_00e5f2", ROMX[$65f2], BANK[$03]
 
 Mob13_ThinkB:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6604
@@ -6174,7 +6175,7 @@ Func_03_660c:
 	ld de, $7ad5
 	ret
 Mob13_ThinkC:
-	call Func_03_663c
+	call ProbeAimedOrLedge
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_661e
@@ -6191,7 +6192,7 @@ Func_03_6622:
 	ld de, $7ac5
 	ret
 Mob13_ThinkD:
-	call Func_03_6688
+	call ProbeAimedOrCrate
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6634
@@ -6207,8 +6208,8 @@ Func_03_6638:
 
 SECTION "room_00e63c", ROMX[$663c], BANK[$03]
 
-Func_03_663c:
-	call Func_03_66c7
+ProbeAimedOrLedge:
+	call ProbeAimedRetreat
 	cp $ff
 	ret z
 	ldh a, [$ffbe]
@@ -6258,8 +6259,8 @@ Func_03_6683:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_6688:
-	call Func_03_66c7
+ProbeAimedOrCrate:
+	call ProbeAimedRetreat
 	cp $ff
 	ret z
 	ldh a, [$ffbe]
@@ -6301,7 +6302,7 @@ Func_03_66a5:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
-Func_03_66c7:
+ProbeAimedRetreat:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_66d6
@@ -6311,7 +6312,7 @@ Func_03_66c7:
 	ldh [$ffb8], a
 	ret
 Func_03_66d6:
-	call Func_03_4694
+	call PlayerAheadAndFacingUs
 	or a
 	jr nz, Func_03_66ed
 	ldh a, [$ffc3]
@@ -6397,7 +6398,7 @@ MonsterBreakTileUnder:
 	pop de
 	ret
 Mob17_Think4:
-	call Func_03_6803
+	call Mob17_ProbeChargeAlign
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_675f
@@ -6427,7 +6428,7 @@ Func_03_676b:
 SECTION "room_00e76f", ROMX[$676f], BANK[$03]
 
 Mob17_Think5:
-	call Func_03_679d
+	call Mob17_ProbeChargeOrWall
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6789
@@ -6473,8 +6474,8 @@ Func_03_6799:
 
 SECTION "room_00e79d", ROMX[$679d], BANK[$03]
 
-Func_03_679d:
-	call Func_03_6803
+Mob17_ProbeChargeOrWall:
+	call Mob17_ProbeChargeAlign
 	cp $ff
 	ret z
 	cp $02
@@ -6550,8 +6551,8 @@ Func_03_67f7:
 
 SECTION "room_00e803", ROMX[$6803], BANK[$03]
 
-Func_03_6803:
-	call Func_03_57bc
+Mob17_ProbeChargeAlign:
+	call DecGenTimer16
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_6812
@@ -6578,7 +6579,7 @@ Data_03_6816:
 SECTION "room_00e837", ROMX[$6837], BANK[$03]
 
 Mob16_Think3:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6849
@@ -6603,7 +6604,7 @@ Func_03_6851:
 SECTION "room_00e855", ROMX[$6855], BANK[$03]
 
 Mob16_Think5:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_686f
@@ -6638,7 +6639,7 @@ Func_03_687f:
 	ld de, $7c8e
 	ret
 Mob16_ThinkB:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_6899
@@ -6668,7 +6669,7 @@ Func_03_68a5:
 	ld de, $7c31
 	ret
 Mob14_Think3:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_68bb
@@ -6693,7 +6694,7 @@ Func_03_68c3:
 SECTION "room_00e8c7", ROMX[$68c7], BANK[$03]
 
 Mob14_Think5:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_68e1
@@ -6734,7 +6735,7 @@ Func_03_68f1:
 	ld de, $7bb5
 	ret
 Mob14_ThinkB:
-	call Func_03_59aa
+	call MonsterProbeWalkAhead
 	ldh a, [$ffb8]
 	cp $ff
 	jr z, Func_03_690b
@@ -6763,7 +6764,7 @@ SECTION "room_00e917", ROMX[$6917], BANK[$03]
 Func_03_6917:
 	ld de, $7b58
 	ret
-	call Func_03_524b
+	call Tacopi_ProbeFrontTile
 	ret
 	push de
 	ldh a, [$ffbc]
@@ -7019,13 +7020,13 @@ Func_03_6a89:
 	ret
 	ld bc, $0000
 	ld a, $2d
-	call Func_03_5394
+	call SpawnProjectileRel
 	ld bc, $0000
 	ld a, $2e
-	call Func_03_5394
+	call SpawnProjectileRel
 	ld bc, $0000
 	ld a, $2f
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	xor a
 	ld [$cf77], a
@@ -7085,7 +7086,7 @@ Func_03_6af8:
 	add a, $10
 	ld b, a
 	ld a, $2c
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffbc]
 	cpl
@@ -7096,7 +7097,7 @@ Func_03_6af8:
 	add a, $10
 	ld b, a
 	ld a, $2c
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffbc]
 	cpl
@@ -7107,7 +7108,7 @@ Func_03_6af8:
 	add a, $10
 	ld b, a
 	ld a, $2c
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffbc]
 	cpl
@@ -7118,7 +7119,7 @@ Func_03_6af8:
 	add a, $10
 	ld b, a
 	ld a, $2c
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	ldh a, [$ffbc]
 	cpl
@@ -7129,7 +7130,7 @@ Func_03_6af8:
 	add a, $10
 	ld b, a
 	ld a, $2c
-	call Func_03_5394
+	call SpawnProjectileRel
 	ret
 	xor a
 	ld hl, $cf77
@@ -7248,9 +7249,9 @@ Func_03_6bfb:
 Func_03_6bff:
 	xor a
 	ld [$cf77], a
-	call Func_03_6c07
+	call PlaceBossEntryX
 	ret
-Func_03_6c07:
+PlaceBossEntryX:
 	ld a, [$cf77]
 	or a
 	jr z, Func_03_6c1d
@@ -7261,7 +7262,7 @@ Func_03_6c07:
 	ld [hl+], a
 	ld a, $e8
 	ld [hl], a
-	call Func_03_6c37
+	call PlaceBossEntryY
 	ret
 Func_03_6c1d:
 	ld hl, $ffbb
@@ -7280,9 +7281,9 @@ Func_03_6c2b:
 	ld [hl+], a
 	ld a, $18
 	ld [hl], a
-	call Func_03_6c37
+	call PlaceBossEntryY
 	ret
-Func_03_6c37:
+PlaceBossEntryY:
 	ld a, [$cf7d]
 	or a
 	jr z, Func_03_6c46
@@ -7311,7 +7312,7 @@ Func_03_6c46:
 	xor a
 Func_03_6c62:
 	ld [$cf77], a
-	call Func_03_6c07
+	call PlaceBossEntryX
 	ret
 	ld a, [$c805]
 	cp $80
@@ -7323,7 +7324,7 @@ Func_03_6c62:
 	or $01
 	set 7, a
 	ldh [$ffb6], a
-	call Func_03_6c07
+	call PlaceBossEntryX
 	ret
 Func_03_6c83:
 	ld a, $01
@@ -7333,7 +7334,7 @@ Func_03_6c83:
 	or $00
 	res 7, a
 	ldh [$ffb6], a
-	call Func_03_6c07
+	call PlaceBossEntryX
 	ret
 	ld a, [$cf77]
 	cp $01
@@ -7756,7 +7757,7 @@ Stairs_AnimDescend:
 	ldh a, [$ffbe]
 	cp $80
 	jr nc, Func_03_6f53
-	call Func_03_6fbb
+	call AdvanceArcPhase
 	call Func_03_6f63
 	xor a
 	ldh [$ffb8], a
@@ -7805,7 +7806,7 @@ Stairs_AnimAscend:
 	ldh a, [$ffbe]
 	cp $11
 	jr c, Func_03_6fa2
-	call Func_03_6fbb
+	call AdvanceArcPhase
 	call Func_03_6fb2
 	xor a
 	ldh [$ffb8], a
@@ -7826,7 +7827,7 @@ Func_03_6fb2:
 	ld a, $00
 	ldh [$ffc0], a
 	ret
-Func_03_6fbb:
+AdvanceArcPhase:
 	ldh a, [$ffc1]
 	cp $41
 	ret z
