@@ -17,9 +17,9 @@
 ;     ($4098) dispatches to the EntityOp_* handlers below; each reads its
 ;     operands, advances de, and tail-jumps back. EndEntityFrame ($404f) is the
 ;     per-frame "yield" that saves the record back. The bytecode the handlers
-;     interpret is carved as readable source in src/entity_scripts.asm
-;     ($71eb-$7d25) -- see docs/entity_scripts.md. The selectors below load a
-;     script with `ld de, $7xxx` (the matching label is in entity_scripts.asm).
+;     interpret is carved as readable source in src/entity_scripts.asm -- see
+;     docs/entity_scripts.md. The selectors below load a script with
+;     `ld de, $7xxx` (the matching label is in entity_scripts.asm).
 ;   * SpawnEntity ($4593: A=type, D=Ypx, E=Xpx, BC=param) allocates a free slot
 ;     (FindFreeEntitySlot) and initialises it. The long run of routines from
 ;     ~$5938 on are per-type/per-state behaviour selectors that probe the world
@@ -7880,11 +7880,13 @@ Data_03_7046:
 	db $03, $08, $0a, $0b, $00, $02, $07, $04, $08, $07, $0b, $00, $02, $07, $05, $08
 	db $07, $0b, $00, $02, $07, $06, $08, $07, $0b, $00, $02, $07, $07, $08, $07, $0b
 	db $00, $07, $0a, $08, $18, $0b, $16, $aa, $4f, $16, $59, $50, $0c, $20, $7f, $70
-	db $07, $09, $16, $20, $4f, $16, $13, $50, $0c, $20, $8b, $70, $07, $2a, $16, $64
-	db $6b, $16, $72, $6b, $27, $01, $a2, $70, $0c, $20, $97, $70, $07, $2b, $08, $3c
-	db $0b, $16, $8d, $6b, $08, $01, $0b, $00, $02, $07, $0c, $08, $0f, $0b, $00, $02
-	db $07, $19, $08, $15, $0b, $16, $5f, $4c, $00, $02, $07, $10, $08, $1f, $0b, $16
-	db $5f, $4c, $00, $06, $00, $07, $11, $1d
+	db $07, $09, $16, $20, $4f, $16, $13, $50, $0c, $20, $8b, $70
+
+SECTION "room_00f0ae", ROMX[$70ae], BANK[$03]
+
+Data_03_70ae:
+	db $02, $07, $0c, $08, $0f, $0b, $00, $02, $07, $19, $08, $15, $0b, $16, $5f, $4c
+	db $00, $02, $07, $10, $08, $1f, $0b, $16, $5f, $4c, $00, $06, $00, $07, $11, $1d
 
 SECTION "room_00f0ce", ROMX[$70ce], BANK[$03]
 
@@ -7990,11 +7992,10 @@ SECTION "room_00f19b", ROMX[$719b], BANK[$03]
 Data_03_719b:
 	db $06, $03, $03, $00, $02, $07, $3c, $0c, $20, $a2, $71, $02, $07, $3d, $08, $15
 	db $0b, $00, $06, $02, $03, $80, $00, $07, $08, $08, $20, $0b, $00, $02, $07, $0b
-	db $08, $0a, $0b, $00, $02, $07, $0f, $08, $3c, $0b, $16, $a1, $55, $00, $02, $07
-	db $09, $08, $5a, $16, $e7, $55, $0a, $ce, $71, $00, $02, $07, $29, $08, $3c, $0b
-	db $16, $97, $57, $27, $01, $e6, $71, $0c, $20, $db, $71, $17, $01, $1b, $4d
-Func_03_71ea:
-	db $00
+	db $08, $0a, $0b, $00, $02
+Func_03_71c0:
+	db $07, $0f, $08, $3c, $0b, $16, $a1, $55, $00, $02, $07, $09, $08, $5a, $16, $e7
+	db $55, $0a, $ce, $71, $00
 
 SECTION "room_00fd25", ROMX[$7d25], BANK[$03]
 

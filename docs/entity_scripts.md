@@ -5,8 +5,11 @@ driven by a tiny **bytecode script** interpreted by the bank-`$03` engine (see
 [`room_engine.md`](room_engine.md) for the engine and entity record). This
 document specifies the script VM and its instruction set.
 
-The scripts themselves occupy **`$71eb`–`$7d25`** (2874 bytes, ~1387
-instructions across ~326 reachable labels) in bank `$03`.
+The scripts occupy **`$71d5`–`$7d25`** plus one isolated 28-byte script at
+**`$7092`** (~1410 instructions across ~332 labels) in bank `$03`. The `$7092`
+script and the `$71d5` one are spawn types 15 and 14 — non-editor entities
+reached only through `MonsterSpawnScriptTable`, hidden among the velocity tables
+below the selector-reachable region.
 
 ## The VM
 
@@ -32,7 +35,7 @@ back to `RunEntityScript` to fetch the next opcode — or to `EndEntityFrame`
 main loop until next frame.
 
 Because the bytecode is a clean instruction stream, the decoded instructions
-**tile the `$71eb`–`$7d25` region exactly** — no gaps, no overlaps, and no
+**tile both script runs exactly** — no gaps, no overlaps, and no
 control flow leaving the region. That perfect tiling is the round-trip proof
 that the instruction lengths below are correct (`tools/entity_script_disasm.py`
 checks it).

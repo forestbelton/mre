@@ -1744,7 +1744,9 @@ SoundCommandTable:
 SECTION "analyzed_000b00", ROM0[$0b00]
 
 Data_00_0b00:
-	db $3f, $14
+	db $3f
+Data_00_0b01:
+	db $14
 
 SECTION "analyzed_000b02", ROM0[$0b02]
 

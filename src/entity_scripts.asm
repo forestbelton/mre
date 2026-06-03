@@ -1,15 +1,51 @@
-; Entity behaviour scripts (bank $03, $71eb-$7d25) -- the per-entity bytecode
-; interpreted by RunEntityScript in src/room.asm. One line per VM instruction
-; via the macros in include/entity_script.inc; see docs/entity_scripts.md.
+; Entity behaviour scripts (bank $03) -- the per-entity bytecode interpreted by
+; RunEntityScript in src/room.asm. One line per VM instruction via the macros in
+; include/entity_script.inc; see docs/entity_scripts.md.
 ;
-; Names: the player avatar is fully identified; monster groups (MobN) have
-; high-confidence roles (Stand/Chase/Windup/Hurt/Charge/Die) but their species
-; is not derivable from this bank (it lives in the bank-$01/$04 spawn tables),
-; so they are numbered. Generated, then byte-exact-verified by make verify.
+; Names: the player avatar and the 13 editor-placeable monsters (Tacopi..Flame)
+; are resolved; non-editor spawn types keep numbered/address names. The two
+; sub-$71eb runs ($7092, $71d5) are spawn types 15 and 14 -- non-editor, the
+; only scripts reached solely through MonsterSpawnScriptTable. Generated, then
+; byte-exact-verified by make verify.
 
 INCLUDE "entity_script.inc"
 
-SECTION "entity_scripts", ROMX[$71eb], BANK[$03]
+SECTION "entity_scripts_7092", ROMX[$7092], BANK[$03]
+
+EScript_7092:
+    ent_gfx $2a
+    ent_call $6b64
+.l7097
+    ent_call $6b72
+    ent_jr_b8_eq $01, EScript_70a2
+    ent_yield
+    ent_jump .l7097
+
+EScript_70a2:
+    ent_gfx $2b
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_call $6b8d
+    ent_set_timer $01
+    ent_wait_timer
+    ent_despawn
+
+SECTION "entity_scripts_71d5", ROMX[$71d5], BANK[$03]
+
+EScript_71d5:
+    ent_vel_x_zero
+    ent_gfx $29
+    ent_set_timer $3c
+    ent_wait_timer
+.l71db
+    ent_call $5797
+    ent_jr_b8_eq $01, EScript_71e6
+    ent_yield
+    ent_jump .l71db
+
+EScript_71e6:
+    ent_call_bank0 $01, $4d1b
+    ent_despawn
 
 Stairs_AppearDown:
     ent_vel_x_zero

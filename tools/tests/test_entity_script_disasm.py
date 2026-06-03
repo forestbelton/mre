@@ -26,19 +26,17 @@ class TestEntityScriptDisasm(unittest.TestCase):
     def test_no_decode_errors(self):
         self.assertEqual(self.errors, [])
 
-    def test_tiles_region_exactly(self):
-        addrs = sorted(self.insns)
-        lo, hi = addrs[0], addrs[-1] + self.insns[addrs[-1]][1]
-        self.assertEqual((lo, hi), (esd.SCRIPT_LO, esd.SCRIPT_HI))
-        covered = {a + i for a in addrs for i in range(self.insns[a][1])}
-        # no gaps
-        self.assertEqual([x for x in range(lo, hi) if x not in covered], [])
-        # no overlaps: covered byte count == span
-        self.assertEqual(len(covered), hi - lo)
+    def test_tiles_runs_exactly(self):
+        covered = {a + i for a in self.insns for i in range(self.insns[a][1])}
+        expected = {x for lo, hi in esd.SCRIPT_RUNS for x in range(lo, hi)}
+        total = sum(self.insns[a][1] for a in self.insns)
+        # decoded bytes exactly cover the script runs, no overlaps
+        self.assertEqual(covered, expected)
+        self.assertEqual(total, len(covered))
 
-    def test_data_refs_outside_region(self):
-        inside = [x for x in self.data_refs
-                  if esd.SCRIPT_LO <= x < esd.SCRIPT_HI]
+    def test_data_refs_outside_runs(self):
+        expected = {x for lo, hi in esd.SCRIPT_RUNS for x in range(lo, hi)}
+        inside = [x for x in self.data_refs if x in expected]
         self.assertEqual(inside, [])
 
 

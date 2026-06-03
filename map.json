@@ -1840,7 +1840,11 @@
 				}, {
 					"type":	"data",
 					"addr":	61510,
-					"len":	136
+					"len":	76
+				}, {
+					"type":	"data",
+					"addr":	61614,
+					"len":	32
 				}, {
 					"type":	"data",
 					"addr":	"0xf0ce",
@@ -1920,7 +1924,7 @@
 				}, {
 					"type":	"data",
 					"addr":	61851,
-					"len":	80
+					"len":	58
 				}, {
 					"type":	"code",
 					"addr":	64805,
@@ -1975,8 +1979,12 @@
 			"name":	"entity_scripts.asm",
 			"sections":	[{
 					"type":	"code",
-					"addr":	61931,
-					"len":	2874
+					"addr":	61586,
+					"len":	28
+				}, {
+					"type":	"code",
+					"addr":	61909,
+					"len":	2896
 				}]
 		}, {
 			"type":	"code",
@@ -17681,6 +17689,21 @@
 			"addr":	49901,
 			"name":	"EntityOp_JrB8Ne"
 		}, {
+			"addr":	31172,
+			"name":	"MonsterSpawnScriptTable"
+		}, {
+			"addr":	61586,
+			"name":	"EScript_7092"
+		}, {
+			"addr":	61602,
+			"name":	"EScript_70a2"
+		}, {
+			"addr":	61909,
+			"name":	"EScript_71d5"
+		}, {
+			"addr":	61926,
+			"name":	"EScript_71e6"
+		}, {
 			"addr":	61931,
 			"name":	"Stairs_AppearDown"
 		}, {
@@ -18235,9 +18258,6 @@
 		}, {
 			"addr":	64798,
 			"name":	"EScript_7d1e"
-		}, {
-			"addr":	31172,
-			"name":	"MonsterSpawnScriptTable"
 		}],
 	"conflicts":	[{
 			"addr":	0,

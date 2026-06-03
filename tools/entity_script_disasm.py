@@ -5,7 +5,8 @@ Bank $03 (src/room.asm, the tower in-room action engine) runs each entity as a
 tiny bytecode "script" interpreted by RunEntityScript ($4042): it reads a 1-byte
 opcode at the script PC (the `de` register), dispatches through EntityOpcodeTable
 ($4098, 41 entries -- ~35 used, the rest null), and each handler advances `de`
-past its operands before fetching the next opcode. Scripts live in $71eb-$7d25.
+past its operands before fetching the next opcode. Scripts live in $71d5-$7d25
+plus one isolated script at $7092 (see SCRIPT_RUNS).
 
 This tool reconstructs the scripts by walking from every entry point
 (`ld de, $7xxx` immediates in the behaviour selectors, plus every branch target)
@@ -27,7 +28,16 @@ import re
 import sys
 from pathlib import Path
 
-SCRIPT_LO, SCRIPT_HI = 0x71eb, 0x7d25     # bank-$03-local bounds of the script blob
+# The scripts occupy two runs: the main blob plus a 28-byte script at $7092 that
+# only MonsterSpawnScriptTable reaches (surrounded by velocity tables, so it is
+# walked explicitly rather than gap-filled).
+SCRIPT_RUNS = ((0x7092, 0x70ae), (0x71d5, 0x7d25))
+SCRIPT_LO, SCRIPT_HI = 0x7092, 0x7d25     # overall bank-$03-local bounds
+# MonsterSpawnScriptTable (Data_01_79c4): entity type -> initial script.
+SPAWN_TABLE = (0x7264, 0x727d, 0x7287, 0x7291, 0x74f1, 0x756c, 0x7615, 0x76a8,
+               0x7713, 0x7777, 0x77b7, 0x77f7, 0x785c, 0x78d7, 0x797f, 0x79df,
+               0x7a1f, 0x72b4, 0x71d5, 0x7092, 0x7a59, 0x7ac5, 0x7b48, 0x7bd6,
+               0x7c21, 0x7caf)
 
 # opcode -> (mnemonic, total_length, kind, target_operand_offset)
 #   kind: cont  = linear, advance by length
@@ -103,6 +113,7 @@ def collect_entry_points(room_asm="src/room.asm", map_json="map.json"):
                 eps.add(ba)
     except (OSError, ValueError, KeyError):
         pass
+    eps |= {v for v in SPAWN_TABLE if SCRIPT_LO <= v < SCRIPT_HI}
     return eps
 
 
@@ -140,12 +151,16 @@ def _walk(rom, roots):
 
 
 def disassemble(rom, room_asm="src/room.asm"):
-    """Fixpoint: walk from entries, then promote each gap-start that is a valid
-    opcode (and not a known data-table address) to a new root, until stable."""
+    """Walk the scripts. The main run ($71d5+) is gap-filled (promote each
+    gap-start that is a valid opcode and not a known data-table address, until
+    stable) since it is pure bytecode; the isolated low script (< $71d5) is
+    walked plainly because it is surrounded by velocity tables."""
     rd = lambda ba: rom[flat(ba)]
-    roots = set(collect_entry_points(room_asm))
+    roots = collect_entry_points(room_asm)
+    main_roots = {r for r in roots if r >= 0x71d5}
+    low_roots = {r for r in roots if r < 0x71d5}
     while True:
-        insns, targets, code_refs, data_refs, errors = _walk(rom, roots)
+        insns, targets, code_refs, data_refs, errors = _walk(rom, main_roots)
         if errors:
             return insns, targets, code_refs, data_refs, errors
         addrs = sorted(insns)
@@ -160,10 +175,14 @@ def disassemble(rom, room_asm="src/room.asm"):
             if prev is None and rd(x) in SPEC and x not in data_refs:
                 new.add(x)
             prev = x
-        new -= roots
+        new -= main_roots
         if not new:
-            return insns, targets, code_refs, data_refs, errors
-        roots |= new
+            break
+        main_roots |= new
+    # merge the isolated low script(s)
+    li, lt, lc, ld_, le = _walk(rom, low_roots)
+    insns.update(li)
+    return (insns, targets | lt, code_refs | lc, data_refs | ld_, errors + le)
 
 
 def self_check(rom, room_asm="src/room.asm"):
@@ -173,20 +192,19 @@ def self_check(rom, room_asm="src/room.asm"):
         for e in errors[:50]:
             print("  ", e)
         return 1
-    addrs = sorted(insns)
-    lo, hi = addrs[0], addrs[-1] + insns[addrs[-1]][1]
-    covered = {a + i for a in addrs for i in range(insns[a][1])}
-    gaps = [x for x in range(lo, hi) if x not in covered]
-    overlaps = (hi - lo) - len(covered) - len(gaps)
-    drefs_in = [x for x in data_refs if lo <= x < hi]
-    ok = (not gaps and overlaps == 0 and (lo, hi) == (SCRIPT_LO, SCRIPT_HI)
-          and not drefs_in)
+    covered = {a + i for a in insns for i in range(insns[a][1])}
+    expected = {x for lo, hi in SCRIPT_RUNS for x in range(lo, hi)}
+    total = sum(insns[a][1] for a in insns)
+    overlaps = total - len(covered)
+    drefs_in = [x for x in data_refs if x in expected]
+    ok = (overlaps == 0 and covered == expected and not drefs_in)
     print(f"scripts: {len(insns)} instructions, {len(targets)} labels")
-    print(f"region:  ${lo:04x}-${hi:04x} ({hi - lo} bytes), "
-          f"gaps={len(gaps)}, overlaps={overlaps}")
+    print(f"runs:    {', '.join(f'${lo:04x}-${hi:04x}' for lo, hi in SCRIPT_RUNS)} "
+          f"({len(expected)} bytes), overlaps={overlaps}, "
+          f"missing={len(expected - covered)}, extra={len(covered - expected)}")
     print(f"refs:    {len(code_refs)} native calls, {len(data_refs)} data tables "
           f"({len(drefs_in)} inside region)")
-    print("ROUND-TRIP:", "OK -- bytecode tiles the region exactly" if ok else "FAIL")
+    print("ROUND-TRIP:", "OK -- bytecode tiles both runs exactly" if ok else "FAIL")
     return 0 if ok else 1
 
 
