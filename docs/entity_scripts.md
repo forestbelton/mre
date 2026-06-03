@@ -127,10 +127,32 @@ It walks from every entry point (`ld de, $7xxx` in the selectors) plus every
 branch target, then fixpoint-fills any script reached only from a pointer table,
 and asserts the decode tiles `$71eb`–`$7d25` exactly.
 
-## Not yet done
+## Source form
 
-The scripts are understood and disassembled but still stored as raw `db` bytes
-in `src/room.asm`. The next step is to re-carve the region with assembler macros
-(one per opcode) so each script reads — and edits — as the listing above while
-assembling back to identical bytes, and to name each script by the entity/state
-it implements (resolved through the selector that loads it).
+The scripts are carved into **`src/entity_scripts.asm`** as readable, editable
+source: one assembler macro per opcode (defined in `include/entity_script.inc`),
+labels per script, and `.l`-local labels for intra-script branches. It assembles
+back to the exact ROM bytes (`make verify`). Example:
+
+```
+Mob1_Windup:
+    ent_set_type    $03
+    ent_vel_x_zero
+    ent_gfx         $02
+    ent_call        $4461        ; native attack wind-up
+    ent_set_timer   $1e
+.l752c:
+    ent_update_action
+    ent_jr_busy     Mob1_Hurt
+    ent_loop_timer  .l752c
+    ent_set_xflip   $ff
+    ent_jump        Mob1_Chase
+```
+
+Naming: the **player** avatar is fully resolved; **monster** groups (`MobN`)
+carry high-confidence roles (Stand/Chase/Windup/Hurt/Charge/Die) but their
+species is numbered — the monster-id → entity-type → script mapping lives in the
+bank-`$01`/`$04` `SpawnEntity` template tables, not this bank, so resolving real
+species names is the natural next step. The selectors in `room.asm` still load a
+script by raw address (`ld de, $7xxx`); the matching label is in
+`entity_scripts.asm`.

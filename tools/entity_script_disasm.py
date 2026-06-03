@@ -22,6 +22,7 @@ Usage:
     python3 tools/entity_script_disasm.py --list     # full disassembly listing
 """
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -82,12 +83,27 @@ def flat(ba):
     return 0xc000 + (ba - 0x4000)
 
 
-def collect_entry_points(room_asm="src/room.asm"):
-    """Script entry points = `ld de, $7xxx` immediates in the selectors."""
+def collect_entry_points(room_asm="src/room.asm", map_json="map.json"):
+    """Script entry seeds. Before the macro-carve the selectors hold
+    `ld de, $7xxx` immediates; after it they hold `ld de, <Label>` and the
+    script-entry labels live in map.json. Union both so the tool works in
+    either state; the fixpoint fills any script reached only via a table."""
+    eps = set()
     txt = Path(room_asm).read_text()
-    return {int(m.group(1), 16)
+    eps |= {int(m.group(1), 16)
             for m in re.finditer(r'ld de, \$([0-9a-f]{4})', txt)
             if int(m.group(1), 16) >= 0x7000}
+    try:
+        spec = json.loads(Path(map_json).read_text())
+        for lab in spec.get("labels", []):
+            a = lab["addr"]
+            a = int(a, 16) if isinstance(a, str) else a
+            ba = a - 0x8000          # flat ROM offset -> bank-$03 local
+            if SCRIPT_LO <= ba < SCRIPT_HI:
+                eps.add(ba)
+    except (OSError, ValueError, KeyError):
+        pass
+    return eps
 
 
 def _walk(rom, roots):
