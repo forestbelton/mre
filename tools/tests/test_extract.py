@@ -785,9 +785,9 @@ class TestPaddingSections(unittest.TestCase):
                 hw_symbols={}, output_dir=Path(td),
             )
             body = "\n".join(lines)
-            self.assertIn('INCBIN "gfx/G.2bpp", 0, 16', body)
+            self.assertIn('INCBIN "raw_gfx/G.2bpp", 0, 16', body)
             self.assertNotIn("db ", body)
-            self.assertTrue((Path(td) / "gfx" / "G.png").exists())
+            self.assertTrue((Path(td) / "raw_gfx" / "G.png").exists())
 
     def test_validate_padding_ignores_non_padding(self):
         # A code or data section with non-zero bytes is fine; only padding
@@ -1309,9 +1309,9 @@ class TestGfxSections(unittest.TestCase):
             )
             text = "\n".join(lines)
             self.assertIn(
-                f'INCBIN "gfx/Data_00_0200.2bpp", 0, {len(data)}', text)
+                f'INCBIN "raw_gfx/Data_00_0200.2bpp", 0, {len(data)}', text)
             self.assertNotIn("\tdb ", text)  # not emitted as raw bytes
-            png = out_dir / "gfx" / "Data_00_0200.png"
+            png = out_dir / "raw_gfx" / "Data_00_0200.png"
             self.assertTrue(png.exists())
 
 

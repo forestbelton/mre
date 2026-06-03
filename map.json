@@ -1196,67 +1196,7 @@
 				}, {
 					"type":	"data",
 					"addr":	49304,
-					"len":	18
-				}, {
-					"type":	"data",
-					"addr":	"0xc0aa",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	49324,
-					"len":	8
-				}, {
-					"type":	"data",
-					"addr":	"0xc0b4",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	49334,
-					"len":	4
-				}, {
-					"type":	"padding",
-					"addr":	49338,
-					"len":	10
-				}, {
-					"type":	"data",
-					"addr":	49348,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	"0xc0ca",
-					"len":	"0x2"
-				}, {
-					"type":	"data",
-					"addr":	49356,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	"0xc0ce",
-					"len":	"0x4"
-				}, {
-					"type":	"data",
-					"addr":	49362,
-					"len":	2
-				}, {
-					"type":	"padding",
-					"addr":	49364,
-					"len":	4
-				}, {
-					"type":	"data",
-					"addr":	49368,
-					"len":	8
-				}, {
-					"type":	"code",
-					"addr":	49376,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	49382,
-					"len":	2
-				}, {
-					"type":	"data",
-					"addr":	"0xc0e8",
-					"len":	"0x2"
+					"len":	82
 				}, {
 					"type":	"code",
 					"addr":	49386,
@@ -1270,7 +1210,7 @@
 					"addr":	49519,
 					"len":	61
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc1ac",
 					"len":	"0xd"
 				}, {
@@ -1278,7 +1218,7 @@
 					"addr":	49593,
 					"len":	39
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc1e0",
 					"len":	"0xc"
 				}, {
@@ -1286,7 +1226,7 @@
 					"addr":	49644,
 					"len":	34
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc20e",
 					"len":	"0xf"
 				}, {
@@ -1294,7 +1234,7 @@
 					"addr":	49693,
 					"len":	13
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc22a",
 					"len":	"0xd"
 				}, {
@@ -1302,7 +1242,7 @@
 					"addr":	49719,
 					"len":	15
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc246",
 					"len":	"0x15"
 				}, {
@@ -1310,7 +1250,7 @@
 					"addr":	49755,
 					"len":	98
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc2bd",
 					"len":	"0x22"
 				}, {
@@ -1318,7 +1258,7 @@
 					"addr":	49887,
 					"len":	14
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0xc2ed",
 					"len":	"0xe"
 				}, {
@@ -17838,6 +17778,108 @@
 		}, {
 			"addr":	52862,
 			"name":	"FindEntityHittingRect"
+		}, {
+			"addr":	49386,
+			"name":	"EntityOp_Despawn"
+		}, {
+			"addr":	49393,
+			"name":	"EntityOp_SetType"
+		}, {
+			"addr":	49401,
+			"name":	"EntityOp_VelXZero"
+		}, {
+			"addr":	49410,
+			"name":	"EntityOp_SetVelX"
+		}, {
+			"addr":	49422,
+			"name":	"EntityOp_VelXIndexed"
+		}, {
+			"addr":	49447,
+			"name":	"EntityOp_SetXFlip"
+		}, {
+			"addr":	49475,
+			"name":	"EntityOp_SetFacing"
+		}, {
+			"addr":	49555,
+			"name":	"EntityOp_Gfx"
+		}, {
+			"addr":	49572,
+			"name":	"EntityOp_SetTimer"
+		}, {
+			"addr":	49580,
+			"name":	"EntityOp_TimerTick"
+		}, {
+			"addr":	49593,
+			"name":	"EntityOp_WaitTimer"
+		}, {
+			"addr":	49608,
+			"name":	"EntityOp_LoopTimer"
+		}, {
+			"addr":	49632,
+			"name":	"EntityOp_SetVelY"
+		}, {
+			"addr":	49644,
+			"name":	"EntityOp_WaitCounter"
+		}, {
+			"addr":	49665,
+			"name":	"EntityOp_LoadB8"
+		}, {
+			"addr":	49678,
+			"name":	"EntityOp_AndB8"
+		}, {
+			"addr":	49693,
+			"name":	"EntityOp_TestB8"
+		}, {
+			"addr":	49706,
+			"name":	"EntityOp_CmpB8"
+		}, {
+			"addr":	49719,
+			"name":	"EntityOp_SpawnRel"
+		}, {
+			"addr":	49734,
+			"name":	"EntityOp_SetFlag2"
+		}, {
+			"addr":	49755,
+			"name":	"EntityOp_BeginAction"
+		}, {
+			"addr":	49768,
+			"name":	"EntityOp_UpdateAction"
+		}, {
+			"addr":	49775,
+			"name":	"EntityOp_Call"
+		}, {
+			"addr":	49787,
+			"name":	"EntityOp_CallBank0"
+		}, {
+			"addr":	49803,
+			"name":	"EntityOp_Yield"
+		}, {
+			"addr":	49807,
+			"name":	"EntityOp_Jump"
+		}, {
+			"addr":	49817,
+			"name":	"EntityOp_JrBusy"
+		}, {
+			"addr":	49829,
+			"name":	"EntityOp_JrFree"
+		}, {
+			"addr":	49841,
+			"name":	"EntityOp_JrHit"
+		}, {
+			"addr":	49853,
+			"name":	"EntityOp_JrNoHit"
+		}, {
+			"addr":	49865,
+			"name":	"EntityOp_JrTimer0"
+		}, {
+			"addr":	49876,
+			"name":	"EntityOp_JrTimerNz"
+		}, {
+			"addr":	49887,
+			"name":	"EntityOp_JrB8Eq"
+		}, {
+			"addr":	49901,
+			"name":	"EntityOp_JrB8Ne"
 		}],
 	"conflicts":	[{
 			"addr":	0,

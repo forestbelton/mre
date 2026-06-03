@@ -124,8 +124,9 @@ From roughly `$5938` on, the bank is a long sequence of near-identical
 **per-type / per-state behaviour selectors**. Each one calls a probe sub
 (`UpdateActionTimer` at `$441f` plus a world/player test) that writes a small
 result code into `$ffb8`, then `cp`-chains on that code and returns `de` = the
-address of the next **script** to run. The scripts themselves are bytecode data
-in the `$72xx`–`$7Exx` region, consumed by `RunEntityScript`.
+address of the next **script** to run. The scripts themselves are bytecode in the
+`$71eb`–`$7d25` region, consumed by `RunEntityScript` — fully specified in
+[`entity_scripts.md`](entity_scripts.md).
 
 * Selectors that read the joypad (`$ff8b`/`$ff8c`, via `$46ed`/`$48cb`) drive the
   **player avatar**.
@@ -136,9 +137,12 @@ in the `$72xx`–`$7Exx` region, consumed by `RunEntityScript`.
 ## Curated vs. undecoded
 
 The labels above (and a handful of helpers) are in `map.json` `labels[]` and
-carry curated names. The remainder of the bank keeps auto-generated
-`Func_03_xxxx` / `Data_03_xxxx` names — deliberately, rather than inventing
-speculative ones. Good next targets for decoding: the extended-opcode set
-(`$41ac`–`$42ed`), the `SpawnEntity` per-type template tables (in banks `$01`/
-`$04`), and disassembling the `$72xx`–`$7Exx` script bytecode against the opcode
-table.
+carry curated names. The full VM dispatcher is now decoded: `EntityOpcodeTable`
+plus all 34 `EntityOp_*` handlers, and the entire script bytecode
+([`entity_scripts.md`](entity_scripts.md)). The remainder of the bank keeps
+auto-generated `Func_03_xxxx` / `Data_03_xxxx` names — deliberately, rather than
+inventing speculative ones. Good next targets for decoding: the per-state native
+helpers the scripts `ent_call` (the `Func_03_5xxx`–`Func_03_6xxx` selectors and
+locomotion), the `SpawnEntity` per-type template tables (in banks `$01`/`$04`),
+and re-carving the script bytecode itself with per-opcode macros (so the scripts
+read and edit as source, not `db` bytes).

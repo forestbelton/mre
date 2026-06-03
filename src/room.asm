@@ -13,9 +13,12 @@
 ;     each occupied slot RunEntity swaps the record into the $ffb0.. HRAM shadow
 ;     (LoadEntityRegs) and enters RunEntityScript ($4042).
 ;   * RunEntityScript is a threaded interpreter: a=[de] (the script PC at field
-;     +$18); `jp [EntityOpcodeTable + a*2]`. Each opcode handler reads its
-;     operands and tail-jumps back to fetch the next opcode; EndEntityFrame
-;     ($404f) is the per-frame "yield" that saves the record back.
+;     +$18); `jp [EntityOpcodeTable + a*2]`. The 41-entry EntityOpcodeTable
+;     ($4098) dispatches to the EntityOp_* handlers below; each reads its
+;     operands, advances de, and tail-jumps back. EndEntityFrame ($404f) is the
+;     per-frame "yield" that saves the record back. The bytecode the handlers
+;     interpret lives at $71eb-$7d25 -- see docs/entity_scripts.md for the
+;     instruction set and tools/entity_script_disasm.py to disassemble it.
 ;   * SpawnEntity ($4593: A=type, D=Ypx, E=Xpx, BC=param) allocates a free slot
 ;     (FindFreeEntitySlot) and initialises it. The long run of routines from
 ;     ~$5938 on are per-type/per-state behaviour selectors that probe the world
@@ -135,94 +138,31 @@ SECTION "room_00c098", ROMX[$4098], BANK[$03]
 
 EntityOpcodeTable:
 	db $ea, $40, $f1, $40, $f9, $40, $02, $41, $0e, $41, $27, $41, $43, $41, $93, $41
-	db $a4, $41
-
-SECTION "room_00c0aa", ROMX[$40aa], BANK[$03]
-
-Data_03_40aa:
-	db $ac, $41
-
-SECTION "room_00c0ac", ROMX[$40ac], BANK[$03]
-
-Data_03_40ac:
-	db $c8, $41, $b9, $41, $8b, $42, $37, $42
-
-SECTION "room_00c0b4", ROMX[$40b4], BANK[$03]
-
-Data_03_40b4:
-	db $46, $42
-
-SECTION "room_00c0b6", ROMX[$40b6], BANK[$03]
-
-Data_03_40b6:
-	db $5b, $42, $68, $42
-
-SECTION "room_00c0c4", ROMX[$40c4], BANK[$03]
-
-Data_03_40c4:
-	db $6f, $42, $7b, $42, $01, $42
-
-SECTION "room_00c0ca", ROMX[$40ca], BANK[$03]
-
-Data_03_40ca:
-	db $0e, $42
-
-SECTION "room_00c0cc", ROMX[$40cc], BANK[$03]
-
-Data_03_40cc:
-	db $1d, $42
-
-SECTION "room_00c0ce", ROMX[$40ce], BANK[$03]
-
-Data_03_40ce:
-	db $2a, $42, $e0, $41
-
-SECTION "room_00c0d2", ROMX[$40d2], BANK[$03]
-
-Data_03_40d2:
-	db $ec, $41
-
-SECTION "room_00c0d8", ROMX[$40d8], BANK[$03]
-
-Data_03_40d8:
-	db $8f, $42, $99, $42, $a5, $42, $b1, $42
-
-SECTION "room_00c0e0", ROMX[$40e0], BANK[$03]
-
-Func_03_40e0:
-	cp l
-	ld b, d
-	ret
-	ld b, d
-	db $d4
-	ld b, d
-
-SECTION "room_00c0e6", ROMX[$40e6], BANK[$03]
-
-Data_03_40e6:
-	db $df, $42
-
-SECTION "room_00c0e8", ROMX[$40e8], BANK[$03]
-
-Data_03_40e8:
+	db $a4, $41, $ac, $41, $c8, $41, $b9, $41, $8b, $42, $37, $42, $46, $42, $5b, $42
+	db $68, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $6f, $42, $7b, $42
+	db $01, $42, $0e, $42, $1d, $42, $2a, $42, $e0, $41, $ec, $41, $00, $00, $00, $00
+	db $8f, $42, $99, $42, $a5, $42, $b1, $42, $bd, $42, $c9, $42, $d4, $42, $df, $42
 	db $ed, $42
 
 SECTION "room_00c0ea", ROMX[$40ea], BANK[$03]
 
-Func_03_40ea:
+EntityOp_Despawn:
 	ld a, $00
 	ldh [$ffb0], a
 	jp EndEntityFrame
+EntityOp_SetType:
 	inc de
 	ld a, [de]
 	ldh [$ffb3], a
 	inc de
 	jp RunEntityScript
+EntityOp_VelXZero:
 	inc de
 	xor a
 	ldh [$ffbf], a
 	ldh [$ffc0], a
 	jp RunEntityScript
+EntityOp_SetVelX:
 	inc de
 	ld a, [de]
 	ldh [$ffbf], a
@@ -231,6 +171,7 @@ Func_03_40ea:
 	ldh [$ffc0], a
 	inc de
 	jp RunEntityScript
+EntityOp_VelXIndexed:
 	inc de
 	ld a, [de]
 	ld l, a
@@ -249,6 +190,7 @@ Func_03_40ea:
 	ld a, [hl]
 	ldh [$ffc0], a
 	jp RunEntityScript
+EntityOp_SetXFlip:
 	inc de
 	ld hl, $ffb6
 	ld a, [de]
@@ -265,6 +207,7 @@ Func_03_4139:
 Func_03_413e:
 	res 7, [hl]
 	jp RunEntityScript
+EntityOp_SetFacing:
 	inc de
 	ld hl, $ffb6
 	ld a, [de]
@@ -322,6 +265,7 @@ Func_03_418a:
 	or $02
 	ld [hl], a
 	jp RunEntityScript
+EntityOp_Gfx:
 	inc de
 	ld a, [de]
 	ld b, a
@@ -332,6 +276,7 @@ Func_03_418a:
 	pop de
 	inc de
 	jp RunEntityScript
+EntityOp_SetTimer:
 	inc de
 	ld a, [de]
 	ldh [$ffc6], a
@@ -340,12 +285,19 @@ Func_03_418a:
 
 SECTION "room_00c1ac", ROMX[$41ac], BANK[$03]
 
-Data_03_41ac:
-	db $13, $0e, $c6, $f2, $b7, $ca, $42, $40, $3d, $e2, $c3, $4f, $40
+EntityOp_TimerTick:
+	inc de
+	ld c, $c6
+	ldh a, [c]
+	or a
+	jp z, RunEntityScript
+	dec a
+	ldh [c], a
+	jp EndEntityFrame
 
 SECTION "room_00c1b9", ROMX[$41b9], BANK[$03]
 
-Func_03_41b9:
+EntityOp_WaitTimer:
 	ld c, $c6
 	ldh a, [c]
 	or a
@@ -356,6 +308,7 @@ Func_03_41b9:
 Func_03_41c4:
 	inc de
 	jp RunEntityScript
+EntityOp_LoopTimer:
 	inc de
 	ld c, $c6
 	ldh a, [c]
@@ -377,12 +330,19 @@ Func_03_41db:
 
 SECTION "room_00c1e0", ROMX[$41e0], BANK[$03]
 
-Data_03_41e0:
-	db $13, $1a, $e0, $c1, $13, $1a, $e0, $c2, $13, $c3, $42, $40
+EntityOp_SetVelY:
+	inc de
+	ld a, [de]
+	ldh [$ffc1], a
+	inc de
+	ld a, [de]
+	ldh [$ffc2], a
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c1ec", ROMX[$41ec], BANK[$03]
 
-Func_03_41ec:
+EntityOp_WaitCounter:
 	ld hl, $ffc1
 	ld a, [hl+]
 	ld c, a
@@ -398,6 +358,7 @@ Func_03_41ec:
 Func_03_41fd:
 	inc de
 	jp RunEntityScript
+EntityOp_LoadB8:
 	inc de
 	ld a, [de]
 	ld l, a
@@ -411,12 +372,21 @@ Func_03_41fd:
 
 SECTION "room_00c20e", ROMX[$420e], BANK[$03]
 
-Data_03_420e:
-	db $13, $0e, $b8, $1a, $47, $f2, $a0, $e2, $cd, $fb, $42, $13, $c3, $42, $40
+EntityOp_AndB8:
+	inc de
+	ld c, $b8
+	ld a, [de]
+	ld b, a
+	ldh a, [c]
+	and b
+	ldh [c], a
+	call Func_03_42fb
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c21d", ROMX[$421d], BANK[$03]
 
-Func_03_421d:
+EntityOp_TestB8:
 	inc de
 	ld a, [de]
 	ld b, a
@@ -428,12 +398,19 @@ Func_03_421d:
 
 SECTION "room_00c22a", ROMX[$422a], BANK[$03]
 
-Data_03_422a:
-	db $13, $1a, $47, $f0, $b8, $b8, $cd, $fb, $42, $13, $c3, $42, $40
+EntityOp_CmpB8:
+	inc de
+	ld a, [de]
+	ld b, a
+	ldh a, [$ffb8]
+	cp b
+	call Func_03_42fb
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c237", ROMX[$4237], BANK[$03]
 
-Func_03_4237:
+EntityOp_SpawnRel:
 	inc de
 	ld a, [de]
 	ld c, a
@@ -448,22 +425,34 @@ Func_03_4237:
 
 SECTION "room_00c246", ROMX[$4246], BANK[$03]
 
-Data_03_4246:
-	db $13, $21, $b6, $ff, $1a, $fe, $01, $28, $06, $cb, $96, $13, $c3, $42, $40, $cb
-	db $d6, $13, $c3, $42, $40
+EntityOp_SetFlag2:
+	inc de
+	ld hl, $ffb6
+	ld a, [de]
+	cp $01
+	jr z, Func_03_4255
+	res 2, [hl]
+	inc de
+	jp RunEntityScript
+Func_03_4255:
+	set 2, [hl]
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c25b", ROMX[$425b], BANK[$03]
 
-Func_03_425b:
+EntityOp_BeginAction:
 	inc de
 	ld hl, $ffb4
 	set 7, [hl]
 	ld a, $14
 	ldh [$ffc7], a
 	jp RunEntityScript
+EntityOp_UpdateAction:
 	inc de
 	call UpdateActionTimer
 	jp RunEntityScript
+EntityOp_Call:
 	inc de
 	ld hl, $4042
 	push hl
@@ -474,6 +463,7 @@ Func_03_425b:
 	ld h, a
 	inc de
 	jp hl
+EntityOp_CallBank0:
 	inc de
 	ld a, [de]
 	ld b, a
@@ -486,9 +476,10 @@ Func_03_425b:
 	inc de
 	call Func_00_1150
 	jp RunEntityScript
+EntityOp_Yield:
 	inc de
 	jp EndEntityFrame
-Func_03_428f:
+EntityOp_Jump:
 	inc de
 	ld a, [de]
 	ld b, a
@@ -497,23 +488,26 @@ Func_03_428f:
 	ld d, a
 	ld e, b
 	jp RunEntityScript
+EntityOp_JrBusy:
 	ldh a, [$ffb7]
 	bit 0, a
-	jr nz, Func_03_428f
+	jr nz, EntityOp_Jump
 	inc de
 	inc de
 	inc de
 	jp RunEntityScript
+EntityOp_JrFree:
 	ldh a, [$ffb7]
 	bit 0, a
-	jr z, Func_03_428f
+	jr z, EntityOp_Jump
 	inc de
 	inc de
 	inc de
 	jp RunEntityScript
+EntityOp_JrHit:
 	ldh a, [$ffb7]
 	bit 1, a
-	jr nz, Func_03_428f
+	jr nz, EntityOp_Jump
 	inc de
 	inc de
 	inc de
@@ -521,20 +515,40 @@ Func_03_428f:
 
 SECTION "room_00c2bd", ROMX[$42bd], BANK[$03]
 
-Data_03_42bd:
-	db $f0, $b7, $cb, $4f, $28, $cc, $13, $13, $13, $c3, $42, $40, $f0, $c6, $b7, $28
-	db $c1, $13, $13, $13, $c3, $42, $40, $f0, $c6, $b7, $20, $b6, $13, $13, $13, $c3
-	db $42, $40
+EntityOp_JrNoHit:
+	ldh a, [$ffb7]
+	bit 1, a
+	jr z, EntityOp_Jump
+	inc de
+	inc de
+	inc de
+	jp RunEntityScript
+EntityOp_JrTimer0:
+	ldh a, [$ffc6]
+	or a
+	jr z, EntityOp_Jump
+	inc de
+	inc de
+	inc de
+	jp RunEntityScript
+EntityOp_JrTimerNz:
+	ldh a, [$ffc6]
+	or a
+	jr nz, EntityOp_Jump
+	inc de
+	inc de
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c2df", ROMX[$42df], BANK[$03]
 
-Func_03_42df:
+EntityOp_JrB8Eq:
 	inc de
 	ldh a, [$ffb8]
 	ld b, a
 	ld a, [de]
 	cp b
-	jr z, Func_03_428f
+	jr z, EntityOp_Jump
 	inc de
 	inc de
 	inc de
@@ -542,8 +556,17 @@ Func_03_42df:
 
 SECTION "room_00c2ed", ROMX[$42ed], BANK[$03]
 
-Data_03_42ed:
-	db $13, $f0, $b8, $47, $1a, $b8, $20, $9a, $13, $13, $13, $c3, $42, $40
+EntityOp_JrB8Ne:
+	inc de
+	ldh a, [$ffb8]
+	ld b, a
+	ld a, [de]
+	cp b
+	jr nz, EntityOp_Jump
+	inc de
+	inc de
+	inc de
+	jp RunEntityScript
 
 SECTION "room_00c2fb", ROMX[$42fb], BANK[$03]
 
