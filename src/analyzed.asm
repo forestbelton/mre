@@ -10413,6 +10413,7 @@ Func_01_4cae:
 	ld c, $0f
 	call Func_01_4d95
 	ret
+DrawStairTileClosedL:
 	ld a, $30
 	ld b, $05
 	ld c, $01
@@ -10428,6 +10429,7 @@ Func_01_4ce1:
 	ld a, $01
 	ld [$cf77], a
 	ret
+DrawStairTileOpenR:
 	ld a, $32
 	ld b, $05
 	ld c, $0f
@@ -10451,6 +10453,7 @@ Func_01_4d0d:
 	ld a, $c0
 	call Func_01_4d95
 	ret
+DrawTileAtSpawnCoord:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -10464,6 +10467,7 @@ Func_01_4d0d:
 	ld a, $e2
 	call Func_01_4d95
 	ret
+ReadTileAtEntityCell:
 	ldh a, [$ffbc]
 	add a, $08
 	swap a
@@ -10477,6 +10481,7 @@ Func_01_4d0d:
 	ld a, $c8
 	call Func_01_4dbe
 	ret
+AnimSparkleRing:
 	ld a, [$cf77]
 	inc a
 	ld [$cf77], a
@@ -12063,6 +12068,7 @@ Func_01_5d99:
 	ld a, $0d
 	call Func_00_1164
 	ret
+Player_SummonMonster:
 	ld a, [$c2c1]
 	cp $02
 	ret z

@@ -134,23 +134,36 @@ and asserts the decode tiles `$71eb`–`$7d25` exactly.
 
 The scripts are carved into **`src/entity_scripts.asm`** as readable, editable
 source: one assembler macro per opcode (defined in `include/entity_script.inc`),
-labels per script, and `.l`-local labels for intra-script branches. It assembles
-back to the exact ROM bytes (`make verify`). Example:
+labels per script, and `.l`-local labels for intra-script branches. The
+`ent_call` / `ent_vel_x_indexed` / `ent_call_bank0` operands resolve to the named
+native routines and data tables in `room.asm` (see below). It assembles back to
+the exact ROM bytes (`make verify`). Example:
 
 ```
-Mob1_Windup:
+Tacopi_Windup:
     ent_set_type    $03
     ent_vel_x_zero
     ent_gfx         $02
-    ent_call        $4461        ; native attack wind-up
+    ent_call        MonsterBreakTileInFront
     ent_set_timer   $1e
 .l752c:
     ent_update_action
-    ent_jr_busy     Mob1_Hurt
+    ent_jr_busy     Tacopi_Hurt
     ent_loop_timer  .l752c
     ent_set_xflip   $ff
-    ent_jump        Mob1_Chase
+    ent_jump        Tacopi_Chase
 ```
+
+### Native helpers
+
+The ~110 bank-`$03` routines / data tables the scripts reach are named in
+`map.json` and defined in `room.asm`: per-species AI selectors
+(`<Species>_Think`, `Psylora_MoveDir*`), projectile spawners (`Ducken_FireMissileA`,
+`Plant_FireMissile`, ...), player input/action handlers (`Player_WalkThinkRight`,
+`Player_SpawnAttackFront`, ...), shared engine helpers (`MonsterBreakTileInFront`,
+`FacePlayerX`, `MonsterBreakTileUnder`), the velocity tables (`MonsterWalkVel`,
+`PlayerWalkVelR`, ...), and the bank-`$01` tile-draw routines reached by
+`ent_call_bank0` (`DrawStairTileClosedL`, ...).
 
 The selectors in `room.asm` still load a script by raw address (`ld de, $7xxx`);
 the matching label is in `entity_scripts.asm`.

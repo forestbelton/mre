@@ -143,8 +143,10 @@ plus all 34 `EntityOp_*` handlers, and the entire script bytecode
 auto-generated `Func_03_xxxx` / `Data_03_xxxx` names — deliberately, rather than
 inventing speculative ones. The script bytecode is fully carved and the monster
 **species** are resolved (`MonsterSpawnScriptTable` → `room.inc` `enum MONSTER` →
-the editor legend); see [`entity_scripts.md`](entity_scripts.md). Good next
-targets: the per-state native helpers the scripts `ent_call` (the
-`Func_03_5xxx`–`Func_03_6xxx` probes and the 8-direction locomotion core), and
-naming the non-editor entity types (`Mob12`–`Mob17`, table slots 16–21 — likely
-bonus-stage monsters).
+the editor legend), and the ~110 native routines/tables the scripts `ent_call`
+(per-species `<Species>_Think` selectors, projectile spawners, player handlers,
+shared helpers, velocity tables) are named too; see
+[`entity_scripts.md`](entity_scripts.md). Good next targets: the shared internal
+probes (`$59aa`, `$663c`, …) and the 8-direction locomotion cores
+(`$5de3`–`$62e8`) those selectors call, and identifying the non-editor entity
+types (`Mob12`–`Mob17`, spawn types 14/15 — likely bonus-stage monsters).

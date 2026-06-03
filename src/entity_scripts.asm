@@ -14,9 +14,9 @@ SECTION "entity_scripts_7092", ROMX[$7092], BANK[$03]
 
 EScript_7092:
     ent_gfx $2a
-    ent_call $6b64
+    ent_call SpawnFx15_InitPos
 .l7097
-    ent_call $6b72
+    ent_call SpawnFx15_RiseToY48
     ent_jr_b8_eq $01, EScript_70a2
     ent_yield
     ent_jump .l7097
@@ -25,7 +25,7 @@ EScript_70a2:
     ent_gfx $2b
     ent_set_timer $3c
     ent_wait_timer
-    ent_call $6b8d
+    ent_call SpawnFx15_SetDoneFlag
     ent_set_timer $01
     ent_wait_timer
     ent_despawn
@@ -38,30 +38,30 @@ EScript_71d5:
     ent_set_timer $3c
     ent_wait_timer
 .l71db
-    ent_call $5797
+    ent_call SlideDownToY80
     ent_jr_b8_eq $01, EScript_71e6
     ent_yield
     ent_jump .l71db
 
 EScript_71e6:
-    ent_call_bank0 $01, $4d1b
+    ent_call_bank0 $01, DrawTileAtSpawnCoord
     ent_despawn
 
 Stairs_AppearDown:
     ent_vel_x_zero
     ent_gfx $0e
-    ent_call_bank0 $01, $4cd3
+    ent_call_bank0 $01, DrawStairTileClosedL
 .l71f2
-    ent_call $6f19
+    ent_call Stairs_PollOpenDown
     ent_yield
     ent_jump .l71f2
 
 Stairs_OpenDown:
     ent_vel_x_zero
     ent_gfx $0d
-    ent_call $6f37
+    ent_call Stairs_FaceUp
 .l71ff
-    ent_call $6f43
+    ent_call Stairs_AnimDescend
     ent_jr_b8_eq $01, EScript_720a
     ent_yield
     ent_jump .l71ff
@@ -69,9 +69,9 @@ Stairs_OpenDown:
 EScript_720a:
     ent_vel_x_zero
     ent_gfx $0e
-    ent_call $6f2b
+    ent_call Stairs_FaceDown
 .l7210
-    ent_call $6f92
+    ent_call Stairs_AnimAscend
     ent_jr_b8_eq $01, Stairs_AppearDown
     ent_yield
     ent_jump .l7210
@@ -79,18 +79,18 @@ EScript_720a:
 EScript_721b:
     ent_vel_x_zero
     ent_gfx $0e
-    ent_call_bank0 $01, $4cf0
+    ent_call_bank0 $01, DrawStairTileOpenR
 .l7222
-    ent_call $6f22
+    ent_call Stairs_PollOpenUp
     ent_yield
     ent_jump .l7222
 
 Stairs_OpenUp:
     ent_vel_x_zero
     ent_gfx $0d
-    ent_call $6f37
+    ent_call Stairs_FaceUp
 .l722f
-    ent_call $6f43
+    ent_call Stairs_AnimDescend
     ent_jr_b8_eq $01, EScript_723a
     ent_yield
     ent_jump .l722f
@@ -98,9 +98,9 @@ Stairs_OpenUp:
 EScript_723a:
     ent_vel_x_zero
     ent_gfx $0e
-    ent_call $6f2b
+    ent_call Stairs_FaceDown
 .l7240
-    ent_call $6f92
+    ent_call Stairs_AnimAscend
     ent_jr_b8_eq $01, EScript_721b
     ent_yield
     ent_jump .l7240
@@ -118,7 +118,7 @@ Warp_Land:
     ent_gfx $2f
     ent_set_timer $05
     ent_wait_timer
-    ent_call_bank0 $01, $4d33
+    ent_call_bank0 $01, ReadTileAtEntityCell
     ent_set_timer $05
     ent_wait_timer
     ent_despawn
@@ -136,7 +136,7 @@ Warp_LandAlt:
     ent_gfx $2d
     ent_set_timer $05
     ent_wait_timer
-    ent_call_bank0 $01, $4d33
+    ent_call_bank0 $01, ReadTileAtEntityCell
     ent_set_timer $05
     ent_wait_timer
     ent_despawn
@@ -145,7 +145,7 @@ Door_OpenA:
     ent_vel_x_zero
     ent_gfx $38
 .l7280
-    ent_call $5743
+    ent_call Door_SlideInFast
     ent_yield
     ent_jump .l7280
 
@@ -153,7 +153,7 @@ Door_OpenB:
     ent_vel_x_zero
     ent_gfx $38
 .l728a
-    ent_call $575a
+    ent_call Door_SlideInMed
     ent_yield
     ent_jump .l728a
 
@@ -161,7 +161,7 @@ Door_OpenC:
     ent_vel_x_zero
     ent_gfx $38
 .l7294
-    ent_call $5771
+    ent_call Door_SlideInSlow
     ent_yield
     ent_jump .l7294
 
@@ -173,7 +173,7 @@ Sparkle_Idle:
     ent_jump .l729e
 
 Sparkle_Ring:
-    ent_call_bank0 $01, $4d4b
+    ent_call_bank0 $01, AnimSparkleRing
     ent_vel_x_zero
     ent_gfx $23
 .l72a9
@@ -190,19 +190,19 @@ Sparkle_Burst:
 Explosion_Anim:
     ent_vel_x_zero
     ent_gfx $28
-    ent_call $6daa
+    ent_call Explosion_FrameA
     ent_set_timer $02
     ent_wait_timer
-    ent_call $6dbe
+    ent_call Explosion_FrameB
     ent_set_timer $02
     ent_wait_timer
-    ent_call $6de4
+    ent_call Explosion_FrameC
     ent_set_timer $02
     ent_wait_timer
-    ent_call $6dbe
+    ent_call Explosion_FrameB
     ent_set_timer $02
     ent_wait_timer
-    ent_call $6daa
+    ent_call Explosion_FrameA
     ent_set_timer $02
     ent_wait_timer
     ent_despawn
@@ -211,7 +211,7 @@ Player_SpawnIntro:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
-    ent_call $4904
+    ent_call Player_LatchActionPressed
     ent_yield
 
 Player_StandDown:
@@ -219,7 +219,7 @@ Player_StandDown:
     ent_vel_x_zero
     ent_gfx $01
 .l72e4
-    ent_call $470a
+    ent_call Player_StandThinkDown
     ent_yield
     ent_jump .l72e4
 
@@ -228,25 +228,25 @@ Player_StandUp:
     ent_vel_x_zero
     ent_gfx $02
 .l72f0
-    ent_call $474e
+    ent_call Player_StandThinkUp
     ent_yield
     ent_jump .l72f0
 
 Player_WalkRight:
     ent_set_type $02
-    ent_vel_x_indexed $6fc4
+    ent_vel_x_indexed PlayerWalkVelR
     ent_gfx $03
 .l72fe
-    ent_call $4783
+    ent_call Player_WalkThinkRight
     ent_yield
     ent_jump .l72fe
 
 Player_WalkLeft:
     ent_set_type $03
-    ent_vel_x_indexed $6fce
+    ent_vel_x_indexed PlayerWalkVelL
     ent_gfx $04
 .l730c
-    ent_call $47b8
+    ent_call Player_WalkThinkLeft
     ent_yield
     ent_jump .l730c
 
@@ -256,14 +256,14 @@ Player_PushDown:
     ent_gfx $07
     ent_set_timer $0a
 .l731a
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l731a
-    ent_call $4a6a
+    ent_call Player_SpawnAttackFront
     ent_set_timer $0c
 .l7325
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l7325
-    ent_call $4915
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandDown
 
 Player_PushUp:
@@ -272,27 +272,27 @@ Player_PushUp:
     ent_gfx $08
     ent_set_timer $0a
 .l7338
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l7338
-    ent_call $4a6a
+    ent_call Player_SpawnAttackFront
     ent_set_timer $0c
 .l7343
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l7343
-    ent_call $4915
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandUp
 
 Player_PushRight:
     ent_set_type $06
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_gfx $07
     ent_set_timer $0a
     ent_wait_timer
-    ent_call $4a6a
+    ent_call Player_SpawnAttackFront
     ent_set_timer $0c
     ent_wait_timer
-    ent_call $4a5e
-    ent_call $4915
+    ent_call EntClearAttackActive
+    ent_call Player_ClearMoveSub
     ent_load_b8 $ff8b
     ent_test_b8 $30
     ent_jr_free Player_CarryWalk
@@ -302,35 +302,35 @@ Player_PullDown:
     ent_set_type $07
     ent_vel_x_zero
     ent_gfx $05
-    ent_call $4c65
+    ent_call Player_FireShot
     ent_set_timer $0e
 .l737a
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l737a
-    ent_call $4915
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandDown
 
 Player_PullUp:
     ent_set_type $08
     ent_vel_x_zero
     ent_gfx $06
-    ent_call $4c65
+    ent_call Player_FireShot
     ent_set_timer $0e
 .l7390
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l7390
-    ent_call $4915
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandUp
 
 Player_PullRight:
     ent_set_type $09
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_gfx $05
-    ent_call $4c65
+    ent_call Player_FireShot
     ent_set_timer $0e
     ent_wait_timer
-    ent_call $4a5e
-    ent_call $4915
+    ent_call EntClearAttackActive
+    ent_call Player_ClearMoveSub
     ent_load_b8 $ff8b
     ent_test_b8 $30
     ent_jr_free Player_CarryWalk
@@ -342,10 +342,10 @@ Player_GrabDown:
     ent_gfx $05
     ent_set_timer $0e
 .l73c1
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l73c1
-    ent_call_bank0 $01, $5dae
-    ent_call $4915
+    ent_call_bank0 $01, Player_SummonMonster
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandDown
 
 Player_GrabUp:
@@ -354,21 +354,21 @@ Player_GrabUp:
     ent_gfx $06
     ent_set_timer $0e
 .l73d8
-    ent_call $48f9
+    ent_call Player_LatchActionHeld
     ent_loop_timer .l73d8
-    ent_call_bank0 $01, $5dae
-    ent_call $4915
+    ent_call_bank0 $01, Player_SummonMonster
+    ent_call Player_ClearMoveSub
     ent_jump Player_StandUp
 
 Player_GrabRight:
     ent_set_type $0c
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_gfx $05
     ent_set_timer $0e
     ent_wait_timer
-    ent_call $4a5e
-    ent_call_bank0 $01, $5dae
-    ent_call $4915
+    ent_call EntClearAttackActive
+    ent_call_bank0 $01, Player_SummonMonster
+    ent_call Player_ClearMoveSub
     ent_load_b8 $ff8b
     ent_test_b8 $30
     ent_jr_free Player_CarryWalk
@@ -378,21 +378,21 @@ Player_LiftCarry:
     ent_set_type $0d
     ent_vel_x_zero
     ent_gfx $09
-    ent_call $4910
+    ent_call Player_ClearActionFlag
     ent_set_timer $07
 .l7411
-    ent_call $48cb
+    ent_call Player_UpdateFacing
     ent_loop_timer .l7411
-    ent_call $4a46
-    ent_call $47ed
+    ent_call Player_BeginAction
+    ent_call Player_LiftThink
     ent_jump Player_CarryStand
 
 Player_ThrowWindup:
     ent_set_type $0e
     ent_vel_x_zero
-    ent_call $4910
+    ent_call Player_ClearActionFlag
     ent_begin_action
-    ent_call $47f4
+    ent_call Player_ThrowWindupThink
 
 Player_CarryStand:
     ent_set_type $0f
@@ -400,17 +400,17 @@ Player_CarryStand:
     ent_gfx $0a
 
 EScript_742f:
-    ent_call $4810
+    ent_call Player_CarryStandThink
     ent_yield
     ent_jump EScript_742f
 
 Player_CarryWalk:
     ent_set_type $10
-    ent_vel_x_indexed $6fd8
+    ent_vel_x_indexed PlayerCarryWalkVel
     ent_gfx $0b
 
 EScript_743d:
-    ent_call $483e
+    ent_call Player_CarryWalkThink
     ent_yield
     ent_jump EScript_743d
 
@@ -418,34 +418,34 @@ Player_ThrowRelease:
     ent_set_type $11
     ent_vel_x_zero
     ent_gfx $0c
-    ent_call $48cb
+    ent_call Player_UpdateFacing
     ent_yield
     ent_set_timer $04
 .l744f
-    ent_call $4868
+    ent_call Player_ThrowReleaseThink
     ent_loop_timer .l744f
-    ent_call $4873
+    ent_call Player_PostThrowSelect
 
 Player_KickRight:
     ent_set_type $12
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_gfx $0a
     ent_set_timer $0a
 .l7461
-    ent_call $48cb
+    ent_call Player_UpdateFacing
     ent_loop_timer .l7461
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_jump EScript_742f
 
 Player_KickCarry:
     ent_set_type $13
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_gfx $0b
     ent_set_timer $0a
 .l7476
-    ent_call $48cb
+    ent_call Player_UpdateFacing
     ent_loop_timer .l7476
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_jump EScript_743d
 
 PlayerHit_Slash:
@@ -454,9 +454,9 @@ PlayerHit_Slash:
     ent_gfx $10
     ent_set_timer $a8
 .l7489
-    ent_call $4f0a
+    ent_call PlayerHit_BeginStun
     ent_loop_timer .l7489
-    ent_call $4a58
+    ent_call RequestFloorExit
 .l7492
     ent_yield
     ent_jump .l7492
@@ -464,7 +464,7 @@ PlayerHit_Slash:
 PlayerHit_Charge:
     ent_set_type $15
     ent_vel_x_zero
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_begin_action
     ent_gfx $11
 .l749f
@@ -474,9 +474,9 @@ PlayerHit_Charge:
     ent_gfx $12
     ent_set_timer $90
 .l74a8
-    ent_call $4f0a
+    ent_call PlayerHit_BeginStun
     ent_loop_timer .l74a8
-    ent_call $4a58
+    ent_call RequestFloorExit
 .l74b1
     ent_yield
     ent_jump .l74b1
@@ -491,7 +491,7 @@ Shard_Tumble:
     ent_gfx $02
 
 EScript_74c1:
-    ent_call $46e2
+    ent_call FacePlayerX
     ent_jr_hit Shard_TumbleAlt
     ent_call $517e
     ent_set_timer $3c
@@ -502,10 +502,10 @@ EScript_74c1:
     ent_jump EScript_74c1
 
 Shard_TumbleAlt:
-    ent_call $5177
+    ent_call Shard_HomeFaceRight
     ent_set_timer $3c
     ent_wait_timer
-    ent_call $518c
+    ent_call Shard_HomeFaceLeft
     ent_set_timer $1e
     ent_wait_timer
     ent_jump EScript_74c1
@@ -517,7 +517,7 @@ Item_Idle:
     ent_set_type $00
     ent_gfx $00
 .l74ea
-    ent_call $57cc
+    ent_call DecYCounter
     ent_yield
     ent_jump .l74ea
 
@@ -545,11 +545,11 @@ Tacopi_StandL:
 
 Tacopi_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l751b
-    ent_call $5a4d
+    ent_call Tacopi_Think
     ent_yield
     ent_jump .l751b
 
@@ -557,7 +557,7 @@ Tacopi_Windup:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $02
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $1e
 .l752c
     ent_update_action
@@ -582,10 +582,10 @@ Tacopi_Spawn:
     ent_vel_x_zero
     ent_gfx $00
     ent_spawn_rel $00, $f8, $09
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_set_timer $0f
     ent_wait_timer
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_gfx $04
     ent_begin_action
 .l755b
@@ -608,7 +608,7 @@ Jell_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7573
-    ent_call $5956
+    ent_call Jell_Think5
     ent_loop_timer .l7573
     ent_jump Jell_Chase
 
@@ -618,17 +618,17 @@ Jell_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7583
-    ent_call $5938
+    ent_call Jell_Think3
     ent_loop_timer .l7583
     ent_set_xflip $ff
 
 Jell_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7594
-    ent_call $5956
+    ent_call Jell_Think5
     ent_yield
     ent_jump .l7594
 
@@ -641,8 +641,8 @@ Jell_AttackR:
     ent_update_action
     ent_jr_busy Jell_Recover
     ent_loop_timer .l75a2
-    ent_call $4461
-    ent_vel_x_indexed $700a
+    ent_call MonsterBreakTileInFront
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_timer $0a
     ent_wait_timer
     ent_jump Jell_Chase
@@ -656,8 +656,8 @@ Jell_AttackL:
     ent_update_action
     ent_jr_busy Jell_Recover
     ent_loop_timer .l75bc
-    ent_call $4461
-    ent_vel_x_indexed $700a
+    ent_call MonsterBreakTileInFront
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_timer $0a
     ent_wait_timer
     ent_set_xflip $ff
@@ -679,10 +679,10 @@ Jell_Spawn:
     ent_vel_x_zero
     ent_gfx $00
     ent_spawn_rel $00, $f8, $09
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_set_timer $0f
     ent_wait_timer
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_gfx $04
     ent_begin_action
 .l75f4
@@ -693,11 +693,11 @@ Jell_Spawn:
 
 Jell_Charge:
     ent_set_type $06
-    ent_vel_x_indexed $700a
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $02
 .l7605
-    ent_call $5984
+    ent_call Jell_Think4
     ent_yield
     ent_jump .l7605
 
@@ -715,7 +715,7 @@ Naga_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l761c
-    ent_call $63e9
+    ent_call Naga_Think4
     ent_loop_timer .l761c
     ent_jump Naga_Chase
 
@@ -725,17 +725,17 @@ Naga_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l762c
-    ent_call $63e9
+    ent_call Naga_Think4
     ent_loop_timer .l762c
     ent_set_xflip $ff
 
 Naga_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l763d
-    ent_call $640f
+    ent_call Naga_Think5
     ent_yield
     ent_jump .l763d
 
@@ -751,11 +751,11 @@ EScript_7646:
     ent_update_action
     ent_jr_busy Naga_Hurt
     ent_loop_timer .l764d
-    ent_call $5382
+    ent_call SpawnProjectile24
     ent_set_timer $09
     ent_wait_timer
-    ent_call $4461
-    ent_call $57b4
+    ent_call MonsterBreakTileInFront
+    ent_call SetTimer120
     ent_jump Naga_Chase
 
 Naga_Hurt:
@@ -774,10 +774,10 @@ Naga_Spawn:
     ent_vel_x_zero
     ent_gfx $00
     ent_spawn_rel $00, $f8, $09
-    ent_call $4a64
+    ent_call EntSetAttackActive
     ent_set_timer $0f
     ent_wait_timer
-    ent_call $4a5e
+    ent_call EntClearAttackActive
     ent_gfx $04
     ent_begin_action
 .l7686
@@ -786,7 +786,7 @@ Naga_Spawn:
     ent_jr_busy .l7686
 
 Naga_FaceFlip:
-    ent_call $46e2
+    ent_call FacePlayerX
     ent_jr_hit EScript_7698
     ent_set_facing $00
     ent_set_xflip $00
@@ -811,7 +811,7 @@ Dino_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l76af
-    ent_call $5a6b
+    ent_call Dino_Think4
     ent_loop_timer .l76af
     ent_jump Dino_Chase
 
@@ -821,17 +821,17 @@ Dino_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l76bf
-    ent_call $5a6b
+    ent_call Dino_Think4
     ent_loop_timer .l76bf
     ent_set_xflip $ff
 
 Dino_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l76d0
-    ent_call $5a91
+    ent_call Dino_Think5
     ent_yield
     ent_jump .l76d0
 
@@ -847,8 +847,8 @@ EScript_76d9:
     ent_update_action
     ent_jr_busy Dino_Hurt
     ent_loop_timer .l76e0
-    ent_call $5376
-    ent_call $4461
+    ent_call SpawnProjectile20
+    ent_call MonsterBreakTileInFront
     ent_set_timer $28
     ent_wait_timer
     ent_set_timer $05
@@ -856,7 +856,7 @@ EScript_76d9:
     ent_update_action
     ent_jr_busy Dino_Hurt
     ent_loop_timer .l76f2
-    ent_call $57b4
+    ent_call SetTimer120
     ent_jump Dino_Chase
 
 Dino_Hurt:
@@ -882,7 +882,7 @@ Plant_StandR:
     ent_set_timer $3c
 
 EScript_771a:
-    ent_call $5b71
+    ent_call Plant_Think
     ent_loop_timer EScript_771a
     ent_jump Plant_Chase
 
@@ -896,17 +896,17 @@ Plant_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l772e
-    ent_call $5b97
+    ent_call Plant_ThinkB
     ent_loop_timer .l772e
     ent_set_xflip $ff
 
 Plant_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l773f
-    ent_call $5bbd
+    ent_call Plant_ThinkC
     ent_yield
     ent_jump .l773f
 
@@ -919,7 +919,7 @@ Plant_Windup:
     ent_update_action
     ent_jr_busy Plant_Hurt
     ent_loop_timer .l774d
-    ent_call $5483
+    ent_call Plant_FireMissile
     ent_set_timer $05
 .l7759
     ent_update_action
@@ -955,10 +955,10 @@ Henger_Windup:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
-    ent_call $5370
+    ent_call Henger_FireShot
     ent_set_timer $21
     ent_wait_timer
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $09
     ent_wait_timer
 
@@ -967,11 +967,11 @@ EScript_7793:
 
 Henger_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l779e
-    ent_call $5ca9
+    ent_call Henger_Think
     ent_yield
     ent_jump .l779e
 
@@ -1004,19 +1004,19 @@ Joker_Windup:
     ent_gfx $03
     ent_set_timer $03
     ent_wait_timer
-    ent_call $537c
+    ent_call Joker_FireShot
     ent_set_timer $09
     ent_wait_timer
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_xflip $ff
 
 Joker_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l77de
-    ent_call $5cb5
+    ent_call Joker_Think
     ent_yield
     ent_jump .l77de
 
@@ -1041,7 +1041,7 @@ Ghost_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l77fe
-    ent_call $5c76
+    ent_call Ghost_ThinkB
     ent_loop_timer .l77fe
     ent_jump Ghost_Chase
 
@@ -1051,16 +1051,16 @@ Ghost_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l780e
-    ent_call $5c76
+    ent_call Ghost_ThinkB
     ent_loop_timer .l780e
     ent_set_xflip $ff
 
 Ghost_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_gfx $02
 .l781d
-    ent_call $5c88
+    ent_call Ghost_Think
     ent_yield
     ent_jump .l781d
 
@@ -1109,7 +1109,7 @@ Puncho_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7863
-    ent_call $5cc1
+    ent_call Puncho_Think
     ent_loop_timer .l7863
     ent_jump Puncho_Chase
 
@@ -1119,17 +1119,17 @@ Puncho_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7873
-    ent_call $5cc1
+    ent_call Puncho_Think
     ent_loop_timer .l7873
     ent_set_xflip $ff
 
 Puncho_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7884
-    ent_call $5cd7
+    ent_call Puncho_ThinkB
     ent_yield
     ent_jump .l7884
 
@@ -1138,7 +1138,7 @@ Puncho_Attack:
     ent_vel_x_zero
     ent_gfx $03
 .l7890
-    ent_call $5cf5
+    ent_call Puncho_ThinkC
     ent_yield
     ent_jump .l7890
 
@@ -1155,11 +1155,11 @@ Puncho_Hurt:
 
 Puncho_Charge:
     ent_set_type $05
-    ent_vel_x_indexed $700a
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $05
 .l78ae
-    ent_call $5d0b
+    ent_call Puncho_ThinkD
     ent_yield
     ent_jump .l78ae
 
@@ -1176,7 +1176,7 @@ Puncho_Special:
     ent_update_action
     ent_yield
     ent_jr_busy .l78c0
-    ent_call $6730
+    ent_call MonsterBreakTileUnder
     ent_begin_action
 .l78c9
     ent_update_action
@@ -1191,14 +1191,14 @@ Puncho_Special:
 
 Psylora_WalkDownA:
     ent_set_type $01
-    ent_vel_x_indexed $701e
-    ent_call $5d21
+    ent_vel_x_indexed PsyloraWalkVel
+    ent_call Psylora_SelectMoveScript
 
 EScript_78df:
     ent_set_facing $00
     ent_gfx $11
 .l78e3
-    ent_call $5d6b
+    ent_call Psylora_MoveDirA
     ent_yield
     ent_jump .l78e3
 
@@ -1206,7 +1206,7 @@ Psylora_WalkDownB:
     ent_set_facing $01
     ent_gfx $12
 .l78ee
-    ent_call $5d89
+    ent_call Psylora_MoveDirB
     ent_yield
     ent_jump .l78ee
 
@@ -1214,7 +1214,7 @@ Psylora_WalkUpA:
     ent_set_facing $00
     ent_gfx $13
 .l78f9
-    ent_call $5d6b
+    ent_call Psylora_MoveDirA
     ent_yield
     ent_jump .l78f9
 
@@ -1222,7 +1222,7 @@ Psylora_WalkUpB:
     ent_set_facing $01
     ent_gfx $14
 .l7904
-    ent_call $5d89
+    ent_call Psylora_MoveDirB
     ent_yield
     ent_jump .l7904
 
@@ -1230,7 +1230,7 @@ Psylora_WalkRightA:
     ent_set_facing $02
     ent_gfx $15
 .l790f
-    ent_call $5da7
+    ent_call Psylora_MoveDirC
     ent_yield
     ent_jump .l790f
 
@@ -1238,7 +1238,7 @@ Psylora_WalkLeftA:
     ent_set_facing $03
     ent_gfx $16
 .l791a
-    ent_call $5dc5
+    ent_call Psylora_MoveDirD
     ent_yield
     ent_jump .l791a
 
@@ -1246,7 +1246,7 @@ Psylora_WalkRightB:
     ent_set_facing $02
     ent_gfx $17
 .l7925
-    ent_call $5da7
+    ent_call Psylora_MoveDirC
     ent_yield
     ent_jump .l7925
 
@@ -1254,7 +1254,7 @@ Psylora_WalkLeftB:
     ent_set_facing $03
     ent_gfx $18
 .l7930
-    ent_call $5dc5
+    ent_call Psylora_MoveDirD
     ent_yield
     ent_jump .l7930
 
@@ -1323,15 +1323,15 @@ FX_Despawn_Gfx8:
     ent_despawn
 
 Ducken_Init:
-    ent_call $6381
+    ent_call Ducken_AimVertical
 
 Ducken_AimR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
-    ent_call $5447
+    ent_call SetProjectileSpeed
 .l798a
-    ent_call $636b
+    ent_call Ducken_FireTimerProbe
     ent_jr_b8_eq $01, Ducken_FireR
     ent_yield
     ent_jump .l798a
@@ -1340,9 +1340,9 @@ Ducken_AimL:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $02
-    ent_call $5447
+    ent_call SetProjectileSpeed
 .l799d
-    ent_call $636b
+    ent_call Ducken_FireTimerProbe
     ent_jr_b8_eq $01, Ducken_FireL
     ent_yield
     ent_jump .l799d
@@ -1353,7 +1353,7 @@ Ducken_FireR:
     ent_gfx $03
     ent_set_timer $1e
     ent_wait_timer
-    ent_call $53d9
+    ent_call Ducken_FireMissileA
     ent_set_timer $03
     ent_wait_timer
     ent_jump Ducken_AimR
@@ -1364,13 +1364,13 @@ Ducken_FireL:
     ent_gfx $04
     ent_set_timer $1e
     ent_wait_timer
-    ent_call $540f
+    ent_call Ducken_FireMissileB
     ent_set_timer $03
     ent_wait_timer
     ent_jump Ducken_AimL
 
 Ducken_Die:
-    ent_call $63ab
+    ent_call Ducken_AimHorizontal
 
 EScript_79cd:
     ent_set_type $ff
@@ -1502,17 +1502,17 @@ Mob12_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7a74
-    ent_call $6503
+    ent_call Mob12_Think
     ent_loop_timer .l7a74
     ent_set_xflip $ff
 
 Mob12_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7a85
-    ent_call $6529
+    ent_call Mob12_ThinkProbe
     ent_yield
     ent_jump .l7a85
 
@@ -1525,7 +1525,7 @@ Mob12_Windup:
     ent_update_action
     ent_jr_busy Mob12_Hurt
     ent_loop_timer .l7a93
-    ent_call $546c
+    ent_call Mob12_FireMissile
     ent_set_timer $05
 .l7a9f
     ent_update_action
@@ -1558,7 +1558,7 @@ Mob13_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7acc
-    ent_call $65dc
+    ent_call Mob13_Think
     ent_loop_timer .l7acc
     ent_jump Mob13_Chase
 
@@ -1568,17 +1568,17 @@ Mob13_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7adc
-    ent_call $65dc
+    ent_call Mob13_Think
     ent_loop_timer .l7adc
     ent_set_xflip $ff
 
 Mob13_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7aed
-    ent_call $65f2
+    ent_call Mob13_ThinkB
     ent_yield
     ent_jump .l7aed
 
@@ -1587,7 +1587,7 @@ Mob13_Attack:
     ent_vel_x_zero
     ent_gfx $03
 .l7af9
-    ent_call $6610
+    ent_call Mob13_ThinkC
     ent_yield
     ent_jump .l7af9
 
@@ -1604,11 +1604,11 @@ Mob13_Hurt:
 
 Mob13_Charge:
     ent_set_type $05
-    ent_vel_x_indexed $700a
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $05
 .l7b17
-    ent_call $6626
+    ent_call Mob13_ThinkD
     ent_yield
     ent_jump .l7b17
 
@@ -1625,7 +1625,7 @@ Mob13_Special:
     ent_update_action
     ent_yield
     ent_jr_busy .l7b29
-    ent_call $6730
+    ent_call MonsterBreakTileUnder
     ent_begin_action
 .l7b32
     ent_update_action
@@ -1647,7 +1647,7 @@ Mob14_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7b4f
-    ent_call $68c7
+    ent_call Mob14_Think5
     ent_loop_timer .l7b4f
     ent_jump Mob14_Chase
 
@@ -1657,17 +1657,17 @@ Mob14_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7b5f
-    ent_call $68a9
+    ent_call Mob14_Think3
     ent_loop_timer .l7b5f
     ent_set_xflip $ff
 
 Mob14_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7b70
-    ent_call $68c7
+    ent_call Mob14_Think5
     ent_yield
     ent_jump .l7b70
 
@@ -1680,7 +1680,7 @@ Mob14_WindupR:
     ent_update_action
     ent_jr_busy Mob14_Hurt
     ent_loop_timer .l7b7e
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $05
     ent_wait_timer
     ent_jump Mob14_Chase
@@ -1694,7 +1694,7 @@ Mob14_WindupL:
     ent_update_action
     ent_jr_busy Mob14_Hurt
     ent_loop_timer .l7b95
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $05
     ent_wait_timer
     ent_set_xflip $ff
@@ -1713,11 +1713,11 @@ Mob14_Hurt:
 
 Mob14_Charge:
     ent_set_type $06
-    ent_vel_x_indexed $700a
+    ent_vel_x_indexed MonsterChargeVel
     ent_set_facing $fe
     ent_gfx $02
 .l7bbe
-    ent_call $68f5
+    ent_call Mob14_ThinkB
     ent_yield
     ent_jump .l7bbe
 
@@ -1744,21 +1744,21 @@ Mob15_Windup:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
-    ent_call $5388
+    ent_call Mob15_FireShot
     ent_set_timer $09
     ent_wait_timer
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $0f
     ent_wait_timer
     ent_set_xflip $ff
 
 Mob15_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7bfd
-    ent_call $529a
+    ent_call ProbeFrontTile
     ent_jr_b8_eq $03, Mob15_Windup
     ent_yield
     ent_jump .l7bfd
@@ -1786,7 +1786,7 @@ Mob16_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7c28
-    ent_call $6855
+    ent_call Mob16_Think5
     ent_loop_timer .l7c28
     ent_jump Mob16_Chase
 
@@ -1796,17 +1796,17 @@ Mob16_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7c38
-    ent_call $6837
+    ent_call Mob16_Think3
     ent_loop_timer .l7c38
     ent_set_xflip $ff
 
 Mob16_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $6fec
+    ent_vel_x_indexed Mob16WalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7c49
-    ent_call $6855
+    ent_call Mob16_Think5
     ent_yield
     ent_jump .l7c49
 
@@ -1819,7 +1819,7 @@ Mob16_WindupR:
     ent_update_action
     ent_jr_busy Mob16_Hurt
     ent_loop_timer .l7c57
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $08
     ent_wait_timer
     ent_jump Mob16_Chase
@@ -1833,7 +1833,7 @@ Mob16_WindupL:
     ent_update_action
     ent_jr_busy Mob16_Hurt
     ent_loop_timer .l7c6e
-    ent_call $4461
+    ent_call MonsterBreakTileInFront
     ent_set_timer $08
     ent_wait_timer
     ent_set_xflip $ff
@@ -1852,11 +1852,11 @@ Mob16_Hurt:
 
 Mob16_Charge:
     ent_set_type $06
-    ent_vel_x_indexed $6ff6
+    ent_vel_x_indexed Mob16ChargeVel
     ent_set_facing $fe
     ent_gfx $02
 .l7c97
-    ent_call $6883
+    ent_call Mob16_ThinkB
     ent_yield
     ent_jump .l7c97
 
@@ -1877,7 +1877,7 @@ Mob17_StandR:
     ent_gfx $01
     ent_set_timer $3c
 .l7cb6
-    ent_call $6749
+    ent_call Mob17_Think4
     ent_loop_timer .l7cb6
     ent_jump Mob17_Chase
 
@@ -1887,17 +1887,17 @@ Mob17_StandL:
     ent_gfx $01
     ent_set_timer $3c
 .l7cc6
-    ent_call $6749
+    ent_call Mob17_Think4
     ent_loop_timer .l7cc6
     ent_set_xflip $ff
 
 Mob17_Chase:
     ent_set_type $02
-    ent_vel_x_indexed $7000
+    ent_vel_x_indexed MonsterWalkVel
     ent_set_facing $fe
     ent_gfx $02
 .l7cd7
-    ent_call $676f
+    ent_call Mob17_Think5
     ent_yield
     ent_jump .l7cd7
 
@@ -1913,8 +1913,8 @@ EScript_7ce0:
     ent_update_action
     ent_jr_busy Mob17_HurtFlip
     ent_loop_timer .l7ce7
-    ent_call $538e
-    ent_call $4461
+    ent_call SpawnProjectile21
+    ent_call MonsterBreakTileInFront
     ent_set_timer $28
     ent_wait_timer
     ent_set_timer $05
@@ -1922,7 +1922,7 @@ EScript_7ce0:
     ent_update_action
     ent_jr_busy Mob17_HurtFlip
     ent_loop_timer .l7cf9
-    ent_call $57b4
+    ent_call SetTimer120
     ent_jump Mob17_Chase
 
 Mob17_HurtFlip:
@@ -1934,7 +1934,7 @@ Mob17_HurtFlip:
     ent_update_action
     ent_yield
     ent_jr_busy .l7d0c
-    ent_call $46e2
+    ent_call FacePlayerX
     ent_jr_hit EScript_7d1e
     ent_set_facing $00
     ent_set_xflip $00
