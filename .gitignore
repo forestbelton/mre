@@ -1,8 +1,6 @@
 rom.gbc
 *.sav
-src/*.bin
-src/data/
-src/raw_gfx/
+src/raw_gfx/*.2bpp
 assets/*/preview.png
 build/
 tools/analyzer/analyzer
