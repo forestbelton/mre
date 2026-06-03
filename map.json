@@ -21,7 +21,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"item_data.asm",
+			"name":	"item.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	20834,
@@ -38,11 +38,7 @@
 					"type":	"data",
 					"addr":	21050,
 					"len":	72
-				}]
-		}, {
-			"type":	"code",
-			"name":	"item_effects.asm",
-			"sections":	[{
+				}, {
 					"type":	"code",
 					"addr":	21122,
 					"len":	590,
@@ -174,7 +170,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"nada_intro.asm",
+			"name":	"gfx/portrait/nada.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	458752,
@@ -194,6 +190,22 @@
 				}, {
 					"type":	"data",
 					"addr":	471394,
+					"len":	220
+				}, {
+					"type":	"data",
+					"addr":	517639,
+					"len":	6144
+				}, {
+					"type":	"data",
+					"addr":	523783,
+					"len":	6
+				}, {
+					"type":	"data",
+					"addr":	523789,
+					"len":	220
+				}, {
+					"type":	"data",
+					"addr":	524009,
 					"len":	220
 				}]
 		}, {
@@ -216,29 +228,10 @@
 					"addr":	498018,
 					"len":	220
 				}]
+
 		}, {
 			"type":	"code",
-			"name":	"nada_scene2.asm",
-			"sections":	[{
-					"type":	"data",
-					"addr":	517639,
-					"len":	6144
-				}, {
-					"type":	"data",
-					"addr":	523783,
-					"len":	6
-				}, {
-					"type":	"data",
-					"addr":	523789,
-					"len":	220
-				}, {
-					"type":	"data",
-					"addr":	524009,
-					"len":	220
-				}]
-		}, {
-			"type":	"code",
-			"name":	"town_screen.asm",
+			"name":	"gfx/screen/town.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	524288,
@@ -262,7 +255,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"tower_entrance.asm",
+			"name":	"gfx/screen/tower.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	557056,
@@ -286,7 +279,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room_start.asm",
+			"name":	"gfx/screen/room_start.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	573440,
@@ -310,7 +303,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"room_clear.asm",
+			"name":	"gfx/screen/room_done.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	540672,
@@ -334,7 +327,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"tower_entrance_open.asm",
+			"name":	"gfx/screen/tower_open.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	622592,
@@ -358,7 +351,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"title_screen.asm",
+			"name":	"gfx/screen/title.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	655360,
@@ -527,7 +520,7 @@
 				}]
 		}, {
 			"type":	"code",
-			"name":	"tecmo_logo.asm",
+			"name":	"gfx/logo.asm",
 			"sections":	[{
 					"type":	"data",
 					"addr":	643072,
@@ -548,7 +541,11 @@
 					"type":	"data",
 					"addr":	645494,
 					"len":	360
-				}, {
+				}]
+		}, {
+			"type":	"code",
+			"name":	"logo.asm",
+			"sections":	[{
 					"type":	"code",
 					"addr":	791576,
 					"len":	103
