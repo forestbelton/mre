@@ -149,10 +149,35 @@ Mob1_Windup:
     ent_jump        Mob1_Chase
 ```
 
-Naming: the **player** avatar is fully resolved; **monster** groups (`MobN`)
-carry high-confidence roles (Stand/Chase/Windup/Hurt/Charge/Die) but their
-species is numbered — the monster-id → entity-type → script mapping lives in the
-bank-`$01`/`$04` `SpawnEntity` template tables, not this bank, so resolving real
-species names is the natural next step. The selectors in `room.asm` still load a
-script by raw address (`ld de, $7xxx`); the matching label is in
-`entity_scripts.asm`.
+The selectors in `room.asm` still load a script by raw address (`ld de, $7xxx`);
+the matching label is in `entity_scripts.asm`.
+
+### Resolving monster species
+
+A freshly-spawned entity's initial script is looked up by type in
+`MonsterSpawnScriptTable` (`Data_01_79c4`, bank `$01`): a 26-entry table of
+script pointers. The first 4 slots are warp/door FX; from slot 4 the entries are
+the editor-placeable monsters, in `room.inc`'s `enum MONSTER` order — i.e.
+**table index = species id + 4**. `SpawnFloorMonsters` (`layout.asm`) reads the
+floor's `arr1[gfxIndex]` species id and spawns through it.
+
+The species→group mapping is confirmed by two unambiguous behaviour matches from
+the level-editor legend (`data_05d278.bin`): **Ducken** ("sticks to wall, fires
+missiles") is the stationary turret group, and **Psylora** ("moves along wall")
+is the 8-direction walker — both land exactly where index = id + 4 predicts,
+with the flyers (Henger/Joker/Ghost) and shooters (Plant/Dino) corroborating.
+
+| id | species | group entry | | id | species | group entry |
+|----|---------|-------------|-|----|---------|-------------|
+| 0 | Tacopi | `$74f1` | | 7 | Ghost | `$77f7` |
+| 1 | Jell | `$756c` | | 8 | Puncho | `$785c` |
+| 2 | Naga | `$7615` | | 9 | Psylora | `$78d7` |
+| 3 | Dino | `$76a8` | | 10 | Ducken | `$797f` |
+| 4 | Plant | `$7713` | | 11 | FlameRed | `$79df` |
+| 5 | Henger | `$7777` | | 12 | FlameBlue | `$7a1f` |
+| 6 | Joker | `$77b7` | | | | |
+
+So each monster's scripts are named `<Species>_<Role>` (e.g. `Ducken_FireR`,
+`Naga_Windup`). Table slots 16–21 (`Mob12`–`Mob17`) are non-editor entity types
+(bonus-stage / internal) with no legend names, so they keep numbered prefixes.
+The player avatar is fully resolved (walk/push/pull/grab/carry/throw/kick).

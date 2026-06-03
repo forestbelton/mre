@@ -141,8 +141,10 @@ carry curated names. The full VM dispatcher is now decoded: `EntityOpcodeTable`
 plus all 34 `EntityOp_*` handlers, and the entire script bytecode
 ([`entity_scripts.md`](entity_scripts.md)). The remainder of the bank keeps
 auto-generated `Func_03_xxxx` / `Data_03_xxxx` names — deliberately, rather than
-inventing speculative ones. Good next targets for decoding: the per-state native
-helpers the scripts `ent_call` (the `Func_03_5xxx`–`Func_03_6xxx` selectors and
-locomotion), the `SpawnEntity` per-type template tables (in banks `$01`/`$04`),
-and re-carving the script bytecode itself with per-opcode macros (so the scripts
-read and edit as source, not `db` bytes).
+inventing speculative ones. The script bytecode is fully carved and the monster
+**species** are resolved (`MonsterSpawnScriptTable` → `room.inc` `enum MONSTER` →
+the editor legend); see [`entity_scripts.md`](entity_scripts.md). Good next
+targets: the per-state native helpers the scripts `ent_call` (the
+`Func_03_5xxx`–`Func_03_6xxx` probes and the 8-direction locomotion core), and
+naming the non-editor entity types (`Mob12`–`Mob17`, table slots 16–21 — likely
+bonus-stage monsters).

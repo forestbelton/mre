@@ -17823,103 +17823,103 @@
 			"name":	"Item_Idle"
 		}, {
 			"addr":	62705,
-			"name":	"Mob1_StandR"
+			"name":	"Tacopi_StandR"
 		}, {
 			"addr":	62722,
-			"name":	"Mob1_StandL"
+			"name":	"Tacopi_StandL"
 		}, {
 			"addr":	62738,
-			"name":	"Mob1_Chase"
+			"name":	"Tacopi_Chase"
 		}, {
 			"addr":	62754,
-			"name":	"Mob1_Windup"
+			"name":	"Tacopi_Windup"
 		}, {
 			"addr":	62776,
-			"name":	"Mob1_Hurt"
+			"name":	"Tacopi_Hurt"
 		}, {
 			"addr":	62790,
-			"name":	"Mob1_Spawn"
+			"name":	"Tacopi_Spawn"
 		}, {
 			"addr":	62819,
-			"name":	"Mob1_Die"
+			"name":	"Tacopi_Die"
 		}, {
 			"addr":	62828,
-			"name":	"EScript_756c"
+			"name":	"Jell_StandR"
 		}, {
 			"addr":	62844,
-			"name":	"Mob1_StandL2"
+			"name":	"Jell_StandL"
 		}, {
 			"addr":	62859,
-			"name":	"Mob1_Chase2"
+			"name":	"Jell_Chase"
 		}, {
 			"addr":	62875,
-			"name":	"Mob1_AttackR"
+			"name":	"Jell_AttackR"
 		}, {
 			"addr":	62901,
-			"name":	"Mob1_AttackL"
+			"name":	"Jell_AttackL"
 		}, {
 			"addr":	62929,
-			"name":	"Mob1_Recover"
+			"name":	"Jell_Recover"
 		}, {
 			"addr":	62943,
-			"name":	"Mob1_SpawnAlt"
+			"name":	"Jell_Spawn"
 		}, {
 			"addr":	62972,
-			"name":	"Mob1_Charge"
+			"name":	"Jell_Charge"
 		}, {
 			"addr":	62988,
-			"name":	"Mob1_Die2"
+			"name":	"Jell_Die"
 		}, {
 			"addr":	62997,
-			"name":	"Mob3_StandR"
+			"name":	"Naga_StandR"
 		}, {
 			"addr":	63013,
-			"name":	"Mob3_StandL"
+			"name":	"Naga_StandL"
 		}, {
 			"addr":	63028,
-			"name":	"Mob3_Chase"
+			"name":	"Naga_Chase"
 		}, {
 			"addr":	63044,
-			"name":	"Mob3_Windup"
+			"name":	"Naga_Windup"
 		}, {
 			"addr":	63046,
 			"name":	"EScript_7646"
 		}, {
 			"addr":	63075,
-			"name":	"Mob3_Hurt"
+			"name":	"Naga_Hurt"
 		}, {
 			"addr":	63089,
-			"name":	"Mob3_Spawn"
+			"name":	"Naga_Spawn"
 		}, {
 			"addr":	63115,
-			"name":	"Mob3_FaceFlip"
+			"name":	"Naga_FaceFlip"
 		}, {
 			"addr":	63128,
 			"name":	"EScript_7698"
 		}, {
 			"addr":	63135,
-			"name":	"Mob3_Die"
+			"name":	"Naga_Die"
 		}, {
 			"addr":	63144,
-			"name":	"Mob4_StandR"
+			"name":	"Dino_StandR"
 		}, {
 			"addr":	63160,
-			"name":	"Mob4_StandL"
+			"name":	"Dino_StandL"
 		}, {
 			"addr":	63175,
-			"name":	"Mob4_Chase"
+			"name":	"Dino_Chase"
 		}, {
 			"addr":	63191,
-			"name":	"Mob4_Windup"
+			"name":	"Dino_Windup"
 		}, {
 			"addr":	63193,
 			"name":	"EScript_76d9"
 		}, {
 			"addr":	63231,
-			"name":	"Mob4_Hurt"
+			"name":	"Dino_Hurt"
 		}, {
 			"addr":	63251,
-			"name":	"Mob5_StandR"
+			"name":	"Plant_StandR"
 		}, {
 			"addr":	63258,
 			"name":	"EScript_771a"
@@ -17928,112 +17928,112 @@
 			"name":	"EScript_7723"
 		}, {
 			"addr":	63271,
-			"name":	"Mob5_StandL"
+			"name":	"Plant_StandL"
 		}, {
 			"addr":	63286,
-			"name":	"Mob5_Chase"
+			"name":	"Plant_Chase"
 		}, {
 			"addr":	63302,
-			"name":	"Mob5_Windup"
+			"name":	"Plant_Windup"
 		}, {
 			"addr":	63331,
-			"name":	"Mob5_Hurt"
+			"name":	"Plant_Hurt"
 		}, {
 			"addr":	63351,
-			"name":	"Mob6_StandR"
+			"name":	"Henger_StandR"
 		}, {
 			"addr":	63362,
-			"name":	"Mob6_Windup"
+			"name":	"Henger_Windup"
 		}, {
 			"addr":	63379,
 			"name":	"EScript_7793"
 		}, {
 			"addr":	63381,
-			"name":	"Mob6_Chase"
+			"name":	"Henger_Chase"
 		}, {
 			"addr":	63397,
-			"name":	"Mob6_Die"
+			"name":	"Henger_Die"
 		}, {
 			"addr":	63415,
-			"name":	"Mob7_StandR"
+			"name":	"Joker_StandR"
 		}, {
 			"addr":	63426,
-			"name":	"Mob7_Windup"
+			"name":	"Joker_Windup"
 		}, {
 			"addr":	63445,
-			"name":	"Mob7_Chase"
+			"name":	"Joker_Chase"
 		}, {
 			"addr":	63461,
-			"name":	"Mob7_Die"
+			"name":	"Joker_Die"
 		}, {
 			"addr":	63479,
-			"name":	"Mob8_StandR"
+			"name":	"Ghost_StandR"
 		}, {
 			"addr":	63495,
-			"name":	"Mob8_StandL"
+			"name":	"Ghost_StandL"
 		}, {
 			"addr":	63510,
-			"name":	"Mob8_Chase"
+			"name":	"Ghost_Chase"
 		}, {
 			"addr":	63524,
-			"name":	"Mob8_AttackA"
+			"name":	"Ghost_AttackA"
 		}, {
 			"addr":	63543,
-			"name":	"Mob8_AttackB"
+			"name":	"Ghost_AttackB"
 		}, {
 			"addr":	63562,
-			"name":	"Mob8_Die"
+			"name":	"Ghost_Die"
 		}, {
 			"addr":	63580,
-			"name":	"Mob9_StandR"
+			"name":	"Puncho_StandR"
 		}, {
 			"addr":	63596,
-			"name":	"Mob9_StandL"
+			"name":	"Puncho_StandL"
 		}, {
 			"addr":	63611,
-			"name":	"Mob9_Chase"
+			"name":	"Puncho_Chase"
 		}, {
 			"addr":	63627,
-			"name":	"Mob9_Attack"
+			"name":	"Puncho_Attack"
 		}, {
 			"addr":	63639,
-			"name":	"Mob9_Hurt"
+			"name":	"Puncho_Hurt"
 		}, {
 			"addr":	63653,
-			"name":	"Mob9_Charge"
+			"name":	"Puncho_Charge"
 		}, {
 			"addr":	63669,
 			"name":	"EScript_78b5"
 		}, {
 			"addr":	63674,
-			"name":	"Mob9_Special"
+			"name":	"Puncho_Special"
 		}, {
 			"addr":	63703,
-			"name":	"Boss_WalkDownA"
+			"name":	"Psylora_WalkDownA"
 		}, {
 			"addr":	63711,
 			"name":	"EScript_78df"
 		}, {
 			"addr":	63722,
-			"name":	"Boss_WalkDownB"
+			"name":	"Psylora_WalkDownB"
 		}, {
 			"addr":	63733,
-			"name":	"Boss_WalkUpA"
+			"name":	"Psylora_WalkUpA"
 		}, {
 			"addr":	63744,
-			"name":	"Boss_WalkUpB"
+			"name":	"Psylora_WalkUpB"
 		}, {
 			"addr":	63755,
-			"name":	"Boss_WalkRightA"
+			"name":	"Psylora_WalkRightA"
 		}, {
 			"addr":	63766,
-			"name":	"Boss_WalkLeftA"
+			"name":	"Psylora_WalkLeftA"
 		}, {
 			"addr":	63777,
-			"name":	"Boss_WalkRightB"
+			"name":	"Psylora_WalkRightB"
 		}, {
 			"addr":	63788,
-			"name":	"Boss_WalkLeftB"
+			"name":	"Psylora_WalkLeftB"
 		}, {
 			"addr":	63799,
 			"name":	"FX_Despawn_Gfx1"
@@ -18060,46 +18060,46 @@
 			"name":	"FX_Despawn_Gfx8"
 		}, {
 			"addr":	63871,
-			"name":	"Mob10_Init"
+			"name":	"Ducken_Init"
 		}, {
 			"addr":	63874,
-			"name":	"Mob10_AimR"
+			"name":	"Ducken_AimR"
 		}, {
 			"addr":	63893,
-			"name":	"Mob10_AimL"
+			"name":	"Ducken_AimL"
 		}, {
 			"addr":	63912,
-			"name":	"Mob10_FireR"
+			"name":	"Ducken_FireR"
 		}, {
 			"addr":	63929,
-			"name":	"Mob10_FireL"
+			"name":	"Ducken_FireL"
 		}, {
 			"addr":	63946,
-			"name":	"Mob10_Die"
+			"name":	"Ducken_Die"
 		}, {
 			"addr":	63949,
 			"name":	"EScript_79cd"
 		}, {
 			"addr":	63958,
-			"name":	"Mob10_DieAlt"
+			"name":	"Ducken_DieAlt"
 		}, {
 			"addr":	63967,
-			"name":	"Mob11_Hidden"
+			"name":	"FlameRed_Hidden"
 		}, {
 			"addr":	63980,
-			"name":	"Mob11_Surface"
+			"name":	"FlameRed_Surface"
 		}, {
 			"addr":	63997,
-			"name":	"Mob11_Emerge"
+			"name":	"FlameRed_Emerge"
 		}, {
 			"addr":	64011,
 			"name":	"EScript_7a0b"
 		}, {
 			"addr":	64022,
-			"name":	"Mob11_Die"
+			"name":	"FlameRed_Die"
 		}, {
 			"addr":	64031,
-			"name":	"EScript_7a1f"
+			"name":	"FlameBlue_Hidden"
 		}, {
 			"addr":	64044,
 			"name":	"EScript_7a2c"
@@ -18235,6 +18235,9 @@
 		}, {
 			"addr":	64798,
 			"name":	"EScript_7d1e"
+		}, {
+			"addr":	31172,
+			"name":	"MonsterSpawnScriptTable"
 		}],
 	"conflicts":	[{
 			"addr":	0,

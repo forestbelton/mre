@@ -485,29 +485,29 @@ Item_Idle:
     ent_yield
     ent_jump .l74ea
 
-Mob1_StandR:
+Tacopi_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $02
     ent_set_timer $3c
 .l74f8
     ent_update_action
-    ent_jr_busy Mob1_Hurt
+    ent_jr_busy Tacopi_Hurt
     ent_loop_timer .l74f8
-    ent_jump Mob1_Chase
+    ent_jump Tacopi_Chase
 
-Mob1_StandL:
+Tacopi_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $02
     ent_set_timer $3c
 .l7509
     ent_update_action
-    ent_jr_busy Mob1_Hurt
+    ent_jr_busy Tacopi_Hurt
     ent_loop_timer .l7509
     ent_set_xflip $ff
 
-Mob1_Chase:
+Tacopi_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -517,7 +517,7 @@ Mob1_Chase:
     ent_yield
     ent_jump .l751b
 
-Mob1_Windup:
+Tacopi_Windup:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $02
@@ -525,12 +525,12 @@ Mob1_Windup:
     ent_set_timer $1e
 .l752c
     ent_update_action
-    ent_jr_busy Mob1_Hurt
+    ent_jr_busy Tacopi_Hurt
     ent_loop_timer .l752c
     ent_set_xflip $ff
-    ent_jump Mob1_Chase
+    ent_jump Tacopi_Chase
 
-Mob1_Hurt:
+Tacopi_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -539,9 +539,9 @@ Mob1_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l753e
-    ent_jump Mob1_Chase
+    ent_jump Tacopi_Chase
 
-Mob1_Spawn:
+Tacopi_Spawn:
     ent_set_type $05
     ent_vel_x_zero
     ent_gfx $00
@@ -556,9 +556,9 @@ Mob1_Spawn:
     ent_update_action
     ent_yield
     ent_jr_busy .l755b
-    ent_jump Mob1_Chase
+    ent_jump Tacopi_Chase
 
-Mob1_Die:
+Tacopi_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -566,7 +566,7 @@ Mob1_Die:
     ent_wait_timer
     ent_despawn
 
-EScript_756c:
+Jell_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -574,9 +574,9 @@ EScript_756c:
 .l7573
     ent_call $5956
     ent_loop_timer .l7573
-    ent_jump Mob1_Chase2
+    ent_jump Jell_Chase
 
-Mob1_StandL2:
+Jell_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -586,7 +586,7 @@ Mob1_StandL2:
     ent_loop_timer .l7583
     ent_set_xflip $ff
 
-Mob1_Chase2:
+Jell_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -596,38 +596,38 @@ Mob1_Chase2:
     ent_yield
     ent_jump .l7594
 
-Mob1_AttackR:
+Jell_AttackR:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l75a2
     ent_update_action
-    ent_jr_busy Mob1_Recover
+    ent_jr_busy Jell_Recover
     ent_loop_timer .l75a2
     ent_call $4461
     ent_vel_x_indexed $700a
     ent_set_timer $0a
     ent_wait_timer
-    ent_jump Mob1_Chase2
+    ent_jump Jell_Chase
 
-Mob1_AttackL:
+Jell_AttackL:
     ent_set_type $07
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $1e
 .l75bc
     ent_update_action
-    ent_jr_busy Mob1_Recover
+    ent_jr_busy Jell_Recover
     ent_loop_timer .l75bc
     ent_call $4461
     ent_vel_x_indexed $700a
     ent_set_timer $0a
     ent_wait_timer
     ent_set_xflip $ff
-    ent_jump Mob1_Chase2
+    ent_jump Jell_Chase
 
-Mob1_Recover:
+Jell_Recover:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -636,9 +636,9 @@ Mob1_Recover:
     ent_update_action
     ent_yield
     ent_jr_busy .l75d7
-    ent_jump Mob1_Die2
+    ent_jump Jell_Die
 
-Mob1_SpawnAlt:
+Jell_Spawn:
     ent_set_type $05
     ent_vel_x_zero
     ent_gfx $00
@@ -653,9 +653,9 @@ Mob1_SpawnAlt:
     ent_update_action
     ent_yield
     ent_jr_busy .l75f4
-    ent_jump Mob1_Chase2
+    ent_jump Jell_Chase
 
-Mob1_Charge:
+Jell_Charge:
     ent_set_type $06
     ent_vel_x_indexed $700a
     ent_set_facing $fe
@@ -665,7 +665,7 @@ Mob1_Charge:
     ent_yield
     ent_jump .l7605
 
-Mob1_Die2:
+Jell_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -673,7 +673,7 @@ Mob1_Die2:
     ent_wait_timer
     ent_despawn
 
-Mob3_StandR:
+Naga_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -681,9 +681,9 @@ Mob3_StandR:
 .l761c
     ent_call $63e9
     ent_loop_timer .l761c
-    ent_jump Mob3_Chase
+    ent_jump Naga_Chase
 
-Mob3_StandL:
+Naga_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -693,7 +693,7 @@ Mob3_StandL:
     ent_loop_timer .l762c
     ent_set_xflip $ff
 
-Mob3_Chase:
+Naga_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -703,7 +703,7 @@ Mob3_Chase:
     ent_yield
     ent_jump .l763d
 
-Mob3_Windup:
+Naga_Windup:
     ent_set_xflip $ff
 
 EScript_7646:
@@ -713,16 +713,16 @@ EScript_7646:
     ent_set_timer $1e
 .l764d
     ent_update_action
-    ent_jr_busy Mob3_Hurt
+    ent_jr_busy Naga_Hurt
     ent_loop_timer .l764d
     ent_call $5382
     ent_set_timer $09
     ent_wait_timer
     ent_call $4461
     ent_call $57b4
-    ent_jump Mob3_Chase
+    ent_jump Naga_Chase
 
-Mob3_Hurt:
+Naga_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -731,9 +731,9 @@ Mob3_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l7669
-    ent_jump Mob3_FaceFlip
+    ent_jump Naga_FaceFlip
 
-Mob3_Spawn:
+Naga_Spawn:
     ent_set_type $05
     ent_vel_x_zero
     ent_gfx $00
@@ -749,19 +749,19 @@ Mob3_Spawn:
     ent_yield
     ent_jr_busy .l7686
 
-Mob3_FaceFlip:
+Naga_FaceFlip:
     ent_call $46e2
     ent_jr_hit EScript_7698
     ent_set_facing $00
     ent_set_xflip $00
-    ent_jump Mob3_Chase
+    ent_jump Naga_Chase
 
 EScript_7698:
     ent_set_facing $01
     ent_set_xflip $01
-    ent_jump Mob3_Chase
+    ent_jump Naga_Chase
 
-Mob3_Die:
+Naga_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -769,7 +769,7 @@ Mob3_Die:
     ent_wait_timer
     ent_despawn
 
-Mob4_StandR:
+Dino_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -777,9 +777,9 @@ Mob4_StandR:
 .l76af
     ent_call $5a6b
     ent_loop_timer .l76af
-    ent_jump Mob4_Chase
+    ent_jump Dino_Chase
 
-Mob4_StandL:
+Dino_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -789,7 +789,7 @@ Mob4_StandL:
     ent_loop_timer .l76bf
     ent_set_xflip $ff
 
-Mob4_Chase:
+Dino_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -799,7 +799,7 @@ Mob4_Chase:
     ent_yield
     ent_jump .l76d0
 
-Mob4_Windup:
+Dino_Windup:
     ent_set_xflip $ff
 
 EScript_76d9:
@@ -809,7 +809,7 @@ EScript_76d9:
     ent_set_timer $1e
 .l76e0
     ent_update_action
-    ent_jr_busy Mob4_Hurt
+    ent_jr_busy Dino_Hurt
     ent_loop_timer .l76e0
     ent_call $5376
     ent_call $4461
@@ -818,12 +818,12 @@ EScript_76d9:
     ent_set_timer $05
 .l76f2
     ent_update_action
-    ent_jr_busy Mob4_Hurt
+    ent_jr_busy Dino_Hurt
     ent_loop_timer .l76f2
     ent_call $57b4
-    ent_jump Mob4_Chase
+    ent_jump Dino_Chase
 
-Mob4_Hurt:
+Dino_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -839,7 +839,7 @@ Mob4_Hurt:
     ent_wait_timer
     ent_despawn
 
-Mob5_StandR:
+Plant_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -848,13 +848,13 @@ Mob5_StandR:
 EScript_771a:
     ent_call $5b71
     ent_loop_timer EScript_771a
-    ent_jump Mob5_Chase
+    ent_jump Plant_Chase
 
 EScript_7723:
     ent_yield
     ent_jump EScript_771a
 
-Mob5_StandL:
+Plant_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -864,7 +864,7 @@ Mob5_StandL:
     ent_loop_timer .l772e
     ent_set_xflip $ff
 
-Mob5_Chase:
+Plant_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -874,24 +874,24 @@ Mob5_Chase:
     ent_yield
     ent_jump .l773f
 
-Mob5_Windup:
+Plant_Windup:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $3c
 .l774d
     ent_update_action
-    ent_jr_busy Mob5_Hurt
+    ent_jr_busy Plant_Hurt
     ent_loop_timer .l774d
     ent_call $5483
     ent_set_timer $05
 .l7759
     ent_update_action
-    ent_jr_busy Mob5_Hurt
+    ent_jr_busy Plant_Hurt
     ent_loop_timer .l7759
-    ent_jump Mob5_Chase
+    ent_jump Plant_Chase
 
-Mob5_Hurt:
+Plant_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -907,15 +907,15 @@ Mob5_Hurt:
     ent_wait_timer
     ent_despawn
 
-Mob6_StandR:
+Henger_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
     ent_wait_timer
-    ent_jump Mob6_Chase
+    ent_jump Henger_Chase
 
-Mob6_Windup:
+Henger_Windup:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
@@ -929,7 +929,7 @@ Mob6_Windup:
 EScript_7793:
     ent_set_xflip $ff
 
-Mob6_Chase:
+Henger_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -939,7 +939,7 @@ Mob6_Chase:
     ent_yield
     ent_jump .l779e
 
-Mob6_Die:
+Henger_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -954,15 +954,15 @@ Mob6_Die:
     ent_wait_timer
     ent_despawn
 
-Mob7_StandR:
+Joker_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
     ent_wait_timer
-    ent_jump Mob7_Chase
+    ent_jump Joker_Chase
 
-Mob7_Windup:
+Joker_Windup:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
@@ -974,7 +974,7 @@ Mob7_Windup:
     ent_call $4461
     ent_set_xflip $ff
 
-Mob7_Chase:
+Joker_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -984,7 +984,7 @@ Mob7_Chase:
     ent_yield
     ent_jump .l77de
 
-Mob7_Die:
+Joker_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -999,7 +999,7 @@ Mob7_Die:
     ent_wait_timer
     ent_despawn
 
-Mob8_StandR:
+Ghost_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -1007,9 +1007,9 @@ Mob8_StandR:
 .l77fe
     ent_call $5c76
     ent_loop_timer .l77fe
-    ent_jump Mob8_Chase
+    ent_jump Ghost_Chase
 
-Mob8_StandL:
+Ghost_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -1019,7 +1019,7 @@ Mob8_StandL:
     ent_loop_timer .l780e
     ent_set_xflip $ff
 
-Mob8_Chase:
+Ghost_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_gfx $02
@@ -1028,7 +1028,7 @@ Mob8_Chase:
     ent_yield
     ent_jump .l781d
 
-Mob8_AttackA:
+Ghost_AttackA:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
@@ -1038,9 +1038,9 @@ Mob8_AttackA:
     ent_set_timer $03
     ent_wait_timer
     ent_set_facing $ff
-    ent_jump Mob8_Chase
+    ent_jump Ghost_Chase
 
-Mob8_AttackB:
+Ghost_AttackB:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $05
@@ -1050,9 +1050,9 @@ Mob8_AttackB:
     ent_set_timer $03
     ent_wait_timer
     ent_set_facing $ff
-    ent_jump Mob8_Chase
+    ent_jump Ghost_Chase
 
-Mob8_Die:
+Ghost_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -1067,7 +1067,7 @@ Mob8_Die:
     ent_wait_timer
     ent_despawn
 
-Mob9_StandR:
+Puncho_StandR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -1075,9 +1075,9 @@ Mob9_StandR:
 .l7863
     ent_call $5cc1
     ent_loop_timer .l7863
-    ent_jump Mob9_Chase
+    ent_jump Puncho_Chase
 
-Mob9_StandL:
+Puncho_StandL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
@@ -1087,7 +1087,7 @@ Mob9_StandL:
     ent_loop_timer .l7873
     ent_set_xflip $ff
 
-Mob9_Chase:
+Puncho_Chase:
     ent_set_type $02
     ent_vel_x_indexed $7000
     ent_set_facing $fe
@@ -1097,7 +1097,7 @@ Mob9_Chase:
     ent_yield
     ent_jump .l7884
 
-Mob9_Attack:
+Puncho_Attack:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
@@ -1106,7 +1106,7 @@ Mob9_Attack:
     ent_yield
     ent_jump .l7890
 
-Mob9_Hurt:
+Puncho_Hurt:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -1115,9 +1115,9 @@ Mob9_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l789d
-    ent_jump Mob9_StandR
+    ent_jump Puncho_StandR
 
-Mob9_Charge:
+Puncho_Charge:
     ent_set_type $05
     ent_vel_x_indexed $700a
     ent_set_facing $fe
@@ -1129,9 +1129,9 @@ Mob9_Charge:
 
 EScript_78b5:
     ent_set_xflip $ff
-    ent_jump Mob9_Charge
+    ent_jump Puncho_Charge
 
-Mob9_Special:
+Puncho_Special:
     ent_set_type $06
     ent_vel_x_zero
     ent_gfx $05
@@ -1153,7 +1153,7 @@ Mob9_Special:
     ent_wait_timer
     ent_despawn
 
-Boss_WalkDownA:
+Psylora_WalkDownA:
     ent_set_type $01
     ent_vel_x_indexed $701e
     ent_call $5d21
@@ -1166,7 +1166,7 @@ EScript_78df:
     ent_yield
     ent_jump .l78e3
 
-Boss_WalkDownB:
+Psylora_WalkDownB:
     ent_set_facing $01
     ent_gfx $12
 .l78ee
@@ -1174,7 +1174,7 @@ Boss_WalkDownB:
     ent_yield
     ent_jump .l78ee
 
-Boss_WalkUpA:
+Psylora_WalkUpA:
     ent_set_facing $00
     ent_gfx $13
 .l78f9
@@ -1182,7 +1182,7 @@ Boss_WalkUpA:
     ent_yield
     ent_jump .l78f9
 
-Boss_WalkUpB:
+Psylora_WalkUpB:
     ent_set_facing $01
     ent_gfx $14
 .l7904
@@ -1190,7 +1190,7 @@ Boss_WalkUpB:
     ent_yield
     ent_jump .l7904
 
-Boss_WalkRightA:
+Psylora_WalkRightA:
     ent_set_facing $02
     ent_gfx $15
 .l790f
@@ -1198,7 +1198,7 @@ Boss_WalkRightA:
     ent_yield
     ent_jump .l790f
 
-Boss_WalkLeftA:
+Psylora_WalkLeftA:
     ent_set_facing $03
     ent_gfx $16
 .l791a
@@ -1206,7 +1206,7 @@ Boss_WalkLeftA:
     ent_yield
     ent_jump .l791a
 
-Boss_WalkRightB:
+Psylora_WalkRightB:
     ent_set_facing $02
     ent_gfx $17
 .l7925
@@ -1214,7 +1214,7 @@ Boss_WalkRightB:
     ent_yield
     ent_jump .l7925
 
-Boss_WalkLeftB:
+Psylora_WalkLeftB:
     ent_set_facing $03
     ent_gfx $18
 .l7930
@@ -1286,32 +1286,32 @@ FX_Despawn_Gfx8:
     ent_wait_timer
     ent_despawn
 
-Mob10_Init:
+Ducken_Init:
     ent_call $6381
 
-Mob10_AimR:
+Ducken_AimR:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_call $5447
 .l798a
     ent_call $636b
-    ent_jr_b8_eq $01, Mob10_FireR
+    ent_jr_b8_eq $01, Ducken_FireR
     ent_yield
     ent_jump .l798a
 
-Mob10_AimL:
+Ducken_AimL:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $02
     ent_call $5447
 .l799d
     ent_call $636b
-    ent_jr_b8_eq $01, Mob10_FireL
+    ent_jr_b8_eq $01, Ducken_FireL
     ent_yield
     ent_jump .l799d
 
-Mob10_FireR:
+Ducken_FireR:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $03
@@ -1320,9 +1320,9 @@ Mob10_FireR:
     ent_call $53d9
     ent_set_timer $03
     ent_wait_timer
-    ent_jump Mob10_AimR
+    ent_jump Ducken_AimR
 
-Mob10_FireL:
+Ducken_FireL:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $04
@@ -1331,9 +1331,9 @@ Mob10_FireL:
     ent_call $540f
     ent_set_timer $03
     ent_wait_timer
-    ent_jump Mob10_AimL
+    ent_jump Ducken_AimL
 
-Mob10_Die:
+Ducken_Die:
     ent_call $63ab
 
 EScript_79cd:
@@ -1344,7 +1344,7 @@ EScript_79cd:
     ent_wait_timer
     ent_despawn
 
-Mob10_DieAlt:
+Ducken_DieAlt:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -1352,17 +1352,17 @@ Mob10_DieAlt:
     ent_wait_timer
     ent_despawn
 
-Mob11_Hidden:
+FlameRed_Hidden:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
 .l79e4
     ent_update_action
-    ent_jr_busy Mob11_Emerge
+    ent_jr_busy FlameRed_Emerge
     ent_yield
     ent_jump .l79e4
 
-Mob11_Surface:
+FlameRed_Surface:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $02
@@ -1371,9 +1371,9 @@ Mob11_Surface:
     ent_update_action
     ent_jr_busy EScript_7a0b
     ent_loop_timer .l79f3
-    ent_jump Mob11_Hidden
+    ent_jump FlameRed_Hidden
 
-Mob11_Emerge:
+FlameRed_Emerge:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $01
@@ -1382,7 +1382,7 @@ Mob11_Emerge:
     ent_update_action
     ent_yield
     ent_jr_busy .l7a03
-    ent_jump Mob11_Die
+    ent_jump FlameRed_Die
 
 EScript_7a0b:
     ent_set_type $02
@@ -1394,7 +1394,7 @@ EScript_7a0b:
     ent_yield
     ent_jr_busy .l7a11
 
-Mob11_Die:
+FlameRed_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -1402,7 +1402,7 @@ Mob11_Die:
     ent_wait_timer
     ent_despawn
 
-EScript_7a1f:
+FlameBlue_Hidden:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
@@ -1421,7 +1421,7 @@ EScript_7a2c:
     ent_update_action
     ent_jr_busy EScript_7a4b
     ent_loop_timer .l7a33
-    ent_jump EScript_7a1f
+    ent_jump FlameBlue_Hidden
 
 EScript_7a3d:
     ent_set_type $02
@@ -1432,7 +1432,7 @@ EScript_7a3d:
     ent_update_action
     ent_yield
     ent_jr_busy .l7a43
-    ent_jump EScript_7a1f
+    ent_jump FlameBlue_Hidden
 
 EScript_7a4b:
     ent_set_type $02
@@ -1443,7 +1443,7 @@ EScript_7a4b:
     ent_update_action
     ent_yield
     ent_jr_busy .l7a51
-    ent_jump EScript_7a1f
+    ent_jump FlameBlue_Hidden
 
 Mob12_StandR:
     ent_set_type $00
