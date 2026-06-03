@@ -36,7 +36,7 @@
 ; names and are honest about being undecoded. This file is hand-editable: extract
 ; only appends map.json sections not already covered by a SECTION here.
 
-SECTION "room_00c000", ROMX[$4000], BANK[$03]
+SECTION "Room engine", ROMX[$4000], BANK[$03]
 
 UpdateEntities:
 	ld a, [$c2db]
@@ -71,6 +71,7 @@ Func_03_4030:
 	dec c
 	jr nz, Func_03_400b
 	ret
+
 RunEntity:
 	push bc
 	push hl
@@ -134,34 +135,63 @@ Func_03_408c:
 	pop bc
 	ret
 
-SECTION "room_00c098", ROMX[$4098], BANK[$03]
-
 EntityOpcodeTable:
-	db $ea, $40, $f1, $40, $f9, $40, $02, $41, $0e, $41, $27, $41, $43, $41, $93, $41
-	db $a4, $41, $ac, $41, $c8, $41, $b9, $41, $8b, $42, $37, $42, $46, $42, $5b, $42
-	db $68, $42, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $6f, $42, $7b, $42
-	db $01, $42, $0e, $42, $1d, $42, $2a, $42, $e0, $41, $ec, $41, $00, $00, $00, $00
-	db $8f, $42, $99, $42, $a5, $42, $b1, $42, $bd, $42, $c9, $42, $d4, $42, $df, $42
-	db $ed, $42
-
-SECTION "room_00c0ea", ROMX[$40ea], BANK[$03]
+	dw EntityOp_Despawn
+	dw EntityOp_SetType
+	dw EntityOp_VelXZero
+	dw EntityOp_SetVelX
+	dw EntityOp_VelXIndexed
+	dw EntityOp_SetXFlip
+	dw EntityOp_SetFacing
+	dw EntityOp_Gfx
+	dw EntityOp_SetTimer
+	dw EntityOp_TimerTick
+	dw EntityOp_LoopTimer
+	dw EntityOp_WaitTimer
+	dw EntityOp_Yield
+	dw EntityOp_SpawnRel
+	dw EntityOp_SetFlag2
+	dw EntityOp_BeginAction
+	dw EntityOp_UpdateAction
+	dw $0000, $0000, $0000, $0000, $0000
+	dw EntityOp_Call
+	dw EntityOp_CallBank0
+	dw EntityOp_LoadB8
+	dw EntityOp_AndB8
+	dw EntityOp_TestB8
+	dw EntityOp_CmpB8
+	dw EntityOp_SetVelY
+	dw EntityOp_WaitCounter
+	dw $0000, $0000
+	dw EntityOp_Jump
+	dw EntityOp_JrBusy
+	dw EntityOp_JrFree
+	dw EntityOp_JrHit
+	dw EntityOp_JrNoHit
+	dw EntityOp_JrTimer0
+	dw EntityOp_JrTimerNz
+	dw EntityOp_JrB8Eq
+	dw EntityOp_JrB8Ne
 
 EntityOp_Despawn:
 	ld a, $00
 	ldh [$ffb0], a
 	jp EndEntityFrame
+
 EntityOp_SetType:
 	inc de
 	ld a, [de]
 	ldh [$ffb3], a
 	inc de
 	jp RunEntityScript
+
 EntityOp_VelXZero:
 	inc de
 	xor a
 	ldh [$ffbf], a
 	ldh [$ffc0], a
 	jp RunEntityScript
+
 EntityOp_SetVelX:
 	inc de
 	ld a, [de]
@@ -171,6 +201,7 @@ EntityOp_SetVelX:
 	ldh [$ffc0], a
 	inc de
 	jp RunEntityScript
+
 EntityOp_VelXIndexed:
 	inc de
 	ld a, [de]
@@ -190,6 +221,7 @@ EntityOp_VelXIndexed:
 	ld a, [hl]
 	ldh [$ffc0], a
 	jp RunEntityScript
+
 EntityOp_SetXFlip:
 	inc de
 	ld hl, $ffb6
@@ -207,6 +239,7 @@ Func_03_4139:
 Func_03_413e:
 	res 7, [hl]
 	jp RunEntityScript
+
 EntityOp_SetFacing:
 	inc de
 	ld hl, $ffb6
@@ -233,14 +266,8 @@ Func_03_4160:
 	jr z, Func_03_4181
 	cp $03
 	jr z, Func_03_418a
-
-SECTION "room_00c16b", ROMX[$416b], BANK[$03]
-
-Data_03_416b:
-	db $fe, $00, $28, $09
-
-SECTION "room_00c16f", ROMX[$416f], BANK[$03]
-
+	cp $00
+	jr z, Func_03_4178
 Func_03_416f:
 	ld a, [hl]
 	and $fc
@@ -265,6 +292,7 @@ Func_03_418a:
 	or $02
 	ld [hl], a
 	jp RunEntityScript
+
 EntityOp_Gfx:
 	inc de
 	ld a, [de]
@@ -276,14 +304,13 @@ EntityOp_Gfx:
 	pop de
 	inc de
 	jp RunEntityScript
+
 EntityOp_SetTimer:
 	inc de
 	ld a, [de]
 	ldh [$ffc6], a
 	inc de
 	jp RunEntityScript
-
-SECTION "room_00c1ac", ROMX[$41ac], BANK[$03]
 
 EntityOp_TimerTick:
 	inc de
@@ -294,8 +321,6 @@ EntityOp_TimerTick:
 	dec a
 	ldh [c], a
 	jp EndEntityFrame
-
-SECTION "room_00c1b9", ROMX[$41b9], BANK[$03]
 
 EntityOp_WaitTimer:
 	ld c, $c6
@@ -308,6 +333,7 @@ EntityOp_WaitTimer:
 Func_03_41c4:
 	inc de
 	jp RunEntityScript
+
 EntityOp_LoopTimer:
 	inc de
 	ld c, $c6
@@ -328,8 +354,6 @@ Func_03_41db:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c1e0", ROMX[$41e0], BANK[$03]
-
 EntityOp_SetVelY:
 	inc de
 	ld a, [de]
@@ -339,8 +363,6 @@ EntityOp_SetVelY:
 	ldh [$ffc2], a
 	inc de
 	jp RunEntityScript
-
-SECTION "room_00c1ec", ROMX[$41ec], BANK[$03]
 
 EntityOp_WaitCounter:
 	ld hl, $ffc1
@@ -358,6 +380,7 @@ EntityOp_WaitCounter:
 Func_03_41fd:
 	inc de
 	jp RunEntityScript
+
 EntityOp_LoadB8:
 	inc de
 	ld a, [de]
@@ -369,8 +392,6 @@ EntityOp_LoadB8:
 	ld a, [hl]
 	ldh [$ffb8], a
 	jp RunEntityScript
-
-SECTION "room_00c20e", ROMX[$420e], BANK[$03]
 
 EntityOp_AndB8:
 	inc de
@@ -384,8 +405,6 @@ EntityOp_AndB8:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c21d", ROMX[$421d], BANK[$03]
-
 EntityOp_TestB8:
 	inc de
 	ld a, [de]
@@ -396,8 +415,6 @@ EntityOp_TestB8:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c22a", ROMX[$422a], BANK[$03]
-
 EntityOp_CmpB8:
 	inc de
 	ld a, [de]
@@ -407,8 +424,6 @@ EntityOp_CmpB8:
 	call PackCmpFlagsToMoveResult
 	inc de
 	jp RunEntityScript
-
-SECTION "room_00c237", ROMX[$4237], BANK[$03]
 
 EntityOp_SpawnRel:
 	inc de
@@ -422,8 +437,6 @@ EntityOp_SpawnRel:
 	inc de
 	call SpawnEntityRelative
 	jp RunEntityScript
-
-SECTION "room_00c246", ROMX[$4246], BANK[$03]
 
 EntityOp_SetFlag2:
 	inc de
@@ -439,8 +452,6 @@ Func_03_4255:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c25b", ROMX[$425b], BANK[$03]
-
 EntityOp_BeginAction:
 	inc de
 	ld hl, $ffb4
@@ -448,10 +459,12 @@ EntityOp_BeginAction:
 	ld a, $14
 	ldh [$ffc7], a
 	jp RunEntityScript
+
 EntityOp_UpdateAction:
 	inc de
 	call UpdateActionTimer
 	jp RunEntityScript
+
 EntityOp_Call:
 	inc de
 	ld hl, $4042
@@ -476,9 +489,11 @@ EntityOp_CallBank0:
 	inc de
 	call Func_00_1150
 	jp RunEntityScript
+
 EntityOp_Yield:
 	inc de
 	jp EndEntityFrame
+
 EntityOp_Jump:
 	inc de
 	ld a, [de]
@@ -488,6 +503,7 @@ EntityOp_Jump:
 	ld d, a
 	ld e, b
 	jp RunEntityScript
+
 EntityOp_JrBusy:
 	ldh a, [$ffb7]
 	bit 0, a
@@ -496,6 +512,7 @@ EntityOp_JrBusy:
 	inc de
 	inc de
 	jp RunEntityScript
+
 EntityOp_JrFree:
 	ldh a, [$ffb7]
 	bit 0, a
@@ -504,6 +521,7 @@ EntityOp_JrFree:
 	inc de
 	inc de
 	jp RunEntityScript
+
 EntityOp_JrHit:
 	ldh a, [$ffb7]
 	bit 1, a
@@ -513,8 +531,6 @@ EntityOp_JrHit:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c2bd", ROMX[$42bd], BANK[$03]
-
 EntityOp_JrNoHit:
 	ldh a, [$ffb7]
 	bit 1, a
@@ -523,6 +539,7 @@ EntityOp_JrNoHit:
 	inc de
 	inc de
 	jp RunEntityScript
+
 EntityOp_JrTimer0:
 	ldh a, [$ffc6]
 	or a
@@ -531,6 +548,7 @@ EntityOp_JrTimer0:
 	inc de
 	inc de
 	jp RunEntityScript
+
 EntityOp_JrTimerNz:
 	ldh a, [$ffc6]
 	or a
@@ -539,8 +557,6 @@ EntityOp_JrTimerNz:
 	inc de
 	inc de
 	jp RunEntityScript
-
-SECTION "room_00c2df", ROMX[$42df], BANK[$03]
 
 EntityOp_JrB8Eq:
 	inc de
@@ -554,8 +570,6 @@ EntityOp_JrB8Eq:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c2ed", ROMX[$42ed], BANK[$03]
-
 EntityOp_JrB8Ne:
 	inc de
 	ldh a, [$ffb8]
@@ -568,8 +582,6 @@ EntityOp_JrB8Ne:
 	inc de
 	jp RunEntityScript
 
-SECTION "room_00c2fb", ROMX[$42fb], BANK[$03]
-
 PackCmpFlagsToMoveResult:
 	ld a, $00
 	jr nc, Func_03_4301
@@ -580,182 +592,25 @@ Func_03_4301:
 Func_03_4305:
 	ldh [$ffb7], a
 	ret
+
 LoadEntityRegs:
 	ld a, l
 	ldh [$ffe5], a
 	ld a, h
 	ldh [$ffe6], a
-	ld a, [hl+]
-	ldh [$ffb0], a
-	ld a, [hl+]
-	ldh [$ffb1], a
-	ld a, [hl+]
-	ldh [$ffb2], a
-	ld a, [hl+]
-	ldh [$ffb3], a
-	ld a, [hl+]
-	ldh [$ffb4], a
-	ld a, [hl+]
-	ldh [$ffb5], a
-	ld a, [hl+]
-	ldh [$ffb6], a
-	ld a, [hl+]
-	ldh [$ffb7], a
-	ld a, [hl+]
-	ldh [$ffb8], a
-	ld a, [hl+]
-	ldh [$ffb9], a
-	ld a, [hl+]
-	ldh [$ffba], a
-	ld a, [hl+]
-	ldh [$ffbb], a
-	ld a, [hl+]
-	ldh [$ffbc], a
-	ld a, [hl+]
-	ldh [$ffbd], a
-	ld a, [hl+]
-	ldh [$ffbe], a
-	ld a, [hl+]
-	ldh [$ffbf], a
-	ld a, [hl+]
-	ldh [$ffc0], a
-	ld a, [hl+]
-	ldh [$ffc1], a
-	ld a, [hl+]
-	ldh [$ffc2], a
-	ld a, [hl+]
-	ldh [$ffc3], a
-	ld a, [hl+]
-	ldh [$ffc4], a
-	ld a, [hl+]
-	ldh [$ffc5], a
-	ld a, [hl+]
-	ldh [$ffc6], a
-	ld a, [hl+]
-	ldh [$ffc7], a
-	ld a, [hl+]
-	ldh [$ffc8], a
-	ld a, [hl+]
-	ldh [$ffc9], a
-	ld a, [hl+]
-	ldh [$ffca], a
-	ld a, [hl+]
-	ldh [$ffcb], a
-	ld a, [hl+]
-	ldh [$ffcc], a
-	ld a, [hl+]
-	ldh [$ffcd], a
-	ld a, [hl+]
-	ldh [$ffce], a
-	ld a, [hl+]
-	ldh [$ffcf], a
-	ld a, [hl+]
-	ldh [$ffd0], a
-	ld a, [hl+]
-	ldh [$ffd1], a
-	ld a, [hl+]
-	ldh [$ffd2], a
-	ld a, [hl+]
-	ldh [$ffd3], a
-	ld a, [hl+]
-	ldh [$ffd4], a
-	ld a, [hl+]
-	ldh [$ffd5], a
-	ld a, [hl+]
-	ldh [$ffd6], a
-	ld a, [hl+]
-	ldh [$ffd7], a
-	ld a, [hl+]
-	ldh [$ffd8], a
-	ld a, [hl+]
-	ldh [$ffd9], a
+	FOR ADDR, $ffb0, $ffda, 1
+		ld a, [hl+]
+		ldh [ADDR], a
+	ENDR
 	ret
+
 SaveEntityRegs:
-	ldh a, [$ffb0]
-	ld [hl+], a
-	ldh a, [$ffb1]
-	ld [hl+], a
-	ldh a, [$ffb2]
-	ld [hl+], a
-	ldh a, [$ffb3]
-	ld [hl+], a
-	ldh a, [$ffb4]
-	ld [hl+], a
-	ldh a, [$ffb5]
-	ld [hl+], a
-	ldh a, [$ffb6]
-	ld [hl+], a
-	ldh a, [$ffb7]
-	ld [hl+], a
-	ldh a, [$ffb8]
-	ld [hl+], a
-	ldh a, [$ffb9]
-	ld [hl+], a
-	ldh a, [$ffba]
-	ld [hl+], a
-	ldh a, [$ffbb]
-	ld [hl+], a
-	ldh a, [$ffbc]
-	ld [hl+], a
-	ldh a, [$ffbd]
-	ld [hl+], a
-	ldh a, [$ffbe]
-	ld [hl+], a
-	ldh a, [$ffbf]
-	ld [hl+], a
-	ldh a, [$ffc0]
-	ld [hl+], a
-	ldh a, [$ffc1]
-	ld [hl+], a
-	ldh a, [$ffc2]
-	ld [hl+], a
-	ldh a, [$ffc3]
-	ld [hl+], a
-	ldh a, [$ffc4]
-	ld [hl+], a
-	ldh a, [$ffc5]
-	ld [hl+], a
-	ldh a, [$ffc6]
-	ld [hl+], a
-	ldh a, [$ffc7]
-	ld [hl+], a
-	ldh a, [$ffc8]
-	ld [hl+], a
-	ldh a, [$ffc9]
-	ld [hl+], a
-	ldh a, [$ffca]
-	ld [hl+], a
-	ldh a, [$ffcb]
-	ld [hl+], a
-	ldh a, [$ffcc]
-	ld [hl+], a
-	ldh a, [$ffcd]
-	ld [hl+], a
-	ldh a, [$ffce]
-	ld [hl+], a
-	ldh a, [$ffcf]
-	ld [hl+], a
-	ldh a, [$ffd0]
-	ld [hl+], a
-	ldh a, [$ffd1]
-	ld [hl+], a
-	ldh a, [$ffd2]
-	ld [hl+], a
-	ldh a, [$ffd3]
-	ld [hl+], a
-	ldh a, [$ffd4]
-	ld [hl+], a
-	ldh a, [$ffd5]
-	ld [hl+], a
-	ldh a, [$ffd6]
-	ld [hl+], a
-	ldh a, [$ffd7]
-	ld [hl+], a
-	ldh a, [$ffd8]
-	ld [hl+], a
-	ldh a, [$ffd9]
-	ld [hl+], a
+	FOR ADDR, $ffb0, $ffda, 1
+		ldh a, [ADDR]
+		ld [hl+], a
+	ENDR
 	ret
+
 SpawnEntityRelative:
 	push de
 	push af
@@ -770,6 +625,7 @@ SpawnEntityRelative:
 	call SpawnEntity
 	pop de
 	ret
+
 UpdateActionTimer:
 	ld hl, $ffb4
 	bit 7, [hl]
@@ -811,6 +667,7 @@ Func_03_445b:
 	set 0, a
 	ldh [$ffb7], a
 	ret
+
 MonsterBreakTileInFront:
 	push de
 	ldh a, [$ffbe]
@@ -865,6 +722,7 @@ Func_03_447b:
 	call BreakTileAtCell
 	pop de
 	ret
+
 BreakTileAtPixel:
 	ld a, c
 	add a, $08
@@ -899,6 +757,7 @@ BreakTileAtCell:
 	call SpawnEntity
 	ld a, $01
 	ret
+
 TryBreakCrateCell:
 	push bc
 	call ReadFloorCell
@@ -927,6 +786,7 @@ Func_03_4519:
 	pop bc
 	xor a
 	ret
+
 BreakOrChainCrateCell:
 	ld a, b
 	ld [$cf70], a
@@ -980,6 +840,7 @@ Func_03_456f:
 	call DrawFloorPiece
 	ld a, $00
 	ret
+
 FindFreeEntitySlot:
 	push bc
 	push de
@@ -993,46 +854,35 @@ Func_03_4580:
 	add hl, de
 	dec c
 	jr nz, Func_03_4580
-
-SECTION "room_00c587", ROMX[$4587], BANK[$03]
-
-Data_03_4587:
-	db $d1, $c1, $21, $00, $00, $af, $c9
-
-SECTION "room_00c58e", ROMX[$458e], BANK[$03]
-
+	pop de
+	pop bc
+	ld hl, $0000
+	xor a
+	ret
 Func_03_458e:
 	pop de
 	pop bc
 	ld a, $01
 	ret
+
 SpawnEntity:
 	push af
 	call FindFreeEntitySlot
 	or a
 	jr nz, Func_03_45a0
-
-SECTION "room_00c59a", ROMX[$459a], BANK[$03]
-
-Data_03_459a:
-	db $f1, $21, $00, $00, $af, $c9
-
-SECTION "room_00c5a0", ROMX[$45a0], BANK[$03]
-
+	pop af
+	ld hl, $0000
+	xor a
+	ret
 Func_03_45a0:
 	pop af
 	push hl
 	ld [hl+], a
 	push af
 	xor a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
+	REPT 8
+		ld [hl+], a
+	ENDR
 	ld a, c
 	ld [hl+], a
 	ld a, b
@@ -1046,15 +896,9 @@ Func_03_45a0:
 	ld a, d
 	ld [hl+], a
 	xor a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
-	ld [hl+], a
+	REPT 9
+		ld [hl+], a
+	ENDR
 	pop af
 	ld c, a
 	ld b, $00
@@ -1123,6 +967,7 @@ Func_03_45a0:
 	ld a, $02
 	ld [$c2e6], a
 	ret
+
 PlayerSameRowInRange:
 	ld a, [$c807]
 	sub $08
@@ -1152,6 +997,7 @@ Func_03_464a:
 Func_03_465b:
 	xor a
 	ret
+
 PlayerAheadSameRow:
 	ld a, [$c807]
 	sub $08
@@ -1188,6 +1034,7 @@ Func_03_468f:
 Func_03_4692:
 	xor a
 	ret
+
 PlayerAheadAndFacingUs:
 	ld a, [$c807]
 	sub $08
@@ -1232,6 +1079,7 @@ Func_03_46d3:
 Func_03_46da:
 	xor a
 	ret
+
 OrderPair:
 	cp b
 	ret nc
@@ -1239,6 +1087,7 @@ OrderPair:
 	ld a, b
 	ld b, c
 	ret
+
 FacePlayerX:
 	ldh a, [$ffbc]
 	ld c, a
@@ -1246,6 +1095,7 @@ FacePlayerX:
 	cp c
 	call PackCmpFlagsToMoveResult
 	ret
+
 ApplyPlayerInputFacingX:
 	ldh a, [$ff8b]
 	bit 5, a
@@ -1266,6 +1116,7 @@ Func_03_46ff:
 	set 7, a
 	ldh [c], a
 	ret
+
 Player_StandThinkDown:
 	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
