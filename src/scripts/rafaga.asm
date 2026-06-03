@@ -51,8 +51,8 @@ RafagaScript:
     SCRIPT_NEWLINE
     db "Time to fight."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$47a8, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$47b1, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Rafaga_ShowMonsterPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Rafaga_ShowMonsterPortrait2, .Bank=$1f
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
 .RafagaVictory:

@@ -18,13 +18,13 @@ PashuteScript:
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$03, .Target=PashuteGreetProgress
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$02, .Target=PashuteGreetReturning
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$01, .Target=PashuteGreetingCycle
-    SCRIPT_FAR_CALL .Addr=$40f3, .Bank=$18
-    SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadIntroScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "Waaaaaaaa!"
     SCRIPT_NEWLINE
     db "They found me!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "But it doesn't"
     SCRIPT_NEWLINE
     db "scare me!"
@@ -37,7 +37,7 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "or hide!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4225, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
     db "... ... ... ..."
     SCRIPT_NEWLINE
     db "Huh? ... ... ..."
@@ -54,7 +54,7 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "Came to help?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "I see. I guess"
     SCRIPT_NEWLINE
     db "I took it wrong."
@@ -75,12 +75,12 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "fight bat..."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "I'm not a weak"
     SCRIPT_NEWLINE
     db "baby or anything"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "....AHEM!"
     SCRIPT_NEWLINE
     db "Anyways."
@@ -169,12 +169,12 @@ PashuteScript:
     SCRIPT_END
 
 PashuteGreetingCycle:
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
     SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, PashuteGreeting1, PashuteGreeting2, PashuteGreeting3, PashuteGreeting4
 
 PashuteGreeting1:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Welcome to the"
     SCRIPT_NEWLINE
     db "Monster Shrine."
@@ -182,7 +182,7 @@ PashuteGreeting1:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting2:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Hello!"
     SCRIPT_NEWLINE
     db "Welcome!"
@@ -190,7 +190,7 @@ PashuteGreeting2:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting3:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Welcome to the"
     SCRIPT_NEWLINE
     db "Monster Shrine."
@@ -198,7 +198,7 @@ PashuteGreeting3:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting4:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Well, well"
     SCRIPT_NEWLINE
     db "Good to see you."
@@ -206,8 +206,8 @@ PashuteGreeting4:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreetReturning:
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Oh, yes. I heard"
     SCRIPT_NEWLINE
     db "that there's a"
@@ -240,11 +240,11 @@ PashuteGreetReturning:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreetProgress:
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
-    SCRIPT_RENDERER .Addr=$4225, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
     db "Oh! Well,"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Thank you"
     SCRIPT_NEWLINE
     db "for helping us."
@@ -287,8 +287,8 @@ PashuteGreetProgress:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGameDone:
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Hello! How are"
     SCRIPT_NEWLINE
     db "doing? I heard"
@@ -317,28 +317,28 @@ PashuteGameDone:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteMenu:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Well, then."
     SCRIPT_WAIT
     db "How can I"
     SCRIPT_NEWLINE
     db "help you?"
-    SCRIPT_FAR_CALL .Addr=$6090, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$4144, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_ShowMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, PashuteStone, PashuteAsk, PashuteLeave
 
 PashuteContinue:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Anything"
     SCRIPT_NEWLINE
     db "else you need?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_JUMP_TABLE wYNResult, PashuteMenu, PashuteNoContinue
 
 PashuteNoContinue:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "I see."
     SCRIPT_WAIT
     db "Well, I await"
@@ -348,14 +348,14 @@ PashuteNoContinue:
     SCRIPT_END
 
 PashuteStone:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Regenerating a"
     SCRIPT_NEWLINE
     db "saucer stone?"
     SCRIPT_WAIT
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteStoneCheck
     SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteStoneCheck
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "If the new"
     SCRIPT_NEWLINE
     db "monster differs"
@@ -368,9 +368,9 @@ PashuteStone:
     SCRIPT_NEWLINE
     db "replaced, okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteStoneCheck
-    SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "Until recently,"
     SCRIPT_WAIT
     db "there was a"
@@ -395,7 +395,7 @@ PashuteStoneCheck:
     SCRIPT_IF_NEQ .Addr=$cfde, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfdf, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfe0, .Value=$00, .Target=PashuteStoneReady
-    SCRIPT_RENDERER .Addr=$41e1, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "But you"
     SCRIPT_WAIT
     db "don't have any"
@@ -413,7 +413,7 @@ PashuteStoneCheck:
     SCRIPT_END
 
 PashuteStoneReady:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Then..."
     SCRIPT_NEWLINE
     db "please choose"
@@ -422,27 +422,27 @@ PashuteStoneReady:
     SCRIPT_NEWLINE
     db "to regenerate."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$6242, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$4144, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=ShowMonsterDiscStoneSelect, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=PashuteContinue
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Starting the"
     SCRIPT_NEWLINE
     db "process."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$14
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowRegeneratedMonster, .Bank=$14
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenSetup
-    SCRIPT_FAR_CALL .Addr=$4054, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_ResetRosterKeepNew, .Bank=$18
     SCRIPT_GOTO .Target=PashuteRegenPick
 
 PashuteRegenSetup:
-    SCRIPT_FAR_CALL .Addr=$4074, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_AddFiveMonsterUses, .Bank=$18
 
 PashuteRegenPick:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Regeneration"
     SCRIPT_NEWLINE
     db "is complete."
@@ -451,9 +451,9 @@ PashuteRegenPick:
     SCRIPT_NEWLINE
     db "the new monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$40a5, .Bank=$32
-    SCRIPT_FAR_CALL .Addr=$40a0, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowMonsterDetailScreen, .Bank=$32
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
     SCRIPT_JUMP_TABLE $cfbb, \
         PashuteTiger, \
         PashuteMocchi, \
@@ -464,7 +464,7 @@ PashuteRegenPick:
         PashutePhenix
 
 PashuteTiger:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "This is Tiger,"
     SCRIPT_NEWLINE
     db "a cool monster."
@@ -472,7 +472,7 @@ PashuteTiger:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteMocchi:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "This is Mocchi,"
     SCRIPT_NEWLINE
     db "a cute monster."
@@ -480,7 +480,7 @@ PashuteMocchi:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteHare:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "This is Hare,"
     SCRIPT_NEWLINE
     db "a fast monster."
@@ -488,7 +488,7 @@ PashuteHare:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGali:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "It's Gali, a"
     SCRIPT_NEWLINE
     db "mystery monster."
@@ -496,7 +496,7 @@ PashuteGali:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGolem:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "It's Golem, a"
     SCRIPT_NEWLINE
     db "powerful monster"
@@ -504,7 +504,7 @@ PashuteGolem:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteSuezo:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "This is Suezo,"
     SCRIPT_NEWLINE
     db "a funny monster"
@@ -512,17 +512,17 @@ PashuteSuezo:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashutePhenix:
-    SCRIPT_RENDERER .Addr=$4225, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
     db "Whoa! Th...this!"
     SCRIPT_NEWLINE
     db "No way!...Dang!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db " . . Ahem . . ."
     SCRIPT_NEWLINE
     db "Sorry about that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4225, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
     db "This is Phenix!"
     SCRIPT_NEWLINE
     db "A wonder monster"
@@ -530,10 +530,10 @@ PashutePhenix:
 
 PashuteRegenConfirm:
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenTake
-    SCRIPT_FAR_CALL .Addr=$4027, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_IsReplacingActiveMonster, .Bank=$18
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
     SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Then I will"
     SCRIPT_NEWLINE
     db "replace "
@@ -547,11 +547,11 @@ PashuteRegenConfirm:
     SCRIPT_INDEXED_STR .Addr=$cfbb
     db "."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Now I will"
     SCRIPT_NEWLINE
     db "give you"
@@ -560,18 +560,18 @@ PashuteRegenDoNow:
     SCRIPT_NEWLINE
     db "monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenTake:
-    SCRIPT_FAR_CALL .Addr=$403c, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_GetActiveMonsterUses, .Bank=$18
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=PashuteRegenNow
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Will you take"
     SCRIPT_NEWLINE
     db "the newborn now?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=PashuteRegenPlace
     SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow2
     db "Then let's put"
@@ -583,11 +583,11 @@ PashuteRegenTake:
     SCRIPT_NEWLINE
     db "Checkroom."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow2:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Now I will"
     SCRIPT_NEWLINE
     db "give you"
@@ -596,11 +596,11 @@ PashuteRegenDoNow2:
     SCRIPT_NEWLINE
     db "monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$404d, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenPlace:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Then let's put"
     SCRIPT_NEWLINE
     db "this "
@@ -613,7 +613,7 @@ PashuteRegenPlace:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenNow:
-    SCRIPT_FAR_CALL .Addr=$4027, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_IsReplacingActiveMonster, .Bank=$18
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenNow2
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
@@ -621,7 +621,7 @@ PashuteRegenNow:
     SCRIPT_NEWLINE
     db "Checkroom has"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4000, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_GetMonsterUsesDecimal, .Bank=$18
     SCRIPT_DECIMAL .Addr=wYNResult
     db " times of"
     SCRIPT_NEWLINE
@@ -636,7 +636,7 @@ PashuteRegenNow2:
     db "you carry"
     SCRIPT_WAIT
     db "has "
-    SCRIPT_FAR_CALL .Addr=$4000, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_GetMonsterUsesDecimal, .Bank=$18
     SCRIPT_DECIMAL .Addr=wYNResult
     db " times of"
     SCRIPT_NEWLINE
@@ -645,7 +645,7 @@ PashuteRegenNow2:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDone:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "We are all done."
     SCRIPT_NEWLINE
     db "Please take"
@@ -657,18 +657,18 @@ PashuteRegenDone:
     SCRIPT_GOTO .Target=PashuteContinue
 
 PashuteAsk:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "What shall"
     SCRIPT_NEWLINE
     db "I explain?"
-    SCRIPT_FAR_CALL .Addr=$6169, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$4144, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Pashute_ShowExplainSubMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, PashuteAskShrineStone, PashuteAskMonster
     db "'J"
 
 PashuteLeave:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Come back again."
     SCRIPT_NEWLINE
     db "I'll be waiting."
@@ -676,7 +676,7 @@ PashuteLeave:
     SCRIPT_END
 
 PashuteAskShrineStone:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Hello."
     SCRIPT_NEWLINE
     db "This Shrine"
@@ -712,7 +712,7 @@ PashuteAskShrineStone:
     SCRIPT_GOTO .Target=PashuteAsk
 
 PashuteAskMonster:
-    SCRIPT_RENDERER .Addr=$4150, .Bank=$18
+    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Let me explain"
     SCRIPT_NEWLINE
     db "about monsters."

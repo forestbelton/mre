@@ -39,8 +39,8 @@ MistralScript:
     SCRIPT_WAIT
     db "Ferious! Come!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$4488, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$4491, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Mistral_ShowMonsterPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Mistral_ShowMonsterPortrait2, .Bank=$1f
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
 .MistralVictory:

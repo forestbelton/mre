@@ -3834,7 +3834,7 @@ Data_00_18ce:
 
 SECTION "analyzed_0018f7", ROM0[$18f7]
 
-Func_00_18f7:
+OpenRoomSelectMenu:
 	ld a, $00
 	ld [$c55d], a
 	ld a, $00
@@ -3865,16 +3865,42 @@ Func_00_1919:
 
 SECTION "analyzed_001937", ROM0[$1937]
 
-Data_00_1937:
-	db $3e, $00, $ea, $5d, $c5, $3e, $15, $21, $fe, $41, $cd, $2e, $04, $3e, $15, $21
-	db $34, $41, $cd, $2e, $04, $3e, $15, $21, $15, $40, $cd, $2e, $04, $3e, $12, $21
-	db $f5, $41, $cd, $2e, $04, $b7, $c9, $3e, $05, $ea, $c1, $c2, $cd, $c1, $16, $3e
-	db $05, $21, $c6, $47, $cd, $2e, $04, $3e, $00, $21, $08, $35, $cd, $2e, $04, $3e
-	db $01, $21, $9e, $43, $cd, $2e, $04, $cd, $63, $18, $c9
+SetupExchangeRoomSelect:
+	ld a, $00
+	ld [$c55d], a
+	ld a, $15
+	ld hl, Func_15_41fe
+	call CallBankedHL
+	ld a, $15
+	ld hl, Func_15_4134
+	call CallBankedHL
+	ld a, $15
+	ld hl, Func_15_4015
+	call CallBankedHL
+	ld a, $12
+	ld hl, Func_12_41f5
+	call CallBankedHL
+	or a
+	ret
+EnterSelectedRoom:
+	ld a, $05
+	ld [$c2c1], a
+	call LoadFloorByMode
+	ld a, $05
+	ld hl, Func_05_47c6
+	call CallBankedHL
+	ld a, $00
+	ld hl, Func_00_3508
+	call CallBankedHL
+	ld a, $01
+	ld hl, Func_01_439e
+	call CallBankedHL
+	call ResetFloorScroll
+	ret
 
 SECTION "analyzed_001982", ROM0[$1982]
 
-Func_00_1982:
+OpenRoomArrangeMenu:
 	push af
 	ld a, $30
 	call CallLibFuncSaveId
@@ -8629,7 +8655,7 @@ CopyBgMapBankedA:
 	ret
 Func_00_3957:
 	ld a, $1f
-	ld hl, Func_1f_4094
+	ld hl, Script_FadeOutPortrait
 	call CallBankedHL
 	ld a, $04
 	ld [$c2a7], a
@@ -43190,7 +43216,7 @@ Data_12_4b64:
 
 SECTION "analyzed_048b67", ROMX[$4b67], BANK[$12]
 
-Func_12_4b67:
+SaveGameToSram:
 	call Func_00_09f9
 	ld de, $4b64
 	ld hl, wSaveSignature
@@ -44201,6 +44227,7 @@ Func_13_4266:
 	ld d, $0f
 	call FillVram
 	ret
+Nox_RenderPortrait_AlfSpeaking:
 	ld hl, $627d
 	ld de, $9900
 	call CopyBgMap
@@ -44210,6 +44237,7 @@ Func_13_4266:
 	call Func_13_433e
 	call Func_13_4362
 	ret
+Nox_RenderPortrait_NoxSpeaking:
 	ld hl, $6257
 	ld de, $9900
 	call CopyBgMap
@@ -44219,6 +44247,7 @@ Func_13_4266:
 	call Func_13_433e
 	call Func_13_4362
 	ret
+Nox_RenderPortrait_Reminiscing:
 	ld hl, $6257
 	ld de, $9900
 	call CopyBgMap
@@ -44228,6 +44257,7 @@ Func_13_4266:
 	call Func_13_4350
 	call Func_13_4362
 	ret
+Nox_RenderPortrait_GoSeeFriends:
 	ld hl, $6257
 	ld de, $9900
 	call CopyBgMap
@@ -44237,6 +44267,7 @@ Func_13_4266:
 	call Func_13_4350
 	call Func_13_4362
 	ret
+Nox_RenderPortrait_Note:
 	ld hl, $6257
 	ld de, $9900
 	call CopyBgMap
@@ -45060,7 +45091,7 @@ Data_14_4000:
 
 SECTION "analyzed_05004d", ROMX[$404d], BANK[$14]
 
-Func_14_404d:
+ShowRegeneratedMonster:
 	push af
 	ld a, $35
 	call CallLibFuncSaveId
@@ -47974,7 +48005,7 @@ Data_17_7fff:
 
 SECTION "analyzed_060000", ROMX[$4000], BANK[$18]
 
-Func_18_4000:
+Pashute_GetMonsterUsesDecimal:
 	ld hl, wMonsterUses
 	ld a, [wActiveMonster]
 	add a, l
@@ -48002,6 +48033,7 @@ Func_18_401f:
 	add a, c
 	ld [wYNResult], a
 	ret
+Pashute_IsReplacingActiveMonster:
 	ld hl, wActiveMonster
 	ld a, [$cfd9]
 	cp [hl]
@@ -48016,7 +48048,7 @@ Func_18_4036:
 
 SECTION "analyzed_06003c", ROMX[$403c], BANK[$18]
 
-Func_18_403c:
+Pashute_GetActiveMonsterUses:
 	ld hl, wMonsterUses
 	ld a, [wActiveMonster]
 	add a, l
@@ -48027,19 +48059,41 @@ Func_18_403c:
 	ld a, [hl]
 	ld [wYNResult], a
 	ret
+Pashute_SetReplaceTargetActive:
 	ld a, [wActiveMonster]
 	ld [$cfd9], a
 	ret
 
 SECTION "analyzed_060054", ROMX[$4054], BANK[$18]
 
-Data_18_4054:
-	db $21, $e1, $cf, $fa, $bb, $cf, $85, $6f, $7c, $ce, $00, $67, $7e, $f5, $e5, $21
-	db $e1, $cf, $af, $22, $22, $22, $22, $22, $22, $22, $e1, $f1, $77, $c3, $74, $40
+Pashute_ResetRosterKeepNew:
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl]
+	push af
+	push hl
+	ld hl, wMonsterUses
+	xor a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	pop hl
+	pop af
+	ld [hl], a
+	jp Pashute_AddFiveMonsterUses
 
 SECTION "analyzed_060074", ROMX[$4074], BANK[$18]
 
-Func_18_4074:
+Pashute_AddFiveMonsterUses:
 	ld hl, wMonsterUses
 	ld a, [wActiveMonster]
 	add a, l
@@ -48054,8 +48108,8 @@ Func_18_4074:
 
 SECTION "analyzed_060086", ROMX[$4086], BANK[$18]
 
-Data_18_4086:
-	db $3e, $99
+Func_18_4086:
+	ld a, $99
 
 SECTION "analyzed_060088", ROMX[$4088], BANK[$18]
 
@@ -48074,6 +48128,7 @@ Func_18_4097:
 	ld hl, $4272
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
+Pashute_LoadShrineScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -48084,8 +48139,8 @@ Func_18_4097:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_4144
-	call Func_18_4150
+	call Pashute_LoadShrineTilemap
+	call Pashute_RenderPortraitNeutral
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $5800
@@ -48106,6 +48161,7 @@ Func_18_4097:
 	call CallLibFuncSaveId
 	pop af
 	ret
+Pashute_LoadIntroScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -48116,8 +48172,8 @@ Func_18_4097:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_4144
-	call Func_18_4150
+	call Pashute_LoadShrineTilemap
+	call Pashute_RenderPortraitNeutral
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $5bdd
@@ -48137,13 +48193,13 @@ Func_18_4097:
 	ld hl, Func_1f_4008
 	call CallBankedHL
 	ret
-Func_18_4144:
+Pashute_LoadShrineTilemap:
 	ld hl, $5880
 	ld a, $1b
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Func_18_4150:
+Pashute_RenderPortraitNeutral:
 	ld a, $50
 	ld [wRendererAddr], a
 	ld a, $41
@@ -48204,6 +48260,7 @@ Func_18_41cc:
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
+Pashute_RenderPortraitPanic:
 	ld a, $e1
 	ld [wRendererAddr], a
 	ld a, $41
@@ -48229,6 +48286,7 @@ Func_18_41cc:
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
+Pashute_RenderPortraitShocked:
 	ld a, $25
 	ld [wRendererAddr], a
 	ld a, $42
@@ -48260,7 +48318,7 @@ Func_18_41cc:
 
 SECTION "analyzed_061321", ROMX[$5321], BANK[$18]
 
-Func_18_5321:
+CountCheckedInMonsters:
 	ld hl, wMonsterUses
 	ld c, $00
 	ld b, $00
@@ -48283,6 +48341,7 @@ Func_18_533c:
 	ld hl, $54f5
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
+Verde_BuildPortraitScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -48293,8 +48352,8 @@ Func_18_533c:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_53eb
-	call Func_18_53f7
+	call Verde_LoadBgMap
+	call Verde_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $745d
@@ -48315,6 +48374,7 @@ Func_18_533c:
 	call CallLibFuncSaveId
 	pop af
 	ret
+Verde_BuildIntroScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -48325,8 +48385,8 @@ Func_18_533c:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_53eb
-	call Func_18_53f7
+	call Verde_LoadBgMap
+	call Verde_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $788e
@@ -48347,13 +48407,13 @@ Func_18_533c:
 	call CallLibFuncSaveId
 	pop af
 	ret
-Func_18_53eb:
+Verde_LoadBgMap:
 	ld hl, $74dd
 	ld a, $1b
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Func_18_53f7:
+Verde_RenderPortrait:
 	ld a, $f7
 	ld [wRendererAddr], a
 	ld a, $53
@@ -48411,6 +48471,7 @@ Func_18_546a:
 	ld bc, $142d
 	call DrawMetasprite
 	ret
+Verde_RenderPortraitSurprised:
 	ld a, $7f
 	ld [wRendererAddr], a
 	ld a, $54
@@ -48433,6 +48494,7 @@ Func_18_546a:
 	ld bc, $142d
 	call DrawMetasprite
 	ret
+Verde_RenderPortraitCalm:
 	ld a, $ba
 	ld [wRendererAddr], a
 	ld a, $54
@@ -48458,9 +48520,20 @@ Func_18_546a:
 
 SECTION "analyzed_061de3", ROMX[$5de3], BANK[$18]
 
-Data_18_5de3:
-	db $fa, $c2, $d5, $fe, $04, $d8, $3e, $03, $c9, $fa, $c0, $c2, $ea, $f9, $d5, $c9
-	db $fa, $c0, $c2, $ea, $fa, $d5, $c9
+LinkClampResultCode:
+	ld a, [$d5c2]
+	cp $04
+	ret c
+	ld a, $03
+	ret
+LinkStoreSendRoom:
+	ld a, [wActiveFloor]
+	ld [$d5f9], a
+	ret
+LinkStoreRecvRoom:
+	ld a, [wActiveFloor]
+	ld [$d5fa], a
+	ret
 
 SECTION "analyzed_061dfa", ROMX[$5dfa], BANK[$18]
 
@@ -48468,6 +48541,7 @@ Func_18_5dfa:
 	ld hl, $608c
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
+Studio_BuildHostScene:
 	call Func_00_0822
 	ld a, $c7
 	ld [rLCDC], a
@@ -48480,8 +48554,8 @@ Func_18_5dfa:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_5ebc
-	call Func_18_5ec8
+	call Studio_LoadBgMap
+	call Studio_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5800
@@ -48502,6 +48576,7 @@ Func_18_5dfa:
 	call CallLibFuncSaveId
 	pop af
 	ret
+Studio_BuildHostSceneWithTiles:
 	ld a, $1f
 	ld hl, Func_1f_4d66
 	call CallBankedHL
@@ -48516,12 +48591,12 @@ Func_18_5dfa:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_5ebc
+	call Studio_LoadBgMap
 	ld hl, $5bd9
 	ld a, $1e
 	ld de, $9845
 	call CopyBgMapBankedA
-	call Func_18_5ec8
+	call Studio_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5b59
@@ -48538,13 +48613,13 @@ Func_18_5dfa:
 	ld [$ffa2], a
 	call WaitForNextFrame
 	ret
-Func_18_5ebc:
+Studio_LoadBgMap:
 	ld hl, $5880
 	ld a, $1e
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Func_18_5ec8:
+Studio_RenderPortrait:
 	ld a, $c8
 	ld [wRendererAddr], a
 	ld a, $5e
@@ -48595,6 +48670,7 @@ Func_18_5f27:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
+Studio_RenderPortraitAlt:
 	ld a, $3c
 	ld [wRendererAddr], a
 	ld a, $5f
@@ -48614,7 +48690,9 @@ Func_18_5f27:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
+Tradehouse_BuildScene:
 	call Func_00_0822
+Tradehouse_BuildSceneNoInit:
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
@@ -48626,7 +48704,7 @@ Func_18_5f27:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_5fbf
+	call Tradehouse_LoadBgMap
 	call Func_18_601f
 	call HideUnusedOamSprites
 	ld a, $33
@@ -48644,12 +48722,13 @@ Func_18_5f27:
 	ld [$ffa2], a
 	call WaitForNextFrame
 	ret
-Func_18_5fbf:
+Tradehouse_LoadBgMap:
 	ld hl, $7080
 	ld a, $33
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
+Tradehouse_BuildNoteScene:
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
@@ -48757,7 +48836,7 @@ Func_18_6b71:
 	ld hl, $6ce3
 	call ScriptDispatcherEnterAfterCall
 	ld a, $1f
-	ld hl, Func_1f_4094
+	ld hl, Script_FadeOutPortrait
 	call CallBankedHL
 	ret
 	call Func_18_6bc8
@@ -48767,6 +48846,7 @@ Func_18_6b71:
 	cp $04
 	jp z, Func_00_3957
 	ret
+Naji_StartTowerClimb:
 	ld a, $05
 	ld hl, Func_05_4785
 	call CallBankedHL
@@ -48774,6 +48854,7 @@ Func_18_6b71:
 	ld hl, Func_00_34e3
 	call CallBankedHL
 	ret
+Naji_ResumeTowerClimb:
 	ld a, $05
 	ld hl, Func_05_479d
 	call CallBankedHL
@@ -48781,6 +48862,7 @@ Func_18_6b71:
 	ld hl, Func_00_34e3
 	call CallBankedHL
 	ret
+Naji_StartTowerFromBottom:
 	ld a, $05
 	ld hl, Func_05_47b2
 	call CallBankedHL
@@ -48799,8 +48881,8 @@ Func_18_6bc8:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_18_6c1b
-	call Func_18_6c27
+	call Naji_LoadPortraitTilemap
+	call Naji_RenderPortraitTalking
 	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $72e8
@@ -48821,13 +48903,13 @@ Func_18_6bc8:
 	call Func_00_0a56
 	pop af
 	ret
-Func_18_6c1b:
+Naji_LoadPortraitTilemap:
 	ld hl, $7368
 	ld a, $1a
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Func_18_6c27:
+Naji_RenderPortraitTalking:
 	ld a, $27
 	ld [wRendererAddr], a
 	ld a, $6c
@@ -48877,6 +48959,7 @@ Func_18_6c8a:
 	ld bc, $1e34
 	call DrawMetasprite
 	ret
+Naji_RenderPortraitAlt:
 	ld a, $9f
 	ld [wRendererAddr], a
 	ld a, $6c
@@ -49205,17 +49288,19 @@ Data_18_7fff:
 
 SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
 
-Func_19_4000:
+Toamuna_LoadGame:
 	ld a, $12
 	ld hl, Func_12_4b8e
 	call CallBankedHL
 	ld [wYNResult], a
 	ret
+Toamuna_SaveGame:
 	ld a, $12
-	ld hl, Func_12_4b67
+	ld hl, SaveGameToSram
 	call CallBankedHL
 	ld [wYNResult], a
 	ret
+Toamuna_CheckSaveExists:
 	ld a, $12
 	ld hl, Func_12_4bb3
 	call CallBankedHL
@@ -49231,8 +49316,8 @@ Func_19_4000:
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	call Func_19_407f
-	call Func_19_408b
+	call Toamuna_LoadPortraitTilemap
+	call Toamuna_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $5800
@@ -49255,13 +49340,13 @@ Func_19_4000:
 	ld hl, $40dd
 	call ScriptDispatcherEnterAfterCall
 	jp Func_00_3957
-Func_19_407f:
+Toamuna_LoadPortraitTilemap:
 	ld hl, $5880
 	ld a, $1a
 	ld de, $9800
 	call CopyBgMapBankedA
 	ret
-Func_19_408b:
+Toamuna_RenderPortrait:
 	ld a, $8b
 	ld [wRendererAddr], a
 	ld a, $40
@@ -49278,6 +49363,7 @@ Func_19_408b:
 	ld de, $98c4
 	call CopyBgMapBankedA
 	ret
+Toamuna_RenderPortraitAlt:
 	ld a, $b4
 	ld [wRendererAddr], a
 	ld a, $40
@@ -49948,7 +50034,7 @@ Func_1f_4089:
 
 SECTION "analyzed_07c094", ROMX[$4094], BANK[$1f]
 
-Func_1f_4094:
+Script_FadeOutPortrait:
 	ld hl, $c181
 	call Func_1f_40b3
 	ld hl, $c1c1
@@ -50043,7 +50129,7 @@ Func_1f_4121:
 	jp Func_00_3957
 Func_1f_4133:
 	ld a, $1f
-	ld hl, Func_1f_4416
+	ld hl, Mistral_StartEncounter
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -50052,7 +50138,7 @@ Func_1f_4133:
 	jp Func_00_3957
 Func_1f_4145:
 	ld a, $1f
-	ld hl, Func_1f_4749
+	ld hl, Rafaga_StartEncounter
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -50061,7 +50147,7 @@ Func_1f_4145:
 	jp Func_00_3957
 Func_1f_4157:
 	ld a, $1f
-	ld hl, Func_1f_4a74
+	ld hl, Tempest_StartEncounter
 	call CallBankedHL
 	push af
 	ld a, $28
@@ -50209,7 +50295,7 @@ Func_1f_429c:
 
 SECTION "analyzed_07c416", ROMX[$4416], BANK[$1f]
 
-Func_1f_4416:
+Mistral_StartEncounter:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -50252,12 +50338,14 @@ Func_1f_4416:
 	call Func_1f_4008
 	ld hl, $45a5
 	jp ScriptDispatcherEnterAfterCall
-	call Func_1f_4497
+Mistral_ShowMonsterPortrait:
+	call Mistral_LoadMonsterTiles
 	call Func_1f_41e6
 	jp Func_1f_40d9
-	call Func_1f_4497
+Mistral_ShowMonsterPortrait2:
+	call Mistral_LoadMonsterTiles
 	jp Func_1f_40f1
-Func_1f_4497:
+Mistral_LoadMonsterTiles:
 	ld a, $35
 	ld hl, $6000
 	ld de, $c181
@@ -50369,7 +50457,7 @@ Func_1f_4575:
 
 SECTION "analyzed_07c749", ROMX[$4749], BANK[$1f]
 
-Func_1f_4749:
+Rafaga_StartEncounter:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -50405,12 +50493,14 @@ Func_1f_4749:
 	call Func_1f_4008
 	ld hl, $4857
 	jp ScriptDispatcherEnterAfterCall
-	call Func_1f_47b7
+Rafaga_ShowMonsterPortrait:
+	call Rafaga_LoadMonsterTiles
 	call Func_1f_41e6
 	jp Func_1f_40d9
-	call Func_1f_47b7
+Rafaga_ShowMonsterPortrait2:
+	call Rafaga_LoadMonsterTiles
 	jp Func_1f_40f1
-Func_1f_47b7:
+Rafaga_LoadMonsterTiles:
 	ld a, $1d
 	ld hl, $7319
 	ld de, $c181
@@ -50479,7 +50569,7 @@ Func_1f_4842:
 
 SECTION "analyzed_07ca74", ROMX[$4a74], BANK[$1f]
 
-Func_1f_4a74:
+Tempest_StartEncounter:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -50515,12 +50605,14 @@ Func_1f_4a74:
 	call Func_1f_4008
 	ld hl, $4b82
 	jp ScriptDispatcherEnterAfterCall
-	call Func_1f_4ae2
+Tempest_ShowMonsterPortrait:
+	call Tempest_LoadMonsterTiles
 	call Func_1f_41e6
 	jp Func_1f_40d9
-	call Func_1f_4ae2
+Tempest_ShowMonsterPortrait2:
+	call Tempest_LoadMonsterTiles
 	jp Func_1f_40f1
-Func_1f_4ae2:
+Tempest_LoadMonsterTiles:
 	ld a, $1e
 	ld hl, $73e7
 	ld de, $c181
@@ -50615,6 +50707,7 @@ Func_1f_4d8c:
 	ld [$d611], a
 	ld hl, $50d6
 	jp ScriptDispatcherEnterAfterCall
+Nada_ShowScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3971
@@ -50636,7 +50729,7 @@ Func_1f_4d8c:
 	ld a, $1c
 	ld de, $9800
 	call CopyBgMapBankedA
-	call Func_1f_4f14
+	call Nada_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000
@@ -50654,6 +50747,7 @@ Func_1f_4d8c:
 	pop af
 	call Func_1f_4008
 	ret
+Nada_ShowSnapReaction:
 	call Func_1f_4d66
 	call HideAllSprites
 	call Func_00_3971
@@ -50675,7 +50769,7 @@ Func_1f_4d8c:
 	ld a, $1c
 	ld de, $9800
 	call CopyBgMapBankedA
-	call Func_1f_4f14
+	call Nada_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000
@@ -50692,6 +50786,7 @@ Func_1f_4d8c:
 	ld [$ffa2], a
 	call WaitForNextFrame
 	ret
+Nada_ShowRageScene:
 	call Func_1f_4d66
 	call HideAllSprites
 	call Func_00_3971
@@ -50732,12 +50827,14 @@ Func_1f_4d8c:
 	ld [$ffa2], a
 	call WaitForNextFrame
 	ret
-	call Func_1f_4ee1
+Nada_ShowMonsterPortrait:
+	call Nada_LoadMonsterTiles
 	call Func_1f_41e6
 	jp Func_1f_40d9
-	call Func_1f_4ee1
+Nada_ShowMonsterPortrait2:
+	call Nada_LoadMonsterTiles
 	jp Func_1f_40f1
-Func_1f_4ee1:
+Nada_LoadMonsterTiles:
 	ld a, $1c
 	ld hl, $7000
 	ld de, $c181
@@ -50757,7 +50854,7 @@ Func_1f_4ee1:
 	ld c, $10
 	call CopyDEtoHL
 	ret
-Func_1f_4f14:
+Nada_RenderPortrait:
 	ld a, $14
 	ld [wRendererAddr], a
 	ld a, $4f
@@ -50769,6 +50866,7 @@ Func_1f_4f14:
 	call Func_1f_4f5b
 	call Func_1f_4fb2
 	ret
+Nada_RenderPortraitAngry:
 	ld a, $2f
 	ld [wRendererAddr], a
 	ld a, $4f
@@ -51091,7 +51189,7 @@ Data_1f_5942:
 
 SECTION "analyzed_07d960", ROMX[$5960], BANK[$1f]
 
-Func_1f_5960:
+Toamuna_ShowMenu2:
 	ld de, $98ca
 	ld bc, $0904
 	call ScriptOpcode05Helper
@@ -51153,7 +51251,7 @@ Data_1f_59cd:
 
 SECTION "analyzed_07d9d3", ROMX[$59d3], BANK[$1f]
 
-Func_1f_59d3:
+Toamuna_ShowMenu1:
 	ld de, $98ca
 	ld bc, $0904
 	call ScriptOpcode05Helper
@@ -51230,7 +51328,7 @@ Data_1f_5a50:
 
 SECTION "analyzed_07dabc", ROMX[$5abc], BANK[$1f]
 
-Func_1f_5abc:
+Naji_ShowMenu2:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51301,7 +51399,7 @@ Data_1f_5b39:
 
 SECTION "analyzed_07db42", ROMX[$5b42], BANK[$1f]
 
-Func_1f_5b42:
+Naji_ShowMenu3a:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51372,7 +51470,7 @@ Data_1f_5bbf:
 
 SECTION "analyzed_07dbcb", ROMX[$5bcb], BANK[$1f]
 
-Func_1f_5bcb:
+Naji_ShowMenu3b:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51448,7 +51546,7 @@ Data_1f_5c51:
 
 SECTION "analyzed_07dc54", ROMX[$5c54], BANK[$1f]
 
-Func_1f_5c54:
+Naji_ShowMenu4:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51529,7 +51627,7 @@ Data_1f_5cd1:
 
 SECTION "analyzed_07dd76", ROMX[$5d76], BANK[$1f]
 
-Func_1f_5d76:
+Naji_ShowSubMenu2:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51596,7 +51694,7 @@ Data_1f_5de3:
 
 SECTION "analyzed_07de43", ROMX[$5e43], BANK[$1f]
 
-Func_1f_5e43:
+Verde_ShowSharedMenu:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51667,7 +51765,7 @@ Data_1f_5eb0:
 
 SECTION "analyzed_07df50", ROMX[$5f50], BANK[$1f]
 
-Func_1f_5f50:
+Verde_ShowMenu2:
 	ld de, $98cc
 	ld bc, $0804
 	call ScriptOpcode05Helper
@@ -51729,24 +51827,74 @@ Data_1f_5fbd:
 
 SECTION "analyzed_07dfc3", ROMX[$5fc3], BANK[$1f]
 
-Data_1f_5fc3:
-	db $11, $cc, $98, $01, $04, $08, $cd, $d3, $3b, $af, $ea, $00, $d6, $cd, $e6, $02
-	db $cd, $52, $02, $cd, $f3, $3c, $fa, $8c, $ff, $cb, $47, $28, $08, $f5, $3e, $0d
-	db $cd, $85, $0a, $f1, $c9, $21, $00, $d6, $01, $00, $02, $cd, $55, $58, $21, $30
-	db $60, $fa, $00, $d6, $cb, $27, $85, $6f, $7c, $ce, $00, $67, $2a, $66, $6f, $11
-	db $ed, $98, $cd, $4e, $0b, $cd, $11, $60, $cd, $f1, $0b, $c3, $d0, $5f, $fa, $00
-	db $d6, $fe, $00, $28, $06, $01, $68, $48, $cd, $ec, $65, $fa, $00, $d6, $fe, $02
-	db $28, $06, $01, $a0, $48, $cd, $be, $65, $21, $12, $d6, $34, $c9, $36, $60, $54
-	db $60, $72, $60, $02, $06, $48, $60, $3c, $60, $e6, $ee, $f6, $97, $97, $97, $e7
-	db $ef, $f7, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06
-	db $06, $02, $06, $66, $60, $5a, $60, $ce, $d6, $de, $97, $97, $97, $cf, $d7, $df
-	db $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $02
-	db $06, $84, $60, $78, $60, $94, $b3, $b5, $97, $97, $97, $95, $b4, $b6, $97, $97
-	db $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06
+Verde_ShowItemsSubMenu:
+	ld de, $98cc
+	ld bc, $0804
+	call ScriptOpcode05Helper
+	xor a
+	ld [wSubMenuCursor], a
+Func_1f_5fd0:
+	call WaitForNextFrame
+	call ReadJoypad
+	call DispatchTextRenderer
+	ld a, [$ff8c]
+	bit 0, a
+	jr z, Func_1f_5fe8
+	push af
+	ld a, $0d
+	call CallLibFunc
+	pop af
+	ret
+Func_1f_5fe8:
+	ld hl, wSubMenuCursor
+	ld bc, $0200
+	call Func_1f_5855
+	ld hl, $6030
+	ld a, [wSubMenuCursor]
+	sla a
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld de, $98ed
+	call CopyBgMap
+	call Func_1f_6011
+	call HideUnusedOamSprites
+	jp Func_1f_5fd0
+Func_1f_6011:
+	ld a, [wSubMenuCursor]
+	cp $00
+	jr z, Func_1f_601e
+	ld bc, $4868
+	call Func_1f_65ec
+Func_1f_601e:
+	ld a, [wSubMenuCursor]
+	cp $02
+	jr z, Func_1f_602b
+	ld bc, $48a0
+	call Func_1f_65be
+Func_1f_602b:
+	ld hl, $d612
+	inc [hl]
+	ret
+
+SECTION "analyzed_07e030", ROMX[$6030], BANK[$1f]
+
+Data_1f_6030:
+	db $36, $60, $54, $60, $72, $60, $02, $06, $48, $60, $3c, $60, $e6, $ee, $f6, $97
+	db $97, $97, $e7, $ef, $f7, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06
+	db $06, $06, $06, $06, $02, $06, $66, $60, $5a, $60, $ce, $d6, $de, $97, $97, $97
+	db $cf, $d7, $df, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06
+	db $06, $06, $02, $06, $84, $60, $78, $60, $94, $b3, $b5, $97, $97, $97, $95, $b4
+	db $b6, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06
 
 SECTION "analyzed_07e090", ROMX[$6090], BANK[$1f]
 
-Func_1f_6090:
+Pashute_ShowMenu:
 	ld de, $98cb
 	ld bc, $0904
 	call ScriptOpcode05Helper
@@ -51814,7 +51962,7 @@ Data_1f_60fd:
 
 SECTION "analyzed_07e169", ROMX[$6169], BANK[$1f]
 
-Func_1f_6169:
+Pashute_ShowExplainSubMenu:
 	ld de, $98cb
 	ld bc, $0904
 	call ScriptOpcode05Helper
@@ -51882,7 +52030,7 @@ Data_1f_61d6:
 
 SECTION "analyzed_07e242", ROMX[$6242], BANK[$1f]
 
-Func_1f_6242:
+ShowMonsterDiscStoneSelect:
 	call Func_1f_63a6
 Func_1f_6245:
 	ld de, $982b
@@ -52048,6 +52196,7 @@ Func_1f_63bf:
 	ld hl, $d602
 	ld [hl], b
 	ret
+Verde_ShowMainMenu:
 	ld de, $98cb
 	ld bc, $0904
 	call ScriptOpcode05Helper
@@ -52220,7 +52369,7 @@ Data_1f_6546:
 
 SECTION "analyzed_07e58a", ROMX[$658a], BANK[$1f]
 
-Func_1f_658a:
+Verde_ShowReleaseMonsterSelect:
 	call Func_1f_6590
 	jp Func_1f_6245
 Func_1f_6590:
@@ -60391,7 +60540,7 @@ Func_31_4036:
 
 SECTION "analyzed_0c4040", ROMX[$4040], BANK[$31]
 
-Func_31_4040:
+LinkExchangeConnect:
 	call Func_31_4022
 	call Func_31_4006
 	xor a
@@ -60473,7 +60622,7 @@ Func_31_40a1:
 	ld a, [$d10e]
 	cp $f3
 	jp z, Func_31_4098
-	jp Func_31_4040
+	jp LinkExchangeConnect
 Func_31_40c4:
 	ld hl, $c297
 	ld a, $a3
@@ -60489,7 +60638,7 @@ Func_31_40c4:
 	ld a, [$d10e]
 	cp $f2
 	jp z, Func_31_4098
-	jp Func_31_4040
+	jp LinkExchangeConnect
 Func_31_40e6:
 	call Func_31_402c
 	call Func_31_4006
@@ -60674,7 +60823,7 @@ Func_31_4244:
 	ld a, [$d10e]
 	cp $f1
 	jp z, Func_31_434a
-	jp Func_31_4040
+	jp LinkExchangeConnect
 Func_31_4267:
 	ld hl, $c297
 	ld a, $7e
@@ -60690,7 +60839,7 @@ Func_31_4267:
 	ld a, [$d10e]
 	cp $f0
 	jp z, Func_31_42a4
-	jp Func_31_4040
+	jp LinkExchangeConnect
 
 SECTION "analyzed_0c4289", ROMX[$4289], BANK[$31]
 
@@ -61029,6 +61178,7 @@ Func_31_44bf:
 	jr nz, Func_31_44bf
 	ld a, d
 	ret
+LinkExchangeTransfer:
 	call Func_31_40e6
 	ld a, [$d5c2]
 	cp $03
@@ -61562,7 +61712,7 @@ Data_32_409d:
 
 SECTION "analyzed_0c80a5", ROMX[$40a5], BANK[$32]
 
-Func_32_40a5:
+ShowMonsterDetailScreen:
 	ld a, [$cfd9]
 	push af
 	ld a, [wActiveMonster]

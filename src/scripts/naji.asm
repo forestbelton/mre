@@ -37,7 +37,7 @@ NajiScript:
     SCRIPT_IF_EQ .Addr=wC2D7, .Value=$01, .Target=NajiCycler
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$02, .Target=NajiProgress
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$01, .Target=NajiCycler
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "Did you come to"
     SCRIPT_NEWLINE
     db "climb the tower?"
@@ -98,7 +98,7 @@ NajiCycler:
     SCRIPT_JUMP_TABLE wCycleCounter, .greet0, .greet1, .greet2, .greet3
 
 .greet0:
-    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
     db "Oh, you're here."
     SCRIPT_NEWLINE
     db "Good luck."
@@ -106,7 +106,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet1:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "It's you. Good"
     SCRIPT_NEWLINE
     db "luck, my friend."
@@ -114,7 +114,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet2:
-    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
     db "It's you. We're"
     SCRIPT_NEWLINE
     db "counting on you."
@@ -122,7 +122,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet3:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "Hey. It's you!"
     SCRIPT_NEWLINE
     db "Take it easy!"
@@ -130,7 +130,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 NajiProgress:
-    SCRIPT_RENDERER .Addr=$6c9f, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
     db "Oh, it's you"
     SCRIPT_NEWLINE
     db "again. You made"
@@ -155,30 +155,30 @@ NajiProgress:
     SCRIPT_GOTO .Target=NajiMenu
 
 NajiMenu:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "What are your"
     SCRIPT_NEWLINE
     db "plans this time?"
     SCRIPT_IF_EQ .Addr=wNajiMenuShown, .Value=$01, .Target=.checkAsk
     SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderClimb
-    SCRIPT_FAR_CALL .Addr=$5abc, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu2, .Bank=$1f
     SCRIPT_GOTO .Target=.menuFinalize
 .renderClimb:
-    SCRIPT_FAR_CALL .Addr=$5b42, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu3a, .Bank=$1f
     SCRIPT_GOTO .Target=.menuFinalize
 .checkAsk:
     SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderLeave
-    SCRIPT_FAR_CALL .Addr=$5bcb, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu3b, .Bank=$1f
     SCRIPT_GOTO .Target=.menuFinalize
 .renderLeave:
-    SCRIPT_FAR_CALL .Addr=$5c54, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu4, .Bank=$1f
 .menuFinalize:
-    SCRIPT_FAR_CALL .Addr=$6c1b, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Naji_LoadPortraitTilemap, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
 NajiRestart:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "You've climbed"
     SCRIPT_NEWLINE
     db "till Level "
@@ -188,14 +188,14 @@ NajiRestart:
     SCRIPT_NEWLINE
     db "start there?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$6ba6, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_ResumeTowerClimb, .Bank=$18
     SCRIPT_END
 
 NajiClimb:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "I understand."
     SCRIPT_NEWLINE
     db "I'll open the"
@@ -204,31 +204,31 @@ NajiClimb:
     SCRIPT_NEWLINE
     db "are you ready?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$6b95, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_StartTowerClimb, .Bank=$18
     SCRIPT_END
 
 NajiAskMenu:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "What do you"
     SCRIPT_NEWLINE
     db "want to know?"
-    SCRIPT_FAR_CALL .Addr=$5d76, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$6c1b, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Naji_ShowSubMenu2, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_LoadPortraitTilemap, .Bank=$18
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, NajiAskTower, NajiAskItem, NajiAskStop
 
 NajiLeave:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "See you later."
     SCRIPT_WAIT
     SCRIPT_END
 
 NajiTowerLong:
     SCRIPT_IF_EQ .Addr=wTowerExplained, .Value=$01, .Target=NajiTowerShort
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "10 underground"
     SCRIPT_NEWLINE
     db "levels here. The"
@@ -240,12 +240,12 @@ NajiTowerLong:
     db "Don't misjudge."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wTowerExplained, .Value=$01
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$6bb7, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_StartTowerFromBottom, .Bank=$18
     SCRIPT_END
 
 NajiTowerShort:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "You again! Going"
     SCRIPT_NEWLINE
     db "to try again?"
@@ -258,14 +258,14 @@ NajiTowerShort:
     SCRIPT_NEWLINE
     db "show you the way"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$58d7, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=$4094, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$6bb7, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Naji_StartTowerFromBottom, .Bank=$18
     SCRIPT_END
 
 NajiAskTower:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "Find the golden"
     SCRIPT_NEWLINE
     db "key in each"
@@ -321,7 +321,7 @@ NajiAskTower:
     SCRIPT_GOTO .Target=NajiAskMenu
 
 NajiAskItem:
-    SCRIPT_RENDERER .Addr=$6c27, .Bank=$18
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
     db "Let me explain."
     SCRIPT_NEWLINE
     db "There are over"

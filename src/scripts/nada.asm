@@ -25,8 +25,8 @@ NadaScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.NadaVictory
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.NadaDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
-    SCRIPT_RENDERER .Addr=$4f14, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowScene, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortrait, .Bank=$1f
     db "Wow. It took you"
     SCRIPT_NEWLINE
     db "a while. I heard"
@@ -75,14 +75,14 @@ NadaScript:
     SCRIPT_NEWLINE
     db "you should know."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
-    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
     db "Hm, I don't know"
     SCRIPT_WAIT
     db "Ask the tower."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4dfe, .Bank=$1f
-    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowSnapReaction, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP!"
@@ -96,8 +96,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "spare your life!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
-    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
     db "Heh! I don't"
     SCRIPT_NEWLINE
     db "think so."
@@ -110,8 +110,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "fool me."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4dfe, .Bank=$1f
-    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowSnapReaction, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP, SNAP!"
@@ -124,8 +124,8 @@ NadaScript:
     SCRIPT_NEWLINE
     db "any angrier!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
-    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
     db "Sorry, but this"
     SCRIPT_NEWLINE
     db "is how it goes."
@@ -136,7 +136,7 @@ NadaScript:
     SCRIPT_WAIT
     db "be gone soon."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$4e65, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowRageScene, .Bank=$1f
     db "!!!"
     SCRIPT_NEWLINE
     db "SNAAAAAAAP!"
@@ -161,21 +161,21 @@ NadaScript:
     SCRIPT_NEWLINE
     db "see what you got"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=$4ed2, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=$4edb, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowMonsterPortrait, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowMonsterPortrait2, .Bank=$1f
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
 .NadaVictory:
-    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
-    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowScene, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
     db "Unbelievable."
     SCRIPT_WAIT
     db "If I only had"
     SCRIPT_NEWLINE
     db "the great power."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=$5e5b, .Bank=$18
-    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Studio_BuildHostSceneWithTiles, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
     db "I didn't think"
     SCRIPT_NEWLINE
     db "that this day"
@@ -202,7 +202,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "legendary power."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$5ec8, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortrait, .Bank=$18
     db "But just because"
     SCRIPT_NEWLINE
     db "you got here"
@@ -223,7 +223,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "give is that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$5f3c, .Bank=$18
+    SCRIPT_RENDERER .Addr=Studio_RenderPortraitAlt, .Bank=$18
     db "silver key you"
     SCRIPT_NEWLINE
     db "picked up. That"
@@ -292,8 +292,8 @@ NadaScript:
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$03
     SCRIPT_END
 .NadaDefeat:
-    SCRIPT_FAR_CALL .Addr=$4d97, .Bank=$1f
-    SCRIPT_RENDERER .Addr=$4f2f, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=Nada_ShowScene, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
     db "No one beats me"
     SCRIPT_NEWLINE
     db "when I'm serious"
@@ -302,7 +302,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "fighting me!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=$4f14, .Bank=$1f
+    SCRIPT_RENDERER .Addr=Nada_RenderPortrait, .Bank=$1f
     db "After this, I'll"
     SCRIPT_NEWLINE
     db "destroy the land"

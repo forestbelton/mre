@@ -3076,7 +3076,7 @@
 					"addr":	6391,
 					"len":	64
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0x1937",
 					"len":	"0x4b"
 				}, {
@@ -11988,7 +11988,7 @@
 					"addr":	393276,
 					"len":	24
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0x60054",
 					"len":	"0x20"
 				}, {
@@ -11996,7 +11996,7 @@
 					"addr":	393332,
 					"len":	18
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0x60086",
 					"len":	"0x2"
 				}, {
@@ -12008,7 +12008,7 @@
 					"addr":	398113,
 					"len":	468
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	"0x61de3",
 					"len":	"0x17"
 				}, {
@@ -12464,9 +12464,13 @@
 					"addr":	516029,
 					"len":	6
 				}, {
-					"type":	"data",
+					"type":	"code",
 					"addr":	516035,
-					"len":	205
+					"len":	109
+				}, {
+					"type":	"data",
+					"addr":	516144,
+					"len":	96
 				}, {
 					"type":	"code",
 					"addr":	516240,
@@ -16420,6 +16424,285 @@
 		}, {
 			"addr":	15627,
 			"name":	"DispatchTextRenderer_Return"
+		}, {
+			"addr":	6391,
+			"name":	"OpenRoomSelectMenu"
+		}, {
+			"addr":	6455,
+			"name":	"SetupExchangeRoomSelect"
+		}, {
+			"addr":	6494,
+			"name":	"EnterSelectedRoom"
+		}, {
+			"addr":	6530,
+			"name":	"OpenRoomArrangeMenu"
+		}, {
+			"addr":	297831,
+			"name":	"SaveGameToSram"
+		}, {
+			"addr":	311940,
+			"name":	"Nox_RenderPortrait_AlfSpeaking"
+		}, {
+			"addr":	311964,
+			"name":	"Nox_RenderPortrait_NoxSpeaking"
+		}, {
+			"addr":	311988,
+			"name":	"Nox_RenderPortrait_Reminiscing"
+		}, {
+			"addr":	312012,
+			"name":	"Nox_RenderPortrait_GoSeeFriends"
+		}, {
+			"addr":	312036,
+			"name":	"Nox_RenderPortrait_Note"
+		}, {
+			"addr":	327757,
+			"name":	"ShowRegeneratedMonster"
+		}, {
+			"addr":	393216,
+			"name":	"Pashute_GetMonsterUsesDecimal"
+		}, {
+			"addr":	393255,
+			"name":	"Pashute_IsReplacingActiveMonster"
+		}, {
+			"addr":	393276,
+			"name":	"Pashute_GetActiveMonsterUses"
+		}, {
+			"addr":	393293,
+			"name":	"Pashute_SetReplaceTargetActive"
+		}, {
+			"addr":	393300,
+			"name":	"Pashute_ResetRosterKeepNew"
+		}, {
+			"addr":	393332,
+			"name":	"Pashute_AddFiveMonsterUses"
+		}, {
+			"addr":	393376,
+			"name":	"Pashute_LoadShrineScene"
+		}, {
+			"addr":	393459,
+			"name":	"Pashute_LoadIntroScene"
+		}, {
+			"addr":	393540,
+			"name":	"Pashute_LoadShrineTilemap"
+		}, {
+			"addr":	393552,
+			"name":	"Pashute_RenderPortraitNeutral"
+		}, {
+			"addr":	393697,
+			"name":	"Pashute_RenderPortraitPanic"
+		}, {
+			"addr":	393765,
+			"name":	"Pashute_RenderPortraitShocked"
+		}, {
+			"addr":	398113,
+			"name":	"CountCheckedInMonsters"
+		}, {
+			"addr":	398149,
+			"name":	"Verde_BuildPortraitScene"
+		}, {
+			"addr":	398232,
+			"name":	"Verde_BuildIntroScene"
+		}, {
+			"addr":	398315,
+			"name":	"Verde_LoadBgMap"
+		}, {
+			"addr":	398327,
+			"name":	"Verde_RenderPortrait"
+		}, {
+			"addr":	398463,
+			"name":	"Verde_RenderPortraitSurprised"
+		}, {
+			"addr":	398522,
+			"name":	"Verde_RenderPortraitCalm"
+		}, {
+			"addr":	400899,
+			"name":	"Studio_BuildHostScene"
+		}, {
+			"addr":	400987,
+			"name":	"Studio_BuildHostSceneWithTiles"
+		}, {
+			"addr":	401084,
+			"name":	"Studio_LoadBgMap"
+		}, {
+			"addr":	401096,
+			"name":	"Studio_RenderPortrait"
+		}, {
+			"addr":	401212,
+			"name":	"Studio_RenderPortraitAlt"
+		}, {
+			"addr":	401262,
+			"name":	"Tradehouse_BuildScene"
+		}, {
+			"addr":	401265,
+			"name":	"Tradehouse_BuildSceneNoInit"
+		}, {
+			"addr":	401343,
+			"name":	"Tradehouse_LoadBgMap"
+		}, {
+			"addr":	401355,
+			"name":	"Tradehouse_BuildNoteScene"
+		}, {
+			"addr":	400867,
+			"name":	"LinkClampResultCode"
+		}, {
+			"addr":	400876,
+			"name":	"LinkStoreSendRoom"
+		}, {
+			"addr":	400883,
+			"name":	"LinkStoreRecvRoom"
+		}, {
+			"addr":	404373,
+			"name":	"Naji_StartTowerClimb"
+		}, {
+			"addr":	404390,
+			"name":	"Naji_ResumeTowerClimb"
+		}, {
+			"addr":	404407,
+			"name":	"Naji_StartTowerFromBottom"
+		}, {
+			"addr":	404507,
+			"name":	"Naji_LoadPortraitTilemap"
+		}, {
+			"addr":	404519,
+			"name":	"Naji_RenderPortraitTalking"
+		}, {
+			"addr":	404639,
+			"name":	"Naji_RenderPortraitAlt"
+		}, {
+			"addr":	409600,
+			"name":	"Toamuna_LoadGame"
+		}, {
+			"addr":	409612,
+			"name":	"Toamuna_SaveGame"
+		}, {
+			"addr":	409624,
+			"name":	"Toamuna_CheckSaveExists"
+		}, {
+			"addr":	409727,
+			"name":	"Toamuna_LoadPortraitTilemap"
+		}, {
+			"addr":	409739,
+			"name":	"Toamuna_RenderPortrait"
+		}, {
+			"addr":	409780,
+			"name":	"Toamuna_RenderPortraitAlt"
+		}, {
+			"addr":	508052,
+			"name":	"Script_FadeOutPortrait"
+		}, {
+			"addr":	508950,
+			"name":	"Mistral_StartEncounter"
+		}, {
+			"addr":	509064,
+			"name":	"Mistral_ShowMonsterPortrait"
+		}, {
+			"addr":	509073,
+			"name":	"Mistral_ShowMonsterPortrait2"
+		}, {
+			"addr":	509079,
+			"name":	"Mistral_LoadMonsterTiles"
+		}, {
+			"addr":	509769,
+			"name":	"Rafaga_StartEncounter"
+		}, {
+			"addr":	509864,
+			"name":	"Rafaga_ShowMonsterPortrait"
+		}, {
+			"addr":	509873,
+			"name":	"Rafaga_ShowMonsterPortrait2"
+		}, {
+			"addr":	509879,
+			"name":	"Rafaga_LoadMonsterTiles"
+		}, {
+			"addr":	510580,
+			"name":	"Tempest_StartEncounter"
+		}, {
+			"addr":	510675,
+			"name":	"Tempest_ShowMonsterPortrait"
+		}, {
+			"addr":	510684,
+			"name":	"Tempest_ShowMonsterPortrait2"
+		}, {
+			"addr":	510690,
+			"name":	"Tempest_LoadMonsterTiles"
+		}, {
+			"addr":	511383,
+			"name":	"Nada_ShowScene"
+		}, {
+			"addr":	511486,
+			"name":	"Nada_ShowSnapReaction"
+		}, {
+			"addr":	511589,
+			"name":	"Nada_ShowRageScene"
+		}, {
+			"addr":	511698,
+			"name":	"Nada_ShowMonsterPortrait"
+		}, {
+			"addr":	511707,
+			"name":	"Nada_ShowMonsterPortrait2"
+		}, {
+			"addr":	511713,
+			"name":	"Nada_LoadMonsterTiles"
+		}, {
+			"addr":	511764,
+			"name":	"Nada_RenderPortrait"
+		}, {
+			"addr":	511791,
+			"name":	"Nada_RenderPortraitAngry"
+		}, {
+			"addr":	514400,
+			"name":	"Toamuna_ShowMenu2"
+		}, {
+			"addr":	514515,
+			"name":	"Toamuna_ShowMenu1"
+		}, {
+			"addr":	514748,
+			"name":	"Naji_ShowMenu2"
+		}, {
+			"addr":	514882,
+			"name":	"Naji_ShowMenu3a"
+		}, {
+			"addr":	515019,
+			"name":	"Naji_ShowMenu3b"
+		}, {
+			"addr":	515156,
+			"name":	"Naji_ShowMenu4"
+		}, {
+			"addr":	515446,
+			"name":	"Naji_ShowSubMenu2"
+		}, {
+			"addr":	515651,
+			"name":	"Verde_ShowSharedMenu"
+		}, {
+			"addr":	515920,
+			"name":	"Verde_ShowMenu2"
+		}, {
+			"addr":	516035,
+			"name":	"Verde_ShowItemsSubMenu"
+		}, {
+			"addr":	516240,
+			"name":	"Pashute_ShowMenu"
+		}, {
+			"addr":	516457,
+			"name":	"Pashute_ShowExplainSubMenu"
+		}, {
+			"addr":	516674,
+			"name":	"ShowMonsterDiscStoneSelect"
+		}, {
+			"addr":	517070,
+			"name":	"Verde_ShowMainMenu"
+		}, {
+			"addr":	517514,
+			"name":	"Verde_ShowReleaseMonsterSelect"
+		}, {
+			"addr":	802880,
+			"name":	"LinkExchangeConnect"
+		}, {
+			"addr":	804041,
+			"name":	"LinkExchangeTransfer"
+		}, {
+			"addr":	819365,
+			"name":	"ShowMonsterDetailScreen"
 		}],
 	"conflicts":	[{
 			"addr":	0,
