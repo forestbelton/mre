@@ -332,11 +332,11 @@ ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the wSpawnCellX/wSpawnCellY 
 	ld e, a
 	ld bc, $0000
 	ld a, $1f
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -507,7 +507,7 @@ ItemEffect_Item22:  ; $22: key-like (wProgressFlags bit 7 + GrantSilverKey); nev
 	ld [wTransitionState], a
 	ret
 
-ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX $28, bumps $cfda+6
+ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX $28, bumps wMonsterDiscStones+6
 	push af
 	ld a, $28
 	call PlaySoundTracked

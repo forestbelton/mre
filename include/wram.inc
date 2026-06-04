@@ -19,6 +19,17 @@
 DEF WRAM_INC EQU 1
 
 
+SECTION "wram_spawn_params", WRAM0[$C29C]
+; SpawnEntity argument block: the far-call trampoline (Func_00_0467) marshals these
+; into AF/DE/HL before tail-calling the bank-3 spawn routine ($4593).
+
+wSpawnType::        ds 1    ; $C29C: entity type/id to spawn (-> A)
+                    ds 2    ; $C29D-$C29E
+wSpawnY::           ds 1    ; $C29F: spawn Y (-> D)
+wSpawnX::           ds 1    ; $C2A0: spawn X (-> E)
+wSpawnPtr::         ds 2    ; $C2A1: spawn context pointer, big-endian hi/lo (-> HL)
+
+
 SECTION "wram_floor", WRAM0[$C2C0]
 
 wActiveFloor::      ds 1    ; $C2C0: active tower floor (1-60). Copied from wCFF0 and

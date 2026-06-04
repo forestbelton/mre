@@ -767,10 +767,10 @@ CallBankedHL:
 	ld de, $043c
 	push de
 	jp hl
-	ld [$c29c], a
+	ld [wSpawnType], a
 	pop af
 	ld [$2fff], a
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ret
 
 SECTION "analyzed_000447", ROM0[$0447]
@@ -784,9 +784,9 @@ SECTION "analyzed_000467", ROM0[$0467]
 Func_00_0467:
 	push af
 	ld a, d
-	ld [$c29f], a
+	ld [wSpawnY], a
 	ld a, e
-	ld [$c2a0], a
+	ld [wSpawnX], a
 	pop af
 	ld d, a
 	ld a, [$7fff]
@@ -796,15 +796,15 @@ Func_00_0467:
 	ld de, $043c
 	push de
 	push hl
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	push af
-	ld a, [$c29f]
+	ld a, [wSpawnY]
 	ld d, a
-	ld a, [$c2a0]
+	ld a, [wSpawnX]
 	ld e, a
-	ld a, [$c2a1]
+	ld a, [wSpawnPtr]
 	ld h, a
-	ld a, [$c2a2]
+	ld a, [wSpawnPtr+1]
 	ld l, a
 	pop af
 	ret
@@ -812,20 +812,20 @@ Func_00_0467:
 SECTION "analyzed_000495", ROM0[$0495]
 
 Func_00_0495:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	ld hl, $04b7
 	push hl
-	ld a, [$c2a1]
+	ld a, [wSpawnPtr]
 	ld h, a
-	ld a, [$c2a2]
+	ld a, [wSpawnPtr+1]
 	ld l, a
 	jp hl
 	pop af
@@ -1516,7 +1516,7 @@ Func_00_0903:
 	ld d, h
 	ld e, l
 	call WaitForHBlank
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	add a, a
 	add a, a
 	add a, a
@@ -1524,7 +1524,7 @@ Func_00_0903:
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ldh [$ffa1], a
 	pop af
 	ld [$2fff], a
@@ -1533,7 +1533,7 @@ Func_00_0903:
 SECTION "analyzed_00094a", ROM0[$094a]
 
 Func_00_094a:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
@@ -1543,7 +1543,7 @@ Func_00_094a:
 	ld d, h
 	ld e, l
 	call WaitForHBlank
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	add a, a
 	add a, a
 	add a, a
@@ -1551,7 +1551,7 @@ Func_00_094a:
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ldh [$ffa2], a
 	pop af
 	ld [$2fff], a
@@ -1560,26 +1560,26 @@ Func_00_094a:
 SECTION "analyzed_000979", ROM0[$0979]
 
 Func_00_0979:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	call Func_00_052e
 	pop af
 	ld [$2fff], a
 	ret
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	call Func_00_0583
 	pop af
 	ld [$2fff], a
@@ -1588,7 +1588,7 @@ Func_00_0979:
 SECTION "analyzed_0009b1", ROM0[$09b1]
 
 Func_00_09b1:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, b
 	ld [$c29d], a
 	ld a, c
@@ -1599,13 +1599,13 @@ Func_00_09b1:
 	ld [$2fff], a
 	ld a, [$c29d]
 	ld b, a
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	call Func_00_0716
 	pop af
 	ld [$2fff], a
 	ret
 Func_00_09d5:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, b
 	ld [$c29d], a
 	ld a, c
@@ -1616,7 +1616,7 @@ Func_00_09d5:
 	ld [$2fff], a
 	ld a, [$c29d]
 	ld b, a
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	call Func_00_0732
 	pop af
 	ld [$2fff], a
@@ -1704,6 +1704,7 @@ PlaySoundTracked:
 	pop de
 	pop bc
 	ret
+
 PlaySound:
 	push bc
 	push de
@@ -2694,10 +2695,10 @@ Func_00_106f:
 	pop hl
 	ret
 Func_00_108f:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	xor a
 	ldh [rVBK], a
@@ -2716,10 +2717,10 @@ Func_00_108f:
 	ld [$2fff], a
 	ret
 Func_00_10b5:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	xor a
 	ldh [rVBK], a
@@ -2927,7 +2928,7 @@ Func_00_11dc:
 	jr z, Func_00_11f6
 	cp $d6
 	ret nz
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$c2ab]
 	or a
 	jr z, Func_00_1203
@@ -2940,7 +2941,7 @@ Data_00_11f2:
 SECTION "analyzed_0011f6", ROM0[$11f6]
 
 Func_00_11f6:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [wHasBattleCard]
 	or a
 	jr z, Func_00_1203
@@ -2953,7 +2954,7 @@ Data_00_11ff:
 SECTION "analyzed_001203", ROM0[$1203]
 
 Func_00_1203:
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	res 6, a
 	ret
 
@@ -8222,10 +8223,10 @@ Func_00_369c:
 	jr nz, Func_00_369c
 	ret
 Func_00_36a3:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	call Func_00_3692
 	pop af
@@ -8648,10 +8649,10 @@ Func_00_38e3:
 SECTION "analyzed_003913", ROM0[$3913]
 
 Func_00_3913:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 Func_00_3920:
 	ld a, [hl+]
@@ -8665,20 +8666,20 @@ Func_00_3920:
 	ld [$2fff], a
 	ret
 CopyBytesBanked:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	call CopyHLtoDE
 	pop af
 	ld [$2fff], a
 	ret
 CopyBgMapBankedA:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, [$7fff]
 	push af
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [$2fff], a
 	call CopyBgMap
 	pop af
@@ -9037,11 +9038,11 @@ Func_01_42f2:
 	ld [$cf83], a
 	pop af
 	ld bc, $0000
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -10806,11 +10807,11 @@ SpawnPickupEffect:
 	ld c, a
 	ld b, [hl]
 	ld a, $08
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -10836,11 +10837,11 @@ SpawnPickupEffectAlt:
 	ld c, a
 	ld b, [hl]
 	ld a, $0c
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -10936,11 +10937,11 @@ Func_01_55db:
 	ld d, a
 	ld bc, $0000
 	ld a, $08
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -11271,11 +11272,11 @@ Func_01_587f:
 	ld d, a
 	ld bc, $0000
 	ld a, $0a
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -11465,11 +11466,11 @@ Func_01_59ce:
 	jr nz, Func_01_599b
 	ld bc, $0000
 	ld a, $3f
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -11499,11 +11500,11 @@ Func_01_5a16:
 	ld d, a
 	ld bc, $0000
 	ld a, $0b
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -13612,11 +13613,11 @@ Func_01_67ee:
 	ld d, [hl]
 	ld bc, $0000
 	ld a, $08
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -13634,11 +13635,11 @@ Func_01_6829:
 	ld d, [hl]
 	ld bc, $0000
 	ld a, $0c
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -13701,11 +13702,11 @@ Func_01_686f:
 	ld d, a
 	ld bc, $0000
 	ld a, $08
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
@@ -16636,9 +16637,9 @@ Func_02_4071:
 	and $f0
 	jr z, Func_02_4096
 	ld a, [hl+]
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, [hl+]
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, [hl+]
 	ld d, a
 	ld a, [hl+]
@@ -16646,9 +16647,9 @@ Func_02_4071:
 	ld a, [hl+]
 	ld c, a
 	ld b, [hl]
-	ld a, [$c2a2]
+	ld a, [wSpawnPtr+1]
 	ld l, a
-	ld a, [$c2a1]
+	ld a, [wSpawnPtr]
 	ld h, a
 	call Func_00_0c84
 	pop bc
@@ -16656,17 +16657,17 @@ Func_02_4071:
 	ret
 Func_02_4096:
 	ld a, [hl+]
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, [hl+]
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	inc hl
 	inc hl
 	ld a, [hl+]
 	ld c, a
 	ld b, [hl]
-	ld a, [$c2a2]
+	ld a, [wSpawnPtr+1]
 	ld l, a
-	ld a, [$c2a1]
+	ld a, [wSpawnPtr]
 	ld h, a
 	call Func_00_0c45
 	pop bc
@@ -17539,7 +17540,7 @@ Func_04_42ab:
 	jr nz, Func_04_4286
 	ret
 Func_04_42b3:
-	ld [$c29c], a
+	ld [wSpawnType], a
 	and $0f
 	jr z, Func_04_42c6
 	cp $01
@@ -17576,7 +17577,7 @@ Func_04_42d4:
 	ld a, $01
 	ld [de], a
 	inc de
-	ld a, [$c29c]
+	ld a, [wSpawnType]
 	ld [de], a
 	inc de
 	call Func_04_4319
@@ -21771,11 +21772,11 @@ Func_05_4349:
 	ld d, h
 	ld e, l
 	pop hl
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $00
 	ld hl, $10dc
 	call Func_00_0467
@@ -21795,11 +21796,11 @@ Func_05_4385:
 	ld d, h
 	ld e, l
 	pop hl
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $00
 	ld hl, $10dc
 	call Func_00_0467

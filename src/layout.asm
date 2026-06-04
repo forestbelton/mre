@@ -469,11 +469,11 @@ SpawnPlayerEntity:
 	ld e, a
 	ld a, $01
 	ld bc, $0000
-	ld [$c29c], a          ; sprite-alloc params for Func_00_0467
+	ld [wSpawnType], a          ; sprite-alloc params for Func_00_0467
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467      ; allocate entity -> hl = entity struct
@@ -543,11 +543,11 @@ SpawnFloorMonsters:
 	add a, $02
 .gfxResolved:
 	ld bc, $0000
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467      ; allocate the monster entity
@@ -788,11 +788,11 @@ ProcessFloorSpawners:
 	push bc
 	ld a, $1e
 	ld bc, $0000
-	ld [$c29c], a
+	ld [wSpawnType], a
 	ld a, h
-	ld [$c2a1], a
+	ld [wSpawnPtr], a
 	ld a, l
-	ld [$c2a2], a
+	ld [wSpawnPtr+1], a
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467      ; allocate the spawner entity
