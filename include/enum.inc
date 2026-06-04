@@ -119,7 +119,12 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 		if _ET_EQ == -1
 			fail "enum_table \1: arg #{d:_ET_i} `{_ET_ARG}` is not Case=Value"
 		endc
+		; split into key/value and strip all whitespace (so `.A = $12`, `* = Fill`,
+		; and line-continued entries all parse the same as `.A=$12`)
 		def _ET_KEY equs STRSLICE("{_ET_ARG}", 0, _ET_EQ)
+		def _ET_VAL equs STRSLICE("{_ET_ARG}", _ET_EQ + 1)
+		redef _ET_KEY equs STRRPL(STRRPL("{_ET_KEY}", " ", ""), "\t", "")
+		redef _ET_VAL equs STRRPL(STRRPL("{_ET_VAL}", " ", ""), "\t", "")
 		if !STRCMP(STRSLICE("{_ET_KEY}", 0, 1), ".")   ; drop optional leading '.'
 			redef _ET_KEY equs STRSLICE("{_ET_KEY}", 1)
 		endc
@@ -127,7 +132,7 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 			if def(_ET_FILL)
 				fail "enum_table \1: duplicate `*` fill"
 			endc
-			def _ET_FILL equs STRCAT("(", STRSLICE("{_ET_ARG}", _ET_EQ + 1), ")")
+			def _ET_FILL equs "({_ET_VAL})"
 		else
 			if !def({_ET_ENUM}_{_ET_KEY})
 				fail "enum_table \1: `\1_{_ET_KEY}` is not a case of `\1`"
@@ -136,10 +141,10 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 			if def(_ET_slot{d:_ET_D})
 				fail "enum_table \1: duplicate value for `\1_{_ET_KEY}`"
 			endc
-			def _ET_slot{d:_ET_D} equs STRCAT("(", STRSLICE("{_ET_ARG}", _ET_EQ + 1), ")")
+			def _ET_slot{d:_ET_D} equs "({_ET_VAL})"
 			purge _ET_D
 		endc
-		purge _ET_ARG, _ET_EQ, _ET_KEY
+		purge _ET_ARG, _ET_EQ, _ET_KEY, _ET_VAL
 	endr
 
 	; emit one element per enum value, in order; skipped slots take the `*` fill
