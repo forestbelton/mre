@@ -388,7 +388,7 @@ PashuteStone:
     SCRIPT_END
 
 PashuteStoneCheck:
-    SCRIPT_IF_NEQ .Addr=wMonsterDiscStones, .Value=$00, .Target=PashuteStoneReady
+    SCRIPT_IF_NEQ .Addr=$cfda, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfdb, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfdc, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfdd, .Value=$00, .Target=PashuteStoneReady
