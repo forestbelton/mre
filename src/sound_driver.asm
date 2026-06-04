@@ -326,6 +326,8 @@ Func_{SB}_41d8:
 	dec [hl]
 Func_{SB}_41e5:
 	jp Func_{SB}_4158
+; Duty/length envelope stepper (cmd $ed, $4754 family). Reads [value,frames]
+; pairs via the +$0c/d pointer; value -> rAUD1LEN/rAUD2LEN. Skips CH3 (no LEN).
 Func_{SB}_41e8:
 	ld a, [$dec3]
 	and $03
@@ -383,6 +385,8 @@ Func_{SB}_422a:
 	ld a, b
 	ldh [rAUD1LEN], a
 	ret
+; Pitch envelope stepper (cmd $fb, $474c family). Reads [value,frames] pairs via
+; the +$1c/d pointer; value is a signed offset added to the note freq (vibrato).
 Func_{SB}_422e:
 	ld d, $df
 	ld a, [$dec7]
@@ -507,6 +511,9 @@ Func_{SB}_42be:
 	ld b, $01
 	ld [$ded2], a
 	jr Func_{SB}_428a
+; Volume envelope stepper (cmd $fc, $4708 family). Reads [value,frames] pairs via
+; the +$16/17 pointer; value -> rAUD1/2/4ENV (retriggering) or rAUD3LEVEL, routed
+; by voice & 3 in Func_{SB}_42ea. +$18 is the frame countdown.
 Func_{SB}_42c5:
 	ld d, $df
 	ld a, [$dec7]

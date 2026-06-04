@@ -129,11 +129,53 @@ index the `$454b` jump table by `(cmd-$ea)`:
 There is one instrument pointer table at `$4708` (`$3f`: 55 entries, `$4708-$4775`);
 the `$fc`/`$fb`/`$ed`/`$ea` commands index it from different base offsets
 (`$4708`/`$474c`/`$4754`/`$4760` = entries 0/34/38/44), i.e. four "families" in
-one array. Each entry points to a block in `$4776-$4aff`. The `$ea` family are
-16-byte CH3 wave samples (4-bit, copied straight to `$ff30-$ff3f`) — directly
-editable: e.g. `$4984` is a triangle (`01 23 45 67 89 ab cd ef …`), `$49a4` a
-descending ramp (`0f fe ed dc …`). The envelope-block byte format (stepped each
-frame to write `rAUDxENV`) is the remaining piece to decode.
+one array. Each entry points to a block in `$4776-$4aff`.
+
+### Envelope blocks — `[value, duration]` pair streams
+
+Three of the families are **envelopes**: streams of `[value, frames]` byte pairs.
+A per-frame stepper holds `value` for `frames` frames, then advances to the next
+pair (`frames = $ff` ≈ a sustain). Entries overlap into a shared pool at staggered
+offsets, so instruments reuse common tails. The three steppers, the family that
+loads each, and what `value` means:
+
+| family / cmd | stepper | `value` is | drives |
+|---|---|---|---|
+| `$4708` / `$fc` | `Func_3f_42c5` | a `rAUDxENV` byte (vol<<4 \| dir<<3 \| period; CH3 = level) — **retriggers the channel** each step | volume envelope |
+| `$4754` / `$ed` | `Func_3f_41e8` | a `rAUDxLEN` byte (duty in bits 7-6, length 5-0) | duty/length envelope |
+| `$474c` / `$fb` | `Func_3f_422e`+`$4257` | a **signed** offset added to the note frequency | vibrato / pitch bend |
+
+Examples (`$3f`): vol-env `$4776` = `f0 ff, c1 03, 90 ff, …` (a decay from full
+volume); duty-env `$495e` = `00 ff, 40 ff, 80 ff, c0 ff, …` (duty 0→25→50→75%);
+pitch-env `$47e6` = `00 ff, 00 10, 01 01, 02 01, 03 02, 02 01, ff 01, …` (a small
+vibrato, `$ff`=−1).
+
+The fourth family, `$4760` / `$ea`, is not a pair stream: each entry is a 16-byte
+CH3 wave sample (4-bit, copied straight to `$ff30-$ff3f`) — directly editable,
+e.g. `$4984` is a triangle (`01 23 45 67 89 ab cd ef …`), `$49a4` a descending
+ramp (`0f fe ed dc …`).
+
+### Voice state block (`$df00 + $20*voice`, partial)
+
+Each voice's `$20`-byte runtime block; `[$dec7]` holds the low byte (`d=$df`).
+The envelope steppers keep a `(pointer, value, countdown)` triple per envelope:
+
+| off | meaning |
+|---|---|
+| `+0` | note length operand (when the note byte's bit 4 is set) |
+| `+1` | octave register (set by `$9x`; the freq-table row) |
+| `+2/+3` | current note frequency (set by the note handler, modulated by the pitch env) |
+| `+4` | key-on flag (`$fe`) |
+| `+6` | note-active flag |
+| `+7`,`+8/9` | loop counter and loop-point pointer (`$ec` sets, `$eb` repeats) |
+| `+$0c/d`,`+$0e`,`+$0f` | duty/length env: pointer, value, countdown (`$ed`) |
+| `+$12/13` | saved stream pointer for call/return (`$f9`/`$f8`) |
+| `+$16/17`,`+$18` | volume env: pointer, countdown (`$fc`) |
+| `+$1c/d`,`+$1e`,`+$1f` | pitch env: pointer, value, countdown (`$fb`) |
+
+Output to hardware is routed by `voice & 3`: `Func_3f_428a` writes the frequency
+to CH1/2/3-`LOW/HIGH` or CH4 `rAUD4POLY`; `Func_3f_42ea` writes the volume to
+`rAUD1/2/4ENV` (+ retrigger) or `rAUD3LEVEL`.
 
 ## Per-frame interpreter (`Sound_Update` → `Func_3f_4113`)
 
@@ -202,11 +244,15 @@ call. Use `[$c28c]` to know the current tracked track.
 
 - **Done:** driver code/data reclassified (above), `$4000-$4aff` reads as code
   in both banks; sound ids named from their call sites (above).
-- **Done:** the per-channel command set (`$9x`, `$ea-$fe`) and the note/`$ff`
-  encoding are enumerated above; the song descriptor format is confirmed.
-- Decode the per-entry layout of the four instrument banks (`$4708`, `$474c`,
-  `$4754`, `$4760`) and the note byte's duration/octave bits (the `$70` field the
-  `$432c` handler tests beyond the bare pitch index).
+- **Done:** the command set (`$9x`, `$ea-$fe`), the note/`$ff` encoding, the song
+  descriptor format, and the instrument/envelope blocks (`$4708`/`$4754`/`$474c`
+  pair streams + `$4760` wave samples) are all enumerated above.
+- Remaining detail: the exact bits of the note byte's `$70` field that `$432c`
+  tests (octave shift vs. the length-operand flag), and a couple of voice-block
+  scratch bytes (`+5`/`+$10`) whose role isn't pinned down.
+- Tooling: with the formats known, the songs/instruments could be lifted into an
+  editable form (the project's north-star) — e.g. export instruments as
+  `[value,duration]` lists and CH3 waves as the existing PNG/2bpp-style assets.
 - Give the three data tables (`$442e`, `$454b`, `$4708`) merged single-section
   homes + names (currently still fragmented into the static pass's `db` sections).
 - Fill in the SFX ids with no observed caller (`$03`,`$07`,`$0c`,`$0f`,`$10`,
