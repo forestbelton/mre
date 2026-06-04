@@ -21,3 +21,6 @@
 ;
 ; --- nothing migrated yet: this is the scaffold; all sections are still placed
 ;     by their source offsets. ---
+ROMX $01
+    ORG $5162
+    "items"

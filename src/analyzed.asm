@@ -10781,7 +10781,12 @@ Data_01_4f5b:
 
 SECTION "analyzed_0054d0", ROMX[$54d0], BANK[$01]
 
-Func_01_54d0:
+; SpawnPickupEffect ($54d0) -- spawn the item-pickup feedback entity (spawn param
+; $08) at the cell of the just-collected item: rounds b/c (item pixel pos) to a
+; cell, takes the effect script from $ffe5/$ffe6, and calls the bank-$03 spawn
+; primitive ($4593). Does NOT remove the item -- RemoveOpenItemAtCell already did
+; that. Func_01_5504 below is the same routine with spawn param $0c.
+SpawnPickupEffect:
 	ld a, c
 	add a, $08
 	swap a
@@ -10810,6 +10815,7 @@ Func_01_54d0:
 	ld hl, $4593
 	call Func_00_0467
 	ret
+
 Func_01_5504:
 	ld a, c
 	add a, $08

@@ -3,129 +3,126 @@
 ; TrackItemCollection) and the bank-1 cleanup pass. Item names come from the ITEM
 ; enum in room.inc; see docs/floor_data.md. Carved from analyzed.asm; the per-item
 ; effect handlers ($5282+) are referenced by address (still in analyzed.asm).
+INCLUDE "bcd.inc"
+INCLUDE "enum.inc"
+INCLUDE "room.inc"
 
-SECTION "item_gate_flags", ROMX[$5162], BANK[$01]
+SECTION "items", ROMX
+
 ; RemoveConditionalItemsPass strips an item cell when its flag here is nonzero,
 ; unless wC2D5 bit 0 is set -- the "only on the normal stair path" items.
-ItemGateFlags:
-    db $00    ; $00 GOLD_KEY
-    db $00    ; $01 SILVER_KEY
-    db $00    ; $02 BELL
-    db $00    ; $03 HALF_TORORON
-    db $00    ; $04 FULL_TORORON
-    db $00    ; $05 ORANGE_HOURGLASS
-    db $00    ; $06 BLUE_HOURGLASS
-    db $01    ; $07 COX_HAT
-    db $00    ; $08 BOMB_SMALL
-    db $00    ; $09 BOMB_LARGE
-    db $00    ; $0a FIREPLACE
-    db $00    ; $0b GUNPOWDER
-    db $00    ; $0c BLUE_CRYSTAL
-    db $00    ; $0d RED_CRYSTAL
-    db $00    ; $0e BLUE_DIAMOND
-    db $00    ; $0f RED_DIAMOND
-    db $00    ; $10 PLATINUM_RING
-    db $00    ; $11 SILVER_MEDAL
-    db $00    ; $12 SILVER_NUGGET
-    db $00    ; $13 GOLD_MEDAL
-    db $00    ; $14 GOLD_NUGGET
-    db $00    ; $15 HEAL_BADGE
-    db $00    ; $16 (unused)
-    db $01    ; $17 CAKE
-    db $00    ; $18 BATTLE_CARD
-    db $01    ; $19 GOLD_PEACH
-    db $01    ; $1a SILVER_PEACH
-    db $01    ; $1b HARE_ICON
-    db $01    ; $1c (unused)
-    db $00    ; $1d MONSTER_FLAME
-    db $00    ; $1e DUCK_DOLL
-    db $01    ; $1f ALF_DOLL
-    db $00    ; $20 DISC_STONE_PIECE
-    db $00    ; $21 (unused)
-    db $00    ; $22 (unused)
-    db $00    ; $23 RED_DISC_STONE
+ItemGateFlags: enum_table ITEM, byte, * = $00, \
+    .GOLD_KEY = $00, \
+    .SILVER_KEY = $00, \
+    .BELL = $00, \
+    .HALF_TORORON = $00, \
+    .FULL_TORORON = $00, \
+    .ORANGE_HOURGLASS = $00, \
+    .BLUE_HOURGLASS = $00, \
+    .COX_HAT = $01, \
+    .BOMB_SMALL = $00, \
+    .BOMB_LARGE = $00, \
+    .FIREPLACE = $00, \
+    .GUNPOWDER = $00, \
+    .BLUE_CRYSTAL = $00, \
+    .RED_CRYSTAL = $00, \
+    .BLUE_DIAMOND = $00, \
+    .RED_DIAMOND = $00, \
+    .PLATINUM_RING = $00, \
+    .SILVER_MEDAL = $00, \
+    .SILVER_NUGGET = $00, \
+    .GOLD_MEDAL = $00, \
+    .GOLD_NUGGET = $00, \
+    .HEAL_BADGE = $00, \
+    .WALKING_COIN = $00, \
+    .CAKE = $01, \
+    .BATTLE_CARD = $00, \
+    .GOLD_PEACH = $01, \
+    .SILVER_PEACH = $01, \
+    .HARE_ICON = $01, \
+    .AYA_DOLL = $01, \
+    .MONSTER_FLAME = $00, \
+    .DUCK_DOLL = $00, \
+    .ALF_DOLL = $01, \
+    .DISC_STONE_PIECE = $00, \
+    .RED_DISC_STONE = $00,
 
-SECTION "item_collectible_desc", ROMX[$5186], BANK[$01]
 ; TrackItemCollection's per-id descriptor ($ff = not a tracked "collect a set" item).
-ItemCollectibleDesc:
-    db $ff    ; $00 GOLD_KEY
-    db $ff    ; $01 SILVER_KEY
-    db $00    ; $02 BELL
-    db $01    ; $03 HALF_TORORON
-    db $02    ; $04 FULL_TORORON
-    db $03    ; $05 ORANGE_HOURGLASS
-    db $04    ; $06 BLUE_HOURGLASS
-    db $05    ; $07 COX_HAT
-    db $10    ; $08 BOMB_SMALL
-    db $11    ; $09 BOMB_LARGE
-    db $12    ; $0a FIREPLACE
-    db $13    ; $0b GUNPOWDER
-    db $15    ; $0c BLUE_CRYSTAL
-    db $14    ; $0d RED_CRYSTAL
-    db $17    ; $0e BLUE_DIAMOND
-    db $16    ; $0f RED_DIAMOND
-    db $21    ; $10 PLATINUM_RING
-    db $24    ; $11 SILVER_MEDAL
-    db $22    ; $12 SILVER_NUGGET
-    db $25    ; $13 GOLD_MEDAL
-    db $23    ; $14 GOLD_NUGGET
-    db $27    ; $15 HEAL_BADGE
-    db $26    ; $16 (unused)
-    db $33    ; $17 CAKE
-    db $30    ; $18 BATTLE_CARD
-    db $35    ; $19 GOLD_PEACH
-    db $34    ; $1a SILVER_PEACH
-    db $37    ; $1b HARE_ICON
-    db $32    ; $1c (unused)
-    db $20    ; $1d MONSTER_FLAME
-    db $36    ; $1e DUCK_DOLL
-    db $31    ; $1f ALF_DOLL
-    db $06    ; $20 DISC_STONE_PIECE
-    db $ff    ; $21 (unused)
-    db $ff    ; $22 (unused)
-    db $07    ; $23 RED_DISC_STONE
+ItemCollectibleDesc: enum_table ITEM, byte, * = $ff, \
+    .GOLD_KEY = $ff, \
+    .SILVER_KEY = $ff, \
+    .BELL = $00, \
+    .HALF_TORORON = $01, \
+    .FULL_TORORON = $02, \
+    .ORANGE_HOURGLASS = $03, \
+    .BLUE_HOURGLASS = $04, \
+    .COX_HAT = $05, \
+    .BOMB_SMALL = $10, \
+    .BOMB_LARGE = $11, \
+    .FIREPLACE = $12, \
+    .GUNPOWDER = $13, \
+    .BLUE_CRYSTAL = $15, \
+    .RED_CRYSTAL = $14, \
+    .BLUE_DIAMOND = $17, \
+    .RED_DIAMOND = $16, \
+    .PLATINUM_RING = $21, \
+    .SILVER_MEDAL = $24, \
+    .SILVER_NUGGET = $22, \
+    .GOLD_MEDAL = $25, \
+    .GOLD_NUGGET = $23, \
+    .HEAL_BADGE = $27, \
+    .WALKING_COIN = $26, \
+    .CAKE = $33, \
+    .BATTLE_CARD = $30, \
+    .GOLD_PEACH = $35, \
+    .SILVER_PEACH = $34, \
+    .HARE_ICON = $37, \
+    .AYA_DOLL = $32, \
+    .MONSTER_FLAME = $20, \
+    .DUCK_DOLL = $36, \
+    .ALF_DOLL = $31, \
+    .DISC_STONE_PIECE = $06, \
+    .RED_DISC_STONE = $07,
 
-SECTION "item_points", ROMX[$51aa], BANK[$01]
 ; 4 bytes/id, big-endian BCD score added by AddItemScore.
 ItemPoints:
-    db $00,$00,$00,$00  ; $00 GOLD_KEY         = 0
-    db $00,$00,$00,$00  ; $01 SILVER_KEY       = 0
-    db $00,$00,$00,$00  ; $02 BELL             = 0
-    db $00,$00,$00,$00  ; $03 HALF_TORORON     = 0
-    db $00,$00,$00,$00  ; $04 FULL_TORORON     = 0
-    db $00,$00,$00,$00  ; $05 ORANGE_HOURGLASS = 0
-    db $00,$00,$00,$00  ; $06 BLUE_HOURGLASS   = 0
-    db $00,$00,$00,$00  ; $07 COX_HAT          = 0
-    db $00,$00,$00,$00  ; $08 BOMB_SMALL       = 0
-    db $00,$00,$00,$00  ; $09 BOMB_LARGE       = 0
-    db $00,$00,$00,$00  ; $0a FIREPLACE        = 0
-    db $00,$00,$00,$00  ; $0b GUNPOWDER        = 0
-    db $00,$00,$02,$00  ; $0c BLUE_CRYSTAL     = 200
-    db $00,$00,$00,$00  ; $0d RED_CRYSTAL      = 0
-    db $00,$00,$05,$00  ; $0e BLUE_DIAMOND     = 500
-    db $00,$00,$50,$00  ; $0f RED_DIAMOND      = 5000
-    db $00,$05,$00,$00  ; $10 PLATINUM_RING    = 50000
-    db $00,$00,$01,$00  ; $11 SILVER_MEDAL     = 100
-    db $00,$00,$02,$00  ; $12 SILVER_NUGGET    = 200
-    db $00,$00,$10,$00  ; $13 GOLD_MEDAL       = 1000
-    db $00,$00,$20,$00  ; $14 GOLD_NUGGET      = 2000
-    db $00,$01,$00,$00  ; $15 HEAL_BADGE       = 10000
-    db $00,$02,$00,$00  ; $16 (unused)         = 20000
-    db $00,$10,$00,$00  ; $17 CAKE             = 100000
-    db $00,$20,$00,$00  ; $18 BATTLE_CARD      = 200000
-    db $00,$50,$00,$00  ; $19 GOLD_PEACH       = 500000
-    db $00,$50,$00,$00  ; $1a SILVER_PEACH     = 500000
-    db $00,$50,$00,$00  ; $1b HARE_ICON        = 500000
-    db $01,$00,$00,$00  ; $1c (unused)         = 1000000
-    db $00,$00,$00,$00  ; $1d MONSTER_FLAME    = 0
-    db $00,$00,$00,$00  ; $1e DUCK_DOLL        = 0
-    db $00,$00,$00,$00  ; $1f ALF_DOLL         = 0
-    db $00,$00,$00,$00  ; $20 DISC_STONE_PIECE = 0
-    db $00,$00,$00,$00  ; $21 (unused)         = 0
-    db $00,$00,$00,$00  ; $22 (unused)         = 0
-    db $00,$00,$00,$00  ; $23 RED_DISC_STONE   = 0
+	BCD4 0       ; GOLD_KEY
+	BCD4 0       ; SILVER_KEY
+	BCD4 0       ; BELL
+	BCD4 0       ; HALF_TORORON
+	BCD4 0       ; FULL_TORORON
+	BCD4 0       ; ORANGE_HOURGLASS
+	BCD4 0       ; BLUE_HOURGLASS
+	BCD4 0       ; COX_HAT
+	BCD4 0       ; BOMB_SMALL
+	BCD4 0       ; BOMB_LARGE
+	BCD4 0       ; FIREPLACE
+	BCD4 0       ; GUNPOWDER
+	BCD4 200     ; BLUE_CRYSTAL
+	BCD4 0       ; RED_CRYSTAL
+	BCD4 500     ; BLUE_DIAMOND
+	BCD4 5000    ; RED_DIAMOND
+	BCD4 50000   ; PLATINUM_RING
+	BCD4 100     ; SILVER_MEDAL
+	BCD4 200     ; SILVER_NUGGET
+	BCD4 1000    ; GOLD_MEDAL
+	BCD4 2000    ; GOLD_NUGGET
+	BCD4 10000   ; HEAL_BADGE
+	BCD4 20000   ; WALKING_COIN
+	BCD4 100000  ; CAKE
+	BCD4 200000  ; BATTLE_CARD
+	BCD4 500000  ; GOLD_PEACH
+	BCD4 500000  ; SILVER_PEACH
+	BCD4 500000  ; HARE_ICON
+	BCD4 1000000 ; AYA_DOLL
+	BCD4 0       ; MONSTER_FLAME
+	BCD4 0       ; DUCK_DOLL
+	BCD4 0       ; ALF_DOLL
+	BCD4 0       ; DISC_STONE_PIECE
+	BCD4 0       ; $21 (unused)
+	BCD4 0       ; $22 (unused)
+	BCD4 0       ; RED_DISC_STONE
 
-SECTION "item_effect_table", ROMX[$523a], BANK[$01]
 ; 2 bytes/id, LE pointer to the bank-1 effect handler ($5282 = generic score-only).
 ItemEffectHandlers:
     dw ItemEffect_GoldKey  ; $00 GOLD_KEY
@@ -167,15 +164,13 @@ ItemEffectHandlers:
 
 ; Item pickup effect handlers (bank $01, $5282-$54cf). Dispatched indirectly
 ; from ItemEffectHandlers (item_data.asm) by CollectItem (jp hl). Shared shape:
-; call Func_01_54d0 (consume + prep), play pickup SFX ($05 via PlaySound), then
-; the item-specific effect. Shared helpers ($54d0+) stay in analyzed.asm; the two
+; call SpawnPickupEffect (the sparkle/popup at the item's cell -- the item itself
+; was already cleared from the grid by RemoveOpenItemAtCell), play pickup SFX ($05
+; via PlaySound), then the item-specific effect. Shared helpers ($54d0+) stay in
+; analyzed.asm; the two
 ; never-collected handlers ($1c, RED_DISC_STONE) are disassembled from ROM gaps.
-
-SECTION "item_effects", ROMX[$5282], BANK[$01]
-
-
 ItemEffect_ScoreOnly:  ; generic: just the ItemPoints score (gems, coins, medals, peaches)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -183,7 +178,7 @@ ItemEffect_ScoreOnly:  ; generic: just the ItemPoints score (gems, coins, medals
 	ret
 
 ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece ($cfd7, cap 4); at 4 -> assemble a stone ($cfd8)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -209,7 +204,7 @@ ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece ($cfd7, cap 4); at 4 -> asse
 	ret
 
 ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot ($c2cb, max 8)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -222,7 +217,7 @@ ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot ($c2cb, max 8)
 	ret
 
 ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large ($c2cd bit 0)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -235,7 +230,7 @@ ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large ($c2cd 
 	ret
 
 ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb ($c2cc), small type
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -265,7 +260,7 @@ ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb ($c2cc), small type
 	ret
 
 ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -292,7 +287,7 @@ ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
 	ret
 
 ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter ($c2ce)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -307,7 +302,7 @@ ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter ($c2ce
 	ret
 
 ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter ($c2ce)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -322,7 +317,7 @@ ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter (
 	ret
 
 ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the $c52e/$c52f slot (gfx $1f)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -350,7 +345,7 @@ ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the $c52e/$c52f slot (gfx $1
 	ret
 
 ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (Func_01_55a6)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -359,7 +354,7 @@ ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (Func_01_55a6)
 	ret
 
 ItemEffect_Item1c:  ; $1c: score-only; never placed (stripped by the gate)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -367,16 +362,16 @@ ItemEffect_Item1c:  ; $1c: score-only; never placed (stripped by the gate)
 	ret
 
 ItemEffect_AlfDoll:  ; ALF_DOLL: transform all monsters into Suzurins ($5544)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	call $5544
+	call Func_01_5544
 	ret
 
 ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, Func_01_5611)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -387,7 +382,7 @@ ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, Func_01_5611)
 	ret
 
 ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, Func_01_562b)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -398,7 +393,7 @@ ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, Func_01_562b)
 	ret
 
 ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s ($c2d1-$c2d3)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -413,7 +408,7 @@ ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s ($c2d1-$
 	ret
 
 ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -449,7 +444,7 @@ ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit ($c2d5 bit 1; Func_01_5854)
 	ret
 
 ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (Func_01_47a9)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -458,7 +453,7 @@ ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (Func_01_47a9)
 	ret
 
 ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag ($c2e8=1; $cff3=1 unless mode 5)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -473,7 +468,7 @@ ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag ($c2e8=1; $cff3=1 unless 
 	ret
 
 ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp ($c2d5 bit 3)
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -483,7 +478,7 @@ ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp ($c2d5 bit 
 	ret
 
 ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + Func_01_5854; never placed
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -502,7 +497,7 @@ ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + Func_01_5854; never pl
 	ret
 
 ItemEffect_Item22:  ; $22: key-like ($c2d5 bit 7 + Func_01_47a9); never placed
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
@@ -519,12 +514,12 @@ ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	call Func_01_54d0
+	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld bc, $0006
+	ld bc, SUMMON_PHOENIX
 	ld hl, wMonsterDiscStones
 	add hl, bc
 	ld a, [hl]

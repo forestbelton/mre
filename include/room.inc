@@ -23,6 +23,7 @@ DEF ROOM_INC EQU 1
 
 INCLUDE "enum.inc"
 INCLUDE "structs.inc"
+INCLUDE "monster.inc"
 
 DEF ITEM_FLAG    EQU $80   ; bit 7: marks the cell as an item (set on every item)
 DEF ITEM_OPEN    EQU $40   ; bit 6: open/visible (clear = hidden/phantom)
@@ -104,33 +105,6 @@ DEF COLL_F  EQU $00   ; walkable floor
 DEF COLL_B  EQU $20   ; border
 DEF COLL_W  EQU $21   ; wall
 DEF COLL_C  EQU $22   ; breakable crate (an item on this cell is in-crate)
-
-; monster species (arr1 / sprite-set ids referenced by a monster slot's GfxIndex)
-enum MONSTER
-    case TACOPI ; aka Octopee
-    case JELL
-    case NAGA
-    case DINO
-    case PLANT
-    case HENGER
-    case JOKER
-    case GHOST
-    case PUNCHO
-    case PSYLORA ; aka Psiroller
-    case DUCKEN ; aka Dakkung
-    case FLAME_RED
-    case FLAME_BLUE
-
-    skip ; Unused
-
-    ; Friendly monsters available on bonus stages
-    case TIGER  ; Floor 56
-    case MOCCHI ; Floor 58
-    case HARE   ; Floor 06
-    case GALI   ; Floor 18
-    case GOLEM  ; Floor 22
-    case SUEZO  ; Floor 44
-end_enum
 
 ; The 8-byte floor-record header. Instantiate with e.g.
 ;   dstruct Header, , .Type=$61, .SpawnX=2, .SpawnY=7, .Pad=0, .Param0=0, .Param1=1, .Height=10, .Width=11

@@ -28,7 +28,7 @@ INCLUDES   := $(wildcard include/*.inc)
 ASSET_SRC  := $(shell find assets -type f 2>/dev/null)
 # Linker script — centralizes section placement; sections are progressively
 # migrated off their source ROMX[$addr] offsets into here (see the file header).
-LINKSCRIPT := link/layout.link
+LINKSCRIPT := layout.link
 
 .PHONY: verify rom clean
 
