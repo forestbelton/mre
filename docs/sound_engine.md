@@ -73,8 +73,9 @@ now disassembled in `src/sound.asm`; the three data tables stay `db`.
 `$4b00-$4cff` is a fixed 256-entry pointer table (offsets relative to `$4b00`).
 Only the entries for the bank's own id range are meaningful; every other slot
 holds the default offset `$0200`, i.e. `$4d00`. **Song/SFX bytecode begins at
-`$4d00`** in both banks. Index 0 (`$4d00`) is the shared default entry (likely
-silence/stop). Counts: 47 real entries in `$3f` (ids `$00-$2e`), 12 in `$3e`
+`$4d00`** in both banks. Index 0 (`$4d00`) is the shared default entry — the
+silence song (all 4 channels priority `$ff`, id `$00`). Counts: 47 real entries
+in `$3f` (ids `$00-$2e`), 12 in `$3e`
 (ids `$2f-$3a`).
 
 ### Song format
@@ -93,17 +94,22 @@ silence song (`$4d00`) is 4× `[$ff,…]` (priority `$ff`) + a 3-byte stub.
 Each channel's stream is interpreted one byte at a time (`Func_3f_414a`):
 `$ff` ends the channel; **bit 7 clear = a note**, **bit 7 set = a command**.
 
-A **note** byte (`$00-$7f`, handler `$432c`) is a pitch-table index — it selects
-an 11-bit GB frequency from the `$442e` table and key-ons the channel's hardware
-voice. The voice's hardware target is `voice index & 3`: 0→CH1 (`rAUD1*`),
-1→CH2 (`rAUD2*`), 2→CH3 wave (`rAUD3LEVEL`), 3→CH4 noise (`rAUD4*`).
+A **note** byte (`$00-$7f`, handler `$432c`→`$4382`) keys on the channel's
+hardware voice with an 11-bit frequency looked up from the `$442e` table, which
+is a 2-D grid: **`row = [block+1]` (the octave register set by `$9x`), `column =
+note & $0f` (semitone)** — `freq = $442e[row*32 + col*2]`. Note bits 5-6 apply a
+further octave shift (handlers `$43ff/$4401/$4403`); bit 4 flags that a length
+operand byte follows. `note & $0f` of `$07`/`$0f` is a rest. The voice's hardware
+target is `voice index & 3`: 0→CH1 (`rAUD1*`), 1→CH2 (`rAUD2*`), 2→CH3 wave
+(`rAUD3LEVEL`), 3→CH4 noise (`rAUD4*`). Volume/timbre come from the instrument
+envelope (`$fc`), not the note.
 
 **Commands** (`$80-$fe`) dispatch via `Func_3f_452e`. `$9x` is special; the rest
 index the `$454b` jump table by `(cmd-$ea)`:
 
 | cmd | operand | action (writes to the voice's `$df` block unless noted) |
 |---|---|---|
-| `$9x` | — | set volume/param `[+1] = x-1` (low nibble). |
+| `$9x` | — | set octave register `[+1] = x-1` (selects the frequency-table row). |
 | `$ea n` | 1 | load CH3 waveform table `$4760[n]` into wave RAM `$ff30-$ff3f`, retrigger CH3. |
 | `$eb` | 0 | loop back: `[+7]` is a counter — if nonzero, dec and jump to the saved point `[+8/9]`. |
 | `$ec n` | 1 | set loop: `[+7]=n` (count), `[+8/9]=` current stream ptr (loop start). |
