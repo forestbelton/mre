@@ -126,9 +126,14 @@ index the `$454b` jump table by `(cmd-$ea)`:
 | `$fd n` | 1 | set `[+5] = n`. |
 | `$fe` | 0 | set `[+4] = 1` (note-active / key-on flag). |
 
-The four `$47xx` tables (`$4708`, `$474c`, `$4754`, `$4760`) are instrument/
-envelope/waveform banks selected by index from the stream; their per-entry layout
-is the next thing to fully decode.
+There is one instrument pointer table at `$4708` (`$3f`: 55 entries, `$4708-$4775`);
+the `$fc`/`$fb`/`$ed`/`$ea` commands index it from different base offsets
+(`$4708`/`$474c`/`$4754`/`$4760` = entries 0/34/38/44), i.e. four "families" in
+one array. Each entry points to a block in `$4776-$4aff`. The `$ea` family are
+16-byte CH3 wave samples (4-bit, copied straight to `$ff30-$ff3f`) — directly
+editable: e.g. `$4984` is a triangle (`01 23 45 67 89 ab cd ef …`), `$49a4` a
+descending ramp (`0f fe ed dc …`). The envelope-block byte format (stepped each
+frame to write `rAUDxENV`) is the remaining piece to decode.
 
 ## Per-frame interpreter (`Sound_Update` → `Func_3f_4113`)
 
