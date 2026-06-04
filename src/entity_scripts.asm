@@ -10,6 +10,154 @@
 
 INCLUDE "entity_script.inc"
 
+SECTION "entity_scripts_6fc4", ROMX[$6fc4], BANK[$03]
+
+; --- entity horizontal-velocity tables: 16-bit values (db lo/hi pairs) read by
+;     ent_vel_x_indexed in the scripts below. Not referenced from room.asm. ---
+
+PlayerWalkVelR:
+	db $00, $01, $00, $01
+
+Data_03_6fc8:
+	db $00, $01
+
+Data_03_6fca:
+	db $00, $01, $00, $02
+PlayerWalkVelL:
+	db $55, $00, $55, $00
+
+Data_03_6fd2:
+	db $55, $00
+
+Data_03_6fd4:
+	db $55, $00, $aa, $00
+PlayerCarryWalkVel:
+	db $9c, $00, $9c, $00
+
+Data_03_6fdc:
+	db $9c, $00
+
+Data_03_6fde:
+	db $9c, $00, $9c, $00, $80, $00, $c0, $00, $00, $01, $80, $01, $00, $02
+GolemWalkVel:
+	db $2a, $00, $3f, $00
+
+Data_03_6ff0:
+	db $55, $00
+
+Data_03_6ff2:
+	db $7f, $00, $aa, $00
+GolemChargeVel:
+	db $55, $00, $7f, $00
+
+Data_03_6ffa:
+	db $aa, $00
+
+Data_03_6ffc:
+	db $ff, $00, $54, $01
+
+MonsterWalkVel:
+	db $40, $00, $60, $00, $80, $00, $c0, $00, $00, $01
+MonsterChargeVel:
+	db $60, $00, $90, $00, $c0, $00, $20, $01
+
+Data_03_7012:
+	db $80, $01, $50, $00, $78, $00, $a0, $00, $f0, $00, $40, $01
+
+PsyloraWalkVel:
+	db $40, $00, $60, $00, $80, $00, $00, $01, $80, $01
+
+Data_03_7028:
+	db $20, $00, $30, $00
+
+Data_03_702c:
+	db $40, $00
+
+Data_03_702e:
+	db $60, $00, $80, $00, $60, $00, $90, $00
+
+Data_03_7036:
+	db $c0, $00
+
+Data_03_7038:
+	db $20, $01, $80, $01, $00, $01, $80, $01
+
+Data_03_7040:
+	db $00, $02
+
+Data_03_7042:
+	db $70, $00, $70, $01
+
+; --- animation / FX one-shot scripts at $7046 (recovered after the carve):
+;     vel_x_zero + gfx $01-$07 timed despawns, then two looping native-call
+;     FX (gfx $0a / $09). Generic EScript_ labels pending a role pass. ---
+EScript_7046:
+    ent_vel_x_zero
+    ent_gfx $01
+    ent_set_timer $04
+    ent_wait_timer
+    ent_despawn
+
+EScript_704d:
+    ent_vel_x_zero
+    ent_gfx $02
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_despawn
+
+EScript_7054:
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_despawn
+
+EScript_705b:
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_set_timer $07
+    ent_wait_timer
+    ent_despawn
+
+EScript_7062:
+    ent_vel_x_zero
+    ent_gfx $05
+    ent_set_timer $07
+    ent_wait_timer
+    ent_despawn
+
+EScript_7069:
+    ent_vel_x_zero
+    ent_gfx $06
+    ent_set_timer $07
+    ent_wait_timer
+    ent_despawn
+
+EScript_7070:
+    ent_vel_x_zero
+    ent_gfx $07
+    ent_set_timer $07
+    ent_wait_timer
+    ent_despawn
+
+EScript_7077:
+    ent_gfx $0a
+    ent_set_timer $18
+    ent_wait_timer
+    ent_call $4faa
+.l707f
+    ent_call $5059
+    ent_yield
+    ent_jump .l707f
+
+EScript_7086:
+    ent_gfx $09
+    ent_call $4f20
+.l708b
+    ent_call $5013
+    ent_yield
+    ent_jump .l708b
+
 SECTION "entity_scripts_7092", ROMX[$7092], BANK[$03]
 
 EScript_7092:
