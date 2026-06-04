@@ -5,13 +5,14 @@
 ; and counts its coverage, but never regenerates it.
 
 SECTION "bank_tag_00", ROM0[$3fff]
-Data_00_3fff:
-    db $00
+
+DB $00
 
 ; Banks $01..$3f (ROMX, tag at $7fff)
 MACRO BANK_TAG
-    SECTION "bank_tag_{02x:\1}", ROMX[$7fff], BANK[\1]
-Data_{02x:\1}_7fff:
+    SECTION "Bank tag ${02X:\1}", ROMX[$7fff], BANK[\1]
+
+BANK_TAG_{02X:\1}:
     DB \1
 ENDM
 

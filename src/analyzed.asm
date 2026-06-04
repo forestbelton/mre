@@ -56312,7 +56312,7 @@ Func_3e_40d9:
 	ld a, [hl+]
 	ld [de], a
 	inc de
-	ld a, [Data_3e_7fff]
+	ld a, [BANK_TAG_3E]
 	ld [de], a
 	inc de
 	ld a, [hl+]
@@ -58888,7 +58888,7 @@ Func_3f_40d9:
 	ld a, [hl+]
 	ld [de], a
 	inc de
-	ld a, [Data_3f_7fff]
+	ld a, [BANK_TAG_3F]
 	ld [de], a
 	inc de
 	ld a, [hl+]
