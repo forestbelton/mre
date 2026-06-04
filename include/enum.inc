@@ -76,9 +76,11 @@ endm
 ; enum has any). `*` fills ONLY skipped slots -- a forgotten *named* case is
 ; still an error, so the coverage check is preserved.
 ;
-; `ElemType` is `byte`, `word`, or `long`; when omitted (empty) it defaults to
-; the enum's own discriminant type. The named-initializer syntax deliberately
-; mirrors structs.inc's `dstruct`.
+; `ElemType` chooses how each value is emitted: `byte`/`word`/`long` (-> db/dw/
+; dl), or the name of any directive or macro that takes one value and emits that
+; entry's bytes -- e.g. `BCD4` for a table of 4-byte BCD values. When omitted
+; (empty) it defaults to the enum's own discriminant type. The named-initializer
+; syntax deliberately mirrors structs.inc's `dstruct`.
 ;
 ;   enum Move
 ;     case Walk
@@ -108,7 +110,7 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 		elif !STRCMP("\2", "long")
 			redef _ET_DIR equs "dl"
 		else
-			fail "enum_table \1: ElemType must be byte/word/long, got `\2`"
+			redef _ET_DIR equs "\2"   ; any other token: a directive/macro emitter
 		endc
 	endc
 

@@ -85,43 +85,41 @@ ItemCollectibleDesc: enum_table ITEM, byte, * = $ff, \
     .RED_DISC_STONE = $07,
 
 ; 4 bytes/id, big-endian BCD score added by AddItemScore.
-ItemPoints:
-	BCD4 0       ; GOLD_KEY
-	BCD4 0       ; SILVER_KEY
-	BCD4 0       ; BELL
-	BCD4 0       ; HALF_TORORON
-	BCD4 0       ; FULL_TORORON
-	BCD4 0       ; ORANGE_HOURGLASS
-	BCD4 0       ; BLUE_HOURGLASS
-	BCD4 0       ; COX_HAT
-	BCD4 0       ; BOMB_SMALL
-	BCD4 0       ; BOMB_LARGE
-	BCD4 0       ; FIREPLACE
-	BCD4 0       ; GUNPOWDER
-	BCD4 200     ; BLUE_CRYSTAL
-	BCD4 0       ; RED_CRYSTAL
-	BCD4 500     ; BLUE_DIAMOND
-	BCD4 5000    ; RED_DIAMOND
-	BCD4 50000   ; PLATINUM_RING
-	BCD4 100     ; SILVER_MEDAL
-	BCD4 200     ; SILVER_NUGGET
-	BCD4 1000    ; GOLD_MEDAL
-	BCD4 2000    ; GOLD_NUGGET
-	BCD4 10000   ; HEAL_BADGE
-	BCD4 20000   ; WALKING_COIN
-	BCD4 100000  ; CAKE
-	BCD4 200000  ; BATTLE_CARD
-	BCD4 500000  ; GOLD_PEACH
-	BCD4 500000  ; SILVER_PEACH
-	BCD4 500000  ; HARE_ICON
-	BCD4 1000000 ; AYA_DOLL
-	BCD4 0       ; MONSTER_FLAME
-	BCD4 0       ; DUCK_DOLL
-	BCD4 0       ; ALF_DOLL
-	BCD4 0       ; DISC_STONE_PIECE
-	BCD4 0       ; $21 (unused)
-	BCD4 0       ; $22 (unused)
-	BCD4 0       ; RED_DISC_STONE
+ItemPoints: enum_table ITEM, BCD4, * = 0, \
+    .GOLD_KEY = 0, \
+    .SILVER_KEY = 0, \
+    .BELL = 0, \
+    .HALF_TORORON = 0, \
+    .FULL_TORORON = 0, \
+    .ORANGE_HOURGLASS = 0, \
+    .BLUE_HOURGLASS = 0, \
+    .COX_HAT = 0, \
+    .BOMB_SMALL = 0, \
+    .BOMB_LARGE = 0, \
+    .FIREPLACE = 0, \
+    .GUNPOWDER = 0, \
+    .BLUE_CRYSTAL = 200, \
+    .RED_CRYSTAL = 0, \
+    .BLUE_DIAMOND = 500, \
+    .RED_DIAMOND = 5000, \
+    .PLATINUM_RING = 50000, \
+    .SILVER_MEDAL = 100, \
+    .SILVER_NUGGET = 200, \
+    .GOLD_MEDAL = 1000, \
+    .GOLD_NUGGET = 2000, \
+    .HEAL_BADGE = 10000, \
+    .WALKING_COIN = 20000, \
+    .CAKE = 100000, \
+    .BATTLE_CARD = 200000, \
+    .GOLD_PEACH = 500000, \
+    .SILVER_PEACH = 500000, \
+    .HARE_ICON = 500000, \
+    .AYA_DOLL = 1000000, \
+    .MONSTER_FLAME = 0, \
+    .DUCK_DOLL = 0, \
+    .ALF_DOLL = 0, \
+    .DISC_STONE_PIECE = 0, \
+    .RED_DISC_STONE = 0,
 
 ; 2 bytes/id, LE pointer to the bank-1 effect handler ($5282 = generic score-only).
 ItemEffectHandlers:
