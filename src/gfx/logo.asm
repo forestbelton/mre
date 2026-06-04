@@ -1,22 +1,22 @@
 ; TECMO logo graphics data -- the image shown on the first boot screen.
 ; The renderer that draws and fades it lives in src/logo.asm (DrawTecmoLogo).
 ;
-; Assembled from the editable source under assets/tecmo_logo/ by
-; tools/gfxasset.py (run in the Makefile, output under build/assets/). The
-; components are pinned to their original bank-$27 offsets so the build stays
-; byte-exact, but the map descriptor references the two maps by *label* (dw) --
-; so this region would relocate cleanly if the offsets were ever dropped
-; (see docs/philosophy.md).
+; Generated from the single source image assets/logo.png by tools/pngasset.py
+; (run in the Makefile, output under build/assets/logo/). The PNG is the only
+; committed source; tiles, palette, tilemap and attribute map are all
+; reconstructed from it byte-exact -- including the $1000 blank-tile block before
+; the sheet (pngasset --pad-before). The map descriptor references the two maps by
+; *label* (dw), so this region would relocate cleanly if the offsets were ever
+; dropped (see docs/philosophy.md).
 
 SECTION "TECMO logo graphics", ROMX
 
 TecmoLogoTiles:
-	INCBIN "raw_gfx/IntroBlankTiles.2bpp", 0, 4096
-	INCBIN "assets/tecmo_logo/tiles.bin"       ; 128 tiles; land at VRAM $9000 ($8800 mode)
+	INCBIN "assets/logo/tiles.bin"             ; $1000 blank + 128 logo tiles -> VRAM $8000 ($8800 mode)
 TecmoLogoTilesEnd:
 
 TecmoLogoPalette:
-	INCBIN "assets/tecmo_logo/palette.bin"     ; 1 BG palette: white / gray / gray / red
+	INCBIN "assets/logo/palette.bin"           ; 1 BG palette: white / gray / gray / red
 
 TecmoLogoMapDesc:
 	db 18, 20                                   ; rows, cols
@@ -24,10 +24,10 @@ TecmoLogoMapDesc:
 	dw TecmoLogoIndexMap                         ; tile index map pointer
 
 TecmoLogoIndexMap:
-	INCBIN "assets/tecmo_logo/tilemap.bin"     ; 20x18 tile indices
+	INCBIN "assets/logo/tilemap.bin"           ; 20x18 tile indices
 
 TecmoLogoAttrMap:
-	INCBIN "assets/tecmo_logo/attrmap.bin"     ; 20x18 CGB BG attributes
+	INCBIN "assets/logo/attrmap.bin"           ; 20x18 CGB BG attributes
 
 Data_27_5ade:
 	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408

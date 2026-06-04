@@ -1,4 +1,0 @@
-; CGB palettes — 4 RGB555 words each (little-endian in ROM).
-; Edit the hex words; the trailing comment is just the RGB.
-
-7fff 5294 294a 001f   ; pal 0: (255,255,255) (165,165,165) (82,82,82) (255, 0, 0)

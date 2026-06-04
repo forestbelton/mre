@@ -68,8 +68,12 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
 		done; \
 	fi
-	@# Compile editable screen assets (assets/<name>/) into their ROM
-	@# component bytes under build/assets/, which the asm INCBINs.
+	@# PNG-driven assets: a single source PNG -> ROM components (tools/pngasset.py).
+	@# The TECMO logo is the first migrated here; --pad-before generates the $1000
+	@# blank-tile block that precedes the sheet in VRAM.
+	$(PYTHON) tools/pngasset.py encode --png assets/logo.png --sheet-rows 8 \
+		--pad-before 0x00 4096 --out-dir $(BUILD_DIR)/assets/logo
+	@# Legacy multi-file assets (assets/<name>/asset.json) -> components via gfxasset.
 	@for a in $(wildcard assets/*); do \
 		[ -f "$$a/asset.json" ] || continue; \
 		$(PYTHON) tools/gfxasset.py encode --in "$$a" --out-dir "$(BUILD_DIR)/$$a" || exit 1; \
