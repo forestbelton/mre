@@ -46,8 +46,10 @@ macro case ; Name
 	def ENUM_DISCRIMINANT += 1
 endm
 
-; Used to skip values if the enum is not contiguous.
+; Used to skip values if the enum is not contiguous. The skipped value is marked
+; so `enum_table` can fill its (nameless) slot via the `*` fill.
 macro skip
+    def _enum_skipped_{ENUM_NAME}_{d:ENUM_DISCRIMINANT} equ 1
     def ENUM_DISCRIMINANT += 1
 endm
 
@@ -64,10 +66,15 @@ endm
 ;
 ; Emits one element per enum value, in value order (0..N-1), regardless of the
 ; order the `.Case=Value` pairs are written -- so the table can't silently drift
-; out of sync with the enum. Every enum value must be given exactly once; a
+; out of sync with the enum. Every named case must be given exactly once; a
 ; missing, duplicate, or unknown case is a build error. The leading `.` on each
 ; key is optional sugar; `Case` names an enum member (`EnumName_Case`). Values
 ; may be any expression (they are parenthesised before emission).
+;
+; `skip`ped enum values have no name, so they can't be addressed by key; instead
+; a `*=Value` entry supplies the fill for every skipped slot (required if the
+; enum has any). `*` fills ONLY skipped slots -- a forgotten *named* case is
+; still an error, so the coverage check is preserved.
 ;
 ; `ElemType` is `byte`, `word`, or `long`; when omitted (empty) it defaults to
 ; the enum's own discriminant type. The named-initializer syntax deliberately
@@ -75,15 +82,15 @@ endm
 ;
 ;   enum Move
 ;     case Walk
+;     skip            ; value 1 reserved / unused
 ;     case Run
-;     case Jump
 ;   end_enum
 ;
 ;   MoveHandlers::
 ;       enum_table Move, word, \
+;           *     = NoMove, \   ; fills the skipped slot
 ;           .Walk = DoWalk, \
-;           .Run  = DoRun, \
-;           .Jump = DoJump      ; -> dw DoWalk / dw DoRun / dw DoJump
+;           .Run  = DoRun       ; -> dw DoWalk / dw NoMove / dw DoRun
 ;
 macro enum_table ; EnumName, ElemType, .Case=Value...
 	def _ET_ENUM equs "\1"
@@ -105,7 +112,7 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 		endc
 	endc
 
-	; parse each `.Case=Value` into a slot indexed by the case's enum value
+	; parse each `.Case=Value` (and the optional `*=Fill`) into slot vars
 	for _ET_i, 3, _NARG + 1
 		def _ET_ARG equs "\<_ET_i>"
 		def _ET_EQ = STRFIND("{_ET_ARG}", "=")
@@ -116,26 +123,43 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 		if !STRCMP(STRSLICE("{_ET_KEY}", 0, 1), ".")   ; drop optional leading '.'
 			redef _ET_KEY equs STRSLICE("{_ET_KEY}", 1)
 		endc
-		if !def({_ET_ENUM}_{_ET_KEY})
-			fail "enum_table \1: `\1_{_ET_KEY}` is not a case of `\1`"
+		if !STRCMP("{_ET_KEY}", "*")                    ; `*=Fill` for skipped slots
+			if def(_ET_FILL)
+				fail "enum_table \1: duplicate `*` fill"
+			endc
+			def _ET_FILL equs STRCAT("(", STRSLICE("{_ET_ARG}", _ET_EQ + 1), ")")
+		else
+			if !def({_ET_ENUM}_{_ET_KEY})
+				fail "enum_table \1: `\1_{_ET_KEY}` is not a case of `\1`"
+			endc
+			def _ET_D = {_ET_ENUM}_{_ET_KEY}
+			if def(_ET_slot{d:_ET_D})
+				fail "enum_table \1: duplicate value for `\1_{_ET_KEY}`"
+			endc
+			def _ET_slot{d:_ET_D} equs STRCAT("(", STRSLICE("{_ET_ARG}", _ET_EQ + 1), ")")
+			purge _ET_D
 		endc
-		def _ET_D = {_ET_ENUM}_{_ET_KEY}
-		if def(_ET_slot{d:_ET_D})
-			fail "enum_table \1: duplicate value for `\1_{_ET_KEY}`"
-		endc
-		def _ET_slot{d:_ET_D} equs STRCAT("(", STRSLICE("{_ET_ARG}", _ET_EQ + 1), ")")
-		purge _ET_ARG, _ET_EQ, _ET_KEY, _ET_D
+		purge _ET_ARG, _ET_EQ, _ET_KEY
 	endr
 
-	; emit one element per enum value, in order
+	; emit one element per enum value, in order; skipped slots take the `*` fill
 	for _ET_i, 0, countof_{_ET_ENUM}
-		if !def(_ET_slot{d:_ET_i})
-			fail "enum_table \1: no value given for enum value #{d:_ET_i}"
+		if def(_ET_slot{d:_ET_i})
+			{_ET_DIR} {_ET_slot{d:_ET_i}}
+			purge _ET_slot{d:_ET_i}
+		elif def(_enum_skipped_{_ET_ENUM}_{d:_ET_i})
+			if !def(_ET_FILL)
+				fail "enum_table \1: value #{d:_ET_i} was `skip`ped; pass `*=<fill>` to fill skipped slots"
+			endc
+			{_ET_DIR} {_ET_FILL}
+		else
+			fail "enum_table \1: no value given for case at value #{d:_ET_i}"
 		endc
-		{_ET_DIR} {_ET_slot{d:_ET_i}}
-		purge _ET_slot{d:_ET_i}
 	endr
 
+	if def(_ET_FILL)
+		purge _ET_FILL
+	endc
 	purge _ET_ENUM, _ET_DIR
 endm
 
