@@ -6,7 +6,8 @@ driven by a tiny **bytecode script** interpreted by the bank-`$03` engine (see
 document specifies the script VM and its instruction set.
 
 The scripts occupy **`$7046`–`$7fec`** in bank `$03` (with the velocity tables
-they read at `$6fc4`–`$7046` just above), all collected in `src/entity_scripts.asm`.
+they read at `$6fc4`–`$7046` just above), split by entity class across
+`src/room/scripts/{fx,environment,player,monster,boss}.asm`.
 Roughly by address: the **FX/animation library** (`$7046`–`$71c9`: `Popup_*`,
 `Glide_*`, `Burst*`, `Vanish_*`, `Fly_*`, `Shatter_*`, dispatched by id from
 bank-1 pointer tables at `$79a8..`), then the **non-editor spawns** (`ZanExitFlame_*`,
@@ -144,7 +145,8 @@ and asserts the decode tiles `$71eb`–`$7d25` exactly.
 
 ## Source form
 
-The scripts are carved into **`src/entity_scripts.asm`** as readable, editable
+The scripts are carved into **`src/room/scripts/`** (one file per entity class:
+`fx`, `environment`, `player`, `monster`, `boss`) as readable, editable
 source: one assembler macro per opcode (defined in `include/entity_script.inc`),
 labels per script, and `.l`-local labels for intra-script branches. The
 `ent_call` / `ent_vel_x_indexed` / `ent_call_bank0` operands resolve to the named
@@ -178,7 +180,7 @@ The ~110 bank-`$03` routines / data tables the scripts reach are named in
 `ent_call_bank0` (`DrawStairTileClosedL`, ...).
 
 The selectors in `room.asm` still load a script by raw address (`ld de, $7xxx`);
-the matching label is in `entity_scripts.asm`.
+the matching label is under `src/room/scripts/`.
 
 ### Resolving monster species
 

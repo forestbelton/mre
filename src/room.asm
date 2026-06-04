@@ -17,9 +17,9 @@
 ;     ($4098) dispatches to the EntityOp_* handlers below; each reads its
 ;     operands, advances de, and tail-jumps back. EndEntityFrame ($404f) is the
 ;     per-frame "yield" that saves the record back. The bytecode the handlers
-;     interpret is carved as readable source in src/entity_scripts.asm -- see
+;     interpret is carved as readable source under src/room/scripts/ -- see
 ;     docs/entity_scripts.md. The selectors below load a script with
-;     `ld de, $7xxx` (the matching label is in entity_scripts.asm).
+;     `ld de, $7xxx` (the matching label is under src/room/scripts/).
 ;   * SpawnEntity ($4593: A=type, D=Ypx, E=Xpx, BC=param) allocates a free slot
 ;     (FindFreeEntitySlot) and initialises it. The bulk of the bank is the AI:
 ;     per-species think/probe selectors (<Species>_Think, *Probe*), the
