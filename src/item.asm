@@ -1,5 +1,5 @@
 ; Item attribute database -- four parallel tables, one entry per item base id
-; ($00-$23), consumed by the pickup path in room.asm (CollectItem/AddItemScore/
+; ($00-$23), consumed by the pickup path in room/engine.asm (CollectItem/AddItemScore/
 ; TrackItemCollection) and the bank-1 cleanup pass. Item names come from the ITEM
 ; enum in room.inc; see docs/floor_data.md. Carved from analyzed.asm; the per-item
 ; effect handlers ($5282+) are referenced by address (still in analyzed.asm).

@@ -150,7 +150,7 @@ The scripts are carved into **`src/room/scripts/`** (one file per entity class:
 source: one assembler macro per opcode (defined in `include/entity_script.inc`),
 labels per script, and `.l`-local labels for intra-script branches. The
 `ent_call` / `ent_vel_x_indexed` / `ent_call_bank0` operands resolve to the named
-native routines and data tables in `room.asm` (see below). It assembles back to
+native routines and data tables in `room/engine.asm` (see below). It assembles back to
 the exact ROM bytes (`make verify`). Example:
 
 ```
@@ -171,7 +171,7 @@ Tacopi_Windup:
 ### Native helpers
 
 The ~110 bank-`$03` routines / data tables the scripts reach are named in
-`map.json` and defined in `room.asm`: per-species AI selectors
+`map.json` and defined in `room/engine.asm`: per-species AI selectors
 (`<Species>_Think`, `Psylora_MoveDir*`), projectile spawners (`Ducken_FireMissileA`,
 `Plant_FireMissile`, ...), player input/action handlers (`Player_WalkThinkRight`,
 `Player_SpawnAttackFront`, ...), shared engine helpers (`MonsterBreakTileInFront`,
@@ -179,7 +179,7 @@ The ~110 bank-`$03` routines / data tables the scripts reach are named in
 `PlayerWalkVelR`, ...), and the bank-`$01` tile-draw routines reached by
 `ent_call_bank0` (`DrawStairTileClosedL`, ...).
 
-The selectors in `room.asm` still load a script by raw address (`ld de, $7xxx`);
+The selectors in `room/engine.asm` still load a script by raw address (`ld de, $7xxx`);
 the matching label is under `src/room/scripts/`.
 
 ### Resolving monster species

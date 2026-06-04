@@ -5,7 +5,7 @@
 SECTION "scripts_vel", ROMX[$6fc4], BANK[$03]
 
 ; --- entity horizontal-velocity tables: 16-bit values (db lo/hi pairs) read by
-;     ent_vel_x_indexed in the scripts below. Not referenced from room.asm. ---
+;     ent_vel_x_indexed in the scripts below. Not referenced from room/engine.asm. ---
 
 PlayerWalkVelR:
 	db $00, $01, $00, $01

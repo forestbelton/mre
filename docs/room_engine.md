@@ -1,4 +1,4 @@
-# Tower in-room action engine (bank `$03`, `src/room.asm`)
+# Tower in-room action engine (bank `$03`, `src/room/engine.asm`)
 
 Bank `$03` is the engine that runs **while the player is inside a tower room**:
 the player avatar, monster AI, projectiles / FX sprites, and breakable-crate
@@ -8,7 +8,7 @@ handling. It is distinct from the floor *layout* code:
 |---|---|---|
 | per-floor layout **data** (collision + piece grids, spawner table) | `src/layout/roomNN.asm` | `$2d`/`$2e` |
 | turn a floor number into a built, rendered room (parse record, draw pieces, spawn initial entities) | `src/layout.asm` | `$00`/`$01`/`$05` |
-| **animate the room each frame** (this document) | `src/room.asm` | `$03` |
+| **animate the room each frame** (this document) | `src/room/engine.asm` | `$03` |
 
 See [`floor_data.md`](floor_data.md) for the record/grid formats the layout code
 consumes.
