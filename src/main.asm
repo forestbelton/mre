@@ -7,6 +7,7 @@ INCLUDE "wram.inc"
 
 INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "banks.asm"
 INCLUDE "entity_scripts.asm"
 INCLUDE "gfx/logo.asm"
 INCLUDE "gfx/portrait/bodka.asm"
