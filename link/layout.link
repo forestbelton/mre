@@ -1,0 +1,23 @@
+; rgblink linker script — centralizes section placement.
+;
+; Passed to the linker via `rgblink -l` (see the Makefile). It is the eventual
+; home for every section's address, replacing the explicit ROMX[$addr] offsets
+; in the SECTION directives throughout src/. See docs/philosophy.md (dropping
+; section offsets) and rgblink(5) for the syntax.
+;
+; Migration is PROGRESSIVE and must stay byte-exact:
+;   1. Pick a contiguous run of sections (in one bank, no gaps between them).
+;   2. Here: activate the bank (e.g. `ROMX $03`), `ORG` the run's start address,
+;      then list the sections by name in ADDRESS order — they pack back to their
+;      original addresses, so N offsets collapse to one ORG anchor.
+;   3. In source, drop the `[$addr]` from each of those SECTION directives
+;      (keep the type; BANK may stay or move to the bank line above).
+;   4. `make verify` — the sha must be unchanged.
+;
+; Sections NOT listed here are still placed by their source SECTION offset and
+; coexist fine. CAUTION: a section floated in source (no [$addr]) but NOT listed
+; here gets auto-placed by rgblink, which silently breaks byte-exactness — always
+; migrate the float and its placement together.
+;
+; --- nothing migrated yet: this is the scaffold; all sections are still placed
+;     by their source offsets. ---

@@ -23,9 +23,12 @@ GFX_DIR  := $(SRC_DIR)/raw_gfx
 # Assembler inputs — a change to any of these rebuilds the ROM (no `make clean`
 # needed). Wildcards are evaluated at parse time, which is fine: these are all
 # committed source. find covers subdirs (src/scripts/, assets/<name>/).
-SRC_ASM   := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
-INCLUDES  := $(wildcard include/*.inc)
-ASSET_SRC := $(shell find assets -type f 2>/dev/null)
+SRC_ASM    := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
+INCLUDES   := $(wildcard include/*.inc)
+ASSET_SRC  := $(shell find assets -type f 2>/dev/null)
+# Linker script — centralizes section placement; sections are progressively
+# migrated off their source ROMX[$addr] offsets into here (see the file header).
+LINKSCRIPT := link/layout.link
 
 .PHONY: verify rom clean
 
@@ -42,7 +45,7 @@ verify: $(OUT)
 
 rom: $(OUT)
 
-$(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
+$(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 	@# Build every gfx PNG into its 2bpp tile data.
 	@# `-c embedded` maps PNG pixels back to 2bpp values by the embedded
 	@# palette's index order, so the round-trip is byte-exact (the asm
@@ -60,7 +63,7 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) | $(BUILD_DIR)
 		$(PYTHON) tools/gfxasset.py encode --in "$$a" --out-dir "$(BUILD_DIR)/$$a" || exit 1; \
 	done
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
-	$(RGBLINK) -p 0 -m $@.map -o $@ $(BUILD_DIR)/main.o
+	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o
 
 $(BUILD_DIR):
 	@mkdir -p $@
