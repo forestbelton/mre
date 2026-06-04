@@ -77,20 +77,60 @@ holds the default offset `$0200`, i.e. `$4d00`. **Song/SFX bytecode begins at
 silence/stop). Counts: 47 real entries in `$3f` (ids `$00-$2e`), 12 in `$3e`
 (ids `$2f-$3a`).
 
-A started "song" is a short descriptor that `Func_3f_40d2` reads as up to 4
-channel-init records (3 bytes each: a priority/voice byte + a 16-bit pointer,
-again relative to `$4b00`) and installs into the per-voice state blocks. The
-detailed per-channel bytecode (note bytes `< $80` vs command bytes `>= $80`,
-interpreted by `Func_3f_414a` → `Func_3f_432c` / `Func_3f_452e`) is **not yet
-enumerated** — see TODO.
+### Song format
+
+A song is a **12-byte descriptor** followed by per-channel command streams, all
+within the bank. The descriptor is 4 records — one per GB channel CH1..CH4 — of
+3 bytes: `[priority] [ptr_lo] [ptr_hi]` where the 16-bit pointer is again an
+offset relative to `$4b00`. `Func_3f_40d2` installs a channel only if its
+priority `>=` the channel's current priority, so a higher-priority SFX can take a
+channel from the BGM. Example (id `$01`): CH2 has priority `$f0` and its own
+stream; CH1/3/4 have priority `$00` pointing at a shared empty stream. The
+silence song (`$4d00`) is 4× `[$ff,…]` (priority `$ff`) + a 3-byte stub.
+
+### Channel command stream (the bytecode)
+
+Each channel's stream is interpreted one byte at a time (`Func_3f_414a`):
+`$ff` ends the channel; **bit 7 clear = a note**, **bit 7 set = a command**.
+
+A **note** byte (`$00-$7f`, handler `$432c`) is a pitch-table index — it selects
+an 11-bit GB frequency from the `$442e` table and key-ons the channel's hardware
+voice. The voice's hardware target is `voice index & 3`: 0→CH1 (`rAUD1*`),
+1→CH2 (`rAUD2*`), 2→CH3 wave (`rAUD3LEVEL`), 3→CH4 noise (`rAUD4*`).
+
+**Commands** (`$80-$fe`) dispatch via `Func_3f_452e`. `$9x` is special; the rest
+index the `$454b` jump table by `(cmd-$ea)`:
+
+| cmd | operand | action (writes to the voice's `$df` block unless noted) |
+|---|---|---|
+| `$9x` | — | set volume/param `[+1] = x-1` (low nibble). |
+| `$ea n` | 1 | load CH3 waveform table `$4760[n]` into wave RAM `$ff30-$ff3f`, retrigger CH3. |
+| `$eb` | 0 | loop back: `[+7]` is a counter — if nonzero, dec and jump to the saved point `[+8/9]`. |
+| `$ec n` | 1 | set loop: `[+7]=n` (count), `[+8/9]=` current stream ptr (loop start). |
+| `$ed n` | 1 | load effect table `$4754[n]` into `[+$0a…]`. |
+| `$ee n` | 1 | set CH1 sweep (`rAUD1SWEEP`/NR10) `= n`. |
+| `$ef n` | 1 | set `[+$10] = n`. |
+| `$f0` | 1 | skip one byte (marker / no-op). |
+| `$f1-$f7` | — | **reserved** — handler is `jp $46db` (self-loop); never emitted. |
+| `$f8` | 0 | return: restore stream ptr from `[+$12]`. |
+| `$f9 lo hi` | 2 | call: save ptr to `[+$12]`, jump (relative). |
+| `$fa lo hi` | 2 | goto: jump (signed 16-bit relative). |
+| `$fb n` | 1 | load table `$474c[n]` into `[+$1a…]`. |
+| `$fc n` | 1 | set instrument: load `$4708[n]` (envelope block) into `[+$14…]`. |
+| `$fd n` | 1 | set `[+5] = n`. |
+| `$fe` | 0 | set `[+4] = 1` (note-active / key-on flag). |
+
+The four `$47xx` tables (`$4708`, `$474c`, `$4754`, `$4760`) are instrument/
+envelope/waveform banks selected by index from the stream; their per-entry layout
+is the next thing to fully decode.
 
 ## Per-frame interpreter (`Sound_Update` → `Func_3f_4113`)
 
-Walks 8 voice slots (`[$dec3]` counter, `cp $08`). Per voice it reads the next
-command byte: `$ff` ends/loops the channel, bit 7 clear is a note, bit 7 set is a
-command. The tracked state lives around `$dec0/$dee0/$df00`, the transient state
-around `$dec1/$def0/$df80`. The fade ramp (`Func_3f_4070`) nudges `rAUDVOL`
-toward `$77` in steps of `$11` under control of the `$ded3-$ded5` block.
+Walks 8 voice slots (`[$dec3]` counter, `cp $08` — 4 tracked + 4 transient, mapped
+to GB CH1-4 by `& 3`). Per voice it reads the next stream byte as above. The
+tracked state lives around `$dec0/$dee0/$df00`, the transient state around
+`$dec1/$def0/$df80`. The fade ramp (`Func_3f_4070`) nudges `rAUDVOL` toward `$77`
+in steps of `$11` under control of the `$ded3-$ded5` block.
 
 ## State RAM (`$de80+`, partial)
 
@@ -151,10 +191,11 @@ call. Use `[$c28c]` to know the current tracked track.
 
 - **Done:** driver code/data reclassified (above), `$4000-$4aff` reads as code
   in both banks; sound ids named from their call sites (above).
-- Enumerate the per-channel bytecode: the note encoding (frequency-table index +
-  the bits the note handler tests at `$432c`) and the full `$ea-$fe` / `$9x`
-  command set (the handlers at `$4575-$4707` are now readable code to annotate).
-- Decode the instrument/envelope blocks at `$4708+` and the wave sample at `$49a4`.
+- **Done:** the per-channel command set (`$9x`, `$ea-$fe`) and the note/`$ff`
+  encoding are enumerated above; the song descriptor format is confirmed.
+- Decode the per-entry layout of the four instrument banks (`$4708`, `$474c`,
+  `$4754`, `$4760`) and the note byte's duration/octave bits (the `$70` field the
+  `$432c` handler tests beyond the bare pitch index).
 - Give the three data tables (`$442e`, `$454b`, `$4708`) merged single-section
   homes + names (currently still fragmented into the static pass's `db` sections).
 - Fill in the SFX ids with no observed caller (`$03`,`$07`,`$0c`,`$0f`,`$10`,

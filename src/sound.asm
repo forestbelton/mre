@@ -3790,6 +3790,18 @@ Data_3f_4526:
 
 SECTION "analyzed_0fc52e", ROMX[$452e], BANK[$3f]
 
+; Channel-stream command dispatch (byte with bit 7 set). $9x -> Func_3f_46cc
+; (set volume [+1]=nibble-1); otherwise (cmd-$ea) indexes the jump table at
+; $454b. Command set (see docs/sound_engine.md):
+;   $ea n  load CH3 waveform $4760[n]      $f0    skip byte (marker)
+;   $eb    loop back if [+7]-- nonzero     $f1-$f7 reserved (jp self)
+;   $ec n  set loop count/point            $f8    return ([+$12])
+;   $ed n  load effect table $4754[n]      $f9 .. call (save [+$12])
+;   $ee n  set CH1 sweep (NR10)            $fa .. goto (rel16)
+;   $ef n  set [+$10]                      $fb n  load table $474c[n]
+;                                          $fc n  set instrument $4708[n]
+;                                          $fd n  set [+5]
+;                                          $fe    key-on flag [+4]=1
 Func_3f_452e:
 	ld b, a
 	and $f0
