@@ -8,24 +8,28 @@
 ; so this region would relocate cleanly if the offsets were ever dropped
 ; (see docs/philosophy.md).
 
-SECTION "TecmoLogoTiles", ROMX[$5000], BANK[$27]
+SECTION "TECMO logo graphics", ROMX
+
 TecmoLogoTiles:
+	INCBIN "raw_gfx/IntroBlankTiles.2bpp", 0, 4096
 	INCBIN "assets/tecmo_logo/tiles.bin"       ; 128 tiles; land at VRAM $9000 ($8800 mode)
 
-SECTION "TecmoLogoPalette", ROMX[$5800], BANK[$27]
 TecmoLogoPalette:
 	INCBIN "assets/tecmo_logo/palette.bin"     ; 1 BG palette: white / gray / gray / red
 
-SECTION "TecmoLogoMapDesc", ROMX[$5808], BANK[$27]
 TecmoLogoMapDesc:
 	db 18, 20                                   ; rows, cols
 	dw TecmoLogoAttrMap                          ; CGB attribute map pointer
 	dw TecmoLogoIndexMap                         ; tile index map pointer
 
-SECTION "TecmoLogoIndexMap", ROMX[$580e], BANK[$27]
 TecmoLogoIndexMap:
 	INCBIN "assets/tecmo_logo/tilemap.bin"     ; 20x18 tile indices
 
-SECTION "TecmoLogoAttrMap", ROMX[$5976], BANK[$27]
 TecmoLogoAttrMap:
 	INCBIN "assets/tecmo_logo/attrmap.bin"     ; 20x18 CGB BG attributes
+
+Data_27_5ade:
+	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408
+
+Data_27_6ffe:
+	db $00, $00

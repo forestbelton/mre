@@ -8,10 +8,9 @@
 ; (CopyBytesBanked, etc.) defined in analyzed.asm, and references the logo's
 ; tile/palette/map data (TecmoLogo*) carved into src/gfx/logo.asm.
 
-; NB: Can't use TECMO_LOGO_GFX_BANK when declaring the data sections in
-; gfx/logo.asm because it doesn't play nicely with the extractor. Can either
-; fix the extractor or wait until the extractor is simplified out after ROM
-; mapping.
+; NB: Using BANK(TecmoLogoTiles) as the definition does not work as the bank is
+; only known at link time. There may be a workaround possible that doesn't
+; require hardcoding this value.
 DEF TECMO_LOGO_GFX_BANK EQU $27
 
 SECTION "DrawTecmoLogo", ROMX[$5418], BANK[$30]
@@ -22,14 +21,14 @@ DrawTecmoLogo:
 	xor a
 	ldh [rVBK], a               ; VRAM bank 0
 	ld a, TECMO_LOGO_GFX_BANK
-	ld hl, $4000                ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
+	ld hl, TecmoLogoTiles       ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a               ; VRAM bank 1
 	ld a, TECMO_LOGO_GFX_BANK
-	ld hl, $5800                ; bank-1 plane (palette/maps/tail ride along, unused as tiles)
+	ld hl, TecmoLogoPalette     ; bank-1 plane (palette/maps/tail ride along, unused as tiles)
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked

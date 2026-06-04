@@ -44840,21 +44840,6 @@ Data_26_7694:
 	db $d8, $75, $fc, $75, $d8, $75, $20, $76, $44, $76, $68, $76, $44, $76, $20, $76
 	db $44, $76, $68, $76, $44, $76
 
-SECTION "analyzed_09c000", ROMX[$4000], BANK[$27]
-
-IntroBlankTiles:
-	INCBIN "raw_gfx/IntroBlankTiles.2bpp", 0, 4096
-
-SECTION "analyzed_09dade", ROMX[$5ade], BANK[$27]
-
-Data_27_5ade:
-	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408
-
-SECTION "analyzed_09effe", ROMX[$6ffe], BANK[$27]
-
-Data_27_6ffe:
-	db $00, $00
-
 SECTION "analyzed_0a3000", ROMX[$7000], BANK[$28]
 
 Data_28_7000:

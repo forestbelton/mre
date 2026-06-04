@@ -7,7 +7,7 @@ INCLUDE "bcd.inc"
 INCLUDE "enum.inc"
 INCLUDE "room.inc"
 
-SECTION "items", ROMX
+SECTION "Items", ROMX
 
 ; RemoveConditionalItemsPass strips an item cell when its flag here is nonzero,
 ; unless wProgressFlags bit 0 is set -- the "only on the normal stair path" items.

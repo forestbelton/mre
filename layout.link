@@ -23,4 +23,7 @@
 ;     by their source offsets. ---
 ROMX $01
     ORG $5162
-    "items"
+    "Items"
+ROMX $27
+    ORG $4000
+    "TECMO logo graphics"
