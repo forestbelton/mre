@@ -27,7 +27,7 @@ SECTION "layout_code", ROM0[$166f]
 ; -----------------------------------------------------------------------------
 FloorPostLoadCleanup:
 	ld a, $01
-	ld hl, RemoveKeyPass           ; pass 1: strip gold KEY when wC2D5 bit 1 set
+	ld hl, RemoveKeyPass           ; pass 1: strip gold KEY when wProgressFlags bit 1 set
 	call CallBankedHL
 	ld a, $01
 	ld hl, RemoveSilverKeyGate     ; pass 2: strip SILVER_KEY unless progress allows
@@ -47,8 +47,8 @@ FloorPostLoadCleanup:
 	ld a, $ff              ; clear a pair of entity slots ($FF = empty)
 	ld [$c530], a
 	ld [$c531], a
-	ld [$c52e], a
-	ld [$c52f], a
+	ld [wSpawnCellX], a
+	ld [wSpawnCellY], a
 	; falls through
 
 ; Func_00_16ad -- map ROM bank $12 and run two of its routines, restoring the
@@ -67,7 +67,7 @@ Func_00_16ad:
 
 ; -----------------------------------------------------------------------------
 ; LoadFloorByMode ($16c1) -- pick the record index for the active floor from the
-; screen "mode" in $c2c1, then tail into ParseFloorRecord. d = wActiveFloor - 1.
+; screen "mode" in wRoomType, then tail into ParseFloorRecord. d = wActiveFloor - 1.
 ;   mode 0 : index = floor-1               (normal tower floors)
 ;   mode 1 : index = $3c + (floor-1)
 ;   mode 2 : index = $46 + (floor-1)
@@ -79,7 +79,7 @@ LoadFloorByMode:
 	ld a, [wActiveFloor]
 	dec a
 	ld d, a                ; d = floor - 1
-	ld a, [$c2c1]          ; screen mode
+	ld a, [wRoomType]          ; screen mode
 	cp $00
 	jr nz, .notMode0
 	ld a, d
@@ -493,7 +493,7 @@ SpawnPlayerEntity:
 ; SpawnFloorMonstersOrBonus ($4055) -- mode 2 uses a scripted bonus list, else
 ; the floor's arr2 table.
 SpawnFloorMonstersOrBonus:
-	ld a, [$c2c1]          ; screen mode
+	ld a, [wRoomType]          ; screen mode
 	cp $02
 	jr nz, .normal
 	call Func_01_42e6      ; mode 2: scripted bonus-stage monsters
@@ -748,7 +748,7 @@ InitEntityHeading:
 ; is empty. See docs/floor_data.md "Monster spawners".
 ; -----------------------------------------------------------------------------
 ProcessFloorSpawners:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret z                  ; mode 2 has no arr3 spawners
 	ld hl, $c4fe           ; arr3 spawner table
@@ -973,10 +973,10 @@ RemoveOpenItemAtCell:
 	pop bc
 	ret
 
-; RemoveKeyPass ($569b) -- when wC2D5 ($c2d5) bit 1 is set, strip the gold KEY
+; RemoveKeyPass ($569b) -- when wProgressFlags (wProgressFlags) bit 1 is set, strip the gold KEY
 ; (open $c0 / hidden $80) from every cell.
 RemoveKeyPass:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 1, a
 	ret z
 	ld hl, wFloorGrid
@@ -1050,11 +1050,11 @@ RemoveSilverKeyPass:
 	jr nz, .row
 	ret
 
-; RemoveConditionalItemsPass ($56fb) -- unless wC2D5 bit 0 is set, strip every
+; RemoveConditionalItemsPass ($56fb) -- unless wProgressFlags bit 0 is set, strip every
 ; item cell whose base id (low 6 bits) has a nonzero flag in Data_01_5162 ($5162).
 ; This is why $07/$17/$19/$1a/$1b/$1c/$1f appear only via the normal stair path.
 RemoveConditionalItemsPass:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 0, a
 	ret nz
 	ld hl, wFloorGrid
@@ -1181,7 +1181,7 @@ CollectItem:
 	jp hl                  ; tail-call the per-item effect handler
 
 ; AddItemScore ($5074) -- a = base id. Add the item's 4-byte big-endian BCD point
-; value (Data_01_51aa, 4 bytes/id) to the 5-byte LE-BCD score at $c2c6.
+; value (Data_01_51aa, 4 bytes/id) to the 5-byte LE-BCD score at wScore.
 AddItemScore:
 	push af
 	push bc
@@ -1200,7 +1200,7 @@ AddItemScore:
 	ld a, [hl+]
 	ld d, a
 	ld e, [hl]             ; bcde = point value (big-endian BCD)
-	ld hl, $c2c6           ; score, 5 bytes, least-significant first
+	ld hl, wScore           ; score, 5 bytes, least-significant first
 	ld a, [hl]
 	add a, e
 	daa
@@ -1229,7 +1229,7 @@ AddItemScore:
 ; fall-through from AddItemScore when the add carried past the 5-byte field).
 CapScoreOverflow:
 	ld a, $99
-	ld hl, $c2c6
+	ld hl, wScore
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl+], a
@@ -1241,7 +1241,7 @@ CapScoreOverflow:
 ; RefreshScoreDisplay ($50b2) -- push the new score to the bank-5 HUD (skipped in
 ; mode 5), then unwind AddItemScore's saved af/bc.
 RefreshScoreDisplay:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr z, .done
 	ld a, $05
@@ -1259,7 +1259,7 @@ TrackItemCollection:
 	push af
 	push bc
 	ld e, a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr z, .done
 	cp $02
@@ -1342,7 +1342,7 @@ RemoveCollectedCell:
 ; floor in the $cff8 table (the index mirrors the LoadFloorByMode mode mapping;
 ; mode 2 uses Func_00_17c0, returning 0 to skip).
 IncFloorCollectCounter:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	jr z, .mode0
 	cp $01

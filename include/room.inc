@@ -87,7 +87,7 @@ end_enum
 ; check (RemoveOpenItemAtCell) only takes open items. The suppressors are bank-$05
 ; grid passes run by FloorPostLoadCleanup: Func_05_49c8 re-hides $16 (always),
 ; Func_05_496b re-hides $1c/$1f (when $c2e8==0); $1c/$1f/etc. are also stripped by
-; the $5162 conditional-appearance gate (RemoveConditionalItemsPass) unless wC2D5
+; the $5162 conditional-appearance gate (RemoveConditionalItemsPass) unless wProgressFlags
 ; bit 0 is set. $1b HARE_ICON is removed by Func_05_499d unless $c2aa!=0. All three
 ; were collected (encyclopedia) only after NOPing those passes -- see git history.
 ; See docs/floor_data.md for the points/effect tables (Data_01_51aa / $523a).

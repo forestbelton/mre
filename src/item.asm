@@ -10,7 +10,7 @@ INCLUDE "room.inc"
 SECTION "items", ROMX
 
 ; RemoveConditionalItemsPass strips an item cell when its flag here is nonzero,
-; unless wC2D5 bit 0 is set -- the "only on the normal stair path" items.
+; unless wProgressFlags bit 0 is set -- the "only on the normal stair path" items.
 ItemGateFlags: enum_table ITEM, byte, * = $00, \
     .GOLD_KEY = $00, \
     .SILVER_KEY = $00, \
@@ -175,13 +175,13 @@ ItemEffect_ScoreOnly:  ; generic: just the ItemPoints score (gems, coins, medals
 	pop af
 	ret
 
-ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece ($cfd7, cap 4); at 4 -> assemble a stone ($cfd8)
+ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece (wDiscStoneFragments, cap 4); at 4 -> assemble a stone (wFreeDiscStones)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $cfd7
+	ld hl, wDiscStoneFragments
 	ld a, [hl]
 	inc a
 	ld [hl], a
@@ -189,57 +189,57 @@ ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece ($cfd7, cap 4); at 4 -> asse
 	ret c
 	ld a, $04
 	ld [hl], a
-	ld hl, $cfd8
+	ld hl, wFreeDiscStones
 	ld a, [hl]
 	cp $09
 	ret z
 	inc a
 	ld [hl], a
-	ld hl, $cfd7
+	ld hl, wDiscStoneFragments
 	ld a, [hl]
 	sub $04
 	ld [hl], a
 	ret
 
-ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot ($c2cb, max 8)
+ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot (wBombCapacity, max 8)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2cb
+	ld hl, wBombCapacity
 	ld a, [hl]
 	cp $08
 	ret z
 	inc [hl]
 	ret
 
-ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large ($c2cd bit 0)
+ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large (wBombLargeFlags bit 0)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld a, [$c2cc]
+	ld a, [wBombCount]
 	or a
 	ret z
-	ld hl, $c2cd
+	ld hl, wBombLargeFlags
 	set 0, [hl]
 	ret
 
-ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb ($c2cc), small type
+ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb (wBombCount), small type
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld a, [$c2cb]
+	ld a, [wBombCapacity]
 	ld b, a
-	ld a, [$c2cc]
+	ld a, [wBombCount]
 	cp b
 	ret z
 	inc a
-	ld [$c2cc], a
+	ld [wBombCount], a
 	ld c, a
 	ld b, $01
 .L52f6:
@@ -251,7 +251,7 @@ ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb ($c2cc), small type
 	ld a, b
 	xor $ff
 	ld b, a
-	ld hl, $c2cd
+	ld hl, wBombLargeFlags
 	ld a, [hl]
 	and b
 	ld [hl], a
@@ -263,13 +263,13 @@ ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
 	ld a, $05
 	call PlaySound
 	pop af
-	ld a, [$c2cb]
+	ld a, [wBombCapacity]
 	ld b, a
-	ld a, [$c2cc]
+	ld a, [wBombCount]
 	cp b
 	ret z
 	inc a
-	ld [$c2cc], a
+	ld [wBombCount], a
 	ld c, a
 	ld b, $01
 .L5322:
@@ -278,19 +278,19 @@ ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
 	sla b
 	jr .L5322
 .L5329:
-	ld hl, $c2cd
+	ld hl, wBombLargeFlags
 	ld a, [hl]
 	or b
 	ld [hl], a
 	ret
 
-ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter ($c2ce)
+ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter (wCrystalCount)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2ce
+	ld hl, wCrystalCount
 	ld a, [hl]
 	add a, $04
 	ld [hl+], a
@@ -299,13 +299,13 @@ ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter ($c2ce
 	ld [hl], a
 	ret
 
-ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter ($c2ce)
+ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter (wCrystalCount)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2ce
+	ld hl, wCrystalCount
 	ld a, [hl]
 	add a, $10
 	ld [hl+], a
@@ -314,19 +314,19 @@ ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter (
 	ld [hl], a
 	ret
 
-ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the $c52e/$c52f slot (gfx $1f)
+ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the wSpawnCellX/wSpawnCellY slot (gfx $1f)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld a, [$c52f]
+	ld a, [wSpawnCellY]
 	cp $ff
 	ret z
 	swap a
 	and $f0
 	ld d, a
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	swap a
 	and $f0
 	ld e, a
@@ -368,35 +368,35 @@ ItemEffect_AlfDoll:  ; ALF_DOLL: transform all monsters into Suzurins ($5544)
 	call TransformMonstersToSuzurin
 	ret
 
-ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, DoubleFloorTimer)
+ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 (wTimeMultiplier=2, DoubleFloorTimer)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
 	ld a, $02
-	ld [$c2d4], a
+	ld [wTimeMultiplier], a
 	call DoubleFloorTimer
 	ret
 
-ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, QuintupleFloorTimer)
+ItemEffect_FullTororon:  ; FULL_TORORON: time x5 (wTimeMultiplier=5, QuintupleFloorTimer)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
 	ld a, $05
-	ld [$c2d4], a
+	ld [wTimeMultiplier], a
 	call QuintupleFloorTimer
 	ret
 
-ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s ($c2d1-$c2d3)
+ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s (wFloorTimer-wFloorTimer+2)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2d3
+	ld hl, wFloorTimer+2
 	xor a
 	ld [hl-], a
 	ld a, $50
@@ -411,7 +411,7 @@ ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2d3
+	ld hl, wFloorTimer+2
 	ld a, $01
 	ld [hl-], a
 	xor a
@@ -419,13 +419,13 @@ ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
 	ld [hl], a
 	ret
 
-ItemEffect_CoxHat:  ; COX_HAT: +1 life ($c2c3 BCD, cap 99); 1-up SFX $08
+ItemEffect_CoxHat:  ; COX_HAT: +1 life (wLives BCD, cap 99); 1-up SFX $08
 	call SpawnPickupEffectAlt
 	push af
 	ld a, $08
 	call PlaySound
 	pop af
-	ld hl, $c2c3
+	ld hl, wLives
 	ld a, [hl]
 	cp $99
 	ret z
@@ -434,8 +434,8 @@ ItemEffect_CoxHat:  ; COX_HAT: +1 life ($c2c3 BCD, cap 99); 1-up SFX $08
 	ld [hl], a
 	ret
 
-ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit ($c2d5 bit 1; StartKeyUnlock)
-	ld hl, $c2d5
+ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit (wProgressFlags bit 1; StartKeyUnlock)
+	ld hl, wProgressFlags
 	set 1, [hl]
 	ld c, $01
 	call StartKeyUnlock
@@ -450,61 +450,61 @@ ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (GrantSilverKey)
 	call GrantSilverKey
 	ret
 
-ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag ($c2e8=1; $cff3=1 unless mode 5)
+ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag (wHasBattleCard=1; wBattleCardPending=1 unless mode 5)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
 	ld a, $01
-	ld [$c2e8], a
-	ld a, [$c2c1]
+	ld [wHasBattleCard], a
+	ld a, [wRoomType]
 	cp $05
 	ret z
 	ld a, $01
-	ld [$cff3], a
+	ld [wBattleCardPending], a
 	ret
 
-ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp ($c2d5 bit 3)
+ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp (wProgressFlags bit 3)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 3, [hl]
 	ret
 
-ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + StartKeyUnlock; never placed
+ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartKeyUnlock; never placed
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld a, [$cf7e]
+	ld a, [wToken21Count]
 	inc a
-	ld [$cf7e], a
+	ld [wToken21Count], a
 	cp $04
 	ret nz
 	xor a
-	ld [$cf7e], a
+	ld [wToken21Count], a
 	ld a, $01
-	ld [$cf40], a
+	ld [wSceneState], a
 	ld c, $04
 	call StartKeyUnlock
 	ret
 
-ItemEffect_Item22:  ; $22: key-like ($c2d5 bit 7 + GrantSilverKey); never placed
+ItemEffect_Item22:  ; $22: key-like (wProgressFlags bit 7 + GrantSilverKey); never placed
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 7, [hl]
 	call GrantSilverKey
 	ld a, $01
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ret
 
 ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX $28, bumps $cfda+6
@@ -525,12 +525,12 @@ ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX
 	jr z, .L54bb
 	inc [hl]
 .L54bb:
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 7, [hl]
 	ld c, $06
 	ld a, $0f
 	ld hl, $488d
 	call CallBankedHL
 	ld a, $01
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ret

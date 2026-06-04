@@ -2941,7 +2941,7 @@ SECTION "analyzed_0011f6", ROM0[$11f6]
 
 Func_00_11f6:
 	ld [$c29c], a
-	ld a, [$c2e8]
+	ld a, [wHasBattleCard]
 	or a
 	jr z, Func_00_1203
 
@@ -2972,7 +2972,7 @@ SECTION "analyzed_001219", ROM0[$1219]
 Func_00_1219:
 	xor a
 	set 0, a
-	ld [$c2d5], a
+	ld [wProgressFlags], a
 	ret
 
 SECTION "analyzed_001220", ROM0[$1220]
@@ -3054,7 +3054,7 @@ Func_00_1290:
 Func_00_1298:
 	ld a, [wActiveFloor]
 	ld d, a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $04
 	jr nz, Func_00_12a8
 	ld a, $4e
@@ -3885,7 +3885,7 @@ Func_00_1919:
 	or a
 	ret nz
 	ld a, $04
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call Func_00_1298
 	call Func_00_2fa2
 	ret z
@@ -3914,7 +3914,7 @@ SetupExchangeRoomSelect:
 	ret
 EnterSelectedRoom:
 	ld a, $05
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call LoadFloorByMode
 	ld a, $05
 	ld hl, Func_05_47c6
@@ -5138,7 +5138,7 @@ Func_00_2117:
 	ret
 Func_00_212c:
 	ld a, $04
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call Func_00_1298
 	ld a, [$c586]
 	cp $ff
@@ -5174,7 +5174,7 @@ Func_00_2140:
 	ret nc
 	ld [wActiveFloor], a
 	ld a, $03
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call Func_00_1298
 	ret
 Func_00_217d:
@@ -6860,8 +6860,8 @@ Func_00_2df6:
 	ld [$c564], a
 	ld [$c565], a
 	ld a, $ff
-	ld [$c52e], a
-	ld [$c52f], a
+	ld [wSpawnCellX], a
+	ld [wSpawnCellY], a
 	ld [$c530], a
 	ld [$c531], a
 	ld b, $00
@@ -7034,7 +7034,7 @@ SECTION "analyzed_002f04", ROM0[$2f04]
 Func_00_2f04:
 	cp $40
 	jr nz, Func_00_2f38
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	cp $ff
 	jr z, Func_00_2f2b
 
@@ -7048,9 +7048,9 @@ SECTION "analyzed_002f2b", ROM0[$2f2b]
 
 Func_00_2f2b:
 	ld a, [$c564]
-	ld [$c52e], a
+	ld [wSpawnCellX], a
 	ld a, [$c565]
-	ld [$c52f], a
+	ld [wSpawnCellY], a
 	ret
 
 SECTION "analyzed_002f38", ROM0[$2f38]
@@ -7969,7 +7969,7 @@ Func_00_34e3:
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_43a4
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_00_3502
 	ld a, $11
@@ -7994,7 +7994,7 @@ Func_00_3508:
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_44aa
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	ret z
 	ld a, $12
@@ -9117,7 +9117,7 @@ Func_01_439e:
 Func_01_4412:
 	call WaitForNextFrame
 	call ReadJoypad
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 7, a
 	jr nz, Func_01_447f
 	bit 5, a
@@ -9178,7 +9178,7 @@ Func_01_449d:
 	ret z
 	or a
 	jr z, Func_01_44bd
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_44b5
 	push af
@@ -9193,7 +9193,7 @@ Func_01_44b5:
 	pop af
 	ret
 Func_01_44bd:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_44d0
 	cp $06
@@ -9231,13 +9231,13 @@ Func_01_44ef:
 	ld a, [$c2e6]
 	or a
 	jr z, Func_01_4515
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret z
-	ld a, [$c2d3]
+	ld a, [wFloorTimer+2]
 	or a
 	jr nz, Func_01_450d
-	ld a, [$c2d2]
+	ld a, [wFloorTimer+1]
 	cp $20
 	ret c
 Func_01_450d:
@@ -9246,13 +9246,13 @@ Func_01_450d:
 	ld [$c2e6], a
 	ret
 Func_01_4515:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_4530
-	ld a, [$c2d3]
+	ld a, [wFloorTimer+2]
 	or a
 	ret nz
-	ld a, [$c2d2]
+	ld a, [wFloorTimer+1]
 	cp $20
 	ret nc
 	call Func_01_455a
@@ -9271,7 +9271,7 @@ Func_01_4530:
 	ld [$c2e6], a
 	ret
 Func_01_4543:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $06
 	jr z, Func_01_4552
 	push af
@@ -9301,15 +9301,15 @@ Func_01_4562:
 	ld a, [$c7fd]
 	bit 0, a
 	ret nz
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_4596
 	ld a, [$c2e2]
 	cp $03
 	ret z
-	ld a, [$c2d4]
+	ld a, [wTimeMultiplier]
 	ld c, a
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	ld a, [hl]
 	sub c
 	daa
@@ -9341,19 +9341,19 @@ Func_01_4596:
 	call Func_01_44ef
 	ret
 Func_01_459a:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	res 0, a
-	ld [$c2d5], a
-	ld a, [$c2c1]
+	ld [wProgressFlags], a
+	ld a, [wRoomType]
 	cp $05
 	jr nz, Func_01_45ad
 	call Func_00_1219
 	ret
 Func_01_45ad:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_45cf
-	ld a, [$c2d6]
+	ld a, [wTransitionState]
 	cp $01
 	jr nz, Func_01_45d2
 	ld a, $05
@@ -9370,7 +9370,7 @@ Func_01_45d2:
 	call Func_01_4654
 	ret
 Func_01_45d6:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	ret nz
 	call Func_01_5c7c
@@ -9441,12 +9441,12 @@ Func_01_4646:
 	call Func_01_4987
 	ret
 Func_01_4654:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $06
 	jr z, Func_01_4698
 	cp $02
 	jr nz, Func_01_46a0
-	ld a, [$c2d6]
+	ld a, [wTransitionState]
 	cp $02
 	jp z, Func_01_478d
 	cp $00
@@ -9472,21 +9472,21 @@ Func_01_4679:
 	ret
 Func_01_4698:
 	ld a, [$c2c2]
-	ld [$c2c1], a
+	ld [wRoomType], a
 	jr Func_01_46c8
 Func_01_46a0:
-	ld a, [$c2d6]
+	ld a, [wTransitionState]
 	cp $02
 	jp z, Func_01_4782
 	cp $00
 	jp z, Func_01_4782
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 3, a
 	jr z, Func_01_46c8
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	ld [$c2c2], a
 	ld a, $06
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call Func_00_1219
 	ld a, $11
 	ld [$c2a7], a
@@ -9498,7 +9498,7 @@ Func_01_46c8:
 	cp $02
 	jp z, Func_01_4759
 Func_01_46d5:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	jr z, Func_01_46e6
 	cp $01
@@ -9613,10 +9613,10 @@ Func_01_4798:
 	ld [$c2a7], a
 	ret
 Func_01_479e:
-	ld a, [$c2c3]
+	ld a, [wLives]
 	sub $01
 	daa
-	ld [$c2c3], a
+	ld [wLives], a
 	or a
 	ret
 GrantSilverKey:
@@ -9631,7 +9631,7 @@ GrantSilverKey:
 	call Func_01_4833
 	ret
 Func_01_47bc:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_47f0
 	cp $00
@@ -9708,7 +9708,7 @@ Func_01_482d:
 	call Func_00_119a
 	ret
 Func_01_4833:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_486d
 	cp $00
@@ -9790,7 +9790,7 @@ SECTION "analyzed_0048af", ROMX[$48af], BANK[$01]
 
 Func_01_48af:
 	ld a, $02
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ld a, [wActiveFloor]
 	cp $0a
 	jr z, Func_01_48cb
@@ -9838,31 +9838,31 @@ Func_01_4900:
 	ld a, $0a
 	ld [wActiveFloor], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ret
 Func_01_490b:
 	ld a, $14
 	ld [wActiveFloor], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ret
 Func_01_4916:
 	ld a, $28
 	ld [wActiveFloor], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ret
 Func_01_4921:
 	ld a, $32
 	ld [wActiveFloor], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ret
 Func_01_492c:
 	ld a, $3c
 	ld [wActiveFloor], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ret
 Func_01_4937:
 	ld hl, $cfe9
@@ -9906,7 +9906,7 @@ Func_01_496a:
 	call Func_00_1164
 	ret
 Func_01_4970:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	jr z, Func_01_497a
 	cp $02
@@ -9966,19 +9966,19 @@ Func_01_49c5:
 	ret
 Func_01_49cb:
 	call HideAllSprites
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 0, a
 	jr nz, Func_01_49e0
 	res 3, a
 	res 4, a
 	res 5, a
 	res 7, a
-	ld [$c2d5], a
+	ld [wProgressFlags], a
 Func_01_49e0:
 	call Func_01_4970
 	xor a
 	ld [$c2e6], a
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ld [$c2d8], a
 	ld [$c2d0], a
 	ld [$c2e2], a
@@ -10018,7 +10018,7 @@ Func_01_49e0:
 	ldh [rWY], a
 	ret
 Func_01_4a3b:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_4a48
 	ld a, $01
@@ -10030,9 +10030,9 @@ Func_01_4a48:
 	ret
 Func_01_4a4e:
 	ld a, $01
-	ld [$c2d4], a
-	ld hl, $c2d1
-	ld a, [$c2c1]
+	ld [wTimeMultiplier], a
+	ld hl, wFloorTimer
+	ld a, [wRoomType]
 	cp $06
 	jr z, Func_01_4a67
 	ld a, $00
@@ -10122,7 +10122,7 @@ Func_01_4ab6:
 	ld [$cfd9], a
 Func_01_4ae1:
 	ld a, $06
-	ld [$cf40], a
+	ld [wSceneState], a
 	ld c, $04
 	call StartKeyUnlock
 	ld a, $01
@@ -10198,10 +10198,10 @@ Data_01_4b6a:
 SECTION "analyzed_004b7c", ROMX[$4b7c], BANK[$01]
 
 Func_01_4b7c:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 3, a
 	jr nz, Func_01_4ba8
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr nz, Func_01_4b96
 	ld a, [wActiveFloor]
@@ -10254,7 +10254,7 @@ Func_01_4bbd:
 	ld [$c2df], a
 	ret
 Func_01_4bdc:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
 	ld a, [$c2e3]
@@ -10602,7 +10602,7 @@ Func_01_4dd7:
 	pop af
 	ret
 Func_01_4dd9:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
 	ld a, [wActiveFloor]
@@ -10647,7 +10647,7 @@ Func_01_4e09:
 	ld hl, $4faf
 	ld de, $9ca0
 	call Func_01_76dd
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr z, Func_01_4e4b
 	cp $06
@@ -10953,7 +10953,7 @@ Func_01_5607:
 	jr nz, Func_01_55ab
 	ret
 DoubleFloorTimer:
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	ld a, [hl]
 	add a, a
 	daa
@@ -10977,7 +10977,7 @@ Data_01_5623:
 SECTION "analyzed_00562b", ROMX[$562b], BANK[$01]
 
 QuintupleFloorTimer:
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	ld a, [hl+]
 	ld [$cf65], a
 	ld a, [hl+]
@@ -11039,7 +11039,7 @@ SECTION "analyzed_00572d", ROMX[$572d], BANK[$01]
 
 Func_01_572d:
 	call Func_01_573d
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	ret z
 	cp $02
@@ -11113,7 +11113,7 @@ Func_01_5788:
 	jr nz, Func_01_575b
 	ret
 Func_01_57a5:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	jr z, Func_01_57b7
 	cp $01
@@ -11351,10 +11351,10 @@ Func_01_5922:
 	xor a
 	ld [$c2dd], a
 	ld [$c2de], a
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 7, [hl]
 	ld a, $01
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ret
 Func_01_5934:
 	push af
@@ -11396,7 +11396,7 @@ Func_01_5949:
 	ld [$c2dd], a
 	ret
 Func_01_596b:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 1, a
 	jr z, Func_01_599b
 	xor a
@@ -11457,7 +11457,7 @@ Func_01_59ce:
 	jr z, Func_01_5a52
 	cp $60
 	ret nz
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_01_5a06
 	ld a, [wActiveFloor]
@@ -11480,7 +11480,7 @@ Func_01_5a06:
 	ld a, [$c530]
 	cp $ff
 	jr nz, Func_01_5a16
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	cp $ff
 	jr nz, Func_01_5a16
 	jr Func_01_5a4c
@@ -11557,7 +11557,7 @@ Func_01_5a7a:
 	ld [$c2db], a
 	ret
 Func_01_5a90:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	and $7f
 	cp $07
 	ret nc
@@ -11730,7 +11730,7 @@ Func_01_5b9a:
 	ret
 Func_01_5b9e:
 	push af
-	ld a, [$c52f]
+	ld a, [wSpawnCellY]
 	cp $ff
 	jr nz, Func_01_5ba8
 
@@ -11743,7 +11743,7 @@ SECTION "analyzed_005ba8", ROMX[$5ba8], BANK[$01]
 
 Func_01_5ba8:
 	ld b, a
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	ld c, a
 	push bc
 	ld a, b
@@ -11833,13 +11833,13 @@ Func_01_5c21:
 	call DrawFloorPiece
 	ret
 Func_01_5c28:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
-	ld a, [$c2d6]
+	ld a, [wTransitionState]
 	cp $01
 	jr z, Func_01_5c42
-	ld a, [$c2c3]
+	ld a, [wLives]
 	cp $01
 	ret nz
 
@@ -11933,10 +11933,10 @@ Func_01_5cb3:
 	ld a, $02
 	ret
 Func_01_5cbe:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 0, a
 	ret z
 	ld a, [wActiveFloor]
@@ -12070,7 +12070,7 @@ Func_01_5d99:
 	call Func_00_1164
 	ret
 Player_SummonMonster:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret z
 	cp $06
@@ -12092,7 +12092,7 @@ Player_SummonMonster:
 	ld [hl], a
 	push de
 	ld a, [$cfd9]
-	ld [$cf40], a
+	ld [wSceneState], a
 	ld c, $04
 	ld a, $01
 	ld hl, StartKeyUnlock
@@ -13642,12 +13642,12 @@ Func_01_6829:
 	ld a, $03
 	ld hl, $4593
 	call Func_00_0467
-	ld a, [$c2c3]
+	ld a, [wLives]
 	cp $99
 	jr z, Func_01_6856
 	add a, $01
 	daa
-	ld [$c2c3], a
+	ld [wLives], a
 Func_01_6856:
 	xor a
 	ld [$c2c4], a
@@ -13713,7 +13713,7 @@ Func_01_686f:
 	xor a
 	ld [hl], a
 	ld a, $07
-	ld [$cf40], a
+	ld [wSceneState], a
 	ld c, $04
 	call StartKeyUnlock
 	ret
@@ -13968,7 +13968,7 @@ Func_01_6a2d:
 	pop hl
 	ret
 Func_01_6a3e:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
 	ld a, [wActiveFloor]
@@ -14069,7 +14069,7 @@ Func_01_6ac4:
 	pop bc
 	ret
 Func_01_6adb:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
 	ld a, [wActiveFloor]
@@ -15829,7 +15829,7 @@ Func_01_7578:
 	pop de
 	ret
 Func_01_75ad:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_75b9
 	ld hl, $75cc
@@ -15854,7 +15854,7 @@ Data_01_75cc:
 SECTION "analyzed_0075f6", ROMX[$75f6], BANK[$01]
 
 Func_01_75f6:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 5, a
 	ret nz
 	ld a, [$c2db]
@@ -15865,7 +15865,7 @@ Func_01_75f6:
 	ret
 Func_01_7608:
 	ld hl, $c532
-	ld bc, $c2d3
+	ld bc, wFloorTimer+2
 	ld a, [bc]
 	and $0f
 	add a, $9a
@@ -15912,12 +15912,12 @@ Func_01_764e:
 	srl a
 	srl a
 	ld [$cf65], a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	ld b, a
 	ld c, $00
-	ld a, [$c2cc]
+	ld a, [wBombCount]
 	ld d, a
-	ld a, [$c2cb]
+	ld a, [wBombCapacity]
 	ld e, a
 	ld hl, $c538
 Func_01_7668:
@@ -15968,7 +15968,7 @@ Func_01_769e:
 	cp $08
 	jr nz, Func_01_7668
 	ld c, $00
-	ld a, [$c2cb]
+	ld a, [wBombCapacity]
 	ld e, a
 	ld hl, $c540
 Func_01_76b5:
@@ -16110,7 +16110,7 @@ Func_01_775b:
 	ret z
 	xor a
 	ldh [rVBK], a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_01_7782
 	ld hl, $c532
@@ -16193,7 +16193,7 @@ Func_01_7782:
 	ldh [rVBK], a
 	ret
 Func_01_77d2:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret nz
 	xor a
@@ -21293,7 +21293,7 @@ Func_05_4000:
 	xor a
 	ldh [rWY], a
 	call Func_00_04bc
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	cp $02
 	jr z, Func_05_4074
 	cp $01
@@ -21312,7 +21312,7 @@ Func_05_4074:
 	ldh [rSCY], a
 	ret
 Func_05_407d:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	bit 7, a
 	ret nz
 	call Func_05_40e7
@@ -21320,13 +21320,13 @@ Func_05_407d:
 	call Func_05_40b6
 	call Func_05_449a
 	call Func_05_409c
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	bit 7, a
 	ret z
 	call Func_05_4516
 	ret
 Func_05_409c:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	cp $02
 	jr z, Func_05_40b2
 	cp $01
@@ -21414,9 +21414,9 @@ Func_05_4128:
 	ld a, $00
 	call PlaySound
 	pop af
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	set 7, a
-	ld [$cf40], a
+	ld [wSceneState], a
 	ret
 Func_05_4138:
 	inc hl
@@ -21575,9 +21575,9 @@ Func_05_4210:
 	jr z, Func_05_4252
 	cp $fa
 	jp z, Func_05_4327
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	set 7, a
-	ld [$cf40], a
+	ld [wSceneState], a
 	ret
 Func_05_4242:
 	inc hl
@@ -21758,7 +21758,7 @@ Func_05_4349:
 	or a
 	jr z, Func_05_4385
 	push hl
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $460a
 	rst $00
 	ld b, [hl]
@@ -21782,7 +21782,7 @@ Func_05_4349:
 	ret
 Func_05_4385:
 	push hl
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $460a
 	rst $00
 	ld b, [hl]
@@ -21833,7 +21833,7 @@ Func_05_43db:
 	or l
 	ret z
 	push hl
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $4602
 	rst $00
 	ld c, [hl]
@@ -21866,7 +21866,7 @@ Func_05_440c:
 	or l
 	ret z
 	push hl
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $4602
 	rst $00
 	ld c, [hl]
@@ -21948,7 +21948,7 @@ Func_05_449a:
 	and $01
 	ret nz
 Func_05_44b4:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $4612
 	rst $00
 	ld a, [hl]
@@ -21973,7 +21973,7 @@ Func_05_44c7:
 	pop bc
 	jr Func_05_44c7
 Func_05_44d8:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	add a, a
 	push af
 	ld hl, $461a
@@ -22089,12 +22089,12 @@ Func_05_4588:
 	jr nz, Func_05_4586
 	ret
 Func_05_45a2:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $45fa
 	rst $00
 	ld a, [hl]
 	push af
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	add a, a
 	ld hl, $45ea
 	rst $00
@@ -22107,12 +22107,12 @@ Func_05_45a2:
 	call Func_00_108f
 	ret
 Func_05_45c1:
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	ld hl, $4602
 	rst $00
 	ld a, [hl]
 	push af
-	ld a, [$cf40]
+	ld a, [wSceneState]
 	add a, a
 	ld hl, $45da
 	rst $00
@@ -22149,7 +22149,7 @@ Func_05_463a:
 	ld [wCFF0], a
 	ld [wCurrentFloor], a
 	ld [wSilverKeys], a
-	ld [$cff3], a
+	ld [wBattleCardPending], a
 	ld [$cfed], a
 	ld [$cfee], a
 	ld [wDiscStoneFragments], a
@@ -22233,7 +22233,7 @@ Func_05_46c2:
 	jr nz, Func_05_46c2
 	ret
 Func_05_46e1:
-	ld hl, $c2c6
+	ld hl, wScore
 	ld de, wHiScore
 	ld c, $05
 Func_05_46e9:
@@ -22244,7 +22244,7 @@ Func_05_46e9:
 	jr nz, Func_05_46e9
 	ret
 Func_05_46f0:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	ret nz
 	ld hl, $c2ae
@@ -22302,7 +22302,7 @@ Func_05_46f0:
 	ld [$cfd9], a
 	ret
 Func_05_473d:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	ret nz
 	ld hl, $c2ae
@@ -22363,7 +22363,7 @@ Func_05_4785:
 	ld a, $01
 	ld [$c2ab], a
 	ld a, $00
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ld a, $01
 	ld [wActiveFloor], a
 	call Func_00_1219
@@ -22374,7 +22374,7 @@ Func_05_479d:
 	xor a
 	ld [$c2ab], a
 	ld a, [$cff1]
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ld a, [wCFF0]
 	ld [wActiveFloor], a
 	ret
@@ -22384,7 +22384,7 @@ Func_05_47b2:
 	ld a, $01
 	ld [$c2ab], a
 	ld a, $01
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ld a, $01
 	ld [wActiveFloor], a
 	ret
@@ -22398,19 +22398,19 @@ Func_05_47c6:
 Func_05_47d4:
 	ld [$c2aa], a
 	ld a, $03
-	ld [$c2c3], a
+	ld [wLives], a
 	ld a, $03
-	ld [$c2cb], a
+	ld [wBombCapacity], a
 	ld a, $50
-	ld [$c2ce], a
+	ld [wCrystalCount], a
 	xor a
 	ld [$c2cf], a
 	xor a
 	ld [$c2c4], a
-	ld [$c2cd], a
-	ld [$c2cc], a
-	ld [$c2e8], a
-	ld hl, $c2c6
+	ld [wBombLargeFlags], a
+	ld [wBombCount], a
+	ld [wHasBattleCard], a
+	ld hl, wScore
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl+], a
@@ -22418,7 +22418,7 @@ Func_05_47d4:
 	ld [hl], a
 	ret
 Func_05_4800:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_05_4812
 	ld a, [wActiveFloor]
@@ -22435,7 +22435,7 @@ Func_05_4812:
 	ld [wActiveFloor], a
 	ret
 Func_05_481d:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_05_4835
 	cp $00
@@ -22543,7 +22543,7 @@ Func_05_48a5:
 	call Func_05_48c9
 	ret
 Func_05_48c9:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_48d9
 	ld a, $3d
@@ -22588,7 +22588,7 @@ Func_05_48fc:
 	call CallBankedHL
 	ret
 Func_05_4918:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_4928
 	ld a, $3d
@@ -22601,7 +22601,7 @@ Func_05_4928:
 	call CallBankedHL
 	ret
 Func_05_4931:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_4956
 	ld a, [wActiveFloor]
@@ -22628,7 +22628,7 @@ Func_05_4956:
 	ld [$c55a], a
 	ret
 Func_05_496b:
-	ld a, [$c2e8]
+	ld a, [wHasBattleCard]
 	or a
 	ret nz
 	ld hl, wFloorGrid
@@ -22719,7 +22719,7 @@ Func_05_49e2:
 	jr nz, Func_05_49cf
 	ret
 Func_05_49ef:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	ret nz
 	ld a, [wActiveFloor]
@@ -29459,7 +29459,7 @@ Data_0e_7000:
 SECTION "analyzed_03c000", ROMX[$4000], BANK[$0f]
 
 Func_0f_4000:
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 5, a
 	jr nz, Func_0f_403b
 	ld a, [$c2db]
@@ -29478,7 +29478,7 @@ Func_0f_4000:
 	ld a, $0d
 	call PlaySound
 	pop af
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 5, [hl]
 	ld a, $10
 	ld [$c2d8], a
@@ -29660,7 +29660,7 @@ Func_0f_416c:
 	jr nz, Func_0f_41bd
 	bit 7, a
 	ret z
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr z, Func_0f_41a3
 	cp $06
@@ -29782,7 +29782,7 @@ Func_0f_4265:
 	ld hl, Func_01_4b0e
 	call CallBankedHL
 	ld a, $02
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ld a, $01
 	ld [$c2ac], a
 	ret
@@ -29796,16 +29796,16 @@ Func_0f_427b:
 	ld hl, RequestFloorExit
 	call CallBankedHL
 	ld a, $01
-	ld [$c2c3], a
+	ld [wLives], a
 	ld a, $02
-	ld [$c2d6], a
+	ld [wTransitionState], a
 	ld a, $04
 	ld [wC2D7], a
 	ld a, $01
 	ld [$c2ac], a
 	ret
 Func_0f_42a2:
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	res 5, [hl]
 	xor a
 	ld [$c2d8], a
@@ -30143,26 +30143,26 @@ Func_0f_45c7:
 	or a
 	jr nz, Func_0f_45eb
 	call WaitForHBlank
-	ld a, [$c2c3]
+	ld a, [wLives]
 	swap a
 	and $0f
 	add a, $9a
 	ld hl, $9cc4
 	ld [hl+], a
-	ld a, [$c2c3]
+	ld a, [wLives]
 	and $0f
 	add a, $9a
 	ld [hl+], a
 	ret
 Func_0f_45eb:
 	call WaitForHBlank
-	ld a, [$c2c3]
+	ld a, [wLives]
 	swap a
 	and $0f
 	add a, $9a
 	ld hl, $9c66
 	ld [hl+], a
-	ld a, [$c2c3]
+	ld a, [wLives]
 	and $0f
 	add a, $9a
 	ld [hl+], a
@@ -30295,7 +30295,7 @@ Func_0f_46d6:
 	xor a
 	ldh [rVBK], a
 	call WaitForHBlank
-	ld hl, $c2c6
+	ld hl, wScore
 	ld de, $9c92
 	ld a, [hl]
 	and $0f
@@ -30394,7 +30394,7 @@ Func_0f_4722:
 Func_0f_476e:
 	xor a
 	ldh [rVBK], a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_0f_478e
 	cp $06
@@ -30807,7 +30807,7 @@ Func_0f_4ab8:
 	call Func_0f_4aef
 	ret
 Func_0f_4ac6:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $06
 	jr z, Func_0f_4ad9
 	cp $02
@@ -30841,7 +30841,7 @@ Func_0f_4b02:
 	ld hl, $5138
 	ld de, $9de3
 	call CopyBgMap
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr z, Func_0f_4b1d
 	cp $06
@@ -32821,9 +32821,9 @@ Func_12_4000:
 	cp $40
 	jr nz, Func_12_4014
 	ld a, b
-	ld [$c52f], a
+	ld [wSpawnCellY], a
 	ld a, c
-	ld [$c52e], a
+	ld [wSpawnCellX], a
 	ld a, d
 	ret
 Func_12_4014:
@@ -32907,7 +32907,7 @@ Func_12_406f:
 	call CopyBgMap
 	ret
 Func_12_4094:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_12_40a6
 	ld a, [wActiveFloor]
@@ -33335,7 +33335,7 @@ SECTION "analyzed_04834b", ROMX[$434b], BANK[$12]
 
 Func_12_434b:
 	ld a, $05
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call LoadFloorByMode
 	ld a, $10
 	ld hl, Func_10_4041
@@ -33359,7 +33359,7 @@ Func_12_4368:
 	jp Func_12_429a
 Func_12_437a:
 	ld a, $04
-	ld [$c2c1], a
+	ld [wRoomType], a
 	call Func_00_1298
 	call Func_00_2fa2
 	jr z, Func_12_4390
@@ -33368,7 +33368,7 @@ Func_12_437a:
 	jp Func_12_42a2
 Func_12_4390:
 	ld a, $05
-	ld [$c2c1], a
+	ld [wRoomType], a
 	ld a, $05
 	ld hl, Func_05_47c6
 	call CallBankedHL
@@ -33955,7 +33955,7 @@ Func_12_47e4:
 	ret
 Func_12_47e5:
 	call Func_12_49df
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	ret z
 	cp $06
@@ -34154,9 +34154,9 @@ Func_12_490d:
 	cp $40
 	jr nz, Func_12_4921
 	ld a, b
-	ld [$c52f], a
+	ld [wSpawnCellY], a
 	ld a, c
-	ld [$c52e], a
+	ld [wSpawnCellX], a
 	ld a, d
 	ret
 Func_12_4921:
@@ -38398,7 +38398,7 @@ SECTION "analyzed_05c0b1", ROMX[$40b1], BANK[$17]
 Func_17_40b1:
 	ld a, [wActiveFloor]
 	ld c, a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	ld b, a
 	cp $02
 	jr nz, Func_17_40c3
@@ -43919,7 +43919,7 @@ SECTION "analyzed_0873ac", ROMX[$73ac], BANK[$21]
 
 Func_21_73ac:
 	call WaitForHBlank
-	ld hl, $c2c6
+	ld hl, wScore
 	ld de, $98cd
 	ld a, [hl]
 	call Func_00_3635
@@ -43946,7 +43946,7 @@ Func_21_73ac:
 	ret
 Func_21_73e4:
 	call WaitForHBlank
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	ld de, $992c
 	ld a, [hl]
 	call Func_00_3635
@@ -48550,7 +48550,7 @@ Func_30_44aa:
 	ld hl, $7080
 	ld de, $9800
 	call CopyBgMapBanked
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr nz, Func_30_4506
 	ld b, $23
@@ -48676,7 +48676,7 @@ Func_30_45e2:
 	ld a, [$d0f5]
 	cp $78
 	jr nc, Func_30_461f
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $05
 	jr z, Func_30_4603
 	ld hl, $7356
@@ -48727,7 +48727,7 @@ Func_30_463d:
 	ld b, $23
 	call CopyBgMapBanked
 Func_30_465a:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $06
 	jr nz, Func_30_4666
 	call Func_30_46f1
@@ -48775,13 +48775,13 @@ Func_30_46a4:
 	ld b, $23
 	call CopyBgMapBanked
 	call Func_30_47d0
-	ld a, [$c2c3]
+	ld a, [wLives]
 	and $0f
 	ld hl, $7ba4
 	ld de, $98cc
 	ld b, $23
 	call Func_00_35d4
-	ld a, [$c2c3]
+	ld a, [wLives]
 	swap a
 	and $0f
 	ld hl, $7ba4
@@ -48873,7 +48873,7 @@ SECTION "analyzed_0c076b", ROMX[$476b], BANK[$30]
 Func_30_476b:
 	ret
 Func_30_476c:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4796
 	ld a, [$d100]
@@ -48923,7 +48923,7 @@ Data_30_47cc:
 SECTION "analyzed_0c07d0", ROMX[$47d0], BANK[$30]
 
 Func_30_47d0:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4800
 	ld c, $02
@@ -49063,7 +49063,7 @@ Func_30_48c9:
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4911
 	ld a, $01
@@ -49149,7 +49149,7 @@ Func_30_4997:
 	call Func_30_4e9e
 	call Func_30_4de3
 	call Func_30_4f88
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $00
 	jr z, Func_30_49bc
 	ld a, [wFadeLevel]
@@ -49162,7 +49162,7 @@ Func_30_4997:
 	ld e, $58
 	call Func_00_35f9
 Func_30_49bc:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_49c6
 	call Func_30_5023
@@ -49199,7 +49199,7 @@ Data_30_49f4:
 SECTION "analyzed_0c09fd", ROMX[$49fd], BANK[$30]
 
 Func_30_49fd:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4a2b
 	ld a, [$d100]
@@ -49233,7 +49233,7 @@ Func_30_4a2b:
 Func_30_4a3e:
 	ret
 Func_30_4a3f:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4a59
 	ld a, [$d100]
@@ -49356,7 +49356,7 @@ Func_30_4df3:
 	add a, a
 	ld hl, $4dd3
 	rst $00
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4e2e
 	ld a, [$d0f8]
@@ -49455,7 +49455,7 @@ Func_30_4e9e:
 	ld a, [wFadeLevel]
 	bit 4, a
 	jp z, Func_30_4f0f
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4ee5
 	ld a, [$d100]
@@ -49516,7 +49516,7 @@ Func_30_4ef8:
 Func_30_4f0f:
 	ret
 Func_30_4f10:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4f87
 	xor a
@@ -49589,7 +49589,7 @@ Func_30_4f82:
 Func_30_4f87:
 	ret
 Func_30_4f88:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4fe3
 	ld a, [$d0f7]
@@ -49690,13 +49690,13 @@ Func_30_503b:
 	ld [$d0f3], a
 	ld [$d0f4], a
 	ld [$d0f5], a
-	ld a, [$c2d1]
+	ld a, [wFloorTimer]
 	ld [$d101], a
-	ld a, [$c2d2]
+	ld a, [wFloorTimer+1]
 	ld [$d102], a
-	ld a, [$c2d3]
+	ld a, [wFloorTimer+2]
 	ld [$d103], a
-	ld a, [$c2c6]
+	ld a, [wScore]
 	ld [$d104], a
 	ld a, [$c2c7]
 	ld [$d105], a
@@ -49828,7 +49828,7 @@ Func_30_5178:
 	ld a, b
 	and $03
 	jr nz, Func_30_51c2
-	ld hl, $c2c6
+	ld hl, wScore
 	ld a, [hl]
 	add a, $11
 	daa
@@ -49860,7 +49860,7 @@ Data_30_51a0:
 SECTION "analyzed_0c11ab", ROMX[$51ab], BANK[$30]
 
 Func_30_51ab:
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	ld a, [hl]
 	sub $11
 	daa
@@ -49876,7 +49876,7 @@ Func_30_51ab:
 	and $f0
 	jp z, Func_30_5242
 Func_30_51c2:
-	ld hl, $c2d1
+	ld hl, wFloorTimer
 	xor a
 	ld [hl+], a
 	ld [hl+], a
@@ -49912,7 +49912,7 @@ Func_30_51c2:
 	daa
 	ld [hl], a
 	ld a, [$d104]
-	ld [$c2c6], a
+	ld [wScore], a
 	ld a, [$d105]
 	ld [$c2c7], a
 	ld a, [$d106]

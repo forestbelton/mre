@@ -28,10 +28,34 @@ wActiveFloor::      ds 1    ; $C2C0: active tower floor (1-60). Copied from wCFF
                             ;   wCurrentFloor ($CFF2) and the source wCFF0.
 
 
+SECTION "wram_item_state", WRAM0[$C2C1]
+; Per-run item state, manipulated by the item pickup effect handlers (src/item.asm).
+
+wRoomType::         ds 1    ; $C2C1: room/screen mode -- 0 normal / 2 boss / 5 special
+                    ds 1    ; $C2C2
+wLives::            ds 1    ; $C2C3: lives, BCD (cap 99); COX_HAT +1
+                    ds 2    ; $C2C4-$C2C5
+wScore::            ds 5    ; $C2C6: score, 5-byte little-endian BCD (AddItemScore adds
+                            ;   the item's ItemPoints value here)
+wBombCapacity::     ds 1    ; $C2CB: bomb slots, max 8 (FIREPLACE +1)
+wBombCount::        ds 1    ; $C2CC: held bombs
+wBombLargeFlags::   ds 1    ; $C2CD: bit per held bomb -> large/piercing
+wCrystalCount::     ds 2    ; $C2CE: crystal counter (BLUE_CRYSTAL +4, RED_CRYSTAL +$10)
+                    ds 1    ; $C2D0
+wFloorTimer::       ds 3    ; $C2D1: floor time remaining, 3-byte BCD (hourglasses/tororon)
+wTimeMultiplier::   ds 1    ; $C2D4: tororon time multiplier (2 or 5)
+wProgressFlags::    ds 1    ; $C2D5: bit0 normal-stair-path, bit1 exit unlocked,
+                            ;   bit3 bonus-stage warp, bit7 stair/summon reveal
+wTransitionState::  ds 1    ; $C2D6: room-transition sub-state (read with wRoomType)
+
+
 SECTION "wram_story_flags", WRAM0[$C2D7]
 ; (story flags are in the always-mapped $C000-$CFFF region)
 
 wC2D7::             ds 1    ; story flag read by Naji's entry cascade
+                    ds 16   ; $C2D8-$C2E7
+wHasBattleCard::    ds 1    ; $C2E8: BATTLE_CARD collected (battle available)
+                    ds 3    ; $C2E9-$C2EB
 
 
 SECTION "wram_floor_grid", WRAM0[$C2EC]
@@ -45,6 +69,18 @@ wFloorRowStride::   ds 1    ; $C2EE: $11 - width (grid rows are 17 cells apart)
 wFloorCollision::   ds 238  ; $C2EF: 17x14 collision/attribute grid
 wFloorGrid::        ds 238  ; $C3DD: 17x14 piece-ID grid (the floor layout; rendered
                             ;   via DrawFloorPiece + FloorPieceDefs at $12FA)
+
+
+SECTION "wram_spawn_cell", WRAM0[$C52E]
+wSpawnCellX::       ds 1    ; $C52E: pickup/effect spawn target cell X
+wSpawnCellY::       ds 1    ; $C52F: pickup/effect spawn target cell Y
+
+
+SECTION "wram_scene", WRAM0[$CF40]
+wSceneState::       ds 1    ; $CF40: bank-5 scene/sequence state machine -- low 7 bits =
+                            ;   state index, bit7 = active; kicked off by special items
+                    ds 61   ; $CF41-$CF7D
+wToken21Count::     ds 1    ; $CF7E: collect-4 counter for token $21
 
 
 SECTION "wram_monsters", WRAM0[$CFBB]
@@ -98,7 +134,8 @@ SECTION "wram_floor_state", WRAM0[$CFF0]
 wCFF0::             ds 1    ; tower progress; gates Naji's Restart + Ask render
                     ds 1    ; $CFF1
 wCurrentFloor::     ds 1    ; current tower floor — rendered by $0F in "Level [X]"
-                    ds 1    ; $CFF3
+wBattleCardPending:: ds 1   ; $CFF3: BATTLE_CARD pending flag (set unless wRoomType 5;
+                            ;   cleared on new game). Write-only in the current disasm.
 wItemsSeen::        ds 4    ; $CFF4: item-encyclopedia "seen" bitfield (up to 32 items),
                             ;   little-endian. Bit i set = item (i+1) has been seen
                             ;   (so item 1 = bit 0). Drives the encyclopedia's seen/

@@ -29,7 +29,7 @@
 ; Public API (called cross-bank via CallBankedHL):
 ;   UpdateEntities ($4000), BreakTileAtPixel ($44bb) / BreakTileAtCell ($44cb)
 ;   -- destroy a breakable crate cell and spawn its shard -- and RequestFloorExit
-;   ($4a58), which sets the $c2d5 bit-7 floor-exit flag the main loop polls.
+;   ($4a58), which sets the wProgressFlags bit-7 floor-exit flag the main loop polls.
 ;
 ; Routines whose purpose is confidently identified carry curated names (in
 ; map.json labels[]); the rest keep auto-generated Func_03_xxxx / Data_03_xxxx
@@ -1598,7 +1598,7 @@ Data_03_4a4f:
 	db $21, $b4, $ff, $cb, $be, $af, $e0, $c7, $c9
 
 RequestFloorExit:
-	ld hl, $c2d5
+	ld hl, wProgressFlags
 	set 7, [hl]
 	ret
 EntClearAttackActive:
@@ -1878,7 +1878,7 @@ Func_03_4c07:
 	ld a, $01
 	ret
 Func_03_4c0b:
-	ld a, [$c2c1]
+	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_03_4c33
 	ld a, [wActiveFloor]
@@ -1935,7 +1935,7 @@ Player_FireShot:
 	ldh a, [$ffb4]
 	bit 2, a
 	ret nz
-	ld a, [$c2cc]
+	ld a, [wBombCount]
 	or a
 	ret z
 	push de
@@ -1973,9 +1973,9 @@ Func_03_4ca8:
 Func_03_4cab:
 	ld hl, $ffb4
 	set 2, [hl]
-	ld hl, $c2cc
+	ld hl, wBombCount
 	dec [hl]
-	ld hl, $c2cd
+	ld hl, wBombLargeFlags
 	srl [hl]
 	pop de
 	ret
@@ -1991,7 +1991,7 @@ Player_SpawnShot16:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $16
 	call SpawnEntity
@@ -2014,7 +2014,7 @@ Player_SpawnShot10:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $10
 	call SpawnEntity
@@ -2037,7 +2037,7 @@ Player_SpawnShot18:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $18
 	call SpawnEntity
@@ -2063,7 +2063,7 @@ Player_SpawnShot12:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $12
 	call SpawnEntity
@@ -2089,7 +2089,7 @@ Player_SpawnShot1a:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $1a
 	call SpawnEntity
@@ -2112,7 +2112,7 @@ Player_SpawnShot14:
 	ld c, a
 	ldh a, [$ffe6]
 	ld b, a
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	and $01
 	add a, $14
 	call SpawnEntity
@@ -2174,7 +2174,7 @@ AttackChild_StashPtr:
 	ldh [$ffe8], a
 	ret
 AttackChild_CopyAlignFlag:
-	ld a, [$c2cd]
+	ld a, [wBombLargeFlags]
 	bit 0, a
 	ret z
 	push hl
@@ -2195,7 +2195,7 @@ AttackChild_CopyAttackPos:
 	ld a, h
 	adc a, $00
 	ld h, a
-	ld a, [$c2ce]
+	ld a, [wCrystalCount]
 	ld [hl+], a
 	ld a, [$c2cf]
 	ld [hl], a
@@ -2312,12 +2312,12 @@ PlayerHit_BeginStun:
 	ret
 	xor a
 	ldh [$ffc1], a
-	ld a, [$c2d5]
+	ld a, [wProgressFlags]
 	bit 1, a
 	jr z, Func_03_4f38
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	ld [$cf6f], a
-	ld a, [$c52f]
+	ld a, [wSpawnCellY]
 	ld [$cf70], a
 	jr Func_03_4f44
 Func_03_4f38:
@@ -2387,7 +2387,7 @@ Func_03_4f7f:
 	ret
 	xor a
 	ldh [$ffc1], a
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	swap a
 	and $f0
 	sub $08
@@ -2494,7 +2494,7 @@ Func_03_502b:
 	ld l, a
 	ldh a, [$ffbe]
 	ld h, a
-	ld a, [$c52f]
+	ld a, [wSpawnCellY]
 	call PlayerYDeltaScaled
 	or a
 	jr nz, Func_03_5070
@@ -2518,7 +2518,7 @@ Func_03_5071:
 	swap a
 	and $0f
 	ld c, a
-	ld a, [$c52e]
+	ld a, [wSpawnCellX]
 	cp c
 	ret nz
 	ldh a, [$ffbe]
@@ -2526,7 +2526,7 @@ Func_03_5071:
 	swap a
 	and $0f
 	ld b, a
-	ld a, [$c52f]
+	ld a, [wSpawnCellY]
 	cp b
 	ret nz
 	ld a, $02
