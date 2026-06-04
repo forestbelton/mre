@@ -3,7 +3,6 @@ rom.gbc
 src/raw_gfx/*.2bpp
 assets/*/preview.png
 build/
-tools/analyzer/analyzer
 __pycache__/
 *.swp
 rom.gbc.sav.bak-*
