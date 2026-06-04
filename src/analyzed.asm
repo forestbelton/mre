@@ -30750,7 +30750,7 @@ LoadMonsterPortrait:
 	cp $ff
 	jr z, Func_0f_4ba3
 	add a, a
-	ld hl, $4c4b
+	ld hl, MonsterPortraitMetaTable
 	rst $00
 	ld a, [hl+]
 	ld h, [hl]
@@ -30771,7 +30771,7 @@ LoadMonsterPortrait:
 	ldh [rVBK], a
 	ld a, [wDisplayMonster]
 	add a, a
-	ld hl, $4c3d
+	ld hl, MonsterPortraitTileTable
 	rst $00
 	ld a, [hl+]
 	ld h, [hl]
@@ -30870,12 +30870,22 @@ Func_0f_4c20:
 
 SECTION "analyzed_03cc3d", ROMX[$4c3d], BANK[$0f]
 
-Data_0f_4c3d:
-	db $00, $40, $00, $48, $00, $50, $00, $58, $00, $60, $00, $68, $00, $70, $59, $4c
-	db $5f, $4c, $65, $4c, $6b, $4c, $71, $4c, $77, $4c, $7d, $4c, $e9, $77, $00, $00
-	db $11, $75, $3b, $78, $26, $78, $79, $75, $50, $78, $00, $00, $e1, $75, $b2, $78
-	db $81, $78, $49, $76, $d7, $78, $00, $00, $b1, $76, $00, $79, $00, $00, $19, $77
-	db $00, $00, $00, $00, $81, $77
+; Indexed by wDisplayMonster (0-6). See docs/monster_detail_screen.md.
+MonsterPortraitTileTable:
+	; -> bank $3c portrait tile data ($800 = 128 tiles each)
+	db $00, $40, $00, $48, $00, $50, $00, $58, $00, $60, $00, $68, $00, $70
+MonsterPortraitMetaTable:
+	; -> a MonsterPortraitMetaRecords entry below
+	db $59, $4c, $5f, $4c, $65, $4c, $6b, $4c, $71, $4c, $77, $4c, $7d, $4c
+MonsterPortraitMetaRecords:
+	; [meta1, meta2, bgmap] little-endian bank-$0f pointers (0 = none)
+	db $e9, $77, $00, $00, $11, $75   ; 0 Tiger
+	db $3b, $78, $26, $78, $79, $75   ; 1 Mocchi
+	db $50, $78, $00, $00, $e1, $75   ; 2 Hare
+	db $b2, $78, $81, $78, $49, $76   ; 3 Gali
+	db $d7, $78, $00, $00, $b1, $76   ; 4 Golem
+	db $00, $79, $00, $00, $19, $77   ; 5 Suezo
+	db $00, $00, $00, $00, $81, $77   ; 6 Phoenix
 
 SECTION "analyzed_03cc83", ROMX[$4c83], BANK[$0f]
 
@@ -52440,11 +52450,17 @@ Func_31_47ce:
 
 SECTION "analyzed_0c8000", ROMX[$4000], BANK[$32]
 
-Data_32_4000:
-	db $03, $6a, $21, $6a, $3f, $6a, $5d, $6a, $7b, $6a, $99, $6a, $b7, $6a, $e9, $65
-	db $7f, $66, $15, $67, $ab, $67, $41, $68, $d7, $68, $6d, $69, $00, $00, $ff, $7f
-	db $ff, $7f, $ff, $7f, $00, $00, $1f, $00, $1f, $00, $1f, $00, $00, $00, $5f, $4b
-	db $b5, $01, $e0, $2c
+; Indexed by wActiveMonster (0-6). CopyBgMapBankedA descriptors (db rows,cols /
+; dw attr / dw idx). See docs/monster_detail_screen.md.
+MonsterNameMapTable:
+	; -> name-plate descriptor, drawn to $9827
+	db $03, $6a, $21, $6a, $3f, $6a, $5d, $6a, $7b, $6a, $99, $6a, $b7, $6a
+MonsterAbilityMapTable:
+	; -> ability-blurb descriptor (18x4), drawn to $99a1
+	db $e9, $65, $7f, $66, $15, $67, $ab, $67, $41, $68, $d7, $68, $6d, $69
+Data_32_401c:
+	db $00, $00, $ff, $7f, $ff, $7f, $ff, $7f, $00, $00, $1f, $00, $1f, $00, $1f, $00
+	db $00, $00, $5f, $4b, $b5, $01, $e0, $2c
 
 SECTION "analyzed_0c8034", ROMX[$4034], BANK[$32]
 
@@ -52535,7 +52551,7 @@ ShowMonsterDetailScreen:
 	ld a, $32
 	ld de, $9800
 	call CopyBgMapBankedA
-	ld hl, $4000
+	ld hl, MonsterNameMapTable
 	ld a, [wActiveMonster]
 	sla a
 	add a, l
@@ -52549,7 +52565,7 @@ ShowMonsterDetailScreen:
 	ld a, $32
 	ld de, $9827
 	call CopyBgMapBankedA
-	ld hl, $400e
+	ld hl, MonsterAbilityMapTable
 	ld a, [wActiveMonster]
 	sla a
 	add a, l
@@ -52642,7 +52658,7 @@ LoadMonsterPalettes:
 	cp $ff
 	ret z
 	add a, a
-	ld hl, $41f7
+	ld hl, MonsterPaletteTable
 	add a, l
 	ld l, a
 	ld a, h
@@ -52671,13 +52687,14 @@ LoadMonsterPalettes:
 
 SECTION "analyzed_0c81f7", ROMX[$41f7], BANK[$32]
 
-Data_32_41f7:
+MonsterPaletteTable:
+	; per-monster -> $80-byte palette block, bank $0f $7191+$80*id
 	db $91, $71, $11, $72, $91, $72, $11, $73, $91, $73, $11, $74, $91, $74
 
 SECTION "analyzed_0c8205", ROMX[$4205], BANK[$32]
 
 Func_32_4205:
-	ld hl, $4217
+	ld hl, MonsterDetailSetupTable
 	ld a, [wActiveMonster]
 	sla a
 	add a, l
@@ -52692,7 +52709,8 @@ Func_32_4205:
 
 SECTION "analyzed_0c8217", ROMX[$4217], BANK[$32]
 
-Data_32_4217:
+MonsterDetailSetupTable:
+	; per-monster -> a per-monster setup routine (jp hl)
 	db $25, $42, $3e, $42, $57, $42, $70, $42, $89, $42, $a2, $42, $bb, $42
 
 SECTION "analyzed_0c8225", ROMX[$4225], BANK[$32]
