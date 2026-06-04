@@ -23,7 +23,7 @@ DrawTecmoLogo:
 	ld a, TECMO_LOGO_GFX_BANK
 	ld hl, TecmoLogoTiles       ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
 	ld de, $8000
-	ld bc, $1800
+	ld bc, TecmoLogoTilesEnd - TecmoLogoTiles
 	call CopyBytesBanked
 	ld a, $01
 	ldh [rVBK], a               ; VRAM bank 1

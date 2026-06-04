@@ -13,6 +13,7 @@ SECTION "TECMO logo graphics", ROMX
 TecmoLogoTiles:
 	INCBIN "raw_gfx/IntroBlankTiles.2bpp", 0, 4096
 	INCBIN "assets/tecmo_logo/tiles.bin"       ; 128 tiles; land at VRAM $9000 ($8800 mode)
+TecmoLogoTilesEnd:
 
 TecmoLogoPalette:
 	INCBIN "assets/tecmo_logo/palette.bin"     ; 1 BG palette: white / gray / gray / red
