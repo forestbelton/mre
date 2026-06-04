@@ -274,15 +274,15 @@ VerdeRaise:
     SCRIPT_WAIT
     db "of it!"
     SCRIPT_WAIT
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=VerdeRaiseFull
+    SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=VerdeRaiseFull
     SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
     db "OK! It's "
-    SCRIPT_INDEXED_STR .Addr=$cfd9
+    SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     db "."
     SCRIPT_NEWLINE
     db "I got it."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=$cfd9, .Value=$ff
+    SCRIPT_WRITE_WRAM .Addr=wDisplayMonster, .Value=$ff
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeRaiseFull:

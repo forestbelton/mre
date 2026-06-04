@@ -494,7 +494,7 @@ Func_00_02b9:
 	push bc
 	push de
 	push hl
-	call Func_00_04e3
+	call FlushDirtyPalettes
 	call $ff80
 	ld a, $01
 	ld [$c286], a
@@ -849,44 +849,53 @@ Func_00_04cc:
 	ld [$c282], a
 	ld [$c281], a
 	dec a
-	ldh [$ffa1], a
-	ldh [$ffa2], a
+	ldh [hBgPaletteDirty], a
+	ldh [hObjPaletteDirty], a
 	ret
 Func_00_04d9:
-	ldh a, [$ffa1]
+	ldh a, [hBgPaletteDirty]
 	cp $ff
 	ret nz
-	ldh a, [$ffa2]
+	ldh a, [hObjPaletteDirty]
 	cp $ff
 	ret
-Func_00_04e3:
-	ldh a, [$ffa1]
+; --- CGB palette subsystem (see docs/palettes.md) ----------------------------
+; Palettes are staged in WRAM shadow buffers (wBgPalettes / wObjPalettes) and
+; flushed to the hardware palette registers in VBlank. The Load* routines copy
+; RGB555 data from [HL] into the buffer and mark it dirty; FlushDirtyPalettes
+; (called each VBlank) streams any dirty buffer out via rBGPD/rOBPD.
+
+; VBlank: flush whichever palette buffers are dirty (state != $ff).
+FlushDirtyPalettes:
+	ldh a, [hBgPaletteDirty]
 	cp $ff
-	call nz, Func_00_0505
-	ldh a, [$ffa2]
+	call nz, FlushBgPalettes
+	ldh a, [hObjPaletteDirty]
 	cp $ff
-	jp nz, Func_00_055a
+	jp nz, FlushObjPalettes
 	ret
-Func_00_04f2:
+; LoadBgPalettes: copy all 8 BG palettes ($40 bytes) from [HL] -> wBgPalettes.
+LoadBgPalettes:
 	rst $20
 	ret z
 	di
 	ld d, h
 	ld e, l
-	ld hl, $c101
+	ld hl, wBgPalettes
 	ld c, $40
 	call CopyDEtoHL
 	ld a, $08
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ei
 	ret
-Func_00_0505:
-	ld hl, $c101
+; FlushBgPalettes: stream wBgPalettes -> rBGPD (8 palettes); clear dirty unless $09.
+FlushBgPalettes:
+	ld hl, wBgPalettes
 	ld de, $ff69
 	ld c, $08
 	ld a, $80
 	ldh [rBGPI], a
-Func_00_0511:
+.loop:
 	ld a, [hl+]
 	ld [de], a
 	ld a, [hl+]
@@ -904,14 +913,15 @@ Func_00_0511:
 	ld a, [hl+]
 	ld [de], a
 	dec c
-	jr nz, Func_00_0511
-	ldh a, [$ffa1]
+	jr nz, .loop
+	ldh a, [hBgPaletteDirty]
 	cp $09
 	ret z
 	ld a, $ff
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ret
-Func_00_052e:
+; LoadBgPalette: copy one BG palette ($08 bytes) from [HL] -> wBgPalettes + A*8.
+LoadBgPalette:
 	ld c, a
 	rst $20
 	ret z
@@ -919,7 +929,7 @@ Func_00_052e:
 	ld e, l
 	ld a, c
 	di
-	ld hl, $c101
+	ld hl, wBgPalettes
 	add a, a
 	add a, a
 	add a, a
@@ -927,29 +937,31 @@ Func_00_052e:
 	ld c, $08
 	call CopyDEtoHL
 	ld a, $08
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ei
 	ret
-Func_00_0547:
+; LoadObjPalettes: copy all 8 OBJ palettes ($40 bytes) from [HL] -> wObjPalettes.
+LoadObjPalettes:
 	rst $20
 	ret z
 	di
 	ld d, h
 	ld e, l
-	ld hl, $c141
+	ld hl, wObjPalettes
 	ld c, $40
 	call CopyDEtoHL
 	ld a, $08
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ei
 	ret
-Func_00_055a:
-	ld hl, $c141
+; FlushObjPalettes: stream wObjPalettes -> rOBPD (8 palettes); clear dirty unless $09.
+FlushObjPalettes:
+	ld hl, wObjPalettes
 	ld de, $ff6b
 	ld c, $08
 	ld a, $80
 	ldh [rOBPI], a
-Func_00_0566:
+.loop:
 	ld a, [hl+]
 	ld [de], a
 	ld a, [hl+]
@@ -967,14 +979,15 @@ Func_00_0566:
 	ld a, [hl+]
 	ld [de], a
 	dec c
-	jr nz, Func_00_0566
-	ldh a, [$ffa2]
+	jr nz, .loop
+	ldh a, [hObjPaletteDirty]
 	cp $09
 	ret z
 	ld a, $ff
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ret
-Func_00_0583:
+; LoadObjPalette: copy one OBJ palette ($08 bytes) from [HL] -> wObjPalettes + A*8.
+LoadObjPalette:
 	ld b, a
 	rst $20
 	ret z
@@ -986,12 +999,12 @@ Func_00_0583:
 	add a, a
 	add a, a
 	add a, a
-	ld hl, $c141
+	ld hl, wObjPalettes
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
 	pop af
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ei
 	ret
 
@@ -1017,7 +1030,7 @@ Func_00_05ae:
 	ld a, $20
 	ld [$c281], a
 	ld a, $09
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ei
 	ret
 Func_00_05ca:
@@ -1043,7 +1056,7 @@ Func_00_05dc:
 	ld a, $20
 	ld [$c281], a
 	ld a, $09
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ret
 
 SECTION "analyzed_0005ef", ROM0[$05ef]
@@ -1077,7 +1090,7 @@ Func_00_0608:
 	ld a, $20
 	ld [$c282], a
 	ld a, $09
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ei
 	ret
 Func_00_061e:
@@ -1103,10 +1116,10 @@ Func_00_0630:
 	ld a, $20
 	ld [$c282], a
 	ld a, $09
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ret
 Func_00_0643:
-	ldh a, [$ffa1]
+	ldh a, [hBgPaletteDirty]
 	cp $09
 	ret nz
 	ldh a, [$ffa6]
@@ -1122,14 +1135,14 @@ Func_00_064a:
 	jr z, Func_00_0661
 	ld c, $20
 	ld hl, $c181
-	ld de, $c101
+	ld de, wBgPalettes
 	jr Func_00_0689
 Func_00_0661:
 	ld a, $ff
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ret
 Func_00_0666:
-	ldh a, [$ffa2]
+	ldh a, [hObjPaletteDirty]
 	cp $09
 	ret nz
 	ldh a, [$ffa6]
@@ -1145,11 +1158,11 @@ Func_00_066d:
 	jr z, Func_00_0684
 	ld c, $20
 	ld hl, $c1c1
-	ld de, $c141
+	ld de, wObjPalettes
 	jr Func_00_0689
 Func_00_0684:
 	ld a, $ff
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ret
 Func_00_0689:
 	push bc
@@ -1277,7 +1290,7 @@ Func_00_0716:
 	ld e, l
 	ld a, c
 	di
-	ld hl, $c101
+	ld hl, wBgPalettes
 	add a, a
 	add a, a
 	add a, a
@@ -1289,7 +1302,7 @@ Func_00_0716:
 	ld c, a
 	call CopyDEtoHL
 	ld a, $08
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	ei
 	ret
 Func_00_0732:
@@ -1300,7 +1313,7 @@ Func_00_0732:
 	ld e, l
 	ld a, c
 	di
-	ld hl, $c141
+	ld hl, wObjPalettes
 	add a, a
 	add a, a
 	add a, a
@@ -1312,7 +1325,7 @@ Func_00_0732:
 	ld c, a
 	call CopyDEtoHL
 	ld a, $08
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	ei
 	ret
 
@@ -1349,7 +1362,7 @@ Func_00_0794:
 Func_00_07a7:
 	rst $20
 	ret z
-	ld de, $c101
+	ld de, wBgPalettes
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
@@ -1362,7 +1375,7 @@ Func_00_07a7:
 Func_00_07c5:
 	rst $20
 	ret z
-	ld de, $c101
+	ld de, wBgPalettes
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
@@ -1375,7 +1388,7 @@ Func_00_07c5:
 Func_00_07e4:
 	rst $20
 	ret z
-	ld de, $c101
+	ld de, wBgPalettes
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
@@ -1391,7 +1404,7 @@ SECTION "analyzed_000803", ROM0[$0803]
 Func_00_0803:
 	rst $20
 	ret z
-	ld de, $c101
+	ld de, wBgPalettes
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
@@ -1408,9 +1421,9 @@ Func_00_0822:
 	rst $20
 	jr z, Func_00_0834
 	ld hl, $0857
-	call Func_00_04f2
+	call LoadBgPalettes
 	ld hl, $0857
-	call Func_00_0547
+	call LoadObjPalettes
 	jp Func_00_0786
 
 SECTION "analyzed_000834", ROM0[$0834]
@@ -1428,9 +1441,9 @@ Func_00_083c:
 	rst $20
 	jr z, Func_00_084e
 	ld hl, $0897
-	call Func_00_04f2
+	call LoadBgPalettes
 	ld hl, $0897
-	call Func_00_0547
+	call LoadObjPalettes
 	jp Func_00_0786
 
 SECTION "analyzed_00084e", ROM0[$084e]
@@ -1520,12 +1533,12 @@ Func_00_0903:
 	add a, a
 	add a, a
 	add a, a
-	ld hl, $c101
+	ld hl, wBgPalettes
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
 	ld a, [wSpawnType]
-	ldh [$ffa1], a
+	ldh [hBgPaletteDirty], a
 	pop af
 	ld [$2fff], a
 	ret
@@ -1547,12 +1560,12 @@ Func_00_094a:
 	add a, a
 	add a, a
 	add a, a
-	ld hl, $c141
+	ld hl, wObjPalettes
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
 	ld a, [wSpawnType]
-	ldh [$ffa2], a
+	ldh [hObjPaletteDirty], a
 	pop af
 	ld [$2fff], a
 	ret
@@ -1568,7 +1581,7 @@ Func_00_0979:
 	ld a, [$c29e]
 	ld [$2fff], a
 	ld a, [wSpawnType]
-	call Func_00_052e
+	call LoadBgPalette
 	pop af
 	ld [$2fff], a
 	ret
@@ -1580,7 +1593,7 @@ Func_00_0979:
 	ld a, [$c29e]
 	ld [$2fff], a
 	ld a, [wSpawnType]
-	call Func_00_0583
+	call LoadObjPalette
 	pop af
 	ld [$2fff], a
 	ret
@@ -2577,12 +2590,12 @@ Func_00_10b5:
 	ldh [rVBK], a
 	call WaitForHBlank
 	push hl
-	call Func_00_04f2
+	call LoadBgPalettes
 	pop hl
 	call WaitForHBlank
 	ld de, $0040
 	add hl, de
-	call Func_00_0547
+	call LoadObjPalettes
 	pop af
 	ld [$2fff], a
 	ret
@@ -8564,7 +8577,7 @@ Func_00_397a:
 	call CopyBgMapBankedA
 	ld a, $19
 	ld hl, $66cb
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0080
 	call Func_00_3913
 	xor a
@@ -9957,7 +9970,7 @@ Func_01_4ab6:
 	dec a
 	ld [$c2c5], a
 	jr nz, Func_01_4af4
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp $06
 	jr nz, Func_01_4b07
 	ld hl, wMonsterUses
@@ -9971,7 +9984,7 @@ Func_01_4ab6:
 	or a
 	jr nz, Func_01_4ae1
 	ld a, $ff
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 Func_01_4ae1:
 	ld a, $06
 	ld [wSceneState], a
@@ -11927,7 +11940,7 @@ Player_SummonMonster:
 	ret z
 	cp $06
 	ret z
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp $ff
 	ret z
 	cp $06
@@ -11943,7 +11956,7 @@ Player_SummonMonster:
 	daa
 	ld [hl], a
 	push de
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	ld [wSceneState], a
 	ld c, $04
 	ld a, $01
@@ -11952,7 +11965,7 @@ Player_SummonMonster:
 	pop de
 	xor a
 	ld [$c2ab], a
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	ld c, a
 	ld b, $00
 	ld hl, wMonsterUses
@@ -11961,7 +11974,7 @@ Player_SummonMonster:
 	or a
 	ret nz
 	ld a, $ff
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ret
 Func_01_5df7:
 	ld a, l
@@ -16432,7 +16445,7 @@ Func_02_4000:
 Func_02_4010:
 	ld a, $07
 	ld hl, $50e9
-	call Func_00_052e
+	call LoadBgPalette
 	ld a, $00
 	ld b, $08
 	ld hl, $50f1
@@ -16458,7 +16471,7 @@ Func_02_4047:
 	ld hl, $ce54
 	ld c, $1c
 	call Func_02_4065
-	ld hl, $cf34
+	ld hl, wMonsterMeta1Ptr
 	ld c, $1c
 	call Func_02_4065
 	ret
@@ -22024,7 +22037,7 @@ Func_05_463a:
 	ld [hl+], a
 	ld [hl], a
 	ld a, $ff
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ld a, $12
 	ld hl, Func_12_4c13
 	call CallBankedHL
@@ -22104,7 +22117,7 @@ Func_05_46f0:
 	ld [hl+], a
 	ld a, [wFreeDiscStones]
 	ld [hl+], a
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	ld [hl+], a
 	ld de, wMonsterDiscStones
 	ld a, [de]
@@ -22151,7 +22164,7 @@ Func_05_46f0:
 	ld a, [$cfe8]
 	ld [hl+], a
 	ld a, $ff
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ret
 Func_05_473d:
 	ld a, [wRoomType]
@@ -22163,7 +22176,7 @@ Func_05_473d:
 	ld a, [hl+]
 	ld [wFreeDiscStones], a
 	ld a, [hl+]
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ld de, wMonsterDiscStones
 	ld a, [hl+]
 	ld [de], a
@@ -29720,7 +29733,7 @@ Func_0f_4307:
 	call Func_0f_436e
 	call Func_0f_48f1
 	call Func_0f_466c
-	call Func_0f_4c03
+	call DrawMonsterPortraitSprites
 	ldh a, [$ff8c]
 	bit 1, a
 	jr nz, Func_0f_4329
@@ -29749,7 +29762,7 @@ Func_0f_433a:
 	ld hl, Func_3b_4000
 	call CallBankedHL
 	call Func_0f_462b
-	call Func_0f_4b62
+	call LoadMonsterPortrait
 	call Func_0f_4565
 	call Func_0f_4518
 	call Func_0f_43c3
@@ -29759,7 +29772,7 @@ Func_0f_435b:
 	call Func_00_0bdd
 	call Func_0f_450d
 	call Func_0f_4588
-	call Func_0f_4bec
+	call DrawMonsterPortraitBgMap
 	call Func_0f_452d
 	ret
 Func_0f_436e:
@@ -29830,7 +29843,7 @@ Func_0f_43c3:
 	ld [$cfba], a
 	ld hl, $cfb3
 	ld a, $06
-	call Func_00_0583
+	call LoadObjPalette
 	ld a, [$cfb1]
 	inc a
 	ld [$cfb1], a
@@ -29929,7 +29942,7 @@ Func_0f_452d:
 	call Func_0f_4bb7
 	ld hl, $52b4
 	ld a, $06
-	call Func_00_0583
+	call LoadObjPalette
 	ret
 Func_0f_4543:
 	call Func_0f_44d5
@@ -30331,13 +30344,13 @@ Data_0f_47f8:
 SECTION "analyzed_03c80c", ROMX[$480c], BANK[$0f]
 
 Func_0f_480c:
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp $ff
 	ret z
 	xor a
 	ldh [rVBK], a
 	call WaitForHBlank
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	ld hl, wMonsterUses
 	rst $00
 	ld a, [hl]
@@ -30729,8 +30742,11 @@ Func_0f_4b4f:
 	ld b, $01
 	call Func_00_0716
 	ret
-Func_0f_4b62:
-	ld a, [$cfd9]
+; LoadMonsterPortrait: for wDisplayMonster, set the wMonster*Ptr pointers from the
+; $0f:$4C4B record and upload its 128 portrait tiles ($3c table $0f:$4C3D) to VRAM
+; $8800. See docs/monster_detail_screen.md.
+LoadMonsterPortrait:
+	ld a, [wDisplayMonster]
 	cp $ff
 	jr z, Func_0f_4ba3
 	add a, a
@@ -30740,20 +30756,20 @@ Func_0f_4b62:
 	ld h, [hl]
 	ld l, a
 	ld a, [hl+]
-	ld [$cf34], a
+	ld [wMonsterMeta1Ptr], a
 	ld a, [hl+]
-	ld [$cf35], a
+	ld [wMonsterMeta1Ptr + 1], a
 	ld a, [hl+]
-	ld [$cf36], a
+	ld [wMonsterMeta2Ptr], a
 	ld a, [hl+]
-	ld [$cf37], a
+	ld [wMonsterMeta2Ptr + 1], a
 	ld a, [hl+]
-	ld [$cf38], a
+	ld [wMonsterBgMapPtr], a
 	ld a, [hl]
-	ld [$cf39], a
+	ld [wMonsterBgMapPtr + 1], a
 	xor a
 	ldh [rVBK], a
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	add a, a
 	ld hl, $4c3d
 	rst $00
@@ -30767,15 +30783,15 @@ Func_0f_4b62:
 	ret
 Func_0f_4ba3:
 	xor a
-	ld [$cf34], a
-	ld [$cf35], a
-	ld [$cf36], a
-	ld [$cf37], a
-	ld [$cf38], a
-	ld [$cf39], a
+	ld [wMonsterMeta1Ptr], a
+	ld [wMonsterMeta1Ptr + 1], a
+	ld [wMonsterMeta2Ptr], a
+	ld [wMonsterMeta2Ptr + 1], a
+	ld [wMonsterBgMapPtr], a
+	ld [wMonsterBgMapPtr + 1], a
 	ret
 Func_0f_4bb7:
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp $ff
 	ret z
 	add a, a
@@ -30805,23 +30821,23 @@ Data_0f_4bde:
 
 SECTION "analyzed_03cbec", ROMX[$4bec], BANK[$0f]
 
-Func_0f_4bec:
-	ld a, [$cfd9]
+DrawMonsterPortraitBgMap:
+	ld a, [wDisplayMonster]
 	cp $ff
 	ret z
-	ld a, [$cf38]
+	ld a, [wMonsterBgMapPtr]
 	ld l, a
-	ld a, [$cf39]
+	ld a, [wMonsterBgMapPtr + 1]
 	ld h, a
 	or l
 	ret z
 	ld de, $9d41
 	call CopyBgMap
 	ret
-Func_0f_4c03:
-	ld a, [$cf34]
+DrawMonsterPortraitSprites:
+	ld a, [wMonsterMeta1Ptr]
 	ld l, a
-	ld a, [$cf35]
+	ld a, [wMonsterMeta1Ptr + 1]
 	ld h, a
 	or l
 	jr z, Func_0f_4c20
@@ -30835,9 +30851,9 @@ Func_0f_4c03:
 	ld c, a
 	call DrawMetasprite
 Func_0f_4c20:
-	ld a, [$cf36]
+	ld a, [wMonsterMeta2Ptr]
 	ld l, a
-	ld a, [$cf37]
+	ld a, [wMonsterMeta2Ptr + 1]
 	ld h, a
 	or l
 	ret z
@@ -32259,7 +32275,7 @@ Func_11_4036:
 	rst $00
 	ld a, c
 	add a, $04
-	call Func_00_0583
+	call LoadObjPalette
 	pop bc
 	pop hl
 	inc hl
@@ -32293,7 +32309,7 @@ Func_11_4050:
 	rst $00
 	ld a, [$c562]
 	add a, $03
-	call Func_00_0583
+	call LoadObjPalette
 	call Func_00_0786
 	ret
 Func_11_4081:
@@ -32362,7 +32378,7 @@ Func_11_40cc:
 	pop bc
 	ld a, c
 	add a, $04
-	call Func_00_0583
+	call LoadObjPalette
 	ret
 
 SECTION "analyzed_0440e3", ROMX[$40e3], BANK[$11]
@@ -34949,9 +34965,9 @@ Func_13_4061:
 	ld a, $60
 	ldh [rWY], a
 	ld hl, $5a45
-	call Func_00_04f2
+	call LoadBgPalettes
 	ld hl, $5a85
-	call Func_00_0547
+	call LoadObjPalettes
 	ret
 Func_13_40b7:
 	ld hl, $62a3
@@ -36071,9 +36087,9 @@ ShowRegeneratedMonster:
 	call Func_14_42d7
 	call Func_14_4319
 	ld hl, $636b
-	call Func_00_04f2
+	call LoadBgPalettes
 	ld hl, $63ab
-	call Func_00_0547
+	call LoadObjPalettes
 	ld hl, $4000
 	ld a, [wActiveMonster]
 	swap a
@@ -36980,9 +36996,9 @@ SECTION "analyzed_054241", ROMX[$4241], BANK[$15]
 
 Func_15_4241:
 	ld hl, $654e
-	call Func_00_04f2
+	call LoadBgPalettes
 	ld hl, $658e
-	call Func_00_0547
+	call LoadObjPalettes
 	ret
 
 SECTION "analyzed_05424e", ROMX[$424e], BANK[$15]
@@ -38957,7 +38973,7 @@ Func_18_401f:
 	ret
 Pashute_IsReplacingActiveMonster:
 	ld hl, wActiveMonster
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp [hl]
 	jr z, Func_18_4036
 	ld a, $01
@@ -38983,7 +38999,7 @@ Pashute_GetActiveMonsterUses:
 	ret
 Pashute_SetReplaceTargetActive:
 	ld a, [wActiveMonster]
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ret
 
 SECTION "analyzed_060054", ROMX[$4054], BANK[$18]
@@ -39066,17 +39082,17 @@ Pashute_LoadShrineScene:
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $5800
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1b
 	ld hl, $5840
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $32
@@ -39099,12 +39115,12 @@ Pashute_LoadIntroScene:
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $5bdd
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1b
 	ld hl, $5c1d
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	push af
@@ -39279,17 +39295,17 @@ Verde_BuildPortraitScene:
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $745d
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1b
 	ld hl, $749d
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $33
@@ -39312,17 +39328,17 @@ Verde_BuildIntroScene:
 	call HideUnusedOamSprites
 	ld a, $1b
 	ld hl, $788e
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1b
 	ld hl, $78ce
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $33
@@ -39481,17 +39497,17 @@ Bodka_BuildStudioScene:
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5800
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1e
 	ld hl, $5840
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $30
@@ -39522,17 +39538,17 @@ Bodka_BuildTowerScene:
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $5b59
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1e
 	ld hl, $5b99
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
 Bodka_LoadStudioBgMap:
@@ -39631,17 +39647,17 @@ Tradehouse_BuildSceneNoInit:
 	call HideUnusedOamSprites
 	ld a, $33
 	ld hl, $7000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $33
 	ld hl, $7040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
 Tradehouse_LoadBgMap:
@@ -39665,17 +39681,17 @@ Tradehouse_BuildNoteScene:
 	call Func_18_6013
 	ld a, $33
 	ld hl, $7000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $33
 	ld hl, $7040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
 Func_18_6013:
@@ -39808,17 +39824,17 @@ Func_18_6bc8:
 	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $72e8
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1a
 	ld hl, $7328
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $2f
@@ -40238,17 +40254,17 @@ Toamuna_CheckSaveExists:
 	call HideUnusedOamSprites
 	ld a, $1a
 	ld hl, $5800
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1a
 	ld hl, $5840
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
 	ld a, $34
@@ -40844,18 +40860,18 @@ Data_1f_4000:
 SECTION "analyzed_07c008", ROMX[$4008], BANK[$1f]
 
 Func_1f_4008:
-	ld hl, $c101
+	ld hl, wBgPalettes
 	ld de, $c181
 	call Func_1f_402d
-	ld hl, $c141
+	ld hl, wObjPalettes
 	ld de, $c1c1
 	call Func_1f_402d
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	jp Func_1f_40bb
 Func_1f_402d:
 	ld c, $40
@@ -40878,8 +40894,8 @@ Func_1f_403a:
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	jp Func_1f_40bb
 Func_1f_4059:
 	ld c, $40
@@ -40893,18 +40909,18 @@ Func_1f_405d:
 SECTION "analyzed_07c062", ROMX[$4062], BANK[$1f]
 
 Func_1f_4062:
-	ld hl, $c101
+	ld hl, wBgPalettes
 	ld de, $c181
 	call Func_1f_4087
-	ld hl, $c141
+	ld hl, wObjPalettes
 	ld de, $c1c1
 	call Func_1f_4087
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	jp Func_1f_40bb
 Func_1f_4087:
 	ld c, $40
@@ -40930,8 +40946,8 @@ Script_FadeOutPortrait:
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	jp Func_1f_40bb
 Func_1f_40b3:
 	ld c, $40
@@ -40946,12 +40962,12 @@ Func_1f_40bb:
 Func_1f_40bd:
 	push bc
 	ld a, $09
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ld a, $ff
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	pop bc
 	dec c
@@ -40962,10 +40978,10 @@ Func_1f_40d9:
 Func_1f_40db:
 	push bc
 	ld a, $09
-	ld [$ffa1], a
+	ld [hBgPaletteDirty], a
 	call WaitForNextFrame
 	ld a, $ff
-	ld [$ffa1], a
+	ld [hBgPaletteDirty], a
 	call WaitForNextFrame
 	pop bc
 	dec c
@@ -40976,10 +40992,10 @@ Func_1f_40f1:
 Func_1f_40f3:
 	push bc
 	ld a, $09
-	ld [$ffa2], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ld a, $ff
-	ld [$ffa2], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	pop bc
 	dec c
@@ -41069,12 +41085,12 @@ Kalum_StartEncounter:
 	call HideUnusedOamSprites
 	ld a, $1d
 	ld hl, $5800
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1d
 	ld hl, $5840
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	call Func_1f_41da
@@ -41088,7 +41104,7 @@ Kalum_StartEncounter:
 	jp ScriptDispatcherEnterAfterCall
 Func_1f_41da:
 	ld de, $4000
-	ld hl, $c101
+	ld hl, wBgPalettes
 	ld c, $08
 	call CopyDEtoHL
 	ret
@@ -41208,12 +41224,12 @@ Mistral_StartEncounter:
 	call HideUnusedOamSprites
 	ld a, $35
 	ld hl, $6000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $35
 	ld hl, $6040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	call Func_1f_41da
@@ -41363,12 +41379,12 @@ Rafaga_StartEncounter:
 	call HideUnusedOamSprites
 	ld a, $1d
 	ld hl, $7319
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1d
 	ld hl, $7359
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	call Func_1f_41da
@@ -41475,12 +41491,12 @@ Tempest_StartEncounter:
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $73e7
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1e
 	ld hl, $7427
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	call Func_1f_41da
@@ -41569,15 +41585,15 @@ Func_1f_4b6d:
 SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]
 
 Func_1f_4d66:
-	ld hl, $c101
+	ld hl, wBgPalettes
 	ld de, $0000
 	call Func_1f_4d82
-	ld hl, $c141
+	ld hl, wObjPalettes
 	ld de, $0000
 	call Func_1f_4d82
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	jp WaitForNextFrame
 Func_1f_4d82:
 	ld c, $18
@@ -41620,12 +41636,12 @@ Nada_ShowScene:
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1c
 	ld hl, $7040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	push af
@@ -41660,17 +41676,17 @@ Nada_ShowSnapReaction:
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1c
 	ld hl, $7040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
 Nada_ShowRageScene:
@@ -41699,19 +41715,19 @@ Nada_ShowRageScene:
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1c
 	ld hl, $7040
-	ld de, $c141
+	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
 	call Func_1f_41da
 	call Func_1f_41e6
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
 Nada_ShowMonsterPortrait:
@@ -43274,7 +43290,7 @@ Func_1f_6597:
 	ld a, [hl]
 	or a
 	jr z, Func_1f_65af
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	cp c
 	jr z, Func_1f_65af
 	ld a, c
@@ -52433,7 +52449,7 @@ Data_32_4000:
 SECTION "analyzed_0c8034", ROMX[$4034], BANK[$32]
 
 Func_32_4034:
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	ld hl, wMonsterUses
 	add a, l
 	ld l, a
@@ -52490,10 +52506,10 @@ Data_32_409d:
 SECTION "analyzed_0c80a5", ROMX[$40a5], BANK[$32]
 
 ShowMonsterDetailScreen:
-	ld a, [$cfd9]
+	ld a, [wDisplayMonster]
 	push af
 	ld a, [wActiveMonster]
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	call Func_00_083c
 	call HideAllSprites
 	ld a, $00
@@ -52549,20 +52565,20 @@ ShowMonsterDetailScreen:
 	call CopyBgMapBankedA
 	call Func_32_4034
 	ld a, $0f
-	ld hl, Func_0f_4b62
+	ld hl, LoadMonsterPortrait
 	call CallBankedHL
-	call Func_32_4184
-	call Func_32_4197
+	call DrawMonsterDetailBgMap
+	call DrawMonsterDetailSprites
 	call Func_32_4205
 	ld a, $32
 	ld hl, $6293
-	ld de, $c101
+	ld de, wBgPalettes
 	ld bc, $0080
 	call Func_00_3913
-	call Func_32_41c1
+	call LoadMonsterPalettes
 	xor a
-	ld [$ffa1], a
-	ld [$ffa2], a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 Func_32_4155:
 	call WaitForNextFrame
@@ -52573,7 +52589,7 @@ Func_32_4155:
 	call Func_32_431a
 	ld c, $02
 	call Func_32_431a
-	call Func_32_4197
+	call DrawMonsterDetailSprites
 	call HideUnusedOamSprites
 	ld a, [$ff8c]
 	bit 0, a
@@ -52582,12 +52598,12 @@ Func_32_4155:
 	ld hl, Func_1f_403a
 	call CallBankedHL
 	pop af
-	ld [$cfd9], a
+	ld [wDisplayMonster], a
 	ret
-Func_32_4184:
-	ld a, [$cf38]
+DrawMonsterDetailBgMap:
+	ld a, [wMonsterBgMapPtr]
 	ld l, a
-	ld a, [$cf39]
+	ld a, [wMonsterBgMapPtr + 1]
 	ld h, a
 	or l
 	ret z
@@ -52595,12 +52611,12 @@ Func_32_4184:
 	ld de, $98a3
 	call CopyBgMapBankedA
 	ret
-Func_32_4197:
+DrawMonsterDetailSprites:
 	ld a, $0f
 	ld [$c100], a
-	ld a, [$cf34]
+	ld a, [wMonsterMeta1Ptr]
 	ld l, a
-	ld a, [$cf35]
+	ld a, [wMonsterMeta1Ptr + 1]
 	ld h, a
 	or l
 	jr z, Func_32_41ae
@@ -52608,9 +52624,9 @@ Func_32_4197:
 	ld b, $38
 	call DrawMetasprite
 Func_32_41ae:
-	ld a, [$cf36]
+	ld a, [wMonsterMeta2Ptr]
 	ld l, a
-	ld a, [$cf37]
+	ld a, [wMonsterMeta2Ptr + 1]
 	ld h, a
 	or l
 	jr z, Func_32_41c0
@@ -52619,8 +52635,10 @@ Func_32_41ae:
 	call DrawMetasprite
 Func_32_41c0:
 	ret
-Func_32_41c1:
-	ld a, [$cfd9]
+; LoadMonsterPalettes: for wDisplayMonster, copy its palette block (bank $0f,
+; $7191 + $80*id) into wBgPalettes 4-6 and wObjPalettes 1-2. See docs/palettes.md.
+LoadMonsterPalettes:
+	ld a, [wDisplayMonster]
 	cp $ff
 	ret z
 	add a, a
@@ -52636,7 +52654,7 @@ Func_32_41c1:
 	push hl
 	ld bc, $0020
 	add hl, bc
-	ld de, $c121
+	ld de, wBgPalettes + $20
 	ld bc, $0018
 	ld a, $0f
 	call Func_00_3913
@@ -52644,7 +52662,7 @@ Func_32_41c1:
 	push hl
 	ld bc, $0048
 	add hl, bc
-	ld de, $c149
+	ld de, wObjPalettes + $8
 	ld bc, $0010
 	ld a, $0f
 	call Func_00_3913
@@ -52889,7 +52907,7 @@ Func_32_43a4:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	ld de, $c141
+	ld de, wObjPalettes
 	ld c, $08
 Func_32_43ae:
 	ld a, [hl+]
@@ -52898,7 +52916,7 @@ Func_32_43ae:
 	dec c
 	jr nz, Func_32_43ae
 	xor a
-	ld [$ffa2], a
+	ld [hObjPaletteDirty], a
 	jp Func_32_4339
 
 SECTION "analyzed_0c83bb", ROMX[$43bb], BANK[$32]

@@ -354,7 +354,7 @@ PashuteStone:
     db "saucer stone?"
     SCRIPT_WAIT
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteStoneCheck
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteStoneCheck
+    SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteStoneCheck
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "If the new"
     SCRIPT_NEWLINE
@@ -532,12 +532,12 @@ PashuteRegenConfirm:
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenTake
     SCRIPT_FAR_CALL .Addr=Pashute_IsReplacingActiveMonster, .Bank=$18
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow
+    SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Then I will"
     SCRIPT_NEWLINE
     db "replace "
-    SCRIPT_INDEXED_STR .Addr=$cfd9
+    SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     db "."
     SCRIPT_WAIT
     db "You now have"
@@ -573,11 +573,11 @@ PashuteRegenTake:
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=PashuteRegenPlace
-    SCRIPT_IF_EQ .Addr=$cfd9, .Value=$ff, .Target=PashuteRegenDoNow2
+    SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow2
     db "Then let's put"
     SCRIPT_NEWLINE
     db "this "
-    SCRIPT_INDEXED_STR .Addr=$cfd9
+    SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     SCRIPT_WAIT
     db "in the Monster"
     SCRIPT_NEWLINE

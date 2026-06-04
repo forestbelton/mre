@@ -19,6 +19,21 @@
 DEF WRAM_INC EQU 1
 
 
+; CGB palette shadow buffers, flushed to the hardware palette registers in VBlank
+; (FlushBgPalettes / FlushObjPalettes, gated by hBgPaletteDirty / hObjPaletteDirty).
+; 8 palettes each, 4 little-endian RGB555 colors per palette. See docs/palettes.md.
+SECTION "wram_palettes", WRAM0[$C101]
+wBgPalettes::  ds $40   ; $C101: BG palettes 0-7 (loaded by LoadBgPalettes / LoadBgPalette)
+wObjPalettes:: ds $40   ; $C141: OBJ palettes 0-7 (loaded by LoadObjPalettes / LoadObjPalette)
+
+; Monster portrait subsystem pointers, set by LoadMonsterPortrait from the
+; $0f:$4C4B record for wDisplayMonster. The portrait is BG body + sprite detail
+; over per-monster bank-$3c tiles. See docs/monster_detail_screen.md.
+SECTION "wram_monster_portrait", WRAM0[$CF34]
+wMonsterMeta1Ptr:: ds 2  ; $CF34: portrait metasprite 1 (drawn by DrawMonster*Sprites)
+wMonsterMeta2Ptr:: ds 2  ; $CF36: portrait metasprite 2 (overlay; 0 if none)
+wMonsterBgMapPtr:: ds 2  ; $CF38: portrait BG tilemap (CopyBgMap; drawn by DrawMonster*BgMap)
+
 SECTION "wram_spawn_params", WRAM0[$C29C]
 ; SpawnEntity argument block: the far-call trampoline (Func_00_0467) marshals these
 ; into AF/DE/HL before tail-calling the bank-3 spawn routine ($4593).
@@ -123,7 +138,11 @@ wHiScore::          ds 4    ; $CFD2: hi-score, 4-byte BCD little-endian (max 999
                     ds 1    ; $CFD6
 wDiscStoneFragments:: ds 1  ; $CFD7: loose disc-stone pieces held (4 pieces = 1 stone)
 wFreeDiscStones::   ds 1    ; $CFD8: assembled disc stones not yet bound to a monster
-                    ds 1    ; $CFD9
+wDisplayMonster::   ds 1    ; $CFD9: monster index (0-6) the portrait/detail subsystem
+                            ;   renders -- LoadMonsterPortrait/LoadMonsterPalettes and the
+                            ;   wMonster*Ptr pointers all derive from it. ShowMonsterDetailScreen
+                            ;   temporarily sets it to wActiveMonster to preview, restoring it
+                            ;   after. Lives in the saved block, so its resting value persists.
 wMonsterDiscStones:: ds 7   ; $CFDA: per-monster (0-6) count of disc stones bound to
                             ;   that monster. A free disc stone (wFreeDiscStones) is
                             ;   bound by touching the monster on its bonus stage;
