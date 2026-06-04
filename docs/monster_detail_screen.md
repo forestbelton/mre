@@ -37,25 +37,34 @@ On the detail screen two more per-monster regions overlay the base tilemap
 - **Name** — table `$32:$4000[monster]` (7 × 2-byte ptr) → a 6×2 region at `$9827`.
 - **Ability blurb** — table `$32:$400e[monster]` → an 18×4 region at `$99a1`.
 
-The 7 ability blurbs (rendered, in monster order 0..6):
+The 7 monsters (ids 0..6), identified by compositing the BG + sprite layers
+(scratch/render_composite.py) — they are exactly the six bonus-room monsters plus
+Phoenix:
 
-| # | tiles @ `$3c` | ability blurb |
-|---|---|---|
-| 0 | `$4000` | "Enemies vanish!" |
-| 1 | `$4800` | "to be invincible!" |
-| 2 | `$5000` | "to double speed!" |
-| 3 | `$5800` | "Stops stage time!" |
-| 4 | `$6000` | "to break blocks!" |
-| 5 | `$6800` | "See hidden items!" (Suezo) |
-| 6 | `$7000` | "Take it along to save your life!" (Phoenix — no metasprite) |
+| # | tiles @ `$3c` | monster | ability blurb |
+|---|---|---|---|
+| 0 | `$4000` | Hare | "Enemies vanish!" |
+| 1 | `$4800` | Mocchi | "to be invincible!" |
+| 2 | `$5000` | Tiger | "to double speed!" |
+| 3 | `$5800` | Gali | "Stops stage time!" |
+| 4 | `$6000` | Golem | "to break blocks!" |
+| 5 | `$6800` | Suezo | "See hidden items!" |
+| 6 | `$7000` | Phoenix | "Take it along to save your life!" (BG-only, no metasprite) |
 
-Likely identities (bonus-room monsters Hare/Gali/Golem/Suezo/Tiger/Mocchi +
-Phoenix) to be confirmed once the palette is located.
+## Rendering the full portrait
+
+The complete image is the **`bgmap` BG layer + the `meta1`/`meta2` sprite layers**,
+all reading the per-monster `$3c` tiles (uploaded to VRAM `$8800`, so both BG
+`$8800` addressing and OBJ tile $80+ index the same tiles). On the detail screen
+the `bgmap` is drawn to `$98a3` (`Func_32_4184`) and the sprites at OAM base
+`(32, 56)` (`Func_32_4197`/`DrawMetasprite`); BG origin and sprite origin coincide
+at screen pixel `(24, 40)`, so the layers align cell-for-pixel. Still grayscale —
+true colors await CGB palette 1.
 
 ## TODO
 
 - Locate the CGB palette for these (attr palette 1) to render/extract in color.
-- Confirm each monster id ↔ name (cross-ref `wMonsterDiscStones` / the summon
-  code; Phoenix is index 6, `wMonsterDiscStones+6`).
-- Decide an editable representation (metasprite + `$3c` tile set per monster) when
-  the sprite/metasprite system is brought under the asset pipeline.
+- Decide an editable representation (BG `bgmap` + metasprites + `$3c` tile set per
+  monster) when the sprite/metasprite system is brought under the asset pipeline.
+- The id↔name mapping above is from visual ID; cross-checking `wMonsterDiscStones`
+  (Phoenix is index 6, `wMonsterDiscStones+6`) confirms Phoenix and the count.
