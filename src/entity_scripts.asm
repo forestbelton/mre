@@ -1944,3 +1944,423 @@ EScript_7d1e:
     ent_set_facing $01
     ent_set_xflip $01
     ent_jump Suezo_Chase
+
+; --- recovered after the initial carve: more scripts at $7d25-$7fec that
+;     branch back into Suezo's hurt handler ($7d06/$7d11, kept as raw addrs).
+;     Live (entered via a bank-3 table at $5751.. still mis-disassembled);
+;     generic EScript_ labels pending a species/role pass.
+
+EScript_7d25:
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $f0
+.l7d2c
+    ent_update_action
+    ent_jr_busy $7d06
+    ent_loop_timer .l7d2c
+    ent_jump $7d11
+
+EScript_7d36:
+    ent_set_xflip $01
+
+EScript_7d38:
+    ent_set_type $00
+    ent_vel_x_zero
+    ent_gfx $01
+    ent_set_timer $3c
+.l7d3f
+    ent_update_action
+    ent_jr_busy EScript_7d93
+    ent_loop_timer .l7d3f
+    ent_jump EScript_7d67
+
+EScript_7d49:
+    ent_set_xflip $ff
+
+EScript_7d4b:
+    ent_set_facing $fe
+    ent_set_type $01
+    ent_vel_x_indexed $7028
+    ent_gfx $02
+    ent_set_timer $5a
+.l7d56
+    ent_call $691b
+    ent_jr_b8_eq $ff, EScript_7d93
+    ent_jr_b8_eq $03, EScript_7d49
+    ent_loop_timer .l7d56
+    ent_jump EScript_7d38
+
+EScript_7d67:
+    ent_set_type $02
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $14
+.l7d6e
+    ent_update_action
+    ent_jr_busy EScript_7d93
+    ent_loop_timer .l7d6e
+    ent_call $549a
+    ent_set_timer $0a
+.l7d7a
+    ent_update_action
+    ent_jr_busy EScript_7d93
+    ent_loop_timer .l7d7a
+    ent_call $54ae
+    ent_set_timer $0a
+.l7d86
+    ent_update_action
+    ent_jr_busy EScript_7d93
+    ent_loop_timer .l7d86
+    ent_call $54b8
+    ent_jump EScript_7d4b
+
+EScript_7d93:
+    ent_call $4622
+    ent_set_type $04
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_set_timer $54
+    ent_wait_timer
+    ent_begin_action
+.l7d9f
+    ent_call $691f
+    ent_update_action
+    ent_yield
+    ent_jr_busy .l7d9f
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_call $5539
+    ent_despawn
+
+EScript_7db3:
+    ent_call $6960
+    ent_jump EScript_7dbb
+
+EScript_7db9:
+    ent_set_xflip $ff
+
+EScript_7dbb:
+    ent_set_facing $fe
+    ent_set_type $01
+    ent_vel_x_indexed $7032
+    ent_gfx $02
+.l7dc4
+    ent_call $69a4
+    ent_jr_b8_eq $ff, EScript_7df9
+    ent_jr_b8_eq $01, EScript_7db9
+    ent_jr_b8_eq $02, EScript_7dd7
+    ent_yield
+    ent_jump .l7dc4
+
+EScript_7dd7:
+    ent_set_xflip $ff
+    ent_set_facing $fe
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $14
+    ent_wait_timer
+    ent_call $6965
+.l7de6
+    ent_call $6974
+    ent_call $4440
+    ent_yield
+    ent_jr_busy .l7de6
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_set_timer $28
+    ent_wait_timer
+    ent_jump EScript_7dbb
+
+EScript_7df9:
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $05
+    ent_set_timer $28
+    ent_wait_timer
+    ent_call $696d
+.l7e04
+    ent_call $698c
+    ent_call $4440
+    ent_yield
+    ent_jr_busy .l7e04
+    ent_vel_x_zero
+    ent_gfx $06
+    ent_set_timer $14
+    ent_wait_timer
+    ent_jump EScript_7db9
+
+EScript_7e17:
+    ent_call $4622
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_call $5539
+    ent_despawn
+
+EScript_7e26:
+    ent_set_xflip $ff
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $01
+    ent_set_timer $b4
+.l7e2f
+    ent_call $6a7e
+    ent_jr_b8_eq $ff, EScript_7e53
+    ent_loop_timer .l7e2f
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $28
+    ent_wait_timer
+    ent_call $54cc
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_call $54e0
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_call $54f4
+    ent_jump EScript_7e26
+
+EScript_7e53:
+    ent_call $4622
+    ent_set_type $04
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_set_timer $28
+    ent_wait_timer
+    ent_begin_action
+.l7e5f
+    ent_call $6a21
+    ent_update_action
+    ent_yield
+    ent_jr_busy .l7e5f
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_call $5539
+    ent_despawn
+
+EScript_7e73:
+    ent_call $6ab4
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $01
+.l7e7b
+    ent_call $6ab9
+    ent_jr_b8_eq $ff, EScript_7eef
+    ent_jr_b8_eq $01, EScript_7e8a
+    ent_yield
+    ent_jump .l7e7b
+
+EScript_7e8a:
+    ent_set_type $02
+    ent_vel_x_zero
+    ent_gfx $06
+    ent_set_timer $58
+    ent_wait_timer
+    ent_set_timer $14
+    ent_wait_timer
+    ent_call $6a9b
+    ent_set_timer $14
+    ent_wait_timer
+    ent_jump EScript_7e73
+
+EScript_7e9e:
+    ent_call $6ad3
+    ent_set_type $11
+    ent_vel_x_zero
+    ent_gfx $02
+.l7ea6
+    ent_call $6adc
+    ent_jr_b8_eq $ff, EScript_7f04
+    ent_jr_b8_eq $01, EScript_7eb5
+    ent_yield
+    ent_jump .l7ea6
+
+EScript_7eb5:
+    ent_set_type $12
+    ent_gfx $07
+    ent_set_facing $02
+    ent_set_vel_x $0040
+    ent_set_timer $20
+    ent_wait_timer
+    ent_vel_x_zero
+    ent_set_timer $78
+    ent_wait_timer
+    ent_set_facing $03
+    ent_set_vel_x $0100
+    ent_set_timer $08
+    ent_wait_timer
+    ent_vel_x_zero
+    ent_call $6a8e
+    ent_call $6afd
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_call $6b0f
+    ent_set_timer $0f
+    ent_wait_timer
+    ent_call $6b21
+    ent_set_timer $14
+    ent_wait_timer
+    ent_call $6b33
+    ent_set_timer $19
+    ent_wait_timer
+    ent_call $6b45
+    ent_jump EScript_7e9e
+
+EScript_7eef:
+    ent_call $4622
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_gfx $05
+    ent_call_bank0 $04, $420a
+    ent_call $556e
+    ent_despawn
+
+EScript_7f04:
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_gfx $05
+    ent_despawn
+
+EScript_7f0f:
+    ent_call $6b57
+    ent_set_type $01
+    ent_vel_x_zero
+    ent_gfx $00
+.l7f17
+    ent_call $6b93
+    ent_jr_b8_eq $01, EScript_7f22
+    ent_yield
+    ent_jump .l7f17
+
+EScript_7f22:
+    ent_call $6ba6
+    ent_set_type $02
+    ent_vel_x_zero
+    ent_gfx $03
+    ent_set_timer $b4
+    ent_wait_timer
+.l7f2d
+    ent_call $6bb4
+    ent_jr_b8_eq $ff, EScript_7fb6
+    ent_jr_b8_eq $01, EScript_7f40
+    ent_jr_b8_eq $02, EScript_7f81
+    ent_yield
+    ent_jump .l7f2d
+
+EScript_7f40:
+    ent_set_type $03
+    ent_vel_x_zero
+    ent_gfx $02
+    ent_set_timer $1e
+    ent_wait_timer
+    ent_call $6be9
+    ent_gfx $0a
+    ent_set_timer $78
+.l7f4f
+    ent_call $6c4f
+    ent_loop_timer .l7f4f
+    ent_call $6c69
+    ent_gfx $04
+    ent_set_timer $1e
+    ent_wait_timer
+    ent_vel_x_indexed $703c
+.l7f60
+    ent_call $6c96
+    ent_jr_b8_eq $01, EScript_7f6b
+    ent_yield
+    ent_jump .l7f60
+
+EScript_7f6b:
+    ent_vel_x_zero
+    ent_gfx $05
+    ent_set_timer $64
+    ent_wait_timer
+    ent_gfx $02
+    ent_set_timer $10
+    ent_wait_timer
+    ent_call $6ba6
+    ent_gfx $02
+    ent_set_timer $10
+    ent_wait_timer
+    ent_jump EScript_7f22
+
+EScript_7f81:
+    ent_set_type $04
+    ent_vel_x_zero
+    ent_gfx $04
+    ent_call $6cc5
+    ent_set_timer $1e
+    ent_wait_timer
+    ent_call $6ce2
+.l7f8f
+    ent_call $6d13
+    ent_jr_b8_eq $01, EScript_7f9a
+    ent_yield
+    ent_jump .l7f8f
+
+EScript_7f9a:
+    ent_vel_x_zero
+    ent_gfx $06
+    ent_set_timer $1e
+    ent_wait_timer
+    ent_call $6d7f
+    ent_set_timer $50
+    ent_wait_timer
+    ent_gfx $02
+    ent_set_timer $10
+    ent_wait_timer
+    ent_call $6ba6
+    ent_gfx $02
+    ent_set_timer $10
+    ent_wait_timer
+    ent_jump EScript_7f22
+
+EScript_7fb6:
+    ent_set_type $05
+    ent_vel_x_zero
+    ent_gfx $07
+    ent_set_timer $05
+    ent_wait_timer
+    ent_gfx $01
+    ent_set_timer $05
+    ent_wait_timer
+    ent_call $6e0a
+.l7fc6
+    ent_call $6e98
+    ent_jr_b8_eq $ff, EScript_7fdd
+    ent_jr_b8_eq $01, EScript_7fd5
+    ent_yield
+    ent_jump .l7fc6
+
+EScript_7fd5:
+    ent_gfx $08
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_jump EScript_7f22
+
+EScript_7fdd:
+    ent_call $4622
+    ent_set_type $ff
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $78
+    ent_wait_timer
+    ent_call $556e
+    ent_despawn
