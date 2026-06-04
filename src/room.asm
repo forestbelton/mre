@@ -1390,9 +1390,11 @@ Player_LatchActionPressed:
 	ldh a, [$ff8b]
 	bit 6, a
 	ret z
-; TODO: Disassemble
 Data_03_4909:
-	db $21, $7f, $cf, $cb, $c6, $c9, $c9
+	ld hl, $cf7f
+	set 0, [hl]
+	ret
+	ret
 Player_ClearActionFlag:
 	xor a
 	ld [$cf7f], a
@@ -3254,7 +3256,7 @@ SpawnBossSegment:
 	jp z, Func_03_56ad
 
 Data_03_5616:
-	db $c9
+	ret
 
 Func_03_5617:
 	ldh a, [$ffbb]
@@ -5808,7 +5810,9 @@ Func_03_659e:
 	jr z, Func_03_65a9
 
 Data_03_65a4:
-	db $3e, $02, $e0, $b8, $c9
+	ld a, $02
+	ldh [$ffb8], a
+	ret
 
 Func_03_65a9:
 	ld a, $03
@@ -5820,7 +5824,10 @@ Tiger_ProbeFireWindow:
 	jr z, Func_03_65bc
 
 Data_03_65b5:
-	db $3e, $ff, $e0, $b8, $06, $00, $c9
+	ld a, $ff
+	ldh [$ffb8], a
+	ld b, $00
+	ret
 
 Func_03_65bc:
 	xor a
@@ -6225,7 +6232,9 @@ Suezo_ProbeChargeAlign:
 	jr z, Func_03_6812
 
 Data_03_680d:
-	db $3e, $ff, $e0, $b8, $c9
+	ld a, $ff
+	ldh [$ffb8], a
+	ret
 
 Func_03_6812:
 	xor a
@@ -6557,7 +6566,9 @@ Func_03_6a11:
 	jr z, Func_03_6a1c
 
 Data_03_6a17:
-	db $3e, $01, $e0, $b8, $c9
+	ld a, $01
+	ldh [$ffb8], a
+	ret
 
 Func_03_6a1c:
 	ld a, $02
