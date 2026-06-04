@@ -18,7 +18,19 @@ PYTHON   := python3
 RGBASM   := rgbasm
 RGBLINK  := rgblink
 RGBGFX   := rgbgfx
+RGBFIX   := rgbfix
 GFX_DIR  := $(SRC_DIR)/raw_gfx
+
+FIXARGS := --validate \
+	--pad-value 0 \
+	--title MREXPLORER \
+	--game-id BSOE \
+	--color-only \
+	--new-licensee 9B \
+	--ram-size 2 \
+	--non-japanese \
+	--old-licensee 0x33 \
+	--mbc-type MBC5+RAM+BATTERY
 
 # Assembler inputs — a change to any of these rebuilds the ROM (no `make clean`
 # needed). Wildcards are evaluated at parse time, which is fine: these are all
@@ -64,6 +76,7 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 	done
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o
+	$(RGBFIX) $(FIXARGS) $@
 
 $(BUILD_DIR):
 	@mkdir -p $@

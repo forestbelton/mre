@@ -34,7 +34,7 @@ DrawTecmoLogo:
 	call CopyBytesBanked
 	ld b, TECMO_LOGO_GFX_BANK
 	ld hl, TecmoLogoMapDesc     ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
-	ld de, $9800
+	ld de, TILEMAP0
 	call CopyBgMapBanked
 	call Func_00_0822
 	ld b, TECMO_LOGO_GFX_BANK

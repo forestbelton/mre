@@ -5,7 +5,6 @@
 INCLUDE "hardware.inc"
 INCLUDE "wram.inc"
 
-INCLUDE "header.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "banks.asm"
 INCLUDE "entity_script.inc"
@@ -117,3 +116,11 @@ INCLUDE "scripts/rafaga.asm"
 INCLUDE "scripts/tempest.asm"
 INCLUDE "scripts/toamuna.asm"
 INCLUDE "scripts/verde.asm"
+
+
+SECTION "Header", ROM0[$0100]
+
+nop
+jp Func_00_0150
+
+DS $150 - @, 0
