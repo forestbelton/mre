@@ -5818,11 +5818,11 @@ Func_03_65a9:
 	ld a, $03
 	ldh [$ffb8], a
 	ret
+
 Tiger_ProbeFireWindow:
 	call UpdateActionTimer
 	bit 0, a
 	jr z, Func_03_65bc
-
 Data_03_65b5:
 	ld a, $ff
 	ldh [$ffb8], a

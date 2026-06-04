@@ -7,6 +7,7 @@
 ; RunIntroScene / IntroSceneTable. It calls shared engine routines
 ; (CopyBytesBanked, etc.) defined in analyzed.asm, and references the logo's
 ; tile/palette/map data (TecmoLogo*) carved into src/gfx/logo.asm.
+INCLUDE "hram.inc"
 
 ; NB: Using BANK(TecmoLogoTiles) as the definition does not work as the bank is
 ; only known at link time. There may be a workaround possible that doesn't
@@ -44,7 +45,7 @@ DrawTecmoLogo:
 .fadeLoop:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]              ; held buttons
+	ldh a, [hJoyHeld]
 	cp $00
 	jr nz, .done                ; any press skips the fade
 	ld a, [wFadeLevel]

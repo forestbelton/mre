@@ -1,0 +1,7 @@
+IF !DEF(HRAM_INC)
+DEF HRAM_INC EQU 1
+
+SECTION "HRAM joypad", HRAM[$ff8d]
+hJoyHeld:: ds 1
+
+ENDC
