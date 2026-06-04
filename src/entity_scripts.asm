@@ -30,6 +30,248 @@ EScript_70a2:
     ent_wait_timer
     ent_despawn
 
+; --- recovered after the initial carve: FX / animation scripts at $70ae-$71d5
+;     (8-direction sprite frames gfx $11-$21, timed-gfx despawns, flying warp
+;     FX). Self-contained; generic EScript_ labels pending a role pass. ---
+
+EScript_70ae:
+    ent_vel_x_zero
+    ent_gfx $0c
+    ent_set_timer $0f
+    ent_wait_timer
+    ent_despawn
+
+EScript_70b5:
+    ent_vel_x_zero
+    ent_gfx $19
+    ent_set_timer $15
+    ent_wait_timer
+    ent_call $4c5f
+    ent_despawn
+
+EScript_70bf:
+    ent_vel_x_zero
+    ent_gfx $10
+    ent_set_timer $1f
+    ent_wait_timer
+    ent_call $4c5f
+    ent_despawn
+
+EScript_70c9:
+    ent_set_facing $00
+    ent_gfx $11
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70d1:
+    ent_set_facing $00
+    ent_gfx $12
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70d9:
+    ent_set_facing $01
+    ent_gfx $13
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70e1:
+    ent_set_facing $01
+    ent_gfx $14
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70e9:
+    ent_set_facing $02
+    ent_gfx $15
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70f1:
+    ent_set_facing $02
+    ent_gfx $16
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_70f9:
+    ent_set_facing $03
+    ent_gfx $17
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_7101:
+    ent_set_facing $03
+    ent_gfx $18
+    ent_wait_counter
+    ent_jump EScript_70bf
+
+EScript_7109:
+    ent_set_facing $00
+    ent_gfx $1a
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7111:
+    ent_set_facing $00
+    ent_gfx $1b
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7119:
+    ent_set_facing $01
+    ent_gfx $1c
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7121:
+    ent_set_facing $01
+    ent_gfx $1d
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7129:
+    ent_set_facing $02
+    ent_gfx $1e
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7131:
+    ent_set_facing $02
+    ent_gfx $1f
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7139:
+    ent_set_facing $03
+    ent_gfx $20
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7141:
+    ent_set_facing $03
+    ent_gfx $21
+    ent_wait_counter
+    ent_jump EScript_70b5
+
+EScript_7149:
+    ent_vel_x_zero
+    ent_gfx $30
+    ent_set_timer $28
+    ent_wait_timer
+    ent_despawn
+
+EScript_7150:
+    ent_vel_x_zero
+    ent_gfx $31
+    ent_set_timer $28
+    ent_wait_timer
+    ent_despawn
+
+EScript_7157:
+    ent_vel_x_zero
+    ent_gfx $32
+    ent_set_timer $2a
+    ent_wait_timer
+    ent_despawn
+
+EScript_715e:
+    ent_vel_x_zero
+    ent_gfx $33
+    ent_set_timer $09
+    ent_wait_timer
+    ent_despawn
+
+EScript_7165:
+    ent_vel_x_zero
+    ent_gfx $34
+    ent_set_timer $06
+    ent_wait_timer
+    ent_despawn
+
+EScript_716c:
+    ent_vel_x_zero
+    ent_gfx $35
+    ent_set_timer $10
+    ent_wait_timer
+    ent_despawn
+
+EScript_7173:
+    ent_set_facing $fe
+    ent_set_vel_x $0200
+    ent_gfx $36
+.l717a
+    ent_yield
+    ent_jump .l717a
+
+EScript_717e:
+    ent_set_facing $fe
+    ent_set_vel_x $0200
+    ent_gfx $37
+.l7185
+    ent_yield
+    ent_jump .l7185
+
+EScript_7189:
+    ent_set_vel_x $0200
+    ent_gfx $3a
+.l718e
+    ent_yield
+    ent_jump .l718e
+
+EScript_7192:
+    ent_set_vel_x $0200
+    ent_gfx $3b
+.l7197
+    ent_yield
+    ent_jump .l7197
+
+EScript_719b:
+    ent_set_facing $03
+    ent_set_vel_x $0200
+    ent_gfx $3c
+.l71a2
+    ent_yield
+    ent_jump .l71a2
+
+EScript_71a6:
+    ent_vel_x_zero
+    ent_gfx $3d
+    ent_set_timer $15
+    ent_wait_timer
+    ent_despawn
+
+EScript_71ad:
+    ent_set_facing $02
+    ent_set_vel_x $0080
+    ent_gfx $08
+    ent_set_timer $20
+    ent_wait_timer
+    ent_despawn
+
+EScript_71b8:
+    ent_vel_x_zero
+    ent_gfx $0b
+    ent_set_timer $0a
+    ent_wait_timer
+    ent_despawn
+
+EScript_71bf:
+    ent_vel_x_zero
+    ent_gfx $0f
+    ent_set_timer $3c
+    ent_wait_timer
+    ent_call $55a1
+    ent_despawn
+
+EScript_71c9:
+    ent_vel_x_zero
+    ent_gfx $09
+    ent_set_timer $5a
+.l71ce
+    ent_call $55e7
+    ent_loop_timer .l71ce
+    ent_despawn
+
 SECTION "entity_scripts_71d5", ROMX[$71d5], BANK[$03]
 
 EScript_71d5:
