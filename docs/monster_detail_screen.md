@@ -43,13 +43,25 @@ Phoenix:
 
 | # | tiles @ `$3c` | monster | ability blurb |
 |---|---|---|---|
-| 0 | `$4000` | Hare | "Enemies vanish!" |
+| 0 | `$4000` | Tiger | "Enemies vanish!" |
 | 1 | `$4800` | Mocchi | "to be invincible!" |
-| 2 | `$5000` | Tiger | "to double speed!" |
+| 2 | `$5000` | Hare | "to double speed!" |
 | 3 | `$5800` | Gali | "Stops stage time!" |
 | 4 | `$6000` | Golem | "to break blocks!" |
 | 5 | `$6800` | Suezo | "See hidden items!" |
 | 6 | `$7000` | Phoenix | "Take it along to save your life!" (BG-only, no metasprite) |
+
+(Confirmed in color — scratch/render_color.py. Grayscale had Tiger/Hare swapped:
+Tiger is the blue two-horned wolf, Hare the brown big-eared one.)
+
+## Why the portrait is split across BG + sprites
+
+Not animation — the metasprites are static single-frame lists. It's a CGB
+**color-depth** technique: each 8×8 tile (BG or OBJ) can only use one 4-color
+palette, but BG and OBJ are *independent* palette banks. The body is drawn on BG
+using **BG palettes 4–6** and the overlaid detail on sprites using **OBJ palettes
+1–2**, so the portrait shows ~16–20 colors at once instead of 4, while keeping the
+bulk on BG to stay under the 10-sprites-per-scanline OBJ limit.
 
 ## Rendering the full portrait
 
@@ -58,13 +70,22 @@ all reading the per-monster `$3c` tiles (uploaded to VRAM `$8800`, so both BG
 `$8800` addressing and OBJ tile $80+ index the same tiles). On the detail screen
 the `bgmap` is drawn to `$98a3` (`Func_32_4184`) and the sprites at OAM base
 `(32, 56)` (`Func_32_4197`/`DrawMetasprite`); BG origin and sprite origin coincide
-at screen pixel `(24, 40)`, so the layers align cell-for-pixel. Still grayscale —
-true colors await CGB palette 1.
+at screen pixel `(24, 40)`, so the layers align cell-for-pixel.
+
+## Palettes (located)
+
+Per-monster palette data lives in **bank `$0f`**, a `$80`-byte block per monster
+at `$7191 + $80*m` (pointer table at `$32:$41f7`). `Func_32_41c1` copies
+`block+$20` → BG palettes **4–6** (`$c121`) and `block+$48` → OBJ palettes **1–2**
+(`$c149`). The portrait sprites use OBJ palette 1 (attr `$01`); the BG body uses
+BG palettes 4–6 per the `bgmap` attr bits. See docs/palettes.md for the general
+CGB palette mechanism this revealed (`$c101`/`$c141` WRAM shadow buffers).
 
 ## TODO
 
-- Locate the CGB palette for these (attr palette 1) to render/extract in color.
-- Decide an editable representation (BG `bgmap` + metasprites + `$3c` tile set per
-  monster) when the sprite/metasprite system is brought under the asset pipeline.
-- The id↔name mapping above is from visual ID; cross-checking `wMonsterDiscStones`
-  (Phoenix is index 6, `wMonsterDiscStones+6`) confirms Phoenix and the count.
+- Decide an editable representation (BG `bgmap` + metasprites + `$3c` tile set +
+  the bank-`$0f` palette block per monster) when the sprite/metasprite system is
+  brought under the asset pipeline.
+- The id↔name mapping above is from color visual ID; cross-checking
+  `wMonsterDiscStones` (Phoenix is index 6, `wMonsterDiscStones+6`) confirms the
+  count and Phoenix.
