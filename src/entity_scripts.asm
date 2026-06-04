@@ -2,11 +2,19 @@
 ; RunEntityScript in src/room.asm. One line per VM instruction via the macros in
 ; include/entity_script.inc; see docs/entity_scripts.md.
 ;
-; Names: the player avatar and the 13 editor-placeable monsters (Tacopi..Flame)
-; are resolved; non-editor spawn types keep numbered/address names. The two
-; sub-$71eb runs ($7092, $71d5) are spawn types 15 and 14 -- non-editor, the
-; only scripts reached solely through MonsterSpawnScriptTable. Generated, then
-; byte-exact-verified by make verify.
+; Layout (roughly by address):
+;   $6fc4  velocity tables consumed by ent_vel_x_indexed
+;   $7046  FX/animation library, part 1 (Popup_*, Glide_*)
+;   $70ae  FX/animation library, part 2 (Burst*, Vanish_*, Fly_*, Shatter_*)
+;   $71d5  non-editor spawns: floor-5 boss-exit flame (BossFlame_*), Spawn3F_*
+;   $723a  the player avatar + the editor-placeable monsters (Tacopi..Flame),
+;          each a state machine of Stand/Chase/Windup/Hurt/... scripts
+;   $7d25  Suezo_Stun, then the floor-gate enemies (FloorEnemy50..55)
+;
+; Spawn entry points are selected by MonsterSpawnScriptTable (bank $01, $79c4)
+; and the per-type table $796c; FX scripts by the bank-1 pointer tables at
+; $79a8.. . FloorEnemy<NN> / Spawn<NN> names encode the resolved engine type id
+; where the creature identity is unconfirmed. Byte-exact-verified by make verify.
 
 INCLUDE "entity_script.inc"
 
@@ -88,59 +96,59 @@ Data_03_7040:
 Data_03_7042:
 	db $70, $00, $70, $01
 
-; --- animation / FX one-shot scripts at $7046 (recovered after the carve):
-;     vel_x_zero + gfx $01-$07 timed despawns, then two looping native-call
-;     FX (gfx $0a / $09). Generic EScript_ labels pending a role pass. ---
-EScript_7046:
+; --- FX/animation library, part 1 ($7046): single-frame timed popups
+;     (Popup_*) and two coordinate-easing glide movers (Glide_ToTarget*).
+;     Dispatched by id from bank-1 pointer tables, not owned by any entity. ---
+Popup_Frame01:
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $04
     ent_wait_timer
     ent_despawn
 
-EScript_704d:
+Popup_Frame02:
     ent_vel_x_zero
     ent_gfx $02
     ent_set_timer $0a
     ent_wait_timer
     ent_despawn
 
-EScript_7054:
+Popup_Frame03:
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $0a
     ent_wait_timer
     ent_despawn
 
-EScript_705b:
+Popup_Frame04:
     ent_vel_x_zero
     ent_gfx $04
     ent_set_timer $07
     ent_wait_timer
     ent_despawn
 
-EScript_7062:
+Popup_Frame05:
     ent_vel_x_zero
     ent_gfx $05
     ent_set_timer $07
     ent_wait_timer
     ent_despawn
 
-EScript_7069:
+Popup_Frame06:
     ent_vel_x_zero
     ent_gfx $06
     ent_set_timer $07
     ent_wait_timer
     ent_despawn
 
-EScript_7070:
+Popup_Frame07:
     ent_vel_x_zero
     ent_gfx $07
     ent_set_timer $07
     ent_wait_timer
     ent_despawn
 
-EScript_7077:
+Glide_ToTargetX:
     ent_gfx $0a
     ent_set_timer $18
     ent_wait_timer
@@ -150,7 +158,7 @@ EScript_7077:
     ent_yield
     ent_jump .l707f
 
-EScript_7086:
+Glide_ToTargetY:
     ent_gfx $09
     ent_call $4f20
 .l708b
@@ -160,16 +168,16 @@ EScript_7086:
 
 SECTION "entity_scripts_7092", ROMX[$7092], BANK[$03]
 
-EScript_7092:
+Spawn3F_Sweep:
     ent_gfx $2a
     ent_call SpawnFx15_InitPos
 .l7097
     ent_call SpawnFx15_RiseToY48
-    ent_jr_b8_eq $01, EScript_70a2
+    ent_jr_b8_eq $01, Spawn3F_Sweep2
     ent_yield
     ent_jump .l7097
 
-EScript_70a2:
+Spawn3F_Sweep2:
     ent_gfx $2b
     ent_set_timer $3c
     ent_wait_timer
@@ -178,18 +186,19 @@ EScript_70a2:
     ent_wait_timer
     ent_despawn
 
-; --- recovered after the initial carve: FX / animation scripts at $70ae-$71d5
-;     (8-direction sprite frames gfx $11-$21, timed-gfx despawns, flying warp
-;     FX). Self-contained; generic EScript_ labels pending a role pass. ---
+; --- FX/animation library, part 2 ($70ae-$71d5): two 8-direction burst fans
+;     that scatter child sprites (Burst10_*/Burst19_*), a sequential vanish
+;     series (Vanish_*), horizontal "fly" sprites (Fly_*), and a shatter pair
+;     (Shatter_*). Dispatched by id from bank-1 pointer tables. ---
 
-EScript_70ae:
+Popup_Frame0C:
     ent_vel_x_zero
     ent_gfx $0c
     ent_set_timer $0f
     ent_wait_timer
     ent_despawn
 
-EScript_70b5:
+Burst19_Scatter:
     ent_vel_x_zero
     ent_gfx $19
     ent_set_timer $15
@@ -197,7 +206,7 @@ EScript_70b5:
     ent_call $4c5f
     ent_despawn
 
-EScript_70bf:
+Burst10_Scatter:
     ent_vel_x_zero
     ent_gfx $10
     ent_set_timer $1f
@@ -205,145 +214,145 @@ EScript_70bf:
     ent_call $4c5f
     ent_despawn
 
-EScript_70c9:
+Burst10_Dir0a:
     ent_set_facing $00
     ent_gfx $11
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70d1:
+Burst10_Dir0b:
     ent_set_facing $00
     ent_gfx $12
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70d9:
+Burst10_Dir1a:
     ent_set_facing $01
     ent_gfx $13
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70e1:
+Burst10_Dir1b:
     ent_set_facing $01
     ent_gfx $14
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70e9:
+Burst10_Dir2a:
     ent_set_facing $02
     ent_gfx $15
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70f1:
+Burst10_Dir2b:
     ent_set_facing $02
     ent_gfx $16
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_70f9:
+Burst10_Dir3a:
     ent_set_facing $03
     ent_gfx $17
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_7101:
+Burst10_Dir3b:
     ent_set_facing $03
     ent_gfx $18
     ent_wait_counter
-    ent_jump EScript_70bf
+    ent_jump Burst10_Scatter
 
-EScript_7109:
+Burst19_Dir0a:
     ent_set_facing $00
     ent_gfx $1a
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7111:
+Burst19_Dir0b:
     ent_set_facing $00
     ent_gfx $1b
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7119:
+Burst19_Dir1a:
     ent_set_facing $01
     ent_gfx $1c
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7121:
+Burst19_Dir1b:
     ent_set_facing $01
     ent_gfx $1d
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7129:
+Burst19_Dir2a:
     ent_set_facing $02
     ent_gfx $1e
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7131:
+Burst19_Dir2b:
     ent_set_facing $02
     ent_gfx $1f
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7139:
+Burst19_Dir3a:
     ent_set_facing $03
     ent_gfx $20
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7141:
+Burst19_Dir3b:
     ent_set_facing $03
     ent_gfx $21
     ent_wait_counter
-    ent_jump EScript_70b5
+    ent_jump Burst19_Scatter
 
-EScript_7149:
+Vanish_Frame30:
     ent_vel_x_zero
     ent_gfx $30
     ent_set_timer $28
     ent_wait_timer
     ent_despawn
 
-EScript_7150:
+Vanish_Frame31:
     ent_vel_x_zero
     ent_gfx $31
     ent_set_timer $28
     ent_wait_timer
     ent_despawn
 
-EScript_7157:
+Vanish_Frame32:
     ent_vel_x_zero
     ent_gfx $32
     ent_set_timer $2a
     ent_wait_timer
     ent_despawn
 
-EScript_715e:
+Vanish_Frame33:
     ent_vel_x_zero
     ent_gfx $33
     ent_set_timer $09
     ent_wait_timer
     ent_despawn
 
-EScript_7165:
+Vanish_Frame34:
     ent_vel_x_zero
     ent_gfx $34
     ent_set_timer $06
     ent_wait_timer
     ent_despawn
 
-EScript_716c:
+Vanish_Frame35:
     ent_vel_x_zero
     ent_gfx $35
     ent_set_timer $10
     ent_wait_timer
     ent_despawn
 
-EScript_7173:
+Fly_Frame36L:
     ent_set_facing $fe
     ent_set_vel_x $0200
     ent_gfx $36
@@ -351,7 +360,7 @@ EScript_7173:
     ent_yield
     ent_jump .l717a
 
-EScript_717e:
+Fly_Frame37L:
     ent_set_facing $fe
     ent_set_vel_x $0200
     ent_gfx $37
@@ -359,21 +368,21 @@ EScript_717e:
     ent_yield
     ent_jump .l7185
 
-EScript_7189:
+Fly_Frame3A:
     ent_set_vel_x $0200
     ent_gfx $3a
 .l718e
     ent_yield
     ent_jump .l718e
 
-EScript_7192:
+Fly_Frame3B:
     ent_set_vel_x $0200
     ent_gfx $3b
 .l7197
     ent_yield
     ent_jump .l7197
 
-EScript_719b:
+Fly_Frame3CR:
     ent_set_facing $03
     ent_set_vel_x $0200
     ent_gfx $3c
@@ -381,14 +390,14 @@ EScript_719b:
     ent_yield
     ent_jump .l71a2
 
-EScript_71a6:
+Popup_Frame3D:
     ent_vel_x_zero
     ent_gfx $3d
     ent_set_timer $15
     ent_wait_timer
     ent_despawn
 
-EScript_71ad:
+Fly_Frame08:
     ent_set_facing $02
     ent_set_vel_x $0080
     ent_gfx $08
@@ -396,14 +405,14 @@ EScript_71ad:
     ent_wait_timer
     ent_despawn
 
-EScript_71b8:
+Popup_Frame0B:
     ent_vel_x_zero
     ent_gfx $0b
     ent_set_timer $0a
     ent_wait_timer
     ent_despawn
 
-EScript_71bf:
+Shatter_Spawn8:
     ent_vel_x_zero
     ent_gfx $0f
     ent_set_timer $3c
@@ -411,7 +420,7 @@ EScript_71bf:
     ent_call $55a1
     ent_despawn
 
-EScript_71c9:
+Shatter_DriveFragments:
     ent_vel_x_zero
     ent_gfx $09
     ent_set_timer $5a
@@ -422,18 +431,23 @@ EScript_71c9:
 
 SECTION "entity_scripts_71d5", ROMX[$71d5], BANK[$03]
 
-EScript_71d5:
+; Floor-5 boss-exit flame (engine type $3e, MonsterSpawnScriptTable slot 18).
+; Spawned by SpawnFloorFlameOrFX -> Func_03_5518 at the kill cell ($c530/$c531)
+; the floor boss's death routine writes. Drops straight down to Y=$80, then
+; stamps its tile into the room map and despawns -- i.e. the floor exit appearing
+; where the boss died.
+BossFlame_Drop:
     ent_vel_x_zero
     ent_gfx $29
     ent_set_timer $3c
     ent_wait_timer
 .l71db
     ent_call SlideDownToY80
-    ent_jr_b8_eq $01, EScript_71e6
+    ent_jr_b8_eq $01, BossFlame_Land
     ent_yield
     ent_jump .l71db
 
-EScript_71e6:
+BossFlame_Land:
     ent_call_bank0 $01, DrawTileAtSpawnCoord
     ent_despawn
 
@@ -452,11 +466,11 @@ Stairs_OpenDown:
     ent_call Stairs_FaceUp
 .l71ff
     ent_call Stairs_AnimDescend
-    ent_jr_b8_eq $01, EScript_720a
+    ent_jr_b8_eq $01, Stairs_OpenDownReturn
     ent_yield
     ent_jump .l71ff
 
-EScript_720a:
+Stairs_OpenDownReturn:
     ent_vel_x_zero
     ent_gfx $0e
     ent_call Stairs_FaceDown
@@ -466,7 +480,7 @@ EScript_720a:
     ent_yield
     ent_jump .l7210
 
-EScript_721b:
+Stairs_AppearUp:
     ent_vel_x_zero
     ent_gfx $0e
     ent_call_bank0 $01, DrawStairTileOpenR
@@ -481,17 +495,17 @@ Stairs_OpenUp:
     ent_call Stairs_FaceUp
 .l722f
     ent_call Stairs_AnimDescend
-    ent_jr_b8_eq $01, EScript_723a
+    ent_jr_b8_eq $01, Stairs_OpenUpReturn
     ent_yield
     ent_jump .l722f
 
-EScript_723a:
+Stairs_OpenUpReturn:
     ent_vel_x_zero
     ent_gfx $0e
     ent_call Stairs_FaceDown
 .l7240
     ent_call Stairs_AnimAscend
-    ent_jr_b8_eq $01, EScript_721b
+    ent_jr_b8_eq $01, Stairs_AppearUp
     ent_yield
     ent_jump .l7240
 
@@ -789,20 +803,20 @@ Player_CarryStand:
     ent_vel_x_zero
     ent_gfx $0a
 
-EScript_742f:
+Player_KickRightRecover:
     ent_call Player_CarryStandThink
     ent_yield
-    ent_jump EScript_742f
+    ent_jump Player_KickRightRecover
 
 Player_CarryWalk:
     ent_set_type $10
     ent_vel_x_indexed PlayerCarryWalkVel
     ent_gfx $0b
 
-EScript_743d:
+Player_KickCarryRecover:
     ent_call Player_CarryWalkThink
     ent_yield
-    ent_jump EScript_743d
+    ent_jump Player_KickCarryRecover
 
 Player_ThrowRelease:
     ent_set_type $11
@@ -825,7 +839,7 @@ Player_KickRight:
     ent_call Player_UpdateFacing
     ent_loop_timer .l7461
     ent_call EntClearAttackActive
-    ent_jump EScript_742f
+    ent_jump Player_KickRightRecover
 
 Player_KickCarry:
     ent_set_type $13
@@ -836,7 +850,7 @@ Player_KickCarry:
     ent_call Player_UpdateFacing
     ent_loop_timer .l7476
     ent_call EntClearAttackActive
-    ent_jump EScript_743d
+    ent_jump Player_KickCarryRecover
 
 PlayerHit_Slash:
     ent_set_type $14
@@ -880,7 +894,7 @@ Shard_Tumble:
     ent_set_type $01
     ent_gfx $02
 
-EScript_74c1:
+Shard_Home:
     ent_call FacePlayerX
     ent_jr_hit Shard_TumbleAlt
     ent_call $517e
@@ -889,7 +903,7 @@ EScript_74c1:
     ent_call $5185
     ent_set_timer $1e
     ent_wait_timer
-    ent_jump EScript_74c1
+    ent_jump Shard_Home
 
 Shard_TumbleAlt:
     ent_call Shard_HomeFaceRight
@@ -898,7 +912,7 @@ Shard_TumbleAlt:
     ent_call Shard_HomeFaceLeft
     ent_set_timer $1e
     ent_wait_timer
-    ent_jump EScript_74c1
+    ent_jump Shard_Home
 
 Generic_Despawn:
     ent_despawn
@@ -1132,7 +1146,7 @@ Naga_Chase:
 Naga_Windup:
     ent_set_xflip $ff
 
-EScript_7646:
+Naga_Fire:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
@@ -1177,12 +1191,12 @@ Naga_Spawn:
 
 Naga_FaceFlip:
     ent_call FacePlayerX
-    ent_jr_hit EScript_7698
+    ent_jr_hit Naga_FaceLeft
     ent_set_facing $00
     ent_set_xflip $00
     ent_jump Naga_Chase
 
-EScript_7698:
+Naga_FaceLeft:
     ent_set_facing $01
     ent_set_xflip $01
     ent_jump Naga_Chase
@@ -1228,7 +1242,7 @@ Dino_Chase:
 Dino_Windup:
     ent_set_xflip $ff
 
-EScript_76d9:
+Dino_Fire:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
@@ -1271,14 +1285,14 @@ Plant_StandR:
     ent_gfx $01
     ent_set_timer $3c
 
-EScript_771a:
+Plant_IdleR:
     ent_call Plant_Think
-    ent_loop_timer EScript_771a
+    ent_loop_timer Plant_IdleR
     ent_jump Plant_Chase
 
-EScript_7723:
+Plant_IdleRWait:
     ent_yield
-    ent_jump EScript_771a
+    ent_jump Plant_IdleR
 
 Plant_StandL:
     ent_set_type $01
@@ -1352,7 +1366,7 @@ Henger_Windup:
     ent_set_timer $09
     ent_wait_timer
 
-EScript_7793:
+Henger_WindupFlip:
     ent_set_xflip $ff
 
 Henger_Chase:
@@ -1553,7 +1567,7 @@ Puncho_Charge:
     ent_yield
     ent_jump .l78ae
 
-EScript_78b5:
+Puncho_ChargeL:
     ent_set_xflip $ff
     ent_jump Puncho_Charge
 
@@ -1584,7 +1598,7 @@ Psylora_WalkDownA:
     ent_vel_x_indexed PsyloraWalkVel
     ent_call Psylora_SelectMoveScript
 
-EScript_78df:
+Psylora_MoveDownA:
     ent_set_facing $00
     ent_gfx $11
 .l78e3
@@ -1762,7 +1776,7 @@ Ducken_FireL:
 Ducken_Die:
     ent_call Ducken_AimHorizontal
 
-EScript_79cd:
+Ducken_DieHorizontal:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $08
@@ -1795,7 +1809,7 @@ FlameRed_Surface:
     ent_set_timer $f0
 .l79f3
     ent_update_action
-    ent_jr_busy EScript_7a0b
+    ent_jr_busy FlameRed_Hit
     ent_loop_timer .l79f3
     ent_jump FlameRed_Hidden
 
@@ -1810,7 +1824,7 @@ FlameRed_Emerge:
     ent_jr_busy .l7a03
     ent_jump FlameRed_Die
 
-EScript_7a0b:
+FlameRed_Hit:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $02
@@ -1834,22 +1848,22 @@ FlameBlue_Hidden:
     ent_gfx $01
 .l7a24
     ent_update_action
-    ent_jr_busy EScript_7a3d
+    ent_jr_busy FlameBlue_Emerge
     ent_yield
     ent_jump .l7a24
 
-EScript_7a2c:
+FlameBlue_Surface:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $02
     ent_set_timer $f0
 .l7a33
     ent_update_action
-    ent_jr_busy EScript_7a4b
+    ent_jr_busy FlameBlue_Hit
     ent_loop_timer .l7a33
     ent_jump FlameBlue_Hidden
 
-EScript_7a3d:
+FlameBlue_Emerge:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $01
@@ -1860,7 +1874,7 @@ EScript_7a3d:
     ent_jr_busy .l7a43
     ent_jump FlameBlue_Hidden
 
-EScript_7a4b:
+FlameBlue_Hit:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $02
@@ -1877,14 +1891,14 @@ Tiger_StandR:
     ent_gfx $01
     ent_set_timer $3c
 
-EScript_7a60:
+Tiger_IdleR:
     ent_call $64dd
-    ent_loop_timer EScript_7a60
+    ent_loop_timer Tiger_IdleR
     ent_jump Tiger_Chase
 
-EScript_7a69:
+Tiger_IdleRWait:
     ent_yield
-    ent_jump EScript_7a60
+    ent_jump Tiger_IdleR
 
 Tiger_StandL:
     ent_set_type $01
@@ -2002,7 +2016,7 @@ Mocchi_Charge:
     ent_yield
     ent_jump .l7b17
 
-EScript_7b1e:
+Mocchi_ChargeL:
     ent_set_xflip $ff
     ent_jump Mocchi_Charge
 
@@ -2099,7 +2113,7 @@ Hare_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l7bad
-    ent_jump EScript_7bc5
+    ent_jump Hare_Stun
 
 Hare_Charge:
     ent_set_type $06
@@ -2111,7 +2125,7 @@ Hare_Charge:
     ent_yield
     ent_jump .l7bbe
 
-EScript_7bc5:
+Hare_Stun:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -2238,7 +2252,7 @@ Golem_Hurt:
     ent_update_action
     ent_yield
     ent_jr_busy .l7c86
-    ent_jump EScript_7c9e
+    ent_jump Golem_Stun
 
 Golem_Charge:
     ent_set_type $06
@@ -2250,7 +2264,7 @@ Golem_Charge:
     ent_yield
     ent_jump .l7c97
 
-EScript_7c9e:
+Golem_Stun:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -2294,7 +2308,7 @@ Suezo_Chase:
 Suezo_Windup:
     ent_set_xflip $ff
 
-EScript_7ce0:
+Suezo_Fire:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $03
@@ -2325,22 +2339,21 @@ Suezo_HurtFlip:
     ent_yield
     ent_jr_busy .l7d0c
     ent_call FacePlayerX
-    ent_jr_hit EScript_7d1e
+    ent_jr_hit Suezo_FaceLeft
     ent_set_facing $00
     ent_set_xflip $00
     ent_jump Suezo_Chase
 
-EScript_7d1e:
+Suezo_FaceLeft:
     ent_set_facing $01
     ent_set_xflip $01
     ent_jump Suezo_Chase
 
-; --- recovered after the initial carve: more scripts at $7d25-$7fec that
-;     branch back into Suezo's hurt handler ($7d06/$7d11, kept as raw addrs).
-;     Live (entered via a bank-3 table at $5751.. still mis-disassembled);
-;     generic EScript_ labels pending a species/role pass.
+; --- Suezo's long-stun state ($7d25): re-enters Suezo's hurt handler
+;     ($7d06/$7d11, kept as raw addrs). Entered via a bank-3 table at $5751..
+;     (still mis-disassembled), hence no internal referrer. ---
 
-EScript_7d25:
+Suezo_Stun:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $09
@@ -2351,24 +2364,32 @@ EScript_7d25:
     ent_loop_timer .l7d2c
     ent_jump $7d11
 
-EScript_7d36:
+; --- Floor-gate enemies, engine types $50-$55 ($7d36-$7fec). Six non-editor,
+;     per-floor "boss" entities resolved via the bank-1 spawn table $796c[$50..
+;     $55] (sprite/init group $30-$35, parallel to the friendly breeds at $40..
+;     $45). Each is a multi-phase state machine whose death routine writes its
+;     kill cell to $c530/$c531 -- the coords SpawnFloorFlameOrFX reads to drop
+;     the floor exit -- so defeating one gates floor progression. Per-creature
+;     identity is unconfirmed (no editor-legend entry / decoded placement), so
+;     names stay structural: FloorEnemy<type>_<phase>. See docs/entity_scripts.md. ---
+FloorEnemy50_Init:
     ent_set_xflip $01
 
-EScript_7d38:
+FloorEnemy50_Idle:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7d3f
     ent_update_action
-    ent_jr_busy EScript_7d93
+    ent_jr_busy FloorEnemy50_Hurt
     ent_loop_timer .l7d3f
-    ent_jump EScript_7d67
+    ent_jump FloorEnemy50_Attack
 
-EScript_7d49:
+FloorEnemy50_Dig:
     ent_set_xflip $ff
 
-EScript_7d4b:
+FloorEnemy50_DigLoop:
     ent_set_facing $fe
     ent_set_type $01
     ent_vel_x_indexed $7028
@@ -2376,36 +2397,36 @@ EScript_7d4b:
     ent_set_timer $5a
 .l7d56
     ent_call $691b
-    ent_jr_b8_eq $ff, EScript_7d93
-    ent_jr_b8_eq $03, EScript_7d49
+    ent_jr_b8_eq $ff, FloorEnemy50_Hurt
+    ent_jr_b8_eq $03, FloorEnemy50_Dig
     ent_loop_timer .l7d56
-    ent_jump EScript_7d38
+    ent_jump FloorEnemy50_Idle
 
-EScript_7d67:
+FloorEnemy50_Attack:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $14
 .l7d6e
     ent_update_action
-    ent_jr_busy EScript_7d93
+    ent_jr_busy FloorEnemy50_Hurt
     ent_loop_timer .l7d6e
     ent_call $549a
     ent_set_timer $0a
 .l7d7a
     ent_update_action
-    ent_jr_busy EScript_7d93
+    ent_jr_busy FloorEnemy50_Hurt
     ent_loop_timer .l7d7a
     ent_call $54ae
     ent_set_timer $0a
 .l7d86
     ent_update_action
-    ent_jr_busy EScript_7d93
+    ent_jr_busy FloorEnemy50_Hurt
     ent_loop_timer .l7d86
     ent_call $54b8
-    ent_jump EScript_7d4b
+    ent_jump FloorEnemy50_DigLoop
 
-EScript_7d93:
+FloorEnemy50_Hurt:
     ent_call $4622
     ent_set_type $04
     ent_vel_x_zero
@@ -2426,27 +2447,27 @@ EScript_7d93:
     ent_call $5539
     ent_despawn
 
-EScript_7db3:
+FloorEnemy51_Init:
     ent_call $6960
-    ent_jump EScript_7dbb
+    ent_jump FloorEnemy51_SeekLoop
 
-EScript_7db9:
+FloorEnemy51_Seek:
     ent_set_xflip $ff
 
-EScript_7dbb:
+FloorEnemy51_SeekLoop:
     ent_set_facing $fe
     ent_set_type $01
     ent_vel_x_indexed $7032
     ent_gfx $02
 .l7dc4
     ent_call $69a4
-    ent_jr_b8_eq $ff, EScript_7df9
-    ent_jr_b8_eq $01, EScript_7db9
-    ent_jr_b8_eq $02, EScript_7dd7
+    ent_jr_b8_eq $ff, FloorEnemy51_AttackB
+    ent_jr_b8_eq $01, FloorEnemy51_Seek
+    ent_jr_b8_eq $02, FloorEnemy51_AttackA
     ent_yield
     ent_jump .l7dc4
 
-EScript_7dd7:
+FloorEnemy51_AttackA:
     ent_set_xflip $ff
     ent_set_facing $fe
     ent_set_type $01
@@ -2464,9 +2485,9 @@ EScript_7dd7:
     ent_gfx $04
     ent_set_timer $28
     ent_wait_timer
-    ent_jump EScript_7dbb
+    ent_jump FloorEnemy51_SeekLoop
 
-EScript_7df9:
+FloorEnemy51_AttackB:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $05
@@ -2482,9 +2503,9 @@ EScript_7df9:
     ent_gfx $06
     ent_set_timer $14
     ent_wait_timer
-    ent_jump EScript_7db9
+    ent_jump FloorEnemy51_Seek
 
-EScript_7e17:
+FloorEnemy52_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero
@@ -2494,7 +2515,7 @@ EScript_7e17:
     ent_call $5539
     ent_despawn
 
-EScript_7e26:
+FloorEnemy52_Main:
     ent_set_xflip $ff
     ent_set_type $01
     ent_vel_x_zero
@@ -2502,7 +2523,7 @@ EScript_7e26:
     ent_set_timer $b4
 .l7e2f
     ent_call $6a7e
-    ent_jr_b8_eq $ff, EScript_7e53
+    ent_jr_b8_eq $ff, FloorEnemy52_Hurt
     ent_loop_timer .l7e2f
     ent_set_type $01
     ent_vel_x_zero
@@ -2516,9 +2537,9 @@ EScript_7e26:
     ent_set_timer $0a
     ent_wait_timer
     ent_call $54f4
-    ent_jump EScript_7e26
+    ent_jump FloorEnemy52_Main
 
-EScript_7e53:
+FloorEnemy52_Hurt:
     ent_call $4622
     ent_set_type $04
     ent_vel_x_zero
@@ -2539,19 +2560,19 @@ EScript_7e53:
     ent_call $5539
     ent_despawn
 
-EScript_7e73:
+FloorEnemy53_Main:
     ent_call $6ab4
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
 .l7e7b
     ent_call $6ab9
-    ent_jr_b8_eq $ff, EScript_7eef
-    ent_jr_b8_eq $01, EScript_7e8a
+    ent_jr_b8_eq $ff, FloorEnemy53_Die
+    ent_jr_b8_eq $01, FloorEnemy53_Attack
     ent_yield
     ent_jump .l7e7b
 
-EScript_7e8a:
+FloorEnemy53_Attack:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $06
@@ -2562,21 +2583,21 @@ EScript_7e8a:
     ent_call $6a9b
     ent_set_timer $14
     ent_wait_timer
-    ent_jump EScript_7e73
+    ent_jump FloorEnemy53_Main
 
-EScript_7e9e:
+FloorEnemy54_Main:
     ent_call $6ad3
     ent_set_type $11
     ent_vel_x_zero
     ent_gfx $02
 .l7ea6
     ent_call $6adc
-    ent_jr_b8_eq $ff, EScript_7f04
-    ent_jr_b8_eq $01, EScript_7eb5
+    ent_jr_b8_eq $ff, FloorEnemy54_Die
+    ent_jr_b8_eq $01, FloorEnemy54_BeamSpread
     ent_yield
     ent_jump .l7ea6
 
-EScript_7eb5:
+FloorEnemy54_BeamSpread:
     ent_set_type $12
     ent_gfx $07
     ent_set_facing $02
@@ -2605,9 +2626,9 @@ EScript_7eb5:
     ent_set_timer $19
     ent_wait_timer
     ent_call $6b45
-    ent_jump EScript_7e9e
+    ent_jump FloorEnemy54_Main
 
-EScript_7eef:
+FloorEnemy53_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero
@@ -2619,7 +2640,7 @@ EScript_7eef:
     ent_call $556e
     ent_despawn
 
-EScript_7f04:
+FloorEnemy54_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -2628,18 +2649,18 @@ EScript_7f04:
     ent_gfx $05
     ent_despawn
 
-EScript_7f0f:
+FloorEnemy55_Init:
     ent_call $6b57
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $00
 .l7f17
     ent_call $6b93
-    ent_jr_b8_eq $01, EScript_7f22
+    ent_jr_b8_eq $01, FloorEnemy55_Decide
     ent_yield
     ent_jump .l7f17
 
-EScript_7f22:
+FloorEnemy55_Decide:
     ent_call $6ba6
     ent_set_type $02
     ent_vel_x_zero
@@ -2648,13 +2669,13 @@ EScript_7f22:
     ent_wait_timer
 .l7f2d
     ent_call $6bb4
-    ent_jr_b8_eq $ff, EScript_7fb6
-    ent_jr_b8_eq $01, EScript_7f40
-    ent_jr_b8_eq $02, EScript_7f81
+    ent_jr_b8_eq $ff, FloorEnemy55_Special
+    ent_jr_b8_eq $01, FloorEnemy55_ChargeA
+    ent_jr_b8_eq $02, FloorEnemy55_ChargeB
     ent_yield
     ent_jump .l7f2d
 
-EScript_7f40:
+FloorEnemy55_ChargeA:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $02
@@ -2673,11 +2694,11 @@ EScript_7f40:
     ent_vel_x_indexed $703c
 .l7f60
     ent_call $6c96
-    ent_jr_b8_eq $01, EScript_7f6b
+    ent_jr_b8_eq $01, FloorEnemy55_ChargeAEnd
     ent_yield
     ent_jump .l7f60
 
-EScript_7f6b:
+FloorEnemy55_ChargeAEnd:
     ent_vel_x_zero
     ent_gfx $05
     ent_set_timer $64
@@ -2689,9 +2710,9 @@ EScript_7f6b:
     ent_gfx $02
     ent_set_timer $10
     ent_wait_timer
-    ent_jump EScript_7f22
+    ent_jump FloorEnemy55_Decide
 
-EScript_7f81:
+FloorEnemy55_ChargeB:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -2701,11 +2722,11 @@ EScript_7f81:
     ent_call $6ce2
 .l7f8f
     ent_call $6d13
-    ent_jr_b8_eq $01, EScript_7f9a
+    ent_jr_b8_eq $01, FloorEnemy55_SpawnChild
     ent_yield
     ent_jump .l7f8f
 
-EScript_7f9a:
+FloorEnemy55_SpawnChild:
     ent_vel_x_zero
     ent_gfx $06
     ent_set_timer $1e
@@ -2720,9 +2741,9 @@ EScript_7f9a:
     ent_gfx $02
     ent_set_timer $10
     ent_wait_timer
-    ent_jump EScript_7f22
+    ent_jump FloorEnemy55_Decide
 
-EScript_7fb6:
+FloorEnemy55_Special:
     ent_set_type $05
     ent_vel_x_zero
     ent_gfx $07
@@ -2734,18 +2755,18 @@ EScript_7fb6:
     ent_call $6e0a
 .l7fc6
     ent_call $6e98
-    ent_jr_b8_eq $ff, EScript_7fdd
-    ent_jr_b8_eq $01, EScript_7fd5
+    ent_jr_b8_eq $ff, FloorEnemy55_Die
+    ent_jr_b8_eq $01, FloorEnemy55_SpecialEnd
     ent_yield
     ent_jump .l7fc6
 
-EScript_7fd5:
+FloorEnemy55_SpecialEnd:
     ent_gfx $08
     ent_set_timer $0a
     ent_wait_timer
-    ent_jump EScript_7f22
+    ent_jump FloorEnemy55_Decide
 
-EScript_7fdd:
+FloorEnemy55_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero

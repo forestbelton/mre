@@ -5,15 +5,21 @@ driven by a tiny **bytecode script** interpreted by the bank-`$03` engine (see
 [`room_engine.md`](room_engine.md) for the engine and entity record). This
 document specifies the script VM and its instruction set.
 
-The scripts occupy **`$71d5`–`$7d25`** plus one isolated 28-byte script at
-**`$7092`** (~1410 instructions across ~332 labels) in bank `$03`. `$71d5` and
-`$7092` are `MonsterSpawnScriptTable` slots 18/19 ($ffb0 `$3e`/`$3f`) — outside
-the floor monster-array path (see "Resolving monster species"), hidden among the
-velocity tables below the selector-reachable region. `$71d5` (type `$3e`) is
-spawned on **floor 5** by `SpawnFloorFlameOrFX` inside a boss-assembly routine
-(six `SpawnBossSegment` calls + the flame); `$7092` (type `$3f`) has no found
-spawn site and appears vestigial. Both keep `EScript_*` names pending a clearer
-identity.
+The scripts occupy **`$7046`–`$7fec`** in bank `$03` (with the velocity tables
+they read at `$6fc4`–`$7046` just above), all collected in `src/entity_scripts.asm`.
+Roughly by address: the **FX/animation library** (`$7046`–`$71c9`: `Popup_*`,
+`Glide_*`, `Burst*`, `Vanish_*`, `Fly_*`, `Shatter_*`, dispatched by id from
+bank-1 pointer tables at `$79a8..`), then the **non-editor spawns** (`BossFlame_*`,
+`Spawn3F_*`), the **player + editor monsters** (`$723a` on), and the
+**floor-gate enemies** (`$7d36`–`$7fec`, engine types `$50`–`$55`).
+
+`$71d5` and `$7092` are `MonsterSpawnScriptTable` slots 18/19 ($ffb0 `$3e`/`$3f`)
+— outside the floor monster-array path (see "Resolving monster species"). `$71d5`
+(type `$3e`) is spawned on **floor 5** by `SpawnFloorFlameOrFX` inside a
+boss-assembly routine (six `SpawnBossSegment` calls + the flame), so it is named
+`BossFlame_Drop` (it drops to the boss kill cell and stamps the floor-exit tile);
+`$7092` (type `$3f`) has no found spawn site and stays structural as
+`Spawn3F_Sweep`.
 
 ## The VM
 
@@ -207,9 +213,41 @@ relation is `table_slot = $ffb0 - $2c`, and `SpawnFloorMonsters` gives a monster
 `$ffb0 = species + $30`, **plus 2 if species ≥ 14** (`cp $3e; jr c; add $02`).
 That `+2` skips `$ffb0 = $3e/$3f`, so the friendly breeds land in slots 20–25
 (not 18/19). Slots 18/19 (`$71d5`, `$7092`) therefore hold no *floor* monster;
-`$71d5` is instead spawned directly on floor 5 (the boss flame, type `$3e`) and
-`$7092` (type `$3f`) has no found spawn site — both stay `EScript_*`.
+`$71d5` is instead spawned directly on floor 5 (the boss flame, type `$3e`,
+`BossFlame_Drop`) and `$7092` (type `$3f`, `Spawn3F_Sweep`) has no found spawn
+site.
 
 So each monster's scripts are named `<Species>_<Role>` (e.g. `Ducken_FireR`,
 `Suezo_Chase`). The player avatar is fully resolved (walk/push/pull/grab/carry/
 throw/kick).
+
+### FX / animation library (`$7046`–`$71c9`)
+
+Self-contained visual-effect scripts owned by no entity; dispatched by id from
+the bank-1 pointer tables at `$79a8..$79c2`. Names encode content, not a verified
+semantic (the gfx ids index an unmapped sprite table), so confidence is medium:
+
+- **`Popup_FrameNN`** — stop, show one gfx frame `NN`, wait, despawn.
+- **`Glide_ToTargetX/Y`** — init + per-frame easing mover (`$4faa`+`$5059` /
+  `$4f20`+`$5013`) that interpolates the sprite along a curve to a stored target.
+- **`Burst10_*` / `Burst19_*`** — two 8-direction fans (gfx `$11`–`$18` → finisher
+  gfx `$10`; gfx `$1a`–`$21` → gfx `$19`); the finisher calls `$4c5f`, which
+  scatters child sprites in the facing direction.
+- **`Vanish_FrameNN`** — sequential one-shot vanish frames (gfx `$30`–`$35`).
+- **`Fly_FrameNN`** — horizontal drift sprites (`set_vel_x`, then loop).
+- **`Shatter_Spawn8` / `Shatter_DriveFragments`** — `$55a1` spawns 8 fragment
+  sprites + a capstone; `$55e7` animates them per frame.
+
+### Floor-gate enemies (`$7d36`–`$7fec`, engine types `$50`–`$55`)
+
+Six non-editor "boss" entities resolved via the per-type spawn table `$796c` at
+slots `$50`–`$55` (sprite/init group `$30`–`$35`, parallel to the friendly breeds
+at `$40`–`$45`). They are placed by per-floor spawner data, so no `ld a,$5x;
+SpawnEntity` call site exists and the specific creature identities are unconfirmed
+— names stay structural (`FloorEnemy<type>_<phase>`). Each is a multi-phase state
+machine; **every death routine writes its kill cell to `$c530`/`$c531`**, the
+coords `SpawnFloorFlameOrFX` reads to drop the floor exit (`BossFlame_Drop`), so
+defeating one gates floor progression. Behaviour by type: `$50`/`$52` dig/break
+terrain tiles, `$51` seeks a target tile, `$52`/`$53` fire projectiles, `$54`
+spreads a wide row of attached sprites, `$55` is a full player-charging,
+child-spawning boss.
