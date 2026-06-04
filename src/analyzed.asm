@@ -9111,7 +9111,7 @@ Func_01_439e:
 	ldh [$ff8b], a
 	ldh [$ff8c], a
 	ld c, $03
-	call Func_01_5854
+	call StartKeyUnlock
 	call Func_00_0d41
 	call Func_00_04bc
 Func_01_4412:
@@ -9619,7 +9619,7 @@ Func_01_479e:
 	ld [$c2c3], a
 	or a
 	ret
-Func_01_47a9:
+GrantSilverKey:
 	call Func_01_47bc
 	cp $ff
 	ret z
@@ -10002,7 +10002,7 @@ Func_01_49e0:
 	call Func_01_4a3b
 	call Func_01_4a4e
 	ld c, $00
-	call Func_01_5854
+	call StartKeyUnlock
 	xor a
 	ldh [rSCX], a
 	ldh [rSCY], a
@@ -10124,7 +10124,7 @@ Func_01_4ae1:
 	ld a, $06
 	ld [$cf40], a
 	ld c, $04
-	call Func_01_5854
+	call StartKeyUnlock
 	ld a, $01
 	ld [$c2c5], a
 	xor a
@@ -10785,7 +10785,7 @@ SECTION "analyzed_0054d0", ROMX[$54d0], BANK[$01]
 ; $08) at the cell of the just-collected item: rounds b/c (item pixel pos) to a
 ; cell, takes the effect script from $ffe5/$ffe6, and calls the bank-$03 spawn
 ; primitive ($4593). Does NOT remove the item -- RemoveOpenItemAtCell already did
-; that. Func_01_5504 below is the same routine with spawn param $0c.
+; that. SpawnPickupEffectAlt below is the same routine with spawn param $0c.
 SpawnPickupEffect:
 	ld a, c
 	add a, $08
@@ -10816,7 +10816,7 @@ SpawnPickupEffect:
 	call Func_00_0467
 	ret
 
-Func_01_5504:
+SpawnPickupEffectAlt:
 	ld a, c
 	add a, $08
 	swap a
@@ -10850,9 +10850,9 @@ Func_01_5538:
 	cp $02
 	ret z
 	ld c, $02
-	call Func_01_5854
+	call StartKeyUnlock
 	ret
-Func_01_5544:
+TransformMonstersToSuzurin:
 	ld hl, $c823
 	ld c, $1b
 Func_01_5549:
@@ -10882,7 +10882,7 @@ Func_01_559c:
 	dec c
 	jr nz, Func_01_5549
 	ret
-Func_01_55a6:
+TransformMonstersToDuck:
 	ld hl, $c823
 	ld c, $1b
 Func_01_55ab:
@@ -10952,7 +10952,7 @@ Func_01_5607:
 	dec c
 	jr nz, Func_01_55ab
 	ret
-Func_01_5611:
+DoubleFloorTimer:
 	ld hl, $c2d1
 	ld a, [hl]
 	add a, a
@@ -10976,7 +10976,7 @@ Data_01_5623:
 
 SECTION "analyzed_00562b", ROMX[$562b], BANK[$01]
 
-Func_01_562b:
+QuintupleFloorTimer:
 	ld hl, $c2d1
 	ld a, [hl+]
 	ld [$cf65], a
@@ -11219,7 +11219,7 @@ Data_01_5833:
 
 SECTION "analyzed_005854", ROMX[$5854], BANK[$01]
 
-Func_01_5854:
+StartKeyUnlock:
 	ld a, c
 	ld [$c2db], a
 	xor a
@@ -12095,7 +12095,7 @@ Player_SummonMonster:
 	ld [$cf40], a
 	ld c, $04
 	ld a, $01
-	ld hl, Func_01_5854
+	ld hl, StartKeyUnlock
 	call CallBankedHL
 	pop de
 	xor a
@@ -13715,7 +13715,7 @@ Func_01_686f:
 	ld a, $07
 	ld [$cf40], a
 	ld c, $04
-	call Func_01_5854
+	call StartKeyUnlock
 	ret
 
 SECTION "analyzed_0068c8", ROMX[$68c8], BANK[$01]

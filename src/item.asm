@@ -342,13 +342,13 @@ ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the $c52e/$c52f slot (gfx $1
 	call Func_00_0467
 	ret
 
-ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (Func_01_55a6)
+ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (TransformMonstersToDuck)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	call Func_01_55a6
+	call TransformMonstersToDuck
 	ret
 
 ItemEffect_Item1c:  ; $1c: score-only; never placed (stripped by the gate)
@@ -365,10 +365,10 @@ ItemEffect_AlfDoll:  ; ALF_DOLL: transform all monsters into Suzurins ($5544)
 	ld a, $05
 	call PlaySound
 	pop af
-	call Func_01_5544
+	call TransformMonstersToSuzurin
 	ret
 
-ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, Func_01_5611)
+ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, DoubleFloorTimer)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
@@ -376,10 +376,10 @@ ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 ($c2d4=2, Func_01_5611)
 	pop af
 	ld a, $02
 	ld [$c2d4], a
-	call Func_01_5611
+	call DoubleFloorTimer
 	ret
 
-ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, Func_01_562b)
+ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, QuintupleFloorTimer)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
@@ -387,7 +387,7 @@ ItemEffect_FullTororon:  ; FULL_TORORON: time x5 ($c2d4=5, Func_01_562b)
 	pop af
 	ld a, $05
 	ld [$c2d4], a
-	call Func_01_562b
+	call QuintupleFloorTimer
 	ret
 
 ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s ($c2d1-$c2d3)
@@ -420,7 +420,7 @@ ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
 	ret
 
 ItemEffect_CoxHat:  ; COX_HAT: +1 life ($c2c3 BCD, cap 99); 1-up SFX $08
-	call Func_01_5504
+	call SpawnPickupEffectAlt
 	push af
 	ld a, $08
 	call PlaySound
@@ -434,20 +434,20 @@ ItemEffect_CoxHat:  ; COX_HAT: +1 life ($c2c3 BCD, cap 99); 1-up SFX $08
 	ld [hl], a
 	ret
 
-ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit ($c2d5 bit 1; Func_01_5854)
+ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit ($c2d5 bit 1; StartKeyUnlock)
 	ld hl, $c2d5
 	set 1, [hl]
 	ld c, $01
-	call Func_01_5854
+	call StartKeyUnlock
 	ret
 
-ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (Func_01_47a9)
+ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (GrantSilverKey)
 	call SpawnPickupEffect
 	push af
 	ld a, $05
 	call PlaySound
 	pop af
-	call Func_01_47a9
+	call GrantSilverKey
 	ret
 
 ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag ($c2e8=1; $cff3=1 unless mode 5)
@@ -475,7 +475,7 @@ ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp ($c2d5 bit 
 	set 3, [hl]
 	ret
 
-ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + Func_01_5854; never placed
+ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + StartKeyUnlock; never placed
 	call SpawnPickupEffect
 	push af
 	ld a, $05
@@ -491,10 +491,10 @@ ItemEffect_Item21:  ; $21: collect 4 ($cf7e) -> $cf40=1 + Func_01_5854; never pl
 	ld a, $01
 	ld [$cf40], a
 	ld c, $04
-	call Func_01_5854
+	call StartKeyUnlock
 	ret
 
-ItemEffect_Item22:  ; $22: key-like ($c2d5 bit 7 + Func_01_47a9); never placed
+ItemEffect_Item22:  ; $22: key-like ($c2d5 bit 7 + GrantSilverKey); never placed
 	call SpawnPickupEffect
 	push af
 	ld a, $05
@@ -502,7 +502,7 @@ ItemEffect_Item22:  ; $22: key-like ($c2d5 bit 7 + Func_01_47a9); never placed
 	pop af
 	ld hl, $c2d5
 	set 7, [hl]
-	call Func_01_47a9
+	call GrantSilverKey
 	ld a, $01
 	ld [$c2d6], a
 	ret
