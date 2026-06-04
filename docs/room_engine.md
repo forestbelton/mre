@@ -149,5 +149,6 @@ shared helpers, velocity tables) are named too; see
 [`entity_scripts.md`](entity_scripts.md). Good next targets: the shared internal
 probes (`$59aa`, `$663c`, …) and the 8-direction locomotion cores
 (`$5de3`–`$62e8`) those selectors call. (The bonus-stage friendly breeds —
-Tiger, Mocchi, Hare, Gali, Golem, Suezo — are now resolved; only the floor-5
-boss-flame script `$71d5` and the vestigial `$7092` remain unnamed.)
+Tiger, Mocchi, Hare, Gali, Golem, Suezo — and the five tower bosses (Selketo/
+Ferious/Punisher/Dragon/Zan, types `$50`–`$55`) are now resolved; only the
+vestigial `$7092` keeps a structural name.)

@@ -9,15 +9,17 @@ The scripts occupy **`$7046`–`$7fec`** in bank `$03` (with the velocity tables
 they read at `$6fc4`–`$7046` just above), all collected in `src/entity_scripts.asm`.
 Roughly by address: the **FX/animation library** (`$7046`–`$71c9`: `Popup_*`,
 `Glide_*`, `Burst*`, `Vanish_*`, `Fly_*`, `Shatter_*`, dispatched by id from
-bank-1 pointer tables at `$79a8..`), then the **non-editor spawns** (`BossFlame_*`,
+bank-1 pointer tables at `$79a8..`), then the **non-editor spawns** (`ZanExitFlame_*`,
 `Spawn3F_*`), the **player + editor monsters** (`$723a` on), and the
-**floor-gate enemies** (`$7d36`–`$7fec`, engine types `$50`–`$55`).
+**five tower bosses** (`$7d36`–`$7fec`, engine types `$50`–`$55`).
 
 `$71d5` and `$7092` are `MonsterSpawnScriptTable` slots 18/19 ($ffb0 `$3e`/`$3f`)
 — outside the floor monster-array path (see "Resolving monster species"). `$71d5`
-(type `$3e`) is spawned on **floor 5** by `SpawnFloorFlameOrFX` inside a
-boss-assembly routine (six `SpawnBossSegment` calls + the flame), so it is named
-`BossFlame_Drop` (it drops to the boss kill cell and stamps the floor-exit tile);
+(type `$3e`) is **Zan's exit flame** (`ZanExitFlame_Drop`): `SpawnFloorFlameOrFX`
+spawns it when `wActiveFloor == $05`, which on a boss floor is the boss index 5
+(Zan, after floor 60) — *not* floor 5; the boss-floor remap `Func_01_48af` sets
+`wActiveFloor` to the boss index 1–5. It drops to the boss kill cell and stamps
+the exit tile (the other four bosses just get stairs).
 `$7092` (type `$3f`) has no found spawn site and stays structural as
 `Spawn3F_Sweep`.
 
@@ -213,8 +215,8 @@ relation is `table_slot = $ffb0 - $2c`, and `SpawnFloorMonsters` gives a monster
 `$ffb0 = species + $30`, **plus 2 if species ≥ 14** (`cp $3e; jr c; add $02`).
 That `+2` skips `$ffb0 = $3e/$3f`, so the friendly breeds land in slots 20–25
 (not 18/19). Slots 18/19 (`$71d5`, `$7092`) therefore hold no *floor* monster;
-`$71d5` is instead spawned directly on floor 5 (the boss flame, type `$3e`,
-`BossFlame_Drop`) and `$7092` (type `$3f`, `Spawn3F_Sweep`) has no found spawn
+`$71d5` is instead Zan's exit flame (type `$3e`, `ZanExitFlame_Drop`, spawned on
+the Zan boss floor) and `$7092` (type `$3f`, `Spawn3F_Sweep`) has no found spawn
 site.
 
 So each monster's scripts are named `<Species>_<Role>` (e.g. `Ducken_FireR`,
@@ -238,16 +240,27 @@ semantic (the gfx ids index an unmapped sprite table), so confidence is medium:
 - **`Shatter_Spawn8` / `Shatter_DriveFragments`** — `$55a1` spawns 8 fragment
   sprites + a capstone; `$55e7` animates them per frame.
 
-### Floor-gate enemies (`$7d36`–`$7fec`, engine types `$50`–`$55`)
+### Tower bosses (`$7d36`–`$7fec`, engine types `$50`–`$55`)
 
-Six non-editor "boss" entities resolved via the per-type spawn table `$796c` at
-slots `$50`–`$55` (sprite/init group `$30`–`$35`, parallel to the friendly breeds
-at `$40`–`$45`). They are placed by per-floor spawner data, so no `ld a,$5x;
-SpawnEntity` call site exists and the specific creature identities are unconfirmed
-— names stay structural (`FloorEnemy<type>_<phase>`). Each is a multi-phase state
-machine; **every death routine writes its kill cell to `$c530`/`$c531`**, the
-coords `SpawnFloorFlameOrFX` reads to drop the floor exit (`BossFlame_Drop`), so
-defeating one gates floor progression. Behaviour by type: `$50`/`$52` dig/break
-terrain tiles, `$51` seeks a target tile, `$52`/`$53` fire projectiles, `$54`
-spreads a wide row of attached sprites, `$55` is a full player-charging,
-child-spawning boss.
+The five tower bosses, fought on the **unnumbered boss floors** entered after
+exiting floors 10/20/40/50/60:
+
+| Type | Boss | After floor | Notes |
+|---|---|---|---|
+| `$50` | **Selketo** | 10 | digs/breaks terrain tiles |
+| `$51` | **Ferious** | 20 | seeks a target tile |
+| `$52` | **Punisher** | 40 | digs + fires projectiles |
+| `$53` | **Dragon** (head) | 50 | fires projectiles; its death gates the exit |
+| `$54` | **DragonBody** | 50 | 2nd part of the Dragon; wide beam/attached-sprite sweep |
+| `$55` | **Zan** | 60 | final boss; charges the player, spawns a child |
+
+They have their own sprite/init group `$30`–`$35` (parallel to the friendly
+breeds at `$40`–`$45`) and are **not** placed by the normal `arr2` floor spawner.
+The boss-floor remap `Func_01_48af` maps `wActiveFloor` 10/20/40/50/60 → boss
+index 1–5; in that mode `Func_01_42e6` reads the boss spawn-list table
+`Data_01_4335` (bank `$01`) by `(index-1)` and spawns each listed type via
+`SpawnEntity` — the only place types `$50`–`$55` reach `SpawnEntity` (data-driven,
+so there is no `ld a,$5x` in code). Each boss's death routine writes its kill cell
+to `$c530`/`$c531`; `SpawnFloorFlameOrFX` reads that to drop the floor exit (plain
+stairs for bosses 1–4, the animated `ZanExitFlame_Drop` for Zan). The Dragon is
+the only two-part boss (`$53` head gates the exit, `$54` body does not).

@@ -6,15 +6,17 @@
 ;   $6fc4  velocity tables consumed by ent_vel_x_indexed
 ;   $7046  FX/animation library, part 1 (Popup_*, Glide_*)
 ;   $70ae  FX/animation library, part 2 (Burst*, Vanish_*, Fly_*, Shatter_*)
-;   $71d5  non-editor spawns: floor-5 boss-exit flame (BossFlame_*), Spawn3F_*
+;   $71d5  non-editor spawns: Zan's exit flame (ZanExitFlame_*), Spawn3F_*
 ;   $723a  the player avatar + the editor-placeable monsters (Tacopi..Flame),
 ;          each a state machine of Stand/Chase/Windup/Hurt/... scripts
-;   $7d25  Suezo_Stun, then the floor-gate enemies (FloorEnemy50..55)
+;   $7d25  Suezo_Stun, then the five tower bosses (Selketo/Ferious/Punisher/
+;          Dragon(+DragonBody)/Zan), engine types $50-$55
 ;
 ; Spawn entry points are selected by MonsterSpawnScriptTable (bank $01, $79c4)
 ; and the per-type table $796c; FX scripts by the bank-1 pointer tables at
-; $79a8.. . FloorEnemy<NN> / Spawn<NN> names encode the resolved engine type id
-; where the creature identity is unconfirmed. Byte-exact-verified by make verify.
+; $79a8.. ; the bosses by Data_01_4335 on the unnumbered boss floors. Spawn<NN>
+; names encode the engine type id where identity is unconfirmed. Byte-exact-
+; verified by make verify.
 
 INCLUDE "entity_script.inc"
 
@@ -431,23 +433,24 @@ Shatter_DriveFragments:
 
 SECTION "entity_scripts_71d5", ROMX[$71d5], BANK[$03]
 
-; Floor-5 boss-exit flame (engine type $3e, MonsterSpawnScriptTable slot 18).
-; Spawned by SpawnFloorFlameOrFX -> Func_03_5518 at the kill cell ($c530/$c531)
-; the floor boss's death routine writes. Drops straight down to Y=$80, then
-; stamps its tile into the room map and despawns -- i.e. the floor exit appearing
-; where the boss died.
-BossFlame_Drop:
+; Zan's exit flame (engine type $3e, MonsterSpawnScriptTable slot 18). Zan (boss
+; index 5) is the only boss whose exit gets this animated flame; SpawnFloorFlameOrFX
+; spawns it via Func_03_5518 when wActiveFloor == $05 (the boss-floor remap sets
+; wActiveFloor to the boss index 1-5, NOT the displayed floor -- this is the Zan
+; boss floor after floor 60, not floor 5). It drops to the boss kill cell
+; ($c530/$c531) and stamps the exit tile; the other four bosses just get stairs.
+ZanExitFlame_Drop:
     ent_vel_x_zero
     ent_gfx $29
     ent_set_timer $3c
     ent_wait_timer
 .l71db
     ent_call SlideDownToY80
-    ent_jr_b8_eq $01, BossFlame_Land
+    ent_jr_b8_eq $01, ZanExitFlame_Land
     ent_yield
     ent_jump .l71db
 
-BossFlame_Land:
+ZanExitFlame_Land:
     ent_call_bank0 $01, DrawTileAtSpawnCoord
     ent_despawn
 
@@ -2364,32 +2367,34 @@ Suezo_Stun:
     ent_loop_timer .l7d2c
     ent_jump $7d11
 
-; --- Floor-gate enemies, engine types $50-$55 ($7d36-$7fec). Six non-editor,
-;     per-floor "boss" entities resolved via the bank-1 spawn table $796c[$50..
-;     $55] (sprite/init group $30-$35, parallel to the friendly breeds at $40..
-;     $45). Each is a multi-phase state machine whose death routine writes its
-;     kill cell to $c530/$c531 -- the coords SpawnFloorFlameOrFX reads to drop
-;     the floor exit -- so defeating one gates floor progression. Per-creature
-;     identity is unconfirmed (no editor-legend entry / decoded placement), so
-;     names stay structural: FloorEnemy<type>_<phase>. See docs/entity_scripts.md. ---
-FloorEnemy50_Init:
+; --- The five tower bosses, engine types $50-$55 ($7d36-$7fec). Fought on the
+;     unnumbered boss floors entered after exiting floors 10/20/40/50/60:
+;       $50 Selketo (after 10)   $51 Ferious (after 20)   $52 Punisher (after 40)
+;       $53 Dragon + $54 DragonBody (after 50)   $55 Zan (after 60, final)
+;     The Dragon is a two-part boss: $53 is the head (its death writes the kill
+;     cell $c530/$c531 that drops the floor exit, gating progress), $54 the
+;     body/beam. Spawned by Data_01_4335 (bank $01), indexed by the boss-floor
+;     remap Func_01_48af that maps wActiveFloor 10/20/40/50/60 -> index 1-5. Own
+;     sprite/init group $30-$35, parallel to the friendly breeds at $40-$45.
+;     See docs/entity_scripts.md. ---
+Selketo_Init:
     ent_set_xflip $01
 
-FloorEnemy50_Idle:
+Selketo_Idle:
     ent_set_type $00
     ent_vel_x_zero
     ent_gfx $01
     ent_set_timer $3c
 .l7d3f
     ent_update_action
-    ent_jr_busy FloorEnemy50_Hurt
+    ent_jr_busy Selketo_Hurt
     ent_loop_timer .l7d3f
-    ent_jump FloorEnemy50_Attack
+    ent_jump Selketo_Attack
 
-FloorEnemy50_Dig:
+Selketo_Dig:
     ent_set_xflip $ff
 
-FloorEnemy50_DigLoop:
+Selketo_DigLoop:
     ent_set_facing $fe
     ent_set_type $01
     ent_vel_x_indexed $7028
@@ -2397,36 +2402,36 @@ FloorEnemy50_DigLoop:
     ent_set_timer $5a
 .l7d56
     ent_call $691b
-    ent_jr_b8_eq $ff, FloorEnemy50_Hurt
-    ent_jr_b8_eq $03, FloorEnemy50_Dig
+    ent_jr_b8_eq $ff, Selketo_Hurt
+    ent_jr_b8_eq $03, Selketo_Dig
     ent_loop_timer .l7d56
-    ent_jump FloorEnemy50_Idle
+    ent_jump Selketo_Idle
 
-FloorEnemy50_Attack:
+Selketo_Attack:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $03
     ent_set_timer $14
 .l7d6e
     ent_update_action
-    ent_jr_busy FloorEnemy50_Hurt
+    ent_jr_busy Selketo_Hurt
     ent_loop_timer .l7d6e
     ent_call $549a
     ent_set_timer $0a
 .l7d7a
     ent_update_action
-    ent_jr_busy FloorEnemy50_Hurt
+    ent_jr_busy Selketo_Hurt
     ent_loop_timer .l7d7a
     ent_call $54ae
     ent_set_timer $0a
 .l7d86
     ent_update_action
-    ent_jr_busy FloorEnemy50_Hurt
+    ent_jr_busy Selketo_Hurt
     ent_loop_timer .l7d86
     ent_call $54b8
-    ent_jump FloorEnemy50_DigLoop
+    ent_jump Selketo_DigLoop
 
-FloorEnemy50_Hurt:
+Selketo_Hurt:
     ent_call $4622
     ent_set_type $04
     ent_vel_x_zero
@@ -2447,27 +2452,27 @@ FloorEnemy50_Hurt:
     ent_call $5539
     ent_despawn
 
-FloorEnemy51_Init:
+Ferious_Init:
     ent_call $6960
-    ent_jump FloorEnemy51_SeekLoop
+    ent_jump Ferious_SeekLoop
 
-FloorEnemy51_Seek:
+Ferious_Seek:
     ent_set_xflip $ff
 
-FloorEnemy51_SeekLoop:
+Ferious_SeekLoop:
     ent_set_facing $fe
     ent_set_type $01
     ent_vel_x_indexed $7032
     ent_gfx $02
 .l7dc4
     ent_call $69a4
-    ent_jr_b8_eq $ff, FloorEnemy51_AttackB
-    ent_jr_b8_eq $01, FloorEnemy51_Seek
-    ent_jr_b8_eq $02, FloorEnemy51_AttackA
+    ent_jr_b8_eq $ff, Ferious_AttackB
+    ent_jr_b8_eq $01, Ferious_Seek
+    ent_jr_b8_eq $02, Ferious_AttackA
     ent_yield
     ent_jump .l7dc4
 
-FloorEnemy51_AttackA:
+Ferious_AttackA:
     ent_set_xflip $ff
     ent_set_facing $fe
     ent_set_type $01
@@ -2485,9 +2490,9 @@ FloorEnemy51_AttackA:
     ent_gfx $04
     ent_set_timer $28
     ent_wait_timer
-    ent_jump FloorEnemy51_SeekLoop
+    ent_jump Ferious_SeekLoop
 
-FloorEnemy51_AttackB:
+Ferious_AttackB:
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $05
@@ -2503,9 +2508,9 @@ FloorEnemy51_AttackB:
     ent_gfx $06
     ent_set_timer $14
     ent_wait_timer
-    ent_jump FloorEnemy51_Seek
+    ent_jump Ferious_Seek
 
-FloorEnemy52_Die:
+Punisher_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero
@@ -2515,7 +2520,7 @@ FloorEnemy52_Die:
     ent_call $5539
     ent_despawn
 
-FloorEnemy52_Main:
+Punisher_Main:
     ent_set_xflip $ff
     ent_set_type $01
     ent_vel_x_zero
@@ -2523,7 +2528,7 @@ FloorEnemy52_Main:
     ent_set_timer $b4
 .l7e2f
     ent_call $6a7e
-    ent_jr_b8_eq $ff, FloorEnemy52_Hurt
+    ent_jr_b8_eq $ff, Punisher_Hurt
     ent_loop_timer .l7e2f
     ent_set_type $01
     ent_vel_x_zero
@@ -2537,9 +2542,9 @@ FloorEnemy52_Main:
     ent_set_timer $0a
     ent_wait_timer
     ent_call $54f4
-    ent_jump FloorEnemy52_Main
+    ent_jump Punisher_Main
 
-FloorEnemy52_Hurt:
+Punisher_Hurt:
     ent_call $4622
     ent_set_type $04
     ent_vel_x_zero
@@ -2560,19 +2565,19 @@ FloorEnemy52_Hurt:
     ent_call $5539
     ent_despawn
 
-FloorEnemy53_Main:
+Dragon_Main:
     ent_call $6ab4
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $01
 .l7e7b
     ent_call $6ab9
-    ent_jr_b8_eq $ff, FloorEnemy53_Die
-    ent_jr_b8_eq $01, FloorEnemy53_Attack
+    ent_jr_b8_eq $ff, Dragon_Die
+    ent_jr_b8_eq $01, Dragon_Attack
     ent_yield
     ent_jump .l7e7b
 
-FloorEnemy53_Attack:
+Dragon_Attack:
     ent_set_type $02
     ent_vel_x_zero
     ent_gfx $06
@@ -2583,21 +2588,21 @@ FloorEnemy53_Attack:
     ent_call $6a9b
     ent_set_timer $14
     ent_wait_timer
-    ent_jump FloorEnemy53_Main
+    ent_jump Dragon_Main
 
-FloorEnemy54_Main:
+DragonBody_Main:
     ent_call $6ad3
     ent_set_type $11
     ent_vel_x_zero
     ent_gfx $02
 .l7ea6
     ent_call $6adc
-    ent_jr_b8_eq $ff, FloorEnemy54_Die
-    ent_jr_b8_eq $01, FloorEnemy54_BeamSpread
+    ent_jr_b8_eq $ff, DragonBody_Die
+    ent_jr_b8_eq $01, DragonBody_BeamSpread
     ent_yield
     ent_jump .l7ea6
 
-FloorEnemy54_BeamSpread:
+DragonBody_BeamSpread:
     ent_set_type $12
     ent_gfx $07
     ent_set_facing $02
@@ -2626,9 +2631,9 @@ FloorEnemy54_BeamSpread:
     ent_set_timer $19
     ent_wait_timer
     ent_call $6b45
-    ent_jump FloorEnemy54_Main
+    ent_jump DragonBody_Main
 
-FloorEnemy53_Die:
+Dragon_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero
@@ -2640,7 +2645,7 @@ FloorEnemy53_Die:
     ent_call $556e
     ent_despawn
 
-FloorEnemy54_Die:
+DragonBody_Die:
     ent_set_type $ff
     ent_vel_x_zero
     ent_gfx $04
@@ -2649,18 +2654,18 @@ FloorEnemy54_Die:
     ent_gfx $05
     ent_despawn
 
-FloorEnemy55_Init:
+Zan_Init:
     ent_call $6b57
     ent_set_type $01
     ent_vel_x_zero
     ent_gfx $00
 .l7f17
     ent_call $6b93
-    ent_jr_b8_eq $01, FloorEnemy55_Decide
+    ent_jr_b8_eq $01, Zan_Decide
     ent_yield
     ent_jump .l7f17
 
-FloorEnemy55_Decide:
+Zan_Decide:
     ent_call $6ba6
     ent_set_type $02
     ent_vel_x_zero
@@ -2669,13 +2674,13 @@ FloorEnemy55_Decide:
     ent_wait_timer
 .l7f2d
     ent_call $6bb4
-    ent_jr_b8_eq $ff, FloorEnemy55_Special
-    ent_jr_b8_eq $01, FloorEnemy55_ChargeA
-    ent_jr_b8_eq $02, FloorEnemy55_ChargeB
+    ent_jr_b8_eq $ff, Zan_Special
+    ent_jr_b8_eq $01, Zan_ChargeA
+    ent_jr_b8_eq $02, Zan_ChargeB
     ent_yield
     ent_jump .l7f2d
 
-FloorEnemy55_ChargeA:
+Zan_ChargeA:
     ent_set_type $03
     ent_vel_x_zero
     ent_gfx $02
@@ -2694,11 +2699,11 @@ FloorEnemy55_ChargeA:
     ent_vel_x_indexed $703c
 .l7f60
     ent_call $6c96
-    ent_jr_b8_eq $01, FloorEnemy55_ChargeAEnd
+    ent_jr_b8_eq $01, Zan_ChargeAEnd
     ent_yield
     ent_jump .l7f60
 
-FloorEnemy55_ChargeAEnd:
+Zan_ChargeAEnd:
     ent_vel_x_zero
     ent_gfx $05
     ent_set_timer $64
@@ -2710,9 +2715,9 @@ FloorEnemy55_ChargeAEnd:
     ent_gfx $02
     ent_set_timer $10
     ent_wait_timer
-    ent_jump FloorEnemy55_Decide
+    ent_jump Zan_Decide
 
-FloorEnemy55_ChargeB:
+Zan_ChargeB:
     ent_set_type $04
     ent_vel_x_zero
     ent_gfx $04
@@ -2722,11 +2727,11 @@ FloorEnemy55_ChargeB:
     ent_call $6ce2
 .l7f8f
     ent_call $6d13
-    ent_jr_b8_eq $01, FloorEnemy55_SpawnChild
+    ent_jr_b8_eq $01, Zan_SpawnChild
     ent_yield
     ent_jump .l7f8f
 
-FloorEnemy55_SpawnChild:
+Zan_SpawnChild:
     ent_vel_x_zero
     ent_gfx $06
     ent_set_timer $1e
@@ -2741,9 +2746,9 @@ FloorEnemy55_SpawnChild:
     ent_gfx $02
     ent_set_timer $10
     ent_wait_timer
-    ent_jump FloorEnemy55_Decide
+    ent_jump Zan_Decide
 
-FloorEnemy55_Special:
+Zan_Special:
     ent_set_type $05
     ent_vel_x_zero
     ent_gfx $07
@@ -2755,18 +2760,18 @@ FloorEnemy55_Special:
     ent_call $6e0a
 .l7fc6
     ent_call $6e98
-    ent_jr_b8_eq $ff, FloorEnemy55_Die
-    ent_jr_b8_eq $01, FloorEnemy55_SpecialEnd
+    ent_jr_b8_eq $ff, Zan_Die
+    ent_jr_b8_eq $01, Zan_SpecialEnd
     ent_yield
     ent_jump .l7fc6
 
-FloorEnemy55_SpecialEnd:
+Zan_SpecialEnd:
     ent_gfx $08
     ent_set_timer $0a
     ent_wait_timer
-    ent_jump FloorEnemy55_Decide
+    ent_jump Zan_Decide
 
-FloorEnemy55_Die:
+Zan_Die:
     ent_call $4622
     ent_set_type $ff
     ent_vel_x_zero
