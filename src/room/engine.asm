@@ -931,21 +931,21 @@ Func_03_45a0:
 	ld a, h
 	adc a, $00
 	ld h, a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	ld [hl+], a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	ld [hl+], a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	ld [hl+], a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	ld [hl+], a
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	ld [hl+], a
-	ldh a, [$ffdf]
+	ldh a, [hHitbox2Y]
 	ld [hl+], a
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	ld [hl+], a
-	ldh a, [$ffe1]
+	ldh a, [hHitbox2H]
 	ld [hl], a
 	pop hl
 	ld a, $01
@@ -1768,7 +1768,7 @@ SpawnPushSprite7:
 	ret
 CheckCellHitsEntity:
 	push bc
-	ld hl, $ffda
+	ld hl, hHitbox1X
 	ld a, c
 	swap a
 	and $f0
@@ -2206,18 +2206,18 @@ Func_03_4e85:
 	push bc
 	ld c, $de
 	call Func_00_104f
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	or a
 	jr z, Func_03_4ee8
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, c
-	ldh [$ffde], a
-	ldh a, [$ffdf]
+	ldh [hHitbox2X], a
+	ldh a, [hHitbox2Y]
 	add a, b
-	ldh [$ffdf], a
+	ldh [hHitbox2Y], a
 	ld a, [$cf71]
 	ld b, a
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, $08
 	swap a
 	and $0f
@@ -2225,9 +2225,9 @@ Func_03_4e85:
 	ld a, b
 	cp c
 	jr c, Func_03_4ee8
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	ld c, a
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	add a, c
 	dec a
 	add a, $08
@@ -2240,7 +2240,7 @@ Func_03_4e85:
 	jr nc, Func_03_4ee8
 	ld a, [$cf72]
 	ld b, a
-	ldh a, [$ffdf]
+	ldh a, [hHitbox2Y]
 	add a, $08
 	swap a
 	and $0f
@@ -2248,9 +2248,9 @@ Func_03_4e85:
 	ld a, b
 	cp c
 	jr c, Func_03_4ee8
-	ldh a, [$ffdf]
+	ldh a, [hHitbox2Y]
 	ld c, a
-	ldh a, [$ffe1]
+	ldh a, [hHitbox2H]
 	add a, c
 	dec a
 	add a, $08

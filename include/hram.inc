@@ -61,7 +61,21 @@ hEntityProbeX::      ds 1  ; $ffd2  collision-probe box: X offset ahead of entit
 hEntityProbeY::      ds 1  ; $ffd3  collision-probe box: Y offset
 hEntityProbeW::      ds 1  ; $ffd4  collision-probe box: X extent
 hEntityProbeH::      ds 1  ; $ffd5  collision-probe box: Y extent
-                     ds 15 ; $ffd6-$ffe4  (entity-vs-entity hitbox overlap scratch + class; TBD)
+                     ds 4  ; $ffd6-$ffd9  (entity record +$26..+$29; purpose TBD)
+; Entity-vs-entity AABB overlap scratch: two boxes built from entity positions
+; (each {X, Y, W, H}), tested by Func_00_0fb0, which writes the signed per-axis
+; penetration to hOverlapX/Y and returns a=1 when the boxes overlap.
+hHitbox1X::          ds 1  ; $ffda  box 1 X (left edge; e.g. wPlayerX + box offset)
+hHitbox1Y::          ds 1  ; $ffdb  box 1 Y (top edge)
+hHitbox1W::          ds 1  ; $ffdc  box 1 width
+hHitbox1H::          ds 1  ; $ffdd  box 1 height
+hHitbox2X::          ds 1  ; $ffde  box 2 X
+hHitbox2Y::          ds 1  ; $ffdf  box 2 Y
+hHitbox2W::          ds 1  ; $ffe0  box 2 width
+hHitbox2H::          ds 1  ; $ffe1  box 2 height
+hOverlapX::          ds 1  ; $ffe2  signed X penetration depth (Func_00_0fb0 output)
+hOverlapY::          ds 1  ; $ffe3  signed Y penetration depth
+                     ds 1  ; $ffe4  (current-entity classification byte; TBD)
 hEntityPtrLo::       ds 1  ; $ffe5  current-entity record WRAM pointer, low byte
 hEntityPtrHi::       ds 1  ; $ffe6  current-entity record WRAM pointer, high byte
 

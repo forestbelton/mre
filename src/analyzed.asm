@@ -2381,52 +2381,52 @@ SECTION "analyzed_000fb0", ROM0[$0fb0]
 
 Func_00_0fb0:
 	push bc
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	ld c, a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	sub c
 	jr c, Func_00_0fce
 	ld c, a
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	ld b, a
 	ld a, c
 	sub b
 	jr nc, Func_00_0fc7
 	cpl
 	inc a
-	ldh [$ffe2], a
+	ldh [hOverlapX], a
 	jr Func_00_0fda
 Func_00_0fc7:
 	pop bc
 	xor a
-	ldh [$ffe2], a
-	ldh [$ffe3], a
+	ldh [hOverlapX], a
+	ldh [hOverlapY], a
 	ret
 Func_00_0fce:
 	cpl
 	inc a
 	ld c, a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	ld b, a
 	ld a, c
 	sub b
 	jr nc, Func_00_0fc7
-	ldh [$ffe2], a
+	ldh [hOverlapX], a
 Func_00_0fda:
-	ldh a, [$ffdf]
+	ldh a, [hHitbox2Y]
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	sub c
 	jr c, Func_00_0ff2
 	ld c, a
-	ldh a, [$ffe1]
+	ldh a, [hHitbox2H]
 	ld b, a
 	ld a, c
 	sub b
 	jr nc, Func_00_0fc7
 	cpl
 	inc a
-	ldh [$ffe3], a
+	ldh [hOverlapY], a
 	pop bc
 	ld a, $01
 	ret
@@ -2434,12 +2434,12 @@ Func_00_0ff2:
 	cpl
 	inc a
 	ld c, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	ld b, a
 	ld a, c
 	sub b
 	jr nc, Func_00_0fc7
-	ldh [$ffe3], a
+	ldh [hOverlapY], a
 	pop bc
 	ld a, $01
 	ret
@@ -12918,7 +12918,7 @@ Func_01_6504:
 	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_650d:
-	ld hl, $ffda
+	ld hl, hHitbox1X
 	ldh a, [hEntityX]
 	ld c, a
 	ldh a, [$ffd6]
@@ -12955,15 +12955,15 @@ Func_01_6529:
 Func_01_6544:
 	ld c, $de
 	call Func_00_106f
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	or a
 	jr z, Func_01_6567
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, c
-	ldh [$ffde], a
-	ldh a, [$ffdf]
+	ldh [hHitbox2X], a
+	ldh a, [hHitbox2Y]
 	add a, b
-	ldh [$ffdf], a
+	ldh [hHitbox2Y], a
 	call Func_00_0fb0
 	or a
 	jr z, Func_01_6567
@@ -13197,16 +13197,16 @@ Func_01_675c:
 	ld b, a
 	ld a, [hl+]
 	add a, b
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	ld a, [wPlayerY]
 	ld b, a
 	ld a, [hl+]
 	add a, b
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	ld a, [hl+]
-	ldh [$ffdc], a
+	ldh [hHitbox1W], a
 	ld a, [hl]
-	ldh [$ffdd], a
+	ldh [hHitbox1H], a
 	call Func_01_6adb
 	ld hl, $c823
 	ld c, $1b
@@ -13228,15 +13228,15 @@ Func_01_678e:
 	jr z, Func_01_67b5
 	ld c, $de
 	call Func_00_106f
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	or a
 	jr z, Func_01_67b5
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, c
-	ldh [$ffde], a
-	ldh a, [$ffdf]
+	ldh [hHitbox2X], a
+	ldh a, [hHitbox2Y]
 	add a, b
-	ldh [$ffdf], a
+	ldh [hHitbox2Y], a
 	call Func_00_0fb0
 	or a
 	jr z, Func_01_67b5
@@ -13453,21 +13453,21 @@ Func_01_68f5:
 	add hl, de
 	ld a, [hl+]
 	add a, c
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	ld a, [hl+]
 	add a, b
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	ld a, [hl+]
-	ldh [$ffdc], a
+	ldh [hHitbox1W], a
 	ld a, [hl]
-	ldh [$ffdd], a
+	ldh [hHitbox1H], a
 	pop hl
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, $08
 	swap a
 	and $0f
@@ -13489,16 +13489,16 @@ Func_01_6944:
 	ld a, $01
 	ld [$cf65], a
 Func_01_6949:
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	ld c, a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	add a, c
 	dec a
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, $08
 	swap a
 	and $0f
@@ -13520,14 +13520,14 @@ Func_01_697a:
 	ld a, $01
 	ld [$cf65], a
 Func_01_697f:
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	ld b, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	add a, b
 	dec a
 	add a, $08
@@ -13551,18 +13551,18 @@ Func_01_69b0:
 	ld a, $01
 	ld [$cf65], a
 Func_01_69b5:
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	ld c, a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	add a, c
 	dec a
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	ld b, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	add a, b
 	dec a
 	add a, $08
@@ -13674,13 +13674,13 @@ Func_01_6a6a:
 	push hl
 	ld c, $da
 	call Func_00_106f
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, c
-	ldh [$ffda], a
-	ldh a, [$ffdb]
+	ldh [hHitbox1X], a
+	ldh a, [hHitbox1Y]
 	add a, b
-	ldh [$ffdb], a
-	ldh a, [$ffdc]
+	ldh [hHitbox1Y], a
+	ldh a, [hHitbox1W]
 	or a
 	jr z, Func_01_6aaa
 	ld hl, $c823
@@ -13693,12 +13693,12 @@ Func_01_6a85:
 	push hl
 	ld c, $de
 	call Func_00_106f
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, c
-	ldh [$ffde], a
-	ldh a, [$ffdf]
+	ldh [hHitbox2X], a
+	ldh a, [hHitbox2Y]
 	add a, b
-	ldh [$ffdf], a
+	ldh [hHitbox2Y], a
 	call Func_00_0fb0
 	pop hl
 	pop bc
@@ -13750,9 +13750,9 @@ Func_01_6adb:
 	ld a, [wActiveFloor]
 	cp $04
 	ret nz
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	ld c, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	ld b, a
 	push bc
 	ld a, c
@@ -13770,7 +13770,7 @@ Func_01_6adb:
 	and $f0
 	cp $60
 	jr z, Func_01_6b6a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	add a, c
 	dec a
 	ld c, a
@@ -13790,9 +13790,9 @@ Func_01_6adb:
 	and $f0
 	cp $60
 	jr z, Func_01_6b6a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	ld c, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	add a, b
 	dec a
 	ld b, a
@@ -13812,7 +13812,7 @@ Func_01_6adb:
 	and $f0
 	cp $60
 	jr z, Func_01_6b6a
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	add a, c
 	dec a
 	ld c, a
@@ -13920,27 +13920,27 @@ Func_01_6bdc:
 	ld de, $0022
 	add hl, de
 	ld a, [hl+]
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	ld a, [hl+]
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	ld a, [hl+]
-	ldh [$ffdc], a
+	ldh [hHitbox1W], a
 	ld a, [hl]
-	ldh [$ffdd], a
+	ldh [hHitbox1H], a
 	pop hl
 	push hl
 	ld de, $000c
 	add hl, de
 	ld a, [hl+]
 	ld d, a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, d
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	inc hl
 	ld d, [hl]
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, d
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	pop hl
 	ret
 Func_01_6c03:
@@ -13948,27 +13948,27 @@ Func_01_6c03:
 	ld de, $0026
 	add hl, de
 	ld a, [hl+]
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	ld a, [hl+]
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	ld a, [hl+]
-	ldh [$ffdc], a
+	ldh [hHitbox1W], a
 	ld a, [hl]
-	ldh [$ffdd], a
+	ldh [hHitbox1H], a
 	pop hl
 	push hl
 	ld de, $000c
 	add hl, de
 	ld a, [hl+]
 	ld d, a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, d
-	ldh [$ffda], a
+	ldh [hHitbox1X], a
 	inc hl
 	ld d, [hl]
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, d
-	ldh [$ffdb], a
+	ldh [hHitbox1Y], a
 	pop hl
 	ret
 Func_01_6c2a:
@@ -13993,18 +13993,18 @@ Data_01_6c3d:
 SECTION "analyzed_006c41", ROMX[$6c41], BANK[$01]
 
 Func_01_6c41:
-	ldh a, [$ffdc]
+	ldh a, [hHitbox1W]
 	ld c, a
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	add a, c
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	sra a
 	ld b, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, b
 	add a, $08
 	swap a
@@ -14015,16 +14015,16 @@ Func_01_6c41:
 	pop bc
 	ret
 Func_01_6c68:
-	ldh a, [$ffda]
+	ldh a, [hHitbox1X]
 	dec a
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffdd]
+	ldh a, [hHitbox1H]
 	sra a
 	ld b, a
-	ldh a, [$ffdb]
+	ldh a, [hHitbox1Y]
 	add a, b
 	add a, $08
 	swap a
@@ -14069,15 +14069,15 @@ Func_01_6ca6:
 Func_01_6cb9:
 	ld c, $de
 	call Func_00_106f
-	ldh a, [$ffe0]
+	ldh a, [hHitbox2W]
 	or a
 	jr z, Func_01_6cd3
-	ldh a, [$ffde]
+	ldh a, [hHitbox2X]
 	add a, c
-	ldh [$ffde], a
-	ldh a, [$ffdf]
+	ldh [hHitbox2X], a
+	ldh a, [hHitbox2Y]
 	add a, b
-	ldh [$ffdf], a
+	ldh [hHitbox2Y], a
 	call Func_00_0fb0
 	or a
 	jr nz, Func_01_6ce0
