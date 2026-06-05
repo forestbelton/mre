@@ -208,6 +208,23 @@ wUiTimer::          ds 1    ; $D0EA: frames elapsed in the active loop (reset at
                             ;   +1 per frame; masked e.g. `rrca/and 3` for blink/anim timing)
 
 
+SECTION "wram_screen_state", WRAMX[$D0F3], BANK[1]
+; Working state for the active full-screen presentation -- the town map and the
+; room-start "Floor N" screen (set up from banks $00/$05/$30). These screens
+; never run at once, so they share this scratchpad: a small state machine that
+; animates a character/sign between four poses and advances on a timer or input.
+; (Best-guess role names; the input byte in particular shifts meaning per screen.)
+wScreenInput::      ds 1    ; $D0F3: primary input/result byte. Room-start: A/B confirm
+                            ;   latch (0 -> 1 on press; flips the pose anim to retreat).
+                            ;   Town: the chosen destination, copied out to $c2a9.
+wScreenPhase::      ds 1    ; $D0F4: screen state-machine phase (jump-table index, e.g. $30:$44a4)
+wScreenTimer::      ds 1    ; $D0F5: phase auto-advance timer (counts up, capped ~$78)
+wScreenFrame::      ds 1    ; $D0F6: free-running frame counter; low bit gates the pose stepping
+wScreenAnim::       ds 1    ; $D0F7: primary pose/animation frame (0-3), init from $c55d; stepped
+                            ;   toward 3 (or back to 0) per wScreenInput, gated by wScreenFrame&1
+wScreenAnim2::      ds 1    ; $D0F8: secondary element's pose/animation frame (0-3), moved with wScreenAnim
+
+
 SECTION "wram_fade_state", WRAMX[$D0FE], BANK[1]
 wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade)
 

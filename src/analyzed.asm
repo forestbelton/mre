@@ -7699,8 +7699,8 @@ Func_00_34bb:
 Func_00_34bc:
 	ld [$d0fb], a
 	ld a, [$c2a9]
-	ld [$d0f3], a
-	ld [$d0f4], a
+	ld [wScreenInput], a
+	ld [wScreenPhase], a
 	FAR_CALL $00, Func_00_1219
 	call ResetFloorScroll
 	push af
@@ -9926,11 +9926,11 @@ Func_01_4b96:
 	jr z, Func_01_4ba8
 Func_01_4ba3:
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ret
 Func_01_4ba8:
 	ld a, $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ret
 Func_01_4bae:
 	ld a, [$c2db]
@@ -22086,7 +22086,7 @@ Func_05_4835:
 	ret
 Func_05_4843:
 	FAR_CALL $12, Func_12_4bb3
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	or a
 	jr z, Func_05_4865
 	FAR_CALL $12, Func_12_4bef
@@ -43053,7 +43053,7 @@ Func_20_796d:
 	call Func_20_7980
 	ret
 Func_20_7980:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	add a, a
 	rst $00
 	rst $18
@@ -46969,9 +46969,9 @@ SECTION "analyzed_0c001e", ROMX[$401e], BANK[$30]
 DrawTownScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0f6], a
-	ld [$d0f7], a
-	ld [$d0f8], a
+	ld [wScreenFrame], a
+	ld [wScreenAnim], a
+	ld [wScreenAnim2], a
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -47065,7 +47065,7 @@ Func_30_40d8:
 Func_30_40e4:
 	bit 0, b
 	jr z, Func_30_4104
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jp z, Func_30_40f7
 	ld a, [wFadeLevel]
@@ -47079,7 +47079,7 @@ Func_30_40f7:
 	call Func_30_42c2
 	jp Func_30_4152
 Func_30_4104:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jp z, Func_30_411b
 	ld a, [wFadeLevel]
@@ -47091,7 +47091,7 @@ Func_30_4104:
 Func_30_411b:
 	ld hl, $4129
 	push hl
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	add a, a
 	ld hl, $400a
 	rst $00
@@ -47100,9 +47100,9 @@ Func_30_411b:
 Func_30_4129:
 	call Func_30_42ef
 	call Func_30_4336
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	inc a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $20
 	ld [wDrawBank], a
 	ld hl, $7356
@@ -47118,7 +47118,7 @@ Func_30_4152:
 	call Func_00_0400
 	call Func_00_0786
 	call Func_00_07a7
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	ld [$c2a9], a
 	add a, $05
 	ld [$c2a7], a
@@ -47248,7 +47248,7 @@ Func_30_41a9:
 	add a, a
 	rst $00
 	rst $18
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	add a, a
 	add a, a
 	add a, d
@@ -47264,7 +47264,7 @@ Func_30_41a9:
 	jr Func_30_41d8
 Func_30_41c9:
 	ld a, c
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	push af
 	ld a, $04
 	call PlaySound
@@ -47405,35 +47405,35 @@ Func_30_42c9:
 	call Func_00_35d4
 	ret
 Func_30_42d5:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_42e9
 	ld a, $03
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 	FAR_CALL $20, Func_20_796d
 	ret
 Func_30_42e9:
 	ld a, $00
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 	ret
 Func_30_42ef:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_430c
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $03
 	jr nc, Func_30_4325
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and $03
 	jr nz, Func_30_4325
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	inc a
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 	jr Func_30_4325
 Func_30_430c:
 	xor a
-	ld [$d0f8], a
-	ld a, [$d0f8]
+	ld [wScreenAnim2], a
+	ld a, [wScreenAnim2]
 	and a
 	ret z
 
@@ -47456,50 +47456,50 @@ Data_30_432e:
 SECTION "analyzed_0c0336", ROMX[$4336], BANK[$30]
 
 Func_30_4336:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_4355
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $03
 	ret nc
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and $01
 	jr nz, Func_30_436b
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	call Func_30_4387
 	jr Func_30_436b
 Func_30_4355:
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	and a
 	ret z
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and $01
 	jr nz, Func_30_436b
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	dec a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	call Func_30_4387
 Func_30_436b:
 	ret
 Func_30_436c:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_437c
 	ld a, $03
-	ld [$d0f7], a
-	ld [$d0f8], a
+	ld [wScreenAnim], a
+	ld [wScreenAnim2], a
 	jr Func_30_4383
 Func_30_437c:
 	xor a
-	ld [$d0f7], a
-	ld [$d0f8], a
+	ld [wScreenAnim], a
+	ld [wScreenAnim2], a
 Func_30_4383:
 	call Func_30_4387
 	ret
 Func_30_4387:
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	add a, a
 	ld hl, $432e
 	rst $00
@@ -47518,7 +47518,7 @@ Func_30_4387:
 DrawTowerEntranceScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -47563,7 +47563,7 @@ Func_30_4403:
 	ld a, [$c55d]
 	bit 0, b
 	jr z, Func_30_442e
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jp z, Func_30_4403
 	push af
@@ -47574,9 +47574,9 @@ Func_30_4403:
 	xor a
 	ld [wFadeLevel], a
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 Func_30_442e:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr nz, Func_30_443d
 	ld a, $03
@@ -47604,20 +47604,20 @@ Func_30_4461:
 	and $1f
 	cp $1f
 	jr nz, Func_30_4475
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $02
 	jr nc, Func_30_4475
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 Func_30_4475:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	ld hl, $75cd
 	ld b, $22
 	ld de, $9945
 	call Func_00_35d4
 	ret
 Func_30_4484:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 Func_30_4487:
 	ld b, $22
 	ld hl, $75d3
@@ -47646,11 +47646,11 @@ DrawRoomStartScreen:
 	xor a
 	ld [wFadeLevel], a
 	xor a
-	ld [$d0f3], a
-	ld [$d0f4], a
-	ld [$d0f5], a
+	ld [wScreenInput], a
+	ld [wScreenPhase], a
+	ld [wScreenTimer], a
 	ld a, [$c55d]
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -47723,11 +47723,11 @@ Func_30_4540:
 	bit 1, b
 	jr z, Func_30_456a
 Func_30_4554:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jp z, Func_30_456a
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	push af
 	ld a, $0d
 	call PlaySound
@@ -47736,13 +47736,13 @@ Func_30_4554:
 Func_30_456a:
 	ld hl, $4578
 	push hl
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	add a, a
 	ld hl, $44a4
 	rst $00
 	rst $18
 	jp hl
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $03
 	jr nc, Func_30_45e2
 	ld a, [wFadeLevel]
@@ -47756,7 +47756,7 @@ Func_30_456a:
 	ld b, $23
 	call Func_00_35d4
 	ld b, $04
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr z, Func_30_45a1
 	ld b, $08
@@ -47793,7 +47793,7 @@ Func_30_45a1:
 Func_30_45e2:
 	call Func_00_0786
 	ret
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $78
 	jr nc, Func_30_461f
 	ld a, [wRoomType]
@@ -47812,30 +47812,30 @@ Func_30_4603:
 	ld b, $48
 	ld c, $38
 	call DrawMetasprite
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr nz, Func_30_461f
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	inc a
 	jr Func_30_4629
 Func_30_461f:
 	xor a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	ld a, $01
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	xor a
 Func_30_4629:
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ret
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $f0
 	jr c, Func_30_463d
 	xor a
 	ld [wFadeLevel], a
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 Func_30_463d:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_465a
 	ld hl, $73a0
@@ -47860,16 +47860,16 @@ Func_30_4666:
 Func_30_466f:
 	call Func_30_46a4
 Func_30_4672:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	inc a
-	ld [$d0f5], a
-	ld a, [$d0f3]
+	ld [wScreenTimer], a
+	ld a, [wScreenInput]
 	cp $00
 	jr z, Func_30_468c
 	ld a, $02
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	xor a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	call Func_00_07c5
 Func_30_468c:
 	ret
@@ -47882,12 +47882,12 @@ Func_30_468c:
 	jr Func_30_46a3
 Func_30_469d:
 	ld a, $03
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	xor a
 Func_30_46a3:
 	ret
 Func_30_46a4:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_46db
 	ld hl, $73d8
@@ -47924,7 +47924,7 @@ SECTION "analyzed_0c06f0", ROMX[$46f0], BANK[$30]
 Func_30_46f0:
 	ret
 Func_30_46f1:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_4703
 	ld hl, $759c
@@ -47944,14 +47944,14 @@ SECTION "analyzed_0c0711", ROMX[$4711], BANK[$30]
 Func_30_4711:
 	ret
 Func_30_4712:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_475d
 	ld hl, $74ba
 	ld de, $9845
 	ld b, $23
 	call CopyBgMapBanked
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	add a, a
 	ld hl, $12db
 	rst $00
@@ -47961,7 +47961,7 @@ Func_30_4712:
 	ld bc, $0507
 	ld a, $08
 	call Func_00_1fa4
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	ld hl, $c7f6
 	rst $00
 	ld a, [hl]
@@ -48136,8 +48136,8 @@ DrawNextRoomScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0ff], a
-	ld [$d0f3], a
-	ld [$d0f8], a
+	ld [wScreenInput], a
+	ld [wScreenAnim2], a
 	ld a, $40
 	ldh [rSCY], a
 	ldh a, [rLCDC]
@@ -48241,7 +48241,7 @@ Func_30_4957:
 	ld a, [$c55d]
 	bit 0, b
 	jr z, Func_30_4982
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jp z, Func_30_4982
 	push af
@@ -48253,10 +48253,10 @@ Func_30_4973:
 	ld [wFadeLevel], a
 	ld [$d0ff], a
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	call Func_00_07c5
 Func_30_4982:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jp nz, Func_30_4997
 	ld a, [wFadeLevel]
@@ -48288,7 +48288,7 @@ Func_30_49bc:
 	call Func_30_5023
 Func_30_49c6:
 	call HideUnusedOamSprites
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $c3
 	jr c, Func_30_49d1
 	add a, a
@@ -48308,7 +48308,7 @@ Func_30_49e5:
 	res 5, a
 	ldh [rLCDC], a
 	call Func_00_0786
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	ret
 
 SECTION "analyzed_0c09f4", ROMX[$49f4], BANK[$30]
@@ -48335,7 +48335,7 @@ Func_30_49fd:
 	dec b
 Func_30_4a1a:
 	ld a, b
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld b, $24
 	ld hl, $65bf
 	ld de, $9900
@@ -48460,7 +48460,7 @@ Func_30_4de3:
 	cp $3c
 	jp c, Func_30_4e46
 Func_30_4df3:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $d2
 	jp nc, Func_30_4e46
 	ld a, $24
@@ -48479,7 +48479,7 @@ Func_30_4df3:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4e2e
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $5a
 	jr nc, Func_30_4e29
 	ld a, $08
@@ -48488,7 +48488,7 @@ Func_30_4e29:
 	ld de, $4a8d
 	jr Func_30_4e3b
 Func_30_4e2e:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $7e
 	jr nc, Func_30_4e38
 	ld a, $08
@@ -48498,14 +48498,14 @@ Func_30_4e38:
 Func_30_4e3b:
 	rst $18
 	call Func_30_4e47
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	inc a
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 Func_30_4e46:
 	ret
 Func_30_4e47:
 	push hl
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	ld b, $00
 	sla a
 	rl b
@@ -48640,10 +48640,10 @@ Func_30_4f10:
 	cp $01
 	jr z, Func_30_4f87
 	xor a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	ld a, [$cfed]
 	ld b, a
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	ld c, a
 Func_30_4f23:
 	ld a, c
@@ -48669,25 +48669,25 @@ Func_30_4f38:
 	ld a, c
 	cp $00
 	jr nz, Func_30_4f4e
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	set 0, a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jp Func_30_4f82
 Func_30_4f4e:
 	ld a, c
 	cp $05
 	jr nz, Func_30_4f5e
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	set 1, a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jp Func_30_4f82
 Func_30_4f5e:
 	ld a, c
 	cp $0a
 	jr nz, Func_30_4f6e
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	set 2, a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jp Func_30_4f82
 Func_30_4f6e:
 	add a, a
@@ -48712,13 +48712,13 @@ Func_30_4f88:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4fe3
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $00
 	jp z, Func_30_5022
 	ld a, [wActiveFloor]
 	cp $0b
 	jr c, Func_30_4fb4
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	bit 0, a
 	jr z, Func_30_4fb4
 	ld a, $24
@@ -48728,7 +48728,7 @@ Func_30_4f88:
 	ld c, $10
 	call DrawMetasprite
 Func_30_4fb4:
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	bit 1, a
 	jr z, Func_30_4fca
 	ld a, $24
@@ -48738,7 +48738,7 @@ Func_30_4fb4:
 	ld c, $10
 	call DrawMetasprite
 Func_30_4fca:
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	bit 2, a
 	jr z, Func_30_5022
 	ld a, $24
@@ -48807,9 +48807,9 @@ SECTION "analyzed_0c103b", ROMX[$503b], BANK[$30]
 DrawRoomClearScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0f3], a
-	ld [$d0f4], a
-	ld [$d0f5], a
+	ld [wScreenInput], a
+	ld [wScreenPhase], a
+	ld [wScreenTimer], a
 	ld a, [wFloorTimer]
 	ld [$d101], a
 	ld a, [wFloorTimer+1]
@@ -48871,21 +48871,21 @@ Func_30_50d7:
 	ld a, [$c55d]
 	ld hl, $50f1
 	push hl
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	add a, a
 	ld hl, $5033
 	rst $00
 	rst $18
 	jp hl
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $04
 	jr nc, Func_30_512e
 	FAR_CALL $21, Func_21_73e4
 	FAR_CALL $21, Func_21_73ac
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5121
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $02
 	jr c, Func_30_5121
 	ld a, [$d0fa]
@@ -48902,10 +48902,10 @@ Func_30_5121:
 Func_30_512e:
 	call Func_00_07c5
 	call Func_00_0786
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5142
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr nz, Func_30_514b
 Func_30_5142:
@@ -48918,10 +48918,10 @@ Func_30_514b:
 	ld a, $04
 	ld [$c2a7], a
 	ret
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $3c
 	jr nc, Func_30_516b
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	inc a
 	jr Func_30_5178
 Func_30_516b:
@@ -48930,10 +48930,10 @@ Func_30_516b:
 	call PlaySound
 	pop af
 	ld a, $01
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	xor a
 Func_30_5178:
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ret
 	ld a, b
 	and $03
@@ -49042,7 +49042,7 @@ Data_30_520e:
 SECTION "analyzed_0c1219", ROMX[$5219], BANK[$30]
 
 Func_30_5219:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5236
 	ld b, $21
@@ -49059,10 +49059,10 @@ Func_30_5236:
 	call PlaySound
 	pop af
 	ld a, $02
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 Func_30_5242:
 	ret
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $01
 	jr nz, Func_30_5251
 	push af
@@ -49073,18 +49073,18 @@ Func_30_5251:
 	cp $02
 	jr nc, Func_30_5259
 	inc a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5259:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_529c
 	bit 7, b
 	jr z, Func_30_527e
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jr z, Func_30_52b0
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	push af
 	ld a, $04
 	call PlaySound
@@ -49095,7 +49095,7 @@ Func_30_5259:
 Func_30_527e:
 	bit 6, b
 	jr z, Func_30_529c
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr z, Func_30_52b0
 	push af
@@ -49105,7 +49105,7 @@ Func_30_527e:
 	ld a, $88
 	ld [$d0fa], a
 	ld a, $00
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	jr Func_30_52b0
 Func_30_529c:
 	bit 0, b
@@ -49115,27 +49115,27 @@ Func_30_529c:
 	call PlaySound
 	pop af
 	xor a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ld a, $03
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 Func_30_52b0:
 	ret
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $1e
 	jp c, Func_30_52bf
 	ld a, $04
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_52bf:
 	inc a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ret
 DrawTowerOpenScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0f3], a
-	ld [$d0f4], a
-	ld [$d0f5], a
+	ld [wScreenInput], a
+	ld [wScreenPhase], a
+	ld [wScreenTimer], a
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -49178,11 +49178,11 @@ Func_30_5324:
 	ld a, [$c55d]
 	bit 0, b
 	jr z, Func_30_5341
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $01
 	jp z, Func_30_5341
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 Func_30_5341:
 	ld a, [wFadeLevel]
 	cp $14
@@ -49196,15 +49196,15 @@ Func_30_5351:
 	ld a, [wFadeLevel]
 	cp $ff
 	jr nc, Func_30_53b7
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $02
 	jr c, Func_30_5368
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr nz, Func_30_53b7
 	jr Func_30_5393
 Func_30_5368:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr z, Func_30_537e
 	push af
@@ -49212,11 +49212,11 @@ Func_30_5368:
 	call PlaySound
 	pop af
 	xor a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	ld a, $02
 	jr Func_30_5390
 Func_30_537e:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	ld b, a
 	ld c, $00
 Func_30_5384:
@@ -49228,13 +49228,13 @@ Func_30_5384:
 	ld a, b
 	and $03
 Func_30_5390:
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 Func_30_5393:
 	call Func_30_53be
 	call Func_30_53cd
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	inc a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_53a0:
 	call Func_30_53dd
 	call Func_30_5408
@@ -49251,14 +49251,14 @@ Func_30_53b7:
 	call Func_00_07c5
 	ret
 Func_30_53be:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	ld b, $26
 	ld hl, $768c
 	ld de, $98c5
 	call Func_00_35d4
 	ret
 Func_30_53cd:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	ld b, $26
 	ld hl, $7694
 	ld d, $48
@@ -49317,16 +49317,16 @@ Func_30_54b8:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0ff], a
-	ld [$d0f3], a
-	ld [$d0f5], a
-	ld [$d0f6], a
-	ld [$d0f7], a
+	ld [wScreenInput], a
+	ld [wScreenTimer], a
+	ld [wScreenFrame], a
+	ld [wScreenAnim], a
 	FAR_CALL $05, Func_05_4843
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	cp $01
 	jr nz, DrawTitleScreen
 	ld a, $01
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 DrawTitleScreen:
 	call HideAllSprites
 	xor a
@@ -49361,7 +49361,7 @@ DrawTitleScreen:
 Func_30_552f:
 	call WaitForNextFrame
 	call ReadJoypad
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $00
 	jr z, Func_30_5571
 	cp $01
@@ -49405,7 +49405,7 @@ Func_30_5571:
 	ld de, $9966
 	call CopyBgMapBanked
 	call Func_30_56d3
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	and a
 	jr z, Func_30_5596
 	ld b, $28
@@ -49414,14 +49414,14 @@ Func_30_5571:
 	call CopyBgMapBanked
 Func_30_5596:
 	ld a, $01
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	jr Func_30_5547
 Func_30_559d:
 	call Func_30_55fa
 	call Func_30_566c
 	jp Func_30_5547
 Func_30_55a6:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	and a
 	jr z, Func_30_555d
 	FAR_CALL $12, Func_12_4b8e
@@ -49442,16 +49442,16 @@ SECTION "analyzed_0c15fa", ROMX[$55fa], BANK[$30]
 Func_30_55fa:
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr z, Func_30_5636
 	bit 7, b
 	jr z, Func_30_561d
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $01
 	jr z, Func_30_5646
 	ld a, $01
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	push af
 	ld a, $04
 	call PlaySound
@@ -49460,7 +49460,7 @@ Func_30_55fa:
 Func_30_561d:
 	bit 6, b
 	jr z, Func_30_5636
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr z, Func_30_5646
 	push af
@@ -49468,7 +49468,7 @@ Func_30_561d:
 	call PlaySound
 	pop af
 	ld a, $00
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5646
 Func_30_5636:
 	bit 0, b
@@ -49478,11 +49478,11 @@ Func_30_5636:
 	call PlaySound
 	pop af
 	ld a, $02
-	ld [$d0f3], a
+	ld [wScreenInput], a
 Func_30_5646:
 	ld a, $28
 	ld [$d0f9], a
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_5656
 	ld a, $68
@@ -49507,13 +49507,13 @@ Func_30_566c:
 	ld d, a
 	ld a, [$d0f9]
 	ld e, a
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	call Func_00_35f9
 	ld a, [wFadeLevel]
 	and $07
 	cp $04
 	jr nz, Func_30_5697
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $03
 	jr c, Func_30_5693
 	ld a, $00
@@ -49521,7 +49521,7 @@ Func_30_566c:
 Func_30_5693:
 	inc a
 Func_30_5694:
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 Func_30_5697:
 	ret
 Func_30_5698:
@@ -49602,10 +49602,10 @@ SECTION "analyzed_0c177e", ROMX[$577e], BANK[$30]
 DrawIntroBookScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0f3], a
-	ld [$d0f4], a
-	ld [$d0f5], a
-	ld [$d0f6], a
+	ld [wScreenInput], a
+	ld [wScreenPhase], a
+	ld [wScreenTimer], a
+	ld [wScreenFrame], a
 	call Func_30_5816
 	xor a
 	ldh [rVBK], a
@@ -49640,15 +49640,15 @@ Func_30_57d4:
 	ldh a, [hJoyRepeat]
 	and a
 	jr nz, Func_30_5809
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	cp $0f
 	jr nc, Func_30_5809
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	and a
 	jr nz, Func_30_57ef
 	call Func_30_6007
 Func_30_57ef:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	ld hl, $57fd
 	push hl
 	add a, a
@@ -49768,22 +49768,22 @@ Func_30_58d7:
 	ld c, e
 	call DrawMetasprite
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5900
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5900:
 	cp $00
 	jr nz, Func_30_5904
 Func_30_5904:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_590c:
 	ld a, [wFadeLevel]
@@ -49823,26 +49823,26 @@ Data_30_5934:
 SECTION "analyzed_0c1954", ROMX[$5954], BANK[$30]
 
 Func_30_5954:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5967
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5967:
 	cp $00
 	jr nz, Func_30_597e
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $68
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	ld a, $40
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 Func_30_597e:
 	cp $1e
 	jr nc, Func_30_5984
@@ -49856,13 +49856,13 @@ Func_30_598d:
 	cp $e6
 	jr nz, Func_30_5998
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_599d
 Func_30_5998:
 	jr c, Func_30_599d
 	call Func_30_5fa2
 Func_30_599d:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_59bc
 	ld d, $00
@@ -49876,18 +49876,18 @@ Func_30_599d:
 	ld b, $04
 	call Func_30_590c
 Func_30_59bc:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_59d7
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_59d7:
 	cp $00
@@ -49900,13 +49900,13 @@ Func_30_59d7:
 	ld bc, $0600
 	call Func_00_36a3
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $68
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	ld a, $40
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 	jr Func_30_5a20
 Func_30_5a01:
 	cp $1e
@@ -49921,13 +49921,13 @@ Func_30_5a10:
 	cp $e6
 	jr nz, Func_30_5a1b
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5a20
 Func_30_5a1b:
 	jr c, Func_30_5a20
 	call Func_30_5fa2
 Func_30_5a20:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5a3f
 	ld hl, $d0f7
@@ -49941,21 +49941,21 @@ Func_30_5a20:
 	ld b, $04
 	call Func_30_590c
 Func_30_5a3f:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5a47:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5a57
 	ld d, $00
 	ld e, $00
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	call Func_30_58d7
 Func_30_5a57:
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5a8a
 	xor a
@@ -49971,11 +49971,11 @@ Func_30_5a57:
 	ld hl, $5400
 	call Func_00_09d5
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $08
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 Func_30_5a8a:
 	cp $5a
 	jr nc, Func_30_5a90
@@ -49986,61 +49986,61 @@ Func_30_5a90:
 	call Func_30_5f78
 Func_30_5a97:
 	call Func_30_5a47
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	cp $b4
 	ret c
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5ac3
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5ac3:
 	cp $00
 	jr nz, Func_30_5ad6
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ld a, $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $08
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 Func_30_5ad6:
 	cp $aa
 	jr nc, Func_30_5af0
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	and $07
 	cp $07
 	jr nz, Func_30_5afa
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $0b
 	jr nc, Func_30_5afa
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jr Func_30_5afa
 Func_30_5af0:
 	jr nz, Func_30_5af7
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5af7:
 	call Func_30_5fa2
 Func_30_5afa:
 	call Func_30_5a47
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5b32
 	xor a
@@ -50056,9 +50056,9 @@ Func_30_5afa:
 	ld hl, $5c10
 	call Func_00_09d5
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 Func_30_5b32:
 	cp $1e
 	jr nc, Func_30_5b38
@@ -50069,7 +50069,7 @@ Func_30_5b38:
 	call Func_30_5f78
 	jr Func_30_5b41
 Func_30_5b41:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5b50
 	ld d, $00
@@ -50077,52 +50077,52 @@ Func_30_5b41:
 	ld a, $0c
 	call Func_30_58d7
 Func_30_5b50:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	cp $b4
 	ret c
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5b79
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5b79:
 	cp $00
 	jr nz, Func_30_5b8c
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ld a, $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $0d
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 Func_30_5b8c:
 	cp $e6
 	jr nc, Func_30_5ba6
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	and $1f
 	cp $1f
 	jr nz, Func_30_5ba9
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $11
 	jr nc, Func_30_5ba9
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jr Func_30_5ba9
 Func_30_5ba6:
 	call Func_30_5fa2
 Func_30_5ba9:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5bc2
 	ld d, $00
@@ -50131,14 +50131,14 @@ Func_30_5ba9:
 	call Func_30_58d7
 	ld d, $00
 	ld e, $00
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	call Func_30_58d7
 Func_30_5bc2:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5c14
 	xor a
@@ -50161,13 +50161,13 @@ Func_30_5bc2:
 	ld hl, $7420
 	call Func_00_09d5
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ld a, $12
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	xor a
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 	jr Func_30_5c3e
 Func_30_5c14:
 	cp $1e
@@ -50179,90 +50179,90 @@ Func_30_5c1a:
 	call Func_30_5f78
 	jr Func_30_5c3e
 Func_30_5c23:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	and $07
 	cp $07
 	jr nz, Func_30_5c3e
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $19
 	jr c, Func_30_5c3a
 	ld a, $12
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jr Func_30_5c3e
 Func_30_5c3a:
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 Func_30_5c3e:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5c4e
 	ld d, $00
 	ld e, $00
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	call Func_30_58d7
 Func_30_5c4e:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	inc a
-	ld [$d0f8], a
-	ld a, [$d0f4]
+	ld [wScreenAnim2], a
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	cp $b4
 	ret c
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5c7e
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5c7e:
 	cp $00
 	jr nz, Func_30_5c8c
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ld a, $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 Func_30_5c8c:
 	cp $aa
 	jr nc, Func_30_5ca6
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	and $07
 	cp $07
 	jr nz, Func_30_5ca9
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	cp $1a
 	jr nc, Func_30_5ca9
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	jr Func_30_5ca9
 Func_30_5ca6:
 	call Func_30_5fa2
 Func_30_5ca9:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5cb9
 	ld d, $00
 	ld e, $00
-	ld a, [$d0f7]
+	ld a, [wScreenAnim]
 	call Func_30_58d7
 Func_30_5cb9:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	inc a
-	ld [$d0f8], a
-	ld a, [$d0f4]
+	ld [wScreenAnim2], a
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5cf1
 	xor a
@@ -50278,7 +50278,7 @@ Func_30_5cb9:
 	ld hl, $4800
 	call Func_00_09d5
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5cf1:
 	cp $0a
 	jr nc, Func_30_5cf7
@@ -50288,7 +50288,7 @@ Func_30_5cf7:
 	jr nc, Func_30_5cfe
 	call Func_30_5f78
 Func_30_5cfe:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5d0d
 	ld d, $00
@@ -50296,16 +50296,16 @@ Func_30_5cfe:
 	ld a, $1b
 	call Func_30_58d7
 Func_30_5d0d:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	cp $b4
 	ret c
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 
 SECTION "analyzed_0c1d23", ROMX[$5d23], BANK[$30]
@@ -50316,26 +50316,26 @@ Data_30_5d23:
 SECTION "analyzed_0c1d24", ROMX[$5d24], BANK[$30]
 
 Func_30_5d24:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5d37
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5d37:
 	cp $00
 	jr nz, Func_30_5d40
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5d40:
 	cp $aa
 	jr c, Func_30_5d47
 	call Func_30_5fa2
 Func_30_5d47:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5d56
 	ld d, $00
@@ -50343,18 +50343,18 @@ Func_30_5d47:
 	ld a, $1b
 	call Func_30_58d7
 Func_30_5d56:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5d71
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5d71:
 	cp $00
@@ -50372,9 +50372,9 @@ Func_30_5d71:
 	ld hl, $6010
 	call Func_00_09d5
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 Func_30_5d9b:
 	cp $3c
 	jr c, Func_30_5db8
@@ -50386,13 +50386,13 @@ Func_30_5da8:
 	cp $aa
 	jr nz, Func_30_5db3
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5db8
 Func_30_5db3:
 	jr c, Func_30_5db8
 	call Func_30_5fa2
 Func_30_5db8:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5dc7
 	ld d, $00
@@ -50400,18 +50400,18 @@ Func_30_5db8:
 	ld a, $1c
 	call Func_30_58d7
 Func_30_5dc7:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5de2
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5de2:
 	cp $5a
@@ -50419,9 +50419,9 @@ Func_30_5de2:
 	cp $00
 	jr nz, Func_30_5df3
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 Func_30_5df3:
 	cp $0a
 	jr nc, Func_30_5dfc
@@ -50431,13 +50431,13 @@ Func_30_5dfc:
 	cp $50
 	jr nz, Func_30_5e07
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5e0c
 Func_30_5e07:
 	jr c, Func_30_5e0c
 	call Func_30_5fa2
 Func_30_5e0c:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5e1b
 	ld d, $00
@@ -50449,7 +50449,7 @@ Func_30_5e1b:
 Func_30_5e1d:
 	jr nz, Func_30_5e24
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5e24:
 	cp $64
 	jr nc, Func_30_5e2d
@@ -50459,13 +50459,13 @@ Func_30_5e2d:
 	cp $aa
 	jr nz, Func_30_5e38
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5e3d
 Func_30_5e38:
 	jr c, Func_30_5e3d
 	call Func_30_5fa2
 Func_30_5e3d:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5e4c
 	ld d, $00
@@ -50473,18 +50473,18 @@ Func_30_5e3d:
 	ld a, $1e
 	call Func_30_58d7
 Func_30_5e4c:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5e67
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5e67:
 	cp $5a
@@ -50492,9 +50492,9 @@ Func_30_5e67:
 	cp $00
 	jr nz, Func_30_5e78
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 Func_30_5e78:
 	cp $0a
 	jr nc, Func_30_5e81
@@ -50504,13 +50504,13 @@ Func_30_5e81:
 	cp $50
 	jr nz, Func_30_5e8c
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5e91
 Func_30_5e8c:
 	jr c, Func_30_5e91
 	call Func_30_5fa2
 Func_30_5e91:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5ea0
 	ld d, $00
@@ -50522,7 +50522,7 @@ Func_30_5ea0:
 Func_30_5ea2:
 	jr nz, Func_30_5ea9
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 Func_30_5ea9:
 	cp $64
 	jr nc, Func_30_5eb2
@@ -50532,13 +50532,13 @@ Func_30_5eb2:
 	cp $aa
 	jr nz, Func_30_5ebd
 	ld a, $09
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	jr Func_30_5ec2
 Func_30_5ebd:
 	jr c, Func_30_5ec2
 	call Func_30_5fa2
 Func_30_5ec2:
-	ld a, [$d0f6]
+	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5ed1
 	ld d, $00
@@ -50546,18 +50546,18 @@ Func_30_5ec2:
 	ld a, $20
 	call Func_30_58d7
 Func_30_5ed1:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5eec
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	inc a
-	ld [$d0f3], a
+	ld [wScreenInput], a
 	xor a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5eec:
 	cp $00
@@ -50577,32 +50577,32 @@ Func_30_5eec:
 	ld bc, $0800
 	call Func_00_36a3
 	ld a, $21
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	xor a
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 Func_30_5f1c:
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	cp $10
 	jr c, Func_30_5f35
 	xor a
-	ld [$d0f8], a
-	ld a, [$d0f7]
+	ld [wScreenAnim2], a
+	ld a, [wScreenAnim]
 	cp $24
 	jr nc, Func_30_5f35
 	inc a
-	ld [$d0f7], a
+	ld [wScreenAnim], a
 	call Func_30_5f4b
 Func_30_5f35:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	cp $1e
 	jr c, Func_30_5f43
-	ld a, [$d0f8]
+	ld a, [wScreenAnim2]
 	inc a
-	ld [$d0f8], a
+	ld [wScreenAnim2], a
 Func_30_5f43:
-	ld a, [$d0f4]
+	ld a, [wScreenPhase]
 	inc a
-	ld [$d0f4], a
+	ld [wScreenPhase], a
 	ret
 Func_30_5f4b:
 	push af
@@ -50633,18 +50633,18 @@ Func_30_5f6e:
 	ld [$cf3f], a
 	ret
 Func_30_5f78:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	and a
 	jr nz, Func_30_5f84
 	ld a, $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ret z
 Func_30_5f84:
 	cp $0a
 	jr nc, Func_30_5f92
 	ld a, [wFadeLevel]
 	and $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	jr Func_30_5f9a
 
 SECTION "analyzed_0c1f92", ROMX[$5f92], BANK[$30]
@@ -50652,28 +50652,28 @@ SECTION "analyzed_0c1f92", ROMX[$5f92], BANK[$30]
 Func_30_5f92:
 	ld a, [wFadeLevel]
 	and $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 
 SECTION "analyzed_0c1f9a", ROMX[$5f9a], BANK[$30]
 
 Func_30_5f9a:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	dec a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ret
 Func_30_5fa2:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	and a
 	jr nz, Func_30_5fad
 	xor a
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	ret z
 Func_30_5fad:
 	cp $0a
 	jr nc, Func_30_5fbb
 	ld a, [wFadeLevel]
 	and $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 	jr Func_30_5fc3
 
 SECTION "analyzed_0c1fbb", ROMX[$5fbb], BANK[$30]
@@ -50681,14 +50681,14 @@ SECTION "analyzed_0c1fbb", ROMX[$5fbb], BANK[$30]
 Func_30_5fbb:
 	ld a, [wFadeLevel]
 	and $01
-	ld [$d0f6], a
+	ld [wScreenFrame], a
 
 SECTION "analyzed_0c1fc3", ROMX[$5fc3], BANK[$30]
 
 Func_30_5fc3:
-	ld a, [$d0f5]
+	ld a, [wScreenTimer]
 	dec a
-	ld [$d0f5], a
+	ld [wScreenTimer], a
 	ret
 
 SECTION "analyzed_0c1fcb", ROMX[$5fcb], BANK[$30]
@@ -50702,7 +50702,7 @@ Data_30_5fcb:
 SECTION "analyzed_0c2007", ROMX[$6007], BANK[$30]
 
 Func_30_6007:
-	ld a, [$d0f3]
+	ld a, [wScreenInput]
 	add a, a
 	add a, a
 	ld hl, $5fcb
