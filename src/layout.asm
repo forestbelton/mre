@@ -463,7 +463,7 @@ SpawnPlayerEntity:
 	ld e, a
 	ld a, $01
 	ld bc, $0000
-	ld [wSpawnType], a          ; sprite-alloc params for Func_00_0467
+	ld [wBankCallTmp], a          ; sprite-alloc params for Func_00_0467
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -537,7 +537,7 @@ SpawnFloorMonsters:
 	add a, $02
 .gfxResolved:
 	ld bc, $0000
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -782,7 +782,7 @@ ProcessFloorSpawners:
 	push bc
 	ld a, $1e
 	ld bc, $0000
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l

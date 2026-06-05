@@ -332,7 +332,7 @@ ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the wSpawnCellX/wSpawnCellY 
 	ld e, a
 	ld bc, $0000
 	ld a, $1f
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l

@@ -771,10 +771,10 @@ CallBankedHL:
 	ld de, $043c
 	push de
 	jp hl
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	pop af
 	ld [$2fff], a
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ret
 
 SECTION "analyzed_000447", ROM0[$0447]
@@ -800,7 +800,7 @@ Func_00_0467:
 	ld de, $043c
 	push de
 	push hl
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	push af
 	ld a, [wSpawnY]
 	ld d, a
@@ -816,14 +816,14 @@ Func_00_0467:
 SECTION "analyzed_000495", ROM0[$0495]
 
 Func_00_0495:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
 	ld [wSpawnPtr+1], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	ld hl, $04b7
 	push hl
@@ -1533,7 +1533,7 @@ Func_00_0903:
 	ld d, h
 	ld e, l
 	call WaitForHBlank
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	add a, a
 	add a, a
 	add a, a
@@ -1541,7 +1541,7 @@ Func_00_0903:
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ldh [hBgPaletteDirty], a
 	pop af
 	ld [$2fff], a
@@ -1550,7 +1550,7 @@ Func_00_0903:
 SECTION "analyzed_00094a", ROM0[$094a]
 
 Func_00_094a:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
@@ -1560,7 +1560,7 @@ Func_00_094a:
 	ld d, h
 	ld e, l
 	call WaitForHBlank
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	add a, a
 	add a, a
 	add a, a
@@ -1568,7 +1568,7 @@ Func_00_094a:
 	rst $00
 	ld c, $08
 	call CopyDEtoHL
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ldh [hObjPaletteDirty], a
 	pop af
 	ld [$2fff], a
@@ -1577,26 +1577,26 @@ Func_00_094a:
 SECTION "analyzed_000979", ROM0[$0979]
 
 Func_00_0979:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	call LoadBgPalette
 	pop af
 	ld [$2fff], a
 	ret
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
 	ld a, [$7fff]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	call LoadObjPalette
 	pop af
 	ld [$2fff], a
@@ -1605,7 +1605,7 @@ Func_00_0979:
 SECTION "analyzed_0009b1", ROM0[$09b1]
 
 Func_00_09b1:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, b
 	ld [$c29d], a
 	ld a, c
@@ -1616,13 +1616,13 @@ Func_00_09b1:
 	ld [$2fff], a
 	ld a, [$c29d]
 	ld b, a
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	call Func_00_0716
 	pop af
 	ld [$2fff], a
 	ret
 Func_00_09d5:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, b
 	ld [$c29d], a
 	ld a, c
@@ -1633,7 +1633,7 @@ Func_00_09d5:
 	ld [$2fff], a
 	ld a, [$c29d]
 	ld b, a
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	call Func_00_0732
 	pop af
 	ld [$2fff], a
@@ -2561,10 +2561,10 @@ Func_00_106f:
 	pop hl
 	ret
 Func_00_108f:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	xor a
 	ldh [rVBK], a
@@ -2583,10 +2583,10 @@ Func_00_108f:
 	ld [$2fff], a
 	ret
 Func_00_10b5:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	xor a
 	ldh [rVBK], a
@@ -2794,7 +2794,7 @@ Func_00_11dc:
 	jr z, Func_00_11f6
 	cp $d6
 	ret nz
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$c2ab]
 	or a
 	jr z, Func_00_1203
@@ -2807,7 +2807,7 @@ Data_00_11f2:
 SECTION "analyzed_0011f6", ROM0[$11f6]
 
 Func_00_11f6:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [wHasBattleCard]
 	or a
 	jr z, Func_00_1203
@@ -2820,7 +2820,7 @@ Data_00_11ff:
 SECTION "analyzed_001203", ROM0[$1203]
 
 Func_00_1203:
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	res 6, a
 	ret
 
@@ -7969,10 +7969,10 @@ Func_00_369c:
 	jr nz, Func_00_369c
 	ret
 Func_00_36a3:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	call Func_00_3692
 	pop af
@@ -8395,10 +8395,10 @@ Func_00_38e3:
 SECTION "analyzed_003913", ROM0[$3913]
 
 Func_00_3913:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 Func_00_3920:
 	ld a, [hl+]
@@ -8412,10 +8412,10 @@ Func_00_3920:
 	ld [$2fff], a
 	ret
 CopyBytesBanked:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	call CopyHLtoDE
 	pop af
@@ -8423,10 +8423,10 @@ CopyBytesBanked:
 	ret
 
 CopyBgMapBankedA:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, [$7fff]
 	push af
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [$2fff], a
 	call CopyBgMap
 	pop af
@@ -8784,7 +8784,7 @@ Func_01_42f2:
 	ld [$cf83], a
 	pop af
 	ld bc, $0000
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -10515,7 +10515,7 @@ SpawnPickupEffect:
 	ld c, a
 	ld b, [hl]
 	ld a, $08
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -10545,7 +10545,7 @@ SpawnPickupEffectAlt:
 	ld c, a
 	ld b, [hl]
 	ld a, $0c
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -10645,7 +10645,7 @@ Func_01_55db:
 	ld d, a
 	ld bc, $0000
 	ld a, $08
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -10980,7 +10980,7 @@ Func_01_587f:
 	ld d, a
 	ld bc, $0000
 	ld a, $0a
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -11172,7 +11172,7 @@ Func_01_59ce:
 	jr nz, Func_01_599b
 	ld bc, $0000
 	ld a, $3f
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -11206,7 +11206,7 @@ Func_01_5a16:
 	ld d, a
 	ld bc, $0000
 	ld a, $0b
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -13297,7 +13297,7 @@ Func_01_67ee:
 	ld d, [hl]
 	ld bc, $0000
 	ld a, $08
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -13319,7 +13319,7 @@ Func_01_6829:
 	ld d, [hl]
 	ld bc, $0000
 	ld a, $0c
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -13384,7 +13384,7 @@ Func_01_686f:
 	ld d, a
 	ld bc, $0000
 	ld a, $08
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -17176,7 +17176,7 @@ Func_04_42ab:
 	jr nz, Func_04_4286
 	ret
 Func_04_42b3:
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	and $0f
 	jr z, Func_04_42c6
 	cp $01
@@ -17213,7 +17213,7 @@ Func_04_42d4:
 	ld a, $01
 	ld [de], a
 	inc de
-	ld a, [wSpawnType]
+	ld a, [wBankCallTmp]
 	ld [de], a
 	inc de
 	call Func_04_4319
@@ -21408,7 +21408,7 @@ Func_05_4349:
 	ld d, h
 	ld e, l
 	pop hl
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -21432,7 +21432,7 @@ Func_05_4385:
 	ld d, h
 	ld e, l
 	pop hl
-	ld [wSpawnType], a
+	ld [wBankCallTmp], a
 	ld a, h
 	ld [wSpawnPtr], a
 	ld a, l
@@ -40301,27 +40301,6 @@ Data_1c_723e:
 	db $28, $00, $08, $10, $30, $14, $08, $20, $00, $16, $08, $20, $08, $06, $00, $20
 	db $10, $08, $00, $20, $18, $0a, $00, $20, $20, $1e, $08, $20, $28, $20, $08, $20
 	db $30, $00, $08, $01, $00, $00, $0c, $05
-
-; ($1d:$5800 BG + $1d:$5840 OBJ palettes carved into src/gfx/portrait/kalum.asm
-; as KalumPortraitPaletteBg / KalumPortraitPaletteObj.)
-
-SECTION "analyzed_075a3e", ROMX[$5a3e], BANK[$1d]
-
-Data_1d_5a3e:
-	db $02, $03, $4a, $5a, $44, $5a, $ec, $f4, $fc, $ed, $f5, $fd, $0b, $0b, $0b, $0a
-	db $0a, $0a, $0c, $00, $00, $04, $08, $00, $08, $06, $08, $00, $10, $08, $08, $00
-	db $18, $0a, $08, $10, $00, $0c, $08, $10, $08, $0e, $08, $10, $10, $10, $08, $10
-	db $18, $12, $08, $20, $00, $14, $08, $20, $08, $16, $08, $20, $10, $18, $08, $20
-	db $18, $1a, $08, $02, $03, $8d, $5a, $87, $5a, $56, $5e, $60, $57, $5f, $61, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0c, $00, $00, $04, $08, $00, $08, $06, $08, $00, $10
-	db $08, $08, $00, $18, $0a, $08, $10, $00, $0c, $08, $10, $08, $20, $08, $10, $10
-	db $22, $08, $10, $18, $24, $08, $20, $00, $14, $08, $20, $08, $16, $08, $20, $10
-	db $18, $08, $20, $18, $1a, $08, $02, $03, $d0, $5a, $ca, $5a, $62, $64, $66, $63
-	db $65, $67, $0b, $0b, $0b, $0b, $0b, $0b, $0c, $00, $00, $04, $08, $00, $08, $06
-	db $08, $00, $10, $08, $08, $00, $18, $0a, $08, $10, $00, $0c, $08, $10, $08, $26
-	db $08, $10, $10, $28, $08, $10, $18, $2a, $08, $20, $00, $14, $08, $20, $08, $16
-	db $08, $20, $10, $18, $08, $20, $18, $1a, $08, $02, $00, $00, $1c, $08, $00, $08
-	db $1e, $08, $02, $00, $00, $00, $0d, $00, $08, $02, $0d
 
 ; ($1d:$7319 BG + $1d:$7359 OBJ palettes carved into src/gfx/portrait/rafaga.asm
 ; as RafagaPortraitPaletteBg / RafagaPortraitPaletteObj.)

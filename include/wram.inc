@@ -45,12 +45,19 @@ wMonsterBgMapPtr:: ds 2  ; $CF38: portrait BG tilemap (CopyBgMap; drawn by DrawM
 SECTION "wram_sound_vars", WRAM0[$C28C]
 wCurrentSound:: ds 1 ; $C28C: ID of sound currently being played
 
-SECTION "wram_spawn_params", WRAM0[$C29C]
-; SpawnEntity argument block: the far-call trampoline (Func_00_0467) marshals these
-; into AF/DE/HL before tail-calling the bank-3 spawn routine ($4593).
+SECTION "wram_bank_call", WRAM0[$C29C]
+; General scratch byte the bank-switching call/copy helpers borrow to hold a value
+; across a ROMX bank swap (`ld a,[$7fff]` save -> `ld [$2fff],a` switch -> work ->
+; restore): CopyBytesBanked / CopyBgMapBankedA / Func_00_3913 stash the *target
+; bank* here; CallBankedHL stashes the callee's *return value*. The spawn
+; trampoline Func_00_0467 also stages the entity type here before passing it (as A)
+; to SpawnEntity, so the spawn callers write it too -- hence the neutral name.
+wBankCallTmp::      ds 1    ; $C29C
 
-wSpawnType::        ds 1    ; $C29C: entity type/id to spawn (-> A)
-                    ds 2    ; $C29D-$C29E
+SECTION "wram_spawn_params", WRAM0[$C29F]
+; SpawnEntity argument block: the far-call trampoline (Func_00_0467) marshals these
+; into D/E/HL (with the entity type from wBankCallTmp -> A) before tail-calling the
+; bank-3 spawn routine ($4593).
 wSpawnY::           ds 1    ; $C29F: spawn Y (-> D)
 wSpawnX::           ds 1    ; $C2A0: spawn X (-> E)
 wSpawnPtr::         ds 2    ; $C2A1: spawn context pointer, big-endian hi/lo (-> HL)
