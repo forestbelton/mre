@@ -20,11 +20,17 @@ Regenerates a screen's components from a source PNG.
   (8 BG + 8 OBJ) in its palette table; each tile is shown in its real palette
   (`pixel = palette*4 + 2bpp value`, so the tile value is `pixel % 4`). No packer —
   the tile order lives in the committed tilemap.
+- `portrait --png <sheet.png> --tiles1 N --tiles0 M --out-dir D` → `tiles.bin`
+  (the `--tiles1` bank-1 tiles) and, when `--tiles0` is set, `tiles2.bin` (the
+  bank-0 tiles), plus the committed `tilemap.bin`/`attrmap.bin` passed through.
+  **Grayscale** sheet for the character portraits: one indexed PNG holds the
+  bank-1 tiles first, then any bank-0 tiles (palettes are lib-dispatched and not
+  yet located, so the PNG is 4-gray, `tile value = pixel % 4`).
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 
-The legacy multi-file flow (`assets/<name>/asset.json` + `tools/gfxasset.py`) is
-still used by everything except the logo and the town screen.
+Every graphics asset is now PNG-driven through this tool; `tools/gfxasset.py`
+remains only as a decode/reference helper (the build no longer needs it).
 
 ## Descriptor: `assets/assets.yaml` + `tools/buildassets.py`
 
@@ -47,9 +53,10 @@ town:
 ```
 
 `mode: composite` opts: `sheet_rows`, `pad_before [byte, n]`, `colors`.
-`mode: screen` opts: `tiles` (per bank, default 384). As the legacy assets migrate
-to pngasset, they move into this file (a future `mode` will cover the single-bank
-portraits + the two-bank portraits).
+`mode: screen` opts: `tiles` (per bank, default 384).
+`mode: portrait` opts: `tiles1` (bank 1, default 384), `tiles0` (bank 0, default 0
+= single-bank). All 18 assets now live in this file — the logo (composite), the 7
+two-bank colour screens, and the 10 portraits.
 
 ## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
 
@@ -69,6 +76,17 @@ them. Hence the source is a tile *sheet* (which holds every tile), not a rendere
 screen, and the arbitrary tile order/arrangement stays in the committed maps. This
 is the exemplar for the remaining six screens (and the eventual YAML schema):
 `mode: sheet`, one combined PNG (two banks + 16 palettes), maps committed.
+
+## Migrated: the portraits (portrait mode)
+
+The 10 character portraits followed onto `mode: portrait`. Each is one grayscale
+tile-sheet PNG — `assets/<name>/<name>.png`, bank-1 tiles first then any bank-0
+tiles — plus the committed `tilemap.bin`/`attrmap.bin`. Single-bank portraits
+(kalum, toamuna, rafaga, tempest, naji, pashute, bodka, nada_scene2) emit only
+`tiles.bin`; the two-bank ones (ferious `tiles0: 128`, nada_intro `tiles0: 384`)
+also emit `tiles2.bin`. The portrait asms were unchanged — they already `INCBIN`
+those bins; only the source moved from `asset.json` to a PNG. Palettes stay
+grayscale until the lib-dispatched CGB palettes are located.
 
 ## Migrated: the TECMO logo (composite mode)
 

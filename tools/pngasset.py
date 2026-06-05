@@ -271,6 +271,30 @@ def cmd_screen(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_portrait(args: argparse.Namespace) -> int:
+    """Single- or two-VRAM-bank grayscale portrait from one tile-sheet PNG. The PNG
+    holds the bank-1 (main) tiles, optionally followed by the bank-0 tiles; splits
+    into tiles.bin (bank 1) + tiles2.bin (bank 0, when --tiles0 > 0) and passes the
+    committed tilemap/attrmap (next to the PNG) through. Grayscale -- the BG palettes
+    are lib-dispatched and not yet located. See docs/gfx_assets.md."""
+    png = Path(args.png)
+    d = png.parent
+    tiles = sheet_png_to_tiles(png, args.tiles1 + args.tiles0)
+    comps = [("tiles", b"".join(tiles[: args.tiles1]))]            # bank 1 (main)
+    if args.tiles0:
+        comps.append(("tiles2", b"".join(tiles[args.tiles1:])))   # bank 0
+    comps += [
+        ("tilemap", (d / "tilemap.bin").read_bytes()),
+        ("attrmap", (d / "attrmap.bin").read_bytes()),
+    ]
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    for name, data in comps:
+        (out / f"{name}.bin").write_bytes(data)
+        print(f"  {name}.bin: {len(data)} bytes")
+    return 0
+
+
 def main() -> int:
     doc = __doc__
     assert doc is not None
@@ -290,6 +314,17 @@ def main() -> int:
     sc.add_argument("--tiles", type=int, default=384, help="tiles per bank")
     sc.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
     sc.set_defaults(fn=cmd_screen)
+
+    pt = sub.add_parser(
+        "portrait", help="grayscale portrait: one tile-sheet PNG -> tiles(.bin)(+tiles2.bin)"
+    )
+    pt.add_argument("--png", required=True,
+                    help="grayscale sheet: bank-1 tiles then (optional) bank-0 tiles; "
+                         "tilemap.bin/attrmap.bin live next to it")
+    pt.add_argument("--out-dir", required=True)
+    pt.add_argument("--tiles1", type=int, default=384, help="bank-1 (main) tile count")
+    pt.add_argument("--tiles0", type=int, default=0, help="bank-0 tile count (0 = single bank)")
+    pt.set_defaults(fn=cmd_portrait)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")
     e.add_argument("--png", required=True)

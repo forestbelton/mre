@@ -46,6 +46,12 @@ def build_png_asset(name: str, spec: dict) -> None:
         cmd = [pngasset, "screen", "--png", str(png), "--out-dir", str(out)]
         if "tiles" in spec:
             cmd += ["--tiles", str(spec["tiles"])]
+    elif mode == "portrait":
+        cmd = [pngasset, "portrait", "--png", str(png), "--out-dir", str(out)]
+        if "tiles1" in spec:
+            cmd += ["--tiles1", str(spec["tiles1"])]
+        if "tiles0" in spec:
+            cmd += ["--tiles0", str(spec["tiles0"])]
     else:
         raise SystemExit(f"asset {name!r}: unknown mode {mode!r}")
     print(f"[{name}] {mode} -> {out.relative_to(ROOT)}")

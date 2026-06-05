@@ -11,6 +11,8 @@
 #                       (every tile is visible). Opts: sheet_rows, pad_before, colors.
 #   mode: screen     -- two-VRAM-bank colour screen; one combined tile-sheet PNG
 #                       (both banks stacked + 16 palettes embedded). Opt: tiles.
+#   mode: portrait   -- grayscale character portrait; one tile-sheet PNG (bank-1
+#                       tiles first, then any bank-0 tiles). Opts: tiles1, tiles0.
 
 logo:
   mode: composite
@@ -45,3 +47,46 @@ title:
 intro_book:                # 10x20 (top half of the screen)
   mode: screen
   png: intro_book/intro_book.png
+
+# Character portraits (grayscale; palettes lib-dispatched, not yet located).
+kalum:
+  mode: portrait
+  png: kalum_portrait/kalum_portrait.png
+
+toamuna:
+  mode: portrait
+  png: toamuna_portrait/toamuna_portrait.png
+
+rafaga:
+  mode: portrait
+  png: rafaga_portrait/rafaga_portrait.png
+
+tempest:
+  mode: portrait
+  png: tempest_portrait/tempest_portrait.png
+
+naji:
+  mode: portrait
+  png: naji_portrait/naji_portrait.png
+
+pashute:
+  mode: portrait
+  png: pashute_portrait/pashute_portrait.png
+
+bodka:
+  mode: portrait
+  png: bodka_portrait/bodka_portrait.png
+
+ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
+  mode: portrait
+  png: ferious_portrait/ferious_portrait.png
+  tiles0: 128
+
+nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
+  mode: portrait
+  png: nada_intro/nada_intro.png
+  tiles0: 384
+
+nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 tiles
+  mode: portrait
+  png: nada_scene2/nada_scene2.png
