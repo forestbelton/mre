@@ -35,16 +35,26 @@ separate); a 384-tile (`$1800`) load to `$8000` is the standard full-screen shee
 descriptor, like the screens in docs/gfx_assets.md). `$8800`/`$8300` partial loads
 are fonts/overlays patched into an existing layout.
 
-## Pointer-table / lib-dispatched sheets (no direct address load)
+## Pointer-table / paged sheets (no direct address load)
 
-These have no `ld hl, $addr` site — they're fetched through pointer tables / the
-CopyBgMap "screen library" dispatch (see the screen-libraries notes), so they're
-genuinely data arranged at runtime: `Data_0f_63ce`, `Data_0f_684e`,
-`Data_11_4d5c`, `Data_11_5c5c`, `Data_11_6b5c`, `Data_11_745c`, `Data_15_624e`,
-`Data_16_407f` (800 tiles — a very large sheet), `Data_17_6918`, `Data_1b_645d`,
-`Data_27_5ade`, `Data_32_5613`, `Data_32_5dd3` (both bank $32 → likely more
-monster-detail tiles), `Data_34_48a8`, `Data_38_501a/5c1a/641a`, `Data_3c_68a1`
-(bank $3c, the monster-portrait tile bank), `Data_3d_5bcd`, `Data_3d_67ed`.
+These load via a per-bank function that computes the address from an index/table
+(scratch/find_bank_loaders.py), so there's no literal `ld hl, $addr`. Identified
+by the loader + the sheet pixels (scratch/montage_unmapped.py):
+
+| sheet | bank / loader | what it is | conf |
+|---|---|---|---|
+| `Data_16_407f` (800t) | `$16` `Func_16_4016` (table `$16:$4000`, page = `[$c4cc]`) | **paged intro/notice text+gfx**: the GBC-only notice ("…ゲームボーイカラー専用"), ©TECMO, and English credit text | high |
+| `Data_17_6918` | `$17` `Func_17_4135` (page = `[$c55c]`) | a **text font page** (clean `ABC…abc…0-9` alphabet) | high |
+| `Data_15_624e` | `$15` `Func_15_41fe` → `$8800` (256t) | a full illustration / cutscene image | med |
+| `Data_0f_63ce`, `Data_0f_684e` | `$0f` `Func_0f_462b` → `$9380` | portrait/sprite tiles (the portrait subsystem bank) | med |
+| `Data_11_4d5c/5c5c/6b5c/745c` | `$11` `Func_11_*` | a character/sprite tile set | med |
+| `Data_38_501a/5c1a/641a` | `$38` `Func_38_*` → `$9400` | a character/sprite tile set | med |
+| `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_*` | sprite tiles | med |
+| `Data_1b_645d` | `$1b` | portrait-related (Verde/Pashute bank) | low |
+| `Data_27_5ade` | `$27` (in `src/gfx/logo.asm`) | graphics right after the TECMO logo (intro) | med |
+| `Data_34_48a8` | `$34` | tiles — loader not yet located | low |
+| `Data_32_5613`, `Data_32_5dd3` | `$32` | **analyzer mis-split** — both fall inside the single `$32:$4613` (`$1800`) monster-detail tile load (`ShowMonsterDetailScreen`) | high |
+| `Data_3c_68a1` | `$3c` | **analyzer mis-split** — inside the Suezo (`$6800`) range of the monster-portrait tile bank | high |
 
 ## Bank-$30 screen loaders (rendered & named)
 
@@ -71,7 +81,12 @@ tilemap over already-loaded tiles (animation/variant states), not new sheets.
 
 ## TODO
 
-- Trace the lib-dispatched sheets through their pointer tables.
+- The bank `$11`/`$38`/`$3d`/`$0f` sprite sets: identify which characters/effects
+  they are (render in-context with their metasprites).
+- `Data_34_48a8`: locate its loader. `Data_16_407f`: name `Func_16_4016` once its
+  exact role (intro story vs notice vs credits) is pinned down.
+- Merge the analyzer mis-splits (`Data_32_5613/5dd3` into `Data_32_4613`,
+  `Data_3c_68a1` into the Suezo tile blob) so each gfx is one INCBIN.
 - Pull Verde's portrait out as an asset; fix the blink-overlay placement.
 - `Data_19_46cb` is the NPC script engine's tile set (border/font/A-button/special
   text); tie it to docs/text_engine.md. `Data_10_53b7` and `Data_2a_4000` are

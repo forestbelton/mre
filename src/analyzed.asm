@@ -38173,12 +38173,14 @@ Func_17_4122:
 	cp $ff
 	ret z
 	cp $05
-	jr c, Func_17_4135
+	jr c, LoadFontTiles
 	ld a, $38
 	ld hl, Func_38_4000
 	call CallBankedHL
 	ret
-Func_17_4135:
+; Upload a 64-tile font page from $17:$6118 (+ $400*[$c55c]) to VRAM $9400.
+; The font sheet there is Data_17_6918 (ABC.../abc.../0-9). See docs/gfx_loaders.md.
+LoadFontTiles:
 	xor a
 	ldh [rVBK], a
 	ld bc, $0400
@@ -53319,6 +53321,8 @@ Data_32_4613:
 
 SECTION "analyzed_0c9613", ROMX[$5613], BANK[$32]
 
+; Analyzer mis-split: this and Data_32_5dd3 are inside the single $32:$4613 ($1800)
+; monster-detail tile blob that ShowMonsterDetailScreen uploads. See docs/gfx_loaders.md.
 Data_32_5613:
 	INCBIN "raw_gfx/Data_32_5613.2bpp", 0, 1392
 
@@ -55102,6 +55106,8 @@ Data_3c_6000:
 
 SECTION "analyzed_0f28a1", ROMX[$68a1], BANK[$3c]
 
+; Analyzer mis-split: inside the Suezo ($3c:$6800) range of the monster-portrait
+; tile bank (LoadMonsterPortrait). See docs/monster_detail_screen.md.
 Data_3c_68a1:
 	INCBIN "raw_gfx/Data_3c_68a1.2bpp", 0, 1296
 
