@@ -48,9 +48,11 @@ monster-detail tiles), `Data_34_48a8`, `Data_38_501a/5c1a/641a`, `Data_3c_68a1`
 
 ## Bank-$30 screen loaders (rendered & named)
 
-Each draws a full screen: tiles `$X:$4000`→VRAM bank 0 `$8000` + `$X:$5800`→bank 1,
-then a `$X:$7080` CopyBgMap descriptor → `$9800` (scratch/render_screens.py renders
-them). All confirmed visually and renamed in source:
+Each draws a full screen from one contiguous per-bank layout: tiles `$X:$4000`→VRAM
+bank 0 `$8000` + `$X:$5800`→bank 1, **palettes `$X:$7000` (8 BG) / `$X:$7040` (8
+OBJ)**, then a `$X:$7080` CopyBgMap descriptor → `$9800`. scratch/render_screens.py
+renders them **in color** (reading the `$7000` palettes, per docs/palettes.md) with
+the palette swatches folded in. All confirmed visually and renamed in source:
 
 | loader | bank | screen |
 |---|---|---|

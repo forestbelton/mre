@@ -53,5 +53,10 @@ located" (docs/gfx_assets.md). The recipe to colorize any of them:
 3. Read `$40` bytes there = the 8 BG (or OBJ) palettes; map cells/sprites to a
    palette via their attribute byte's low 3 bits.
 
-Worked example (monster portraits): per-monster `$80`-byte block in bank `$0f` at
-`$7191 + $80*m`; `block+$20` → BG palettes 4–6, `block+$48` → OBJ palettes 1–2.
+Worked examples:
+- Monster portraits: per-monster `$80`-byte block in bank `$0f` at `$7191 + $80*m`;
+  `block+$20` → BG palettes 4–6, `block+$48` → OBJ palettes 1–2.
+- Bank-`$30` full screens (town, tower, title, …): each data bank has a fixed
+  layout — `$X:$7000` = 8 BG palettes, `$X:$7040` = 8 OBJ, `$X:$7080` = the
+  CopyBgMap descriptor. scratch/render_screens.py reads `$7000` to render them in
+  color; see docs/gfx_loaders.md.
