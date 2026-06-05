@@ -4,12 +4,21 @@
 ; addressing), arranged by the CopyBgMap descriptor below. Located via
 ; tools/find_portraits.py.
 ;
-; Assembled from assets/bodka/ by tools/gfxasset.py (Makefile, output
-; under build/assets/). Grayscale source -- palettes lib-dispatched, not located.
+; Assembled from assets/portrait/bodka/ by tools/pngasset.py (Makefile, output
+; under build/assets/). The 6 BG + 6 OBJ palettes (loaded by Bodka_BuildStudioScene
+; from $1e:$5800/$5840) are carved here from the PNG's colour table.
 
 SECTION "BodkaPortraitTiles", ROMX[$4000], BANK[$1e]
 BodkaPortraitTiles:
 	INCBIN "assets/bodka/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+
+SECTION "BodkaPortraitPaletteBg", ROMX[$5800], BANK[$1e]
+BodkaPortraitPaletteBg:
+	INCBIN "assets/bodka/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
+
+SECTION "BodkaPortraitPaletteObj", ROMX[$5840], BANK[$1e]
+BodkaPortraitPaletteObj:
+	INCBIN "assets/bodka/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
 SECTION "BodkaPortraitMapDesc", ROMX[$5880], BANK[$1e]
 BodkaPortraitMapDesc:

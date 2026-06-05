@@ -53,41 +53,61 @@ title:
 kalum:
   mode: portrait
   png: portrait/kalum/kalum.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 toamuna:
   mode: portrait
   png: portrait/toamuna/toamuna.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 rafaga:
   mode: portrait
   png: portrait/rafaga/rafaga.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 tempest:
   mode: portrait
   png: portrait/tempest/tempest.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 naji:
   mode: portrait
   png: portrait/naji/naji.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 pashute:
   mode: portrait
   png: portrait/pashute/pashute.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 bodka:
   mode: portrait
   png: portrait/bodka/bodka.png
+  palettes_bg: 6
+  palettes_obj: 6
 
 ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
   mode: portrait
   png: portrait/ferious/ferious.png
   tiles0: 128
+  palettes_bg: 6
+  palettes_obj: 6
 
 nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   mode: portrait
   png: portrait/nada_intro/nada_intro.png
   tiles0: 384
+  palettes_bg: 6
+  palettes_obj: 6
 
+# nada_scene2 reuses nada_intro's $1c:$7000 palette (and bank-0 sheet); its PNG is
+# colourised for editing but it owns no palette bytes to carve.
 nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 tiles
   mode: portrait
   png: portrait/nada_scene2/nada_scene2.png

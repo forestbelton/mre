@@ -4,15 +4,23 @@
 ; tiles are copied to VRAM bank 1 $8000 ($8800 signed addressing) and arranged by
 ; the CopyBgMap descriptor below over the top 20x11 cells.
 ;
-; Assembled from the editable source under assets/toamuna/ by
-; tools/gfxasset.py (run in the Makefile, output under build/assets/). The
+; Assembled from the editable source under assets/portrait/toamuna/ by
+; tools/pngasset.py (run in the Makefile, output under build/assets/). The
 ; descriptor references the two maps by *label* (dw), so the region is internally
-; relocatable. The BG palettes are lib-dispatched and not yet located, so the
-; source is grayscale — only the tile pixels + tilemap round-trip here.
+; relocatable. The 6 BG + 6 OBJ palettes (loaded by Toamuna_CheckSaveExists from
+; $1a:$5800/$5840) are carved here from the PNG's colour table.
 
 SECTION "ToamunaPortraitTiles", ROMX[$4000], BANK[$1a]
 ToamunaPortraitTiles:
 	INCBIN "assets/toamuna/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+
+SECTION "ToamunaPortraitPaletteBg", ROMX[$5800], BANK[$1a]
+ToamunaPortraitPaletteBg:
+	INCBIN "assets/toamuna/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
+
+SECTION "ToamunaPortraitPaletteObj", ROMX[$5840], BANK[$1a]
+ToamunaPortraitPaletteObj:
+	INCBIN "assets/toamuna/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
 SECTION "ToamunaPortraitMapDesc", ROMX[$5880], BANK[$1a]
 ToamunaPortraitMapDesc:

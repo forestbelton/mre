@@ -40004,20 +40004,8 @@ SECTION "analyzed_06688f", ROMX[$688f], BANK[$19]
 Data_19_688f:
 	db $02, $00, $00, $8e, $07, $00, $08, $90, $07
 
-SECTION "analyzed_069800", ROMX[$5800], BANK[$1a]
-
-Data_1a_5800:
-	db $6a, $00, $de, $3a, $b7, $19, $d0, $00, $6a, $00, $bc, $22, $b7, $19, $d0, $00
-	db $bc, $22, $de, $3a, $b7, $19, $d0, $00, $6a, $00, $bc, $22, $de, $3a, $b7, $19
-	db $6a, $00, $99, $00, $b7, $19, $d0, $00, $6a, $00, $51, $19, $77, $42, $5c, $67
-
-SECTION "analyzed_069840", ROMX[$5840], BANK[$1a]
-
-Data_1a_5840:
-	db $e0, $03, $97, $4a, $4f, $29, $9e, $6b, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
+; ($1a:$5800 BG + $1a:$5840 OBJ palettes carved into src/gfx/portrait/toamuna.asm
+; as ToamunaPortraitPaletteBg / ToamunaPortraitPaletteObj.)
 SECTION "analyzed_069a3e", ROMX[$5a3e], BANK[$1a]
 
 Data_1a_5a3e:
@@ -40033,20 +40021,8 @@ Data_1a_5a3e:
 	db $10, $08, $10, $20, $12, $08, $20, $00, $14, $08, $20, $08, $16, $08, $20, $10
 	db $08, $08, $20, $18, $08, $08, $20, $20, $18, $08
 
-SECTION "analyzed_06b2e8", ROMX[$72e8], BANK[$1a]
-
-Data_1a_72e8:
-	db $8c, $00, $ff, $36, $dc, $19, $d3, $00, $7a, $77, $ff, $36, $dc, $19, $d3, $00
-	db $7a, $77, $ff, $36, $8c, $00, $1b, $01, $7a, $77, $d2, $6a, $c7, $55, $43, $35
-	db $7a, $77, $d2, $6a, $c7, $55, $0d, $7f, $7a, $77, $50, $20, $7f, $18, $43, $35
-
-SECTION "analyzed_06b328", ROMX[$7328], BANK[$1a]
-
-Data_1a_7328:
-	db $e0, $03, $60, $1c, $23, $55, $f1, $76, $00, $7c, $60, $1c, $23, $55, $8c, $00
-	db $1f, $00, $db, $0d, $9f, $1e, $74, $72, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
+; ($1a:$72e8 BG + $1a:$7328 OBJ palettes carved into src/gfx/portrait/naji.asm
+; as NajiPortraitPaletteBg / NajiPortraitPaletteObj.)
 SECTION "analyzed_06b526", ROMX[$7526], BANK[$1a]
 
 Data_1a_7526:
@@ -40068,24 +40044,12 @@ Data_1a_7526:
 	db $08, $08, $10, $00, $0a, $09, $10, $08, $3a, $09, $10, $10, $3c, $09, $10, $18
 	db $3e, $09, $10, $20, $12, $09
 
-SECTION "analyzed_06d800", ROMX[$5800], BANK[$1b]
-
-Data_1b_5800:
-	db $67, $31, $ff, $32, $d8, $1d, $30, $1d, $67, $31, $2b, $4e, $b4, $46, $bf, $6f
-	db $67, $31, $2b, $4e, $d8, $1d, $ff, $32, $67, $31, $2b, $4e, $b4, $46, $d8, $1d
-	db $67, $31, $2b, $4e, $d8, $1d, $30, $1d, $d8, $1d, $2b, $4e, $b4, $46, $ff, $32
-
+; ($1b:$5800 BG + $1b:$5840 OBJ palettes carved into src/gfx/portrait/pashute.asm
+; as PashutePortraitPaletteBg / PashutePortraitPaletteObj.)
 SECTION "analyzed_06d830", ROMX[$5830], BANK[$1b]
 
 Data_1b_5830:
 	db $ff, $7f, $3e, $1b, $37, $01, $4b, $00, $ff, $7f, $94, $52, $4a, $29, $00, $00
-
-SECTION "analyzed_06d840", ROMX[$5840], BANK[$1b]
-
-Data_1b_5840:
-	db $ff, $03, $1e, $00, $50, $04, $68, $00, $00, $7c, $ff, $6f, $7b, $3a, $68, $00
-	db $1f, $7c, $ff, $6f, $13, $42, $00, $00, $e0, $03, $94, $52, $4a, $29, $00, $00
-	db $e0, $03, $3e, $1b, $37, $01, $4b, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 SECTION "analyzed_06d870", ROMX[$5870], BANK[$1b]
 
@@ -40238,24 +40202,12 @@ SECTION "analyzed_06f8ce", ROMX[$78ce], BANK[$1b]
 Data_1b_78ce:
 	db $e0, $03, $fe, $46, $b1, $49, $de, $63, $00, $7c, $fe, $46, $69, $3d, $8c, $26
 
-SECTION "analyzed_073000", ROMX[$7000], BANK[$1c]
-
-Data_1c_7000:
-	db $44, $18, $c7, $44, $a3, $5d, $00, $00, $44, $18, $cb, $40, $99, $65, $85, $24
-	db $44, $18, $cb, $40, $33, $29, $85, $24, $44, $18, $53, $01, $99, $65, $85, $24
-	db $44, $18, $cb, $40, $99, $65, $53, $01, $00, $00, $00, $00, $00, $00, $00, $00
-
+; ($1c:$7000 BG + $1c:$7040 OBJ palettes carved into src/gfx/portrait/nada.asm
+; as NadaIntroPortraitPaletteBg / NadaIntroPortraitPaletteObj.)
 SECTION "analyzed_073030", ROMX[$7030], BANK[$1c]
 
 Data_1c_7030:
 	db $ff, $7f, $3e, $1b, $37, $01, $4b, $00, $ff, $7f, $94, $52, $4a, $29, $00, $00
-
-SECTION "analyzed_073040", ROMX[$7040], BANK[$1c]
-
-Data_1c_7040:
-	db $e0, $03, $2f, $31, $3b, $3e, $fe, $56, $00, $7c, $2f, $2d, $3b, $3e, $5b, $22
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $1f, $00, $00, $00, $00, $00
 
 SECTION "analyzed_073070", ROMX[$7070], BANK[$1c]
 
@@ -40348,19 +40300,8 @@ Data_1c_723e:
 	db $10, $08, $00, $20, $18, $0a, $00, $20, $20, $1e, $08, $20, $28, $20, $08, $20
 	db $30, $00, $08, $01, $00, $00, $0c, $05
 
-SECTION "analyzed_075800", ROMX[$5800], BANK[$1d]
-
-Data_1d_5800:
-	db $44, $18, $67, $40, $4b, $61, $00, $00, $44, $18, $2f, $15, $3b, $02, $05, $49
-	db $44, $18, $2f, $15, $b6, $29, $05, $49, $44, $18, $2f, $15, $3b, $02, $b6, $29
-	db $44, $18, $2f, $15, $47, $76, $05, $49, $44, $18, $00, $00, $b6, $29, $1e, $43
-
-SECTION "analyzed_075840", ROMX[$5840], BANK[$1d]
-
-Data_1d_5840:
-	db $e0, $03, $1f, $00, $1e, $43, $47, $76, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $7c, $1f, $00, $00, $00, $00, $00
+; ($1d:$5800 BG + $1d:$5840 OBJ palettes carved into src/gfx/portrait/kalum.asm
+; as KalumPortraitPaletteBg / KalumPortraitPaletteObj.)
 
 SECTION "analyzed_075a3e", ROMX[$5a3e], BANK[$1d]
 
@@ -40380,20 +40321,8 @@ Data_1d_5a3e:
 	db $08, $20, $10, $18, $08, $20, $18, $1a, $08, $02, $00, $00, $1c, $08, $00, $08
 	db $1e, $08, $02, $00, $00, $00, $0d, $00, $08, $02, $0d
 
-SECTION "analyzed_077319", ROMX[$7319], BANK[$1d]
-
-Data_1d_7319:
-	db $44, $18, $c9, $08, $70, $21, $00, $00, $44, $18, $c7, $24, $31, $5a, $00, $00
-	db $44, $18, $c7, $24, $72, $10, $3c, $0d, $44, $18, $c7, $24, $bb, $46, $b2, $35
-	db $44, $18, $ee, $0c, $72, $10, $b2, $35, $44, $18, $ee, $0c, $72, $10, $c7, $24
-
-SECTION "analyzed_077359", ROMX[$7359], BANK[$1d]
-
-Data_1d_7359:
-	db $e0, $03, $da, $21, $bb, $46, $31, $5a, $00, $7c, $3c, $0d, $bb, $46, $31, $5a
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $e0, $7f, $1f, $00, $00, $00, $00, $00
-
+; ($1d:$7319 BG + $1d:$7359 OBJ palettes carved into src/gfx/portrait/rafaga.asm
+; as RafagaPortraitPaletteBg / RafagaPortraitPaletteObj.)
 SECTION "analyzed_077557", ROMX[$7557], BANK[$1d]
 
 Data_1d_7557:
@@ -40408,20 +40337,8 @@ Data_1d_7557:
 	db $08, $1c, $09, $10, $10, $1e, $09, $02, $00, $00, $20, $09, $00, $08, $22, $09
 	db $01, $00, $00, $24, $0d
 
-SECTION "analyzed_079800", ROMX[$5800], BANK[$1e]
-
-Data_1e_5800:
-	db $aa, $08, $8b, $00, $17, $22, $31, $19, $aa, $08, $8b, $00, $79, $3e, $31, $19
-	db $aa, $08, $8b, $00, $7b, $67, $31, $19, $aa, $08, $17, $22, $bd, $3e, $7c, $5f
-	db $e7, $18, $8f, $25, $35, $32, $4b, $29, $aa, $08, $e7, $18, $b6, $1d, $71, $25
-
-SECTION "analyzed_079840", ROMX[$5840], BANK[$1e]
-
-Data_1e_5840:
-	db $e0, $03, $ff, $32, $d8, $1d, $ae, $31, $00, $7c, $7b, $67, $d8, $1d, $ae, $31
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-
+; ($1e:$5800 BG + $1e:$5840 OBJ palettes carved into src/gfx/portrait/bodka.asm
+; as BodkaPortraitPaletteBg / BodkaPortraitPaletteObj.)
 SECTION "analyzed_079a3e", ROMX[$5a3e], BANK[$1e]
 
 Data_1e_5a3e:
@@ -40464,20 +40381,8 @@ SECTION "analyzed_079bd9", ROMX[$5bd9], BANK[$1e]
 Data_1e_5bd9:
 	db $02, $02, $e3, $5b, $df, $5b, $68, $70, $69, $71, $0b, $08, $08, $08
 
-SECTION "analyzed_07b3e7", ROMX[$73e7], BANK[$1e]
-
-Data_1e_73e7:
-	db $44, $18, $a9, $28, $8d, $4d, $00, $00, $44, $18, $e8, $38, $ec, $30, $72, $10
-	db $44, $18, $ec, $30, $3c, $0d, $72, $10, $44, $18, $e8, $38, $12, $5e, $72, $10
-	db $44, $18, $e8, $38, $d6, $3d, $ec, $30, $44, $18, $5c, $6b, $12, $5e, $ec, $30
-
-SECTION "analyzed_07b427", ROMX[$7427], BANK[$1e]
-
-Data_1e_7427:
-	db $e0, $03, $1a, $2e, $d6, $3d, $1e, $43, $00, $7c, $3c, $0d, $12, $5e, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $e0, $7f, $1f, $00, $00, $00, $00, $00
-
+; ($1e:$73e7 BG + $1e:$7427 OBJ palettes carved into src/gfx/portrait/tempest.asm
+; as TempestPortraitPaletteBg / TempestPortraitPaletteObj.)
 SECTION "analyzed_07b625", ROMX[$7625], BANK[$1e]
 
 Data_1e_7625:
@@ -53510,24 +53415,12 @@ Data_34_70a8:
 	db $0c, $e6, $76, $00, $04, $2c, $76, $00, $06, $72, $75, $00, $06, $2c, $76, $00
 	db $01, $fe, $73, $00, $ff
 
-SECTION "analyzed_0d6000", ROMX[$6000], BANK[$35]
-
-Data_35_6000:
-	db $44, $18, $2a, $3c, $0f, $59, $00, $00, $44, $18, $aa, $08, $30, $19, $0e, $24
-	db $44, $18, $aa, $08, $30, $19, $d9, $25, $44, $18, $aa, $08, $30, $19, $57, $5a
-	db $44, $18, $aa, $08, $57, $5a, $0e, $24, $44, $18, $18, $18, $57, $5a, $0e, $24
-
+; ($35:$6000 BG + $35:$6040 OBJ palettes carved into src/gfx/portrait/ferious.asm
+; as FeriousPortraitPaletteBg / FeriousPortraitPaletteObj.)
 SECTION "analyzed_0d6030", ROMX[$6030], BANK[$35]
 
 Data_35_6030:
 	db $ff, $7f, $3e, $1b, $37, $01, $4b, $00, $ff, $7f, $94, $52, $4a, $29, $00, $00
-
-SECTION "analyzed_0d6040", ROMX[$6040], BANK[$35]
-
-Data_35_6040:
-	db $e0, $03, $be, $7b, $3e, $43, $18, $18, $00, $00, $be, $7b, $3e, $43, $1f, $00
-	db $00, $7c, $18, $18, $fd, $55, $1f, $00, $00, $00, $18, $18, $fd, $55, $0e, $24
-	db $00, $00, $00, $00, $00, $00, $00, $00, $e0, $7f, $1f, $00, $00, $00, $00, $00
 
 SECTION "analyzed_0d6070", ROMX[$6070], BANK[$35]
 

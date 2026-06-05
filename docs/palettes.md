@@ -1,9 +1,9 @@
 # CGB palettes — how the game loads colors
 
 Discovered while colorizing the monster portraits (docs/monster_detail_screen.md),
-but this is the game-wide palette mechanism. It's the key to giving the many
+but this is the game-wide palette mechanism. It was the key to giving the
 grayscale-extracted assets (portraits, screens — see docs/gfx_assets.md) their
-real colors.
+real colors; all of them now carry colour.
 
 ## WRAM shadow buffers + VBlank flush
 
@@ -44,19 +44,24 @@ already reads for the logo.
 
 ## Why this helps the whole project
 
-Most extracted assets are grayscale because their palette source was "not yet
-located" (docs/gfx_assets.md). The recipe to colorize any of them:
+All of the editable graphics assets now carry real colour; nothing is left
+grayscale-for-lack-of-a-palette. The recipe to locate any asset's palette:
 
-1. Find the screen's setup routine (the one that uploads its tiles/tilemap).
-2. Look for the `Func_00_04f2` / `Func_00_0547` (or single-palette) calls near it
-   and note the ROM pointer in `HL` (and bank) before each call.
-3. Read `$40` bytes there = the 8 BG (or OBJ) palettes; map cells/sprites to a
-   palette via their attribute byte's low 3 bits.
+1. Find the screen/portrait's setup routine (the one that uploads its tiles/tilemap).
+2. Look for the `Func_00_04f2` / `Func_00_0547` (or the banked-copy
+   `Func_00_3913` into `wBgPalettes` / `wObjPalettes`) calls near it and note the
+   ROM pointer in `HL` (and bank) before each.
+3. Read the bytes there = the BG (or OBJ) palettes; map cells/sprites to a palette
+   via their attribute byte's low 3 bits.
 
 Worked examples:
 - Monster portraits: per-monster `$80`-byte block in bank `$0f` at `$7191 + $80*m`;
   `block+$20` → BG palettes 4–6, `block+$48` → OBJ palettes 1–2.
 - Bank-`$30` full screens (town, tower, title, …): each data bank has a fixed
   layout — `$X:$7000` = 8 BG palettes, `$X:$7040` = 8 OBJ, `$X:$7080` = the
-  CopyBgMap descriptor. scratch/render_screens.py reads `$7000` to render them in
-  color; see docs/gfx_loaders.md.
+  CopyBgMap descriptor. The screen assets embed these in their PNGs.
+- Character portraits (kalum, toamuna, …): each draw routine copies 6 BG + 6 OBJ
+  palettes (`$30` each) from ROM **adjacent to the tile sheet** into
+  `wBgPalettes`/`wObjPalettes` via `Func_00_3913` — e.g. Kalum_StartEncounter
+  reads `$1d:$5800`/`$5840`. These were NOT lib-dispatched; they are carved into
+  each portrait asset (palette_bg.bin / palette_obj.bin). See docs/gfx_assets.md.

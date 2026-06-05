@@ -273,17 +273,33 @@ def cmd_screen(args: argparse.Namespace) -> int:
 
 
 def cmd_portrait(args: argparse.Namespace) -> int:
-    """Single- or two-VRAM-bank grayscale portrait from one tile-sheet PNG. The PNG
-    holds the bank-1 (main) tiles, optionally followed by the bank-0 tiles; splits
-    into tiles.bin (bank 1) + tiles2.bin (bank 0, when --tiles0 > 0) and passes the
-    committed tilemap/attrmap (next to the PNG) through. Grayscale -- the BG palettes
-    are lib-dispatched and not yet located. See docs/gfx_assets.md."""
+    """Single- or two-VRAM-bank portrait from one tile-sheet PNG. The PNG holds the
+    bank-1 (main) tiles, optionally followed by the bank-0 tiles; splits into
+    tiles.bin (bank 1) + tiles2.bin (bank 0, when --tiles0 > 0) and passes the
+    committed tilemap/attrmap (next to the PNG) through. When --palettes-bg/-obj are
+    set, the PNG's table holds the real CGB palettes (BG palettes first, then OBJ)
+    and each tile is shown in its colour (pixel = palette*4 + 2bpp value); they are
+    split off into palette_bg.bin / palette_obj.bin. See docs/gfx_assets.md."""
     png = Path(args.png)
     d = png.parent
     tiles = sheet_png_to_tiles(png, args.tiles1 + args.tiles0)
     comps = [("tiles", b"".join(tiles[: args.tiles1]))]            # bank 1 (main)
     if args.tiles0:
         comps.append(("tiles2", b"".join(tiles[args.tiles1:])))   # bank 0
+    if args.palettes_bg or args.palettes_obj:
+        _w, _h, _px, colors = read_indexed_png(png)
+
+        def pack(first: int, n: int) -> bytes:
+            out = bytearray()
+            for i in range(first, first + n * 4):                 # n palettes * 4 colors
+                word = rgb888_to_555(*colors[i])
+                out += bytes((word & 0xFF, (word >> 8) & 0xFF))
+            return bytes(out)
+
+        if args.palettes_bg:                                      # BG palettes lead the table
+            comps.append(("palette_bg", pack(0, args.palettes_bg)))
+        if args.palettes_obj:                                     # OBJ palettes follow them
+            comps.append(("palette_obj", pack(args.palettes_bg * 4, args.palettes_obj)))
     comps += [
         ("tilemap", (d / "tilemap.bin").read_bytes()),
         ("attrmap", (d / "attrmap.bin").read_bytes()),
@@ -325,6 +341,9 @@ def main() -> int:
     pt.add_argument("--out-dir", required=True)
     pt.add_argument("--tiles1", type=int, default=384, help="bank-1 (main) tile count")
     pt.add_argument("--tiles0", type=int, default=0, help="bank-0 tile count (0 = single bank)")
+    pt.add_argument("--palettes-bg", type=int, default=0,
+                    help="BG palettes in the PNG table (0 = grayscale, no palette.bin)")
+    pt.add_argument("--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones")
     pt.set_defaults(fn=cmd_portrait)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")

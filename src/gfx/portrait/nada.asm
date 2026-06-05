@@ -4,10 +4,11 @@
 ; (NadaIntroTilesBank0), so they are kept together here. Located via
 ; tools/find_portraits.py.
 ;
-; Assembled from the editable sources under assets/nada_intro/ and
-; assets/nada_scene2/ by tools/gfxasset.py (Makefile, output under
-; build/assets/). Grayscale sources -- palettes are lib-dispatched and not yet
-; located; tiles + tilemap round-trip here.
+; Assembled from the editable sources under assets/portrait/nada_intro/ and
+; assets/portrait/nada_scene2/ by tools/pngasset.py (Makefile, output under
+; build/assets/). The 6 BG + 6 OBJ palettes (loaded by Nada_ShowScene from
+; $1c:$7000/$7040) are carved into the intro scene below; the second pose reuses
+; them, so its PNG is colourised but owns no palette bytes.
 
 ; --- Intro scene (shown by Func_1f_4d97 early in her script) ---------------
 ; Bank 0 sheet $1c:$4000, bank 1 sheet $1c:$5800.
@@ -19,6 +20,14 @@ NadaIntroTilesBank0:
 SECTION "NadaIntroTiles", ROMX[$5800], BANK[$1c]
 NadaIntroTiles:
 	INCBIN "assets/nada_intro/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+
+SECTION "NadaIntroPaletteBg", ROMX[$7000], BANK[$1c]
+NadaIntroPaletteBg:
+	INCBIN "assets/nada_intro/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
+
+SECTION "NadaIntroPaletteObj", ROMX[$7040], BANK[$1c]
+NadaIntroPaletteObj:
+	INCBIN "assets/nada_intro/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
 SECTION "NadaIntroMapDesc", ROMX[$7080], BANK[$1c]
 NadaIntroMapDesc:

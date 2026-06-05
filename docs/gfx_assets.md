@@ -20,12 +20,13 @@ Regenerates a screen's components from a source PNG.
   (8 BG + 8 OBJ) in its palette table; each tile is shown in its real palette
   (`pixel = palette*4 + 2bpp value`, so the tile value is `pixel % 4`). No packer —
   the tile order lives in the committed tilemap.
-- `portrait --png <sheet.png> --tiles1 N --tiles0 M --out-dir D` → `tiles.bin`
-  (the `--tiles1` bank-1 tiles) and, when `--tiles0` is set, `tiles2.bin` (the
-  bank-0 tiles), plus the committed `tilemap.bin`/`attrmap.bin` passed through.
-  **Grayscale** sheet for the character portraits: one indexed PNG holds the
-  bank-1 tiles first, then any bank-0 tiles (palettes are lib-dispatched and not
-  yet located, so the PNG is 4-gray, `tile value = pixel % 4`).
+- `portrait --png <sheet.png> --tiles1 N --tiles0 M --palettes-bg 6 --palettes-obj 6
+  --out-dir D` → `tiles.bin` (the `--tiles1` bank-1 tiles), `tiles2.bin` (the
+  `--tiles0` bank-0 tiles, when set), `palette_bg.bin` / `palette_obj.bin` (the
+  `--palettes-bg/-obj` palettes, split off the PNG table), plus the committed
+  `tilemap.bin`/`attrmap.bin` passed through. The character-portrait sheet holds
+  the bank-1 tiles first, then any bank-0 tiles; the 6 BG + 6 OBJ palettes lead
+  the PNG table and each tile shows in its colour (`tile value = pixel % 4`).
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 
@@ -95,14 +96,21 @@ is the exemplar for the remaining six screens (and the eventual YAML schema):
 
 ## Migrated: the portraits (portrait mode)
 
-The 10 character portraits followed onto `mode: portrait`. Each is one grayscale
+The 10 character portraits followed onto `mode: portrait`. Each is one colour
 tile-sheet PNG — `assets/portrait/<name>/<name>.png`, bank-1 tiles first then any bank-0
-tiles — plus the committed `tilemap.bin`/`attrmap.bin`. Single-bank portraits
-(kalum, toamuna, rafaga, tempest, naji, pashute, bodka, nada_scene2) emit only
-`tiles.bin`; the two-bank ones (ferious `tiles0: 128`, nada_intro `tiles0: 384`)
-also emit `tiles2.bin`. The portrait asms were unchanged — they already `INCBIN`
-those bins; only the source moved from `asset.json` to a PNG. Palettes stay
-grayscale until the lib-dispatched CGB palettes are located.
+tiles, with the 6 BG + 6 OBJ palettes embedded — plus the committed
+`tilemap.bin`/`attrmap.bin`. Single-bank portraits (kalum, toamuna, rafaga,
+tempest, naji, pashute, bodka, nada_scene2) emit only `tiles.bin`; the two-bank
+ones (ferious `tiles0: 128`, nada_intro `tiles0: 384`) also emit `tiles2.bin`.
+
+**Colour (`palettes_bg: 6`, `palettes_obj: 6`):** each portrait's draw routine
+copies 6 BG + 6 OBJ palettes (`$30` each) from ROM *adjacent to its tile sheet*
+into `wBgPalettes`/`wObjPalettes` (e.g. Kalum_StartEncounter reads `$1d:$5800`/
+`$5840`) — they were never lib-dispatched, just unlabelled data. They are carved
+out of `analyzed.asm` into each portrait asset (`<Name>PortraitPaletteBg` /
+`PaletteObj` → palette_bg.bin / palette_obj.bin), so the portraits carry real
+colour. nada_scene2 reuses nada_intro's `$1c:$7000` palette, so it is colourised
+for editing but owns no palette bytes. See docs/palettes.md for the located map.
 
 ## Migrated: the TECMO logo (composite mode)
 
@@ -130,10 +138,11 @@ unreferenced.
 
 ### What's common
 
-**17 of 18 share one archetype:** `8800` addressing, 384-tile sheet(s), grayscale
-(real palettes are lib-dispatched and not yet located → `palette_count 0`), a real
+**17 of 18 share one archetype:** `8800` addressing, 384-tile sheet(s), a real
 attribute map, and **non-blank "invisible" tiles the tilemap never references**
-(mouth-animation/overlay frames drawn by other descriptors). Only the logo is the
+(mouth-animation/overlay frames drawn by other descriptors). (At survey time their
+palettes were thought "not located" → recorded as grayscale; they have since all
+been located and carved, so every asset now carries colour.) Only the logo is the
 composite outlier (every tile visible, attr all-zero, has a palette).
 
 ### Key insight — two modes; packing is a non-problem
