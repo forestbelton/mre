@@ -3939,11 +3939,11 @@ Func_00_1b15:
 	ret
 Func_00_1b29:
 	ld a, $01
-	ld [$d0e9], a
+	ld [wUiState], a
 Func_00_1b2e:
 	call WaitForNextFrame
 	call ReadJoypad
-	ld a, [$d0e9]
+	ld a, [wUiState]
 	cp $01
 	jr nz, Func_00_1b40
 	call Func_00_1be5
@@ -3953,20 +3953,20 @@ Func_00_1b40:
 Func_00_1b43:
 	call Func_00_3460
 	call Func_00_2dbc
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
-	ld a, [$d0e9]
+	ld [wUiTimer], a
+	ld a, [wUiState]
 	cp $00
 	jr nz, Func_00_1b2e
 	ret
 Func_00_1b58:
 	ld a, $01
-	ld [$d0e9], a
+	ld [wUiState], a
 Func_00_1b5d:
 	call WaitForNextFrame
 	call ReadJoypad
-	ld a, [$d0e9]
+	ld a, [wUiState]
 	cp $01
 	jr nz, Func_00_1b6f
 	call Func_00_1c9d
@@ -3982,20 +3982,20 @@ SECTION "analyzed_001b72", ROM0[$1b72]
 Func_00_1b72:
 	call Func_00_3460
 	call Func_00_2dbc
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
-	ld a, [$d0e9]
+	ld [wUiTimer], a
+	ld a, [wUiState]
 	cp $00
 	jr nz, Func_00_1b5d
 	ret
 Func_00_1b87:
 	ld a, $01
-	ld [$d0e9], a
+	ld [wUiState], a
 	call WaitForNextFrame
 	call ReadJoypad
 	call Func_00_1be5
-	ld a, [$d0e9]
+	ld a, [wUiState]
 	cp $02
 	jr nz, Func_00_1bc7
 	ld a, [$c568]
@@ -4016,10 +4016,10 @@ Func_00_1bb9:
 	FAR_CALL $16, Func_16_4016
 Func_00_1bc7:
 	call Func_00_2dbc
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
-	ld a, [$d0e9]
+	ld [wUiTimer], a
+	ld a, [wUiState]
 	cp $00
 	jr nz, Func_00_1b87
 	ret
@@ -4120,7 +4120,7 @@ Func_00_1c57:
 	call PlaySound
 	pop af
 	ld a, $02
-	ld [$d0e9], a
+	ld [wUiState], a
 	call Func_00_30cf
 	jr Func_00_1c7e
 Func_00_1c6c:
@@ -4132,10 +4132,10 @@ Func_00_1c6c:
 	call PlaySound
 	pop af
 	ld a, $00
-	ld [$d0e9], a
+	ld [wUiState], a
 Func_00_1c7e:
 	call Func_00_3268
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	rrca
 	rrca
 	and $03
@@ -4336,11 +4336,11 @@ Func_00_1dd0:
 	call PlaySound
 	pop af
 	ld a, $00
-	ld [$d0e9], a
+	ld [wUiState], a
 	call Func_00_25a4
 Func_00_1de5:
 	call Func_00_2020
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	rrca
 	rrca
 	and $03
@@ -4530,7 +4530,7 @@ Func_00_1eeb:
 	call PlaySound
 	pop af
 	ld a, $01
-	ld [$d0e9], a
+	ld [wUiState], a
 	call Func_00_3089
 	ret
 Func_00_1eff:
@@ -4578,7 +4578,7 @@ SECTION "analyzed_001f34", ROM0[$1f34]
 
 Func_00_1f34:
 	call Func_00_20da
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	and $04
 	jr nz, Func_00_1f47
 	ld d, $00
@@ -5669,7 +5669,7 @@ Func_00_2795:
 	ret
 Func_00_27a5:
 	ld a, $02
-	ld [$d0e9], a
+	ld [wUiState], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $747b
@@ -5814,7 +5814,7 @@ Func_00_289d:
 Func_00_28c0:
 	call WaitForNextFrame
 	call ReadJoypad
-	ld a, [$d0e9]
+	ld a, [wUiState]
 	cp $01
 	jr nz, Func_00_28d2
 	call Func_00_28fb
@@ -5822,9 +5822,9 @@ Func_00_28c0:
 Func_00_28d2:
 	call Func_00_2a05
 Func_00_28d5:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 	and $08
 	rrca
 	rrca
@@ -5839,7 +5839,7 @@ Func_00_28d5:
 	ld a, $0f
 	call Func_00_2117
 Func_00_28f3:
-	ld a, [$d0e9]
+	ld a, [wUiState]
 	cp $00
 	jr nz, Func_00_28c0
 	ret
@@ -5943,7 +5943,7 @@ Func_00_2994:
 	ld [$c7cd], a
 	call Func_00_27a5
 	ld a, $02
-	ld [$d0e9], a
+	ld [wUiState], a
 	ret
 Func_00_29c1:
 	ldh a, [hJoyPressed]
@@ -5957,9 +5957,9 @@ Func_00_29cb:
 	call PlaySound
 	pop af
 	ld a, $00
-	ld [$d0e9], a
+	ld [wUiState], a
 Func_00_29d7:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	rrca
 	rrca
 	and $03
@@ -6065,7 +6065,7 @@ Func_00_2a7f:
 	call Func_00_281f
 	call Func_00_2c54
 	ld a, $01
-	ld [$d0e9], a
+	ld [wUiState], a
 	call Func_00_2bb8
 	ret
 Func_00_2a9d:
@@ -6080,10 +6080,10 @@ Func_00_2aa7:
 	call PlaySound
 	pop af
 	ld a, $00
-	ld [$d0e9], a
+	ld [wUiState], a
 	call Func_00_2bb8
 Func_00_2ab6:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	rrca
 	rrca
 	and $03
@@ -6601,7 +6601,7 @@ Func_00_2dc1:
 SECTION "analyzed_002dda", ROM0[$2dda]
 
 Func_00_2dda:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	and $10
 	jr nz, Func_00_2de8
 	ldh a, [$ffab]
@@ -34797,10 +34797,10 @@ Func_13_41e5:
 	call CopyBgMap
 	call Func_13_49a5
 	xor a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 	ld [$cfbc], a
 	inc a
-	ld [$d0e9], a
+	ld [wUiState], a
 Func_13_4204:
 	ld b, d
 	ld d, $08
@@ -34808,10 +34808,10 @@ Func_13_4204:
 	ld d, b
 	call Func_13_49ac
 	call Func_13_4a18
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
-	ld a, [$d0e9]
+	ld [wUiTimer], a
+	ld a, [wUiState]
 	or a
 	jr nz, Func_13_4204
 	call Func_00_07c5
@@ -35316,7 +35316,7 @@ Func_13_4a08:
 	cp $0d
 	ret nz
 	xor a
-	ld [$d0e9], a
+	ld [wUiState], a
 	ret
 Func_13_4a18:
 	push hl
@@ -35328,7 +35328,7 @@ Func_13_4a18:
 	xor a
 	ldh [rVBK], a
 	ld bc, $0001
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	and $01
 	jr z, Func_13_4a30
 	ld d, $ec
@@ -35767,7 +35767,7 @@ ShowRegeneratedMonster:
 	ld b, $01
 	call Func_00_0732
 	xor a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 Func_14_40c5:
 	call WaitForNextFrame
 	call WaitForNextFrame
@@ -35802,9 +35802,9 @@ Func_14_40fb:
 	ld l, a
 	dec d
 	jr nz, Func_14_40ec
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 	cp $14
 	jr nz, Func_14_40c5
 	ld hl, $d0eb
@@ -35812,7 +35812,7 @@ Func_14_40fb:
 	ld d, $ff
 	call Func_00_03bc
 	xor a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 Func_14_411e:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -35820,21 +35820,21 @@ Func_14_411e:
 	bit 1, a
 	jr nz, Func_14_417b
 	call Func_14_41b3
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 	cp $8c
 	jr nz, Func_14_411e
 	xor a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 Func_14_413c:
 	call WaitForNextFrame
 	call Func_14_41b3
 	call Func_14_4294
 	call Func_14_42af
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	inc a
-	ld [$d0ea], a
+	ld [wUiTimer], a
 	cp $f0
 	jr nz, Func_14_413c
 	call Func_00_07a7
@@ -35872,7 +35872,7 @@ Data_14_4183:
 SECTION "analyzed_0501b3", ROMX[$41b3], BANK[$14]
 
 Func_14_41b3:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	cp $8c
 	jr nc, Func_14_4239
 	ld c, a
@@ -36039,7 +36039,7 @@ Func_14_428b:
 	jr nz, Func_14_423e
 	ret
 Func_14_4294:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	cp $64
 	ret c
 	and $01
@@ -36049,12 +36049,12 @@ Func_14_4294:
 Func_14_42a3:
 	call Func_14_42e7
 Func_14_42a6:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	and $0f
 	call z, Func_14_4300
 	ret
 Func_14_42af:
-	ld a, [$d0ea]
+	ld a, [wUiTimer]
 	ld b, a
 	and $03
 	ret nz

@@ -195,6 +195,19 @@ wTradehouseState::  ds 1    ; $D0E3: empty-tradehouse cascade
 wVerdeState::       ds 1    ; $D0E4: Verde's NPC cascade
 
 
+SECTION "wram_ui_loop", WRAMX[$D0E9], BANK[1]
+; State + frame timer for the engine's blocking interactive UI/menu loops. The
+; recurring shape (Func_00_1b29/$1b58/... and screen setups in banks $13/...) is:
+; draw the screen, zero wUiTimer, set wUiState=1, then each frame
+; `WaitForNextFrame -> ReadJoypad -> dispatch a per-phase handler by wUiState ->
+; render`, looping while wUiState != 0 and exiting when a handler clears it. The
+; phase-1 handlers read hJoyRepeat for cursor navigation. Sits just past the
+; saved block ($CFCF..$D0E6), so neither byte persists.
+wUiState::          ds 1    ; $D0E9: UI-loop state (0 = exit loop; 1/2 = active phase)
+wUiTimer::          ds 1    ; $D0EA: frames elapsed in the active loop (reset at entry,
+                            ;   +1 per frame; masked e.g. `rrca/and 3` for blink/anim timing)
+
+
 SECTION "wram_fade_state", WRAMX[$D0FE], BANK[1]
 wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade)
 
