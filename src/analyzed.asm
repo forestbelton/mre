@@ -1806,7 +1806,7 @@ Func_00_0c04:
 DrawMetasprite:
 	ld a, [$7fff]
 	push af
-	ld a, [$c100]
+	ld a, [wDrawBank]
 	ld [$2fff], a
 	ld a, c
 	ldh [$ff9b], a
@@ -3864,7 +3864,7 @@ Func_00_1a6c:
 	or $02
 	ldh [rLCDC], a
 	ld a, $11
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $413f
 	ld bc, $1008
 	call DrawMetasprite
@@ -5676,7 +5676,7 @@ Func_00_27a5:
 	ld de, $9800
 	call CopyBgMap
 	ld a, $16
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $75c4
 	ld bc, $1008
 	call DrawMetasprite
@@ -5796,7 +5796,7 @@ Func_00_2893:
 	ret
 Func_00_289d:
 	ld a, $16
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $757f
 	ld bc, $1008
 	call DrawMetasprite
@@ -7862,7 +7862,7 @@ Func_00_35f9:
 	rst $00
 	rst $18
 	ld a, b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld b, d
 	ld c, e
 	call DrawMetasprite
@@ -8579,10 +8579,10 @@ Data_00_3db6:
 SECTION "analyzed_003e10", ROM0[$3e10]
 
 Func_00_3e10:
-	ld a, [$c100]
+	ld a, [wDrawBank]
 	push af
 	ld a, $19
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$d612]
 	srl a
 	srl a
@@ -8602,7 +8602,7 @@ Func_00_3e10:
 	ld hl, $d612
 	inc [hl]
 	pop af
-	ld [$c100], a
+	ld [wDrawBank], a
 	ret
 
 SECTION "analyzed_003e3e", ROM0[$3e3e]
@@ -21587,7 +21587,7 @@ Func_05_44b4:
 	ld hl, $4612
 	rst $00
 	ld a, [hl]
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$cf50]
 	ld c, a
 	ld a, [$cf51]
@@ -29471,7 +29471,7 @@ Func_0f_435b:
 	ret
 Func_0f_436e:
 	ld a, $0f
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$c287]
 	and $0c
 	srl a
@@ -30149,7 +30149,7 @@ Func_0f_489f:
 	ret
 Func_0f_48f1:
 	ld a, $02
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$cf66]
 	add a, a
 	ld hl, $493f
@@ -30523,7 +30523,7 @@ DrawMonsterPortraitSprites:
 	or l
 	jr z, Func_0f_4c20
 	ld a, $0f
-	ld [$c100], a
+	ld [wDrawBank], a
 	ldh a, [rSCY]
 	add a, $50
 	ld b, a
@@ -30539,7 +30539,7 @@ Func_0f_4c20:
 	or l
 	ret z
 	ld a, $0f
-	ld [$c100], a
+	ld [wDrawBank], a
 	ldh a, [rSCY]
 	add a, $50
 	ld b, a
@@ -34867,7 +34867,7 @@ Nox_RenderPortrait_AlfSpeaking:
 	ld de, $9900
 	call CopyBgMap
 	ld a, $13
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_13_42f6
 	call Func_13_433e
 	call Func_13_4362
@@ -34877,7 +34877,7 @@ Nox_RenderPortrait_NoxSpeaking:
 	ld de, $9900
 	call CopyBgMap
 	ld a, $13
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_13_42f6
 	call Func_13_433e
 	call Func_13_4362
@@ -34887,7 +34887,7 @@ Nox_RenderPortrait_Reminiscing:
 	ld de, $9900
 	call CopyBgMap
 	ld a, $13
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_13_4308
 	call Func_13_4350
 	call Func_13_4362
@@ -34897,7 +34897,7 @@ Nox_RenderPortrait_GoSeeFriends:
 	ld de, $9900
 	call CopyBgMap
 	ld a, $13
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_13_431a
 	call Func_13_4350
 	call Func_13_4362
@@ -34907,7 +34907,7 @@ Nox_RenderPortrait_Note:
 	ld de, $9900
 	call CopyBgMap
 	ld a, $13
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_13_432c
 	ret
 Func_13_42f6:
@@ -35738,7 +35738,7 @@ ShowRegeneratedMonster:
 	ld de, $9800
 	call CopyBgMap
 	ld a, $14
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $6853
 	ld bc, $1008
 	call DrawMetasprite
@@ -36581,7 +36581,7 @@ Func_15_4147:
 	ret
 Func_15_4185:
 	ld a, $15
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $74ee
 	call DrawMetasprite
 	ld hl, $74ee
@@ -36601,7 +36601,7 @@ Func_15_4185:
 	ret
 Func_15_41b8:
 	ld a, $15
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $74ee
 	call DrawMetasprite
 	call HideUnusedOamSprites
@@ -38809,7 +38809,7 @@ Pashute_RenderPortraitNeutral:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5afb
 	ld bc, $5018
 	call DrawMetasprite
@@ -38870,7 +38870,7 @@ Pashute_RenderPortraitPanic:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5afb
 	ld bc, $5018
 	call DrawMetasprite
@@ -38896,7 +38896,7 @@ Pashute_RenderPortraitShocked:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5afb
 	ld bc, $5018
 	call DrawMetasprite
@@ -39023,7 +39023,7 @@ Verde_RenderPortrait:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $777c
 	ld bc, $4435
 	call DrawMetasprite
@@ -39081,7 +39081,7 @@ Verde_RenderPortraitSurprised:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7789
 	ld bc, $502c
 	call DrawMetasprite
@@ -39104,7 +39104,7 @@ Verde_RenderPortraitCalm:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1b
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7789
 	ld bc, $502c
 	call DrawMetasprite
@@ -39227,7 +39227,7 @@ Bodka_RenderPortrait:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1e
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5add
 	ld bc, $482b
 	call DrawMetasprite
@@ -39278,7 +39278,7 @@ Bodka_RenderPortraitAlt:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1e
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5add
 	ld bc, $482b
 	call DrawMetasprite
@@ -39370,7 +39370,7 @@ Func_18_601f:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $33
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -39503,7 +39503,7 @@ Naji_RenderPortraitTalking:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1a
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $75d3
 	ld a, $1a
 	ld de, $9886
@@ -39553,7 +39553,7 @@ Naji_RenderPortraitAlt:
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $1a
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $75eb
 	ld a, $1a
 	ld de, $9886
@@ -39929,7 +39929,7 @@ Toamuna_RenderPortrait:
 	ld a, $19
 	ld [wRendererBank], a
 	ld a, $1a
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5a56
 	ld bc, $2828
 	call DrawMetasprite
@@ -39946,7 +39946,7 @@ Toamuna_RenderPortraitAlt:
 	ld a, $19
 	ld [wRendererBank], a
 	ld a, $1a
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5aab
 	ld bc, $2828
 	call DrawMetasprite
@@ -40686,7 +40686,7 @@ Kalum_AnimateMonsterPortrait:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1d
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5b07
 	ld bc, $5070
 	call DrawMetasprite
@@ -40813,7 +40813,7 @@ Func_1f_44ca:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $35
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $6508
 	ld bc, $5068
 	call DrawMetasprite
@@ -40968,7 +40968,7 @@ Func_1f_47ea:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1d
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $75c5
 	ld bc, $4848
 	call DrawMetasprite
@@ -41080,7 +41080,7 @@ Func_1f_4b15:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1e
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $76bb
 	ld bc, $2060
 	call DrawMetasprite
@@ -41302,7 +41302,7 @@ Nada_RenderPortrait:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1c
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_1f_4f5b
 	call Func_1f_4fb2
 	ret
@@ -41314,7 +41314,7 @@ Nada_RenderPortraitAngry:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1c
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $76ea
 	ld a, $1c
 	ld de, $986c
@@ -41466,7 +41466,7 @@ Func_1f_50a1:
 	ld a, $1f
 	ld [wRendererBank], a
 	ld a, $1c
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $76ea
 	ld a, $1c
 	ld de, $986c
@@ -42849,7 +42849,7 @@ Func_1f_65be:
 	ld hl, $65e8
 Func_1f_65c1:
 	ld a, $19
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$d612]
 	srl a
 	srl a
@@ -43083,7 +43083,7 @@ Func_20_7990:
 	ld a, [de]
 	ld b, a
 	ld a, $20
-	ld [$c100], a
+	ld [wDrawBank], a
 	call DrawMetasprite
 	ret
 
@@ -47013,7 +47013,7 @@ Func_30_405a:
 	jp Func_30_405a
 Func_30_4077:
 	ld a, $20
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
@@ -47104,7 +47104,7 @@ Func_30_4129:
 	inc a
 	ld [$d0f6], a
 	ld a, $20
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
@@ -47627,7 +47627,7 @@ Func_30_4487:
 	ret
 Func_30_4494:
 	ld a, $22
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
@@ -47801,14 +47801,14 @@ Func_30_45e2:
 	jr z, Func_30_4603
 	ld hl, $7356
 	ld a, $23
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld b, $28
 	ld c, $48
 	call DrawMetasprite
 Func_30_4603:
 	ld hl, $7377
 	ld a, $23
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld b, $48
 	ld c, $38
 	call DrawMetasprite
@@ -48117,7 +48117,7 @@ Func_30_4855:
 	rst $00
 	rst $18
 	ld a, $02
-	ld [$c100], a
+	ld [wDrawBank], a
 	call DrawMetasprite
 	ret
 Func_30_486d:
@@ -48464,7 +48464,7 @@ Func_30_4df3:
 	cp $d2
 	jp nc, Func_30_4e46
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5920
 	ld b, $68
 	ld c, $78
@@ -48522,7 +48522,7 @@ Func_30_4e47:
 	ld b, a
 	pop hl
 	ld a, $02
-	ld [$c100], a
+	ld [wDrawBank], a
 	call DrawMetasprite
 	ret
 
@@ -48598,7 +48598,7 @@ Func_30_4ecb:
 Func_30_4ece:
 	push hl
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, c
 	add a, a
 	ld hl, $4e84
@@ -48629,7 +48629,7 @@ Func_30_4ef8:
 	ld a, [hl]
 	ld b, a
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5956
 	ld c, $10
 	call DrawMetasprite
@@ -48722,7 +48722,7 @@ Func_30_4f88:
 	bit 0, a
 	jr z, Func_30_4fb4
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5968
 	ld b, $90
 	ld c, $10
@@ -48732,7 +48732,7 @@ Func_30_4fb4:
 	bit 1, a
 	jr z, Func_30_4fca
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5968
 	ld b, $60
 	ld c, $10
@@ -48742,7 +48742,7 @@ Func_30_4fca:
 	bit 2, a
 	jr z, Func_30_5022
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5968
 	ld b, $30
 	ld c, $10
@@ -48779,7 +48779,7 @@ Func_30_5000:
 	ld a, [hl]
 	ld b, a
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $5968
 	ld c, $10
 	call DrawMetasprite
@@ -48790,7 +48790,7 @@ Func_30_5022:
 	ret
 Func_30_5023:
 	ld a, $24
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $592d
 	ld b, $10
 	ld c, $50
@@ -49290,7 +49290,7 @@ Func_30_53e3:
 	ret
 Func_30_5408:
 	ld a, $26
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7356
 	ld b, $10
 	ld c, $08
@@ -49494,7 +49494,7 @@ Func_30_5658:
 	ret
 Func_30_565c:
 	ld a, $28
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld b, $10
 	ld c, $08
 	ld hl, $74c6
@@ -49758,7 +49758,7 @@ Func_30_58d7:
 	ld hl, $5868
 	rst $00
 	ld a, [hl]
-	ld [$c100], a
+	ld [wDrawBank], a
 	pop af
 	ld hl, $588d
 	add a, a
@@ -51530,7 +51530,7 @@ Func_31_45a4:
 	push bc
 	push hl
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7914
 	ld c, d
 	call DrawMetasprite
@@ -51607,7 +51607,7 @@ Func_31_45fe:
 	sub c
 	ld c, a
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7973
 	call DrawMetasprite
 	pop bc
@@ -51623,7 +51623,7 @@ Func_31_462b:
 	cp $40
 	ret nc
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7921
 	ld b, $28
 	ld c, $60
@@ -51646,7 +51646,7 @@ Func_31_4644:
 	bit 0, c
 	ret z
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7985
 	ld a, [$d5ea]
 	swap a
@@ -51660,7 +51660,7 @@ Func_31_4644:
 	ld c, a
 	call DrawMetasprite
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld hl, $7985
 	ld a, [$d5ea]
 	swap a
@@ -51695,7 +51695,7 @@ Func_31_46b5:
 	ld b, a
 	ld c, $68
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$d5c7]
 	bit 2, a
 	jr nz, Func_31_46c9
@@ -51788,7 +51788,7 @@ Func_31_4755:
 	ld c, $68
 Func_31_4762:
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$d5c7]
 	bit 2, a
 	jr nz, Func_31_4773
@@ -51807,7 +51807,7 @@ Func_31_477e:
 	ret
 Func_31_4782:
 	ld a, $34
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [$d5c7]
 	bit 2, a
 	jr nz, Func_31_479b
@@ -52054,7 +52054,7 @@ DrawMonsterDetailBgMap:
 	ret
 DrawMonsterDetailSprites:
 	ld a, $0f
-	ld [$c100], a
+	ld [wDrawBank], a
 	ld a, [wMonsterMeta1Ptr]
 	ld l, a
 	ld a, [wMonsterMeta1Ptr + 1]
@@ -52254,7 +52254,7 @@ Func_32_430a:
 	jp Func_32_42ef
 Func_32_431a:
 	ld a, $32
-	ld [$c100], a
+	ld [wDrawBank], a
 	call Func_32_42d4
 	push bc
 	call Func_32_432a

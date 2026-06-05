@@ -22,6 +22,14 @@ DEF WRAM_INC EQU 1
 ; CGB palette shadow buffers, flushed to the hardware palette registers in VBlank
 ; (FlushBgPalettes / FlushObjPalettes, gated by hBgPaletteDirty / hObjPaletteDirty).
 ; 8 palettes each, 4 little-endian RGB555 colors per palette. See docs/palettes.md.
+SECTION "wram_draw_bank", WRAM0[$C100]
+wDrawBank::    ds 1     ; $C100: ROM bank holding the graphics/metasprite data to render.
+                        ;   Callers set it to their data bank (banks $02-$35 seen) right
+                        ;   before a DrawMetasprite-family call, which banks it into the
+                        ;   $2FFF ROM-select register to fetch the sprite/tile data. The
+                        ;   real execution bank is saved/restored separately via $7FFF
+                        ;   (each ROMX bank's last byte holds its own index).
+
 SECTION "wram_palettes", WRAM0[$C101]
 wBgPalettes::  ds $40   ; $C101: BG palettes 0-7 (loaded by LoadBgPalettes / LoadBgPalette)
 wObjPalettes:: ds $40   ; $C141: OBJ palettes 0-7 (loaded by LoadObjPalettes / LoadObjPalette)
