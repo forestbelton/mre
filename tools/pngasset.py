@@ -228,34 +228,43 @@ def cmd_decode(args: argparse.Namespace) -> int:
 
 def sheet_png_to_tiles(path: Path, count: int, sheet_w: int = 16) -> list[bytes]:
     """Read a tile-sheet PNG (tiles laid out `sheet_w` per row) into `count`
-    2bpp tiles -- the inverse of how the screens' tiles.png is decoded."""
+    2bpp tiles. Pixel values are `display_palette*4 + 2bpp_value`, so the tile's
+    pixel value is `pixel % 4` (the display palette is only for viewing)."""
     w, _h, px, _ = read_indexed_png(path)
     tiles: list[bytes] = []
     for t in range(count):
         bx, by = (t % sheet_w) * 8, (t // sheet_w) * 8
-        grid = [px[(by + r) * w + (bx + c)] for r in range(8) for c in range(8)]
+        grid = [px[(by + r) * w + (bx + c)] % 4 for r in range(8) for c in range(8)]
         tiles.append(indices_to_tile(grid))
     return tiles
 
 
 def cmd_screen(args: argparse.Namespace) -> int:
-    """Two-VRAM-bank screen: two tile-sheet PNGs + a 16-palette .pal -> the
-    tiles/palette .bin the screen's asm INCBINs (the tilemap/attrmap stay as
-    committed data the asm INCBINs directly). The colour exemplar for screens."""
-    d = Path(args.dir)
-    tiles0 = sheet_png_to_tiles(d / "tiles_bank0.png", args.tiles)  # -> VRAM bank 0
-    tiles1 = sheet_png_to_tiles(d / "tiles.png", args.tiles)  # -> VRAM bank 1
-    words = read_pal_file(d / "palette.pal")  # 8 BG + 8 OBJ palettes
-    pal = b"".join(bytes((w & 0xFF, (w >> 8) & 0xFF)) for w in words)
+    """Two-VRAM-bank colour screen from ONE indexed tile-sheet PNG. The sheet holds
+    both banks stacked (top `--tiles` tiles -> VRAM bank 0, bottom -> bank 1) and the
+    16 CGB palettes (8 BG + 8 OBJ) in its PNG palette table; each tile is shown in
+    its real palette (pixel = palette*4 + 2bpp value). Splits it into
+    tiles_bank0/1.bin + palette.bin and passes the committed tilemap/attrmap (next to
+    the PNG) through. The screens' full tile data can't come from a screenshot -- 402
+    of town's 768 tiles are off-screen animation/scroll frames -- so the editable
+    source is this sheet plus the committed maps (the arrangement). See docs/gfx_assets.md."""
+    png = Path(args.png)
+    d = png.parent
+    tiles = sheet_png_to_tiles(png, args.tiles * 2)            # both banks, stacked
+    _w, _h, _px, colors = read_indexed_png(png)
+    pal = bytearray()
+    for i in range(args.palettes * 4):                        # 16 palettes * 4 colors
+        word = rgb888_to_555(*colors[i])
+        pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     comps = [
-        ("tiles_bank0", b"".join(tiles0)),
-        ("tiles_bank1", b"".join(tiles1)),
-        ("palette", pal),
-        ("tilemap", (d / "tilemap.bin").read_bytes()),  # committed maps,
-        ("attrmap", (d / "attrmap.bin").read_bytes()),
-    ]  # passed through to build/
+        ("tiles_bank0", b"".join(tiles[: args.tiles])),
+        ("tiles_bank1", b"".join(tiles[args.tiles:])),
+        ("palette", bytes(pal)),
+        ("tilemap", (d / "tilemap.bin").read_bytes()),        # committed maps,
+        ("attrmap", (d / "attrmap.bin").read_bytes()),        # passed through to build/
+    ]
     for name, data in comps:
         (out / f"{name}.bin").write_bytes(data)
         print(f"  {name}.bin: {len(data)} bytes")
@@ -270,15 +279,16 @@ def main() -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sc = sub.add_parser(
-        "screen", help="two-bank screen: tile PNGs + .pal -> tiles/palette .bin"
+        "screen", help="two-bank colour screen: one tile-sheet PNG -> tiles/palette .bin"
     )
     sc.add_argument(
-        "--dir",
-        required=True,
-        help="asset dir with tiles.png, tiles_bank0.png, palette.pal",
+        "--png", required=True,
+        help="combined indexed sheet (both banks stacked, 16 palettes embedded); "
+             "tilemap.bin/attrmap.bin live next to it",
     )
     sc.add_argument("--out-dir", required=True)
-    sc.add_argument("--tiles", type=int, default=384, help="tiles per sheet")
+    sc.add_argument("--tiles", type=int, default=384, help="tiles per bank")
+    sc.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
     sc.set_defaults(fn=cmd_screen)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")

@@ -13,11 +13,13 @@ Regenerates a screen's components from a source PNG.
 
 - `encode --png … --sheet-rows N --pad-before BYTE N --out-dir D` → `tiles.bin`,
   `palette.bin`, `tilemap.bin`, `attrmap.bin` (composite mode; the logo).
-- `screen --dir <asset> --out-dir D` → `tiles_bank0.bin`, `tiles_bank1.bin`,
-  `palette.bin`, and passes `tilemap.bin`/`attrmap.bin` through. **Sheet mode** for
-  the two-VRAM-bank colour screens: reads the two tile-sheet PNGs + a 16-entry
-  `palette.pal` (8 BG + 8 OBJ), dumps them to 2bpp + RGB555 (no packer — the tile
-  order lives in the committed tilemap).
+- `screen --png <sheet.png> --out-dir D` → `tiles_bank0.bin`, `tiles_bank1.bin`,
+  `palette.bin`, and passes `tilemap.bin`/`attrmap.bin` (next to the PNG) through.
+  **Sheet mode** for the two-VRAM-bank colour screens: ONE indexed PNG holds both
+  banks stacked (top half → VRAM bank 0, bottom → bank 1) and all 16 CGB palettes
+  (8 BG + 8 OBJ) in its palette table; each tile is shown in its real palette
+  (`pixel = palette*4 + 2bpp value`, so the tile value is `pixel % 4`). No packer —
+  the tile order lives in the committed tilemap.
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 
@@ -27,14 +29,21 @@ still used by everything except the logo and the town screen.
 ## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
 
 `src/gfx/screen/town.asm` was the first bank-`$30` screen taken off the
-auto-generated inline-`db` extract dump onto pngasset. Editable source lives in
-`assets/town_screen/` (two tile-sheet PNGs, `palette.pal`, `tilemap.bin`,
-`attrmap.bin`); the build regenerates the bins and the asm `INCBIN`s them, with the
-map descriptor referencing the maps by label (`dw`). The CGB palettes (`$20:$7000`,
-8 BG + 8 OBJ) were carved out of `analyzed.asm` into the asset, so the screen now
-carries real colour. Byte-exact. This is the exemplar for the remaining six screens
-(and the eventual YAML schema): `mode: sheet`, two banks, palette at `$X:$7000`,
-maps committed.
+auto-generated inline-`db` extract dump onto pngasset. Editable source is **one
+image** — `assets/town_screen/town.png` (both banks stacked, all 16 palettes
+embedded, each tile in its real colour) — plus the committed `tilemap.bin` /
+`attrmap.bin` (the arrangement). The build splits the PNG into the two banks +
+palette, the asm `INCBIN`s the bins, and the map descriptor references the maps by
+label (`dw`). The CGB palettes (`$20:$7000`, 8 BG + 8 OBJ) were carved out of
+`analyzed.asm` into the asset, so the screen now carries real colour. Byte-exact.
+
+**Why not a single screenshot?** A screen's full tile data can't come from a
+composite: 402 of town's 768 tiles are off-screen (animation/scroll/sprite frames
+the game draws at runtime), so they appear in no screenshot — but byte-exact needs
+them. Hence the source is a tile *sheet* (which holds every tile), not a rendered
+screen, and the arbitrary tile order/arrangement stays in the committed maps. This
+is the exemplar for the remaining six screens (and the eventual YAML schema):
+`mode: sheet`, one combined PNG (two banks + 16 palettes), maps committed.
 
 ## Migrated: the TECMO logo (composite mode)
 
