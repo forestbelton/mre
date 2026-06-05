@@ -3796,7 +3796,7 @@ Func_00_19af:
 	jr nz, Func_00_19a3
 Func_00_19ba:
 	call Func_00_2325
-	ld a, [$c561]
+	ld a, [wMenuId]
 	cp $00
 	jr z, Func_00_19d6
 	cp $01
@@ -3847,19 +3847,19 @@ Func_00_1a66:
 	ret
 Func_00_1a6c:
 	FAR_CALL $12, Func_12_4798
-	ld a, [$c561]
+	ld a, [wMenuId]
 	ld hl, $1873
 	rst $00
 	ld a, [hl]
 	ld [wMenuItemCount], a
-	ld a, [$c561]
+	ld a, [wMenuId]
 	add a, a
 	ld hl, $1877
 	rst $00
 	ld a, [hl+]
-	ld [$c56b], a
+	ld [wMenuItemPtr], a
 	ld a, [hl+]
-	ld [$c56c], a
+	ld [wMenuItemPtr + 1], a
 	ldh a, [rLCDC]
 	or $02
 	ldh [rLCDC], a
@@ -3877,7 +3877,7 @@ Func_00_1a6c:
 	call HideUnusedOamSprites
 	call Func_00_20da
 	call Func_00_206a
-	ld a, [$c561]
+	ld a, [wMenuId]
 	cp $03
 	jr z, Func_00_1acd
 	call Func_00_3268
@@ -3897,15 +3897,15 @@ Data_00_1ad7:
 SECTION "analyzed_001ada", ROM0[$1ada]
 
 Func_00_1ada:
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld c, a
 	push bc
 	ld a, [$c2eb]
-	ld [$c565], a
+	ld [wEditCursorY], a
 	ld a, [$c2ea]
-	ld [$c564], a
+	ld [wEditCursorX], a
 	FAR_CALL $12, Func_12_46d0
 	ld hl, $c4d1
 	ld c, $00
@@ -3933,9 +3933,9 @@ Func_00_1b15:
 	jr nz, Func_00_1afc
 	pop bc
 	ld a, b
-	ld [$c565], a
+	ld [wEditCursorY], a
 	ld a, c
-	ld [$c564], a
+	ld [wEditCursorX], a
 	ret
 Func_00_1b29:
 	ld a, $01
@@ -3998,7 +3998,7 @@ Func_00_1b87:
 	ld a, [wUiState]
 	cp $02
 	jr nz, Func_00_1bc7
-	ld a, [$c568]
+	ld a, [wMenuItemValue]
 	cp $fd
 	jr nz, Func_00_1bb9
 	ld a, [$c4cb]
@@ -4411,7 +4411,7 @@ SECTION "analyzed_001e58", ROM0[$1e58]
 
 Func_00_1e58:
 	ld [hl], a
-	ld [$c568], a
+	ld [wMenuItemValue], a
 	ld a, [$c4cd]
 	ld d, a
 	ld a, [$c4ce]
@@ -4438,7 +4438,7 @@ Func_00_1e72:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	inc a
 	cp c
 	jr nz, Func_00_1e8e
@@ -4451,7 +4451,7 @@ Data_00_1e8c:
 SECTION "analyzed_001e8e", ROM0[$1e8e]
 
 Func_00_1e8e:
-	ld [$c565], a
+	ld [wEditCursorY], a
 	jr Func_00_1eff
 Func_00_1e93:
 	bit 6, b
@@ -4460,7 +4460,7 @@ Func_00_1e93:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	dec a
 	cp $00
 	jr nz, Func_00_1eab
@@ -4473,7 +4473,7 @@ Data_00_1ea6:
 SECTION "analyzed_001eab", ROM0[$1eab]
 
 Func_00_1eab:
-	ld [$c565], a
+	ld [wEditCursorY], a
 	jr Func_00_1eff
 Func_00_1eb0:
 	bit 5, b
@@ -4482,7 +4482,7 @@ Func_00_1eb0:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	dec a
 	cp $00
 	jr nz, Func_00_1ec8
@@ -4495,7 +4495,7 @@ Data_00_1ec3:
 SECTION "analyzed_001ec8", ROM0[$1ec8]
 
 Func_00_1ec8:
-	ld [$c564], a
+	ld [wEditCursorX], a
 	jr Func_00_1eff
 Func_00_1ecd:
 	ld a, [wFloorWidth]
@@ -4507,7 +4507,7 @@ Func_00_1ecd:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	inc a
 	cp c
 	jr nz, Func_00_1ee6
@@ -4520,7 +4520,7 @@ Data_00_1ee4:
 SECTION "analyzed_001ee6", ROM0[$1ee6]
 
 Func_00_1ee6:
-	ld [$c564], a
+	ld [wEditCursorX], a
 	jr Func_00_1eff
 Func_00_1eeb:
 	bit 1, b
@@ -4549,7 +4549,7 @@ Func_00_1f07:
 	ldh a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_00_1f2b
-	ld a, [$c561]
+	ld a, [wMenuId]
 	cp $03
 	jr z, Func_00_1f1e
 	FAR_CALL $12, Func_12_4519
@@ -4865,13 +4865,13 @@ Func_00_20d1:
 	ret
 Func_00_20da:
 	ld hl, $c000
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	add a, a
 	add a, a
 	add a, a
 	add a, $10
 	ld [hl+], a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	add a, a
 	add a, a
 	add a, a
@@ -5238,7 +5238,7 @@ Func_00_2325:
 	ld hl, $68aa
 	ld de, $9800
 	call CopyBgMap
-	ld a, [$c561]
+	ld a, [wMenuId]
 	ld b, a
 	FAR_CALL $12, Func_12_44d6
 	FAR_CALL $15, Func_15_4241
@@ -5247,7 +5247,7 @@ Func_00_2351:
 	call ReadJoypad
 	ldh a, [hJoyPressed]
 	ld b, a
-	ld a, [$c561]
+	ld a, [wMenuId]
 	bit 4, b
 	jr z, Func_00_2369
 	cp $06
@@ -5321,7 +5321,7 @@ Func_00_23be:
 	call Func_00_3460
 	jr Func_00_2351
 Func_00_23c3:
-	ld [$c561], a
+	ld [wMenuId], a
 	cp $04
 	jr z, Func_00_23d8
 	cp $05
@@ -5353,7 +5353,7 @@ Func_00_2401:
 	ld hl, $68aa
 	ld de, $9800
 	call CopyBgMap
-	ld a, [$c561]
+	ld a, [wMenuId]
 	ld b, a
 	FAR_CALL $12, Func_12_44d6
 	xor a
@@ -5707,7 +5707,7 @@ Func_00_27e1:
 	add a, $05
 	rst $00
 	ld a, [hl]
-	ld [$c567], a
+	ld [wGridCol], a
 Func_00_27f9:
 	ld a, [hl+]
 	call Func_00_2880
@@ -5722,13 +5722,13 @@ Func_00_27f9:
 Func_00_280b:
 	ld [wMenuItemCount], a
 	xor a
-	ld [$c566], a
-	ld a, [$c567]
+	ld [wGridRow], a
+	ld a, [wGridCol]
 	cp $ff
 	jr nz, Func_00_281b
 	ld a, $03
 Func_00_281b:
-	ld [$c567], a
+	ld [wGridCol], a
 	ret
 Func_00_281f:
 	ld a, $03
@@ -5854,13 +5854,13 @@ Func_00_28fb:
 	pop af
 	ld a, [wMenuItemCount]
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	inc a
 	cp c
 	jr nz, Func_00_2916
 	ld a, $00
 Func_00_2916:
-	ld [$c566], a
+	ld [wGridRow], a
 	call Func_00_2c54
 	call Func_00_3121
 	jp Func_00_29d7
@@ -5871,14 +5871,14 @@ Func_00_2922:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c566]
+	ld a, [wGridRow]
 	dec a
 	cp $80
 	jr c, Func_00_2939
 	ld a, [wMenuItemCount]
 	dec a
 Func_00_2939:
-	ld [$c566], a
+	ld [wGridRow], a
 	call Func_00_2c54
 	call Func_00_3121
 	jp Func_00_29d7
@@ -5889,19 +5889,19 @@ Func_00_2945:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c56d]
+	ld a, [wGridColCount]
 	ld c, a
-	ld a, [$c567]
+	ld a, [wGridCol]
 	inc a
 	cp c
 	jr nz, Func_00_295d
 	ld a, $00
 Func_00_295d:
-	ld [$c567], a
+	ld [wGridCol], a
 	ld hl, $c7d3
-	ld a, [$c566]
+	ld a, [wGridRow]
 	rst $00
-	ld a, [$c567]
+	ld a, [wGridCol]
 	ld [hl], a
 	jr Func_00_29d7
 Func_00_296d:
@@ -5911,18 +5911,18 @@ Func_00_296d:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c567]
+	ld a, [wGridCol]
 	dec a
 	cp $80
 	jr c, Func_00_2984
-	ld a, [$c56d]
+	ld a, [wGridColCount]
 	dec a
 Func_00_2984:
-	ld [$c567], a
+	ld [wGridCol], a
 	ld hl, $c7d3
-	ld a, [$c566]
+	ld a, [wGridRow]
 	rst $00
-	ld a, [$c567]
+	ld a, [wGridCol]
 	ld [hl], a
 	jr Func_00_29d7
 Func_00_2994:
@@ -5975,7 +5975,7 @@ Func_00_29d7:
 	ld hl, $1bd9
 	rst $00
 	ld d, [hl]
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, $03
 	ld c, $02
 	call Func_00_20d1
@@ -5992,7 +5992,7 @@ Func_00_2a05:
 	call PlaySound
 	pop af
 Func_00_2a13:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	inc a
 	cp $04
 	jr nz, Func_00_2a1d
@@ -6009,7 +6009,7 @@ Func_00_2a25:
 	call PlaySound
 	pop af
 Func_00_2a30:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	dec a
 	cp $80
 	jr c, Func_00_2a3a
@@ -6027,13 +6027,13 @@ Func_00_2a41:
 	pop af
 	ld a, [wMenuItemCount]
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	inc a
 	cp c
 	jr nz, Func_00_2a58
 	xor a
 Func_00_2a58:
-	ld [$c566], a
+	ld [wGridRow], a
 	call Func_00_2b4d
 	jr Func_00_2ab6
 Func_00_2a60:
@@ -6043,14 +6043,14 @@ Func_00_2a60:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c566]
+	ld a, [wGridRow]
 	dec a
 	cp $80
 	jr c, Func_00_2a77
 	ld a, [wMenuItemCount]
 	dec a
 Func_00_2a77:
-	ld [$c566], a
+	ld [wGridRow], a
 	call Func_00_2b4d
 	jr Func_00_2ab6
 Func_00_2a7f:
@@ -6061,7 +6061,7 @@ Func_00_2a7f:
 	call PlaySound
 	pop af
 	xor a
-	ld [$c566], a
+	ld [wGridRow], a
 	call Func_00_281f
 	call Func_00_2c54
 	ld a, $01
@@ -6104,9 +6104,9 @@ Func_00_2ab6:
 	ld a, $02
 	call Func_00_20d1
 	call Func_00_2b1b
-	ld a, [$c566]
+	ld a, [wGridRow]
 	ld d, a
-	ld a, [$c567]
+	ld a, [wGridCol]
 	cp $03
 	jr nz, Func_00_2aec
 	ld a, $ff
@@ -6116,10 +6116,10 @@ Func_00_2aec:
 	call Func_00_2b89
 	ret
 Func_00_2af6:
-	ld [$c567], a
+	ld [wGridCol], a
 	cp $03
 	jr nz, Func_00_2b0d
-	ld a, [$c566]
+	ld a, [wGridRow]
 	inc a
 	cp $06
 	jr c, Func_00_2b07
@@ -6141,7 +6141,7 @@ Func_00_2b18:
 	or $01
 	ret
 Func_00_2b1b:
-	ld a, [$c566]
+	ld a, [wGridRow]
 	ld e, a
 	sub $03
 	jr nc, Func_00_2b27
@@ -6182,7 +6182,7 @@ Func_00_2b4d:
 	add a, c
 	add a, $05
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
 	ld a, [hl]
@@ -6190,7 +6190,7 @@ Func_00_2b4d:
 	jr nz, Func_00_2b67
 	ld a, $03
 Func_00_2b67:
-	ld [$c567], a
+	ld [wGridCol], a
 	ret
 Func_00_2b6b:
 	ld hl, $c4fe
@@ -6202,10 +6202,10 @@ Func_00_2b6b:
 	add a, c
 	add a, $05
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
-	ld a, [$c567]
+	ld a, [wGridCol]
 	cp $03
 	jr nz, Func_00_2b87
 	ld a, $ff
@@ -6296,7 +6296,7 @@ Func_00_2bf1:
 	jr z, Func_00_2c2c
 	cp $06
 	jr z, Func_00_2c11
-	ld a, [$c566]
+	ld a, [wGridRow]
 	swap a
 	add a, a
 	add a, $38
@@ -6305,7 +6305,7 @@ Func_00_2bf1:
 	call Func_00_20d1
 	ret
 Func_00_2c11:
-	ld a, [$c566]
+	ld a, [wGridRow]
 	cp $00
 	jr nz, Func_00_2c1c
 	ld d, $30
@@ -6322,7 +6322,7 @@ Func_00_2c26:
 	call Func_00_20d1
 	ret
 Func_00_2c2c:
-	ld a, [$c566]
+	ld a, [wGridRow]
 	cp $00
 	jr nz, Func_00_2c37
 	ld d, $30
@@ -6359,16 +6359,16 @@ Func_00_2c54:
 	add a, a
 	add a, c
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
 	ld a, [hl]
-	ld [$c56d], a
+	ld [wGridColCount], a
 	ld hl, $c7d3
-	ld a, [$c566]
+	ld a, [wGridRow]
 	rst $00
 	ld a, [hl]
-	ld [$c567], a
+	ld [wGridCol], a
 	ret
 	nop
 	ld bc, $00ff
@@ -6402,7 +6402,7 @@ Func_00_2c85:
 	add a, a
 	add a, c
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $30
 	ld a, [de]
@@ -6416,7 +6416,7 @@ Func_00_2c85:
 	jr z, Func_00_2cc7
 	cp $05
 	jr z, Func_00_2cc7
-	ld a, [$c567]
+	ld a, [wGridCol]
 	ld c, a
 	ld a, [hl]
 	and $f0
@@ -6425,17 +6425,17 @@ Func_00_2c85:
 	ret
 Func_00_2cc7:
 	inc hl
-	ld a, [$c567]
+	ld a, [wGridCol]
 	ld [hl], a
 	ret
 Func_00_2ccd:
 	inc hl
-	ld a, [$c567]
+	ld a, [wGridCol]
 	add a, $02
 	ld [hl], a
 	ret
 Func_00_2cd5:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	swap a
 	ld c, a
 	ld a, [hl]
@@ -6453,10 +6453,10 @@ Func_00_2ce1:
 	add a, c
 	add a, $02
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
-	ld a, [$c567]
+	ld a, [wGridCol]
 	ld [hl], a
 	ret
 Func_00_2cf9:
@@ -6466,7 +6466,7 @@ Func_00_2cf9:
 	add a, a
 	add a, c
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
 	ld a, [hl]
@@ -6481,28 +6481,28 @@ Func_00_2cf9:
 	cp $03
 	jr z, Func_00_2d77
 Func_00_2d1d:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	swap a
 	add a, $38
 	ld d, a
 	ld c, $01
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, $03
 	call Func_00_20d1
 	ret
 Func_00_2d30:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	swap a
 	add a, a
 	add a, $44
 	ld d, a
 	ld c, $01
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, $03
 	call Func_00_20d1
 	ret
 Func_00_2d44:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	swap a
 	ld d, a
 	rrca
@@ -6510,12 +6510,12 @@ Func_00_2d44:
 	add a, $34
 	ld d, a
 	ld c, $01
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, $03
 	call Func_00_20d1
 	ret
 Func_00_2d5a:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	bit 2, a
 	jr nz, Func_00_2d65
 	ld b, $38
@@ -6534,7 +6534,7 @@ Func_00_2d67:
 	call Func_00_20f0
 	ret
 Func_00_2d77:
-	ld a, [$c567]
+	ld a, [wGridCol]
 	swap a
 	add a, a
 	add a, $34
@@ -6548,9 +6548,9 @@ SECTION "analyzed_002d88", ROM0[$2d88]
 
 Func_00_2d88:
 	ld hl, $c4d1
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld d, a
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
 	ld c, $00
 Func_00_2d95:
@@ -6623,11 +6623,11 @@ Func_00_2def:
 	ret
 Func_00_2df6:
 	xor a
-	ld [$c561], a
+	ld [wMenuId], a
 	ld [$c585], a
 	ld a, $01
-	ld [$c564], a
-	ld [$c565], a
+	ld [wEditCursorX], a
+	ld [wEditCursorY], a
 	ld a, $ff
 	ld [wSpawnCellX], a
 	ld [wSpawnCellY], a
@@ -6680,9 +6680,9 @@ Func_00_2e37:
 	ret
 Func_00_2e42:
 	ld hl, $c571
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld c, a
 Func_00_2e4d:
 	ld a, [hl]
@@ -6704,9 +6704,9 @@ Func_00_2e56:
 SECTION "analyzed_002e62", ROM0[$2e62]
 
 Func_00_2e62:
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld c, a
 
 SECTION "analyzed_002e6a", ROM0[$2e6a]
@@ -6816,9 +6816,9 @@ Data_00_2f0f:
 SECTION "analyzed_002f2b", ROM0[$2f2b]
 
 Func_00_2f2b:
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld [wSpawnCellX], a
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld [wSpawnCellY], a
 	ret
 
@@ -6837,9 +6837,9 @@ Func_00_2f41:
 	rst $00
 	jr Func_00_2f41
 Func_00_2f4b:
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld [hl+], a
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld [hl+], a
 	ld a, $02
 	ld [hl+], a
@@ -6887,9 +6887,9 @@ Func_00_2f65:
 	pop hl
 	pop de
 Func_00_2f95:
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld [$c530], a
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld [$c531], a
 	ret
 Func_00_2fa2:
@@ -7063,7 +7063,7 @@ Data_00_3081:
 SECTION "analyzed_003089", ROM0[$3089]
 
 Func_00_3089:
-	ld a, [$c561]
+	ld a, [wMenuId]
 	ld b, a
 	add a, a
 	ld hl, $3081
@@ -7111,7 +7111,7 @@ Func_00_30cb:
 	call Func_00_33fb
 	ret
 Func_00_30cf:
-	ld a, [$c561]
+	ld a, [wMenuId]
 	cp $00
 	ret z
 	cp $01
@@ -7167,7 +7167,7 @@ Func_00_3121:
 	add a, a
 	add a, c
 	ld c, a
-	ld a, [$c566]
+	ld a, [wGridRow]
 	add a, c
 	rst $00
 	ld a, [hl]
@@ -7387,15 +7387,15 @@ Func_00_320e:
 	FAR_CALL $11, Func_11_4031
 	ret
 Func_00_3268:
-	ld a, [$c56b]
+	ld a, [wMenuItemPtr]
 	ld l, a
-	ld a, [$c56c]
+	ld a, [wMenuItemPtr + 1]
 	ld h, a
 	push hl
 	ld a, [wMenuCursor]
 	rst $00
 	ld a, [hl]
-	ld [$c568], a
+	ld [wMenuItemValue], a
 	pop hl
 	ld a, [wMenuCursorRow]
 	ld c, a
@@ -7425,9 +7425,9 @@ Func_00_328e:
 	ld a, [hl]
 	cp $ff
 	jr nz, Func_00_32aa
-	ld a, [$c56b]
+	ld a, [wMenuItemPtr]
 	ld l, a
-	ld a, [$c56c]
+	ld a, [wMenuItemPtr + 1]
 	ld h, a
 Func_00_32aa:
 	dec d
@@ -33120,7 +33120,7 @@ Func_12_44d6:
 	ld e, b
 	ld a, $01
 	ldh [rVBK], a
-	ld a, [$c561]
+	ld a, [wMenuId]
 	cp $06
 	jr nc, Func_12_44e6
 	ld b, $08
@@ -33151,7 +33151,7 @@ Func_12_44fe:
 	ld l, a
 	call Func_00_31d5
 	ld a, e
-	ld [$c561], a
+	ld [wMenuId], a
 	add a, a
 	ld hl, $44bf
 	rst $00
@@ -33172,9 +33172,9 @@ Data_12_451e:
 SECTION "analyzed_04852d", ROMX[$452d], BANK[$12]
 
 Func_12_452d:
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld c, a
 	ld a, [$c2eb]
 	cp b
@@ -33207,7 +33207,7 @@ Data_12_455b:
 SECTION "analyzed_04855f", ROMX[$455f], BANK[$12]
 
 Func_12_455f:
-	ld a, [$c568]
+	ld a, [wMenuItemValue]
 	ld c, a
 	bit 7, c
 	jr nz, Func_12_45c3
@@ -33297,7 +33297,7 @@ Func_12_45fa:
 	ld a, c
 	cp $c0
 	call z, Func_00_2f65
-	ld a, [$c568]
+	ld a, [wMenuItemValue]
 	ld [de], a
 	ld [$c569], a
 	push af
@@ -33393,9 +33393,9 @@ Func_12_467a:
 	pop af
 	call Func_00_2ea8
 Func_12_4686:
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	ld c, a
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	ld b, a
 	ld a, [$c569]
 	call Func_00_1f71
@@ -33412,13 +33412,13 @@ Data_12_4695:
 SECTION "analyzed_0486d0", ROMX[$46d0], BANK[$12]
 
 Func_12_46d0:
-	ld a, [$c565]
+	ld a, [wEditCursorY]
 	add a, a
 	add a, a
 	add a, a
 	add a, $10
 	ld b, a
-	ld a, [$c564]
+	ld a, [wEditCursorX]
 	add a, a
 	add a, a
 	add a, a

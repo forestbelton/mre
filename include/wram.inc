@@ -113,17 +113,28 @@ wSpawnCellX::       ds 1    ; $C52E: pickup/effect spawn target cell X
 wSpawnCellY::       ds 1    ; $C52F: pickup/effect spawn target cell Y
 
 
-SECTION "wram_menu", WRAM0[$C562]
-; Cursor state for the list menus run by the wUiState loops (cursor handler
-; Func_00_1be5: hJoyRepeat Up/Down move the cursor, wrapping at wMenuItemCount,
-; with a cursor-move sound). The surrounding bytes $c55d-$c561 / $c564-$c569 are
-; more of this menu's state (draw positions, a second cursor/count pair at
-; $c566/$c567, a $fd-sentinel selection at $c568) but aren't confidently decoded
-; yet, so they stay raw.
-wMenuCursor::       ds 1    ; $C562: selected menu-item index; wraps 0..wMenuItemCount-1
+SECTION "wram_menu", WRAM0[$C561]
+; List/grid menu + cursor state, shared by the in-game menus and the level
+; editor's room menus, run by the wUiState loop. A menu definition is picked by
+; wMenuId, which indexes parallel tables for the item count (wMenuItemCount) and
+; the item-value list (wMenuItemPtr). Three cursor handlers move the cursors on
+; hJoyRepeat: Func_00_1be5 (linear list -> wMenuCursor/wMenuCursorRow),
+; Func_00_28fb (2D grid -> wGridRow/wGridCol), and Func_00_1e72 (floor-edit grid
+; -> wEditCursorX/Y). The bytes just below ($c55d-$c560) and $c569 are more
+; menu/editor state that isn't confidently decoded yet, so they stay raw.
+wMenuId::           ds 1    ; $C561: active menu definition; indexes the item-count table
+                            ;   ($00:$1873) and the item-list pointer table ($00:$1877)
+wMenuCursor::       ds 1    ; $C562: selected item index in a linear list (wraps 0..count-1)
 wMenuCursorRow::    ds 1    ; $C563: visible cursor row (0-3) for lists taller than the window
-                    ds 6    ; $C564-$C569 (undecoded menu state)
+wEditCursorX::      ds 1    ; $C564: floor-grid edit cursor X (Left/Right, wraps at wFloorWidth)
+wEditCursorY::      ds 1    ; $C565: floor-grid edit cursor Y (Up/Down, wraps at wFloorHeight)
+wGridRow::          ds 1    ; $C566: 2D grid-menu cursor row (Up/Down, wraps at wMenuItemCount)
+wGridCol::          ds 1    ; $C567: 2D grid-menu cursor column (Left/Right, wraps at wGridColCount)
+wMenuItemValue::    ds 1    ; $C568: value of the item under the cursor ($fd = blank/non-selectable)
+                    ds 1    ; $C569 (editor last-placed cell value; not yet confidently decoded)
 wMenuItemCount::    ds 1    ; $C56A: number of selectable items (the cursor wrap bound)
+wMenuItemPtr::      ds 2    ; $C56B/$C56C: pointer to the active menu's item-value list (from $1877)
+wGridColCount::     ds 1    ; $C56D: number of columns in the current grid row (bounds wGridCol)
 
 
 SECTION "wram_scene", WRAM0[$CF40]
