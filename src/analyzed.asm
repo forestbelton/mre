@@ -8666,9 +8666,9 @@ SECTION "analyzed_003e7e", ROM0[$3e7e]
 Func_00_3e7e:
 	push af
 	ld a, $ff
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	ldh a, [rSB]
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	cp $f0
 	jr z, Func_00_3ea1
 	cp $f1
@@ -8679,7 +8679,7 @@ Func_00_3e7e:
 SECTION "analyzed_003e93", ROM0[$3e93]
 
 Func_00_3e93:
-	ld a, [$d10f]
+	ld a, [wSerialSend]
 	ldh [rSB], a
 	call Func_00_3e74
 	ld a, $80
@@ -8691,9 +8691,9 @@ Func_00_3ea1:
 	reti
 	push af
 	ld a, $ff
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	ldh a, [rSB]
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	cp $f2
 	jr z, Func_00_3ea1
 	cp $f3
@@ -8702,9 +8702,9 @@ Func_00_3ea1:
 	reti
 	push af
 	ld a, $ff
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	ldh a, [rSB]
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	cp $f4
 	jr z, Func_00_3ea1
 	cp $f5
@@ -8713,22 +8713,22 @@ Func_00_3ea1:
 	reti
 	push af
 	ldh a, [rSB]
-	ld [$d10e], a
-	ld a, [$d10f]
+	ld [wSerialRecv], a
+	ld a, [wSerialSend]
 	ldh [rSB], a
 	ld a, $80
 	ldh [rSC], a
 	ld a, $ff
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	pop af
 	reti
 	push af
 	ldh a, [rSB]
-	ld [$d10e], a
-	ld a, [$d10f]
+	ld [wSerialRecv], a
+	ld a, [wSerialSend]
 	ldh [rSB], a
 	ld a, $ff
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	pop af
 	reti
 
@@ -50797,7 +50797,7 @@ Func_31_404a:
 	ld a, $f0
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	ldh a, [hJoyPressed]
@@ -50809,7 +50809,7 @@ Func_31_404a:
 	call Func_31_4289
 Func_31_4069:
 	call WaitForNextFrame
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f1
 	jp z, Func_31_40a1
 	cp $f0
@@ -50821,7 +50821,7 @@ Func_31_4069:
 	ld [$d5c3], a
 	jr Func_31_404a
 Func_31_4085:
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $00
 	jr nz, Func_31_4090
 
@@ -50862,11 +50862,11 @@ Func_31_40a1:
 	ld a, $f2
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	call Func_31_43db
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f3
 	jp z, Func_31_4098
 	jp LinkExchangeConnect
@@ -50882,7 +50882,7 @@ Func_31_40c4:
 	ld a, $81
 	ldh [rSC], a
 	call WaitForNextFrame
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f2
 	jp z, Func_31_4098
 	jp LinkExchangeConnect
@@ -50896,7 +50896,7 @@ Func_31_40f0:
 	ld a, $f2
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	ldh a, [hJoyPressed]
@@ -50908,7 +50908,7 @@ Func_31_40f0:
 	call Func_31_4292
 Func_31_410f:
 	call WaitForNextFrame
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f3
 	jp z, Func_31_4144
 	cp $f2
@@ -50917,7 +50917,7 @@ Func_31_410f:
 	inc a
 	ld [$d5c3], a
 	jr Func_31_40f0
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $00
 	jr nz, Func_31_4133
 	ld a, $01
@@ -50942,11 +50942,11 @@ Func_31_4144:
 	ld a, $f0
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	call Func_31_43db
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f1
 	jp z, Func_31_41bb
 	jp Func_31_40e6
@@ -50962,7 +50962,7 @@ Func_31_4167:
 	ld a, $81
 	ldh [rSC], a
 	call WaitForNextFrame
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f0
 	jp z, Func_31_4189
 	jp Func_31_40e6
@@ -50977,13 +50977,13 @@ Func_31_4189:
 	ldh [rSB], a
 	call Func_31_4434
 	call Func_00_3e74
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [$d5c5], a
 	ld a, [$d5fa]
 	ldh [rSB], a
 	call Func_31_4434
 	call Func_00_3e74
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [$d5c6], a
 	call Func_31_4010
 	ret
@@ -50996,12 +50996,12 @@ Func_31_41bb:
 	ld a, [$d5f9]
 	ldh [rSB], a
 	call Func_31_4423
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [$d5c5], a
 	ld a, [$d5fa]
 	ldh [rSB], a
 	call Func_31_4423
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [$d5c6], a
 	call Func_31_4010
 	ret
@@ -51015,7 +51015,7 @@ Func_31_41ee:
 	ld a, $f4
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	ldh a, [hJoyPressed]
@@ -51029,7 +51029,7 @@ Func_31_420d:
 	push bc
 	call WaitForNextFrame
 	pop bc
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f5
 	jp z, Func_31_4244
 	cp $f4
@@ -51038,7 +51038,7 @@ Func_31_420d:
 	inc a
 	ld [$d5c3], a
 	jr Func_31_41ee
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $00
 	jr nz, Func_31_4233
 	ld a, $01
@@ -51063,11 +51063,11 @@ Func_31_4244:
 	ld a, $f0
 	ldh [rSB], a
 	xor a
-	ld [$d10e], a
+	ld [wSerialRecv], a
 	ld a, $80
 	ldh [rSC], a
 	call Func_31_43db
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f1
 	jp z, Func_31_434a
 	jp LinkExchangeConnect
@@ -51083,7 +51083,7 @@ Func_31_4267:
 	ld a, $81
 	ldh [rSC], a
 	call WaitForNextFrame
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $f0
 	jp z, Func_31_42a4
 	jp LinkExchangeConnect
@@ -51164,7 +51164,7 @@ Func_31_42f8:
 	ld [$d10d], a
 Func_31_42ff:
 	call Func_31_4434
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld b, a
 	ld a, [$d10d]
 	cp $f8
@@ -51188,7 +51188,7 @@ Func_31_4325:
 Func_31_4329:
 	call Func_00_3e74
 	call Func_31_4434
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $fa
 	jr nz, Func_31_433e
 	xor a
@@ -51245,7 +51245,7 @@ Func_31_438c:
 	ld [$d10d], a
 Func_31_4393:
 	call Func_31_4423
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld b, a
 	ld a, [$d10d]
 	cp $f8
@@ -51268,7 +51268,7 @@ Func_31_43b9:
 	ldh [rSB], a
 Func_31_43bd:
 	call Func_31_4423
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	cp $fa
 	jr nz, Func_31_43cf
 	xor a
@@ -51285,7 +51285,7 @@ Func_31_43d2:
 Func_31_43db:
 	xor a
 	ld [$d109], a
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	ld a, $80
 	ldh [rSC], a
 Func_31_43e6:
@@ -51299,18 +51299,18 @@ Func_31_43e6:
 	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_43fc
-	ld a, [$d10a]
+	ld a, [wSerialRecvFlag]
 	and a
 	jr z, Func_31_43e6
 	ret
 Func_31_43fc:
 	ld a, $aa
 	ld [$d109], a
-	ld a, [$d10a]
+	ld a, [wSerialRecvFlag]
 	and a
 	ret
 	xor a
-	ld [$d10a], a
+	ld [wSerialRecvFlag], a
 	ld a, $80
 	ldh [rSC], a
 	ld b, $00
@@ -51324,7 +51324,7 @@ Func_31_4412:
 	ld b, a
 	and c
 	ret z
-	ld a, [$d10a]
+	ld a, [wSerialRecvFlag]
 	and a
 	jr z, Func_31_4412
 	ret
@@ -51333,9 +51333,9 @@ Func_31_4423:
 	ret
 Func_31_4427:
 	ld a, [hl+]
-	ld [$d10f], a
+	ld [wSerialSend], a
 	call Func_31_4423
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [de], a
 	inc de
 	ret
@@ -51346,9 +51346,9 @@ Func_31_4434:
 	ret
 Func_31_443c:
 	ld a, [hl+]
-	ld [$d10f], a
+	ld [wSerialSend], a
 	call Func_31_4434
-	ld a, [$d10e]
+	ld a, [wSerialRecv]
 	ld [de], a
 	inc de
 	ret

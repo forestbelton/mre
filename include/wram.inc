@@ -212,6 +212,19 @@ SECTION "wram_fade_state", WRAMX[$D0FE], BANK[1]
 wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade)
 
 
+SECTION "wram_serial", WRAMX[$D10A], BANK[1]
+; Game Link serial state, driven by the serial-transfer-complete ISR
+; (Func_00_3e7e): it stamps wSerialRecvFlag, copies the shifted-in byte from rSB
+; into wSerialRecv, and dispatches on the protocol bytes ($f0/$f1/...). The link
+; protocol itself lives in bank $31. To transmit, code stages a byte in
+; wSerialSend, copies it to rSB, and kicks rSC.
+wSerialRecvFlag::   ds 1    ; $D10A: $FF once a byte has arrived (set by the ISR); the
+                            ;   bank-$31 poller checks it (`and a`) and clears it when handled
+                    ds 3    ; $D10B-$D10D
+wSerialRecv::       ds 1    ; $D10E: last byte received (copied from rSB by the ISR)
+wSerialSend::       ds 1    ; $D10F: byte to transmit (staged here, then written to rSB)
+
+
 SECTION "wram_menu_results", WRAMX[$D5FB], BANK[1]
 
 wBcdLow::           ds 1    ; $D5FB: $0F's low-digit BCD output
