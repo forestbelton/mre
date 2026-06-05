@@ -34,6 +34,9 @@ wMonsterMeta1Ptr:: ds 2  ; $CF34: portrait metasprite 1 (drawn by DrawMonster*Sp
 wMonsterMeta2Ptr:: ds 2  ; $CF36: portrait metasprite 2 (overlay; 0 if none)
 wMonsterBgMapPtr:: ds 2  ; $CF38: portrait BG tilemap (CopyBgMap; drawn by DrawMonster*BgMap)
 
+SECTION "wram_sound_vars", WRAM0[$C28C]
+wCurrentSound:: ds 1 ; $C28C: ID of sound currently being played
+
 SECTION "wram_spawn_params", WRAM0[$C29C]
 ; SpawnEntity argument block: the far-call trampoline (Func_00_0467) marshals these
 ; into AF/DE/HL before tail-calling the bank-3 spawn routine ($4593).

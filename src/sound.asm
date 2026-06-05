@@ -32,8 +32,9 @@ ResetSoundEngine:
 	pop af
 	ld [$2fff], a
 	xor a
-	ld [$c28c], a
+	ld [wCurrentSound], a
 	ret
+
 UpdateSoundEngine:
 	ld a, [$7fff]
 	push af
@@ -43,18 +44,20 @@ UpdateSoundEngine:
 	pop af
 	ld [$2fff], a
 	ret
+
 PlaySoundIfChanged:
 	push hl
-	ld hl, $c28c
+	ld hl, wCurrentSound
 	cp [hl]
-	jr z, Func_00_0a61
+	jr z, .done
 	ld [hl], a
 	call PlaySoundTracked
-Func_00_0a61:
+.done:
 	pop hl
 	ret
+
 PlaySoundTracked:
-	ld [$c28c], a
+	ld [wCurrentSound], a
 	push bc
 	push de
 	push hl
@@ -148,6 +151,12 @@ SetSoundMute:
 
 SECTION "SoundCommandTable", ROM0[$0ad8]
 
+; \1 Bank
+; \2 Local command index
+MACRO SOUND_COMMAND
+	db \1, \2
+ENDM
+
 ; Sound id (the A passed to PlaySound/PlaySoundTracked) -> (driver bank, that
 ; bank's local command index). 2 bytes/entry. ids $00-$2e are in bank $3f
 ; (index == id); ids $2f-$3a are in bank $3e (index == id-$2f). 59 ids total.
@@ -157,15 +166,13 @@ SECTION "SoundCommandTable", ROM0[$0ad8]
 ;   ids $28-$3a = BGM  (started via PlaySoundTracked; $28 = main/title theme)
 SoundCommandTable:
 	; ids $00-$2e -> bank $3f, index = id
-	db $3f, $00, $3f, $01, $3f, $02, $3f, $03, $3f, $04, $3f, $05, $3f, $06, $3f, $07	; $00-$07
-	db $3f, $08, $3f, $09, $3f, $0a, $3f, $0b, $3f, $0c, $3f, $0d, $3f, $0e, $3f, $0f	; $08-$0f
-	db $3f, $10, $3f, $11, $3f, $12, $3f, $13, $3f, $14, $3f, $15, $3f, $16, $3f, $17	; $10-$17
-	db $3f, $18, $3f, $19, $3f, $1a, $3f, $1b, $3f, $1c, $3f, $1d, $3f, $1e, $3f, $1f	; $18-$1f
-	db $3f, $20, $3f, $21, $3f, $22, $3f, $23, $3f, $24, $3f, $25, $3f, $26, $3f, $27	; $20-$27
-	db $3f, $28, $3f, $29, $3f, $2a, $3f, $2b, $3f, $2c, $3f, $2d, $3f, $2e	; $28-$2e
+	FOR I, $2f
+		SOUND_COMMAND $3f, I
+	ENDR
 	; ids $2f-$3a -> bank $3e, index = id-$2f
-	db $3e, $00, $3e, $01, $3e, $02, $3e, $03, $3e, $04, $3e, $05, $3e, $06, $3e, $07	; $2f-$36
-	db $3e, $08, $3e, $09, $3e, $0a, $3e, $0b	; $37-$3a
+	FOR I, $2f, $3b
+		SOUND_COMMAND $3e, (I - $2f)
+	ENDR
 
 ; ----- Shared driver ($4000-$4aff), instantiated into both banks --------------
 ; sound_driver.asm is byte-identical in $3e and $3f; include it once per bank
