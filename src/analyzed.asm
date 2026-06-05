@@ -377,7 +377,7 @@ Func_00_01ee:
 	call Func_00_0a04
 	jp Func_00_04cc
 Func_00_01f9:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	cp $0f
 	ret nz
 
@@ -425,7 +425,7 @@ SECTION "analyzed_000252", ROM0[$0252]
 
 ReadJoypad:
 	ld c, $00
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	ld d, a
 	ld a, $20
 	ldh [c], a
@@ -450,32 +450,32 @@ ReadJoypad:
 	ld a, d
 	xor b
 	and b
-	ldh [$ff8c], a
+	ldh [hJoyPressed], a
 	ld a, b
-	ldh [$ff8b], a
+	ldh [hJoyHeld], a
 	ld a, $30
 	ldh [c], a
-	ld hl, $ff8e
-	ldh a, [$ff8c]
+	ld hl, hJoyRepeatTimer
+	ldh a, [hJoyPressed]
 	and a
 	jr nz, Func_00_029b
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	and a
 	jr z, Func_00_0294
 	dec [hl]
 	jr nz, Func_00_0294
-	ldh [$ff8d], a
+	ldh [hJoyRepeat], a
 	ld a, $05
 	ld [hl], a
 	call Func_00_01f9
 	ret
 Func_00_0294:
 	xor a
-	ldh [$ff8d], a
+	ldh [hJoyRepeat], a
 	call Func_00_01f9
 	ret
 Func_00_029b:
-	ldh [$ff8d], a
+	ldh [hJoyRepeat], a
 	ld a, $1e
 	ld [hl], a
 	call Func_00_01f9
@@ -4040,7 +4040,7 @@ Func_00_1be1:
 SECTION "analyzed_001be5", ROM0[$1be5]
 
 Func_00_1be5:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c56a]
 	ld c, a
@@ -4124,7 +4124,7 @@ Func_00_1c57:
 	call Func_00_30cf
 	jr Func_00_1c7e
 Func_00_1c6c:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr z, Func_00_1c7e
 	push af
@@ -4150,7 +4150,7 @@ Func_00_1c7e:
 	call Func_00_206a
 	ret
 Func_00_1c9d:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c56a]
 	ld c, a
@@ -4328,7 +4328,7 @@ Data_00_1dbc:
 SECTION "analyzed_001dd0", ROM0[$1dd0]
 
 Func_00_1dd0:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr z, Func_00_1de5
 	push af
@@ -4427,7 +4427,7 @@ Func_00_1e58:
 	ld a, [hl]
 	ret
 Func_00_1e72:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [wFloorHeight]
 	dec a
@@ -4534,7 +4534,7 @@ Func_00_1eeb:
 	call Func_00_3089
 	ret
 Func_00_1eff:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 0, a
 	jr z, Func_00_1f2b
 
@@ -4546,7 +4546,7 @@ Data_00_1f05:
 SECTION "analyzed_001f07", ROM0[$1f07]
 
 Func_00_1f07:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_00_1f2b
 	ld a, [$c561]
@@ -4565,7 +4565,7 @@ Func_00_1f1e:
 SECTION "analyzed_001f2b", ROM0[$1f2b]
 
 Func_00_1f2b:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 2, a
 	jr z, Func_00_1f34
 
@@ -4988,7 +4988,7 @@ Func_00_217d:
 Func_00_21a5:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	ld b, a
 	ld a, [$c55f]
 	bit 4, b
@@ -5078,7 +5078,7 @@ Func_00_2223:
 Func_00_2253:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c560]
 	bit 4, b
@@ -5245,7 +5245,7 @@ Func_00_2325:
 Func_00_2351:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	ld b, a
 	ld a, [$c561]
 	bit 4, b
@@ -5844,7 +5844,7 @@ Func_00_28f3:
 	jr nz, Func_00_28c0
 	ret
 Func_00_28fb:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	bit 7, b
 	jr z, Func_00_2922
@@ -5946,7 +5946,7 @@ Func_00_2994:
 	ld [$d0e9], a
 	ret
 Func_00_29c1:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_00_29cb
 	bit 2, a
@@ -5983,7 +5983,7 @@ Func_00_29d7:
 	call Func_00_2c85
 	ret
 Func_00_2a05:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	bit 7, b
 	jr z, Func_00_2a25
@@ -6069,7 +6069,7 @@ Func_00_2a7f:
 	call Func_00_2bb8
 	ret
 Func_00_2a9d:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_00_2aa7
 	bit 2, a
@@ -7436,7 +7436,7 @@ Func_00_32aa:
 Func_00_32ae:
 	push af
 	push bc
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 3, b
 	jr z, Func_00_3305
 
@@ -8839,8 +8839,8 @@ Func_01_439e:
 	FAR_CALL $05, Func_05_48fc
 	call Func_00_0786
 	xor a
-	ldh [$ff8b], a
-	ldh [$ff8c], a
+	ldh [hJoyHeld], a
+	ldh [hJoyPressed], a
 	ld c, $03
 	call StartKeyUnlock
 	call Func_00_0d41
@@ -14350,7 +14350,7 @@ Func_01_6eda:
 	ret nz
 	bit 7, a
 	jr z, Func_01_6ef9
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	ret z
 	ld a, [$cf7f]
@@ -14359,7 +14359,7 @@ Func_01_6eda:
 	ld [$cf7f], a
 	ret
 Func_01_6ef9:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 6, a
 	ret nz
 	ld a, [$cf7f]
@@ -21010,7 +21010,7 @@ Data_05_40df:
 SECTION "analyzed_0140e7", ROMX[$40e7], BANK[$05]
 
 Func_05_40e7:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_05_4128
 	ld a, [$cf41]
@@ -29066,7 +29066,7 @@ Func_0f_4000:
 	ld a, [$c2db]
 	or a
 	ret nz
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 3, a
 	ret z
 	ld a, [$c7fd]
@@ -29121,7 +29121,7 @@ Func_0f_4054:
 	ld [$c2ac], a
 	ret
 Func_0f_4086:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_0f_40cb
 	bit 0, a
@@ -29181,7 +29181,7 @@ Func_0f_40e8:
 	call Func_0f_427b
 	ret
 Func_0f_40f9:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_0f_413e
 	bit 0, a
@@ -29232,7 +29232,7 @@ Func_0f_415b:
 	call Func_0f_4265
 	ret
 Func_0f_416c:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jp nz, Func_0f_4206
 	bit 0, a
@@ -29406,7 +29406,7 @@ Func_0f_42cf:
 Func_0f_42dd:
 	call Func_0f_436e
 	call Func_0f_49c9
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_0f_4329
 	and $30
@@ -29430,7 +29430,7 @@ Func_0f_4307:
 	call Func_0f_48f1
 	call Func_0f_466c
 	call DrawMonsterPortraitSprites
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_0f_4329
 	and $30
@@ -30372,7 +30372,7 @@ Func_0f_4ac6:
 	jr z, Func_0f_4ad9
 	FAR_CALL $12, Func_12_484e
 Func_0f_4ad9:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	ret z
 	call Func_0f_4543
@@ -32678,7 +32678,7 @@ Func_12_41e9:
 Func_12_41f5:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	ld b, a
 	ld a, [$c55d]
 	bit 4, b
@@ -32785,7 +32785,7 @@ Func_12_429a:
 Func_12_42a2:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	ld b, a
 	ld a, [$c55e]
 	call Func_00_32ae
@@ -35778,7 +35778,7 @@ Func_14_40c5:
 	call WaitForNextFrame
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jp nz, Func_14_417b
 	ld d, $06
@@ -35816,7 +35816,7 @@ Func_14_40fb:
 Func_14_411e:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_14_417b
 	call Func_14_41b3
@@ -35844,7 +35844,7 @@ Func_14_4158:
 	push de
 	call ReadJoypad
 	pop de
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_14_417b
 	dec d
@@ -36172,7 +36172,7 @@ Func_14_4348:
 Func_14_4351:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_14_4363
 	bit 0, a
@@ -41483,7 +41483,7 @@ Func_1f_50a1:
 SECTION "analyzed_07d855", ROMX[$5855], BANK[$1f]
 
 Func_1f_5855:
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 4, a
 	jr z, Func_1f_5868
 	ld a, [hl]
@@ -41495,7 +41495,7 @@ Func_1f_5855:
 	call PlaySound
 	pop af
 Func_1f_5868:
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 5, a
 	jr z, Func_1f_587b
 	ld a, [hl]
@@ -41514,7 +41514,7 @@ Func_1f_587c:
 	dec a
 	ld b, a
 	ld c, $00
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 7, a
 	jr z, Func_1f_58ae
 	ld a, [hl]
@@ -41540,7 +41540,7 @@ Func_1f_58a2:
 	pop af
 	ret
 Func_1f_58ae:
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 6, a
 	jr z, Func_1f_58d6
 	ld a, [hl]
@@ -41580,7 +41580,7 @@ Func_1f_58ed:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_590b
 	call HideUnusedOamSprites
@@ -41591,7 +41591,7 @@ Func_1f_58ed:
 	pop af
 	ret
 Func_1f_590b:
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	and $c0
 	jr z, Func_1f_5921
 	ld hl, wYNResult
@@ -41639,7 +41639,7 @@ Func_1f_596d:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5985
 	push af
@@ -41701,7 +41701,7 @@ Func_1f_59e0:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5a08
 	ld hl, $5a54
@@ -41778,7 +41778,7 @@ Func_1f_5ac9:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5af1
 	ld hl, $5b3f
@@ -41849,7 +41849,7 @@ Func_1f_5b4f:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5b77
 	ld hl, $5bc7
@@ -41920,7 +41920,7 @@ Func_1f_5bd8:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5c00
 	ld hl, $5c50
@@ -41996,7 +41996,7 @@ Func_1f_5c61:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5c89
 	ld hl, $5cdb
@@ -42077,7 +42077,7 @@ Func_1f_5d83:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5d9b
 	push af
@@ -42144,7 +42144,7 @@ Func_1f_5e50:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5e68
 	push af
@@ -42215,7 +42215,7 @@ Func_1f_5f5d:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5f75
 	push af
@@ -42277,7 +42277,7 @@ Func_1f_5fd0:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_5fe8
 	push af
@@ -42344,7 +42344,7 @@ Func_1f_609d:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_60b5
 	push af
@@ -42412,7 +42412,7 @@ Func_1f_6176:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_618e
 	push af
@@ -42492,7 +42492,7 @@ Func_1f_6266:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_628e
 	ld hl, $d603
@@ -42646,7 +42646,7 @@ Func_1f_63db:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_6403
 	ld hl, $6453
@@ -42717,7 +42717,7 @@ Func_1f_6464:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_1f_648c
 	ld hl, $64dc
@@ -47037,7 +47037,7 @@ Func_30_4077:
 Func_30_40ab:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	bit 7, b
 	jr z, Func_30_40c0
@@ -47558,7 +47558,7 @@ DrawTowerEntranceScreen:
 Func_30_4403:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c55d]
 	bit 0, b
@@ -47715,7 +47715,7 @@ Func_30_4524:
 Func_30_4540:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c55d]
 	bit 0, b
@@ -48236,7 +48236,7 @@ Func_30_4946:
 	jr z, Func_30_4973
 Func_30_4957:
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c55d]
 	bit 0, b
@@ -48866,7 +48866,7 @@ DrawRoomClearScreen:
 Func_30_50d7:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c55d]
 	ld hl, $50f1
@@ -49173,7 +49173,7 @@ DrawTowerOpenScreen:
 Func_30_5324:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$c55d]
 	bit 0, b
@@ -49397,7 +49397,7 @@ Func_30_5564:
 	call Func_00_0786
 	ret
 Func_30_5571:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	cp $00
 	jr z, Func_30_5547
 	ld b, $28
@@ -49440,7 +49440,7 @@ Data_30_55b7:
 SECTION "analyzed_0c15fa", ROMX[$55fa], BANK[$30]
 
 Func_30_55fa:
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [$d0f4]
 	cp $00
@@ -49637,7 +49637,7 @@ DrawIntroBookScreen:
 Func_30_57d4:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [$ff8d]
+	ldh a, [hJoyRepeat]
 	and a
 	jr nz, Func_30_5809
 	ld a, [$d0f3]
@@ -50800,7 +50800,7 @@ Func_31_404a:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_4094
 	ld a, [$d5c3]
@@ -50899,7 +50899,7 @@ Func_31_40f0:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_4137
 	ld a, [$d5c3]
@@ -51018,7 +51018,7 @@ Func_31_41ee:
 	ld [$d10e], a
 	ld a, $80
 	ldh [rSC], a
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_4237
 	ld a, [$d5c3]
@@ -51133,7 +51133,7 @@ Func_31_42c3:
 	pop hl
 	pop de
 	pop bc
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_4341
 	call Func_31_443c
@@ -51296,7 +51296,7 @@ Func_31_43e6:
 	pop hl
 	pop de
 	pop bc
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 1, a
 	jr nz, Func_31_43fc
 	ld a, [$d10a]
@@ -52034,7 +52034,7 @@ Func_32_4155:
 	call Func_32_431a
 	call DrawMonsterDetailSprites
 	call HideUnusedOamSprites
-	ld a, [$ff8c]
+	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_32_4155
 	FAR_CALL $1f, Func_1f_403a

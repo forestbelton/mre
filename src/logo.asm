@@ -45,7 +45,7 @@ DrawTecmoLogo:
 .fadeLoop:
 	call WaitForNextFrame
 	call ReadJoypad
-	ldh a, [hJoyHeld]
+	ldh a, [hJoyRepeat]
 	cp $00
 	jr nz, .done                ; any press skips the fade
 	ld a, [wFadeLevel]

@@ -1087,7 +1087,7 @@ FacePlayerX:
 	ret
 
 ApplyPlayerInputFacingX:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 5, a
 	jr nz, Func_03_46ff
 	bit 4, a
@@ -1110,10 +1110,10 @@ Func_03_46ff:
 Player_StandThinkDown:
 	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	jp nz, Func_03_48b3
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 6, a
 	jp z, Func_03_4726
 	ld a, [$cf7f]
@@ -1131,7 +1131,7 @@ Func_03_4726:
 	jp z, Func_03_4897
 	cp $02
 	jp z, Func_03_48a3
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 7, a
 	jp nz, Func_03_487f
 	and $30
@@ -1140,7 +1140,7 @@ Func_03_4726:
 Player_StandThinkUp:
 	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	jp nz, Func_03_48b3
 	call UpdateActionTimer
@@ -1154,7 +1154,7 @@ Player_StandThinkUp:
 	jp z, Func_03_489b
 	cp $02
 	jp z, Func_03_48a7
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 7, a
 	jp z, Func_03_487b
 	and $30
@@ -1163,7 +1163,7 @@ Player_StandThinkUp:
 Player_WalkThinkRight:
 	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	jp nz, Func_03_48b3
 	call UpdateActionTimer
@@ -1177,7 +1177,7 @@ Player_WalkThinkRight:
 	jp z, Func_03_4897
 	cp $02
 	jp z, Func_03_48a3
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 7, a
 	jp nz, Func_03_487f
 	and $30
@@ -1186,7 +1186,7 @@ Player_WalkThinkRight:
 Player_WalkThinkLeft:
 	call ApplyPlayerInputFacingX
 	call Player_UpdateFacing
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	jp nz, Func_03_48b3
 	call UpdateActionTimer
@@ -1200,7 +1200,7 @@ Player_WalkThinkLeft:
 	jp z, Func_03_489b
 	cp $02
 	jp z, Func_03_48a7
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 7, a
 	jp z, Func_03_487b
 	and $30
@@ -1220,7 +1220,7 @@ Player_ThrowWindupThink:
 	jp z, Func_03_489f
 	cp $02
 	jp z, Func_03_48ab
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	and $30
 	jp nz, Func_03_48bb
 	ret
@@ -1237,7 +1237,7 @@ Player_CarryStandThink:
 	jp z, Func_03_489f
 	cp $02
 	jp z, Func_03_48ab
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	and $30
 	jp nz, Func_03_48bb
 	call UpdateActionTimer
@@ -1257,7 +1257,7 @@ Player_CarryWalkThink:
 	jr z, Func_03_489f
 	cp $02
 	jr z, Func_03_48ab
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	and $30
 	jr z, Func_03_48b7
 	call UpdateActionTimer
@@ -1266,12 +1266,12 @@ Player_CarryWalkThink:
 	ret
 Player_ThrowReleaseThink:
 	call Player_UpdateFacing
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 6, a
 	jp nz, Func_03_487b
 	ret
 Player_PostThrowSelect:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 7, a
 	jr z, Func_03_487b
 	jr Func_03_487f
@@ -1341,7 +1341,7 @@ Player_UpdateFacing:
 	ld b, a
 	and $03
 	jr nz, Func_03_48e2
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 0, a
 	jr nz, Func_03_48e4
 	bit 1, a
@@ -1370,14 +1370,14 @@ Func_03_48f2:
 	ld [hl], a
 	ret
 Player_LatchActionHeld:
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 6, a
 	ret z
 	ld hl, $cf7f
 	set 0, [hl]
 	ret
 Player_LatchActionPressed:
-	ldh a, [$ff8b]
+	ldh a, [hJoyHeld]
 	bit 6, a
 	ret z
 Data_03_4909:

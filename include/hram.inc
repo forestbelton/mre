@@ -1,8 +1,16 @@
 IF !DEF(HRAM_INC)
 DEF HRAM_INC EQU 1
 
-SECTION "HRAM joypad", HRAM[$ff8d]
-hJoyHeld:: ds 1
+; Joypad state, refreshed once per frame by ReadJoypad ($00:$0252). `hJoyHeld` is
+; the raw down-state; `hJoyPressed` is the rising edge ((prev^cur)&cur); `hJoyRepeat`
+; is the menu auto-repeat pulse -- on a fresh press it mirrors the press, then with
+; the button held it re-fires every few frames, and is 0 in between (the cadence is
+; counted down in `hJoyRepeatTimer`: $1e-frame initial delay, then $05-frame repeat).
+SECTION "HRAM joypad", HRAM[$ff8b]
+hJoyHeld::        ds 1  ; $ff8b  buttons currently held down this frame
+hJoyPressed::     ds 1  ; $ff8c  buttons newly pressed this frame (rising edge)
+hJoyRepeat::      ds 1  ; $ff8d  press + auto-repeat pulse (for menu navigation; 0 between repeats)
+hJoyRepeatTimer:: ds 1  ; $ff8e  auto-repeat countdown ($1e initial delay, $05 repeat rate)
 
 ; CGB palette upload state, one per layer (see docs/palettes.md). $FF = clean;
 ; any other value = dirty -> FlushDirtyPalettes streams the WRAM shadow buffer

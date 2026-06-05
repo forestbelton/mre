@@ -99,7 +99,7 @@ Data_00_3a4e:
 Func_00_3a51:
 	call Func_00_3e10
 	call HideUnusedOamSprites
-	ldh a, [$ff8c]
+	ldh a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_00_3a3a
 	push af
