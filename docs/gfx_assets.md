@@ -12,12 +12,29 @@ to be located before committing to a schema.
 Regenerates a screen's components from a source PNG.
 
 - `encode --png … --sheet-rows N --pad-before BYTE N --out-dir D` → `tiles.bin`,
-  `palette.bin`, `tilemap.bin`, `attrmap.bin`.
+  `palette.bin`, `tilemap.bin`, `attrmap.bin` (composite mode; the logo).
+- `screen --dir <asset> --out-dir D` → `tiles_bank0.bin`, `tiles_bank1.bin`,
+  `palette.bin`, and passes `tilemap.bin`/`attrmap.bin` through. **Sheet mode** for
+  the two-VRAM-bank colour screens: reads the two tile-sheet PNGs + a 16-entry
+  `palette.pal` (8 BG + 8 OBJ), dumps them to 2bpp + RGB555 (no packer — the tile
+  order lives in the committed tilemap).
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 
 The legacy multi-file flow (`assets/<name>/asset.json` + `tools/gfxasset.py`) is
-still used by everything except the logo.
+still used by everything except the logo and the town screen.
+
+## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
+
+`src/gfx/screen/town.asm` was the first bank-`$30` screen taken off the
+auto-generated inline-`db` extract dump onto pngasset. Editable source lives in
+`assets/town_screen/` (two tile-sheet PNGs, `palette.pal`, `tilemap.bin`,
+`attrmap.bin`); the build regenerates the bins and the asm `INCBIN`s them, with the
+map descriptor referencing the maps by label (`dw`). The CGB palettes (`$20:$7000`,
+8 BG + 8 OBJ) were carved out of `analyzed.asm` into the asset, so the screen now
+carries real colour. Byte-exact. This is the exemplar for the remaining six screens
+(and the eventual YAML schema): `mode: sheet`, two banks, palette at `$X:$7000`,
+maps committed.
 
 ## Migrated: the TECMO logo (composite mode)
 

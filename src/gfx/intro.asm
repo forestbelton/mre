@@ -1,5 +1,5 @@
 ; The intro-cutscene book scene (10x20, top half of the screen): an open book,
-; shown as one scene of the opening cutscene. Drawn by Func_30_577e (bank $30),
+; shown as one scene of the opening cutscene. Drawn by DrawIntroBookScreen (bank $30),
 ; reached via the ROM0 $34xx-$35xx screen-transition handlers.
 ;
 ; Two-VRAM-bank CGB image, same layout as nada_intro: $29:$4000 -> VRAM bank 0

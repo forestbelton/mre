@@ -73,6 +73,9 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 	@# blank-tile block that precedes the sheet in VRAM.
 	$(PYTHON) tools/pngasset.py encode --png assets/logo.png --sheet-rows 8 \
 		--pad-before 0x00 4096 --out-dir $(BUILD_DIR)/assets/logo
+	@# Two-bank colour screens: tile sheets + .pal -> tiles/palette/map bins.
+	$(PYTHON) tools/pngasset.py screen --dir assets/town_screen \
+		--out-dir $(BUILD_DIR)/assets/town_screen
 	@# Legacy multi-file assets (assets/<name>/asset.json) -> components via gfxasset.
 	@for a in $(wildcard assets/*); do \
 		[ -f "$$a/asset.json" ] || continue; \
