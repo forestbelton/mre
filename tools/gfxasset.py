@@ -166,7 +166,7 @@ ASSETS = {
     # animated sprites/text on top at runtime (animated door, room number, etc.).
     # Palettes are lib-dispatched (not yet located) -> grayscale composite, tiles
     # + tilemap round-trip byte-exact.
-    "town_screen": {  # bank $20, drawn by Func_30_401e -- the town
+    "town_screen": {  # bank $20, drawn by DrawTownScreen -- the town
         "bank": 0x20,
         "tiles_addr": 0x81800, "tiles_count": 384,    # $20:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0x80000, "tiles2_count": 384,  # $20:$4000 -> VRAM bank 0 $8000
@@ -174,7 +174,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x83080, "index_base": 0, "addressing": "8800",
     },
-    "tower_entrance": {  # bank $22, drawn by Func_30_43a4 -- tower entrance
+    "tower_entrance": {  # bank $22, drawn by DrawTowerEntranceScreen -- tower entrance
         "bank": 0x22,
         "tiles_addr": 0x89800, "tiles_count": 384,    # $22:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0x88000, "tiles2_count": 384,  # $22:$4000 -> VRAM bank 0 $8000
@@ -182,7 +182,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x8b080, "index_base": 0, "addressing": "8800",
     },
-    "room_start": {  # bank $23, drawn by Func_30_44aa -- per-room start screen
+    "room_start": {  # bank $23, drawn by DrawRoomStartScreen -- per-room start screen
         "bank": 0x23,
         "tiles_addr": 0x8d800, "tiles_count": 384,    # $23:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0x8c000, "tiles2_count": 384,  # $23:$4000 -> VRAM bank 0 $8000
@@ -190,7 +190,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x8f080, "index_base": 0, "addressing": "8800",
     },
-    "room_clear": {  # bank $21, drawn by Func_30_503b -- "STAGE CLEAR!" results (shown after a room)
+    "room_clear": {  # bank $21, drawn by DrawRoomClearScreen -- "STAGE CLEAR!" results (shown after a room)
         "bank": 0x21,
         "tiles_addr": 0x85800, "tiles_count": 384,    # $21:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0x84000, "tiles2_count": 384,  # $21:$4000 -> VRAM bank 0 $8000
@@ -198,7 +198,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x87080, "index_base": 0, "addressing": "8800",
     },
-    "tower_entrance_open": {  # bank $26, drawn by Func_30_52c4 -- tower entrance, door open
+    "tower_entrance_open": {  # bank $26, drawn by DrawTowerOpenScreen -- tower entrance, door open
         "bank": 0x26,
         "tiles_addr": 0x99800, "tiles_count": 384,    # $26:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0x98000, "tiles2_count": 384,  # $26:$4000 -> VRAM bank 0 $8000
@@ -206,7 +206,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0x9b080, "index_base": 0, "addressing": "8800",
     },
-    "title_screen": {  # bank $28, drawn by Func_30_54df -- title screen (has $7356 overlay)
+    "title_screen": {  # bank $28, drawn by DrawTitleScreen -- title screen (has $7356 overlay)
         "bank": 0x28,
         "tiles_addr": 0xa1800, "tiles_count": 384,    # $28:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0xa0000, "tiles2_count": 384,  # $28:$4000 -> VRAM bank 0 $8000
@@ -214,7 +214,7 @@ ASSETS = {
         "palette_addr": None, "palette_count": 0,
         "desc_addr": 0xa3080, "index_base": 0, "addressing": "8800",
     },
-    "intro_book": {  # bank $29, drawn by Func_30_577e -- intro-cutscene book (10x20)
+    "intro_book": {  # bank $29, drawn by DrawIntroBookScreen -- intro-cutscene book (10x20)
         "bank": 0x29,
         "tiles_addr": 0xa5800, "tiles_count": 384,    # $29:$5800 -> VRAM bank 1 $8000
         "tiles2_addr": 0xa4000, "tiles2_count": 384,  # $29:$4000 -> VRAM bank 0 $8000

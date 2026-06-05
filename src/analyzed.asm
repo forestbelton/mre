@@ -7823,7 +7823,7 @@ Func_00_34bc:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_401e
+	call DrawTownScreen
 	ret
 Func_00_34e3:
 	call ResetFloorScroll
@@ -7833,7 +7833,7 @@ Func_00_34e3:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_43a4
+	call DrawTowerEntranceScreen
 	ld a, [wRoomType]
 	cp $02
 	jr z, Func_00_3502
@@ -7858,7 +7858,7 @@ Func_00_3508:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_44aa
+	call DrawRoomStartScreen
 	ld a, [wRoomType]
 	cp $05
 	ret z
@@ -7872,7 +7872,7 @@ Func_00_3508:
 	pop af
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_487d
+	call DrawNextRoomScreen
 	ld a, $11
 	ld [$c2a7], a
 	push af
@@ -7883,7 +7883,7 @@ Func_00_3508:
 	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_503b
+	call DrawRoomClearScreen
 	ld a, $05
 	ld hl, Func_05_46ba
 	call CallBankedHL
@@ -7898,7 +7898,7 @@ Func_00_3508:
 	jr nz, Func_00_3572
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_52c4
+	call DrawTowerOpenScreen
 Func_00_3572:
 	ld a, $18
 	ld hl, Func_18_6b71
@@ -7917,7 +7917,7 @@ IntroScene_TecmoLogo:
 	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_577e
+	call DrawIntroBookScreen
 	ld a, $00
 	ld [$c2a7], a
 	push af
@@ -47509,7 +47509,7 @@ Data_30_400a:
 
 SECTION "analyzed_0c001e", ROMX[$401e], BANK[$30]
 
-Func_30_401e:
+DrawTownScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0f6], a
@@ -48062,7 +48062,7 @@ Func_30_4387:
 	ld c, $20
 	call Func_00_09d5
 	ret
-Func_30_43a4:
+DrawTowerEntranceScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0f4], a
@@ -48188,7 +48188,7 @@ Data_30_44a4:
 
 SECTION "analyzed_0c04aa", ROMX[$44aa], BANK[$30]
 
-Func_30_44aa:
+DrawRoomStartScreen:
 	call Func_00_083c
 	xor a
 	ld [wFadeLevel], a
@@ -48679,7 +48679,7 @@ Func_30_486d:
 	dec b
 	jr nz, Func_30_486d
 	ret
-Func_30_487d:
+DrawNextRoomScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0ff], a
@@ -49351,7 +49351,7 @@ Data_30_5033:
 
 SECTION "analyzed_0c103b", ROMX[$503b], BANK[$30]
 
-Func_30_503b:
+DrawRoomClearScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0f3], a
@@ -49687,7 +49687,7 @@ Func_30_52bf:
 	inc a
 	ld [$d0f5], a
 	ret
-Func_30_52c4:
+DrawTowerOpenScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0f3], a
@@ -49883,10 +49883,10 @@ Func_30_54b8:
 	call CallBankedHL
 	ld [$d0f4], a
 	cp $01
-	jr nz, Func_30_54df
+	jr nz, DrawTitleScreen
 	ld a, $01
 	ld [$d0f5], a
-Func_30_54df:
+DrawTitleScreen:
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -50160,7 +50160,7 @@ Data_30_5760:
 
 SECTION "analyzed_0c177e", ROMX[$577e], BANK[$30]
 
-Func_30_577e:
+DrawIntroBookScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0f3], a
