@@ -24,6 +24,10 @@
 ROMX $01
     ORG $5162
     "Items"
+ROMX $1d
+    ORG $4000
+    "Kalum graphics"
+    "Rafaga graphics"
 ROMX $20
     ORG $4000
     "Town screen graphics"
