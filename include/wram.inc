@@ -113,6 +113,19 @@ wSpawnCellX::       ds 1    ; $C52E: pickup/effect spawn target cell X
 wSpawnCellY::       ds 1    ; $C52F: pickup/effect spawn target cell Y
 
 
+SECTION "wram_menu", WRAM0[$C562]
+; Cursor state for the list menus run by the wUiState loops (cursor handler
+; Func_00_1be5: hJoyRepeat Up/Down move the cursor, wrapping at wMenuItemCount,
+; with a cursor-move sound). The surrounding bytes $c55d-$c561 / $c564-$c569 are
+; more of this menu's state (draw positions, a second cursor/count pair at
+; $c566/$c567, a $fd-sentinel selection at $c568) but aren't confidently decoded
+; yet, so they stay raw.
+wMenuCursor::       ds 1    ; $C562: selected menu-item index; wraps 0..wMenuItemCount-1
+wMenuCursorRow::    ds 1    ; $C563: visible cursor row (0-3) for lists taller than the window
+                    ds 6    ; $C564-$C569 (undecoded menu state)
+wMenuItemCount::    ds 1    ; $C56A: number of selectable items (the cursor wrap bound)
+
+
 SECTION "wram_scene", WRAM0[$CF40]
 wSceneState::       ds 1    ; $CF40: bank-5 scene/sequence state machine -- low 7 bits =
                             ;   state index, bit7 = active; kicked off by special items

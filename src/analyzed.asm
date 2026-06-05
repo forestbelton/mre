@@ -3851,7 +3851,7 @@ Func_00_1a6c:
 	ld hl, $1873
 	rst $00
 	ld a, [hl]
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, [$c561]
 	add a, a
 	ld hl, $1877
@@ -3885,7 +3885,7 @@ Func_00_1a6c:
 	jr Func_00_1ada
 Func_00_1acd:
 	call Func_00_2020
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	cp $00
 	jr z, Func_00_1ada
 
@@ -4011,7 +4011,7 @@ Func_00_1bac:
 	FAR_CALL $10, Func_10_40a4
 	jr Func_00_1bc7
 Func_00_1bb9:
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	ld [$c4cc], a
 	FAR_CALL $16, Func_16_4016
 Func_00_1bc7:
@@ -4042,7 +4042,7 @@ SECTION "analyzed_001be5", ROM0[$1be5]
 Func_00_1be5:
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	ld c, a
 	bit 7, b
 	jr z, Func_00_1c20
@@ -4050,13 +4050,13 @@ Func_00_1be5:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	inc a
 	cp c
 	jr nz, Func_00_1c00
 	ld a, $00
 Func_00_1c00:
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, c
 	cp $05
 	jr nc, Func_00_1c10
@@ -4069,11 +4069,11 @@ Data_00_1c08:
 SECTION "analyzed_001c10", ROM0[$1c10]
 
 Func_00_1c10:
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	cp $03
 	jr z, Func_00_1c1b
 	inc a
-	ld [$c563], a
+	ld [wMenuCursorRow], a
 Func_00_1c1b:
 	call Func_00_3089
 	jr Func_00_1c7e
@@ -4084,14 +4084,14 @@ Func_00_1c20:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	cp $80
 	jr c, Func_00_1c37
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	dec a
 Func_00_1c37:
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, c
 	cp $05
 	jr nc, Func_00_1c47
@@ -4104,11 +4104,11 @@ Data_00_1c3f:
 SECTION "analyzed_001c47", ROM0[$1c47]
 
 Func_00_1c47:
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	cp $00
 	jr z, Func_00_1c52
 	dec a
-	ld [$c563], a
+	ld [wMenuCursorRow], a
 Func_00_1c52:
 	call Func_00_3089
 	jr Func_00_1c7e
@@ -4152,7 +4152,7 @@ Func_00_1c7e:
 Func_00_1c9d:
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	ld c, a
 	bit 7, b
 	jr z, Func_00_1cdc
@@ -4160,28 +4160,28 @@ Func_00_1c9d:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	inc a
 	cp c
 	jr nz, Func_00_1cb8
 	ld a, $00
 Func_00_1cb8:
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, c
 	cp $05
 	jr nc, Func_00_1cc8
-	ld a, [$c562]
-	ld [$c563], a
+	ld a, [wMenuCursor]
+	ld [wMenuCursorRow], a
 	jr Func_00_1cd3
 
 SECTION "analyzed_001cc8", ROM0[$1cc8]
 
 Func_00_1cc8:
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	cp $03
 	jr z, Func_00_1cd3
 	inc a
-	ld [$c563], a
+	ld [wMenuCursorRow], a
 
 SECTION "analyzed_001cd3", ROM0[$1cd3]
 
@@ -4196,29 +4196,29 @@ Func_00_1cdc:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	cp $80
 	jr c, Func_00_1cf3
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	dec a
 Func_00_1cf3:
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, c
 	cp $05
 	jr nc, Func_00_1d03
-	ld a, [$c562]
-	ld [$c563], a
+	ld a, [wMenuCursor]
+	ld [wMenuCursorRow], a
 	jr Func_00_1d0e
 
 SECTION "analyzed_001d03", ROM0[$1d03]
 
 Func_00_1d03:
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	cp $00
 	jr z, Func_00_1d0e
 	dec a
-	ld [$c563], a
+	ld [wMenuCursorRow], a
 
 SECTION "analyzed_001d0e", ROM0[$1d0e]
 
@@ -4229,7 +4229,7 @@ Func_00_1d0e:
 Func_00_1d17:
 	bit 5, b
 	jr z, Func_00_1d69
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	cp $80
 	jr nc, Func_00_1d69
@@ -4277,7 +4277,7 @@ Func_00_1d52:
 Func_00_1d69:
 	bit 4, b
 	jr z, Func_00_1db8
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	cp $80
 	jr nc, Func_00_1db8
@@ -4354,7 +4354,7 @@ Func_00_1de5:
 	ld a, $04
 	call Func_00_20d1
 	call Func_00_206a
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	cp $00
 	jr nz, Func_00_1e1c
 	ld d, $00
@@ -4721,7 +4721,7 @@ Data_00_1feb:
 SECTION "analyzed_001ff4", ROM0[$1ff4]
 
 Func_00_1ff4:
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	ld b, a
 	ld hl, $c4d1
@@ -4754,9 +4754,9 @@ Func_00_2019:
 Func_00_2020:
 	ld de, $c01c
 	ld hl, $18ad
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	ld c, a
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	sub c
 	jr nc, Func_00_2035
 
@@ -4822,7 +4822,7 @@ Func_00_2062:
 	jr nz, Func_00_2062
 	ret
 Func_00_206a:
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	ld b, a
 	ld c, $18
 	call Func_00_3700
@@ -5230,8 +5230,8 @@ Func_00_2319:
 	jp Func_00_2253
 Func_00_2325:
 	xor a
-	ld [$c562], a
-	ld [$c563], a
+	ld [wMenuCursor], a
+	ld [wMenuCursorRow], a
 	call Func_00_0bdd
 	ld a, $15
 	ld [$2fff], a
@@ -5469,7 +5469,7 @@ SECTION "analyzed_0025e5", ROM0[$25e5]
 
 Func_00_25e5:
 	ld a, $02
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $6737
@@ -5497,7 +5497,7 @@ Func_00_25e5:
 	call Func_00_20f0
 	ret
 	ld a, $02
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $6737
@@ -5532,7 +5532,7 @@ Func_00_25e5:
 	call Func_00_20f0
 	ret
 	ld a, $03
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $696d
@@ -5570,7 +5570,7 @@ Func_00_25e5:
 	call Func_00_20f0
 	ret
 	ld a, $02
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $6ba3
@@ -5601,7 +5601,7 @@ Func_00_25e5:
 	call Func_00_20f0
 	ret
 	ld a, $02
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $6dd9
@@ -5631,7 +5631,7 @@ Func_00_25e5:
 	call Func_00_20f0
 	ret
 	ld a, $02
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $700f
@@ -5720,7 +5720,7 @@ Func_00_27f9:
 	jr c, Func_00_280b
 	ld a, $06
 Func_00_280b:
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	xor a
 	ld [$c566], a
 	ld a, [$c567]
@@ -5732,7 +5732,7 @@ Func_00_281b:
 	ret
 Func_00_281f:
 	ld a, $03
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ld a, $10
 	ld [$2fff], a
 	ld hl, $7245
@@ -5852,7 +5852,7 @@ Func_00_28fb:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	ld c, a
 	ld a, [$c566]
 	inc a
@@ -5875,7 +5875,7 @@ Func_00_2922:
 	dec a
 	cp $80
 	jr c, Func_00_2939
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	dec a
 Func_00_2939:
 	ld [$c566], a
@@ -6025,7 +6025,7 @@ Func_00_2a41:
 	ld a, $04
 	call PlaySound
 	pop af
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	ld c, a
 	ld a, [$c566]
 	inc a
@@ -6047,7 +6047,7 @@ Func_00_2a60:
 	dec a
 	cp $80
 	jr c, Func_00_2a77
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	dec a
 Func_00_2a77:
 	ld [$c566], a
@@ -6243,7 +6243,7 @@ Func_00_2bb0:
 	jr c, Func_00_2bb4
 	ld a, c
 Func_00_2bb4:
-	ld [$c56a], a
+	ld [wMenuItemCount], a
 	ret
 Func_00_2bb8:
 	ld d, $00
@@ -7076,7 +7076,7 @@ Func_00_3089:
 	jr z, Func_00_30ab
 	cp $03
 	jr z, Func_00_30af
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	ld c, a
 	or a
 	jr z, Func_00_30ab
@@ -7093,7 +7093,7 @@ Func_00_30af:
 	ret
 Func_00_30b3:
 	ld hl, $5b30
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	cp $00
 	jr z, Func_00_30cb
 	dec a
@@ -7392,18 +7392,18 @@ Func_00_3268:
 	ld a, [$c56c]
 	ld h, a
 	push hl
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	rst $00
 	ld a, [hl]
 	ld [$c568], a
 	pop hl
-	ld a, [$c563]
+	ld a, [wMenuCursorRow]
 	ld c, a
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	sub c
 	jr nc, Func_00_3289
 	ld c, a
-	ld a, [$c56a]
+	ld a, [wMenuItemCount]
 	add a, c
 Func_00_3289:
 	rst $00
@@ -31932,22 +31932,22 @@ SECTION "analyzed_044000", ROMX[$4000], BANK[$11]
 
 Func_11_4000:
 	ld a, $01
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, [$c4cd]
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $02
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, [$c4ce]
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $03
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, [$c4cf]
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $04
-	ld [$c562], a
+	ld [wMenuCursor], a
 	ld a, [$c4d0]
 	ld c, a
 	call LoadFloorMonsterSprite
@@ -31977,7 +31977,7 @@ Func_11_4036:
 	ret
 ; Upload floor-monster species C's sprite (32 tiles, 4x8 column-major from
 ; FloorMonsterSprites + C*$300) to VRAM bank 1 and load its OBJ palette from
-; FloorMonsterSpritePalettes + C*8 into slot [$c562]+3. C is a MONSTER enum value
+; FloorMonsterSpritePalettes + C*8 into slot [wMenuCursor]+3. C is a MONSTER enum value
 ; (include/monster.inc). See docs/gfx_loaders.md for the rendered roster.
 LoadFloorMonsterSprite:
 	ld a, c
@@ -31987,7 +31987,7 @@ LoadFloorMonsterSprite:
 	ld hl, FloorMonsterSprites
 	add a, h
 	ld h, a
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	dec a
 	add a, a
 	ld de, $8000
@@ -32002,7 +32002,7 @@ LoadFloorMonsterSprite:
 	add a, a
 	ld hl, FloorMonsterSpritePalettes
 	rst $00
-	ld a, [$c562]
+	ld a, [wMenuCursor]
 	add a, $03
 	call LoadObjPalette
 	call Func_00_0786
