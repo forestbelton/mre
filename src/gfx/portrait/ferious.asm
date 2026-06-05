@@ -4,17 +4,17 @@
 ; tile bank per cell. Located by following Mistral's script far-calls
 ; (tools/find_portraits.py).
 ;
-; Assembled from the editable source under assets/ferious_portrait/ by
+; Assembled from the editable source under assets/ferious/ by
 ; tools/gfxasset.py (Makefile, output under build/assets/). Grayscale source --
 ; palettes are lib-dispatched and not yet located; tiles + tilemap round-trip here.
 
 SECTION "FeriousPortraitTilesBank0", ROMX[$4000], BANK[$35]
 FeriousPortraitTilesBank0:
-	INCBIN "assets/ferious_portrait/tiles2.bin"   ; 128 tiles -> VRAM bank 0 $9000
+	INCBIN "assets/ferious/tiles2.bin"   ; 128 tiles -> VRAM bank 0 $9000
 
 SECTION "FeriousPortraitTiles", ROMX[$4800], BANK[$35]
 FeriousPortraitTiles:
-	INCBIN "assets/ferious_portrait/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/ferious/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
 SECTION "FeriousPortraitMapDesc", ROMX[$6080], BANK[$35]
 FeriousPortraitMapDesc:
@@ -24,8 +24,8 @@ FeriousPortraitMapDesc:
 
 SECTION "FeriousPortraitIndexMap", ROMX[$6086], BANK[$35]
 FeriousPortraitIndexMap:
-	INCBIN "assets/ferious_portrait/tilemap.bin"  ; 20x11 tile indices
+	INCBIN "assets/ferious/tilemap.bin"  ; 20x11 tile indices
 
 SECTION "FeriousPortraitAttrMap", ROMX[$6162], BANK[$35]
 FeriousPortraitAttrMap:
-	INCBIN "assets/ferious_portrait/attrmap.bin"  ; 20x11 CGB BG attributes (bit 3 = VRAM bank)
+	INCBIN "assets/ferious/attrmap.bin"  ; 20x11 CGB BG attributes (bit 3 = VRAM bank)

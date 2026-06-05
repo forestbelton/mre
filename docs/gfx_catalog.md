@@ -26,12 +26,12 @@ under `src/gfx/` (e.g. `gfx/portrait/` or `gfx/screen/`).
 | Data_17_6918.png | $17:$6918 | 128 | 128x64 |  |  |
 | Data_19_46cb.png | $19:$46cb | 512 | 128x256 |  |  |
 | Data_1a_4000.png | $1a:$4000 | 384 | 128x192 | sprite/character tiles (not a font) |  |
-| Data_1a_5ae8.png | $1a:$5ae8 | 384 | 128x192 |  | PROMOTED -> assets/naji_portrait/ |
-| Data_1b_4000.png | $1b:$4000 | 384 | 128x192 |  | PROMOTED -> assets/pashute_portrait/ |
+| Data_1a_5ae8.png | $1a:$5ae8 | 384 | 128x192 |  | PROMOTED -> assets/portrait/naji/ |
+| Data_1b_4000.png | $1b:$4000 | 384 | 128x192 |  | PROMOTED -> assets/portrait/pashute/ |
 | Data_1b_5c5d.png | $1b:$5c5d | 89 | 128x48 |  |  |
 | Data_1b_645d.png | $1b:$645d | 231 | 128x120 |  |  |
-| Data_1d_5b19.png | $1d:$5b19 | 384 | 128x192 |  | PROMOTED -> assets/rafaga_portrait/ |
-| Data_1e_5be7.png | $1e:$5be7 | 128 | 128x64 |  | PROMOTED -> assets/tempest_portrait/ |
+| Data_1d_5b19.png | $1d:$5b19 | 384 | 128x192 |  | PROMOTED -> assets/portrait/rafaga/ |
+| Data_1e_5be7.png | $1e:$5be7 | 128 | 128x64 |  | PROMOTED -> assets/portrait/tempest/ |
 | Data_1e_64e8.png | $1e:$64e8 | 239 | 128x120 |  |  |
 | Data_20_4000.png | $20:$4000 | 768 | 128x384 | VRAM tileset — full font + UI/decor tiles (confirmed) |  |
 | Data_21_4000.png | $21:$4000 | 768 | 128x384 | likely VRAM tileset+font (768-tile, same shape as $20/$28) — confirm? |  |

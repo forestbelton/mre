@@ -1,12 +1,12 @@
 # Graphics asset descriptor -- the single place that lists every PNG-driven asset,
 # so adding one is a YAML edit, not a Makefile change. tools/buildassets.py reads
 # this and runs tools/pngasset.py per entry (output -> build/assets/<dir>/, which
-# the asm INCBINs). It also auto-builds the legacy assets/<name>/asset.json assets
-# via gfxasset.py. See docs/gfx_assets.md.
+# the asm INCBINs). See docs/gfx_assets.md.
 #
-# Each entry's key is just a label; the output dir is derived from the PNG path
-# (assets/town_screen/town.png -> build/assets/town_screen; assets/logo.png ->
-# build/assets/logo). Fields:
+# The directory layout mirrors src/gfx: logo/ and intro/ at the top, screen/ and
+# portrait/ groups below. Each entry's key is just a label; the output dir is
+# derived from the PNG's parent dir name (assets/screen/town/town.png ->
+# build/assets/town). Fields:
 #   mode: composite  -- one self-contained image; the tool derives tiles + tilemap
 #                       (every tile is visible). Opts: sheet_rows, pad_before, colors.
 #   mode: screen     -- two-VRAM-bank colour screen; one combined tile-sheet PNG
@@ -16,77 +16,78 @@
 
 logo:
   mode: composite
-  png: logo.png
+  png: logo/logo.png
   sheet_rows: 8
   pad_before: [0, 4096]   # $1000 blank-tile VRAM block before the sheet
 
+intro_book:                # 10x20 (top half of the screen)
+  mode: screen
+  png: intro/intro.png
+
+# Full-screen backgrounds (src/gfx/screen/*.asm).
 town:
   mode: screen
-  png: town_screen/town.png
+  png: screen/town/town.png
 
 tower:
   mode: screen
-  png: tower_entrance/tower_entrance.png
+  png: screen/tower/tower.png
 
 tower_open:
   mode: screen
-  png: tower_entrance_open/tower_entrance_open.png
+  png: screen/tower_open/tower_open.png
 
 room_start:
   mode: screen
-  png: room_start/room_start.png
+  png: screen/room_start/room_start.png
 
 room_clear:
   mode: screen
-  png: room_clear/room_clear.png
+  png: screen/room_done/room_done.png
 
 title:
   mode: screen
-  png: title_screen/title_screen.png
+  png: screen/title/title.png
 
-intro_book:                # 10x20 (top half of the screen)
-  mode: screen
-  png: intro_book/intro_book.png
-
-# Character portraits (grayscale; palettes lib-dispatched, not yet located).
+# Character portraits (src/gfx/portrait/*.asm; grayscale, palettes not yet located).
 kalum:
   mode: portrait
-  png: kalum_portrait/kalum_portrait.png
+  png: portrait/kalum/kalum.png
 
 toamuna:
   mode: portrait
-  png: toamuna_portrait/toamuna_portrait.png
+  png: portrait/toamuna/toamuna.png
 
 rafaga:
   mode: portrait
-  png: rafaga_portrait/rafaga_portrait.png
+  png: portrait/rafaga/rafaga.png
 
 tempest:
   mode: portrait
-  png: tempest_portrait/tempest_portrait.png
+  png: portrait/tempest/tempest.png
 
 naji:
   mode: portrait
-  png: naji_portrait/naji_portrait.png
+  png: portrait/naji/naji.png
 
 pashute:
   mode: portrait
-  png: pashute_portrait/pashute_portrait.png
+  png: portrait/pashute/pashute.png
 
 bodka:
   mode: portrait
-  png: bodka_portrait/bodka_portrait.png
+  png: portrait/bodka/bodka.png
 
 ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
   mode: portrait
-  png: ferious_portrait/ferious_portrait.png
+  png: portrait/ferious/ferious.png
   tiles0: 128
 
 nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   mode: portrait
-  png: nada_intro/nada_intro.png
+  png: portrait/nada_intro/nada_intro.png
   tiles0: 384
 
 nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 tiles
   mode: portrait
-  png: nada_scene2/nada_scene2.png
+  png: portrait/nada_scene2/nada_scene2.png

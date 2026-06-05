@@ -39,8 +39,8 @@ portrait palettes — `Func_32_41c1` copies straight into `$c121`/`$c149`).
 ## Palette data format
 
 `$08` bytes per palette = 4 colors, each a little-endian **RGB555** word
-(`r | g<<5 | b<<10`, 5 bits/channel). Same packing as `tools/pngasset.py` /
-`gfxasset.py` already read for the logo.
+(`r | g<<5 | b<<10`, 5 bits/channel). Same packing as `tools/pngasset.py`
+already reads for the logo.
 
 ## Why this helps the whole project
 

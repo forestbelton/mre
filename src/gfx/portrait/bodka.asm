@@ -4,12 +4,12 @@
 ; addressing), arranged by the CopyBgMap descriptor below. Located via
 ; tools/find_portraits.py.
 ;
-; Assembled from assets/bodka_portrait/ by tools/gfxasset.py (Makefile, output
+; Assembled from assets/bodka/ by tools/gfxasset.py (Makefile, output
 ; under build/assets/). Grayscale source -- palettes lib-dispatched, not located.
 
 SECTION "BodkaPortraitTiles", ROMX[$4000], BANK[$1e]
 BodkaPortraitTiles:
-	INCBIN "assets/bodka_portrait/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/bodka/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
 SECTION "BodkaPortraitMapDesc", ROMX[$5880], BANK[$1e]
 BodkaPortraitMapDesc:
@@ -19,8 +19,8 @@ BodkaPortraitMapDesc:
 
 SECTION "BodkaPortraitIndexMap", ROMX[$5886], BANK[$1e]
 BodkaPortraitIndexMap:
-	INCBIN "assets/bodka_portrait/tilemap.bin"  ; 20x11 tile indices
+	INCBIN "assets/bodka/tilemap.bin"  ; 20x11 tile indices
 
 SECTION "BodkaPortraitAttrMap", ROMX[$5962], BANK[$1e]
 BodkaPortraitAttrMap:
-	INCBIN "assets/bodka_portrait/attrmap.bin"  ; 20x11 CGB BG attributes
+	INCBIN "assets/bodka/attrmap.bin"  ; 20x11 CGB BG attributes

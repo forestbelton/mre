@@ -199,19 +199,20 @@ The intro sequence is TECMO logo (fade in/out) → opening cutscene → title
 screen. The TECMO logo is a CGB full-screen image and the first concrete use of
 the gfx pipeline on a real asset.
 
-- **Components** (`assets/tecmo_logo/`, compiled by `tools/gfxasset.py`): the
+- **Components** (`assets/logo/`, compiled by `tools/pngasset.py`): the
   renderer bulk-copies bank `$27` `$4000`+`$3000` into VRAM, but the logo proper
   is a tile sheet + palette + a 20×18 map packed inside that blob (NB: the
   `0x9C000` file offset is just `0x27·0x4000` — unrelated to the VRAM `$9C00`
-  window-tilemap address, a different address space):
+  window-tilemap address, a different address space). All of it is derived from
+  the single committed `logo.png` (`composite` mode):
 
   | component | file offset | bytes | source |
   |---|---|---|---|
-  | tile data (VRAM `$9000`, bank 0, `$8800` mode) | `0x9D000` | 2048 (128 tiles) | `tiles.png` |
-  | palette (white / gray / gray / red) | `0x9D800` | 8 | `palette.pal` |
-  | map descriptor (`db rows,cols / dw attr,idx`) | `0x9D808` | 6 | `tecmo_logo.asm` |
-  | tile index map (20×18) | `0x9D80E` | 360 | `tilemap.bin` |
-  | CGB attribute map (20×18) | `0x9D976` | 360 | `attrmap.bin` |
+  | tile data (VRAM `$9000`, bank 0, `$8800` mode) | `0x9D000` | 2048 (128 tiles) | `logo.png` |
+  | palette (white / gray / gray / red) | `0x9D800` | 8 | `logo.png` |
+  | map descriptor (`db rows,cols / dw attr,idx`) | `0x9D808` | 6 | `logo.asm` |
+  | tile index map (20×18) | `0x9D80E` | 360 | `logo.png` |
+  | CGB attribute map (20×18) | `0x9D976` | 360 | `logo.png` |
 
   The blank lead-in (`0x9C000`+`0x1000`, cleared VRAM) and the bank-1 tail
   (`0x9DADE`+, mid-tile) stay as plain `gfx`/`data` regions in `analyzed.asm`.
@@ -229,14 +230,12 @@ the gfx pipeline on a real asset.
 - **Dispatch:** `RunIntroScene` (`$0f58`) indexes `IntroSceneTable` (`$0f71`,
   3 bytes/entry `{bank,lo,hi}`) by the intro state `$c2a7`; the TECMO entry →
   `IntroScene_TecmoLogo` (`$3580`) which banks in `$30` and calls `DrawTecmoLogo`.
-- **Build:** `src/tecmo_logo.asm` pins the components to their bank-`$27`
-  offsets and `INCBIN`s the `gfxasset`-compiled bytes (from `build/assets/`);
+- **Build:** `src/gfx/logo.asm` pins the components to their bank-`$27`
+  offsets and `INCBIN`s the `pngasset`-compiled bytes (from `build/assets/`);
   the descriptor references the two maps by `dw` *label*, so the region is
   internally relocatable — the philosophy litmus test (docs/philosophy.md). The
-  region is carved out of `analyzed.asm` via a map.json file entry. `gfxasset`
-  also bakes a composite `assets/tecmo_logo/preview.png` (the assembled
-  red-on-white logo) for viewing — *generated*, gitignored; the components are
-  the round-trip source.
+  region is carved out of `analyzed.asm` via a map.json file entry. The single
+  committed `logo.png` is the round-trip source.
 - Confirmed first-drawn empirically: a ~30 s boot `--watch-vram` trace marked
   bank `$27` (this logo) but never reached the bank `$28` cutscene/title art.
 

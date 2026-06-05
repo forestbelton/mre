@@ -5,9 +5,10 @@ The goal (see docs/philosophy.md): an image's editable source is *one PNG*, and
 the build regenerates the ROM bytes (tile data, palette, tilemap, attribute map)
 from it. Nothing else is committed.
 
-This is the successor to gfxasset.py's multi-file `assets/<name>/` layout: instead
-of committing tiles.png + palette.pal + tilemap.bin + attrmap.bin + asset.json, we
-commit just `assets/<name>.png` and reconstruct everything.
+The committed source is the PNG plus (for screens/portraits) the non-derivable
+`tilemap.bin` / `attrmap.bin`; everything else (tile data, palette) is rebuilt.
+Assets live under `assets/` in a tree mirroring `src/gfx/` (logo/, intro/,
+screen/<name>/, portrait/<name>/).
 
 Reproducing the *exact* original tileset order + tilemap from a flat image needs
 a layout heuristic (the game didn't dedupe in a canonical way). The heuristic
@@ -31,10 +32,10 @@ VRAM banks). For now it does exactly what the logo needs; `verify` proves the
 round-trip is byte-exact.
 
 Commands:
-    pngasset.py encode --png assets/logo.png --sheet-rows 8 \
+    pngasset.py encode --png assets/logo/logo.png --sheet-rows 8 \
         --pad-before 0x00 4096 --out-dir build/assets/logo
     pngasset.py decode --tiles t.bin --tilemap m.bin --palette p.pal \
-        --cols 20 --rows 18 --out assets/logo.png      # bootstrap the PNG
+        --cols 20 --rows 18 --out assets/logo/logo.png      # bootstrap the PNG
 """
 
 from __future__ import annotations

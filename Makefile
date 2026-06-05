@@ -1,9 +1,9 @@
 # Monster Rancher Explorer disassembly — build orchestration.
 #
 # The source tree under src/ is the hand-maintained truth; the build just
-# assembles it. Editable screen assets (assets/<name>/asset.json) are encoded to
-# their ROM bytes by tools/gfxasset.py, and raw_gfx/*.png are converted to 2bpp,
-# both at build time.
+# assembles it. Editable graphics assets (assets/, laid out to mirror src/gfx)
+# are encoded to their ROM bytes from one PNG each by tools/pngasset.py (driven by
+# assets/assets.yaml), and raw_gfx/*.png are converted to 2bpp, both at build time.
 #
 # Targets:
 #   verify   (default) — build the ROM and compare its sha256 to the known value
@@ -68,9 +68,8 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
 		done; \
 	fi
-	@# All graphics assets: PNG-driven (assets/assets.yaml -> pngasset) + the
-	@# remaining legacy assets/<name>/asset.json (-> gfxasset). One descriptor,
-	@# one entry point -- adding a PNG-driven asset is a YAML edit.
+	@# All graphics assets are PNG-driven: assets/assets.yaml -> pngasset, via the
+	@# one entry point below. Adding an asset is a YAML edit, not a Makefile change.
 	$(PYTHON) tools/buildassets.py
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o

@@ -29,27 +29,43 @@ Regenerates a screen's components from a source PNG.
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 
-Every graphics asset is now PNG-driven through this tool; `tools/gfxasset.py`
-remains only as a decode/reference helper (the build no longer needs it).
+Every graphics asset is PNG-driven through this one tool (the old multi-file
+`assets/<name>/asset.json` + `tools/gfxasset.py` flow has been removed).
+
+## Layout: `assets/` mirrors `src/gfx/`
+
+The asset tree is laid out to parallel the asm tree, so `assets/screen/town/`
+sits next to `src/gfx/screen/town.asm`:
+
+```
+assets/logo/logo.png              src/gfx/logo.asm
+assets/intro/intro.png            src/gfx/intro.asm
+assets/screen/<name>/<name>.png   src/gfx/screen/<name>.asm   (town, tower,
+                                    tower_open, room_start, room_done, title)
+assets/portrait/<name>/<name>.png src/gfx/portrait/<name>.asm (kalum, …; nada.asm
+                                    drives nada_intro/ + nada_scene2/)
+```
+
+Each leaf dir holds the editable `<name>.png` plus the committed `tilemap.bin` /
+`attrmap.bin` (the arrangement). The build writes ROM components to
+`build/assets/<name>/`, which the asm `INCBIN`s.
 
 ## Descriptor: `assets/assets.yaml` + `tools/buildassets.py`
 
-One YAML lists every PNG-driven asset; `tools/buildassets.py` (the single entry
-point the Makefile calls) runs `pngasset.py` per entry, then auto-builds the
-remaining `assets/<name>/asset.json` assets via `gfxasset.py`. **Adding a
-PNG-driven asset is a YAML edit, not a Makefile change.** The output dir is derived
-from the PNG path (`assets/town_screen/town.png` → `build/assets/town_screen`;
-`assets/logo.png` → `build/assets/logo`), which the asm `INCBIN`s.
+One YAML lists every asset; `tools/buildassets.py` (the single entry point the
+Makefile calls) runs `pngasset.py` per entry. **Adding an asset is a YAML edit,
+not a Makefile change.** The output dir is derived from the PNG's parent dir name
+(`assets/screen/town/town.png` → `build/assets/town`), which the asm `INCBIN`s.
 
 ```yaml
 logo:
   mode: composite          # one self-contained image; tool derives tiles + tilemap
-  png: logo.png
+  png: logo/logo.png
   sheet_rows: 8
   pad_before: [0, 4096]    # blank-tile VRAM block before the sheet
 town:
   mode: screen             # two-bank colour screen; one combined tile-sheet PNG
-  png: town_screen/town.png
+  png: screen/town/town.png
 ```
 
 `mode: composite` opts: `sheet_rows`, `pad_before [byte, n]`, `colors`.
@@ -62,7 +78,7 @@ two-bank colour screens, and the 10 portraits.
 
 `src/gfx/screen/town.asm` was the first bank-`$30` screen taken off the
 auto-generated inline-`db` extract dump onto pngasset. Editable source is **one
-image** — `assets/town_screen/town.png` (both banks stacked, all 16 palettes
+image** — `assets/screen/town/town.png` (both banks stacked, all 16 palettes
 embedded, each tile in its real colour) — plus the committed `tilemap.bin` /
 `attrmap.bin` (the arrangement). The build splits the PNG into the two banks +
 palette, the asm `INCBIN`s the bins, and the map descriptor references the maps by
@@ -80,7 +96,7 @@ is the exemplar for the remaining six screens (and the eventual YAML schema):
 ## Migrated: the portraits (portrait mode)
 
 The 10 character portraits followed onto `mode: portrait`. Each is one grayscale
-tile-sheet PNG — `assets/<name>/<name>.png`, bank-1 tiles first then any bank-0
+tile-sheet PNG — `assets/portrait/<name>/<name>.png`, bank-1 tiles first then any bank-0
 tiles — plus the committed `tilemap.bin`/`attrmap.bin`. Single-bank portraits
 (kalum, toamuna, rafaga, tempest, naji, pashute, bodka, nada_scene2) emit only
 `tiles.bin`; the two-bank ones (ferious `tiles0: 128`, nada_intro `tiles0: 384`)
@@ -90,7 +106,7 @@ grayscale until the lib-dispatched CGB palettes are located.
 
 ## Migrated: the TECMO logo (composite mode)
 
-`assets/logo.png` (160×144 indexed) is the only committed source; the build
+`assets/logo/logo.png` (160×144 indexed) is the only committed source; the build
 regenerates tiles/palette/tilemap/attrmap. The byte-exact tile-ordering heuristic:
 blank tile = all-color-0; find the bounding box of non-blank cells; build the
 sheet **column-major** over the bbox, padding each column to `--sheet-rows` tiles
@@ -101,13 +117,13 @@ in the composite**.
 
 ## Asset survey (18 captured assets)
 
-From `scratch/asset_survey.py` over `gfxasset.ASSETS`, measuring dimensions,
-addressing, tile-bank layout, attribute-map usage, palette, and how many sheet
-tiles are unreferenced.
+A one-time survey of the 18 captured assets, measuring dimensions, addressing,
+tile-bank layout, attribute-map usage, palette, and how many sheet tiles are
+unreferenced.
 
 | Family | Count | Members | Shared shape |
 |---|---|---|---|
-| Composite | 1 | tecmo_logo | `direct`, 1 palette, 128 tiles, attr **all-zero**, 1 bank |
+| Composite | 1 | logo | `direct`, 1 palette, 128 tiles, attr **all-zero**, 1 bank |
 | Single-bank portraits | 7 | kalum, toamuna, rafaga, tempest, naji, pashute, bodka | 11×20, `8800`, 384 tiles, attr = per-cell pal 0-5 + bank3=1 |
 | Two-bank portraits | 3 | ferious, nada_intro, nada_scene2 | 11×20, `8800`, 384 + 2nd sheet, attr bit3 selects bank |
 | Two-bank screens | 7 | town, tower_entrance, room_start, room_clear, tower_entrance_open, title_screen, intro_book | 18×20 (intro 10×20), `8800`, 384+384, attr bit3 bank-select, some xflip |

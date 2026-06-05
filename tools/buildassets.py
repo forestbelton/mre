@@ -2,9 +2,8 @@
 """Build every graphics asset's ROM components into build/assets/.
 
 The single entry point the Makefile calls: reads assets/assets.yaml and runs
-tools/pngasset.py for each PNG-driven asset, then auto-builds the remaining
-legacy assets/<name>/asset.json assets via tools/gfxasset.py. Adding a
-PNG-driven asset is a YAML edit -- no Makefile change. See docs/gfx_assets.md.
+tools/pngasset.py for each PNG-driven asset. Every graphics asset is described
+here, so adding one is a YAML edit -- no Makefile change. See docs/gfx_assets.md.
 """
 from __future__ import annotations
 
@@ -60,19 +59,8 @@ def build_png_asset(name: str, spec: dict) -> None:
 
 def main() -> int:
     spec = yaml.safe_load((ROOT / "assets" / "assets.yaml").read_text()) or {}
-    described = set()
     for name, a in spec.items():
         build_png_asset(name, a)
-        described.add((ROOT / "assets" / a["png"]).parent.resolve())
-
-    # Legacy multi-file assets (assets/<name>/asset.json) not already PNG-driven.
-    gfxasset = str(ROOT / "tools" / "gfxasset.py")
-    for aj in sorted((ROOT / "assets").glob("*/asset.json")):
-        d = aj.parent
-        if d.resolve() in described:
-            continue
-        print(f"[{d.name}] legacy gfxasset")
-        run(gfxasset, "encode", "--in", str(d), "--out-dir", str(ROOT / "build" / "assets" / d.name))
     return 0
 
 

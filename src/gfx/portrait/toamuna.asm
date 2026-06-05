@@ -4,7 +4,7 @@
 ; tiles are copied to VRAM bank 1 $8000 ($8800 signed addressing) and arranged by
 ; the CopyBgMap descriptor below over the top 20x11 cells.
 ;
-; Assembled from the editable source under assets/toamuna_portrait/ by
+; Assembled from the editable source under assets/toamuna/ by
 ; tools/gfxasset.py (run in the Makefile, output under build/assets/). The
 ; descriptor references the two maps by *label* (dw), so the region is internally
 ; relocatable. The BG palettes are lib-dispatched and not yet located, so the
@@ -12,7 +12,7 @@
 
 SECTION "ToamunaPortraitTiles", ROMX[$4000], BANK[$1a]
 ToamunaPortraitTiles:
-	INCBIN "assets/toamuna_portrait/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/toamuna/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
 SECTION "ToamunaPortraitMapDesc", ROMX[$5880], BANK[$1a]
 ToamunaPortraitMapDesc:
@@ -22,8 +22,8 @@ ToamunaPortraitMapDesc:
 
 SECTION "ToamunaPortraitIndexMap", ROMX[$5886], BANK[$1a]
 ToamunaPortraitIndexMap:
-	INCBIN "assets/toamuna_portrait/tilemap.bin"  ; 20x11 tile indices
+	INCBIN "assets/toamuna/tilemap.bin"  ; 20x11 tile indices
 
 SECTION "ToamunaPortraitAttrMap", ROMX[$5962], BANK[$1a]
 ToamunaPortraitAttrMap:
-	INCBIN "assets/toamuna_portrait/attrmap.bin"  ; 20x11 CGB BG attributes
+	INCBIN "assets/toamuna/attrmap.bin"  ; 20x11 CGB BG attributes

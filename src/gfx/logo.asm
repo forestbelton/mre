@@ -1,7 +1,7 @@
 ; TECMO logo graphics data -- the image shown on the first boot screen.
 ; The renderer that draws and fades it lives in src/logo.asm (DrawTecmoLogo).
 ;
-; Generated from the single source image assets/logo.png by tools/pngasset.py
+; Generated from the single source image assets/logo/logo.png by tools/pngasset.py
 ; (run in the Makefile, output under build/assets/logo/). The PNG is the only
 ; committed source; tiles, palette, tilemap and attribute map are all
 ; reconstructed from it byte-exact -- including the $1000 blank-tile block before

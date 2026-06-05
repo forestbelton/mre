@@ -1,7 +1,7 @@
 rom.gbc
 *.sav
 src/raw_gfx/*.2bpp
-assets/*/preview.png
+assets/**/preview.png
 build/
 __pycache__/
 *.swp
