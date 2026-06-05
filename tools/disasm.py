@@ -13,11 +13,11 @@ Usage:
 bank/addr/len and --bytes accept bare hex (no $ / 0x needed). Branch and IO
 operands print as $XXXX; relabel by hand after pasting into the source.
 """
+
 import argparse
 import re
 import sys
 from typing import Callable
-
 
 R8 = ["b", "c", "d", "e", "h", "l", "[hl]", "a"]
 R16_SP = ["bc", "de", "hl", "sp"]
@@ -95,7 +95,8 @@ def decode(
                 return ("nop", 1)
             if y == 1:
                 nn = imm16()
-                if nn is None: return (f"db ${op:02x}", 1)
+                if nn is None:
+                    return (f"db ${op:02x}", 1)
                 return (f"ld [{fmt_target('data', nn)}], sp", 3)
             if y == 2:
                 # `stop` is officially `stop $00` — the opcode is `$10 $00`.
@@ -108,20 +109,23 @@ def decode(
                 return ("db $10", 1)
             if y == 3:
                 e = imm8()
-                if e is None: return (f"db ${op:02x}", 1)
+                if e is None:
+                    return (f"db ${op:02x}", 1)
                 t = _signed_offset(e, addr + 2)
                 return (f"jr {fmt_target('code', t)}", 2)
             # y in 4..7
             cc = COND[y - 4]
             e = imm8()
-            if e is None: return (f"db ${op:02x}", 1)
+            if e is None:
+                return (f"db ${op:02x}", 1)
             t = _signed_offset(e, addr + 2)
             return (f"jr {cc}, {fmt_target('code', t)}", 2)
 
         if z == 1:
             if q == 0:
                 nn = imm16()
-                if nn is None: return (f"db ${op:02x}", 1)
+                if nn is None:
+                    return (f"db ${op:02x}", 1)
                 # Resolve WRAM-range immediates (pointer loads like `ld hl, wFloorGrid`)
                 # to their wram.inc symbol. fmt_target only substitutes addresses that
                 # are actually defined, so undefined WRAM and all ROM/constant
@@ -137,7 +141,7 @@ def decode(
             return ((mnems_store if q == 0 else mnems_load)[p], 1)
 
         if z == 3:
-            return ((f"inc {R16_SP[p]}", 1) if q == 0 else (f"dec {R16_SP[p]}", 1))
+            return (f"inc {R16_SP[p]}", 1) if q == 0 else (f"dec {R16_SP[p]}", 1)
 
         if z == 4:
             return (f"inc {R8[y]}", 1)
@@ -145,7 +149,8 @@ def decode(
             return (f"dec {R8[y]}", 1)
         if z == 6:
             n = imm8()
-            if n is None: return (f"db ${op:02x}", 1)
+            if n is None:
+                return (f"db ${op:02x}", 1)
             return (f"ld {R8[y]}, ${n:02x}", 2)
         # z == 7
         return (ROT[y], 1)
@@ -175,20 +180,24 @@ def decode(
             return (f"ret {COND[y]}", 1)
         if y == 4:
             n = imm8()
-            if n is None: return (f"db ${op:02x}", 1)
+            if n is None:
+                return (f"db ${op:02x}", 1)
             return (f"ldh [{fmt_io(0xFF00 + n)}], a", 2)
         if y == 5:
             n = imm8()
-            if n is None: return (f"db ${op:02x}", 1)
+            if n is None:
+                return (f"db ${op:02x}", 1)
             s = _signed_byte(n)
             return (f"add sp, {s}", 2)
         if y == 6:
             n = imm8()
-            if n is None: return (f"db ${op:02x}", 1)
+            if n is None:
+                return (f"db ${op:02x}", 1)
             return (f"ldh a, [{fmt_io(0xFF00 + n)}]", 2)
         # y == 7
         n = imm8()
-        if n is None: return (f"db ${op:02x}", 1)
+        if n is None:
+            return (f"db ${op:02x}", 1)
         s = _signed_byte(n)
         if s >= 0:
             return (f"ld hl, sp+{s}", 2)
@@ -197,35 +206,45 @@ def decode(
     if z == 1:
         if q == 0:
             return (f"pop {R16_AF[p]}", 1)
-        if p == 0: return ("ret", 1)
-        if p == 1: return ("reti", 1)
-        if p == 2: return ("jp hl", 1)
+        if p == 0:
+            return ("ret", 1)
+        if p == 1:
+            return ("reti", 1)
+        if p == 2:
+            return ("jp hl", 1)
         return ("ld sp, hl", 1)
 
     if z == 2:
         if y < 4:
             nn = imm16()
-            if nn is None: return (f"db ${op:02x}", 1)
+            if nn is None:
+                return (f"db ${op:02x}", 1)
             return (f"jp {COND[y]}, {fmt_target('code', nn)}", 3)
-        if y == 4: return ("ldh [c], a", 1)
+        if y == 4:
+            return ("ldh [c], a", 1)
         if y == 5:
             nn = imm16()
-            if nn is None: return (f"db ${op:02x}", 1)
+            if nn is None:
+                return (f"db ${op:02x}", 1)
             return (f"ld [{fmt_target('data', nn)}], a", 3)
-        if y == 6: return ("ldh a, [c]", 1)
+        if y == 6:
+            return ("ldh a, [c]", 1)
         # y == 7
         nn = imm16()
-        if nn is None: return (f"db ${op:02x}", 1)
+        if nn is None:
+            return (f"db ${op:02x}", 1)
         return (f"ld a, [{fmt_target('data', nn)}]", 3)
 
     if z == 3:
         if y == 0:
             nn = imm16()
-            if nn is None: return (f"db ${op:02x}", 1)
+            if nn is None:
+                return (f"db ${op:02x}", 1)
             return (f"jp {fmt_target('code', nn)}", 3)
         if y == 1:
             # CB prefix
-            if remaining < 2: return (f"db ${op:02x}", 1)
+            if remaining < 2:
+                return (f"db ${op:02x}", 1)
             op2 = data[pos + 1]
             reg = R8[op2 & 7]
             if op2 < 0x40:
@@ -236,15 +255,18 @@ def decode(
             if op2 < 0xC0:
                 return (f"res {bit}, {reg}", 2)
             return (f"set {bit}, {reg}", 2)
-        if y == 6: return ("di", 1)
-        if y == 7: return ("ei", 1)
+        if y == 6:
+            return ("di", 1)
+        if y == 7:
+            return ("ei", 1)
         # y in {2,3,4,5}: illegal opcodes
         return (f"db ${op:02x}", 1)
 
     if z == 4:
         if y < 4:
             nn = imm16()
-            if nn is None: return (f"db ${op:02x}", 1)
+            if nn is None:
+                return (f"db ${op:02x}", 1)
             return (f"call {COND[y]}, {fmt_target('code', nn)}", 3)
         return (f"db ${op:02x}", 1)
 
@@ -253,13 +275,15 @@ def decode(
             return (f"push {R16_AF[p]}", 1)
         if p == 0:
             nn = imm16()
-            if nn is None: return (f"db ${op:02x}", 1)
+            if nn is None:
+                return (f"db ${op:02x}", 1)
             return (f"call {fmt_target('code', nn)}", 3)
         return (f"db ${op:02x}", 1)
 
     if z == 6:
         n = imm8()
-        if n is None: return (f"db ${op:02x}", 1)
+        if n is None:
+            return (f"db ${op:02x}", 1)
         return (f"{ALU8[y]} ${n:02x}", 2)
 
     # z == 7
@@ -270,6 +294,7 @@ def decode(
 # Bank / address helpers
 # ---------------------------------------------------------------------------
 
+
 def flat(bank: int, addr: int) -> int:
     """bank + 16-bit address -> flat ROM offset."""
     return addr if bank == 0 else bank * 0x4000 + (addr - 0x4000)
@@ -277,7 +302,9 @@ def flat(bank: int, addr: int) -> int:
 
 def disassemble(data: bytes, addr: int = 0) -> list[str]:
     """Linearly decode `data`, whose first byte is at memory address `addr`."""
-    out, pos, a = [], 0, addr
+    out: list[str] = []
+    pos = 0
+    a = addr
     while pos < len(data):
         text, length = decode(data, pos, a)
         out.append(f"\t{text}")
@@ -290,20 +317,27 @@ def _hx(s: str) -> int:
     return int(s.lstrip("$").replace("0x", ""), 16)
 
 
-def main(argv=None) -> int:
+def main() -> int:
+    assert __doc__ is not None
     ap = argparse.ArgumentParser(
         description=__doc__.splitlines()[1],
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     ap.add_argument("--rom", default="rom.gbc")
-    ap.add_argument("--bytes", nargs="+", metavar="HEX",
-                    help="disassemble these literal bytes")
-    ap.add_argument("--db", action="store_true",
-                    help="read `db $..` lines from stdin")
-    ap.add_argument("--addr", default="0",
-                    help="start address for --bytes/--db (default 0)")
-    ap.add_argument("region", nargs="*", metavar="BANK ADDR LEN",
-                    help="disassemble a rom.gbc region")
-    args = ap.parse_args(argv)
+    ap.add_argument(
+        "--bytes", nargs="+", metavar="HEX", help="disassemble these literal bytes"
+    )
+    ap.add_argument("--db", action="store_true", help="read `db $..` lines from stdin")
+    ap.add_argument(
+        "--addr", default="0", help="start address for --bytes/--db (default 0)"
+    )
+    ap.add_argument(
+        "region",
+        nargs="*",
+        metavar="BANK ADDR LEN",
+        help="disassemble a rom.gbc region",
+    )
+    args = ap.parse_args()
 
     if args.bytes:
         data = bytes(_hx(b) for b in args.bytes)
@@ -317,7 +351,7 @@ def main(argv=None) -> int:
         bank, addr, length = (_hx(x) for x in args.region)
         rom = open(args.rom, "rb").read()
         off = flat(bank, addr)
-        data = rom[off:off + length]
+        data = rom[off : off + length]
     else:
         ap.error("give a BANK ADDR LEN region, --bytes, or --db")
 
