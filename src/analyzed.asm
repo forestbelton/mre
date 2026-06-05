@@ -8421,6 +8421,7 @@ CopyBytesBanked:
 	pop af
 	ld [$2fff], a
 	ret
+
 CopyBgMapBankedA:
 	ld [wSpawnType], a
 	ld a, [$7fff]
@@ -8431,6 +8432,7 @@ CopyBgMapBankedA:
 	pop af
 	ld [$2fff], a
 	ret
+
 Func_00_3957:
 	FAR_CALL $1f, Script_FadeOutPortrait
 	ld a, $04
@@ -9019,7 +9021,7 @@ Func_01_455a:
 	pop af
 	ret
 Func_01_4562:
-	ld a, [$c7fd]
+	ld a, [wPlayerStatus]
 	bit 0, a
 	ret nz
 	ld a, [wRoomType]
@@ -9856,15 +9858,15 @@ Func_01_4b0e:
 	pop af
 	xor a
 	ld [$c80f], a
-	ld [$c808], a
-	ld [$c809], a
-	ld a, [$c7fd]
+	ld [wPlayerVelXLo], a
+	ld [wPlayerVelXHi], a
+	ld a, [wPlayerStatus]
 	set 0, a
-	ld [$c7fd], a
+	ld [wPlayerStatus], a
 	bit 7, a
 	jr nz, Func_01_4b3b
 	ld a, $14
-	ld [$c7fc], a
+	ld [wPlayerType], a
 	ld a, $82
 	ld [$c811], a
 	ld a, $74
@@ -9872,17 +9874,17 @@ Func_01_4b0e:
 	ret
 Func_01_4b3b:
 	ld a, $15
-	ld [$c7fc], a
+	ld [wPlayerType], a
 	ld a, $96
 	ld [$c811], a
 	ld a, $74
 	ld [$c812], a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	ld b, a
 	ld a, [$c81c]
 	add a, b
@@ -10044,7 +10046,7 @@ Func_01_4c57:
 	ld d, a
 	ld a, [$c289]
 	ld e, a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub e
 	ld c, a
 	sub $40
@@ -10072,7 +10074,7 @@ Func_01_4c82:
 	ld d, a
 	ld a, [$c28a]
 	ld e, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	sub e
 	ld c, a
 	sub $38
@@ -11051,7 +11053,7 @@ Func_01_5908:
 	jr z, Func_01_5922
 	cp $10
 	ret nz
-	ld hl, $c7ff
+	ld hl, wPlayerFacing
 	set 6, [hl]
 	ret
 Func_01_5922:
@@ -11220,7 +11222,7 @@ Func_01_5a4c:
 	ld [$c2dd], a
 	ret
 Func_01_5a52:
-	ld hl, $c7ff
+	ld hl, wPlayerFacing
 	res 6, [hl]
 	ret
 
@@ -11893,7 +11895,7 @@ Func_01_5e44:
 	ld [hl+], a
 	ret
 Func_01_5e8b:
-	ld a, [$c7fd]
+	ld a, [wPlayerStatus]
 	bit 2, a
 	ret z
 	ldh a, [$ffe7]
@@ -13191,12 +13193,12 @@ SECTION "analyzed_00675c", ROMX[$675c], BANK[$01]
 
 Func_01_675c:
 	ld hl, $c81f
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	ld b, a
 	ld a, [hl+]
 	add a, b
 	ldh [$ffda], a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	ld b, a
 	ld a, [hl+]
 	add a, b
@@ -13252,7 +13254,7 @@ Func_01_67be:
 	ld a, [hl]
 	cp $1f
 	jr z, Func_01_67ee
-	ld a, [$c7fd]
+	ld a, [wPlayerStatus]
 	bit 0, a
 	ret nz
 	ld a, [$c2e2]
@@ -13277,7 +13279,7 @@ Func_01_67e8:
 	call Func_01_4ab6
 	ret
 Func_01_67ee:
-	ld a, [$c7fd]
+	ld a, [wPlayerStatus]
 	bit 0, a
 	ret nz
 	xor a
@@ -14511,7 +14513,7 @@ Func_01_6fc4:
 	push de
 	ldh a, [hEntityY]
 	ld h, a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub $08
 	cp h
 	jr nc, Func_01_6fe9
@@ -29069,7 +29071,7 @@ Func_0f_4000:
 	ldh a, [hJoyPressed]
 	bit 3, a
 	ret z
-	ld a, [$c7fd]
+	ld a, [wPlayerStatus]
 	bit 0, a
 	ret nz
 	FAR_CALL $01, Func_01_4c4d

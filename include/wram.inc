@@ -137,6 +137,27 @@ wMenuItemPtr::      ds 2    ; $C56B/$C56C: pointer to the active menu's item-val
 wGridColCount::     ds 1    ; $C56D: number of columns in the current grid row (bounds wGridCol)
 
 
+SECTION "wram_player", WRAM0[$C7F9]
+; The player avatar is entity slot 0 of the entity array (base $C7F9), so its
+; live record fields sit at fixed addresses -- the rest of the engine reads the
+; player's position/facing straight from them (e.g. monster AI: "is the player
+; within range of me?"). Field offsets and meanings mirror the hEntity* HRAM
+; shadow (see include/hram.inc and docs/room_engine.md); only the fields actually
+; read/written by absolute address are named, the rest stay as `ds` gaps.
+wPlayer::                   ; $C7F9: the player's live 42-byte entity record
+                    ds 3    ; $C7F9-$C7FB (record +0..+2: state flag, ...)
+wPlayerType::       ds 1    ; $C7FC: entity type id (record +3)
+wPlayerStatus::     ds 1    ; $C7FD: status bits, bit7 = acting/cooldown (record +4)
+                    ds 1    ; $C7FE (record +5)
+wPlayerFacing::     ds 1    ; $C7FF: facing/flags, bit7 X-flip / bits0-1 4-dir (record +6)
+                    ds 5    ; $C800-$C804 (record +7..+$0b, incl X subpixel)
+wPlayerX::          ds 1    ; $C805: X pixel (record +$0c)
+                    ds 1    ; $C806: Y subpixel (record +$0d)
+wPlayerY::          ds 1    ; $C807: Y pixel (record +$0e)
+wPlayerVelXLo::     ds 1    ; $C808: X velocity low (record +$0f)
+wPlayerVelXHi::     ds 1    ; $C809: X velocity high (record +$10)
+
+
 SECTION "wram_scene", WRAM0[$CF40]
 wSceneState::       ds 1    ; $CF40: bank-5 scene/sequence state machine -- low 7 bits =
                             ;   state index, bit7 = active; kicked off by special items

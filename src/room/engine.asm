@@ -959,7 +959,7 @@ Func_03_45a0:
 	ret
 
 PlayerSameRowInRange:
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub $08
 	add a, $08
 	swap a
@@ -975,7 +975,7 @@ PlayerSameRowInRange:
 	cp b
 	jr nz, Func_03_465b
 Func_03_464a:
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	ld b, a
 	ldh a, [hEntityX]
 	call OrderPair
@@ -989,7 +989,7 @@ Func_03_465b:
 	ret
 
 PlayerAheadSameRow:
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub $08
 	add a, $08
 	swap a
@@ -1005,7 +1005,7 @@ PlayerAheadSameRow:
 	cp b
 	jr nz, Func_03_4692
 Func_03_4678:
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	ld b, a
 	ldh a, [hEntityX]
 	cp b
@@ -1026,7 +1026,7 @@ Func_03_4692:
 	ret
 
 PlayerAheadAndFacingUs:
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub $08
 	add a, $08
 	swap a
@@ -1038,7 +1038,7 @@ PlayerAheadAndFacingUs:
 	and $0f
 	cp b
 	jr nz, Func_03_46da
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	ld b, a
 	ldh a, [hEntityX]
 	cp b
@@ -1052,7 +1052,7 @@ Func_03_46bc:
 	bit 7, a
 	jr nz, Func_03_46da
 Func_03_46c2:
-	ld a, [$c7ff]
+	ld a, [wPlayerFacing]
 	ld b, a
 	ldh a, [hEntityFacing]
 	bit 7, a
@@ -1081,7 +1081,7 @@ OrderPair:
 FacePlayerX:
 	ldh a, [hEntityX]
 	ld c, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	call PackCmpFlagsToMoveResult
 	ret
@@ -1914,7 +1914,7 @@ Func_03_4c4c:
 	pop af
 	xor a
 	ret
-	ld hl, $c7fd
+	ld hl, wPlayerStatus
 	res 2, [hl]
 	ret
 Player_FireShot:
@@ -2615,7 +2615,7 @@ Shard_HomeFaceLeft:
 ShardHomeVelX_Fast:
 	ldh a, [hEntityX]
 	ld c, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	jr c, Func_03_519f
 	sub c
@@ -2650,7 +2650,7 @@ Func_03_51bd:
 ShardHomeVelX_Slow:
 	ldh a, [hEntityX]
 	ld c, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	jr c, Func_03_51d0
 	sub c
@@ -3946,7 +3946,7 @@ PlayerInFrontInRange:
 	jr nz, Func_03_5a2f
 	ldh a, [hEntityX]
 	ld c, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	jr nc, Func_03_5a3a
 	xor a
@@ -3954,13 +3954,13 @@ PlayerInFrontInRange:
 Func_03_5a2f:
 	ldh a, [hEntityX]
 	ld c, a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	jr c, Func_03_5a3a
 	xor a
 	ret
 Func_03_5a3a:
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	ld b, a
 	ldh a, [hEntityY]
 	call OrderPair
@@ -4346,7 +4346,7 @@ Ghost_ThinkB:
 	ldh a, [hEntityX]
 	ld c, a
 	ld hl, $ffb6
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp c
 	jr c, Func_03_5c85
 	res 7, [hl]
@@ -6849,7 +6849,7 @@ Func_03_6be4:
 	ret
 	xor a
 	ld [$cf7a], a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	cp $48
 	jr c, Func_03_6bfb
 	ld a, $01
@@ -6926,7 +6926,7 @@ Func_03_6c62:
 	ld [$cf77], a
 	call PlaceBossEntryX
 	ret
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp $80
 	jr c, Func_03_6c83
 	ld a, $02
@@ -6977,7 +6977,7 @@ Func_03_6cc1:
 	ldh [hEntityResult], a
 	ret
 Func_03_6cc5:
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	cp $80
 	jr c, Func_03_6cd7
 	ldh a, [hEntityFacing]
@@ -7000,18 +7000,18 @@ Func_03_6cd7:
 	ld [$cf8a], a
 	ldh a, [hEntityY]
 	ld [$cf8b], a
-	ld a, [$c807]
+	ld a, [wPlayerY]
 	sub $18
 	ld [$cf8d], a
 	ldh a, [hEntityFacing]
 	bit 7, a
 	jr nz, Func_03_6d0a
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	sub $18
 	ld [$cf8c], a
 	ret
 Func_03_6d0a:
-	ld a, [$c805]
+	ld a, [wPlayerX]
 	add a, $18
 	ld [$cf8c], a
 	ret
