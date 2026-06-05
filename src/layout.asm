@@ -1102,12 +1102,12 @@ SECTION "layout_pickup", ROMX[$5007], BANK[$01]
 ; open item; on the first hit, dispatch CollectItem. $ffbc/$ffbe = player x/y,
 ; $ffd7/$ffd9 reach the second cell. Piece $41 triggers Func_01_5538 (special).
 CheckItemPickup:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 0, a
 	ret nz
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
 	ldh a, [$ffd7]
 	add a, b

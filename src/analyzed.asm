@@ -10156,12 +10156,12 @@ Func_01_4d0d:
 	call Func_01_4d95
 	ret
 DrawTileAtSpawnCoord:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -10170,12 +10170,12 @@ DrawTileAtSpawnCoord:
 	call Func_01_4d95
 	ret
 ReadTileAtEntityCell:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -11796,44 +11796,44 @@ Player_SummonMonster:
 	ret
 Func_01_5df7:
 	ld a, l
-	ldh [$ffe5], a
+	ldh [hEntityPtrLo], a
 	ld a, h
-	ldh [$ffe6], a
+	ldh [hEntityPtrHi], a
 	ld a, [hl+]
-	ldh [$ffb0], a
+	ldh [hEntityState], a
 	ld bc, $0003
 	add hl, bc
 	ld a, [hl+]
-	ldh [$ffb4], a
+	ldh [hEntityStatus], a
 	ld a, [hl+]
-	ldh [$ffb5], a
+	ldh [hEntityAnimState], a
 	ld a, [hl+]
-	ldh [$ffb6], a
+	ldh [hEntityFacing], a
 	ld bc, $0004
 	add hl, bc
 	ld a, [hl+]
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ld a, [hl+]
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	ld a, [hl+]
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ld a, [hl+]
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	inc hl
 	inc hl
 	ld a, [hl+]
-	ldh [$ffc1], a
+	ldh [hEntityVelYLo], a
 	ld a, [hl+]
-	ldh [$ffc2], a
+	ldh [hEntityVelYHi], a
 	ld bc, $0003
 	add hl, bc
 	ld a, [hl+]
-	ldh [$ffc6], a
+	ldh [hEntityTimer], a
 	inc hl
 	ld a, [hl+]
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, [hl+]
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ld bc, $000c
 	add hl, bc
 	ld a, [hl+]
@@ -11846,40 +11846,40 @@ Func_01_5df7:
 	ldh [$ffd9], a
 	ret
 Func_01_5e44:
-	ldh a, [$ffb0]
+	ldh a, [hEntityState]
 	ld [hl+], a
 	ld bc, $0003
 	add hl, bc
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	ld [hl+], a
-	ldh a, [$ffb5]
+	ldh a, [hEntityAnimState]
 	ld [hl+], a
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	ld [hl+], a
 	ld bc, $0004
 	add hl, bc
-	ldh a, [$ffbb]
+	ldh a, [hEntityXSub]
 	ld [hl+], a
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld [hl+], a
-	ldh a, [$ffbd]
+	ldh a, [hEntityYSub]
 	ld [hl+], a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld [hl+], a
 	inc hl
 	inc hl
-	ldh a, [$ffc1]
+	ldh a, [hEntityVelYLo]
 	ld [hl+], a
-	ldh a, [$ffc2]
+	ldh a, [hEntityVelYHi]
 	ld [hl+], a
 	ld bc, $0003
 	add hl, bc
-	ldh a, [$ffc6]
+	ldh a, [hEntityTimer]
 	ld [hl+], a
 	inc hl
-	ldh a, [$ffc8]
+	ldh a, [hEntityScriptPtrLo]
 	ld [hl+], a
-	ldh a, [$ffc9]
+	ldh a, [hEntityScriptPtrHi]
 	ld [hl+], a
 	ld bc, $000c
 	add hl, bc
@@ -11906,7 +11906,7 @@ Func_01_5e8b:
 	cp $1c
 	ret nc
 	call Func_01_5df7
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	bit 3, a
 	jr z, Func_01_5eac
 	call Func_01_5ec1
@@ -11919,9 +11919,9 @@ Func_01_5eaf:
 	jr z, Func_01_5eb7
 	call Func_01_650d
 Func_01_5eb7:
-	ldh a, [$ffe5]
+	ldh a, [hEntityPtrLo]
 	ld l, a
-	ldh a, [$ffe6]
+	ldh a, [hEntityPtrHi]
 	ld h, a
 	call Func_01_5e44
 	ret
@@ -11946,13 +11946,13 @@ Func_01_5ed9:
 	jp z, Func_01_624a
 	jp Func_01_5f68
 Func_01_5eed:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -11963,7 +11963,7 @@ Func_01_5eed:
 	pop bc
 	or a
 	jp nz, Func_01_5f58
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -11974,7 +11974,7 @@ Func_01_5eed:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	ld c, a
 	push bc
@@ -12025,13 +12025,13 @@ Func_01_5f58:
 	call Func_01_645f
 	ret
 Func_01_5f68:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12042,7 +12042,7 @@ Func_01_5f68:
 	pop bc
 	or a
 	jp nz, Func_01_5fd3
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12053,7 +12053,7 @@ Func_01_5f68:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	ld c, a
 	push bc
@@ -12104,13 +12104,13 @@ Func_01_5fd3:
 	call Func_01_645f
 	ret
 Func_01_5fe3:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12121,7 +12121,7 @@ Func_01_5fe3:
 	pop bc
 	or a
 	jp nz, Func_01_604e
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12132,7 +12132,7 @@ Func_01_5fe3:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	ld c, a
 	push bc
@@ -12183,13 +12183,13 @@ Func_01_604e:
 	call Func_01_6449
 	ret
 Func_01_605e:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12200,7 +12200,7 @@ Func_01_605e:
 	pop bc
 	or a
 	jp nz, Func_01_60c9
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12211,7 +12211,7 @@ Func_01_605e:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	ld c, a
 	push bc
@@ -12262,13 +12262,13 @@ Func_01_60c9:
 	call Func_01_6449
 	ret
 Func_01_60d9:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12279,7 +12279,7 @@ Func_01_60d9:
 	pop bc
 	or a
 	jp nz, Func_01_6144
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
@@ -12290,7 +12290,7 @@ Func_01_60d9:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	ld b, a
 	push bc
@@ -12341,13 +12341,13 @@ Func_01_6144:
 	call Func_01_6475
 	ret
 Func_01_6154:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12358,7 +12358,7 @@ Func_01_6154:
 	pop bc
 	or a
 	jp nz, Func_01_61bf
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
@@ -12369,7 +12369,7 @@ Func_01_6154:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	ld b, a
 	push bc
@@ -12420,13 +12420,13 @@ Func_01_61bf:
 	call Func_01_6475
 	ret
 Func_01_61cf:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12437,7 +12437,7 @@ Func_01_61cf:
 	pop bc
 	or a
 	jp nz, Func_01_623a
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
@@ -12448,7 +12448,7 @@ Func_01_61cf:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	ld b, a
 	push bc
@@ -12499,13 +12499,13 @@ Func_01_623a:
 	call Func_01_648b
 	ret
 Func_01_624a:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12516,7 +12516,7 @@ Func_01_624a:
 	pop bc
 	or a
 	jp nz, Func_01_62b5
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
@@ -12527,7 +12527,7 @@ Func_01_624a:
 	pop bc
 	or a
 	ret nz
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	ld b, a
 	push bc
@@ -12598,13 +12598,13 @@ Func_01_62dd:
 	jp z, Func_01_641e
 	jp Func_01_631c
 Func_01_62f1:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12622,13 +12622,13 @@ Func_01_62f1:
 	call Func_01_645f
 	ret
 Func_01_631c:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $03
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12646,13 +12646,13 @@ Func_01_631c:
 	call Func_01_645f
 	ret
 Func_01_6347:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12670,13 +12670,13 @@ Func_01_6347:
 	call Func_01_6449
 	ret
 Func_01_6372:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	sub $04
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12697,12 +12697,12 @@ Func_01_6372:
 SECTION "analyzed_00639d", ROMX[$639d], BANK[$01]
 
 Func_01_639d:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12721,12 +12721,12 @@ Func_01_639d:
 	call Func_01_6475
 	ret
 Func_01_63c8:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $04
 	add a, $08
 	swap a
@@ -12745,12 +12745,12 @@ Func_01_63c8:
 	call Func_01_6475
 	ret
 Func_01_63f3:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12769,12 +12769,12 @@ Func_01_63f3:
 	call Func_01_648b
 	ret
 Func_01_641e:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $03
 	add a, $08
 	swap a
@@ -12796,7 +12796,7 @@ Func_01_641e:
 SECTION "analyzed_006449", ROMX[$6449], BANK[$01]
 
 Func_01_6449:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
@@ -12804,12 +12804,12 @@ Func_01_6449:
 	and $f0
 	sub $08
 	add a, $03
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_645f:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
@@ -12817,12 +12817,12 @@ Func_01_645f:
 	and $f0
 	sub $08
 	add a, $0d
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_6475:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12830,12 +12830,12 @@ Func_01_6475:
 	and $f0
 	sub $08
 	add a, $03
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ret
 Func_01_648b:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -12843,86 +12843,86 @@ Func_01_648b:
 	and $f0
 	sub $08
 	add a, $0d
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ret
 Func_01_64a1:
 	xor a
-	ldh [$ffc6], a
-	ldh a, [$ffb4]
+	ldh [hEntityTimer], a
+	ldh a, [hEntityStatus]
 	bit 3, a
 	jr nz, Func_01_64b3
 	ld a, $11
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $71
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64b3:
 	ld a, $d1
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $70
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64bc:
 	xor a
-	ldh [$ffc6], a
-	ldh a, [$ffb4]
+	ldh [hEntityTimer], a
+	ldh a, [hEntityStatus]
 	bit 3, a
 	jr nz, Func_01_64ce
 	ld a, $21
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $71
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64ce:
 	ld a, $e1
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $70
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64d7:
 	xor a
-	ldh [$ffc6], a
-	ldh a, [$ffb4]
+	ldh [hEntityTimer], a
+	ldh a, [hEntityStatus]
 	bit 3, a
 	jr nz, Func_01_64e9
 	ld a, $31
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $71
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64e9:
 	ld a, $f1
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $70
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_64f2:
 	xor a
-	ldh [$ffc6], a
-	ldh a, [$ffb4]
+	ldh [hEntityTimer], a
+	ldh a, [hEntityStatus]
 	bit 3, a
 	jr nz, Func_01_6504
 	ld a, $41
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $71
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_6504:
 	ld a, $01
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $71
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_650d:
 	ld hl, $ffda
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
 	ldh a, [$ffd6]
 	add a, c
 	ld [hl+], a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
 	ldh a, [$ffd7]
 	add a, b
@@ -12982,7 +12982,7 @@ Func_01_6570:
 	call Func_01_6577
 	ret
 Func_01_6577:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 3, a
 	jr z, Func_01_657f
 	xor a
@@ -12992,13 +12992,13 @@ Func_01_657f:
 	ret
 Func_01_6582:
 	xor a
-	ldh [$ffc1], a
-	ldh [$ffc2], a
-	ldh [$ffc6], a
+	ldh [hEntityVelYLo], a
+	ldh [hEntityVelYHi], a
+	ldh [hEntityTimer], a
 	ld a, $b5
-	ldh [$ffc8], a
+	ldh [hEntityScriptPtrLo], a
 	ld a, $70
-	ldh [$ffc9], a
+	ldh [hEntityScriptPtrHi], a
 	ret
 Func_01_6592:
 	ld a, [hl]
@@ -14171,7 +14171,7 @@ Func_01_6d44:
 	pop hl
 	ret
 Func_01_6d48:
-	ldh a, [$ffb0]
+	ldh a, [hEntityState]
 	add a, a
 	ld c, a
 	ld b, $00
@@ -14322,10 +14322,10 @@ Func_01_6e36:
 	call Func_01_7499
 	call Func_01_6f3a
 	ret
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 1, a
 	jr z, Func_01_6ebd
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	and $03
 	call Func_01_716f
 	ret
@@ -14342,7 +14342,7 @@ Func_01_6ebd:
 	call Func_01_6fc4
 	ret
 Func_01_6eda:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 7, a
 	ret z
 	ld a, [$cf7f]
@@ -14367,7 +14367,7 @@ Func_01_6ef9:
 	ld [$cf7f], a
 	ret
 Func_01_6f07:
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	and $03
 	cp $01
 	jr z, Func_01_6f16
@@ -14376,9 +14376,9 @@ Func_01_6f07:
 	ld a, $ff
 	ret
 Func_01_6f16:
-	ldh a, [$ffbf]
+	ldh a, [hEntityVelXLo]
 	ld e, a
-	ldh a, [$ffc0]
+	ldh a, [hEntityVelXHi]
 	ld d, a
 	ld c, $bb
 	ldh a, [c]
@@ -14391,9 +14391,9 @@ Func_01_6f16:
 	ld a, $01
 	ret
 Func_01_6f28:
-	ldh a, [$ffbf]
+	ldh a, [hEntityVelXLo]
 	ld e, a
-	ldh a, [$ffc0]
+	ldh a, [hEntityVelXHi]
 	ld d, a
 	ld c, $bb
 	ldh a, [c]
@@ -14406,18 +14406,18 @@ Func_01_6f28:
 	ld a, $00
 	ret
 Func_01_6f3a:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 7, a
 	jr nz, Func_01_6f6b
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	and $03
 	cp $02
 	jr z, Func_01_6f5b
 	cp $03
 	ret nz
-	ldh a, [$ffbf]
+	ldh a, [hEntityVelXLo]
 	ld e, a
-	ldh a, [$ffc0]
+	ldh a, [hEntityVelXHi]
 	ld d, a
 	ld c, $bd
 	ldh a, [c]
@@ -14429,9 +14429,9 @@ Func_01_6f3a:
 	ldh [c], a
 	ret
 Func_01_6f5b:
-	ldh a, [$ffbf]
+	ldh a, [hEntityVelXLo]
 	ld e, a
-	ldh a, [$ffc0]
+	ldh a, [hEntityVelXHi]
 	ld d, a
 	ld c, $bd
 	ldh a, [c]
@@ -14443,7 +14443,7 @@ Func_01_6f5b:
 	ldh [c], a
 	ret
 Func_01_6f6b:
-	ldh a, [$ffb0]
+	ldh a, [hEntityState]
 	cp $51
 	jr z, Func_01_6f75
 	call Func_01_6f7c
@@ -14453,11 +14453,11 @@ Func_01_6f75:
 	call Func_01_7512
 	ret
 Func_01_6f7c:
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $28
 	jr z, Func_01_6f85
 	inc a
-	ldh [$ffc7], a
+	ldh [hEntityActionTimer], a
 Func_01_6f85:
 	push hl
 	ld hl, $7b6b
@@ -14465,25 +14465,25 @@ Func_01_6f85:
 	pop hl
 	ret
 Func_01_6f8e:
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $3d
 	jr z, Func_01_6f97
 	inc a
-	ldh [$ffc7], a
+	ldh [hEntityActionTimer], a
 Func_01_6f97:
-	ldh a, [$ffc1]
+	ldh a, [hEntityVelYLo]
 	or a
 	jr z, Func_01_6fa7
 	push hl
 	ld hl, $7c39
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	call Func_01_6fb2
 	pop hl
 	ret
 Func_01_6fa7:
 	push hl
 	ld hl, $7bbd
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	call Func_01_6fb2
 	pop hl
 	ret
@@ -14505,11 +14505,11 @@ Func_01_6fb2:
 	ldh [c], a
 	ret
 Func_01_6fc4:
-	ldh a, [$ffb3]
+	ldh a, [hEntityType]
 	cp $01
 	ret nz
 	push de
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld h, a
 	ld a, [$c807]
 	sub $08
@@ -14519,12 +14519,12 @@ Func_01_6fc4:
 	ld d, $00
 	ld e, a
 	srl e
-	ldh a, [$ffbd]
+	ldh a, [hEntityYSub]
 	sub e
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ld a, h
 	sbc a, d
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	pop de
 	call Func_01_7265
 	ret
@@ -14535,17 +14535,17 @@ Func_01_6fe9:
 	ld d, $00
 	ld e, a
 	srl e
-	ldh a, [$ffbd]
+	ldh a, [hEntityYSub]
 	add a, e
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ld a, h
 	adc a, d
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	pop de
 	call Func_01_7210
 	ret
 Func_01_6fff:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 1, a
 	ret nz
 	bit 7, a
@@ -14562,17 +14562,17 @@ Func_01_7014:
 	res 3, [hl]
 	ret
 Func_01_701a:
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $15
 	ret c
 	call Func_01_72b5
 	or a
 	jr z, Func_01_7014
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, b
 	add a, c
 	add a, $08
@@ -14583,15 +14583,15 @@ Func_01_701a:
 	sub $08
 	sub c
 	sub b
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
-	ldh [$ffc7], a
+	ldh [hEntityYSub], a
+	ldh [hEntityActionTimer], a
 	ld hl, $ffb4
 	res 7, [hl]
 	jr Func_01_700e
 Func_01_704b:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 1, a
 	ret nz
 	bit 7, a
@@ -14608,17 +14608,17 @@ Func_01_7060:
 	res 3, [hl]
 	ret
 Func_01_7066:
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $15
 	ret c
 	call Func_01_72f3
 	or a
 	jr z, Func_01_7060
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, b
 	add a, c
 	add a, $08
@@ -14629,15 +14629,15 @@ Func_01_7066:
 	sub $08
 	sub c
 	sub b
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
-	ldh [$ffc7], a
+	ldh [hEntityYSub], a
+	ldh [hEntityActionTimer], a
 	ld hl, $ffb4
 	res 7, [hl]
 	jr Func_01_705a
 Func_01_7097:
-	ldh a, [$ffb4]
+	ldh a, [hEntityStatus]
 	bit 1, a
 	ret nz
 	bit 7, a
@@ -14654,17 +14654,17 @@ Func_01_70ac:
 	res 3, [hl]
 	ret
 Func_01_70b2:
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $1f
 	ret c
 	call Func_01_7373
 	or a
 	jr z, Func_01_70ac
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, b
 	add a, c
 	add a, $08
@@ -14675,10 +14675,10 @@ Func_01_70b2:
 	sub $08
 	sub c
 	sub b
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
-	ldh [$ffc7], a
+	ldh [hEntityYSub], a
+	ldh [hEntityActionTimer], a
 	ld hl, $ffb4
 	res 7, [hl]
 	jr Func_01_70a6
@@ -14687,23 +14687,23 @@ Func_01_70e3:
 	jr z, Func_01_7129
 	cp $01
 	ret nz
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	or a
 	ret z
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	add a, b
 	add a, $08
@@ -14721,36 +14721,36 @@ Func_01_70e3:
 	sub $08
 	add a, $10
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	ld b, a
 	ld a, c
 	sub b
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_7129:
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	or a
 	ret z
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	add a, c
 	dec a
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	add a, b
 	add a, $08
@@ -14762,7 +14762,7 @@ Func_01_7129:
 	pop bc
 	or a
 	ret z
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	ld b, a
 	ld a, c
 	swap a
@@ -14770,29 +14770,29 @@ Func_01_7129:
 	sub $08
 	sub b
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	ld b, a
 	ld a, c
 	sub b
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_716f:
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	or a
 	ret z
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
 	push bc
@@ -14805,7 +14805,7 @@ Func_01_716f:
 	pop bc
 	or a
 	jr nz, Func_01_71ac
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	add a, b
 	ld b, a
@@ -14826,21 +14826,21 @@ Func_01_71ac:
 	sub $08
 	add a, $10
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	ld b, a
 	ld a, c
 	sub b
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_71c1:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	add a, $08
@@ -14857,7 +14857,7 @@ Func_01_71c1:
 	pop bc
 	or a
 	jr nz, Func_01_71f9
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	ld l, a
 	ld a, b
@@ -14874,7 +14874,7 @@ Func_01_71c1:
 	or a
 	ret z
 Func_01_71f9:
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	ld b, a
 	ld a, c
 	swap a
@@ -14882,29 +14882,29 @@ Func_01_71f9:
 	sub $08
 	sub b
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	ld b, a
 	ld a, c
 	sub b
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	xor a
-	ldh [$ffbb], a
+	ldh [hEntityXSub], a
 	ret
 Func_01_7210:
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	or a
 	ret z
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	add a, b
 	add a, $08
@@ -14921,7 +14921,7 @@ Func_01_7210:
 	pop bc
 	or a
 	jr nz, Func_01_7251
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	ld c, a
@@ -14936,30 +14936,30 @@ Func_01_7210:
 	or a
 	ret z
 Func_01_7251:
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	sra a
 	ld b, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $08
 	and $f0
 	add a, $08
 	add a, b
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ret
 Func_01_7265:
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	or a
 	ret z
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	add a, $08
 	swap a
@@ -14975,7 +14975,7 @@ Func_01_7265:
 	pop bc
 	or a
 	jr nz, Func_01_72a1
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	ld c, a
@@ -14990,30 +14990,30 @@ Func_01_7265:
 	or a
 	ret z
 Func_01_72a1:
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	sra a
 	ld b, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	sub $08
 	and $f0
 	add a, $18
 	sub b
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	xor a
-	ldh [$ffbd], a
+	ldh [hEntityYSub], a
 	ret
 Func_01_72b5:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	add a, b
 	add a, $08
 	swap a
@@ -15029,7 +15029,7 @@ Func_01_72b5:
 	pop bc
 	or a
 	jr nz, Func_01_72ee
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	add a, $08
@@ -15046,14 +15046,14 @@ Func_01_72f1:
 	xor a
 	ret
 Func_01_72f3:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	add a, b
 	ld b, a
 	push bc
@@ -15087,9 +15087,9 @@ Func_01_72f3:
 	pop bc
 	or a
 	jr nz, Func_01_736e
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
 	push bc
@@ -15107,7 +15107,7 @@ Func_01_72f3:
 	pop bc
 	or a
 	jr nz, Func_01_736e
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	ld c, a
@@ -15133,14 +15133,14 @@ Func_01_7371:
 	xor a
 	ret
 Func_01_7373:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	add a, b
 	ld b, a
 	push bc
@@ -15180,9 +15180,9 @@ Func_01_7373:
 	jr z, Func_01_7408
 	cp $21
 	jr z, Func_01_7408
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
 	push bc
@@ -15203,7 +15203,7 @@ Func_01_7373:
 	jr z, Func_01_7408
 	cp $21
 	jr z, Func_01_7408
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	dec a
 	add a, c
 	ld c, a
@@ -15231,46 +15231,46 @@ Func_01_7408:
 	ld a, $01
 	ret
 Func_01_740b:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	and $03
 	cp $01
 	jr z, Func_01_742a
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	add a, c
 	dec a
 	ld c, a
 	call Func_01_74c4
 	ret
 Func_01_742a:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
 	call Func_01_74c4
 	ret
 Func_01_7435:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	add a, $08
 	swap a
@@ -15283,20 +15283,20 @@ Func_01_7435:
 	push bc
 	FAR_CALL $03, BreakTileAtCell
 	pop bc
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	dec a
 	add a, b
 	add a, $08
@@ -15312,17 +15312,17 @@ Func_01_7435:
 	pop bc
 	ret
 Func_01_7499:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
 	ldh a, [$ffd7]
 	add a, b
 	ld b, a
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
 	push bc
 	call Func_01_74dd
 	pop bc
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
 	ldh a, [$ffd6]
 	add a, c
@@ -15334,7 +15334,7 @@ Func_01_7499:
 	push bc
 	call Func_01_74dd
 	pop bc
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
 	ldh a, [$ffd6]
 	add a, c
@@ -15376,28 +15376,28 @@ Func_01_74dd:
 	pop de
 	ret
 Func_01_7512:
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffc7]
+	ldh a, [hEntityActionTimer]
 	cp $1f
 	jr c, Func_01_752d
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	add a, b
 	dec a
 	ld b, a
 	jr Func_01_7534
 Func_01_752d:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
 Func_01_7534:
@@ -15418,47 +15418,47 @@ Func_01_7534:
 	pop de
 	ret
 Func_01_755b:
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	and $03
 	cp $02
 	jr z, Func_01_7571
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
-	ldh a, [$ffd5]
+	ldh a, [hEntityProbeH]
 	add a, b
 	dec a
 	ld b, a
 	jr Func_01_7578
 Func_01_7571:
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld b, a
-	ldh a, [$ffd3]
+	ldh a, [hEntityProbeY]
 	add a, b
 	ld b, a
 Func_01_7578:
 	push de
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
 	push bc
 	FAR_CALL $03, BreakTileAtPixel
 	pop bc
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
 	push bc
 	FAR_CALL $03, BreakTileAtPixel
 	pop bc
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld c, a
-	ldh a, [$ffd2]
+	ldh a, [hEntityProbeX]
 	add a, c
 	ld c, a
-	ldh a, [$ffd4]
+	ldh a, [hEntityProbeW]
 	add a, c
 	dec a
 	ld c, a
@@ -16779,7 +16779,7 @@ SECTION "analyzed_01003c", ROMX[$403c], BANK[$04]
 
 Func_04_403c:
 	xor a
-	ldh [$ffb1], a
+	ldh [hEntityUpdate2], a
 	jr Func_04_4013
 	inc de
 	ld a, [de]
@@ -16812,12 +16812,12 @@ Func_04_405f:
 	jr Func_04_4006
 	inc de
 	push de
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -16827,12 +16827,12 @@ Func_04_405f:
 	jr Func_04_4006
 	inc de
 	push de
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	add a, $08
 	swap a
 	and $0f
 	ld c, a
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	add a, $08
 	swap a
 	and $0f
@@ -16884,7 +16884,7 @@ Func_04_40b5:
 	jp Func_04_4006
 Func_04_40e2:
 	ld a, b
-	ldh [$ffb1], a
+	ldh [hEntityUpdate2], a
 	ld l, a
 	ld h, $00
 	sla l
@@ -16929,7 +16929,7 @@ Func_04_4114:
 	rl b
 	sla c
 	rl b
-	ldh a, [$ffb6]
+	ldh a, [hEntityFacing]
 	bit 7, a
 	jr z, Func_04_4133
 	inc bc
@@ -17231,29 +17231,29 @@ Func_04_42d4:
 	and $03
 	ld [de], a
 	inc de
-	ldh a, [$ffbc]
+	ldh a, [hEntityX]
 	ld [de], a
 	inc de
-	ldh a, [$ffbe]
+	ldh a, [hEntityY]
 	ld [de], a
 	ret
 Func_04_4319:
 	ld a, [hl+]
-	ldh [$ffb0], a
+	ldh [hEntityState], a
 	inc hl
 	ld a, [hl+]
 	ldh [$ffb2], a
 	ld bc, $0003
 	add hl, bc
 	ld a, [hl+]
-	ldh [$ffb6], a
+	ldh [hEntityFacing], a
 	ld bc, $0005
 	add hl, bc
 	ld a, [hl+]
-	ldh [$ffbc], a
+	ldh [hEntityX], a
 	inc hl
 	ld a, [hl+]
-	ldh [$ffbe], a
+	ldh [hEntityY], a
 	ld bc, $000b
 	add hl, bc
 	ld a, [hl+]

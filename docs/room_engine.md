@@ -65,32 +65,34 @@ clear; individual opcode numbers are not all enumerated yet.)*
 ### Entity record / HRAM-shadow layout
 
 Reconstructed from `LoadEntityRegs`/`SaveEntityRegs` and field usage. Offsets are
-the record offset; the live copy sits at `$ffb0 + offset`.
+the record offset; the live copy sits at `$ffb0 + offset`. Confirmed fields carry
+`hEntity*` labels (defined in `include/hram.inc`); undecoded bytes stay raw.
 
-| off | HRAM | meaning |
-|---|---|---|
-| +0 | `$ffb0` | occupied / state-id flag (`0` = empty) |
-| +1 | `$ffb1` | secondary-update enable (nonzero → call `Func_04_4000`) |
-| +3 | `$ffb3` | entity **type** id (set by opcode `$01`) |
-| +4 | `$ffb4` | status bits (bit7 = acting/cooldown gate) |
-| +5 | `$ffb5` | animation sub-state (`&3` selects facing variant) |
-| +6 | `$ffb6` | **facing/flags** (bit7 = X facing, bits0-1 = 4-dir, bit3 = active) |
-| +7 | `$ffb7` | move/collision result bits |
-| +8 | `$ffb8` | behaviour-selector result code (`$ff`/0..4) |
-| +$0b/+$0c | `$ffbb/$ffbc` | **X position** (subpixel / pixel) |
-| +$0d/+$0e | `$ffbd/$ffbe` | **Y position** (subpixel / pixel) |
-| +$0f/+$10 | `$ffbf/$ffc0` | **X velocity** (signed 16-bit) |
-| +$11/+$12 | `$ffc1/$ffc2` | Y velocity / counter |
-| +$13/+$14 | `$ffc3/$ffc4` | 16-bit timer |
-| +$16 | `$ffc6` | per-entity timer (opcode `$08`) |
-| +$17 | `$ffc7` | action/attack cooldown timer |
-| +$18/+$19 | `$ffc8/$ffc9` | **script program counter** (`de` in `RunEntityScript`) |
-| +$20/+$21 | `$ffd0/$ffd1` | OAM attribute / species-anim selector |
-| +$22..+$25 | `$ffd2..$ffd5` | hitbox-probe offsets (ahead-X, up-Y, width, height) |
+| off | HRAM | label | meaning |
+|---|---|---|---|
+| +0 | `$ffb0` | `hEntityState` | occupied / state-id flag (`0` = empty) |
+| +1 | `$ffb1` | `hEntityUpdate2` | secondary-update enable (nonzero → call `Func_04_4000`) |
+| +3 | `$ffb3` | `hEntityType` | entity **type** id (set by opcode `$01`) |
+| +4 | `$ffb4` | `hEntityStatus` | status bits (bit7 = acting/cooldown gate) |
+| +5 | `$ffb5` | `hEntityAnimState` | animation sub-state (`&3` selects facing variant) |
+| +6 | `$ffb6` | `hEntityFacing` | **facing/flags** (bit7 = X facing, bits0-1 = 4-dir, bit3 = active) |
+| +7 | `$ffb7` | `hEntityMoveResult` | move/collision result bits |
+| +8 | `$ffb8` | `hEntityResult` | behaviour-selector result code (`$ff`/0..4) |
+| +$0b/+$0c | `$ffbb/$ffbc` | `hEntityXSub`/`hEntityX` | **X position** (subpixel / pixel) |
+| +$0d/+$0e | `$ffbd/$ffbe` | `hEntityYSub`/`hEntityY` | **Y position** (subpixel / pixel) |
+| +$0f/+$10 | `$ffbf/$ffc0` | `hEntityVelXLo`/`hEntityVelXHi` | **X velocity** (signed 16-bit) |
+| +$11/+$12 | `$ffc1/$ffc2` | `hEntityVelYLo`/`hEntityVelYHi` | Y velocity / counter |
+| +$13/+$14 | `$ffc3/$ffc4` | *(raw)* | 16-bit timer (unverified) |
+| +$16 | `$ffc6` | `hEntityTimer` | per-entity script timer (opcode `$08`) |
+| +$17 | `$ffc7` | `hEntityActionTimer` | action/attack cooldown timer |
+| +$18/+$19 | `$ffc8/$ffc9` | `hEntityScriptPtrLo`/`hEntityScriptPtrHi` | **script program counter** (`de` in `RunEntityScript`) |
+| +$20/+$21 | `$ffd0/$ffd1` | *(raw)* / `hEntityAnimSel` | OAM attribute / species-anim selector (`&7` table index) |
+| +$22..+$25 | `$ffd2..$ffd5` | `hEntityProbeX/Y/W/H` | collision-probe box offsets (ahead-X, Y, X-extent, Y-extent) |
 
-Other HRAM used by the engine: `$ffe4` = current-entity classification byte,
-`$ffe5/$ffe6` = current-entity WRAM pointer, `$ffda..$ffe1` = scratch hitbox rect
-built for entity-vs-entity overlap tests.
+Other HRAM used by the engine: `$ffe4` = current-entity classification byte (raw),
+`$ffe5/$ffe6` = current-entity WRAM pointer (`hEntityPtrLo`/`hEntityPtrHi`),
+`$ffda..$ffe1` = scratch hitbox rect (two AABBs) built for entity-vs-entity overlap
+tests, with the signed penetration written to `$ffe2/$ffe3` by `Func_00_0fb0` (raw).
 
 ## Spawning
 
