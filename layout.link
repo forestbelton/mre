@@ -24,6 +24,9 @@
 ROMX $01
     ORG $5162
     "Items"
+ROMX $20
+    ORG $4000
+    "Town screen graphics"
 ROMX $27
     ORG $4000
     "TECMO logo graphics"
