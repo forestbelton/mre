@@ -21,3 +21,27 @@ logo:
 town:
   mode: screen
   png: town_screen/town.png
+
+tower:
+  mode: screen
+  png: tower_entrance/tower_entrance.png
+
+tower_open:
+  mode: screen
+  png: tower_entrance_open/tower_entrance_open.png
+
+room_start:
+  mode: screen
+  png: room_start/room_start.png
+
+room_clear:
+  mode: screen
+  png: room_clear/room_clear.png
+
+title:
+  mode: screen
+  png: title_screen/title_screen.png
+
+intro_book:                # 10x20 (top half of the screen)
+  mode: screen
+  png: intro_book/intro_book.png

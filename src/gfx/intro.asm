@@ -1,31 +1,30 @@
-; The intro-cutscene book scene (10x20, top half of the screen): an open book,
-; shown as one scene of the opening cutscene. Drawn by DrawIntroBookScreen (bank $30),
-; reached via the ROM0 $34xx-$35xx screen-transition handlers.
-;
-; Two-VRAM-bank CGB image, same layout as nada_intro: $29:$4000 -> VRAM bank 0
-; $8000 and $29:$5800 -> VRAM bank 1 $8000 (384 tiles each, $8800 addressing);
-; the attr map's bit 3 selects the tile bank per cell. Descriptor at $29:$7080
-; -> $9800 (10 rows x 20 cols). Grayscale source (palettes lib-dispatched, not
-; yet located); tiles + tilemap round-trip byte-exact. See tools/gfxasset.py.
+; intro-cutscene open book (top 10 rows) -- drawn by DrawIntroBookScreen (bank $30). Generated from the single editable image
+; assets/intro_book/intro_book.png by tools/pngasset.py (screen mode, via assets.yaml): both
+; VRAM banks stacked + the 16 CGB palettes embedded. The map descriptor references
+; the maps by label (dw). See docs/gfx_assets.md.
 
-SECTION "IntroBookTilesBank0", ROMX[$4000], BANK[$29]
+SECTION "IntroBookTiles bank0", ROMX[$4000], BANK[$29]
 IntroBookTilesBank0:
-	INCBIN "assets/intro_book/tiles2.bin"   ; 384 tiles -> VRAM bank 0 $8000
+	INCBIN "assets/intro_book/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-SECTION "IntroBookTiles", ROMX[$5800], BANK[$29]
-IntroBookTiles:
-	INCBIN "assets/intro_book/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+SECTION "IntroBookTiles bank1", ROMX[$5800], BANK[$29]
+IntroBookTilesBank1:
+	INCBIN "assets/intro_book/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "IntroBookMapDesc", ROMX[$7080], BANK[$29]
+SECTION "IntroBookPalettes", ROMX[$7000], BANK[$29]
+IntroBookPalettes:
+	INCBIN "assets/intro_book/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+
+SECTION "IntroBookDescriptor", ROMX[$7080], BANK[$29]
 IntroBookMapDesc:
-	db 10, 20                                 ; rows, cols
-	dw IntroBookAttrMap                        ; CGB attribute map pointer
-	dw IntroBookIndexMap                       ; tile index map pointer
+	db 10, 20
+	dw IntroBookAttrMap
+	dw IntroBookIdxMap
 
-SECTION "IntroBookIndexMap", ROMX[$7086], BANK[$29]
-IntroBookIndexMap:
-	INCBIN "assets/intro_book/tilemap.bin"  ; 20x10 tile indices
+SECTION "IntroBookIdxMap", ROMX[$7086], BANK[$29]
+IntroBookIdxMap:
+	INCBIN "assets/intro_book/tilemap.bin"
 
 SECTION "IntroBookAttrMap", ROMX[$714e], BANK[$29]
 IntroBookAttrMap:
-	INCBIN "assets/intro_book/attrmap.bin"  ; 20x10 CGB BG attributes (bit 3 = VRAM bank)
+	INCBIN "assets/intro_book/attrmap.bin"
