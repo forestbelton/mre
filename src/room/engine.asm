@@ -115,16 +115,12 @@ Func_03_4071:
 	bit 5, a
 	jr z, Func_03_407f
 Func_03_4077:
-	ld a, $01
-	ld hl, Func_01_6d48
-	call CallBankedHL
+	FAR_CALL $01, Func_01_6d48
 Func_03_407f:
 	ldh a, [$ffb1]
 	or a
 	jr z, Func_03_408c
-	ld a, $04
-	ld hl, Func_04_4000
-	call CallBankedHL
+	FAR_CALL $04, Func_04_4000
 Func_03_408c:
 	ldh a, [$ffe5]
 	ld l, a
@@ -298,9 +294,7 @@ EntityOp_Gfx:
 	ld a, [de]
 	ld b, a
 	push de
-	ld a, $04
-	ld hl, Func_04_40e2
-	call CallBankedHL
+	FAR_CALL $04, Func_04_40e2
 	pop de
 	inc de
 	jp RunEntityScript
@@ -904,9 +898,7 @@ Func_03_45a0:
 	ld b, $00
 	push de
 	push hl
-	ld a, $01
-	ld hl, Func_01_7b24
-	call CallBankedHL
+	FAR_CALL $01, Func_01_7b24
 	pop hl
 	pop de
 	ld a, [$cf65]
@@ -929,9 +921,7 @@ Func_03_45a0:
 	pop hl
 	push de
 	push hl
-	ld a, $04
-	ld hl, Func_04_4344
-	call CallBankedHL
+	FAR_CALL $04, Func_04_4344
 	pop hl
 	pop de
 	push hl
@@ -1906,9 +1896,7 @@ Func_03_4c37:
 	ret
 Func_03_4c39:
 	push de
-	ld a, $01
-	ld hl, Func_01_4ce1
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4ce1
 	pop de
 	push af
 	ld a, $04
@@ -1918,9 +1906,7 @@ Func_03_4c39:
 	ret
 Func_03_4c4c:
 	push de
-	ld a, $01
-	ld hl, Func_01_4cfe
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4cfe
 	pop de
 	push af
 	ld a, $04
@@ -3124,9 +3110,7 @@ SpawnFloorFlameOrFX:
 	ld a, [wActiveFloor]
 	cp $05
 	jr z, Func_03_5518
-	ld a, $01
-	ld hl, Func_01_4d0d
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4d0d
 	ret
 Func_03_5518:
 	ld a, [$c530]
@@ -3575,9 +3559,7 @@ Func_03_57da:
 	ldh a, [$ffb6]
 	ld c, a
 	push de
-	ld a, $01
-	ld hl, Func_01_42b3
-	call CallBankedHL
+	FAR_CALL $01, Func_01_42b3
 	pop de
 	ld a, c
 	ldh [$ffc1], a
@@ -7340,9 +7322,7 @@ Func_03_6ee6:
 	ld a, $01
 	ldh [$ffb8], a
 	push de
-	ld a, $01
-	ld hl, Func_01_4cae
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4cae
 	pop de
 	ret
 

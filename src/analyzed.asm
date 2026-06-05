@@ -2338,9 +2338,7 @@ Func_00_0f41:
 	ld a, $01
 	ld [$c2a7], a
 	call ResetFloorScroll
-	ld a, $05
-	ld hl, Func_05_463a
-	call CallBankedHL
+	FAR_CALL $05, Func_05_463a
 RunIntroScene:
 	ld hl, $0f6e
 	push hl
@@ -3738,19 +3736,11 @@ OpenRoomSelectMenu:
 	ld [$c55d], a
 	ld a, $00
 	ld [$cfbe], a
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4015
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
+	FAR_CALL $15, Func_15_4015
 Func_00_1919:
-	ld a, $12
-	ld hl, Func_12_41f5
-	call CallBankedHL
+	FAR_CALL $12, Func_12_41f5
 	or a
 	ret nz
 	ld a, $04
@@ -3767,33 +3757,19 @@ SECTION "analyzed_001937", ROM0[$1937]
 SetupExchangeRoomSelect:
 	ld a, $00
 	ld [$c55d], a
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4015
-	call CallBankedHL
-	ld a, $12
-	ld hl, Func_12_41f5
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
+	FAR_CALL $15, Func_15_4015
+	FAR_CALL $12, Func_12_41f5
 	or a
 	ret
 EnterSelectedRoom:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
-	ld a, $05
-	ld hl, Func_05_47c6
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_3508
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_439e
-	call CallBankedHL
+	FAR_CALL $05, Func_05_47c6
+	FAR_CALL $00, Func_00_3508
+	FAR_CALL $01, Func_01_439e
 	call ResetFloorScroll
 	ret
 
@@ -3808,22 +3784,14 @@ OpenRoomArrangeMenu:
 	ld [$c55d], a
 	ld a, $00
 	ld [$cfbe], a
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 Func_00_19a3:
-	ld a, $12
-	ld hl, Func_12_41e9
-	call CallBankedHL
+	FAR_CALL $12, Func_12_41e9
 	or a
 	jp nz, Func_00_1a66
 Func_00_19af:
-	ld a, $12
-	ld hl, Func_12_4296
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4296
 	or a
 	jr nz, Func_00_19a3
 Func_00_19ba:
@@ -3843,57 +3811,31 @@ Func_00_19ba:
 Func_00_19d6:
 	call Func_00_320e
 	call Func_00_1b87
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 	jr Func_00_19ba
 Func_00_19ee:
 	call Func_00_320e
 	call Func_00_1b29
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 	jr Func_00_19ba
 Func_00_1a06:
 	call Func_00_320e
 	call Func_00_1b58
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 	jr Func_00_19ba
 Func_00_1a1e:
-	ld a, $05
-	ld hl, Func_05_47c6
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_3508
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_439e
-	call CallBankedHL
+	FAR_CALL $05, Func_05_47c6
+	FAR_CALL $00, Func_00_3508
+	FAR_CALL $01, Func_01_439e
 	call ResetFloorScroll
 	call LoadFloorByMode
-	ld a, $10
-	ld hl, Func_10_4041
-	call CallBankedHL
-	ld a, $11
-	ld hl, Func_11_4000
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $10, Func_10_4041
+	FAR_CALL $11, Func_11_4000
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 	push af
 	ld a, $30
 	call PlaySoundTracked
@@ -3904,9 +3846,7 @@ Func_00_1a66:
 	ld [$c2a7], a
 	ret
 Func_00_1a6c:
-	ld a, $12
-	ld hl, Func_12_4798
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4798
 	ld a, [$c561]
 	ld hl, $1873
 	rst $00
@@ -3966,9 +3906,7 @@ Func_00_1ada:
 	ld [$c565], a
 	ld a, [$c2ea]
 	ld [$c564], a
-	ld a, $12
-	ld hl, Func_12_46d0
-	call CallBankedHL
+	FAR_CALL $12, Func_12_46d0
 	ld hl, $c4d1
 	ld c, $00
 Func_00_1afc:
@@ -4070,16 +4008,12 @@ Func_00_1b87:
 	xor a
 Func_00_1bac:
 	ld [$c4cb], a
-	ld a, $10
-	ld hl, Func_10_40a4
-	call CallBankedHL
+	FAR_CALL $10, Func_10_40a4
 	jr Func_00_1bc7
 Func_00_1bb9:
 	ld a, [$c562]
 	ld [$c4cc], a
-	ld a, $16
-	ld hl, Func_16_4016
-	call CallBankedHL
+	FAR_CALL $16, Func_16_4016
 Func_00_1bc7:
 	call Func_00_2dbc
 	ld a, [$d0ea]
@@ -4336,9 +4270,7 @@ Func_00_1d52:
 	call Func_00_1e58
 	jr z, Func_00_1d4a
 	ld c, a
-	ld a, $11
-	ld hl, LoadFloorMonsterSprite
-	call CallBankedHL
+	FAR_CALL $11, LoadFloorMonsterSprite
 	call Func_00_1ff4
 	call Func_00_30b3
 	jp Func_00_1de5
@@ -4379,9 +4311,7 @@ Func_00_1da2:
 	call Func_00_1e58
 	jr z, Func_00_1d9b
 	ld c, a
-	ld a, $11
-	ld hl, LoadFloorMonsterSprite
-	call CallBankedHL
+	FAR_CALL $11, LoadFloorMonsterSprite
 	call Func_00_1ff4
 	call Func_00_30b3
 	jr Func_00_1de5
@@ -4622,17 +4552,13 @@ Func_00_1f07:
 	ld a, [$c561]
 	cp $03
 	jr z, Func_00_1f1e
-	ld a, $12
-	ld hl, Func_12_4519
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4519
 	jr Func_00_1f34
 
 SECTION "analyzed_001f1e", ROM0[$1f1e]
 
 Func_00_1f1e:
-	ld a, $12
-	ld hl, Data_12_4695
-	call CallBankedHL
+	FAR_CALL $12, Data_12_4695
 	call Func_00_25a4
 	jr Func_00_1f34
 
@@ -5030,9 +4956,7 @@ Func_00_2140:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	ld a, $15
-	ld hl, Func_15_4147
-	call CallBankedHL
+	FAR_CALL $15, Func_15_4147
 	ld hl, $4978
 	call Func_00_33fb
 	xor a
@@ -5058,9 +4982,7 @@ Func_00_217d:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	ld a, $15
-	ld hl, Func_15_4147
-	call CallBankedHL
+	FAR_CALL $15, Func_15_4147
 	ld a, [$c55f]
 	call Func_00_3049
 Func_00_21a5:
@@ -5148,15 +5070,11 @@ Func_00_2223:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	ld a, $15
-	ld hl, Func_15_4147
-	call CallBankedHL
+	FAR_CALL $15, Func_15_4147
 	ld a, $01
 	ld [$c560], a
 	ld b, a
-	ld a, $12
-	ld hl, Func_12_4441
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4441
 Func_00_2253:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -5308,9 +5226,7 @@ SECTION "analyzed_002319", ROM0[$2319]
 
 Func_00_2319:
 	ld b, a
-	ld a, $12
-	ld hl, Func_12_4441
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4441
 	jp Func_00_2253
 Func_00_2325:
 	xor a
@@ -5324,12 +5240,8 @@ Func_00_2325:
 	call CopyBgMap
 	ld a, [$c561]
 	ld b, a
-	ld a, $12
-	ld hl, Func_12_44d6
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4241
-	call CallBankedHL
+	FAR_CALL $12, Func_12_44d6
+	FAR_CALL $15, Func_15_4241
 Func_00_2351:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -5404,9 +5316,7 @@ SECTION "analyzed_0023b5", ROM0[$23b5]
 
 Func_00_23b5:
 	ld b, a
-	ld a, $12
-	ld hl, Func_12_44cf
-	call CallBankedHL
+	FAR_CALL $12, Func_12_44cf
 Func_00_23be:
 	call Func_00_3460
 	jr Func_00_2351
@@ -5430,16 +5340,12 @@ Func_00_23d8:
 	xor a
 	ret
 Func_00_23e8:
-	ld a, $15
-	ld hl, Func_15_41b8
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41b8
 	call Func_00_217d
 	or a
 	jr nz, Func_00_2401
 	call Func_00_2fd4
-	ld a, $12
-	ld hl, Func_12_4a79
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4a79
 Func_00_2401:
 	call Func_00_0bdd
 	ld a, $15
@@ -5449,26 +5355,20 @@ Func_00_2401:
 	call CopyBgMap
 	ld a, [$c561]
 	ld b, a
-	ld a, $12
-	ld hl, Func_12_44d6
-	call CallBankedHL
+	FAR_CALL $12, Func_12_44d6
 	xor a
 	ret
 Func_00_2420:
 	ld hl, $4bb8
 	call Func_00_33fb
-	ld a, $15
-	ld hl, Func_15_41b8
-	call CallBankedHL
+	FAR_CALL $15, Func_15_41b8
 	call Func_00_217d
 	cp $02
 	jr nc, Func_00_2401
 	or a
 	jr nz, Func_00_2443
 	call Func_00_2fd4
-	ld a, $12
-	ld hl, Func_12_4a79
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4a79
 Func_00_2443:
 	or $01
 	ret
@@ -7377,17 +7277,13 @@ Func_00_31a4:
 	call Func_00_217d
 	or a
 	jr nz, Func_00_31ba
-	ld a, $12
-	ld hl, Func_12_4b13
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4b13
 	jr Func_00_31c2
 
 SECTION "analyzed_0031ba", ROM0[$31ba]
 
 Func_00_31ba:
-	ld a, $12
-	ld hl, Data_12_4b44
-	call CallBankedHL
+	FAR_CALL $12, Data_12_4b44
 
 SECTION "analyzed_0031c2", ROM0[$31c2]
 
@@ -7468,15 +7364,9 @@ SECTION "analyzed_00320e", ROM0[$320e]
 
 Func_00_320e:
 	call Func_00_083c
-	ld a, $16
-	ld hl, Func_16_4016
-	call CallBankedHL
-	ld a, $10
-	ld hl, Func_10_4018
-	call CallBankedHL
-	ld a, $10
-	ld hl, Func_10_4070
-	call CallBankedHL
+	FAR_CALL $16, Func_16_4016
+	FAR_CALL $10, Func_10_4018
+	FAR_CALL $10, Func_10_4070
 	xor a
 	ldh [rVBK], a
 	ld hl, $99c0
@@ -7492,15 +7382,9 @@ Func_00_320e:
 	call Func_00_3340
 	call Func_00_1a6c
 	call Func_00_3089
-	ld a, $10
-	ld hl, Func_10_40a4
-	call CallBankedHL
-	ld a, $10
-	ld hl, Func_10_4081
-	call CallBankedHL
-	ld a, $11
-	ld hl, Func_11_4031
-	call CallBankedHL
+	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $10, Func_10_4081
+	FAR_CALL $11, Func_11_4031
 	ret
 Func_00_3268:
 	ld a, [$c56b]
@@ -7817,9 +7701,7 @@ Func_00_34bc:
 	ld a, [$c2a9]
 	ld [$d0f3], a
 	ld [$d0f4], a
-	ld a, $00
-	ld hl, Func_00_1219
-	call CallBankedHL
+	FAR_CALL $00, Func_00_1219
 	call ResetFloorScroll
 	push af
 	ld a, $2f
@@ -7888,9 +7770,7 @@ Func_00_3508:
 	ld a, $30
 	ld [$2fff], a
 	call DrawRoomClearScreen
-	ld a, $05
-	ld hl, Func_05_46ba
-	call CallBankedHL
+	FAR_CALL $05, Func_05_46ba
 	ret
 	push af
 	ld a, $28
@@ -7904,9 +7784,7 @@ Func_00_3508:
 	ld [$2fff], a
 	call DrawTowerOpenScreen
 Func_00_3572:
-	ld a, $18
-	ld hl, Func_18_6b71
-	call CallBankedHL
+	FAR_CALL $18, Func_18_6b71
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -8554,9 +8432,7 @@ CopyBgMapBankedA:
 	ld [$2fff], a
 	ret
 Func_00_3957:
-	ld a, $1f
-	ld hl, Script_FadeOutPortrait
-	call CallBankedHL
+	FAR_CALL $1f, Script_FadeOutPortrait
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -8939,42 +8815,28 @@ Data_01_4335:
 SECTION "analyzed_00439e", ROMX[$439e], BANK[$01]
 
 Func_01_439e:
-	ld a, $05
-	ld hl, Func_05_46f0
-	call CallBankedHL
+	FAR_CALL $05, Func_05_46f0
 	call Func_01_5cbe
 	call Func_01_49cb
 	call Func_00_083c
-	ld a, $05
-	ld hl, Func_05_4884
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4884
 	call LoadFloorByMode
-	ld a, $17
-	ld hl, Func_17_40b1
-	call CallBankedHL
+	FAR_CALL $17, Func_17_40b1
 	call FloorPostLoadCleanup
-	ld a, $05
-	ld hl, Func_05_4931
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4931
 	xor a
 	call Func_01_5bd8
 	call Func_01_75ad
 	call SpawnFloorEntities
 	call Func_01_4a71
-	ld a, $05
-	ld hl, Func_05_48a5
-	call CallBankedHL
-	ld a, $03
-	ld hl, UpdateEntities
-	call CallBankedHL
+	FAR_CALL $05, Func_05_48a5
+	FAR_CALL $03, UpdateEntities
 	call Func_01_4c57
 	ld a, [$c289]
 	ldh [rSCY], a
 	ld a, [$c28a]
 	ldh [rSCX], a
-	ld a, $05
-	ld hl, Func_05_48fc
-	call CallBankedHL
+	FAR_CALL $05, Func_05_48fc
 	call Func_00_0786
 	xor a
 	ldh [$ff8b], a
@@ -8993,9 +8855,7 @@ Func_01_4412:
 	jr nz, Func_01_444a
 	call Func_01_5866
 	call Func_01_4bae
-	ld a, $03
-	ld hl, UpdateEntities
-	call CallBankedHL
+	FAR_CALL $03, UpdateEntities
 	ld a, [$c2db]
 	cp $04
 	jr z, Func_01_446b
@@ -9015,16 +8875,10 @@ Func_01_444a:
 	jr nz, Func_01_446b
 Func_01_4458:
 	call Func_01_4dd9
-	ld a, $04
-	ld hl, Func_04_425c
-	call CallBankedHL
-	ld a, $02
-	ld hl, Func_02_4023
-	call CallBankedHL
+	FAR_CALL $04, Func_04_425c
+	FAR_CALL $02, Func_02_4023
 Func_01_446b:
-	ld a, $0f
-	ld hl, Func_0f_4000
-	call CallBankedHL
+	FAR_CALL $0f, Func_0f_4000
 	call Func_01_75f6
 	call Func_01_775b
 	call HideUnusedOamSprites
@@ -9037,9 +8891,7 @@ Func_01_447f:
 	call WaitForNextFrame
 	call ResetFloorScroll
 	call Func_01_459a
-	ld a, $05
-	ld hl, Func_05_473d
-	call CallBankedHL
+	FAR_CALL $05, Func_05_473d
 	ret
 Func_01_449d:
 	ld a, [$c2e6]
@@ -9225,9 +9077,7 @@ Func_01_45ad:
 	ld a, [wTransitionState]
 	cp $01
 	jr nz, Func_01_45d2
-	ld a, $05
-	ld hl, Func_05_481d
-	call CallBankedHL
+	FAR_CALL $05, Func_05_481d
 	call Func_01_4b7c
 	call Func_01_45d6
 	ld a, $13
@@ -9333,9 +9183,7 @@ Func_01_4679:
 	call Func_01_4987
 	ld a, $01
 	ld [wC2D7], a
-	ld a, $18
-	ld hl, Func_18_6b71
-	call CallBankedHL
+	FAR_CALL $18, Func_18_6b71
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -9412,12 +9260,8 @@ Func_01_470d:
 	call Func_00_119a
 	or a
 	jr nz, Func_01_473a
-	ld a, $13
-	ld hl, Func_13_4000
-	call CallBankedHL
-	ld a, $18
-	ld hl, Func_18_6b65
-	call CallBankedHL
+	FAR_CALL $13, Func_13_4000
+	FAR_CALL $18, Func_18_6b65
 	ld a, $0e
 	call Func_00_1164
 	ld a, $03
@@ -9429,9 +9273,7 @@ Func_01_470d:
 SECTION "analyzed_00473a", ROMX[$473a], BANK[$01]
 
 Func_01_473a:
-	ld a, $18
-	ld hl, Func_18_6b71
-	call CallBankedHL
+	FAR_CALL $18, Func_18_6b71
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -9439,18 +9281,14 @@ Func_01_473a:
 SECTION "analyzed_004748", ROMX[$4748], BANK[$01]
 
 Func_01_4748:
-	ld a, $05
-	ld hl, Func_05_4800
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
 	ld a, $10
 	ld [$c2a7], a
 	ret
 Func_01_4759:
 	call Func_01_5d77
-	ld a, $05
-	ld hl, Func_05_4800
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
 	ld a, $10
 	ld [$c2a7], a
@@ -11293,9 +11131,7 @@ Func_01_5993:
 	cp $20
 	ret nz
 Func_01_599b:
-	ld a, $12
-	ld hl, Func_12_402c
-	call CallBankedHL
+	FAR_CALL $12, Func_12_402c
 	call Func_01_449d
 	call Func_01_4aa1
 	xor a
@@ -11408,16 +11244,12 @@ Func_01_5a5f:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	ld a, $05
-	ld hl, Func_05_4000
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4000
 	ld a, $01
 	ld [$c2dd], a
 	ret
 Func_01_5a7a:
-	ld a, $05
-	ld hl, Func_05_407d
-	call CallBankedHL
+	FAR_CALL $05, Func_05_407d
 	bit 7, a
 	ret z
 	call Func_01_5a90
@@ -11757,9 +11589,7 @@ Func_01_5c6e:
 	ld a, $04
 Func_01_5c70:
 	ld [$d60e], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ret
 Func_01_5c7c:
 	ld a, [wActiveFloor]
@@ -11836,9 +11666,7 @@ Func_01_5ce2:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ld a, $00
 	call Func_00_1164
 	ret
@@ -11851,9 +11679,7 @@ Func_01_5cff:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ld a, $02
 	call Func_00_1164
 	ret
@@ -11866,9 +11692,7 @@ Func_01_5d1d:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ld a, $04
 	call Func_00_1164
 	ret
@@ -11881,9 +11705,7 @@ Func_01_5d3b:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ld a, $06
 	call Func_00_1164
 	ret
@@ -11896,9 +11718,7 @@ Func_01_5d59:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	ld a, $1f
-	ld hl, Func_1f_4109
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4109
 	ld a, $08
 	call Func_00_1164
 	ret
@@ -11921,9 +11741,7 @@ Func_01_5d84:
 	call Func_00_119a
 	or a
 	ret nz
-	ld a, $18
-	ld hl, Func_18_4097
-	call CallBankedHL
+	FAR_CALL $18, Func_18_4097
 	ld a, $0c
 	call Func_00_1164
 	ret
@@ -11932,9 +11750,7 @@ Func_01_5d99:
 	call Func_00_119a
 	or a
 	ret nz
-	ld a, $18
-	ld hl, Func_18_533c
-	call CallBankedHL
+	FAR_CALL $18, Func_18_533c
 	ld a, $0d
 	call Func_00_1164
 	ret
@@ -11963,9 +11779,7 @@ Player_SummonMonster:
 	ld a, [wDisplayMonster]
 	ld [wSceneState], a
 	ld c, $04
-	ld a, $01
-	ld hl, StartKeyUnlock
-	call CallBankedHL
+	FAR_CALL $01, StartKeyUnlock
 	pop de
 	xor a
 	ld [$c2ab], a
@@ -13555,9 +13369,7 @@ Func_01_686f:
 	ld a, [hl]
 	sub $40
 	ld c, a
-	ld a, $0f
-	ld hl, Func_0f_488d
-	call CallBankedHL
+	FAR_CALL $0f, Func_0f_488d
 	pop hl
 	push hl
 	ld de, $000c
@@ -13669,9 +13481,7 @@ Func_01_68f5:
 	jr nz, Func_01_6944
 Func_01_693a:
 	push hl
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 Func_01_6944:
 	ld a, $01
@@ -13702,9 +13512,7 @@ Func_01_6949:
 	jr nz, Func_01_697a
 Func_01_6970:
 	push hl
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 Func_01_697a:
 	ld a, $01
@@ -13735,9 +13543,7 @@ Func_01_697f:
 	jr nz, Func_01_69b0
 Func_01_69a6:
 	push hl
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 Func_01_69b0:
 	ld a, $01
@@ -13772,9 +13578,7 @@ Func_01_69b5:
 	jr nz, Func_01_69eb
 Func_01_69e1:
 	push hl
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 Func_01_69eb:
 	ld a, $01
@@ -14204,9 +14008,7 @@ Func_01_6c41:
 	swap a
 	and $0f
 	ld b, a
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 	pop bc
 	ret
@@ -14226,9 +14028,7 @@ Func_01_6c68:
 	swap a
 	and $0f
 	ld b, a
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop hl
 	pop bc
 	ret
@@ -15477,15 +15277,11 @@ Func_01_7435:
 	and $0f
 	ld b, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop bc
 	inc c
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
@@ -15508,15 +15304,11 @@ Func_01_7435:
 	and $0f
 	ld b, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop bc
 	inc c
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtCell
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtCell
 	pop bc
 	ret
 Func_01_7499:
@@ -15552,47 +15344,35 @@ Func_01_7499:
 Func_01_74c4:
 	push de
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop de
 	ret
 Func_01_74dd:
 	push de
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $0f
 	add a, b
 	ld b, a
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop de
 	ret
 Func_01_7512:
@@ -15623,24 +15403,18 @@ Func_01_752d:
 Func_01_7534:
 	push de
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop de
 	ret
 Func_01_755b:
@@ -15672,16 +15446,12 @@ Func_01_7578:
 	add a, c
 	ld c, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
 	push bc
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop bc
 	ldh a, [$ffbc]
 	ld c, a
@@ -15692,9 +15462,7 @@ Func_01_7578:
 	add a, c
 	dec a
 	ld c, a
-	ld a, $03
-	ld hl, BreakTileAtPixel
-	call CallBankedHL
+	FAR_CALL $03, BreakTileAtPixel
 	pop de
 	ret
 Func_01_75ad:
@@ -16392,9 +16160,7 @@ Func_01_7b24:
 	ld [$cf69], a
 	ld a, [hl]
 	ld [$cf6a], a
-	ld a, $04
-	ld hl, Func_04_4100
-	call CallBankedHL
+	FAR_CALL $04, Func_04_4100
 	pop hl
 	ret
 
@@ -21874,12 +21640,8 @@ Func_05_4516:
 	call Func_00_0bdd
 	call Func_00_083c
 	call Func_00_16ad
-	ld a, $12
-	ld hl, Func_12_402c
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_75ad
-	call CallBankedHL
+	FAR_CALL $12, Func_12_402c
+	FAR_CALL $01, Func_01_75ad
 	call Func_05_48a5
 	ld a, $07
 	ldh [rWX], a
@@ -22005,9 +21767,7 @@ Data_05_45da:
 SECTION "analyzed_01463a", ROMX[$463a], BANK[$05]
 
 Func_05_463a:
-	ld a, $00
-	ld hl, Func_00_39ad
-	call CallBankedHL
+	FAR_CALL $00, Func_00_39ad
 	call Func_05_4690
 	call Func_05_4699
 	ld a, $01
@@ -22042,9 +21802,7 @@ Func_05_463a:
 	ld [hl], a
 	ld a, $ff
 	ld [wDisplayMonster], a
-	ld a, $12
-	ld hl, Func_12_4c13
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4c13
 	ret
 Func_05_4690:
 	xor a
@@ -22327,15 +22085,11 @@ Func_05_4835:
 	ld [$cfee], a
 	ret
 Func_05_4843:
-	ld a, $12
-	ld hl, Func_12_4bb3
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4bb3
 	ld [$d0f4], a
 	or a
 	jr z, Func_05_4865
-	ld a, $12
-	ld hl, Func_12_4bef
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4bef
 	or a
 	jr z, Func_05_485f
 	ld a, $01
@@ -22397,27 +22151,17 @@ Func_05_4884:
 	ldh [rVBK], a
 	ret
 Func_05_48a5:
-	ld a, $10
-	ld hl, Func_10_4018
-	call CallBankedHL
-	ld a, $02
-	ld hl, Func_02_4000
-	call CallBankedHL
-	ld a, $16
-	ld hl, Func_16_4016
-	call CallBankedHL
-	ld a, $17
-	ld hl, Func_17_4122
-	call CallBankedHL
+	FAR_CALL $10, Func_10_4018
+	FAR_CALL $02, Func_02_4000
+	FAR_CALL $16, Func_16_4016
+	FAR_CALL $17, Func_17_4122
 	call Func_05_48c9
 	ret
 Func_05_48c9:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_48d9
-	ld a, $3d
-	ld hl, Func_3d_4000
-	call CallBankedHL
+	FAR_CALL $3d, Func_3d_4000
 	ret
 Func_05_48d9:
 	call Func_05_48dd
@@ -22432,9 +22176,7 @@ Func_05_48e2:
 	ld b, a
 	push bc
 	push de
-	ld a, $11
-	ld hl, Func_11_4081
-	call CallBankedHL
+	FAR_CALL $11, Func_11_4081
 	pop de
 	pop bc
 Func_05_48f4:
@@ -22445,29 +22187,19 @@ Func_05_48f4:
 	jr nz, Func_05_48e2
 	ret
 Func_05_48fc:
-	ld a, $02
-	ld hl, Func_02_4010
-	call CallBankedHL
+	FAR_CALL $02, Func_02_4010
 	call Func_05_4918
-	ld a, $10
-	ld hl, Func_10_40a4
-	call CallBankedHL
-	ld a, $17
-	ld hl, Func_17_416c
-	call CallBankedHL
+	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $17, Func_17_416c
 	ret
 Func_05_4918:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_4928
-	ld a, $3d
-	ld hl, Func_3d_4051
-	call CallBankedHL
+	FAR_CALL $3d, Func_3d_4051
 	ret
 Func_05_4928:
-	ld a, $11
-	ld hl, Func_11_40b1
-	call CallBankedHL
+	FAR_CALL $11, Func_11_40b1
 	ret
 Func_05_4931:
 	ld a, [wRoomType]
@@ -29340,9 +29072,7 @@ Func_0f_4000:
 	ld a, [$c7fd]
 	bit 0, a
 	ret nz
-	ld a, $01
-	ld hl, Func_01_4c4d
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4c4d
 	push af
 	ld a, $0d
 	call PlaySound
@@ -29381,16 +29111,12 @@ Func_0f_4054:
 	jp z, Func_0f_40f9
 	cp $03
 	jr z, Func_0f_4086
-	ld a, $01
-	ld hl, Func_01_4e09
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e09
 	ld a, $11
 	ld [$c2d8], a
 	xor a
 	ld [$c2d9], a
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4eb8
 	ld a, $02
 	ld [$c2ac], a
 	ret
@@ -29417,9 +29143,7 @@ Func_0f_4097:
 	pop af
 	ld a, $01
 	ld [$c2da], a
-	ld a, $01
-	ld hl, Func_01_4e8c
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e8c
 	ret
 
 SECTION "analyzed_03c0b2", ROMX[$40b2], BANK[$0f]
@@ -29434,17 +29158,11 @@ Func_0f_40b2:
 	pop af
 	xor a
 	ld [$c2da], a
-	ld a, $01
-	ld hl, Func_01_4e8c
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e8c
 	ret
 Func_0f_40cb:
-	ld a, $01
-	ld hl, Func_01_4e09
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e09
+	FAR_CALL $01, Func_01_4eb8
 	push af
 	ld a, $0e
 	call PlaySound
@@ -29491,17 +29209,11 @@ Func_0f_4125:
 	pop af
 	xor a
 	ld [$c2da], a
-	ld a, $01
-	ld hl, Func_01_4e8c
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e8c
 	ret
 Func_0f_413e:
-	ld a, $01
-	ld hl, Func_01_4e09
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e09
+	FAR_CALL $01, Func_01_4eb8
 	push af
 	ld a, $0e
 	call PlaySound
@@ -29539,9 +29251,7 @@ Func_0f_416c:
 	ret z
 	inc a
 	ld [$c2d9], a
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4eb8
 	push af
 	ld a, $04
 	call PlaySound
@@ -29553,9 +29263,7 @@ Func_0f_41a3:
 	ret z
 	inc a
 	ld [$c2d9], a
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4eb8
 	push af
 	ld a, $04
 	call PlaySound
@@ -29567,9 +29275,7 @@ Func_0f_41bd:
 	ret z
 	dec a
 	ld [$c2d9], a
-	ld a, $01
-	ld hl, Func_01_4eb8
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4eb8
 	push af
 	ld a, $04
 	call PlaySound
@@ -29589,14 +29295,10 @@ Func_0f_41d6:
 	ld a, $0d
 	call PlaySound
 	pop af
-	ld a, $01
-	ld hl, Func_01_4e55
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e55
 	ld a, $01
 	ld [$c2da], a
-	ld a, $01
-	ld hl, Func_01_4e8c
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e8c
 	ret
 Func_0f_4206:
 	call Func_0f_42a2
@@ -29636,20 +29338,14 @@ Func_0f_4243:
 	ld a, $0d
 	call PlaySound
 	pop af
-	ld a, $01
-	ld hl, Func_01_4e55
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e55
 	ld a, $01
 	ld [$c2da], a
-	ld a, $01
-	ld hl, Func_01_4e8c
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4e8c
 	ret
 Func_0f_4265:
 	call Func_0f_42a2
-	ld a, $01
-	ld hl, Func_01_4b0e
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4b0e
 	ld a, $02
 	ld [wTransitionState], a
 	ld a, $01
@@ -29661,9 +29357,7 @@ Func_0f_427b:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	ld a, $03
-	ld hl, RequestFloorExit
-	call CallBankedHL
+	FAR_CALL $03, RequestFloorExit
 	ld a, $01
 	ld [wLives], a
 	ld a, $02
@@ -29682,9 +29376,7 @@ Func_0f_42a2:
 	ld a, $0d
 	call PlaySound
 	pop af
-	ld a, $01
-	ld hl, Func_01_449d
-	call CallBankedHL
+	FAR_CALL $01, Func_01_449d
 	ret
 Func_0f_42bb:
 	ld a, [$c2d8]
@@ -29762,9 +29454,7 @@ Func_0f_433a:
 	call Func_0f_44d5
 	call Func_00_0bdd
 	call Func_0f_450d
-	ld a, $3b
-	ld hl, Func_3b_4000
-	call CallBankedHL
+	FAR_CALL $3b, Func_3b_4000
 	call LoadDiscStoneDisplay
 	call LoadMonsterPortrait
 	call Func_0f_4565
@@ -29952,12 +29642,8 @@ Func_0f_4543:
 	call Func_0f_44d5
 	call Func_00_0bdd
 	call Func_0f_450d
-	ld a, $05
-	ld hl, Func_05_48a5
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_48fc
-	call CallBankedHL
+	FAR_CALL $05, Func_05_48a5
+	FAR_CALL $05, Func_05_48fc
 	call Func_00_0786
 	ld a, $01
 	ld [$c2ac], a
@@ -30684,9 +30370,7 @@ Func_0f_4ac6:
 	jr z, Func_0f_4ad9
 	cp $02
 	jr z, Func_0f_4ad9
-	ld a, $12
-	ld hl, Func_12_484e
-	call CallBankedHL
+	FAR_CALL $12, Func_12_484e
 Func_0f_4ad9:
 	ldh a, [$ff8c]
 	bit 1, a
@@ -30707,9 +30391,7 @@ Func_0f_4aef:
 	call Func_0f_4b4f
 	ret
 Func_0f_4b02:
-	ld a, $12
-	ld hl, Func_12_47e5
-	call CallBankedHL
+	FAR_CALL $12, Func_12_47e5
 	ld hl, $5138
 	ld de, $9de3
 	call CopyBgMap
@@ -30724,15 +30406,9 @@ Func_0f_4b1d:
 	call CopyBgMap
 	ret
 Func_0f_4b27:
-	ld a, $10
-	ld hl, Func_10_405f
-	call CallBankedHL
-	ld a, $16
-	ld hl, Func_16_4016
-	call CallBankedHL
-	ld a, $10
-	ld hl, Func_10_4007
-	call CallBankedHL
+	FAR_CALL $10, Func_10_405f
+	FAR_CALL $16, Func_16_4016
+	FAR_CALL $10, Func_10_4007
 	xor a
 	ldh [rVBK], a
 	ld hl, $4d38
@@ -30741,9 +30417,7 @@ Func_0f_4b27:
 	call CopyHLtoDE
 	ret
 Func_0f_4b4f:
-	ld a, $10
-	ld hl, Func_10_40a4
-	call CallBankedHL
+	FAR_CALL $10, Func_10_40a4
 	ld hl, $4ce8
 	ld a, $06
 	ld b, $01
@@ -32998,9 +32672,7 @@ Func_12_41df:
 Func_12_41e8:
 	ret
 Func_12_41e9:
-	ld a, $15
-	ld hl, Func_15_4015
-	call CallBankedHL
+	FAR_CALL $15, Func_15_4015
 	call Func_12_41f5
 	ret
 Func_12_41f5:
@@ -33092,12 +32764,8 @@ SECTION "analyzed_048271", ROMX[$4271], BANK[$12]
 
 Func_12_4271:
 	ld [$c55d], a
-	ld a, $15
-	ld hl, Func_15_408a
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_41cf
-	call CallBankedHL
+	FAR_CALL $15, Func_15_408a
+	FAR_CALL $15, Func_15_41cf
 	jp Func_12_41f5
 Func_12_4287:
 	cp $04
@@ -33113,9 +32781,7 @@ Func_12_4296:
 	xor a
 	ld [$c55e], a
 Func_12_429a:
-	ld a, $15
-	ld hl, Func_15_410f
-	call CallBankedHL
+	FAR_CALL $15, Func_15_410f
 Func_12_42a2:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -33233,12 +32899,8 @@ Func_12_434b:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
-	ld a, $10
-	ld hl, Func_10_4041
-	call CallBankedHL
-	ld a, $11
-	ld hl, Func_11_4000
-	call CallBankedHL
+	FAR_CALL $10, Func_10_4041
+	FAR_CALL $11, Func_11_4000
 	call Func_00_2df6
 	xor a
 	ret
@@ -33249,9 +32911,7 @@ Func_12_4368:
 	call Func_00_217d
 	or a
 	jp nz, Func_12_429a
-	ld a, $12
-	ld hl, Func_12_4ab8
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4ab8
 	jp Func_12_429a
 Func_12_437a:
 	ld a, $04
@@ -33265,29 +32925,15 @@ Func_12_437a:
 Func_12_4390:
 	ld a, $05
 	ld [wRoomType], a
-	ld a, $05
-	ld hl, Func_05_47c6
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_3508
-	call CallBankedHL
-	ld a, $01
-	ld hl, Func_01_439e
-	call CallBankedHL
+	FAR_CALL $05, Func_05_47c6
+	FAR_CALL $00, Func_00_3508
+	FAR_CALL $01, Func_01_439e
 	call ResetFloorScroll
 	call LoadFloorByMode
-	ld a, $10
-	ld hl, Func_10_4041
-	call CallBankedHL
-	ld a, $11
-	ld hl, Func_11_4000
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_41fe
-	call CallBankedHL
-	ld a, $15
-	ld hl, Func_15_4134
-	call CallBankedHL
+	FAR_CALL $10, Func_10_4041
+	FAR_CALL $11, Func_11_4000
+	FAR_CALL $15, Func_15_41fe
+	FAR_CALL $15, Func_15_4134
 	push af
 	ld a, $30
 	call PlaySoundTracked
@@ -33402,9 +33048,7 @@ Func_12_4426:
 	ret
 Func_12_4441:
 	push bc
-	ld a, $15
-	ld hl, Func_15_4147
-	call CallBankedHL
+	FAR_CALL $15, Func_15_4147
 	ld a, $01
 	ldh [rVBK], a
 	ld a, [$c55f]
@@ -35587,9 +35231,7 @@ Func_13_4982:
 	ld [$d617], a
 	push hl
 	push de
-	ld a, $00
-	ld hl, PrintCharacterAtCursor
-	call CallBankedHL
+	FAR_CALL $00, PrintCharacterAtCursor
 	pop de
 	pop hl
 	inc de
@@ -35636,9 +35278,7 @@ SECTION "analyzed_04c9d1", ROMX[$49d1], BANK[$13]
 Func_13_49d1:
 	push hl
 	push de
-	ld a, $00
-	ld hl, PrintCharacterAtCursor
-	call CallBankedHL
+	FAR_CALL $00, PrintCharacterAtCursor
 	pop de
 	inc de
 	pop hl
@@ -36883,9 +36523,7 @@ Func_15_410f:
 	call Func_00_0786
 	ld a, [$c55e]
 	ld c, a
-	ld a, $12
-	ld hl, Func_12_43fe
-	call CallBankedHL
+	FAR_CALL $12, Func_12_43fe
 	ret
 Func_15_4134:
 	ld hl, $65ce
@@ -38192,9 +37830,7 @@ Func_17_4122:
 	ret z
 	cp $05
 	jr c, LoadFontTiles
-	ld a, $38
-	ld hl, Func_38_4000
-	call CallBankedHL
+	FAR_CALL $38, Func_38_4000
 	ret
 ; Upload a 64-tile font page from $17:$6118 (+ $400*[$c55c]) to VRAM $9400.
 ; The font sheet there is Data_17_6918 (ABC.../abc.../0-9). See docs/gfx_loaders.md.
@@ -39157,9 +38793,7 @@ Pashute_LoadIntroScene:
 	ld a, $32
 	call PlaySoundTracked
 	pop af
-	ld a, $1f
-	ld hl, Func_1f_4008
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4008
 	ret
 Pashute_LoadShrineTilemap:
 	ld hl, $5880
@@ -39545,9 +39179,7 @@ Bodka_BuildStudioScene:
 	pop af
 	ret
 Bodka_BuildTowerScene:
-	ld a, $1f
-	ld hl, Func_1f_4d66
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4d66
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
@@ -39803,9 +39435,7 @@ Func_18_6b71:
 	call Func_18_6bc8
 	ld hl, $6ce3
 	call ScriptDispatcherEnterAfterCall
-	ld a, $1f
-	ld hl, Script_FadeOutPortrait
-	call CallBankedHL
+	FAR_CALL $1f, Script_FadeOutPortrait
 	ret
 	call Func_18_6bc8
 	ld hl, $717e
@@ -39815,28 +39445,16 @@ Func_18_6b71:
 	jp z, Func_00_3957
 	ret
 Naji_StartTowerClimb:
-	ld a, $05
-	ld hl, Func_05_4785
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_34e3
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4785
+	FAR_CALL $00, Func_00_34e3
 	ret
 Naji_ResumeTowerClimb:
-	ld a, $05
-	ld hl, Func_05_479d
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_34e3
-	call CallBankedHL
+	FAR_CALL $05, Func_05_479d
+	FAR_CALL $00, Func_00_34e3
 	ret
 Naji_StartTowerFromBottom:
-	ld a, $05
-	ld hl, Func_05_47b2
-	call CallBankedHL
-	ld a, $00
-	ld hl, Func_00_34e3
-	call CallBankedHL
+	FAR_CALL $05, Func_05_47b2
+	FAR_CALL $00, Func_00_34e3
 	ret
 Func_18_6bc8:
 	call Func_00_0822
@@ -40252,21 +39870,15 @@ Data_18_70e6:
 SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
 
 Toamuna_LoadGame:
-	ld a, $12
-	ld hl, Func_12_4b8e
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4b8e
 	ld [wYNResult], a
 	ret
 Toamuna_SaveGame:
-	ld a, $12
-	ld hl, SaveGameToSram
-	call CallBankedHL
+	FAR_CALL $12, SaveGameToSram
 	ld [wYNResult], a
 	ret
 Toamuna_CheckSaveExists:
-	ld a, $12
-	ld hl, Func_12_4bb3
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4bb3
 	ld [wYNResult], a
 	ret
 	call Func_00_0822
@@ -41052,45 +40664,35 @@ Data_1f_4120:
 SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
 Func_1f_4121:
-	ld a, $1f
-	ld hl, Kalum_StartEncounter
-	call CallBankedHL
+	FAR_CALL $1f, Kalum_StartEncounter
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4133:
-	ld a, $1f
-	ld hl, Mistral_StartEncounter
-	call CallBankedHL
+	FAR_CALL $1f, Mistral_StartEncounter
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4145:
-	ld a, $1f
-	ld hl, Rafaga_StartEncounter
-	call CallBankedHL
+	FAR_CALL $1f, Rafaga_StartEncounter
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4157:
-	ld a, $1f
-	ld hl, Tempest_StartEncounter
-	call CallBankedHL
+	FAR_CALL $1f, Tempest_StartEncounter
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
 Func_1f_4169:
-	ld a, $1f
-	ld hl, Func_1f_4d8c
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_4d8c
 	push af
 	ld a, $28
 	call PlaySoundTracked
@@ -47973,9 +47575,7 @@ Func_30_42d5:
 	jr nz, Func_30_42e9
 	ld a, $03
 	ld [$d0f8], a
-	ld a, $20
-	ld hl, Func_20_796d
-	call CallBankedHL
+	FAR_CALL $20, Func_20_796d
 	ret
 Func_30_42e9:
 	ld a, $00
@@ -48010,9 +47610,7 @@ Data_30_4315:
 SECTION "analyzed_0c0325", ROMX[$4325], BANK[$30]
 
 Func_30_4325:
-	ld a, $20
-	ld hl, Func_20_796d
-	call CallBankedHL
+	FAR_CALL $20, Func_20_796d
 	ret
 
 SECTION "analyzed_0c032e", ROMX[$432e], BANK[$30]
@@ -49416,9 +49014,7 @@ DrawRoomClearScreen:
 	ld hl, $7080
 	ld de, $9800
 	call CopyBgMapBanked
-	ld a, $21
-	ld hl, Func_21_7409
-	call CallBankedHL
+	FAR_CALL $21, Func_21_7409
 	xor a
 	ld b, $08
 	ld c, $21
@@ -49449,12 +49045,8 @@ Func_30_50d7:
 	ld a, [$d0f4]
 	cp $04
 	jr nc, Func_30_512e
-	ld a, $21
-	ld hl, Func_21_73e4
-	call CallBankedHL
-	ld a, $21
-	ld hl, Func_21_73ac
-	call CallBankedHL
+	FAR_CALL $21, Func_21_73e4
+	FAR_CALL $21, Func_21_73ac
 	ld a, [$d0f6]
 	cp $00
 	jr nz, Func_30_5121
@@ -49482,16 +49074,12 @@ Func_30_512e:
 	cp $00
 	jr nz, Func_30_514b
 Func_30_5142:
-	ld a, $01
-	ld hl, Func_01_4654
-	call CallBankedHL
+	FAR_CALL $01, Func_01_4654
 	ret
 Func_30_514b:
 	ld a, $04
 	ld [wC2D7], a
-	ld a, $18
-	ld hl, Func_18_6b71
-	call CallBankedHL
+	FAR_CALL $18, Func_18_6b71
 	ld a, $04
 	ld [$c2a7], a
 	ret
@@ -49898,9 +49486,7 @@ Func_30_54b8:
 	ld [$d0f5], a
 	ld [$d0f6], a
 	ld [$d0f7], a
-	ld a, $05
-	ld hl, Func_05_4843
-	call CallBankedHL
+	FAR_CALL $05, Func_05_4843
 	ld [$d0f4], a
 	cp $01
 	jr nz, DrawTitleScreen
@@ -50003,9 +49589,7 @@ Func_30_55a6:
 	ld a, [$d0f5]
 	and a
 	jr z, Func_30_555d
-	ld a, $12
-	ld hl, Func_12_4b8e
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4b8e
 	and a
 	jr nz, Func_30_555d
 
@@ -52045,9 +51629,7 @@ Func_31_44fd:
 	bit 2, a
 	jr nz, Func_31_4526
 	call Func_31_446e
-	ld a, $12
-	ld hl, Func_12_4c13
-	call CallBankedHL
+	FAR_CALL $12, Func_12_4c13
 	call Func_31_456f
 Func_31_4526:
 	xor a
@@ -52067,15 +51649,11 @@ Func_31_452e:
 Func_31_4542:
 	call Func_31_4644
 	call Func_31_4697
-	ld a, $34
-	ld hl, Func_34_4034
-	call CallBankedHL
+	FAR_CALL $34, Func_34_4034
 	call Func_31_462b
 	call HideUnusedOamSprites
 	ld b, $00
-	ld a, $34
-	ld hl, Data_34_4000
-	call CallBankedHL
+	FAR_CALL $34, Data_34_4000
 	call WaitForNextFrame
 	ld a, [$d5c7]
 	inc a
@@ -52094,9 +51672,7 @@ Func_31_457e:
 	call Func_31_46e0
 	call HideUnusedOamSprites
 	ld b, $01
-	ld a, $34
-	ld hl, Data_34_4000
-	call CallBankedHL
+	FAR_CALL $34, Data_34_4000
 	call WaitForNextFrame
 	ld a, [$d5c7]
 	inc a
@@ -52424,9 +52000,7 @@ Func_31_47aa:
 	res 7, a
 	res 5, a
 	ldh [rLCDC], a
-	ld a, $34
-	ld hl, Func_34_406a
-	call CallBankedHL
+	FAR_CALL $34, Func_34_406a
 	ld c, $03
 	ld hl, $d5eb
 Func_31_47bf:
@@ -52600,9 +52174,7 @@ ShowMonsterDetailScreen:
 	ld de, $99a1
 	call CopyBgMapBankedA
 	call Func_32_4034
-	ld a, $0f
-	ld hl, LoadMonsterPortrait
-	call CallBankedHL
+	FAR_CALL $0f, LoadMonsterPortrait
 	call DrawMonsterDetailBgMap
 	call DrawMonsterDetailSprites
 	call Func_32_4205
@@ -52630,9 +52202,7 @@ Func_32_4155:
 	ld a, [$ff8c]
 	bit 0, a
 	jr z, Func_32_4155
-	ld a, $1f
-	ld hl, Func_1f_403a
-	call CallBankedHL
+	FAR_CALL $1f, Func_1f_403a
 	pop af
 	ld [wDisplayMonster], a
 	ret

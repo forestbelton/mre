@@ -35,15 +35,9 @@ FloorPostLoadCleanup:
 	ld a, $01
 	ld hl, RemoveConditionalItemsPass  ; pass 3: conditional-item gate (Data_01_5162)
 	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_496b
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_49c8
-	call CallBankedHL
-	ld a, $05
-	ld hl, Func_05_499d
-	call CallBankedHL
+	FAR_CALL $05, Func_05_496b
+	FAR_CALL $05, Func_05_49c8
+	FAR_CALL $05, Func_05_499d
 	ld a, $ff              ; clear a pair of entity slots ($FF = empty)
 	ld [$c530], a
 	ld [$c531], a
@@ -1244,9 +1238,7 @@ RefreshScoreDisplay:
 	ld a, [wRoomType]
 	cp $05
 	jr z, .done
-	ld a, $05
-	ld hl, Func_05_46ba
-	call CallBankedHL
+	FAR_CALL $05, Func_05_46ba
 .done:
 	pop bc
 	pop af

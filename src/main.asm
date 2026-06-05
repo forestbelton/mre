@@ -5,6 +5,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "wram.inc"
 INCLUDE "hram.inc"
+INCLUDE "util.inc"
 
 INCLUDE "analyzed.asm"
 INCLUDE "banks.asm"
