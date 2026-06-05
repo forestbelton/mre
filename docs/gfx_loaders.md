@@ -46,10 +46,10 @@ by the loader + the sheet pixels (scratch/montage_unmapped.py):
 | `Data_16_407f` (800t) | `$16` `Func_16_4016` (table `$16:$4000`, page = `[$c4cc]`) | **paged intro/notice text+gfx**: the GBC-only notice ("…ゲームボーイカラー専用"), ©TECMO, and English credit text | high |
 | `Data_17_6918` | `$17` `Func_17_4135` (page = `[$c55c]`) | a **text font page** (clean `ABC…abc…0-9` alphabet) | high |
 | `Data_15_624e` | `$15` `Func_15_41fe` → `$8800` (256t) | a full illustration / cutscene image | med |
-| `Data_0f_63ce`, `Data_0f_684e` | `$0f` `Func_0f_462b` → `$9380` | portrait/sprite tiles (the portrait subsystem bank) | med |
+| `Data_0f_63ce`, `Data_0f_684e` | `$0f` `LoadDiscStoneDisplay` → `$9380` | **disc-stone progress display** (Pashute's shrine; indexed by `wDiscStoneFragments`, drawn via `DiscStoneDisplayMeta`) | high |
 | `Data_11_4d5c/5c5c/6b5c/745c` | `$11` | continuation of `FloorMonsterSprites` (see roster) | high |
 | `Data_38_501a/5c1a/641a` | `$38` `Func_38_4000` → `$9400` (page `[$c55c]-5`) | room-background **mural/decoration** tiles (poke out behind floor walls); paged alongside the font | med |
-| `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_*` | sprite tiles | med |
+| `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_4000` (3 tables `$406f`/`$4079`/`$4083` indexed by `wActiveFloor`) | **per-floor decoration tiles** — each tower floor's custom graphics (loader left unnamed) | med |
 | `Data_1b_645d` | `$1b` | portrait-related (Verde/Pashute bank) | low |
 | `Data_27_5ade` | `$27` (in `src/gfx/logo.asm`) | graphics right after the TECMO logo (intro) | med |
 | `Data_34_48a8` | `$34` | tiles — loader not yet located | low |

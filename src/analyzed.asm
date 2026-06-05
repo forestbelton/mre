@@ -29761,7 +29761,7 @@ Func_0f_433a:
 	ld a, $3b
 	ld hl, Func_3b_4000
 	call CallBankedHL
-	call Func_0f_462b
+	call LoadDiscStoneDisplay
 	call LoadMonsterPortrait
 	call Func_0f_4565
 	call Func_0f_4518
@@ -30055,7 +30055,10 @@ Func_0f_4604:
 	add a, $9a
 	ld [hl+], a
 	ret
-Func_0f_462b:
+; Disc-stone progress display (Pashute's shrine): for wDiscStoneFragments (1-4),
+; upload that fragment count's 72-tile graphic from DiscStoneDisplayTable[frags-1]
+; to VRAM $9380 and point the renderer at DiscStoneDisplayMeta ($cf3a/$cf3b).
+LoadDiscStoneDisplay:
 	xor a
 	ld [$cf3c], a
 	ld [$cf3d], a
@@ -30065,7 +30068,7 @@ Func_0f_462b:
 	jr z, Func_0f_465c
 	dec a
 	add a, a
-	ld hl, $4664
+	ld hl, DiscStoneDisplayTable
 	rst $00
 	ld a, [hl+]
 	ld h, [hl]
@@ -30088,7 +30091,7 @@ Func_0f_465c:
 
 SECTION "analyzed_03c664", ROMX[$4664], BANK[$0f]
 
-Data_0f_4664:
+DiscStoneDisplayTable:
 	db $ce, $5a, $4e, $5f, $ce, $63
 
 SECTION "analyzed_03c66a", ROMX[$466a], BANK[$0f]
@@ -30150,7 +30153,7 @@ Func_0f_46b4:
 
 SECTION "analyzed_03c6bb", ROMX[$46bb], BANK[$0f]
 
-Data_0f_46bb:
+DiscStoneDisplayMeta:
 	db $ce, $6c, $07, $e6, $6c, $07, $fe, $6c, $07, $16, $6d, $07, $2e, $6d, $07, $46
 	db $6d, $07, $fe, $6c, $07, $5e, $6d, $07, $bb, $46, $00
 
