@@ -30,3 +30,6 @@ ROMX $20
 ROMX $27
     ORG $4000
     "TECMO logo graphics"
+ROMX $35
+    ORG $4000
+    "Mistral graphics"

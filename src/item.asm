@@ -3,9 +3,9 @@
 ; TrackItemCollection) and the bank-1 cleanup pass. Item names come from the ITEM
 ; enum in room.inc; see docs/floor_data.md. Carved from analyzed.asm; the per-item
 ; effect handlers ($5282+) are referenced by address (still in analyzed.asm).
-INCLUDE "bcd.inc"
 INCLUDE "enum.inc"
 INCLUDE "room.inc"
+INCLUDE "util.inc"
 
 SECTION "Items", ROMX
 

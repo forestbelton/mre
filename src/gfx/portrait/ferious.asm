@@ -9,32 +9,35 @@
 ; palettes (loaded by Mistral_StartEncounter from $35:$6000/$6040) are carved here
 ; from the PNG's colour table.
 
-SECTION "FeriousPortraitTilesBank0", ROMX[$4000], BANK[$35]
+SECTION "Mistral graphics", ROMX
+
 FeriousPortraitTilesBank0:
 	INCBIN "assets/ferious/tiles2.bin"   ; 128 tiles -> VRAM bank 0 $9000
 
-SECTION "FeriousPortraitTiles", ROMX[$4800], BANK[$35]
 FeriousPortraitTiles:
 	INCBIN "assets/ferious/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "FeriousPortraitPaletteBg", ROMX[$6000], BANK[$35]
 FeriousPortraitPaletteBg:
 	INCBIN "assets/ferious/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
-SECTION "FeriousPortraitPaletteObj", ROMX[$6040], BANK[$35]
+Data_35_6030:
+	DB $ff, $7f, $3e, $1b, $37, $01, $4b, $00
+	DB $ff, $7f, $94, $52, $4a, $29, $00, $00
+
 FeriousPortraitPaletteObj:
 	INCBIN "assets/ferious/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
-SECTION "FeriousPortraitMapDesc", ROMX[$6080], BANK[$35]
+Data_35_6070:
+	DB $ff, $7f, $94, $52, $4a, $29, $00, $00
+	DB $ff, $7f, $3e, $1b, $37, $01, $4b, $00
+
 FeriousPortraitMapDesc:
 	db 11, 20                                      ; rows, cols
 	dw FeriousPortraitAttrMap                       ; CGB attribute map pointer
 	dw FeriousPortraitIndexMap                      ; tile index map pointer
 
-SECTION "FeriousPortraitIndexMap", ROMX[$6086], BANK[$35]
 FeriousPortraitIndexMap:
 	INCBIN "assets/ferious/tilemap.bin"  ; 20x11 tile indices
 
-SECTION "FeriousPortraitAttrMap", ROMX[$6162], BANK[$35]
 FeriousPortraitAttrMap:
 	INCBIN "assets/ferious/attrmap.bin"  ; 20x11 CGB BG attributes (bit 3 = VRAM bank)

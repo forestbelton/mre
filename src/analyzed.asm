@@ -53417,15 +53417,6 @@ Data_34_70a8:
 
 ; ($35:$6000 BG + $35:$6040 OBJ palettes carved into src/gfx/portrait/ferious.asm
 ; as FeriousPortraitPaletteBg / FeriousPortraitPaletteObj.)
-SECTION "analyzed_0d6030", ROMX[$6030], BANK[$35]
-
-Data_35_6030:
-	db $ff, $7f, $3e, $1b, $37, $01, $4b, $00, $ff, $7f, $94, $52, $4a, $29, $00, $00
-
-SECTION "analyzed_0d6070", ROMX[$6070], BANK[$35]
-
-Data_35_6070:
-	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $ff, $7f, $3e, $1b, $37, $01, $4b, $00
 
 SECTION "analyzed_0d623e", ROMX[$623e], BANK[$35]
 
