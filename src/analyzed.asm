@@ -4333,7 +4333,7 @@ Func_00_1d52:
 	jr z, Func_00_1d4a
 	ld c, a
 	ld a, $11
-	ld hl, Func_11_4050
+	ld hl, LoadFloorMonsterSprite
 	call CallBankedHL
 	call Func_00_1ff4
 	call Func_00_30b3
@@ -4376,7 +4376,7 @@ Func_00_1da2:
 	jr z, Func_00_1d9b
 	ld c, a
 	ld a, $11
-	ld hl, Func_11_4050
+	ld hl, LoadFloorMonsterSprite
 	call CallBankedHL
 	call Func_00_1ff4
 	call Func_00_30b3
@@ -32254,22 +32254,22 @@ Func_11_4000:
 	ld [$c562], a
 	ld a, [$c4cd]
 	ld c, a
-	call Func_11_4050
+	call LoadFloorMonsterSprite
 	ld a, $02
 	ld [$c562], a
 	ld a, [$c4ce]
 	ld c, a
-	call Func_11_4050
+	call LoadFloorMonsterSprite
 	ld a, $03
 	ld [$c562], a
 	ld a, [$c4cf]
 	ld c, a
-	call Func_11_4050
+	call LoadFloorMonsterSprite
 	ld a, $04
 	ld [$c562], a
 	ld a, [$c4d0]
 	ld c, a
-	call Func_11_4050
+	call LoadFloorMonsterSprite
 	ret
 Func_11_4031:
 	ld c, $00
@@ -32281,7 +32281,7 @@ Func_11_4036:
 	add a, a
 	add a, a
 	add a, a
-	ld hl, $7d5c
+	ld hl, FloorMonsterSpritePalettes
 	rst $00
 	ld a, c
 	add a, $04
@@ -32294,12 +32294,16 @@ Func_11_4036:
 	cp c
 	jr nz, Func_11_4036
 	ret
-Func_11_4050:
+; Upload floor-monster species C's sprite (32 tiles, 4x8 column-major from
+; FloorMonsterSprites + C*$300) to VRAM bank 1 and load its OBJ palette from
+; FloorMonsterSpritePalettes + C*8 into slot [$c562]+3. C is a MONSTER enum value
+; (include/monster.inc). See docs/gfx_loaders.md for the rendered roster.
+LoadFloorMonsterSprite:
 	ld a, c
 	add a, a
 	push af
 	add a, c
-	ld hl, $415c
+	ld hl, FloorMonsterSprites
 	add a, h
 	ld h, a
 	ld a, [$c562]
@@ -32315,7 +32319,7 @@ Func_11_4050:
 	pop af
 	add a, a
 	add a, a
-	ld hl, $7d5c
+	ld hl, FloorMonsterSpritePalettes
 	rst $00
 	ld a, [$c562]
 	add a, $03
@@ -32424,7 +32428,12 @@ Data_11_4133:
 
 SECTION "analyzed_04415c", ROMX[$415c], BANK[$11]
 
-Data_11_415c:
+; Floor-monster sprite tiles, $300 bytes (32 used) per MONSTER species, indexed by
+; LoadFloorMonsterSprite. 20 species ($415c..$7d5b): Tacopi, Jell, Naga, Dino,
+; Plant, Henger, Joker, Ghost, Puncho, Psylora, Ducken, FlameRed, FlameBlue,
+; (#13 unused), Tiger, Mocchi, Hare, Gali, Golem, Suezo. The blob is split across
+; the Data_11_* sheets below (analyzer fragmentation). See docs/gfx_loaders.md.
+FloorMonsterSprites:
 	INCBIN "raw_gfx/Data_11_415c.2bpp", 0, 2304
 
 SECTION "analyzed_044a5c", ROMX[$4a5c], BANK[$11]
@@ -32667,7 +32676,9 @@ Data_11_745c:
 
 SECTION "analyzed_047d5c", ROMX[$7d5c], BANK[$11]
 
-Data_11_7d5c:
+; One OBJ palette (4 RGB555 colors, $08 bytes) per floor-monster species, indexed
+; by LoadFloorMonsterSprite (FloorMonsterSpritePalettes + MONSTER*8).
+FloorMonsterSpritePalettes:
 	db $00, $24, $34, $01, $bc, $01, $df, $7b, $00, $00, $00, $49, $46, $52, $1b, $24
 	db $ef, $3d, $4a, $40, $12, $6c, $9a, $76, $12, $01, $40, $01, $e0, $01, $3f, $4b
 	db $00, $00, $e5, $11, $7a, $01, $5e, $17, $00, $00, $6d, $19, $3b, $3f, $7a, $01

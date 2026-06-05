@@ -26,7 +26,7 @@ VRAM address, and (where known) the descriptor/palette that arranges it.
 | `Data_02_40b1` | 256 | `Func_02_4000` | `$8000` | sprite/object tiles (bank 2) | med |
 | `Data_0f_4d38` | 128 | `Func_0f_4b27` | `$8800` | sprite/character tiles | med |
 | `Data_3b_4034` | 128 | `Func_3b_4000` | `$9000` | sprite/character tiles | med |
-| `Data_11_415c` | ? | `Func_11_4050` | `$8000` | bank-11 tiles (sparse) | low |
+| `Data_11_415c`+ | 20×32 | `LoadFloorMonsterSprite` (`$11:4050`) | bank 1 | **floor-monster sprites** — see the roster below | high |
 | `Data_0e_4000` | ~64 | `Func_15_4147` | — | bank-$0e copy (len `$407`, non-tile-aligned) | low |
 
 `$8000`/`$9000` are tile data (BG or sprite — the OAM/attr distinction is
@@ -47,8 +47,8 @@ by the loader + the sheet pixels (scratch/montage_unmapped.py):
 | `Data_17_6918` | `$17` `Func_17_4135` (page = `[$c55c]`) | a **text font page** (clean `ABC…abc…0-9` alphabet) | high |
 | `Data_15_624e` | `$15` `Func_15_41fe` → `$8800` (256t) | a full illustration / cutscene image | med |
 | `Data_0f_63ce`, `Data_0f_684e` | `$0f` `Func_0f_462b` → `$9380` | portrait/sprite tiles (the portrait subsystem bank) | med |
-| `Data_11_4d5c/5c5c/6b5c/745c` | `$11` `Func_11_*` | a character/sprite tile set | med |
-| `Data_38_501a/5c1a/641a` | `$38` `Func_38_*` → `$9400` | a character/sprite tile set | med |
+| `Data_11_4d5c/5c5c/6b5c/745c` | `$11` | continuation of `FloorMonsterSprites` (see roster) | high |
+| `Data_38_501a/5c1a/641a` | `$38` `Func_38_4000` → `$9400` (page `[$c55c]-5`) | room-background **mural/decoration** tiles (poke out behind floor walls); paged alongside the font | med |
 | `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_*` | sprite tiles | med |
 | `Data_1b_645d` | `$1b` | portrait-related (Verde/Pashute bank) | low |
 | `Data_27_5ade` | `$27` (in `src/gfx/logo.asm`) | graphics right after the TECMO logo (intro) | med |
@@ -79,10 +79,28 @@ The descriptor-only `Func_30_*` routines (`$463d`, `$46a4`, `$46f1`, `$4712`,
 `$4752`, `$4796`, `$47b5`, `$4800`, `$4822`, `$5219`, `$5571`) redraw a sub-region
 tilemap over already-loaded tiles (animation/variant states), not new sheets.
 
+## Floor-monster sprites (bank `$11`)
+
+`FloorMonsterSprites` (`$11:$415c`..`$7d5b`) holds the 20 floor-monster species'
+sprites — `$300` bytes (32 tiles used, **4×8 column-major**) per species, indexed
+by `LoadFloorMonsterSprite` with a `MONSTER` enum value; each has one OBJ palette
+in `FloorMonsterSpritePalettes` (`$11:$7d5c`). Rendered roster (scratch/roster11.py),
+which matches `include/monster.inc` exactly, **#13 = the enum's `skip` (unused)**:
+
+| # | species | # | species | # | species | # | species |
+|---|---|---|---|---|---|---|---|
+| 0 | Tacopi | 5 | Henger | 10 | Ducken | 15 | Mocchi |
+| 1 | Jell | 6 | Joker | 11 | FlameRed | 16 | Hare |
+| 2 | Naga | 7 | Ghost | 12 | FlameBlue | 17 | Gali |
+| 3 | Dino | 8 | Puncho | 13 | *(unused)* | 18 | Golem |
+| 4 | Plant | 9 | Psylora | 14 | Tiger | 19 | Suezo |
+
+(The blob is fragmented across the `Data_11_*` sheets by the analyzer.)
+
 ## TODO
 
-- The bank `$11`/`$38`/`$3d`/`$0f` sprite sets: identify which characters/effects
-  they are (render in-context with their metasprites).
+- The bank `$3d`/`$0f` sprite sets: identify which characters/effects they are.
+- Confirm bank `$38` is the floor murals (its tilemap arrangement wasn't recovered).
 - `Data_34_48a8`: locate its loader. `Data_16_407f`: name `Func_16_4016` once its
   exact role (intro story vs notice vs credits) is pinned down.
 - Merge the analyzer mis-splits (`Data_32_5613/5dd3` into `Data_32_4613`,
