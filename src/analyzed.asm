@@ -483,9 +483,21 @@ Func_00_029b:
 
 SECTION "analyzed_0002a4", ROM0[$02a4]
 
-Data_00_02a4:
-	db $f5, $c5, $d5, $e5, $cd, $80, $ff, $3e, $01, $ea, $86, $c2, $fb, $cd, $45, $0a
-	db $e1, $d1, $c1, $f1, $c9
+Func_00_02a4:
+	push af
+	push bc
+	push de
+	push hl
+	call $ff80
+	ld a, $01
+	ld [$c286], a
+	ei
+	call UpdateSoundEngine
+	pop hl
+	pop de
+	pop bc
+	pop af
+	ret
 
 SECTION "analyzed_0002b9", ROM0[$02b9]
 
@@ -505,6 +517,7 @@ Func_00_02b9:
 	pop bc
 	pop af
 	ret
+
 WaitForHBlank:
 	ldh a, [rLCDC]
 	rla
@@ -520,6 +533,7 @@ Func_00_02dd:
 	cp $03
 	jr z, Func_00_02dd
 	ret
+
 WaitForNextFrame:
 	ld a, [$c287]
 	inc a
@@ -534,14 +548,7 @@ WaitForNextFrame:
 	jr HaltOnly
 HaltOnly:
 	halt
-
-SECTION "analyzed_0002fd", ROM0[$02fd]
-
-Data_00_02fd:
-	db $00
-
-SECTION "analyzed_0002fe", ROM0[$02fe]
-
+	nop
 HaltIfC286Set:
 	ld a, [$c286]
 	and a
@@ -550,11 +557,8 @@ HaltIfC286Set:
 	ld [$c286], a
 	rst $20
 	ret nz
-
-SECTION "analyzed_00030a", ROM0[$030a]
-
-Data_00_030a:
-	db $c9
+	; NB: Not sure why ret immediately follows ret nz here.
+	ret
 
 SECTION "analyzed_00030b", ROM0[$030b]
 
