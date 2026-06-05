@@ -56,6 +56,18 @@ wSpawnX::           ds 1    ; $C2A0: spawn X (-> E)
 wSpawnPtr::         ds 2    ; $C2A1: spawn context pointer, big-endian hi/lo (-> HL)
 
 
+SECTION "wram_game_scene", WRAM0[$C2A7]
+; Top-level game-flow state. wGameScene is the current scene/mode index; ~25
+; transition sites across the banks just `ld [wGameScene], a` to switch scene,
+; and one dispatcher (RunIntroScene, near $00:$0f44) reads it, multiplies by 3,
+; and far-jumps through the {bank,lo,hi} scene table at $00:$0f71. wGameSceneArg
+; rides along as an entry parameter for the scene being switched to (e.g. the
+; town screen reads it as its initial menu selection -> wScreenInput/wScreenPhase).
+wGameScene::        ds 1    ; $C2A7: current top-level scene/mode index (table $00:$0f71)
+                    ds 1    ; $C2A8
+wGameSceneArg::     ds 1    ; $C2A9: parameter handed to the scene being entered
+
+
 SECTION "wram_floor", WRAM0[$C2C0]
 
 wActiveFloor::      ds 1    ; $C2C0: active tower floor (1-60). Copied from wCFF0 and

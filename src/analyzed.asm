@@ -2333,16 +2333,16 @@ Func_00_0e96:
 	ret
 Func_00_0f41:
 	xor a
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ld [$c2a8], a
 	ld a, $01
-	ld [$c2a7], a
+	ld [wGameScene], a
 	call ResetFloorScroll
 	FAR_CALL $05, Func_05_463a
 RunIntroScene:
 	ld hl, $0f6e
 	push hl
-	ld a, [$c2a7]
+	ld a, [wGameScene]
 	ld l, a
 	add a, a
 	add a, l
@@ -3843,7 +3843,7 @@ Func_00_1a1e:
 	jp Func_00_19ba
 Func_00_1a66:
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_00_1a6c:
 	FAR_CALL $12, Func_12_4798
@@ -7698,7 +7698,7 @@ Func_00_34bb:
 	xor a
 Func_00_34bc:
 	ld [$d0fb], a
-	ld a, [$c2a9]
+	ld a, [wGameSceneArg]
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
 	FAR_CALL $00, Func_00_1219
@@ -7724,14 +7724,14 @@ Func_00_34e3:
 	cp $02
 	jr z, Func_00_3502
 	ld a, $11
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 
 SECTION "analyzed_003502", ROM0[$3502]
 
 Func_00_3502:
 	ld a, $12
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 
 SECTION "analyzed_003508", ROM0[$3508]
@@ -7749,7 +7749,7 @@ Func_00_3508:
 	cp $05
 	ret z
 	ld a, $12
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 	call ResetFloorScroll
 	push af
@@ -7760,7 +7760,7 @@ Func_00_3508:
 	ld [$2fff], a
 	call DrawNextRoomScreen
 	ld a, $11
-	ld [$c2a7], a
+	ld [wGameScene], a
 	push af
 	ld a, $28
 	call PlaySoundTracked
@@ -7786,7 +7786,7 @@ Func_00_3508:
 Func_00_3572:
 	FAR_CALL $18, Func_18_6b71
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 IntroScene_TecmoLogo:
 	call ResetFloorScroll
@@ -7794,14 +7794,14 @@ IntroScene_TecmoLogo:
 	ld [$2fff], a
 	call DrawTecmoLogo
 	ld a, $02
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 	call ResetFloorScroll
 	ld a, $30
 	ld [$2fff], a
 	call DrawIntroBookScreen
 	ld a, $00
-	ld [$c2a7], a
+	ld [wGameScene], a
 	push af
 	ld a, $28
 	call PlaySoundTracked
@@ -7820,7 +7820,7 @@ IntroScene_TecmoLogo:
 	call PlaySoundTracked
 	pop af
 	ld a, $03
-	ld [$c2a9], a
+	ld [wGameSceneArg], a
 	ret
 Func_00_35c8:
 	call ResetFloorScroll
@@ -8436,7 +8436,7 @@ CopyBgMapBankedA:
 Func_00_3957:
 	FAR_CALL $1f, Script_FadeOutPortrait
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_00_3965:
 	ld a, $00
@@ -9083,7 +9083,7 @@ Func_01_45ad:
 	call Func_01_4b7c
 	call Func_01_45d6
 	ld a, $13
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_45cf:
 	call Func_01_5c28
@@ -9187,7 +9187,7 @@ Func_01_4679:
 	ld [wC2D7], a
 	FAR_CALL $18, Func_18_6b71
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_4698:
 	ld a, [$c2c2]
@@ -9208,7 +9208,7 @@ Func_01_46a0:
 	ld [wRoomType], a
 	call Func_00_1219
 	ld a, $11
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_46c8:
 	call Func_01_5c7c
@@ -9267,9 +9267,9 @@ Func_01_470d:
 	ld a, $0e
 	call Func_00_1164
 	ld a, $03
-	ld [$c2a9], a
+	ld [wGameSceneArg], a
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 
 SECTION "analyzed_00473a", ROMX[$473a], BANK[$01]
@@ -9277,7 +9277,7 @@ SECTION "analyzed_00473a", ROMX[$473a], BANK[$01]
 Func_01_473a:
 	FAR_CALL $18, Func_18_6b71
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 
 SECTION "analyzed_004748", ROMX[$4748], BANK[$01]
@@ -9286,14 +9286,14 @@ Func_01_4748:
 	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
 	ld a, $10
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_4759:
 	call Func_01_5d77
 	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
 	ld a, $10
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_476d:
 	ld a, $09
@@ -9303,23 +9303,23 @@ Func_01_476d:
 	call Func_01_48af
 	call Func_00_1219
 	ld a, $12
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_4782:
 	call Func_01_479e
 	jr z, Func_01_4798
 	ld a, $11
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_478d:
 	call Func_01_479e
 	jr z, Func_01_4798
 	ld a, $12
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_4798:
 	ld a, $14
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 Func_01_479e:
 	ld a, [wLives]
@@ -21775,7 +21775,7 @@ Func_05_463a:
 	ld a, $01
 	ld [wActiveFloor], a
 	ld a, $03
-	ld [$c2a9], a
+	ld [wGameSceneArg], a
 	xor a
 	ld [wCFF0], a
 	ld [wCurrentFloor], a
@@ -47121,9 +47121,9 @@ Func_30_4152:
 	call Func_00_0786
 	call Func_00_07a7
 	ld a, [wScreenInput]
-	ld [$c2a9], a
+	ld [wGameSceneArg], a
 	add a, $05
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 
 SECTION "analyzed_0c0167", ROMX[$4167], BANK[$30]
@@ -48918,7 +48918,7 @@ Func_30_514b:
 	ld [wC2D7], a
 	FAR_CALL $18, Func_18_6b71
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ret
 	ld a, [wScreenTimer]
 	cp $3c
@@ -49389,7 +49389,7 @@ Func_30_5547:
 	jp Func_30_552f
 Func_30_555d:
 	ld a, $04
-	ld [$c2a7], a
+	ld [wGameScene], a
 	ld c, $5a
 Func_30_5564:
 	call WaitForNextFrame
