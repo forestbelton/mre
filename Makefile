@@ -68,19 +68,10 @@ $(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
 			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
 		done; \
 	fi
-	@# PNG-driven assets: a single source PNG -> ROM components (tools/pngasset.py).
-	@# The TECMO logo is the first migrated here; --pad-before generates the $1000
-	@# blank-tile block that precedes the sheet in VRAM.
-	$(PYTHON) tools/pngasset.py encode --png assets/logo.png --sheet-rows 8 \
-		--pad-before 0x00 4096 --out-dir $(BUILD_DIR)/assets/logo
-	@# Two-bank colour screens: one combined tile-sheet PNG -> tiles/palette/map bins.
-	$(PYTHON) tools/pngasset.py screen --png assets/town_screen/town.png \
-		--out-dir $(BUILD_DIR)/assets/town_screen
-	@# Legacy multi-file assets (assets/<name>/asset.json) -> components via gfxasset.
-	@for a in $(wildcard assets/*); do \
-		[ -f "$$a/asset.json" ] || continue; \
-		$(PYTHON) tools/gfxasset.py encode --in "$$a" --out-dir "$(BUILD_DIR)/$$a" || exit 1; \
-	done
+	@# All graphics assets: PNG-driven (assets/assets.yaml -> pngasset) + the
+	@# remaining legacy assets/<name>/asset.json (-> gfxasset). One descriptor,
+	@# one entry point -- adding a PNG-driven asset is a YAML edit.
+	$(PYTHON) tools/buildassets.py
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o
 	$(RGBFIX) $(FIXARGS) $@

@@ -1,0 +1,23 @@
+# Graphics asset descriptor -- the single place that lists every PNG-driven asset,
+# so adding one is a YAML edit, not a Makefile change. tools/buildassets.py reads
+# this and runs tools/pngasset.py per entry (output -> build/assets/<dir>/, which
+# the asm INCBINs). It also auto-builds the legacy assets/<name>/asset.json assets
+# via gfxasset.py. See docs/gfx_assets.md.
+#
+# Each entry's key is just a label; the output dir is derived from the PNG path
+# (assets/town_screen/town.png -> build/assets/town_screen; assets/logo.png ->
+# build/assets/logo). Fields:
+#   mode: composite  -- one self-contained image; the tool derives tiles + tilemap
+#                       (every tile is visible). Opts: sheet_rows, pad_before, colors.
+#   mode: screen     -- two-VRAM-bank colour screen; one combined tile-sheet PNG
+#                       (both banks stacked + 16 palettes embedded). Opt: tiles.
+
+logo:
+  mode: composite
+  png: logo.png
+  sheet_rows: 8
+  pad_before: [0, 4096]   # $1000 blank-tile VRAM block before the sheet
+
+town:
+  mode: screen
+  png: town_screen/town.png

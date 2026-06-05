@@ -26,6 +26,31 @@ Regenerates a screen's components from a source PNG.
 The legacy multi-file flow (`assets/<name>/asset.json` + `tools/gfxasset.py`) is
 still used by everything except the logo and the town screen.
 
+## Descriptor: `assets/assets.yaml` + `tools/buildassets.py`
+
+One YAML lists every PNG-driven asset; `tools/buildassets.py` (the single entry
+point the Makefile calls) runs `pngasset.py` per entry, then auto-builds the
+remaining `assets/<name>/asset.json` assets via `gfxasset.py`. **Adding a
+PNG-driven asset is a YAML edit, not a Makefile change.** The output dir is derived
+from the PNG path (`assets/town_screen/town.png` → `build/assets/town_screen`;
+`assets/logo.png` → `build/assets/logo`), which the asm `INCBIN`s.
+
+```yaml
+logo:
+  mode: composite          # one self-contained image; tool derives tiles + tilemap
+  png: logo.png
+  sheet_rows: 8
+  pad_before: [0, 4096]    # blank-tile VRAM block before the sheet
+town:
+  mode: screen             # two-bank colour screen; one combined tile-sheet PNG
+  png: town_screen/town.png
+```
+
+`mode: composite` opts: `sheet_rows`, `pad_before [byte, n]`, `colors`.
+`mode: screen` opts: `tiles` (per bank, default 384). As the legacy assets migrate
+to pngasset, they move into this file (a future `mode` will cover the single-bank
+portraits + the two-bank portraits).
+
 ## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
 
 `src/gfx/screen/town.asm` was the first bank-`$30` screen taken off the
