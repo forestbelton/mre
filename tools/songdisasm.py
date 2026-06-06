@@ -314,8 +314,10 @@ def emit_item(bank, a, it, labels, dead):
 ID_NAMES = {
     0x00:'silence / stop', 0x04:'UI cursor move', 0x05:'item use',
     0x0d:'UI confirm', 0x25:'player lift', 0x28:'BGM silence / stop',
-    0x29:'room', 0x2f:'town', 0x31:'room transition (between floors)',
-    0x32:'Pashute', 0x33:'Verde', 0x34:'Toamuna', 0x35:'monster regen',
+    0x29:'room', 0x2b:'bonus stage (tentative)', 0x2f:'town',
+    0x30:'Bodka', 0x31:'room transition (between floors)',
+    0x32:'Pashute', 0x33:'Verde', 0x34:'Toamuna',
+    0x35:'disc stone regeneration',
     0x36:'rival encounter', 0x37:'title', 0x38:'intro',
 }
 

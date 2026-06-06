@@ -247,14 +247,15 @@ exist in the data but have no disassembled trigger yet.
 | `$25` | SFX | **player lift** (`Player_LiftThink`). |
 | `$28` | BGM | **BGM silence / stop** — its data is a 17-byte `rest; goto self` loop on all 4 channels (the BGM analogue of `$00`). Most-used (22 sites) because scenes play it to turn music off; despite being the boot/most-played BGM id it is *not* a musical track. |
 | `$29` | BGM | **room** (tower gameplay); bank `$01` scene builder. |
-| `$2a-$2e` | BGM | bank `$01` scene builders (paired scene cues). |
+| `$2a`,`$2c-$2e` | BGM | bank `$01` scene builders (paired scene cues). |
+| `$2b` | BGM | **bonus stage** (tentative — observed for Hare, not yet checked against others). |
 | `$2f` | BGM | **town**; bank `$18` scene (`Func_00_34bc`). |
-| `$30` | BGM | menu/studio (room-arrange menu, Bodka studio, intro). |
+| `$30` | BGM | **Bodka** (menu/studio: room-arrange menu, Bodka studio, intro). |
 | `$31` | BGM | **room transition** (walking between floors); `Func_00_3508`. |
 | `$32` | BGM | **Pashute** scenes. |
 | `$33` | BGM | **Verde** scenes. |
 | `$34` | BGM | **Toamuna** (ranch/save NPC theme; `Toamuna_CheckSaveExists`). |
-| `$35` | BGM | monster-regenerated jingle (`ShowRegeneratedMonster`). |
+| `$35` | BGM | **disc stone regeneration** (`ShowRegeneratedMonster`). |
 | `$36` | BGM | **rival encounter** (Kalum/Mistral/Rafaga/Tempest/Nada). |
 | `$37` | BGM | **title** theme (`IntroScene_TecmoLogo` call site; the music is the title screen, not the Tecmo logo). |
 | `$38` | BGM | **intro**; bank `$30` (`Func_00_577e`). |
