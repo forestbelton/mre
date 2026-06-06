@@ -308,3 +308,283 @@ NadaScript:
     db "destroy the land"
     SCRIPT_WAIT
     SCRIPT_END
+
+SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]
+
+Func_1f_4d66:
+	ld hl, wBgPalettes
+	ld de, $0000
+	call Func_1f_4d82
+	ld hl, wObjPalettes
+	ld de, $0000
+	call Func_1f_4d82
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	jp WaitForNextFrame
+Func_1f_4d82:
+	ld c, $18
+Func_1f_4d84:
+	ld [hl], e
+	inc hl
+	ld [hl], d
+	inc hl
+	dec c
+	jr nz, Func_1f_4d84
+	ret
+Func_1f_4d8c:
+	ld a, $00
+	ld [$d611], a
+	ld hl, $50d6
+	jp ScriptDispatcherEnterAfterCall
+Nada_ShowScene:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $00
+	ld [rVBK], a
+	ld a, $1c
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1c
+	ld hl, $5800
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, $7080
+	ld a, $1c
+	ld de, $9800
+	call BankMapCopyA
+	call Nada_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1c
+	ld hl, $7000
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1c
+	ld hl, $7040
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	push af
+	ld a, $36
+	call PlaySoundTracked
+	pop af
+	call Func_1f_4008
+	ret
+Nada_ShowSnapReaction:
+	call Func_1f_4d66
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $00
+	ld [rVBK], a
+	ld a, $1c
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1c
+	ld hl, $5800
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, $7080
+	ld a, $1c
+	ld de, $9800
+	call BankMapCopyA
+	call Nada_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1c
+	ld hl, $7000
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1c
+	ld hl, $7040
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	ret
+Nada_ShowRageScene:
+	call Func_1f_4d66
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $00
+	ld [rVBK], a
+	ld a, $1c
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1f
+	ld hl, $6607
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, $7e07
+	ld a, $1f
+	ld de, $9800
+	call BankMapCopyA
+	call Func_1f_50a1
+	call HideUnusedOamSprites
+	ld a, $1c
+	ld hl, $7000
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1c
+	ld hl, $7040
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	call Func_1f_41da
+	call Func_1f_41e6
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	ret
+Nada_ShowMonsterPortrait:
+	call Nada_LoadMonsterTiles
+	call Func_1f_41e6
+	jp ScriptWaitForBgSwap
+
+Nada_ShowMonsterPortrait2:
+	call Nada_LoadMonsterTiles
+	jp ScriptWaitForObjSwap
+
+Nada_LoadMonsterTiles:
+	ld a, $1c
+	ld hl, $7000
+	ld de, $c181
+	ld bc, $0030
+	call BankCopy
+	ld de, $c131
+	ld hl, $c1b1
+	ld c, $10
+	call CopyDEtoHL
+	ld a, $1c
+	ld hl, $7040
+	ld de, $c1c1
+	ld bc, $0030
+	call BankCopy
+	ld de, $c171
+	ld hl, $c1f1
+	ld c, $10
+	call CopyDEtoHL
+	ret
+Nada_RenderPortrait:
+	ld a, $14
+	ld [wRendererAddr], a
+	ld a, $4f
+	ld [$d61f], a
+	ld a, $1f
+	ld [wRendererBank], a
+	ld a, $1c
+	ld [wDrawBank], a
+	call Func_1f_4f5b
+	call Func_1f_4fb2
+	ret
+Nada_RenderPortraitAngry:
+	ld a, $2f
+	ld [wRendererAddr], a
+	ld a, $4f
+	ld [$d61f], a
+	ld a, $1f
+	ld [wRendererBank], a
+	ld a, $1c
+	ld [wDrawBank], a
+	ld hl, $76ea
+	ld a, $1c
+	ld de, $986c
+	call BankMapCopyA
+	ld hl, $76fc
+	ld bc, $1360
+	call DrawMetasprite
+	call Func_1f_4fb2
+	ret
+Func_1f_4f5b:
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_1f_4f88
+	cp $02
+	jr z, Func_1f_4f9d
+	cp $03
+	jr z, Func_1f_4f88
+	ld hl, $75b5
+	ld a, $1c
+	ld de, $986c
+	call BankMapCopyA
+	ld hl, $75c7
+	ld bc, $1360
+	call DrawMetasprite
+	ret
+Func_1f_4f88:
+	ld hl, $761c
+	ld a, $1c
+	ld de, $986c
+	call BankMapCopyA
+	ld hl, $762e
+	ld bc, $1360
+	call DrawMetasprite
+	ret
+Func_1f_4f9d:
+	ld hl, $7683
+	ld a, $1c
+	ld de, $986c
+	call BankMapCopyA
+	ld hl, $7695
+	ld bc, $1360
+	call DrawMetasprite
+	ret
+Func_1f_4fb2:
+	ld hl, $d611
+	ld a, [hl]
+	or a
+	jr z, Func_1f_4fbf
+	cp $ff
+	jr z, Func_1f_4fbf
+	inc a
+	ld [hl], a
+Func_1f_4fbf:
+	srl a
+	cp $1b
+	jr c, Func_1f_4fc7
+	ld a, $1a
+Func_1f_4fc7:
+	ld hl, $4fd6
+	sla a
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	jp hl
+
+Data_1f_4fd6:
+	db $0e, $50, $0e, $50, $0e, $50, $23, $50, $23, $50, $23, $50, $38, $50, $38, $50
+	db $38, $50, $4d, $50, $4d, $50, $4d, $50, $62, $50, $62, $50, $62, $50, $77, $50
+	db $77, $50, $77, $50, $8c, $50, $8c, $50, $8c, $50, $77, $50, $77, $50, $77, $50
+	db $62, $50, $62, $50, $62, $50

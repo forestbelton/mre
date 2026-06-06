@@ -1,76 +1,93 @@
 #!/usr/bin/env python3
-"""Carve one ROM bank's contiguous section run out of src/analyzed.asm.
+"""Carve sections out of src/analyzed.asm into another file (byte-exact).
 
-    tools/carvebank.py <bank-hex> <out-path> ["one-line description"]
+    tools/carvebank.py --bank 0f --out src/monster_detail.asm --desc "..."
+    tools/carvebank.py --sections analyzed_07c416 --out src/scripts/mistral.asm --append
 
-analyzed.asm holds the banks in ascending order, each as one contiguous block
-(verify with scratch/bank_profile.py). This moves a bank's block verbatim into a
-new file, drops it from analyzed.asm, and adds an INCLUDE to src/main.asm right
-after analyzed.asm. Section names are unchanged and everything stays one
-compilation unit, so cross-bank label refs still resolve -- byte-exact. Run
-`make verify` afterwards to confirm.
+Select sections either by --bank (all sections of that ROMX bank, which are one
+contiguous block) or by --sections (a comma-separated list of section names).
+The chosen sections are removed from analyzed.asm and written to --out (created
+with a header, or appended with --append). An `INCLUDE "<out>"` is added to
+src/main.asm after analyzed.asm unless that file is already included.
+
+Section names and addresses are unchanged and everything stays one compilation
+unit, so cross-bank label refs still resolve. Run `make verify` afterwards.
 """
-import re, sys
+import re, sys, argparse
 
 ANALYZED = 'src/analyzed.asm'
 MAIN = 'src/main.asm'
+SECRE = re.compile(r'^SECTION "([^"]+)"(?:.*BANK\[\$([0-9a-f]+)\])?')
+
+
+def sections(lines):
+    """Yield (start, end, name, bank) for every SECTION block."""
+    spans = []
+    for i, ln in enumerate(lines):
+        m = SECRE.match(ln)
+        if m:
+            spans.append([i, None, m.group(1), int(m.group(2), 16) if m.group(2) else 0])
+    for k, s in enumerate(spans):
+        s[1] = spans[k + 1][0] if k + 1 < len(spans) else len(lines)
+    return spans
 
 
 def main() -> int:
-    if len(sys.argv) < 3:
-        print(__doc__); return 2
-    bank = int(sys.argv[1].lstrip('$'), 16)
-    out = sys.argv[2]
-    desc = sys.argv[3] if len(sys.argv) > 3 else f"bank ${bank:02x}"
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--bank')
+    ap.add_argument('--sections')
+    ap.add_argument('--out', required=True)
+    ap.add_argument('--desc', default='')
+    ap.add_argument('--append', action='store_true')
+    args = ap.parse_args()
 
     lines = open(ANALYZED).readlines()
-    secre = re.compile(r'^SECTION .*BANK\[\$([0-9a-f]+)\]')
+    spans = sections(lines)
 
-    # find the contiguous [start, end) line span whose sections are this bank
-    start = end = None
-    for i, ln in enumerate(lines):
-        m = secre.match(ln)
-        if m and int(m.group(1), 16) == bank:
-            if start is None:
-                start = i
-            end = i  # last seen section header for this bank
-    if start is None:
-        print(f"no sections for bank ${bank:02x}"); return 1
-    # extend end to just before the next bank's section (or EOF)
-    j = end + 1
-    while j < len(lines) and not secre.match(lines[j]):
-        j += 1
-    end = j
-    # sanity: no other bank appears inside [start, end)
-    for k in range(start, end):
-        m = secre.match(lines[k])
-        if m and int(m.group(1), 16) != bank:
-            print(f"bank ${bank:02x} is not contiguous (found ${int(m.group(1),16):02x} at line {k+1})")
-            return 1
+    if args.bank is not None:
+        bank = int(args.bank.lstrip('$'), 16)
+        pick = [s for s in spans if s[3] == bank]
+    elif args.sections:
+        want = set(args.sections.split(','))
+        pick = [s for s in spans if s[2] in want]
+        missing = want - {s[2] for s in pick}
+        if missing:
+            print(f"sections not found: {sorted(missing)}"); return 1
+    else:
+        print("give --bank or --sections"); return 2
+    if not pick:
+        print("nothing selected"); return 1
 
-    block = lines[start:end]
-    while block and block[-1].strip() == '':
-        block.pop()
-    nsec = sum(1 for l in block if l.startswith('SECTION'))
+    # collect carved text (in file order) and the set of removed line indices
+    remove = set()
+    block = []
+    for s in sorted(pick, key=lambda s: s[0]):
+        block += lines[s[0]:s[1]]
+        remove.update(range(s[0], s[1]))
+    block = ''.join(block).rstrip('\n') + '\n'
 
-    header = (f"; ROM bank ${bank:02x} -- {desc}. Carved out of analyzed.asm; section\n"
-              f"; names and placement are unchanged (byte-exact). {nsec} sections.\n\n")
-    open(out, 'w').write(header + ''.join(block))
+    if args.append and __import__('os').path.exists(args.out):
+        with open(args.out, 'a') as f:
+            f.write('\n' + block)
+    else:
+        hdr = f"; {args.desc}\n; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).\n\n" if args.desc \
+              else "; Carved out of analyzed.asm (byte-exact).\n\n"
+        open(args.out, 'w').write(hdr + block)
 
-    rest = lines[:start] + lines[end:]
-    open(ANALYZED, 'w').write(''.join(rest))
+    open(ANALYZED, 'w').write(''.join(l for i, l in enumerate(lines) if i not in remove))
 
-    # add the include after analyzed.asm in main.asm
-    inc = out[len('src/'):] if out.startswith('src/') else out
+    inc = args.out[len('src/'):] if args.out.startswith('src/') else args.out
     mlines = open(MAIN).readlines()
-    for i, ln in enumerate(mlines):
-        if ln.strip() == 'INCLUDE "analyzed.asm"':
-            mlines.insert(i + 1, f'INCLUDE "{inc}"\n')
-            break
-    open(MAIN, 'w').write(''.join(mlines))
+    if not any(f'INCLUDE "{inc}"' in l for l in mlines):
+        for i, ln in enumerate(mlines):
+            if ln.strip() == 'INCLUDE "analyzed.asm"':
+                mlines.insert(i + 1, f'INCLUDE "{inc}"\n'); break
+        open(MAIN, 'w').write(''.join(mlines))
+        added = f'; INCLUDE "{inc}" added'
+    else:
+        added = '; already included'
 
-    print(f"carved bank ${bank:02x}: {len(block)} lines, {nsec} sections -> {out}")
-    print(f"  INCLUDE \"{inc}\" added to {MAIN}; run `make verify`")
+    print(f"carved {len(pick)} section(s), {len(remove)} lines -> {args.out} {added}")
     return 0
 
 

@@ -95,3 +95,115 @@ TempestScript:
     db "will wait here."
     SCRIPT_WAIT
     SCRIPT_END
+
+SECTION "analyzed_07ca74", ROMX[$4a74], BANK[$1f]
+
+Tempest_StartEncounter:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1e
+	ld hl, $5be7
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, $7467
+	ld a, $1e
+	ld de, $9800
+	call BankMapCopyA
+	call Func_1f_4b15
+	call HideUnusedOamSprites
+	ld a, $1e
+	ld hl, $73e7
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1e
+	ld hl, $7427
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	call Func_1f_41da
+	call Func_1f_41e6
+	push af
+	ld a, $36
+	call PlaySoundTracked
+	pop af
+	call Func_1f_4008
+	ld hl, $4b82
+	jp ScriptDispatcherEnterAfterCall
+Tempest_ShowMonsterPortrait:
+	call Tempest_LoadMonsterTiles
+	call Func_1f_41e6
+	jp ScriptWaitForBgSwap
+Tempest_ShowMonsterPortrait2:
+	call Tempest_LoadMonsterTiles
+	jp ScriptWaitForObjSwap
+Tempest_LoadMonsterTiles:
+	ld a, $1e
+	ld hl, $73e7
+	ld de, $c181
+	ld bc, $0030
+	call BankCopy
+	ld de, $c131
+	ld hl, $c1b1
+	ld c, $10
+	call CopyDEtoHL
+	ld a, $1e
+	ld hl, $7427
+	ld de, $c1c1
+	ld bc, $0030
+	call BankCopy
+	ld de, $c171
+	ld hl, $c1f1
+	ld c, $10
+	call CopyDEtoHL
+	ret
+Func_1f_4b15:
+	ld a, $15
+	ld [wRendererAddr], a
+	ld a, $4b
+	ld [$d61f], a
+	ld a, $1f
+	ld [wRendererBank], a
+	ld a, $1e
+	ld [wDrawBank], a
+	ld hl, $76bb
+	ld bc, $2060
+	call DrawMetasprite
+	ld hl, $76cc
+	ld bc, $5052
+	call DrawMetasprite
+	ld hl, $76d5
+	ld bc, $183b
+	call DrawMetasprite
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_1f_4b6d
+	cp $02
+	jr z, Func_1f_4b6d
+	ld hl, $7625
+	ld a, $1e
+	ld de, $98ad
+	call BankMapCopyA
+	ld hl, $7633
+	ld bc, $3560
+	call DrawMetasprite
+	ret
+Func_1f_4b6d:
+	ld hl, $7670
+	ld a, $1e
+	ld de, $98ad
+	call BankMapCopyA
+	ld hl, $767e
+	ld bc, $3560
+	call DrawMetasprite
+	ret

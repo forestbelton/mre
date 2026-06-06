@@ -9,6 +9,8 @@ INCLUDE "util.inc"
 
 INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "screens.asm"
+INCLUDE "monster_detail.asm"
 INCLUDE "link.asm"
 INCLUDE "banks.asm"
 INCLUDE "entity_script.inc"

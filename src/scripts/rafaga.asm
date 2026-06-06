@@ -99,3 +99,115 @@ RafagaScript:
     db "Quietly leave."
     SCRIPT_WAIT
     SCRIPT_END
+
+SECTION "analyzed_07c749", ROMX[$4749], BANK[$1f]
+
+Rafaga_StartEncounter:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1d
+	ld hl, $5b19
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, $7399
+	ld a, $1d
+	ld de, $9800
+	call BankMapCopyA
+	call Func_1f_47ea
+	call HideUnusedOamSprites
+	ld a, $1d
+	ld hl, $7319
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1d
+	ld hl, $7359
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	call Func_1f_41da
+	call Func_1f_41e6
+	push af
+	ld a, $36
+	call PlaySoundTracked
+	pop af
+	call Func_1f_4008
+	ld hl, $4857
+	jp ScriptDispatcherEnterAfterCall
+Rafaga_ShowMonsterPortrait:
+	call Rafaga_LoadMonsterTiles
+	call Func_1f_41e6
+	jp ScriptWaitForBgSwap
+Rafaga_ShowMonsterPortrait2:
+	call Rafaga_LoadMonsterTiles
+	jp ScriptWaitForObjSwap
+Rafaga_LoadMonsterTiles:
+	ld a, $1d
+	ld hl, $7319
+	ld de, $c181
+	ld bc, $0030
+	call BankCopy
+	ld de, $c131
+	ld hl, $c1b1
+	ld c, $10
+	call CopyDEtoHL
+	ld a, $1d
+	ld hl, $7359
+	ld de, $c1c1
+	ld bc, $0030
+	call BankCopy
+	ld de, $c171
+	ld hl, $c1f1
+	ld c, $10
+	call CopyDEtoHL
+	ret
+Func_1f_47ea:
+	ld a, $ea
+	ld [wRendererAddr], a
+	ld a, $47
+	ld [$d61f], a
+	ld a, $1f
+	ld [wRendererBank], a
+	ld a, $1d
+	ld [wDrawBank], a
+	ld hl, $75c5
+	ld bc, $4848
+	call DrawMetasprite
+	ld hl, $75de
+	ld bc, $5872
+	call DrawMetasprite
+	ld hl, $75e7
+	ld bc, $1933
+	call DrawMetasprite
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_1f_4842
+	cp $02
+	jr z, Func_1f_4842
+	ld hl, $7557
+	ld a, $1d
+	ld de, $98ad
+	call BankMapCopyA
+	ld hl, $7565
+	ld bc, $3860
+	call DrawMetasprite
+	ret
+Func_1f_4842:
+	ld hl, $758e
+	ld a, $1d
+	ld de, $98ad
+	call BankMapCopyA
+	ld hl, $759c
+	ld bc, $3860
+	call DrawMetasprite
+	ret
