@@ -245,7 +245,7 @@ exist in the data but have no disassembled trigger yet.
 | `$0e` | SFX | UI cancel/secondary (7 sites). |
 | `$11`,`$15`,`$21`,`$22`,`$24`,`$26` | SFX | banks `$03`/`$30`/`$31`/`$01` events. |
 | `$25` | SFX | **player lift** (`Player_LiftThink`). |
-| `$28` | BGM | **main/title theme** — first track played at boot; most-used (22 sites). |
+| `$28` | BGM | **BGM silence / stop** — its data is a 17-byte `rest; goto self` loop on all 4 channels (the BGM analogue of `$00`). Most-used (22 sites) because scenes play it to turn music off; despite being the boot/most-played BGM id it is *not* a musical track. |
 | `$29-$2e` | BGM | bank `$01` scene builders (paired scene cues). |
 | `$2f` | BGM | bank `$18` scene (`Func_00_34bc`). |
 | `$30` | BGM | menu/studio (room-arrange menu, Bodka studio, intro). |

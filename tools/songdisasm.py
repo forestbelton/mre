@@ -313,7 +313,7 @@ def emit_item(bank, a, it, labels, dead):
 # docs/sound_engine.md for the full table.
 ID_NAMES = {
     0x00:'silence / stop', 0x04:'UI cursor move', 0x05:'item use',
-    0x0d:'UI confirm', 0x25:'player lift', 0x28:'main / title theme',
+    0x0d:'UI confirm', 0x25:'player lift', 0x28:'BGM silence / stop',
     0x32:'Pashute', 0x33:'Verde', 0x34:'ranch / save', 0x35:'monster regen',
     0x36:'rival encounter', 0x37:'Tecmo logo jingle',
 }
