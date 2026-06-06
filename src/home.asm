@@ -162,7 +162,12 @@ Func_00_01ca:
 	ret
 
 Data_00_01d8:
-	db $3e, $c0, $e0, $46, $3e, $40, $3d, $20, $fd, $c9
+	ld a, $c0
+	ldh [rDMA], a
+	ld a, $40
+	dec a
+	jr nz, $01de
+	ret
 
 SetIsCgb:
 	ld a, [wConsoleType]
@@ -1107,8 +1112,20 @@ Data_00_074e:
 	db $03, $3e, $20, $ea, $81, $c2, $3e, $09, $e0, $a1, $fb, $c9, $47, $e7, $c8, $e5
 	db $d1
 Func_00_076f:
-	db $f3, $21, $c1, $c1, $78, $87, $87, $87, $4f, $cd, $0b, $03, $3e, $20, $ea, $82
-	db $c2, $3e, $09, $e0, $a2, $fb, $c9
+	di
+	ld hl, $c1c1
+	ld a, b
+	add a, a
+	add a, a
+	add a, a
+	ld c, a
+	call CopyDEtoHL
+	ld a, $20
+	ld [$c282], a
+	ld a, $09
+	ldh [hObjPaletteDirty], a
+	ei
+	ret
 
 Func_00_0786:
 	rst CheckCgb
@@ -1407,8 +1424,19 @@ Func_00_0a04:
 	ret
 
 Data_00_0a1a:
-	db $e7, $c8, $21, $4d, $ff, $cb, $7e, $c8, $cb, $c6, $af, $e0, $0f, $e0, $ff, $3e
-	db $30, $e0, $00, $10, $00, $c9
+	rst CheckCgb
+	ret z
+	ld hl, $ff4d
+	bit 7, [hl]
+	ret z
+	set 0, [hl]
+	xor a
+	ldh [rIF], a
+	ldh [rIE], a
+	ld a, $30
+	ldh [rJOYP], a
+	stop
+	ret
 
 SECTION "analyzed_000b4e", ROM0[$0b4e]
 
@@ -1500,7 +1528,11 @@ Func_00_0bc9:
 	ret
 
 Data_00_0bd0:
-	db $21, $a8, $ff, $2a, $4e, $47, $c9
+	ld hl, $ffa8
+	ld a, [hl+]
+	ld c, [hl]
+	ld b, a
+	ret
 
 HideAllSprites:
 	ld bc, $0000
@@ -1625,8 +1657,14 @@ Func_00_0c51:
 	ret
 
 Data_00_0c72:
-	db $fa, $ff, $7f, $f5, $fa, $00, $c1, $ea, $ff, $2f, $cd, $84, $0c, $f1, $ea, $ff
-	db $2f, $c9
+	ld a, [BANK_TAG_01]
+	push af
+	ld a, [wDrawBank]
+	ld [$2fff], a
+	call Func_00_0c84
+	pop af
+	ld [$2fff], a
+	ret
 
 Func_00_0c84:
 	ld a, c
@@ -2531,7 +2569,8 @@ Func_00_11dc:
 	jr z, Func_00_1203
 
 Data_00_11f2:
-	db $fa, $9c, $c2, $c9
+	ld a, [wBankCallTmp]
+	ret
 
 Func_00_11f6:
 	ld [wBankCallTmp], a
@@ -2540,7 +2579,8 @@ Func_00_11f6:
 	jr z, Func_00_1203
 
 Data_00_11ff:
-	db $fa, $9c, $c2, $c9
+	ld a, [wBankCallTmp]
+	ret
 
 Func_00_1203:
 	ld a, [wBankCallTmp]
@@ -3515,7 +3555,7 @@ Func_00_1acd:
 	jr z, Func_00_1ada
 
 Data_00_1ad7:
-	db $cd, $81, $20
+	call Func_00_2081
 
 Func_00_1ada:
 	ld a, [wEditCursorY]
@@ -3536,8 +3576,19 @@ Func_00_1afc:
 	jr z, Func_00_1b15
 
 Data_00_1b01:
-	db $ea, $64, $c5, $2a, $ea, $65, $c5, $2a, $2a, $2a, $5f, $c5, $e5, $cd, $94, $20
-	db $e1, $c1, $18, $04
+	ld [wEditCursorX], a
+	ld a, [hl+]
+	ld [wEditCursorY], a
+	ld a, [hl+]
+	ld a, [hl+]
+	ld a, [hl+]
+	ld e, a
+	push bc
+	push hl
+	call Data_00_2094
+	pop hl
+	pop bc
+	jr $1b19	; WARN: jr target $1b19 outside decoded range $1b01-$1b14 — wrong --addr? (jr needs the real base address)
 
 Func_00_1b15:
 	inc hl
@@ -3669,7 +3720,9 @@ Func_00_1c00:
 	jr nc, Func_00_1c10
 
 Data_00_1c08:
-	db $fa, $62, $c5, $ea, $63, $c5, $18, $0b
+	ld a, [wMenuCursor]
+	ld [wMenuCursorRow], a
+	jr Func_00_1c1b	; WARN: jr target $1c1b outside decoded range $1c08-$1c0f — wrong --addr? (jr needs the real base address)
 
 Func_00_1c10:
 	ld a, [wMenuCursorRow]
@@ -3700,7 +3753,9 @@ Func_00_1c37:
 	jr nc, Func_00_1c47
 
 Data_00_1c3f:
-	db $fa, $62, $c5, $ea, $63, $c5, $18, $0b
+	ld a, [wMenuCursor]
+	ld [wMenuCursorRow], a
+	jr Func_00_1c52	; WARN: jr target $1c52 outside decoded range $1c3f-$1c46 — wrong --addr? (jr needs the real base address)
 
 Func_00_1c47:
 	ld a, [wMenuCursorRow]
@@ -3832,8 +3887,16 @@ Func_00_1d17:
 	jr nz, Func_00_1d40
 
 Data_00_1d2e:
-	db $21, $cd, $c4, $c7, $7e, $3d, $fe, $0d, $20, $02, $3e, $13, $77, $ea, $68, $c5
-	db $18, $17
+	ld hl, $c4cd
+	rst AddAToHL
+	ld a, [hl]
+	dec a
+	cp $0d
+	jr nz, $1d3a
+	ld a, $13
+	ld [hl], a
+	ld [wMenuItemValue], a
+	jr $1d57	; WARN: jr target $1d57 outside decoded range $1d2e-$1d3f — wrong --addr? (jr needs the real base address)
 
 Func_00_1d40:
 	ld hl, $c4cd
@@ -3847,7 +3910,7 @@ Func_00_1d4a:
 	jr c, Func_00_1d52
 
 Data_00_1d50:
-	db $3e, $0c
+	ld a, $0c
 
 Func_00_1d52:
 	call Func_00_1e58
@@ -3872,8 +3935,16 @@ Func_00_1d69:
 	jr nz, Func_00_1d92
 
 Data_00_1d80:
-	db $21, $cd, $c4, $c7, $7e, $3c, $fe, $14, $20, $02, $3e, $0e, $77, $ea, $68, $c5
-	db $18, $15
+	ld hl, $c4cd
+	rst AddAToHL
+	ld a, [hl]
+	inc a
+	cp $14
+	jr nz, $1d8c
+	ld a, $0e
+	ld [hl], a
+	ld [wMenuItemValue], a
+	jr $1da7	; WARN: jr target $1da7 outside decoded range $1d80-$1d91 — wrong --addr? (jr needs the real base address)
 
 Func_00_1d92:
 	ld hl, $c4cd
@@ -3899,8 +3970,15 @@ Func_00_1db8:
 	jr z, Func_00_1dd0
 
 Data_00_1dbc:
-	db $f5, $3e, $0d, $cd, $85, $0a, $f1, $3e, $02, $ea, $e9, $d0, $cd, $a4, $25, $cd
-	db $cf, $30, $18, $15
+	push af
+	ld a, $0d
+	call PlaySound
+	pop af
+	ld a, $02
+	ld [wUiState], a
+	call Func_00_25a4
+	call Func_00_30cf
+	jr Func_00_1de5	; WARN: jr target $1de5 outside decoded range $1dbc-$1dcf — wrong --addr? (jr needs the real base address)
 
 Func_00_1dd0:
 	ldh a, [hJoyPressed]
@@ -4015,7 +4093,7 @@ Func_00_1e72:
 	jr nz, Func_00_1e8e
 
 Data_00_1e8c:
-	db $3e, $01
+	ld a, $01
 
 Func_00_1e8e:
 	ld [wEditCursorY], a
@@ -4033,7 +4111,8 @@ Func_00_1e93:
 	jr nz, Func_00_1eab
 
 Data_00_1ea6:
-	db $fa, $ed, $c2, $d6, $02
+	ld a, [wFloorHeight]
+	sub $02
 
 Func_00_1eab:
 	ld [wEditCursorY], a
@@ -4051,7 +4130,8 @@ Func_00_1eb0:
 	jr nz, Func_00_1ec8
 
 Data_00_1ec3:
-	db $fa, $ec, $c2, $d6, $02
+	ld a, [wFloorWidth]
+	sub $02
 
 Func_00_1ec8:
 	ld [wEditCursorX], a
@@ -4072,7 +4152,7 @@ Func_00_1ecd:
 	jr nz, Func_00_1ee6
 
 Data_00_1ee4:
-	db $3e, $01
+	ld a, $01
 
 Func_00_1ee6:
 	ld [wEditCursorX], a
@@ -4094,7 +4174,7 @@ Func_00_1eff:
 	jr z, Func_00_1f2b
 
 Data_00_1f05:
-	db $18, $06
+	jr $1f0d	; WARN: jr target $1f0d outside decoded range $1f05-$1f06 — wrong --addr? (jr needs the real base address)
 
 Func_00_1f07:
 	ldh a, [hJoyPressed]
@@ -4117,7 +4197,7 @@ Func_00_1f2b:
 	jr z, Func_00_1f34
 
 Data_00_1f31:
-	db $cd, $46, $24
+	call Data_00_2446
 
 Func_00_1f34:
 	call Func_00_20da
@@ -4137,7 +4217,9 @@ Func_00_1f48:
 	jr nz, Func_00_1f55
 
 Data_00_1f50:
-	db $fa, $cc, $c4, $3c, $67
+	ld a, [$c4cc]
+	inc a
+	ld h, a
 
 Func_00_1f55:
 	ld a, [de]
@@ -4253,7 +4335,13 @@ Func_00_1fe8:
 	jr Func_00_1fb5
 
 Data_00_1feb:
-	db $21, $00, $c0, $87, $87, $81, $c7, $7e, $c9
+	ld hl, $c000
+	add a, a
+	add a, a
+	add a, c
+	rst AddAToHL
+	ld a, [hl]
+	ret
 
 Func_00_1ff4:
 	ld a, [wMenuCursor]
@@ -4273,8 +4361,18 @@ Data_00_2000:
 	jr nz, Func_00_2019
 
 Data_00_2006:
-	db $e5, $c5, $fa, $68, $c5, $87, $c6, $32, $57, $79, $c6, $10, $0e, $02, $cd, $d1
-	db $20, $c1, $e1
+	push hl
+	push bc
+	ld a, [wMenuItemValue]
+	add a, a
+	add a, $32
+	ld d, a
+	ld a, c
+	add a, $10
+	ld c, $02
+	call Func_00_20d1
+	pop bc
+	pop hl
 
 Func_00_2019:
 	inc c
@@ -4292,7 +4390,9 @@ Func_00_2020:
 	jr nc, Func_00_2035
 
 Data_00_2030:
-	db $4f, $fa, $6a, $c5, $81
+	ld c, a
+	ld a, [wMenuItemCount]
+	add a, c
 
 Func_00_2035:
 	add a, a
@@ -4306,7 +4406,7 @@ Func_00_203b:
 	jr nz, Func_00_2043
 
 Data_00_2040:
-	db $21, $ad, $18
+	ld hl, $18ad
 
 Func_00_2043:
 	inc hl
@@ -4369,10 +4469,44 @@ Func_00_2081:
 	ret
 
 Data_00_2094:
-	db $79, $c6, $10, $47, $3e, $04, $83, $57, $78, $0e, $03, $cd, $d1, $20, $7b, $21
-	db $cd, $c4, $c7, $7e, $87, $c6, $32, $57, $78, $0e, $02, $cd, $d1, $20, $fa, $65
-	db $c5, $87, $87, $87, $c6, $10, $57, $78, $0e, $00, $cd, $d1, $20, $fa, $64, $c5
-	db $87, $87, $87, $c6, $08, $57, $78, $0e, $01, $cd, $d1, $20, $c9
+	ld a, c
+	add a, $10
+	ld b, a
+	ld a, $04
+	add a, e
+	ld d, a
+	ld a, b
+	ld c, $03
+	call Func_00_20d1
+	ld a, e
+	ld hl, $c4cd
+	rst AddAToHL
+	ld a, [hl]
+	add a, a
+	add a, $32
+	ld d, a
+	ld a, b
+	ld c, $02
+	call Func_00_20d1
+	ld a, [wEditCursorY]
+	add a, a
+	add a, a
+	add a, a
+	add a, $10
+	ld d, a
+	ld a, b
+	ld c, $00
+	call Func_00_20d1
+	ld a, [wEditCursorX]
+	add a, a
+	add a, a
+	add a, a
+	add a, $08
+	ld d, a
+	ld a, b
+	ld c, $01
+	call Func_00_20d1
+	ret
 
 Func_00_20d1:
 	ld hl, $c000
@@ -4459,7 +4593,9 @@ Func_00_212c:
 	jr z, Func_00_2140
 
 Data_00_213b:
-	db $af, $ea, $5f, $c5, $c9
+	xor a
+	ld [$c55f], a
+	ret
 
 Func_00_2140:
 	ld a, [CUR_BANK_TAG]
@@ -4532,16 +4668,30 @@ Func_00_21d7:
 	jr z, Func_00_21ec
 
 Data_00_21db:
-	db $f5, $3e, $04, $cd, $85, $0a, $f1, $c6, $02, $fe, $04, $38, $36, $e6, $01, $18
-	db $32
+	push af
+	ld a, $04
+	call PlaySound
+	pop af
+	add a, $02
+	cp $04
+	jr c, Func_00_221e	; WARN: jr target $221e outside decoded range $21db-$21eb — wrong --addr? (jr needs the real base address)
+	and $01
+	jr Func_00_221e	; WARN: jr target $221e outside decoded range $21db-$21eb — wrong --addr? (jr needs the real base address)
 
 Func_00_21ec:
 	bit 6, b
 	jr z, Func_00_2201
 
 Data_00_21f0:
-	db $f5, $3e, $04, $cd, $85, $0a, $f1, $d6, $02, $fe, $80, $38, $21, $e6, $03, $18
-	db $1d
+	push af
+	ld a, $04
+	call PlaySound
+	pop af
+	sub $02
+	cp $80
+	jr c, Func_00_221e	; WARN: jr target $221e outside decoded range $21f0-$2200 — wrong --addr? (jr needs the real base address)
+	and $03
+	jr Func_00_221e	; WARN: jr target $221e outside decoded range $21f0-$2200 — wrong --addr? (jr needs the real base address)
 
 Func_00_2201:
 	bit 0, b
@@ -4556,7 +4706,13 @@ Func_00_220d:
 	jr z, Func_00_21a5
 
 Data_00_2211:
-	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $3e, $02, $ea, $5f, $c5, $c9
+	push af
+	ld a, $0e
+	call PlaySound
+	pop af
+	ld a, $02
+	ld [$c55f], a
+	ret
 
 Func_00_221e:
 	call Func_00_3049
@@ -4597,14 +4753,15 @@ Func_00_2253:
 	jr nz, Func_00_2275
 
 Data_00_2273:
-	db $3e, $01
+	ld a, $01
 
 Func_00_2275:
 	cp $1f
 	jp nz, Func_00_2319
 
 Data_00_227a:
-	db $3e, $11, $c3, $19, $23
+	ld a, $11
+	jp Func_00_2319
 
 Func_00_227f:
 	add a, $04
@@ -4612,13 +4769,14 @@ Func_00_227f:
 	jr nz, Func_00_2287
 
 Data_00_2285:
-	db $3e, $2e
+	ld a, $2e
 
 Func_00_2287:
 	jp c, Func_00_2319
 
 Data_00_228a:
-	db $3e, $21, $c3, $19, $23
+	ld a, $21
+	jp Func_00_2319
 
 Func_00_228f:
 	bit 5, b
@@ -4631,7 +4789,14 @@ Func_00_228f:
 	jr nc, Func_00_22ad
 
 Data_00_229e:
-	db $3d, $fe, $00, $20, $02, $3e, $0e, $fe, $10, $20, $70, $3e, $1e, $18, $6c
+	dec a
+	cp $00
+	jr nz, $22a5
+	ld a, $0e
+	cp $10
+	jr nz, Func_00_2319	; WARN: jr target $2319 outside decoded range $229e-$22ac — wrong --addr? (jr needs the real base address)
+	ld a, $1e
+	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $229e-$22ac — wrong --addr? (jr needs the real base address)
 
 Func_00_22ad:
 	sub $04
@@ -4639,13 +4804,14 @@ Func_00_22ad:
 	jr nz, Func_00_22b5
 
 Data_00_22b3:
-	db $3e, $21
+	ld a, $21
 
 Func_00_22b5:
 	jr nc, Func_00_2319
 
 Data_00_22b7:
-	db $3e, $2e, $18, $5e
+	ld a, $2e
+	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22b7-$22ba — wrong --addr? (jr needs the real base address)
 
 Func_00_22bb:
 	bit 7, b
@@ -4659,15 +4825,23 @@ Func_00_22bb:
 	jr c, Func_00_2319
 
 Data_00_22cc:
-	db $e6, $0f, $18, $49
+	and $0f
+	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22cc-$22cf — wrong --addr? (jr needs the real base address)
 
 Func_00_22d0:
 	bit 6, b
 	jr z, Func_00_22e5
 
 Data_00_22d4:
-	db $f5, $3e, $04, $cd, $85, $0a, $f1, $d6, $10, $fe, $80, $38, $38, $c6, $30, $18
-	db $34
+	push af
+	ld a, $04
+	call PlaySound
+	pop af
+	sub $10
+	cp $80
+	jr c, Func_00_2319	; WARN: jr target $2319 outside decoded range $22d4-$22e4 — wrong --addr? (jr needs the real base address)
+	add a, $30
+	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22d4-$22e4 — wrong --addr? (jr needs the real base address)
 
 Func_00_22e5:
 	bit 0, b
@@ -4684,8 +4858,21 @@ Func_00_22f7:
 	jp z, Func_00_2253
 
 Data_00_22fc:
-	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $47, $fa, $5f, $c5, $b7, $20, $09, $3e, $12
-	db $21, $44, $4b, $cd, $2e, $04, $c9, $3d, $ea, $5f, $c5, $18, $01
+	push af
+	ld a, $0e
+	call PlaySound
+	pop af
+	ld b, a
+	ld a, [$c55f]
+	or a
+	jr nz, $2313
+	ld a, $12
+	ld hl, $4b44
+	call CallBankedHL
+	ret
+	dec a
+	ld [$c55f], a
+	jr $231a	; WARN: jr target $231a outside decoded range $22fc-$2318 — wrong --addr? (jr needs the real base address)
 
 Func_00_2319:
 	ld b, a
@@ -4732,7 +4919,7 @@ Func_00_2375:
 	jr c, Func_00_2381
 
 Data_00_237f:
-	db $e6, $01
+	and $01
 
 Func_00_2381:
 	jr Func_00_23b5
@@ -4744,7 +4931,7 @@ Func_00_2383:
 	jr c, Func_00_238f
 
 Data_00_238d:
-	db $e6, $07
+	and $07
 
 Func_00_238f:
 	jr Func_00_23b5
@@ -4763,7 +4950,14 @@ Func_00_23a2:
 	jr z, Func_00_23be
 
 Data_00_23a6:
-	db $3e, $06, $f5, $3e, $0e, $cd, $85, $0a, $f1, $cd, $c3, $23, $c0, $18, $09
+	ld a, $06
+	push af
+	ld a, $0e
+	call PlaySound
+	pop af
+	call Func_00_23c3
+	ret nz
+	jr Func_00_23be	; WARN: jr target $23be outside decoded range $23a6-$23b4 — wrong --addr? (jr needs the real base address)
 
 Func_00_23b5:
 	ld b, a
@@ -4825,11 +5019,47 @@ Func_00_2443:
 	ret
 
 Data_00_2446:
-	db $fa, $61, $c5, $fe, $03, $28, $08, $cd, $5d, $24, $c0, $cd, $a2, $24, $c9, $cd
-	db $a2, $24, $c0, $cd, $5d, $24, $c9, $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $cd
-	db $48, $18, $21, $dd, $c3, $79, $c7, $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $f0
-	db $ac, $cb, $7f, $c8, $f5, $3e, $01, $cd, $85, $0a, $f1, $cb, $77, $20, $09, $cb
-	db $f7, $77, $cd, $71, $1f, $f6, $01, $c9, $cb, $b7, $77, $f6, $01, $c9
+	ld a, [wMenuId]
+	cp $03
+	jr z, $2455
+	call $245d
+	ret nz
+	call $24a2
+	ret
+	call $24a2
+	ret nz
+	call $245d
+	ret
+	ld a, [wEditCursorY]
+	ld b, a
+	ld a, [wEditCursorX]
+	ld c, a
+	call ReadFloorCell
+	ld hl, wFloorGrid
+	ld a, c
+	rst AddAToHL
+	ld a, [wEditCursorY]
+	ld b, a
+	ld a, [wEditCursorX]
+	ld c, a
+	ldh a, [$ffac]
+	bit 7, a
+	ret z
+	push af
+	ld a, $01
+	call PlaySound
+	pop af
+	bit 6, a
+	jr nz, $248e
+	set 6, a
+	ld [hl], a
+	call Func_00_1f71
+	or $01
+	ret
+	res 6, a
+	ld [hl], a
+	or $01
+	ret
 
 SECTION "analyzed_002494", ROM0[$2494]
 
@@ -5998,8 +6228,19 @@ Func_00_2d95:
 	jr nz, Func_00_2db0
 
 Data_00_2d99:
-	db $2a, $b8, $20, $14, $2a, $ea, $cd, $c7, $2a, $ea, $ce, $c7, $7e, $ea, $cb, $c7
-	db $79, $ea, $cc, $c7, $f6, $01, $c9
+	ld a, [hl+]
+	cp b
+	jr nz, $2db1	; WARN: jr target $2db1 outside decoded range $2d99-$2daf — wrong --addr? (jr needs the real base address)
+	ld a, [hl+]
+	ld [$c7cd], a
+	ld a, [hl+]
+	ld [$c7ce], a
+	ld a, [hl]
+	ld [$c7cb], a
+	ld a, c
+	ld [$c7cc], a
+	or $01
+	ret
 
 Func_00_2db0:
 	inc hl
@@ -6190,17 +6431,56 @@ Func_00_2ea8:
 	jr nz, Func_00_2eb7
 
 Data_00_2eae:
-	db $3e, $ff, $ea, $2e, $c5, $ea, $2f, $c5, $c9
+	ld a, $ff
+	ld [wSpawnCellX], a
+	ld [wSpawnCellY], a
+	ret
 
 Func_00_2eb7:
 	cp $42
 	jr nz, Func_00_2efa
 
 Data_00_2ebb:
-	db $21, $fe, $c4, $16, $04, $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $2a, $b9, $20
-	db $27, $7e, $b8, $20, $23, $16, $00, $3e, $ff, $4f, $2b, $22, $22, $22, $22, $22
-	db $7e, $b9, $28, $05, $79, $22, $14, $18, $f7, $fa, $70, $c5, $3d, $ea, $70, $c5
-	db $fa, $6e, $c5, $92, $ea, $6e, $c5, $c9, $3e, $0b, $c7, $15, $20, $cf, $c9
+	ld hl, $c4fe
+	ld d, $04
+	ld a, [wEditCursorY]
+	ld b, a
+	ld a, [wEditCursorX]
+	ld c, a
+	ld a, [hl+]
+	cp c
+	jr nz, $2ef3
+	ld a, [hl]
+	cp b
+	jr nz, $2ef3
+	ld d, $00
+	ld a, $ff
+	ld c, a
+	dec hl
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld a, [hl]
+	cp c
+	jr z, $2ee4
+	ld a, c
+	ld [hl+], a
+	inc d
+	jr $2edb
+	ld a, [$c570]
+	dec a
+	ld [$c570], a
+	ld a, [$c56e]
+	sub d
+	ld [$c56e], a
+	ret
+	ld a, $0b
+	rst AddAToHL
+	dec d
+	jr nz, $2ec8
+	ret
 
 SECTION "analyzed_002efa", ROM0[$2efa]
 
@@ -6223,8 +6503,22 @@ Func_00_2f04:
 	jr z, Func_00_2f2b
 
 Data_00_2f0f:
-	db $fa, $2f, $c5, $47, $67, $fa, $2e, $c5, $6f, $3e, $11, $4f, $cd, $00, $37, $85
-	db $11, $dd, $c3, $f7, $4d, $44, $3e, $00, $12, $cd, $71, $1f
+	ld a, [wSpawnCellY]
+	ld b, a
+	ld h, a
+	ld a, [wSpawnCellX]
+	ld l, a
+	ld a, $11
+	ld c, a
+	call Func_00_3700
+	add a, l
+	ld de, wFloorGrid
+	rst AddAToDE
+	ld c, l
+	ld b, h
+	ld a, $00
+	ld [de], a
+	call Func_00_1f71
 
 Func_00_2f2b:
 	ld a, [wEditCursorX]
@@ -6631,14 +6925,20 @@ Func_00_318c:
 	jr nz, Func_00_319c
 
 Data_00_3190:
-	db $fa, $5f, $c5, $3c, $fe, $06, $20, $df, $3e, $05, $18, $db
+	ld a, [$c55f]
+	inc a
+	cp $06
+	jr nz, Func_00_3177	; WARN: jr target $3177 outside decoded range $3190-$319b — wrong --addr? (jr needs the real base address)
+	ld a, $05
+	jr Func_00_3177	; WARN: jr target $3177 outside decoded range $3190-$319b — wrong --addr? (jr needs the real base address)
 
 Func_00_319c:
 	cp $08
 	jr nz, Func_00_31a4
 
 Data_00_31a0:
-	db $0e, $20, $18, $ba
+	ld c, $20
+	jr Func_00_315e	; WARN: jr target $315e outside decoded range $31a0-$31a3 — wrong --addr? (jr needs the real base address)
 
 Func_00_31a4:
 	ld hl, $4930
@@ -6698,7 +6998,7 @@ Func_00_31e6:
 SECTION "analyzed_0031f9", ROM0[$31f9]
 
 Data_00_31f9:
-	db $c9
+	ret
 
 SECTION "analyzed_0031fa", ROM0[$31fa]
 
@@ -6800,11 +7100,57 @@ Func_00_32ae:
 	jr z, Func_00_3305
 
 Data_00_32b6:
-	db $fa, $5d, $c5, $fe, $03, $30, $48, $87, $21, $db, $12, $c7, $2a, $66, $6f, $2a
-	db $fe, $21, $20, $3b, $2a, $d6, $41, $cb, $37, $4f, $2a, $d6, $41, $81, $4f, $16
-	db $00, $7a, $21, $67, $15, $c7, $fa, $ff, $7f, $f5, $7e, $ea, $ff, $2f, $7a, $87
-	db $21, $bf, $15, $c7, $2a, $66, $6f, $46, $f1, $ea, $ff, $2f, $78, $b9, $28, $12
-	db $14, $3e, $46, $ba, $20, $04, $3e, $0c, $82, $57, $3e, $58, $ba, $20, $d2
+	ld a, [$c55d]
+	cp $03
+	jr nc, Func_00_3305	; WARN: jr target $3305 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	add a, a
+	ld hl, $12db
+	rst AddAToHL
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld a, [hl+]
+	cp $21
+	jr nz, Func_00_3305	; WARN: jr target $3305 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	ld a, [hl+]
+	sub $41
+	swap a
+	ld c, a
+	ld a, [hl+]
+	sub $41
+	add a, c
+	ld c, a
+	ld d, $00
+	ld a, d
+	ld hl, $1567
+	rst AddAToHL
+	ld a, [BANK_TAG_01]
+	push af
+	ld a, [hl]
+	ld [$2fff], a
+	ld a, d
+	add a, a
+	ld hl, $15bf
+	rst AddAToHL
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld b, [hl]
+	pop af
+	ld [$2fff], a
+	ld a, b
+	cp c
+	jr z, Data_00_3308	; WARN: jr target $3308 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	inc d
+	ld a, $46
+	cp d
+	jr nz, $3300
+	ld a, $0c
+	add a, d
+	ld d, a
+	ld a, $58
+	cp d
+	jr nz, $32d7
 
 Func_00_3305:
 	pop bc
