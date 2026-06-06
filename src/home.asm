@@ -4,25 +4,19 @@
 ; shared library routines the rest of the game far-calls into. Sections are
 ; placed by their explicit ROM0[$xxxx] addresses.
 
-SECTION "analyzed_000000", ROM0[$0000]
+SECTION "RST_00", ROM0[$00]
 
-; RST $00 helper -- HL += A. The workhorse for table indexing:
-;   ld hl, Table  /  ld a, index  /  rst AddAToHL   (then rst DerefHL to load the
-; entry). 1-byte call; carry into H is handled by the $0002 tail below.
+; AddAToHL adds A to HL.
 AddAToHL:
 	add a, l
 	ld l, a
-
-SECTION "analyzed_000002", ROM0[$0002]
-
-Func_00_0002:
 	ret nc
 	inc h
 	ret
 
-SECTION "analyzed_000008", ROM0[$0008]
+SECTION "RST_08", ROM0[$08]
 
-; RST $08 helper -- HL -= A (negates A via cpl/inc, then adds).
+; SubAFromHL subtracts A from HL.
 SubAFromHL:
 	cpl
 	inc a
@@ -32,30 +26,26 @@ SubAFromHL:
 	dec h
 	ret
 
-SECTION "analyzed_000018", ROM0[$0018]
+SECTION "RST_18", ROM0[$18]
 
-; RST $18 helper -- HL = [HL]: load the little-endian word HL points at into HL.
-; Pairs with rst AddAToHL to fetch a table entry.
+; DerefHL dereferences the little-endian word at HL and store it in HL.
 DerefHL:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	ret
 
-SECTION "analyzed_000020", ROM0[$0020]
+SECTION "RST_20", ROM0[$20]
 
-; RST $20 helper -- set Z from wIsCgb: `rst CheckCgb` then `jr z` (DMG) / `jr nz`
-; (CGB). The boot ROM leaves A = $11 on Game Boy Color / $01 on DMG; that's
-; latched in wConsoleType and cached here as wIsCgb. Gates the CGB-only paths
-; (rVBK VRAM banking, bulk VRAM copies, ...).
+; CheckCGB sets Z if the system is a Game Boy Color.
 CheckCgb:
 	ld a, [wIsCgb]
 	and a
 	ret
 
-SECTION "analyzed_000030", ROM0[$0030]
+SECTION "RST_30", ROM0[$30]
 
-; RST $30 helper -- DE += A.
+; AddAToDE adds A to DE.
 AddAToDE:
 	add a, e
 	ld e, a
@@ -63,202 +53,27 @@ AddAToDE:
 	inc d
 	ret
 
-SECTION "analyzed_000040", ROM0[$0040]
-
-Func_00_0040:
+SECTION "RST_40", ROM0[$40]
 	jp $c28d
 
-SECTION "analyzed_000048", ROM0[$0048]
-
-Func_00_0048:
+SECTION "RST_48", ROM0[$48]
 	jp $c290
 
-SECTION "analyzed_00004b", ROM0[$004b]
-
-Func_00_004b:
-	nop
-	nop
-	nop
-	nop
-	nop
+SECTION "RST_50", ROM0[$50]
 	jp $c293
-	nop
-	nop
-	nop
-	nop
-	nop
 
-SECTION "analyzed_000058", ROM0[$0058]
-
-Func_00_0058:
+SECTION "RST_58", ROM0[$58]
 	jp $c296
 
-SECTION "analyzed_00005b", ROM0[$005b]
-
-Func_00_005b:
-	nop
-	nop
-	nop
-	nop
-	nop
+SECTION "RST_60", ROM0[$60]
 	jp $c299
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
+
+SECTION "Header", ROM0[$0100]
+
+	nop
+	jp Func_00_0150
+
+	DS $150 - @, 0
 
 SECTION "analyzed_000150", ROM0[$0150]
 
