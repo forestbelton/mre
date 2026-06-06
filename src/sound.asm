@@ -184,8 +184,9 @@ INCLUDE "sound_driver.asm"
 INCLUDE "snd_song.inc"
 
 ; ----- Bank $3e: song/SFX data ($4b00+) for sound ids $2f-$3a -----------------
-; Readable, byte-exact macro source; (dis)assembled by tools/songdisasm.py.
-INCLUDE "snd_data_3e.asm"
+; Readable, byte-exact macro source: per-bank pointer table + one file per song
+; under src/sound/{sfx,bgm}/. (Dis)assembled by tools/songdisasm.py.
+INCLUDE "sound/bank_3e.asm"
 
 ; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
-INCLUDE "snd_data_3f.asm"
+INCLUDE "sound/bank_3f.asm"
