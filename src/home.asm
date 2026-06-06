@@ -316,17 +316,17 @@ Func_00_02b9:
 WaitForHBlank:
 	ldh a, [rLCDC]
 	rla
-	ret nc
-Func_00_02d5:
+	ret nc                ; LCD off -> VRAM is always accessible
+.enterMode3:
 	ldh a, [rSTAT]
 	and $03
 	cp $03
-	jr nz, Func_00_02d5
-Func_00_02dd:
+	jr nz, .enterMode3    ; spin until mode 3 (pixel transfer) begins
+.leaveMode3:
 	ldh a, [rSTAT]
 	and $03
 	cp $03
-	jr z, Func_00_02dd
+	jr z, .leaveMode3     ; then spin until it ends -- now at the start of HBlank
 	ret
 
 WaitForNextFrame:
@@ -362,6 +362,7 @@ CopyDEtoHL:
 	dec c
 	jr nz, CopyDEtoHL
 	ret
+
 CopyDEtoHLLong:
 	ld a, [de]
 	ld [hl+], a
@@ -450,20 +451,21 @@ VramCopy16:
 	jr nz, .copy2
 	ret
 
+; FillVram performs a VRAM-safe fill with a given byte.
+;
+; hl	Target address
+; d		Byte to fill
+; bc	Number of bytes to copy
 FillVram:
 	call WaitForHBlank
-	ld a, d
-	ld [hl+], a
-	dec bc
-	ld a, b
-	or c
-	ret z
-	ld a, d
-	ld [hl+], a
-	dec bc
-	ld a, b
-	or c
-	ret z
+	REPT 2
+		ld a, d
+		ld [hl+], a
+		dec bc
+		ld a, b
+		or c
+		ret z
+	ENDR
 	ld a, d
 	ld [hl+], a
 	dec bc
@@ -3553,10 +3555,7 @@ Func_00_1acd:
 	ld a, [wMenuCursor]
 	cp $00
 	jr z, Func_00_1ada
-
-Data_00_1ad7:
 	call Func_00_2081
-
 Func_00_1ada:
 	ld a, [wEditCursorY]
 	ld b, a
@@ -3574,7 +3573,6 @@ Func_00_1afc:
 	ld a, [hl+]
 	cp $ff
 	jr z, Func_00_1b15
-
 Data_00_1b01:
 	ld [wEditCursorX], a
 	ld a, [hl+]
@@ -3588,13 +3586,13 @@ Data_00_1b01:
 	call Data_00_2094
 	pop hl
 	pop bc
-	jr $1b19	; WARN: jr target $1b19 outside decoded range $1b01-$1b14 — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_1b19
 Func_00_1b15:
 	inc hl
 	inc hl
 	inc hl
 	inc hl
+Func_00_1b19:
 	inc c
 	ld a, $09
 	cp c
@@ -4197,7 +4195,7 @@ Func_00_1f2b:
 	jr z, Func_00_1f34
 
 Data_00_1f31:
-	call Data_00_2446
+	call Func_00_2446
 
 Func_00_1f34:
 	call Func_00_20da
@@ -4704,8 +4702,6 @@ Func_00_2201:
 Func_00_220d:
 	bit 1, b
 	jr z, Func_00_21a5
-
-Data_00_2211:
 	push af
 	ld a, $0e
 	call PlaySound
@@ -4751,33 +4747,21 @@ Func_00_2253:
 	inc a
 	cp $0f
 	jr nz, Func_00_2275
-
-Data_00_2273:
 	ld a, $01
-
 Func_00_2275:
 	cp $1f
 	jp nz, Func_00_2319
-
-Data_00_227a:
 	ld a, $11
 	jp Func_00_2319
-
 Func_00_227f:
 	add a, $04
 	cp $2f
 	jr nz, Func_00_2287
-
-Data_00_2285:
 	ld a, $2e
-
 Func_00_2287:
 	jp c, Func_00_2319
-
-Data_00_228a:
 	ld a, $21
 	jp Func_00_2319
-
 Func_00_228f:
 	bit 5, b
 	jr z, Func_00_22bb
@@ -4787,32 +4771,23 @@ Func_00_228f:
 	pop af
 	cp $20
 	jr nc, Func_00_22ad
-
-Data_00_229e:
 	dec a
 	cp $00
 	jr nz, $22a5
 	ld a, $0e
 	cp $10
-	jr nz, Func_00_2319	; WARN: jr target $2319 outside decoded range $229e-$22ac — wrong --addr? (jr needs the real base address)
+	jr nz, Func_00_2319
 	ld a, $1e
-	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $229e-$22ac — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_2319
 Func_00_22ad:
 	sub $04
 	cp $20
 	jr nz, Func_00_22b5
-
-Data_00_22b3:
 	ld a, $21
-
 Func_00_22b5:
 	jr nc, Func_00_2319
-
-Data_00_22b7:
 	ld a, $2e
-	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22b7-$22ba — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_2319
 Func_00_22bb:
 	bit 7, b
 	jr z, Func_00_22d0
@@ -4823,26 +4798,21 @@ Func_00_22bb:
 	add a, $10
 	cp $30
 	jr c, Func_00_2319
-
-Data_00_22cc:
+Func_00_22cc:
 	and $0f
-	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22cc-$22cf — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_2319
 Func_00_22d0:
 	bit 6, b
 	jr z, Func_00_22e5
-
-Data_00_22d4:
 	push af
 	ld a, $04
 	call PlaySound
 	pop af
 	sub $10
 	cp $80
-	jr c, Func_00_2319	; WARN: jr target $2319 outside decoded range $22d4-$22e4 — wrong --addr? (jr needs the real base address)
+	jr c, Func_00_2319
 	add a, $30
-	jr Func_00_2319	; WARN: jr target $2319 outside decoded range $22d4-$22e4 — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_2319
 Func_00_22e5:
 	bit 0, b
 	jp z, Func_00_22f7
@@ -4856,8 +4826,7 @@ Func_00_22e5:
 Func_00_22f7:
 	bit 1, b
 	jp z, Func_00_2253
-
-Data_00_22fc:
+Func_00_22fc:
 	push af
 	ld a, $0e
 	call PlaySound
@@ -4865,17 +4834,18 @@ Data_00_22fc:
 	ld b, a
 	ld a, [$c55f]
 	or a
-	jr nz, $2313
+	jr nz, Func_00_2313
 	ld a, $12
 	ld hl, $4b44
 	call CallBankedHL
 	ret
+Func_00_2313:
 	dec a
 	ld [$c55f], a
-	jr $231a	; WARN: jr target $231a outside decoded range $22fc-$2318 — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_231a
 Func_00_2319:
 	ld b, a
+Func_00_231a:
 	FAR_CALL $12, Func_12_4441
 	jp Func_00_2253
 Func_00_2325:
@@ -5018,18 +4988,20 @@ Func_00_2443:
 	or $01
 	ret
 
-Data_00_2446:
+Func_00_2446:
 	ld a, [wMenuId]
 	cp $03
-	jr z, $2455
-	call $245d
+	jr z, Func_00_2455
+	call Func_00_245d
 	ret nz
 	call $24a2
 	ret
+Func_00_2455:
 	call $24a2
 	ret nz
-	call $245d
+	call Func_00_245d
 	ret
+Func_00_245d:
 	ld a, [wEditCursorY]
 	ld b, a
 	ld a, [wEditCursorX]
@@ -6226,11 +6198,9 @@ Func_00_2d95:
 	ld a, [hl+]
 	cp d
 	jr nz, Func_00_2db0
-
-Data_00_2d99:
 	ld a, [hl+]
 	cp b
-	jr nz, $2db1	; WARN: jr target $2db1 outside decoded range $2d99-$2daf — wrong --addr? (jr needs the real base address)
+	jr nz, Func_00_2db1
 	ld a, [hl+]
 	ld [$c7cd], a
 	ld a, [hl+]
@@ -6244,6 +6214,7 @@ Data_00_2d99:
 
 Func_00_2db0:
 	inc hl
+Func_00_2db1:
 	inc hl
 	inc hl
 	inc hl
@@ -6312,14 +6283,7 @@ Func_00_2e1a:
 	ld a, [hl+]
 	cp $ff
 	jr z, Func_00_2e20
-
-SECTION "analyzed_002e1f", ROM0[$2e1f]
-
-Data_00_2e1f:
-	db $04
-
-SECTION "analyzed_002e20", ROM0[$2e20]
-
+	inc b
 Func_00_2e20:
 	ld a, $04
 	rst AddAToHL
@@ -6334,14 +6298,7 @@ Func_00_2e31:
 	ld a, [hl+]
 	cp $ff
 	jr z, Func_00_2e37
-
-SECTION "analyzed_002e36", ROM0[$2e36]
-
-Data_00_2e36:
-	db $04
-
-SECTION "analyzed_002e37", ROM0[$2e37]
-
+	inc b
 Func_00_2e37:
 	ld a, $0b
 	rst AddAToHL
@@ -6412,6 +6369,7 @@ Func_00_2e89:
 	xor a
 	ld [$c56f], a
 	ret
+
 Func_00_2e94:
 	ld hl, $c571
 	ld a, [$c56f]
@@ -6425,12 +6383,13 @@ Func_00_2e94:
 	inc a
 	ld [$c56f], a
 	ret
+
 Func_00_2ea8:
 	ldh a, [$ffac]
 	cp $40
 	jr nz, Func_00_2eb7
 
-Data_00_2eae:
+Func_00_2eae:
 	ld a, $ff
 	ld [wSpawnCellX], a
 	ld [wSpawnCellY], a
@@ -6440,7 +6399,7 @@ Func_00_2eb7:
 	cp $42
 	jr nz, Func_00_2efa
 
-Data_00_2ebb:
+Func_00_2ebb:
 	ld hl, $c4fe
 	ld d, $04
 	ld a, [wEditCursorY]
@@ -6481,13 +6440,8 @@ Data_00_2ebb:
 	dec d
 	jr nz, $2ec8
 	ret
-
-SECTION "analyzed_002efa", ROM0[$2efa]
-
 Func_00_2efa:
 	ret
-
-SECTION "analyzed_002efb", ROM0[$2efb]
 
 Func_00_2efb:
 	ld a, $ff
@@ -6622,20 +6576,14 @@ Func_00_2fc1:
 Func_00_2fc8:
 	cp $80
 	jr nz, Func_00_2fcd
-
-SECTION "analyzed_002fcc", ROM0[$2fcc]
-
-Data_00_2fcc:
-	db $14
-
-SECTION "analyzed_002fcd", ROM0[$2fcd]
-
+	inc d
 Func_00_2fcd:
 	dec c
 	jr nz, Func_00_2fb9
 	ld a, $02
 	cp d
 	ret
+
 Func_00_2fd4:
 	ld hl, $c586
 	ld a, [$cfbd]
@@ -6880,11 +6828,9 @@ Func_00_3153:
 	jr nz, Func_00_315b
 	ld c, $3f
 	jr Func_00_315e
-
 Func_00_315b:
 	add a, $3e
 	ld c, a
-
 Func_00_315e:
 	ld a, [$c55d]
 	add a, a
@@ -6911,7 +6857,6 @@ Func_00_3177:
 Func_00_317d:
 	and $0c
 	jr nz, Func_00_318c
-
 Func_00_3181:
 	ld a, [$c55f]
 	dec a
@@ -6919,27 +6864,22 @@ Func_00_3181:
 	jr c, Func_00_3177
 	xor a
 	jr Func_00_3177
-
 Func_00_318c:
 	cp $04
 	jr nz, Func_00_319c
-
-Data_00_3190:
+Func_00_3190:
 	ld a, [$c55f]
 	inc a
 	cp $06
-	jr nz, Func_00_3177	; WARN: jr target $3177 outside decoded range $3190-$319b — wrong --addr? (jr needs the real base address)
+	jr nz, Func_00_3177
 	ld a, $05
-	jr Func_00_3177	; WARN: jr target $3177 outside decoded range $3190-$319b — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_3177
 Func_00_319c:
 	cp $08
 	jr nz, Func_00_31a4
-
-Data_00_31a0:
+Func_00_31a0:
 	ld c, $20
-	jr Func_00_315e	; WARN: jr target $315e outside decoded range $31a0-$31a3 — wrong --addr? (jr needs the real base address)
-
+	jr Func_00_315e
 Func_00_31a4:
 	ld hl, $4930
 	call Func_00_33fb
@@ -6948,13 +6888,12 @@ Func_00_31a4:
 	jr nz, Func_00_31ba
 	FAR_CALL $12, Func_12_4b13
 	jr Func_00_31c2
-
 Func_00_31ba:
 	FAR_CALL $12, Data_12_4b44
-
 Func_00_31c2:
 	xor a
 	ret
+
 Func_00_31c4:
 	ld c, b
 	ld d, $fa
@@ -6966,6 +6905,7 @@ Func_00_31c4:
 	ld d, $fa
 	call Func_00_31fa
 	ret
+
 Func_00_31d5:
 	ld c, b
 	ld d, $07
@@ -6977,6 +6917,7 @@ Func_00_31d5:
 	ld d, $07
 	call Func_00_31e6
 	ret
+
 Func_00_31e6:
 	call WaitForHBlank
 	ld a, [hl]
@@ -6994,13 +6935,7 @@ Func_00_31e6:
 	ld [hl+], a
 	dec c
 	jr nz, Func_00_31e6
-
-SECTION "analyzed_0031f9", ROM0[$31f9]
-
-Data_00_31f9:
 	ret
-
-SECTION "analyzed_0031fa", ROM0[$31fa]
 
 Func_00_31fa:
 	call WaitForHBlank
@@ -7098,11 +7033,10 @@ Func_00_32ae:
 	ldh a, [hJoyPressed]
 	bit 3, b
 	jr z, Func_00_3305
-
-Data_00_32b6:
+Func_00_32b6:
 	ld a, [$c55d]
 	cp $03
-	jr nc, Func_00_3305	; WARN: jr target $3305 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	jr nc, Func_00_3305
 	add a, a
 	ld hl, $12db
 	rst AddAToHL
@@ -7111,7 +7045,7 @@ Data_00_32b6:
 	ld l, a
 	ld a, [hl+]
 	cp $21
-	jr nz, Func_00_3305	; WARN: jr target $3305 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	jr nz, Func_00_3305
 	ld a, [hl+]
 	sub $41
 	swap a
@@ -7140,28 +7074,43 @@ Data_00_32b6:
 	ld [$2fff], a
 	ld a, b
 	cp c
-	jr z, Data_00_3308	; WARN: jr target $3308 outside decoded range $32b6-$3304 — wrong --addr? (jr needs the real base address)
+	jr z, Func_00_3308
 	inc d
 	ld a, $46
 	cp d
-	jr nz, $3300
+	jr nz, Func_00_3300
 	ld a, $0c
 	add a, d
 	ld d, a
+Func_00_3300:
 	ld a, $58
 	cp d
 	jr nz, $32d7
-
 Func_00_3305:
 	pop bc
 	pop af
 	ret
-
-Data_00_3308:
-	db $14, $7a, $fe, $3d, $30, $0a, $ea, $c0, $c2, $3e, $00, $ea, $c1, $c2, $18, $0a
-	db $d6, $3c, $ea, $c0, $c2, $3e, $01, $ea, $c1, $c2, $cd, $c1, $16, $cd, $d4, $2f
-	db $fa, $5d, $c5, $ea, $c0, $c2, $3e, $12, $21, $79, $4a, $cd, $2e, $04, $3e, $15
-	db $21, $47, $41, $cd, $2e, $04, $18, $c5
+Func_00_3308:
+	inc d
+	ld a, d
+	cp $3d
+	jr nc, Func_00_3318
+	ld [$c2c0], a
+	ld a, $00
+	ld [$c2c1], a
+	jr $3322
+Func_00_3318:
+	sub $3c
+	ld [$c2c0], a
+	ld a, $01
+	ld [$c2c1], a
+	call LoadFloorByMode
+	call Func_00_2fd4
+	ld a, [$c55d]
+	ld [$c2c0], a
+	FAR_CALL $12, Func_12_4a79
+	FAR_CALL $15, Func_15_4147
+	jr Func_00_3305
 
 Func_00_3340:
 	ld a, $ff
@@ -7739,14 +7688,74 @@ Func_00_371f:
 	sla c
 	rl b
 	jr Func_00_3718
+	ld a, b
+	xor d
+	rla
+	push af
+	bit 7, b
+	jr z, Func_00_3737
+	ld a, c
+	cpl
+	ld c, a
+	ld a, b
+	cpl
+	ld b, a
+	inc bc
+Func_00_3737:
+	bit 7, d
+	jr z, Func_00_3742
+	ld a, e
+	cpl
+	ld e, a
+	ld a, d
+	cpl
+	ld d, a
+	inc de
+Func_00_3742:
+	call Func_00_374f
+	pop af
+	ret nc
+	ld a, l
+	cpl
+	ld l, a
+	ld a, h
+	cpl
+	ld h, a
+	inc hl
+	ret
 
-Data_00_3728:
-	db $78, $aa, $17, $f5, $cb, $78, $28, $07, $79, $2f, $4f, $78, $2f, $47, $03, $cb
-	db $7a, $28, $07, $7b, $2f, $5f, $7a, $2f, $57, $13, $cd, $4f, $37, $f1, $d0, $7d
-	db $2f, $6f, $7c, $2f, $67, $23, $c9, $af, $67, $6f, $cb, $7a, $20, $07, $cb, $23
-	db $cb, $12, $3c, $18, $f5, $f5, $79, $93, $78, $9a, $38, $05, $47, $79, $93, $4f
-	db $23, $f1, $a7, $c8, $3d, $cb, $3a, $cb, $1b, $29, $18, $e9
-
+Func_00_374f:
+	xor a
+	ld h, a
+	ld l, a
+Func_00_3752:
+	bit 7, d
+	jr nz, Func_00_375d
+	sla e
+	rl d
+	inc a
+	jr Func_00_3752
+Func_00_375d:
+	push af
+	ld a, c
+	sub e
+	ld a, b
+	sbc a, d
+	jr c, Func_00_3769
+	ld b, a
+	ld a, c
+	sub e
+	ld c, a
+	inc hl
+Func_00_3769:
+	pop af
+	and a
+	ret z
+	dec a
+	srl d
+	rr e
+	add hl, hl
+	jr Func_00_375d
 Func_00_3774:
 	push bc
 	ld b, $08
@@ -7765,6 +7774,7 @@ Func_00_3783:
 	jr nz, Func_00_377a
 	pop bc
 	ret
+
 Func_00_3788:
 	push hl
 	xor a
@@ -8299,6 +8309,7 @@ NumberToDecimal3:
 	ld a, c
 	ld [wBcdLow], a
 	ret
+
 DivBySubtraction:
 	ld e, $00
 Func_00_3e5b:
