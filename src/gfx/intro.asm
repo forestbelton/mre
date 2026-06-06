@@ -7,24 +7,19 @@ SECTION "IntroBookTiles bank0", ROMX[$4000], BANK[$29]
 IntroBookTilesBank0:
 	INCBIN "assets/intro/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-SECTION "IntroBookTiles bank1", ROMX[$5800], BANK[$29]
 IntroBookTilesBank1:
 	INCBIN "assets/intro/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "IntroBookPalettes", ROMX[$7000], BANK[$29]
 IntroBookPalettes:
 	INCBIN "assets/intro/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
-SECTION "IntroBookDescriptor", ROMX[$7080], BANK[$29]
 IntroBookMapDesc:
 	db 10, 20
 	dw IntroBookAttrMap
 	dw IntroBookIdxMap
 
-SECTION "IntroBookIdxMap", ROMX[$7086], BANK[$29]
 IntroBookIdxMap:
 	INCBIN "assets/intro/tilemap.bin"
 
-SECTION "IntroBookAttrMap", ROMX[$714e], BANK[$29]
 IntroBookAttrMap:
 	INCBIN "assets/intro/attrmap.bin"

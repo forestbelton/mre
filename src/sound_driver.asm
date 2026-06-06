@@ -18,13 +18,9 @@ Func_{SB}_4003:
 	jp Sound_StartTracked_{SB}
 	jp Sound_Start_{SB}
 
-SECTION "snd_{SB}_00c", ROMX[$400c], BANK[${SB}]
-
 Func_{SB}_400c:
 	jp Sound_SetFadeBlock_{SB}
 	jp Sound_SetMute_{SB}
-SECTION "snd_{SB}_012", ROMX[$4012], BANK[${SB}]
-
 Sound_Reset_{SB}:
 	ld hl, $de80
 	ld de, $0180
@@ -83,8 +79,6 @@ Func_{SB}_4070:
 	or a
 	ret z
 
-SECTION "snd_{SB}_076", ROMX[$4076], BANK[${SB}]
-
 Func_{SB}_4076:
 	cp $01
 	jr z, $408c
@@ -112,8 +106,6 @@ Func_{SB}_4076:
 	inc hl
 	ld a, [hl-]
 	jr $4089
-SECTION "snd_{SB}_09c", ROMX[$409c], BANK[${SB}]
-
 Sound_StartTracked_{SB}:
 	ld [$dec0], a
 	call Sound_ResolveCmdPtr_{SB}
@@ -450,12 +442,8 @@ Func_{SB}_4257:
 	bit 7, a
 	jr z, Func_{SB}_427c
 
-SECTION "snd_{SB}_27a", ROMX[$427a], BANK[${SB}]
-
 Func_{SB}_427a:
 	ld d, $ff
-SECTION "snd_{SB}_27c", ROMX[$427c], BANK[${SB}]
-
 Func_{SB}_427c:
 	pop hl
 	add hl, de
@@ -464,12 +452,8 @@ Func_{SB}_427c:
 	bit 7, c
 	jr z, Func_{SB}_4287
 
-SECTION "snd_{SB}_285", ROMX[$4285], BANK[${SB}]
-
 Func_{SB}_4285:
 	ld d, $ff
-SECTION "snd_{SB}_287", ROMX[$4287], BANK[${SB}]
-
 Func_{SB}_4287:
 	add hl, de
 	ld b, $00
@@ -626,12 +610,8 @@ Func_{SB}_435e:
 	or a
 	jr nz, Func_{SB}_4365
 
-SECTION "snd_{SB}_363", ROMX[$4363], BANK[${SB}]
-
 Func_{SB}_4363:
 	ld b, $07
-SECTION "snd_{SB}_365", ROMX[$4365], BANK[${SB}]
-
 Func_{SB}_4365:
 	ld a, b
 	and $0f
@@ -644,15 +624,11 @@ Func_{SB}_4365:
 	cp $60
 	jp z, Func_{SB}_43ff
 
-SECTION "snd_{SB}_378", ROMX[$4378], BANK[${SB}]
-
 Func_{SB}_4378:
 	cp $40
 	ld a, $00
 	jp z, $4401
 	jp $4403
-SECTION "snd_{SB}_382", ROMX[$4382], BANK[${SB}]
-
 Func_{SB}_4382:
 	inc hl
 	ld a, [$dec4]
@@ -784,193 +760,119 @@ Func_{SB}_4425:
 	ldh [rAUDTERM], a
 	jp Func_{SB}_4382
 
-SECTION "snd_{SB}_42e", ROMX[$442e], BANK[${SB}]
-
 Data_{SB}_442e:
 	db $00, $01, $20, $01, $40, $01, $60, $01, $80, $01, $a0, $01
-
-SECTION "snd_{SB}_43a", ROMX[$443a], BANK[${SB}]
 
 Data_{SB}_443a:
 	db $c0, $01
 
-SECTION "snd_{SB}_43c", ROMX[$443c], BANK[${SB}]
-
 Data_{SB}_443c:
 	db $00, $00, $10, $01, $30, $01
-
-SECTION "snd_{SB}_442", ROMX[$4442], BANK[${SB}]
 
 Data_{SB}_4442:
 	db $50, $01
 
-SECTION "snd_{SB}_444", ROMX[$4444], BANK[${SB}]
-
 Data_{SB}_4444:
 	db $70, $01, $90, $01
 
-SECTION "snd_{SB}_448", ROMX[$4448], BANK[${SB}]
-
 Data_{SB}_4448:
 	db $b0, $01, $d0, $01, $00, $00
-
-SECTION "snd_{SB}_44e", ROMX[$444e], BANK[${SB}]
 
 Data_{SB}_444e:
 	db $2c, $00, $07, $01, $c9, $01, $23, $02, $c7, $02, $58, $03, $da, $03, $00, $00
 	db $9d, $00
 
-SECTION "snd_{SB}_460", ROMX[$4460], BANK[${SB}]
-
 Data_{SB}_4460:
 	db $6b, $01, $23, $02, $77, $02
-
-SECTION "snd_{SB}_466", ROMX[$4466], BANK[${SB}]
 
 Data_{SB}_4466:
 	db $12, $03
 
-SECTION "snd_{SB}_468", ROMX[$4468], BANK[${SB}]
-
 Data_{SB}_4468:
 	db $9b, $03, $16, $04, $00, $00
-
-SECTION "snd_{SB}_46e", ROMX[$446e], BANK[${SB}]
 
 Data_{SB}_446e:
 	db $16, $04, $83, $04, $e5, $04, $11, $05, $63, $05, $ac, $05, $ed, $05, $00, $00
 	db $4e, $04, $b5, $04
 
-SECTION "snd_{SB}_482", ROMX[$4482], BANK[${SB}]
-
 Data_{SB}_4482:
 	db $11, $05
-
-SECTION "snd_{SB}_484", ROMX[$4484], BANK[${SB}]
 
 Data_{SB}_4484:
 	db $3b, $05, $89, $05, $ce, $05
 
-SECTION "snd_{SB}_48a", ROMX[$448a], BANK[${SB}]
-
 Data_{SB}_448a:
 	db $0b, $06, $00, $00
-
-SECTION "snd_{SB}_48e", ROMX[$448e], BANK[${SB}]
 
 Data_{SB}_448e:
 	db $0b, $06, $42, $06, $72, $06, $89, $06, $b2, $06, $d6, $06, $f7, $06, $00, $00
 	db $27, $06, $5b, $06
 
-SECTION "snd_{SB}_4a2", ROMX[$44a2], BANK[${SB}]
-
 Data_{SB}_44a2:
 	db $89, $06
-
-SECTION "snd_{SB}_4a4", ROMX[$44a4], BANK[${SB}]
 
 Data_{SB}_44a4:
 	db $9e, $06, $c4, $06, $e7, $06
 
-SECTION "snd_{SB}_4aa", ROMX[$44aa], BANK[${SB}]
-
 Data_{SB}_44aa:
 	db $06, $07, $00, $00
-
-SECTION "snd_{SB}_4ae", ROMX[$44ae], BANK[${SB}]
 
 Data_{SB}_44ae:
 	db $06, $07, $21, $07, $39, $07, $44, $07, $59, $07, $6b, $07, $7b, $07, $00, $00
 	db $14, $07, $2d, $07
 
-SECTION "snd_{SB}_4c2", ROMX[$44c2], BANK[${SB}]
-
 Data_{SB}_44c2:
 	db $44, $07
-
-SECTION "snd_{SB}_4c4", ROMX[$44c4], BANK[${SB}]
 
 Data_{SB}_44c4:
 	db $4f, $07, $62, $07, $73, $07
 
-SECTION "snd_{SB}_4ca", ROMX[$44ca], BANK[${SB}]
-
 Data_{SB}_44ca:
 	db $83, $07, $00, $00
-
-SECTION "snd_{SB}_4ce", ROMX[$44ce], BANK[${SB}]
 
 Data_{SB}_44ce:
 	db $83, $07, $90, $07, $9d, $07, $a2, $07, $ac, $07, $b6, $07, $be, $07, $00, $00
 
-SECTION "snd_{SB}_4de", ROMX[$44de], BANK[${SB}]
-
 Data_{SB}_44de:
 	db $8a, $07
-
-SECTION "snd_{SB}_4e0", ROMX[$44e0], BANK[${SB}]
 
 Data_{SB}_44e0:
 	db $97, $07
 
-SECTION "snd_{SB}_4e2", ROMX[$44e2], BANK[${SB}]
-
 Data_{SB}_44e2:
 	db $a2, $07
-
-SECTION "snd_{SB}_4e4", ROMX[$44e4], BANK[${SB}]
 
 Data_{SB}_44e4:
 	db $a7, $07, $b1, $07, $ba, $07
 
-SECTION "snd_{SB}_4ea", ROMX[$44ea], BANK[${SB}]
-
 Data_{SB}_44ea:
 	db $c1, $07, $00, $00
-
-SECTION "snd_{SB}_4ee", ROMX[$44ee], BANK[${SB}]
 
 Data_{SB}_44ee:
 	db $c1, $07, $c8, $07, $ce, $07, $d1, $07, $d6, $07, $db, $07, $df, $07, $00, $00
 	db $c5, $07, $cb, $07
 
-SECTION "snd_{SB}_502", ROMX[$4502], BANK[${SB}]
-
 Data_{SB}_4502:
 	db $d1, $07
-
-SECTION "snd_{SB}_504", ROMX[$4504], BANK[${SB}]
 
 Data_{SB}_4504:
 	db $d4, $07, $d9, $07, $dd, $07
 
-SECTION "snd_{SB}_50a", ROMX[$450a], BANK[${SB}]
-
 Data_{SB}_450a:
 	db $e1, $07, $00, $00
-
-SECTION "snd_{SB}_50e", ROMX[$450e], BANK[${SB}]
 
 Data_{SB}_450e:
 	db $e1, $07, $e4, $07, $e7, $07, $e9, $07, $eb, $07, $ed, $07, $ef, $07, $00, $00
 	db $e2, $07, $e6, $07
 
-SECTION "snd_{SB}_522", ROMX[$4522], BANK[${SB}]
-
 Data_{SB}_4522:
 	db $e9, $07
-
-SECTION "snd_{SB}_524", ROMX[$4524], BANK[${SB}]
 
 Data_{SB}_4524:
 	db $ea, $07
 
-SECTION "snd_{SB}_526", ROMX[$4526], BANK[${SB}]
-
 Data_{SB}_4526:
 	db $ec, $07, $ee, $07, $00, $00, $00, $00
-
-SECTION "snd_{SB}_52e", ROMX[$452e], BANK[${SB}]
 
 ; Channel-stream command dispatch (byte with bit 7 set). $9x -> Func_{SB}_46cc
 ; (set octave register [+1]=nibble-1, the freq-table row); otherwise (cmd-$ea)
@@ -1007,42 +909,26 @@ Func_{SB}_452e:
 	ld l, e
 	ret
 
-SECTION "snd_{SB}_54b", ROMX[$454b], BANK[${SB}]
-
 Data_{SB}_454b:
 	db $a1, $46
-
-SECTION "snd_{SB}_54d", ROMX[$454d], BANK[${SB}]
 
 Data_{SB}_454d:
 	db $87, $46, $71, $46
 
-SECTION "snd_{SB}_551", ROMX[$4551], BANK[${SB}]
-
 Data_{SB}_4551:
 	db $43, $46
-
-SECTION "snd_{SB}_553", ROMX[$4553], BANK[${SB}]
 
 Data_{SB}_4553:
 	db $3c, $46
 
-SECTION "snd_{SB}_555", ROMX[$4555], BANK[${SB}]
-
 Data_{SB}_4555:
 	db $2a, $46
-
-SECTION "snd_{SB}_557", ROMX[$4557], BANK[${SB}]
 
 Data_{SB}_4557:
 	db $26, $46, $db, $46, $db, $46, $db, $46, $db, $46, $db, $46, $db, $46, $db, $46
 
-SECTION "snd_{SB}_567", ROMX[$4567], BANK[${SB}]
-
 Data_{SB}_4567:
 	db $14, $46, $f9, $45, $ef, $45, $c1, $45, $96, $45, $86, $45, $75, $45
-
-SECTION "snd_{SB}_575", ROMX[$4575], BANK[${SB}]
 
 Func_{SB}_4575:
 	ld d, $df
@@ -1177,13 +1063,9 @@ Func_{SB}_4575:
 	ld l, a
 	jp Func_{SB}_414a
 
-SECTION "snd_{SB}_626", ROMX[$4626], BANK[${SB}]
-
 Func_{SB}_4626:
 	inc hl
 	jp Func_{SB}_414a
-SECTION "snd_{SB}_62a", ROMX[$462a], BANK[${SB}]
-
 Func_{SB}_462a:
 	inc hl
 	ld a, [hl+]
@@ -1198,15 +1080,11 @@ Func_{SB}_462a:
 	ld [de], a
 	jp Func_{SB}_414a
 
-SECTION "snd_{SB}_63c", ROMX[$463c], BANK[${SB}]
-
 Func_{SB}_463c:
 	inc hl
 	ld a, [hl+]
 	ldh [rAUD1SWEEP], a
 	jp Func_{SB}_414a
-SECTION "snd_{SB}_643", ROMX[$4643], BANK[${SB}]
-
 Func_{SB}_4643:
 	inc hl
 	ld a, [hl+]
@@ -1245,8 +1123,6 @@ Func_{SB}_4643:
 	pop hl
 	jp Func_{SB}_414a
 
-SECTION "snd_{SB}_671", ROMX[$4671], BANK[${SB}]
-
 Func_{SB}_4671:
 	ld d, $df
 	ld a, [$dec7]
@@ -1283,8 +1159,6 @@ Func_{SB}_4671:
 	ld a, [de]
 	ld l, a
 	jp Func_{SB}_414a
-SECTION "snd_{SB}_6a1", ROMX[$46a1], BANK[${SB}]
-
 Func_{SB}_46a1:
 	inc hl
 	ld a, [hl+]
@@ -1325,8 +1199,6 @@ Func_{SB}_46cc:
 	ld [de], a
 	jp Func_{SB}_414a
 
-SECTION "snd_{SB}_6db", ROMX[$46db], BANK[${SB}]
-
 Func_{SB}_46db:
 	jp Func_{SB}_46db
 Sound_SetFadeBlock_{SB}:
@@ -1355,53 +1227,33 @@ Sound_SetMute_{SB}:
 	ldh [rAUDVOL], a
 	ldh [rAUDTERM], a
 	ret
-SECTION "snd_{SB}_708", ROMX[$4708], BANK[${SB}]
-
 Data_{SB}_4708:
 	db $76, $47, $78, $47, $7c, $47, $80, $47, $84, $47, $86, $47
-
-SECTION "snd_{SB}_714", ROMX[$4714], BANK[${SB}]
 
 Data_{SB}_4714:
 	db $88, $47, $8a, $47, $8c, $47, $8e, $47
 
-SECTION "snd_{SB}_71c", ROMX[$471c], BANK[${SB}]
-
 Data_{SB}_471c:
 	db $90, $47, $94, $47, $98, $47, $9a, $47, $9c, $47
-
-SECTION "snd_{SB}_726", ROMX[$4726], BANK[${SB}]
 
 Data_{SB}_4726:
 	db $a0, $47, $a2, $47, $a4, $47, $aa, $47
 
-SECTION "snd_{SB}_72e", ROMX[$472e], BANK[${SB}]
-
 Data_{SB}_472e:
 	db $ae, $47, $b0, $47
-
-SECTION "snd_{SB}_732", ROMX[$4732], BANK[${SB}]
 
 Data_{SB}_4732:
 	db $b4, $47, $b8, $47, $ba, $47, $be, $47, $c2, $47, $c6, $47, $ca, $47, $ce, $47
 	db $d2, $47, $d6, $47, $da, $47, $de, $47, $e4, $47
 
-SECTION "snd_{SB}_74c", ROMX[$474c], BANK[${SB}]
-
 Data_{SB}_474c:
 	db $e6, $47, $e8, $47, $3c, $49
-
-SECTION "snd_{SB}_752", ROMX[$4752], BANK[${SB}]
 
 Data_{SB}_4752:
 	db $4c, $49
 
-SECTION "snd_{SB}_754", ROMX[$4754], BANK[${SB}]
-
 Data_{SB}_4754:
 	db $5e, $49, $60, $49, $62, $49, $64, $49, $66, $49, $70, $49
-
-SECTION "snd_{SB}_760", ROMX[$4760], BANK[${SB}]
 
 Func_{SB}_4760:
 	ld [hl], h
@@ -1409,53 +1261,33 @@ Func_{SB}_4760:
 	add a, h
 	ld c, c
 
-SECTION "snd_{SB}_764", ROMX[$4764], BANK[${SB}]
-
 Data_{SB}_4764:
 	db $94, $49
-
-SECTION "snd_{SB}_766", ROMX[$4766], BANK[${SB}]
 
 Data_{SB}_4766:
 	db $a4, $49, $b4, $49, $c4, $49, $d4, $49, $e4, $49
 
-SECTION "snd_{SB}_770", ROMX[$4770], BANK[${SB}]
-
 Data_{SB}_4770:
 	db $f4, $49
 
-SECTION "snd_{SB}_772", ROMX[$4772], BANK[${SB}]
-
 Data_{SB}_4772:
 	db $04, $4a
-
-SECTION "snd_{SB}_774", ROMX[$4774], BANK[${SB}]
 
 Data_{SB}_4774:
 	db $14, $4a, $f0, $ff, $c1, $03, $90, $ff, $a1, $03, $70, $ff, $81, $03, $50, $ff
 	db $40, $ff, $20, $ff
 
-SECTION "snd_{SB}_788", ROMX[$4788], BANK[${SB}]
-
 Data_{SB}_4788:
 	db $19, $0c, $e4, $03, $d1, $0c, $53, $ff
-
-SECTION "snd_{SB}_790", ROMX[$4790], BANK[${SB}]
 
 Data_{SB}_4790:
 	db $f1, $01, $00, $ff, $f1, $01, $b1, $ff, $73, $ff, $f2, $ff, $f1, $01, $91, $ff
 
-SECTION "snd_{SB}_7a0", ROMX[$47a0], BANK[${SB}]
-
 Data_{SB}_47a0:
 	db $81, $ff, $51, $ff, $79, $04, $b1, $07, $40, $ff, $1a, $10, $f5, $ff
 
-SECTION "snd_{SB}_7ae", ROMX[$47ae], BANK[${SB}]
-
 Data_{SB}_47ae:
 	db $40, $ff, $20, $ff
-
-SECTION "snd_{SB}_7b2", ROMX[$47b2], BANK[${SB}]
 
 Data_{SB}_47b2:
 	db $28, $ff, $20, $01, $80, $ff, $86, $ff, $20, $03, $80, $ff, $20, $04, $80, $ff
@@ -1463,14 +1295,10 @@ Data_{SB}_47b2:
 	db $20, $09, $80, $ff, $f0, $10, $f5, $ff, $e1, $01, $d0, $ff, $1c, $80, $f0, $80
 	db $f6, $ff, $00, $00
 
-SECTION "snd_{SB}_7e6", ROMX[$47e6], BANK[${SB}]
-
 Data_{SB}_47e6:
 	db $00, $ff, $00, $10, $01, $01, $02, $01, $03, $02, $02, $01, $ff, $01, $fe, $01
 	db $fd, $01, $ff, $01, $01, $01, $02, $01, $03, $02, $02, $01, $ff, $01, $fe, $01
 	db $fd, $01, $ff, $01, $01, $01, $02, $01, $03, $02, $02, $01, $ff, $01
-
-SECTION "snd_{SB}_814", ROMX[$4814], BANK[${SB}]
 
 Data_{SB}_4814:
 	db $fe, $01, $fd, $01, $ff, $01, $01, $01, $02, $01, $03, $02, $02, $01, $ff, $01
@@ -1493,44 +1321,28 @@ Data_{SB}_4814:
 	db $fe, $01, $fd, $01, $ff, $01, $01, $01, $02, $01, $03, $02, $02, $01, $ff, $01
 	db $fe, $01, $fd, $01, $ff, $01, $00, $ff
 
-SECTION "snd_{SB}_93c", ROMX[$493c], BANK[${SB}]
-
 Data_{SB}_493c:
 	db $00, $01
-
-SECTION "snd_{SB}_93e", ROMX[$493e], BANK[${SB}]
 
 Data_{SB}_493e:
 	db $e0, $01, $d0, $01, $c0, $01, $b0, $01, $a0, $02, $90, $02, $80, $ff, $00, $01
 	db $f0, $01, $e0, $01, $d0, $02, $c0, $02, $b0, $02, $a0, $02, $90, $02, $80, $ff
 
-SECTION "snd_{SB}_95e", ROMX[$495e], BANK[${SB}]
-
 Data_{SB}_495e:
 	db $00, $ff, $40, $ff, $80, $ff, $c0, $ff, $80, $01, $40, $01
-
-SECTION "snd_{SB}_96a", ROMX[$496a], BANK[${SB}]
 
 Data_{SB}_496a:
 	db $00, $02, $40, $03, $80, $ff
 
-SECTION "snd_{SB}_970", ROMX[$4970], BANK[${SB}]
-
 Data_{SB}_4970:
 	db $c0, $02, $80, $ff
-
-SECTION "snd_{SB}_974", ROMX[$4974], BANK[${SB}]
 
 Data_{SB}_4974:
 	db $00, $11, $23, $46, $9b, $cd, $ee, $ff, $ff, $ee, $dc, $b9, $64, $32, $11, $00
 	db $01, $23, $45, $67, $89, $ab, $cd, $ef, $ed, $cb, $a9, $87, $65, $43, $21, $00
 
-SECTION "snd_{SB}_994", ROMX[$4994], BANK[${SB}]
-
 Data_{SB}_4994:
 	db $00, $00, $00, $00, $00, $00, $00, $0f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f0
-
-SECTION "snd_{SB}_9a4", ROMX[$49a4], BANK[${SB}]
 
 Data_{SB}_49a4:
 	db $0f, $fe, $ed, $dc, $cb, $ba, $a9, $98, $87, $76, $65, $54, $43, $32, $21, $10
@@ -1539,22 +1351,14 @@ Data_{SB}_49a4:
 	db $01, $46, $54, $8d, $f9, $51, $27, $be, $db, $db, $75, $32, $05, $67, $53, $20
 	db $03, $69, $8c, $be, $fc, $bb, $ed, $ef, $db, $ac, $ba, $99, $78, $85, $64, $32
 
-SECTION "snd_{SB}_9f4", ROMX[$49f4], BANK[${SB}]
-
 Data_{SB}_49f4:
 	db $00, $11, $12, $46, $9b, $be, $ee, $ff, $ff, $ee, $ed, $d9, $64, $21, $11, $00
-
-SECTION "snd_{SB}_a04", ROMX[$4a04], BANK[${SB}]
 
 Data_{SB}_4a04:
 	db $02, $46, $89, $ab, $cd, $ef, $ed, $cb, $a9, $87, $65, $45, $65, $43, $20, $00
 
-SECTION "snd_{SB}_a14", ROMX[$4a14], BANK[${SB}]
-
 Data_{SB}_4a14:
 	db $01, $70, $13, $57, $9b, $df, $fb, $73, $03, $7b, $fd, $89, $75, $31, $00, $00
-
-SECTION "snd_{SB}_a24", ROMX[$4a24], BANK[${SB}]
 
 Data_{SB}_4a24:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff

@@ -7,24 +7,19 @@ SECTION "TitleTiles bank0", ROMX[$4000], BANK[$28]
 TitleTilesBank0:
 	INCBIN "assets/title/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-SECTION "TitleTiles bank1", ROMX[$5800], BANK[$28]
 TitleTilesBank1:
 	INCBIN "assets/title/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "TitlePalettes", ROMX[$7000], BANK[$28]
 TitlePalettes:
 	INCBIN "assets/title/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
-SECTION "TitleDescriptor", ROMX[$7080], BANK[$28]
 TitleMapDesc:
 	db 18, 20
 	dw TitleAttrMap
 	dw TitleIdxMap
 
-SECTION "TitleIdxMap", ROMX[$7086], BANK[$28]
 TitleIdxMap:
 	INCBIN "assets/title/tilemap.bin"
 
-SECTION "TitleAttrMap", ROMX[$71ee], BANK[$28]
 TitleAttrMap:
 	INCBIN "assets/title/attrmap.bin"

@@ -10,7 +10,6 @@ SECTION "NajiPortraitTiles", ROMX[$5ae8], BANK[$1a]
 NajiPortraitTiles:
 	INCBIN "assets/naji/tiles.bin"
 
-SECTION "NajiPortraitPaletteBg", ROMX[$72e8], BANK[$1a]
 NajiPortraitPaletteBg:
 	INCBIN "assets/naji/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
@@ -24,10 +23,8 @@ NajiPortraitMapDesc:
 	dw NajiPortraitAttrMap
 	dw NajiPortraitIndexMap
 
-SECTION "NajiPortraitIndexMap", ROMX[$736e], BANK[$1a]
 NajiPortraitIndexMap:
 	INCBIN "assets/naji/tilemap.bin"
 
-SECTION "NajiPortraitAttrMap", ROMX[$744a], BANK[$1a]
 NajiPortraitAttrMap:
 	INCBIN "assets/naji/attrmap.bin"

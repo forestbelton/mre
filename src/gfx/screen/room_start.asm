@@ -7,24 +7,19 @@ SECTION "RoomStartTiles bank0", ROMX[$4000], BANK[$23]
 RoomStartTilesBank0:
 	INCBIN "assets/room_start/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-SECTION "RoomStartTiles bank1", ROMX[$5800], BANK[$23]
 RoomStartTilesBank1:
 	INCBIN "assets/room_start/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "RoomStartPalettes", ROMX[$7000], BANK[$23]
 RoomStartPalettes:
 	INCBIN "assets/room_start/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
-SECTION "RoomStartDescriptor", ROMX[$7080], BANK[$23]
 RoomStartMapDesc:
 	db 18, 20
 	dw RoomStartAttrMap
 	dw RoomStartIdxMap
 
-SECTION "RoomStartIdxMap", ROMX[$7086], BANK[$23]
 RoomStartIdxMap:
 	INCBIN "assets/room_start/tilemap.bin"
 
-SECTION "RoomStartAttrMap", ROMX[$71ee], BANK[$23]
 RoomStartAttrMap:
 	INCBIN "assets/room_start/attrmap.bin"

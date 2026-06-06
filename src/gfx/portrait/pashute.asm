@@ -10,7 +10,6 @@ SECTION "PashutePortraitTiles", ROMX[$4000], BANK[$1b]
 PashutePortraitTiles:
 	INCBIN "assets/pashute/tiles.bin"
 
-SECTION "PashutePortraitPaletteBg", ROMX[$5800], BANK[$1b]
 PashutePortraitPaletteBg:
 	INCBIN "assets/pashute/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
@@ -24,10 +23,8 @@ PashutePortraitMapDesc:
 	dw PashutePortraitAttrMap
 	dw PashutePortraitIndexMap
 
-SECTION "PashutePortraitIndexMap", ROMX[$5886], BANK[$1b]
 PashutePortraitIndexMap:
 	INCBIN "assets/pashute/tilemap.bin"
 
-SECTION "PashutePortraitAttrMap", ROMX[$5962], BANK[$1b]
 PashutePortraitAttrMap:
 	INCBIN "assets/pashute/attrmap.bin"

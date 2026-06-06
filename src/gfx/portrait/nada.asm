@@ -17,11 +17,9 @@ SECTION "NadaIntroTilesBank0", ROMX[$4000], BANK[$1c]
 NadaIntroTilesBank0:
 	INCBIN "assets/nada_intro/tiles2.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-SECTION "NadaIntroTiles", ROMX[$5800], BANK[$1c]
 NadaIntroTiles:
 	INCBIN "assets/nada_intro/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "NadaIntroPaletteBg", ROMX[$7000], BANK[$1c]
 NadaIntroPaletteBg:
 	INCBIN "assets/nada_intro/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
@@ -35,11 +33,9 @@ NadaIntroMapDesc:
 	dw NadaIntroAttrMap                       ; CGB attribute map pointer
 	dw NadaIntroIndexMap                      ; tile index map pointer
 
-SECTION "NadaIntroIndexMap", ROMX[$7086], BANK[$1c]
 NadaIntroIndexMap:
 	INCBIN "assets/nada_intro/tilemap.bin"  ; 20x11 tile indices
 
-SECTION "NadaIntroAttrMap", ROMX[$7162], BANK[$1c]
 NadaIntroAttrMap:
 	INCBIN "assets/nada_intro/attrmap.bin"  ; 20x11 CGB BG attributes (bit 3 = VRAM bank)
 
@@ -52,16 +48,13 @@ SECTION "NadaScene2Tiles", ROMX[$6607], BANK[$1f]
 NadaScene2Tiles:
 	INCBIN "assets/nada_scene2/tiles.bin"     ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "NadaScene2MapDesc", ROMX[$7e07], BANK[$1f]
 NadaScene2MapDesc:
 	db 11, 20                                  ; rows, cols
 	dw NadaScene2AttrMap                        ; CGB attribute map pointer
 	dw NadaScene2IndexMap                       ; tile index map pointer
 
-SECTION "NadaScene2IndexMap", ROMX[$7e0d], BANK[$1f]
 NadaScene2IndexMap:
 	INCBIN "assets/nada_scene2/tilemap.bin"   ; 20x11 tile indices
 
-SECTION "NadaScene2AttrMap", ROMX[$7ee9], BANK[$1f]
 NadaScene2AttrMap:
 	INCBIN "assets/nada_scene2/attrmap.bin"   ; 20x11 CGB BG attributes (bit 3 = VRAM bank)

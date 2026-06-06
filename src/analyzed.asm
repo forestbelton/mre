@@ -8,12 +8,8 @@ SECTION "analyzed_0042c9", ROMX[$42c9], BANK[$01]
 Data_01_42c9:
 	db $40, $00, $80, $00, $c0, $00, $00, $01
 
-SECTION "analyzed_0042d1", ROMX[$42d1], BANK[$01]
-
 Data_01_42d1:
 	db $40, $01, $80, $01, $c0, $01, $00, $02
-
-SECTION "analyzed_0042d9", ROMX[$42d9], BANK[$01]
 
 Func_01_42d9:
 	call Func_01_42b3
@@ -72,8 +68,6 @@ Func_01_42f2:
 	rst AddAToHL
 	jr Func_01_42f2
 
-SECTION "analyzed_004335", ROMX[$4335], BANK[$01]
-
 Data_01_4335:
 	db $3f, $43, $46, $43, $59, $43, $7e, $43, $97, $43, $50, $60, $37, $22, $01, $01
 	db $00, $51, $a4, $47, $22, $01, $05, $60, $20, $10, $22, $03, $00, $61, $e0, $10
@@ -82,8 +76,6 @@ Data_01_4335:
 	db $00, $00, $62, $80, $a0, $22, $00, $00, $00, $53, $d0, $2f, $22, $00, $05, $54
 	db $e8, $87, $22, $02, $00, $63, $38, $18, $22, $02, $00, $63, $88, $18, $22, $02
 	db $00, $00, $55, $80, $47, $22, $00, $05, $00
-
-SECTION "analyzed_00439e", ROMX[$439e], BANK[$01]
 
 Func_01_439e:
 	FAR_CALL $05, Func_05_46f0
@@ -272,16 +264,12 @@ Func_01_4543:
 	pop af
 	ret
 
-SECTION "analyzed_004552", ROMX[$4552], BANK[$01]
-
 Func_01_4552:
 	push af
 	ld a, $2b
 	call PlaySoundTracked
 	pop af
 	ret
-
-SECTION "analyzed_00455a", ROMX[$455a], BANK[$01]
 
 Func_01_455a:
 	push af
@@ -317,8 +305,6 @@ Func_01_4562:
 	and $f0
 	jr z, Func_01_4596
 
-SECTION "analyzed_00458e", ROMX[$458e], BANK[$01]
-
 Func_01_458e:
 	xor a
 	ld [hl-], a
@@ -326,8 +312,6 @@ Func_01_458e:
 	ld [hl], a
 	call Func_01_4b0e
 	ret
-
-SECTION "analyzed_004596", ROMX[$4596], BANK[$01]
 
 Func_01_4596:
 	call Func_01_44ef
@@ -492,12 +476,8 @@ Func_01_46d5:
 	cp $01
 	jr z, Func_01_46f8
 
-SECTION "analyzed_0046e0", ROMX[$46e0], BANK[$01]
-
 Data_01_46e0:
 	db $fe, $06, $28, $02, $18, $62
-
-SECTION "analyzed_0046e6", ROMX[$46e6], BANK[$01]
 
 Func_01_46e6:
 	ld a, $09
@@ -517,12 +497,8 @@ Func_01_46f8:
 	cp c
 	jr nz, Func_01_4748
 
-SECTION "analyzed_004706", ROMX[$4706], BANK[$01]
-
 Data_01_4706:
 	db $3e, $02, $ea, $d7, $c2, $18, $2d
-
-SECTION "analyzed_00470d", ROMX[$470d], BANK[$01]
 
 Func_01_470d:
 	ld a, $03
@@ -541,15 +517,11 @@ Func_01_470d:
 	ld [wGameScene], a
 	ret
 
-SECTION "analyzed_00473a", ROMX[$473a], BANK[$01]
-
 Func_01_473a:
 	FAR_CALL $18, Func_18_6b71
 	ld a, $04
 	ld [wGameScene], a
 	ret
-
-SECTION "analyzed_004748", ROMX[$4748], BANK[$01]
 
 Func_01_4748:
 	FAR_CALL $05, Func_05_4800
@@ -664,8 +636,6 @@ Func_01_4815:
 	call Func_00_119a
 	ret
 
-SECTION "analyzed_00481b", ROMX[$481b], BANK[$01]
-
 Func_01_481b:
 	ld a, $16
 	call Func_00_119a
@@ -679,8 +649,6 @@ Func_01_4827:
 	call Func_00_119a
 	ret
 
-SECTION "analyzed_00482d", ROMX[$482d], BANK[$01]
-
 Func_01_482d:
 	ld a, $19
 	call Func_00_119a
@@ -692,12 +660,8 @@ Func_01_4833:
 	cp $00
 	jr z, Func_01_4849
 
-SECTION "analyzed_00483e", ROMX[$483e], BANK[$01]
-
 Data_01_483e:
 	db $fe, $01, $c0, $fa, $c0, $c2, $fe, $35, $28, $61, $c9
-
-SECTION "analyzed_004849", ROMX[$4849], BANK[$01]
 
 Func_01_4849:
 	ld a, [wActiveFloor]
@@ -746,8 +710,6 @@ Func_01_4891:
 	call Func_00_1164
 	ret
 
-SECTION "analyzed_004897", ROMX[$4897], BANK[$01]
-
 Func_01_4897:
 	ld a, $16
 	call Func_00_1164
@@ -763,8 +725,6 @@ Func_01_48a3:
 	ld a, $19
 	call Func_00_1164
 	ret
-
-SECTION "analyzed_0048af", ROMX[$48af], BANK[$01]
 
 Func_01_48af:
 	ld a, $02
@@ -1167,13 +1127,9 @@ Func_01_4b3b:
 	or a
 	ret z
 
-SECTION "analyzed_004b6a", ROMX[$4b6a], BANK[$01]
-
 Data_01_4b6a:
 	db $78, $3c, $cb, $37, $e6, $f0, $d6, $08, $c6, $0d, $ea, $07, $c8, $af, $ea, $06
 	db $c8, $c9
-
-SECTION "analyzed_004b7c", ROMX[$4b7c], BANK[$01]
 
 Func_01_4b7c:
 	ld a, [wProgressFlags]
@@ -1507,17 +1463,11 @@ Func_01_4d7b:
 	jr nz, Func_01_4d7b
 	ret
 
-SECTION "analyzed_004d89", ROMX[$4d89], BANK[$01]
-
 Func_01_4d89:
 	jr nc, Func_01_4dbc
 
-SECTION "analyzed_004d8b", ROMX[$4d8b], BANK[$01]
-
 Data_01_4d8b:
 	db $32, $33, $34, $35, $36, $37, $38, $39, $00, $00
-
-SECTION "analyzed_004d95", ROMX[$4d95], BANK[$01]
 
 Func_01_4d95:
 	push af
@@ -1548,15 +1498,11 @@ Func_01_4db6:
 	bit 7, a
 	ret z
 
-SECTION "analyzed_004dba", ROMX[$4dba], BANK[$01]
-
 Func_01_4dba:
 	set 6, a
 Func_01_4dbc:
 	ld [hl], a
 	ret
-
-SECTION "analyzed_004dbe", ROMX[$4dbe], BANK[$01]
 
 Func_01_4dbe:
 	push af
@@ -1602,12 +1548,8 @@ Func_01_4dd9:
 	ldh [$ffa8], a
 	ret
 
-SECTION "analyzed_004e01", ROMX[$4e01], BANK[$01]
-
 Data_01_4e01:
 	db $00, $01, $00, $02, $00, $fe, $00, $ff
-
-SECTION "analyzed_004e09", ROMX[$4e09], BANK[$01]
 
 Func_01_4e09:
 	ld hl, $4f5b
@@ -1742,8 +1684,6 @@ Func_01_4f36:
 	call Func_01_76dd
 	ret
 
-SECTION "analyzed_004f5b", ROMX[$4f5b], BANK[$01]
-
 Data_01_4f5b:
 	db $20, $20, $20, $20, $20, $20, $20, $50, $41, $55, $53, $45, $20, $20, $20, $20
 	db $20, $20, $20, $20, $00, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -1841,16 +1781,12 @@ Func_01_5549:
 	bit 2, a
 	jr z, Func_01_559c
 
-SECTION "analyzed_005553", ROMX[$5553], BANK[$01]
-
 Data_01_5553:
 	db $cb, $77, $20, $1d, $e5, $01, $0d, $00, $09, $2a, $66, $6f, $11, $00, $08, $7d
 	db $93, $6f, $7c, $9a, $67, $54, $5d, $e1, $e5, $01, $0d, $00, $09, $7b, $22, $72
 	db $e1, $af, $77, $e5, $01, $0c, $00, $09, $5e, $e1, $e5, $01, $0e, $00, $09, $56
 	db $e1, $01, $00, $00, $3e, $1f, $ea, $9c, $c2, $7c, $ea, $a1, $c2, $7d, $ea, $a2
 	db $c2, $3e, $03, $21, $93, $45, $cd, $67, $04
-
-SECTION "analyzed_00559c", ROMX[$559c], BANK[$01]
 
 Func_01_559c:
 	pop hl
@@ -1887,8 +1823,6 @@ Func_01_55bc:
 	pop hl
 	jr Func_01_55db
 
-SECTION "analyzed_0055d1", ROMX[$55d1], BANK[$01]
-
 Func_01_55d1:
 	push hl
 	ld bc, $000e
@@ -1896,8 +1830,6 @@ Func_01_55d1:
 	ld a, [hl]
 	ld [$cf76], a
 	pop hl
-
-SECTION "analyzed_0055db", ROMX[$55db], BANK[$01]
 
 Func_01_55db:
 	push hl
@@ -1947,12 +1879,8 @@ DoubleFloorTimer:
 	and $f0
 	ret z
 
-SECTION "analyzed_005623", ROMX[$5623], BANK[$01]
-
 Data_01_5623:
 	db $3e, $09, $32, $3e, $99, $32, $77, $c9
-
-SECTION "analyzed_00562b", ROMX[$562b], BANK[$01]
 
 QuintupleFloorTimer:
 	ld hl, wFloorTimer
@@ -2007,8 +1935,6 @@ QuintupleFloorTimer:
 	ld [hl], a
 	and $f0
 	ret z
-
-SECTION "analyzed_00566e", ROMX[$566e], BANK[$01]
 
 Data_01_566e:
 	db $3e, $09, $32, $3e, $99, $32, $77, $c9
@@ -2188,14 +2114,10 @@ Func_01_582f:
 	xor a
 	ret
 
-SECTION "analyzed_005833", ROMX[$5833], BANK[$01]
-
 Data_01_5833:
 	db $c2, $c3, $c4, $c5, $c6, $c7, $c8, $c9, $ca, $cb, $cc, $cd, $ce, $cf, $d0, $d1
 	db $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df, $e0, $e3
 	db $00
-
-SECTION "analyzed_005854", ROMX[$5854], BANK[$01]
 
 StartKeyUnlock:
 	ld a, c
@@ -2220,12 +2142,8 @@ Func_01_5866:
 	ld l, a
 	jp hl
 
-SECTION "analyzed_005875", ROMX[$5875], BANK[$01]
-
 Data_01_5875:
 	db $7f, $58, $80, $58, $ee, $58, $49, $59, $5f, $5a
-
-SECTION "analyzed_00587f", ROMX[$587f], BANK[$01]
 
 Func_01_587f:
 	ret
@@ -2288,12 +2206,8 @@ Func_01_58d9:
 	ld [$c2db], a
 	ret
 
-SECTION "analyzed_0058ec", ROMX[$58ec], BANK[$01]
-
 Data_01_58ec:
 	db $01, $02
-
-SECTION "analyzed_0058ee", ROMX[$58ee], BANK[$01]
 
 Func_01_58ee:
 	ld a, [$c2de]
@@ -2347,12 +2261,8 @@ Func_01_593c:
 	pop af
 	ret
 
-SECTION "analyzed_005944", ROMX[$5944], BANK[$01]
-
 Data_01_5944:
 	db $ff, $ff, $01, $00, $ff
-
-SECTION "analyzed_005949", ROMX[$5949], BANK[$01]
 
 Func_01_5949:
 	ld a, [$c2dd]
@@ -2495,8 +2405,6 @@ Func_01_5a52:
 	res 6, [hl]
 	ret
 
-SECTION "analyzed_005a58", ROMX[$5a58], BANK[$01]
-
 Data_01_5a58:
 	db $ff, $01, $02, $03, $ff, $04
 
@@ -2541,17 +2449,11 @@ Func_01_5a90:
 	ld l, a
 	jp hl
 
-SECTION "analyzed_005aa1", ROMX[$5aa1], BANK[$01]
-
 Data_01_5aa1:
 	db $b9, $5a, $d5, $5a, $ed, $5a, $05, $5b, $1d, $5b, $35, $5b, $4d, $5b
 
-SECTION "analyzed_005aaf", ROMX[$5aaf], BANK[$01]
-
 Data_01_5aaf:
 	db $b1, $5a, $f5, $3e, $06, $cd, $85, $0a, $f1, $c9
-
-SECTION "analyzed_005ab9", ROMX[$5ab9], BANK[$01]
 
 Func_01_5ab9:
 	ld hl, $c823
@@ -2706,12 +2608,8 @@ Func_01_5b9e:
 	cp $ff
 	jr nz, Func_01_5ba8
 
-SECTION "analyzed_005ba6", ROMX[$5ba6], BANK[$01]
-
 Data_01_5ba6:
 	db $f1, $c9
-
-SECTION "analyzed_005ba8", ROMX[$5ba8], BANK[$01]
 
 Func_01_5ba8:
 	ld b, a
@@ -2751,12 +2649,8 @@ Func_01_5bd8:
 	cp $ff
 	jr nz, Func_01_5be2
 
-SECTION "analyzed_005be0", ROMX[$5be0], BANK[$01]
-
 Data_01_5be0:
 	db $f1, $c9
-
-SECTION "analyzed_005be2", ROMX[$5be2], BANK[$01]
 
 Func_01_5be2:
 	ld b, a
@@ -2815,12 +2709,8 @@ Func_01_5c28:
 	cp $01
 	ret nz
 
-SECTION "analyzed_005c3b", ROMX[$5c3b], BANK[$01]
-
 Data_01_5c3b:
 	db $3e, $02, $ea, $0f, $d6, $18, $05
-
-SECTION "analyzed_005c42", ROMX[$5c42], BANK[$01]
 
 Func_01_5c42:
 	ld a, $01
@@ -3273,14 +3163,10 @@ Func_01_5eed:
 	call Func_01_6449
 	ret
 
-SECTION "analyzed_005f52", ROMX[$5f52], BANK[$01]
-
 Func_01_5f52:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_005f58", ROMX[$5f58], BANK[$01]
 
 Func_01_5f58:
 	call Func_01_64f2
@@ -3352,14 +3238,10 @@ Func_01_5f68:
 	call Func_01_6449
 	ret
 
-SECTION "analyzed_005fcd", ROMX[$5fcd], BANK[$01]
-
 Func_01_5fcd:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_005fd3", ROMX[$5fd3], BANK[$01]
 
 Func_01_5fd3:
 	call Func_01_64d7
@@ -3431,14 +3313,10 @@ Func_01_5fe3:
 	call Func_01_645f
 	ret
 
-SECTION "analyzed_006048", ROMX[$6048], BANK[$01]
-
 Func_01_6048:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_00604e", ROMX[$604e], BANK[$01]
 
 Func_01_604e:
 	call Func_01_64d7
@@ -3510,14 +3388,10 @@ Func_01_605e:
 	call Func_01_645f
 	ret
 
-SECTION "analyzed_0060c3", ROMX[$60c3], BANK[$01]
-
 Func_01_60c3:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_0060c9", ROMX[$60c9], BANK[$01]
 
 Func_01_60c9:
 	call Func_01_64f2
@@ -3589,14 +3463,10 @@ Func_01_60d9:
 	call Func_01_648b
 	ret
 
-SECTION "analyzed_00613e", ROMX[$613e], BANK[$01]
-
 Func_01_613e:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_006144", ROMX[$6144], BANK[$01]
 
 Func_01_6144:
 	call Func_01_64a1
@@ -3668,14 +3538,10 @@ Func_01_6154:
 	call Func_01_648b
 	ret
 
-SECTION "analyzed_0061b9", ROMX[$61b9], BANK[$01]
-
 Func_01_61b9:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_0061bf", ROMX[$61bf], BANK[$01]
 
 Func_01_61bf:
 	call Func_01_64bc
@@ -3747,14 +3613,10 @@ Func_01_61cf:
 	call Func_01_6475
 	ret
 
-SECTION "analyzed_006234", ROMX[$6234], BANK[$01]
-
 Func_01_6234:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_00623a", ROMX[$623a], BANK[$01]
 
 Func_01_623a:
 	call Func_01_64bc
@@ -3826,14 +3688,10 @@ Func_01_624a:
 	call Func_01_6475
 	ret
 
-SECTION "analyzed_0062af", ROMX[$62af], BANK[$01]
-
 Func_01_62af:
 	ld hl, $ffb6
 	res 3, [hl]
 	ret
-
-SECTION "analyzed_0062b5", ROMX[$62b5], BANK[$01]
 
 Func_01_62b5:
 	call Func_01_64a1
@@ -3961,8 +3819,6 @@ Func_01_6372:
 	call Func_01_6449
 	ret
 
-SECTION "analyzed_00639d", ROMX[$639d], BANK[$01]
-
 Func_01_639d:
 	ldh a, [hEntityX]
 	add a, $08
@@ -4059,8 +3915,6 @@ Func_01_641e:
 	ld [hl], a
 	call Func_01_648b
 	ret
-
-SECTION "analyzed_006449", ROMX[$6449], BANK[$01]
 
 Func_01_6449:
 	ldh a, [hEntityX]
@@ -4407,8 +4261,6 @@ Func_01_666a:
 	xor a
 	ret
 
-SECTION "analyzed_00666c", ROMX[$666c], BANK[$01]
-
 Data_01_666c:
 	db $37, $79, $40, $79, $49, $79, $52, $79, $5b, $79, $64, $79, $6d, $79, $76, $79
 
@@ -4417,14 +4269,10 @@ SECTION "analyzed_0066b8", ROMX[$66b8], BANK[$01]
 Data_01_66b8:
 	db $00, $00
 
-SECTION "analyzed_0066ba", ROMX[$66ba], BANK[$01]
-
 Data_01_66ba:
 	db $e5, $74, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00
-
-SECTION "analyzed_0066dc", ROMX[$66dc], BANK[$01]
 
 Data_01_66dc:
 	db $63, $75, $0c, $76, $9f, $76, $0a, $77, $6e, $77, $a5, $77, $e5, $77, $4a, $78
@@ -4440,16 +4288,12 @@ SECTION "analyzed_0066f4", ROMX[$66f4], BANK[$01]
 Data_01_66f4:
 	db $00, $00, $00, $00
 
-SECTION "analyzed_0066f8", ROMX[$66f8], BANK[$01]
-
 Data_01_66f8:
 	db $00, $00, $00, $00, $b4, $7a, $37, $7b, $c5, $7b, $08, $7c, $9e, $7c, $25, $7d
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $73, $7e, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_006740", ROMX[$6740], BANK[$01]
 
 Data_01_6740:
 	db $a2, $72
@@ -4666,13 +4510,9 @@ Func_01_686f:
 	call StartKeyUnlock
 	ret
 
-SECTION "analyzed_0068c8", ROMX[$68c8], BANK[$01]
-
 Func_01_68c8:
 	pop hl
 	ret
-
-SECTION "analyzed_0068ca", ROMX[$68ca], BANK[$01]
 
 Func_01_68ca:
 	ld hl, $c823
@@ -5098,13 +4938,9 @@ Func_01_6adb:
 	cp $60
 	ret nz
 
-SECTION "analyzed_006b6a", ROMX[$6b6a], BANK[$01]
-
 Func_01_6b6a:
 	call Func_01_4ab6
 	ret
-
-SECTION "analyzed_006b6e", ROMX[$6b6e], BANK[$01]
 
 Func_01_6b6e:
 	ld hl, $c823
@@ -5142,12 +4978,8 @@ Func_01_6ba1:
 	cp $38
 	jr z, Func_01_6bb2
 
-SECTION "analyzed_006ba6", ROMX[$6ba6], BANK[$01]
-
 Data_01_6ba6:
 	db $fe, $41, $28, $1d
-
-SECTION "analyzed_006baa", ROMX[$6baa], BANK[$01]
 
 Func_01_6baa:
 	ld de, $002a
@@ -5172,13 +5004,9 @@ Func_01_6bb2:
 	pop hl
 	ret
 
-SECTION "analyzed_006bc7", ROMX[$6bc7], BANK[$01]
-
 Data_01_6bc7:
 	db $e5, $11, $18, $00, $19, $3e, $37, $22, $3e, $7b, $77, $e1, $e5, $11, $16, $00
 	db $19, $af, $77, $e1, $c9
-
-SECTION "analyzed_006bdc", ROMX[$6bdc], BANK[$01]
 
 Func_01_6bdc:
 	push hl
@@ -5250,12 +5078,8 @@ Func_01_6c2a:
 	cp $01
 	jr z, Func_01_6c68
 
-SECTION "analyzed_006c3d", ROMX[$6c3d], BANK[$01]
-
 Data_01_6c3d:
 	db $e1, $c1, $af, $c9
-
-SECTION "analyzed_006c41", ROMX[$6c41], BANK[$01]
 
 Func_01_6c41:
 	ldh a, [hHitbox1W]
@@ -5370,12 +5194,8 @@ Func_01_6ce0:
 	cp $38
 	jr z, Func_01_6cfe
 
-SECTION "analyzed_006cf1", ROMX[$6cf1], BANK[$01]
-
 Data_01_6cf1:
 	db $fe, $41, $28, $1e
-
-SECTION "analyzed_006cf5", ROMX[$6cf5], BANK[$01]
 
 Func_01_6cf5:
 	call Func_01_6592
@@ -5400,13 +5220,9 @@ Func_01_6cfe:
 	ld a, $01
 	ret
 
-SECTION "analyzed_006d13", ROMX[$6d13], BANK[$01]
-
 Data_01_6d13:
 	db $e5, $01, $18, $00, $09, $3e, $0e, $22, $3e, $7b, $77, $e1, $cd, $28, $6d, $c1
 	db $e1, $c1, $3e, $01, $c9
-
-SECTION "analyzed_006d28", ROMX[$6d28], BANK[$01]
 
 Func_01_6d28:
 	push hl
@@ -5426,12 +5242,8 @@ Func_01_6d28:
 	bit 7, d
 	jr z, Func_01_6d44
 
-SECTION "analyzed_006d40", ROMX[$6d40], BANK[$01]
-
 Data_01_6d40:
 	db $cb, $fe, $18, $02
-
-SECTION "analyzed_006d44", ROMX[$6d44], BANK[$01]
 
 Func_01_6d44:
 	res 7, [hl]
@@ -5449,64 +5261,40 @@ Func_01_6d48:
 	ld l, a
 	jp hl
 
-SECTION "analyzed_006d56", ROMX[$6d56], BANK[$01]
-
 Func_01_6d56:
 	ld [hl], $6e
-
-SECTION "analyzed_006d58", ROMX[$6d58], BANK[$01]
 
 Data_01_6d58:
 	db $af, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e, $36, $6e
 	db $36, $6e, $37, $6e, $37, $6e, $37, $6e, $36, $6e, $37, $6e, $37, $6e, $37, $6e
 	db $37, $6e, $37, $6e, $37, $6e, $37, $6e
 
-SECTION "analyzed_006d80", ROMX[$6d80], BANK[$01]
-
 Data_01_6d80:
 	db $37, $6e
-
-SECTION "analyzed_006d82", ROMX[$6d82], BANK[$01]
 
 Data_01_6d82:
 	db $37, $6e, $37, $6e, $37, $6e, $37, $6e, $37, $6e, $37, $6e
 
-SECTION "analyzed_006d8e", ROMX[$6d8e], BANK[$01]
-
 Data_01_6d8e:
 	db $36, $6e, $36, $6e
-
-SECTION "analyzed_006d92", ROMX[$6d92], BANK[$01]
 
 Data_01_6d92:
 	db $36, $6e, $d0, $6e, $36, $6e, $36, $6e
 
-SECTION "analyzed_006d9a", ROMX[$6d9a], BANK[$01]
-
 Data_01_6d9a:
 	db $36, $6e
-
-SECTION "analyzed_006d9c", ROMX[$6d9c], BANK[$01]
 
 Data_01_6d9c:
 	db $36, $6e, $36, $6e, $36, $6e
 
-SECTION "analyzed_006da2", ROMX[$6da2], BANK[$01]
-
 Data_01_6da2:
 	db $37, $6e
-
-SECTION "analyzed_006da4", ROMX[$6da4], BANK[$01]
 
 Data_01_6da4:
 	db $37, $6e, $37, $6e, $37, $6e, $37, $6e
 
-SECTION "analyzed_006dac", ROMX[$6dac], BANK[$01]
-
 Data_01_6dac:
 	db $37, $6e
-
-SECTION "analyzed_006dae", ROMX[$6dae], BANK[$01]
 
 Data_01_6dae:
 	db $37, $6e, $37, $6e, $37, $6e, $37, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e
@@ -5514,32 +5302,20 @@ Data_01_6dae:
 	db $48, $6e, $37, $6e, $37, $6e, $37, $6e, $48, $6e, $48, $6e, $48, $6e, $48, $6e
 	db $48, $6e, $48, $6e
 
-SECTION "analyzed_006de2", ROMX[$6de2], BANK[$01]
-
 Data_01_6de2:
 	db "6n6n6n6n6n6n6n6n6n6n"
-
-SECTION "analyzed_006df6", ROMX[$6df6], BANK[$01]
 
 Data_01_6df6:
 	db $55, $6e, $95, $6e, $65, $6e, $75, $6e, $85, $6e, $a5, $6e
 
-SECTION "analyzed_006e02", ROMX[$6e02], BANK[$01]
-
 Data_01_6e02:
 	db "6n6n6n6n6n6n6n6n6n6n"
-
-SECTION "analyzed_006e16", ROMX[$6e16], BANK[$01]
 
 Data_01_6e16:
 	db $3e, $6e, $3e, $6e, $36, $6e, $36, $6e
 
-SECTION "analyzed_006e1e", ROMX[$6e1e], BANK[$01]
-
 Data_01_6e1e:
 	db "6n6n6n6n6n6n6n6n6n6n6n6n"
-
-SECTION "analyzed_006e36", ROMX[$6e36], BANK[$01]
 
 Func_01_6e36:
 	ret
@@ -6748,14 +6524,10 @@ Func_01_75bc:
 	call Func_01_77d2
 	ret
 
-SECTION "analyzed_0075cc", ROMX[$75cc], BANK[$01]
-
 Data_01_75cc:
 	db $64, $2d, $30, $30, $30, $30, $30, $20, $65, $2a, $30, $20, $20, $20, $20, $20
 	db $20, $20, $20, $20, $00, $4c, $49, $46, $45, $6a, $6a, $6a, $20, $65, $2a, $30
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $00
-
-SECTION "analyzed_0075f6", ROMX[$75f6], BANK[$01]
 
 Func_01_75f6:
 	ld a, [wProgressFlags]
@@ -6905,12 +6677,8 @@ Func_01_76d0:
 	dec d
 	ret
 
-SECTION "analyzed_0076d5", ROMX[$76d5], BANK[$01]
-
 Data_01_76d5:
 	db $ae, $af, $b0, $af, $a8, $a9, $aa, $a9
-
-SECTION "analyzed_0076dd", ROMX[$76dd], BANK[$01]
 
 Func_01_76dd:
 	xor a
@@ -6985,13 +6753,9 @@ Func_01_7743:
 	ld a, $a5
 	ret
 
-SECTION "analyzed_007746", ROMX[$7746], BANK[$01]
-
 Func_01_7746:
 	ld a, $a6
 	ret
-
-SECTION "analyzed_007749", ROMX[$7749], BANK[$01]
 
 Func_01_7749:
 	ld a, $a7
@@ -7151,53 +6915,33 @@ Data_01_781f:
 	db $00, $0c, $00, $00, $0d, $00, $00, $0e, $00, $00, $0f, $00, $00, $10, $00, $00
 	db $11, $00, $00, $12, $00, $00, $13, $00, $00, $14, $00, $00
 
-SECTION "analyzed_00785b", ROMX[$785b], BANK[$01]
-
 Data_01_785b:
 	db $15, $00, $00
-
-SECTION "analyzed_00785e", ROMX[$785e], BANK[$01]
 
 Data_01_785e:
 	db $16, $00, $00, $17, $00, $00, $18, $00, $00, $19, $00, $00, $1a, $00, $00, $1b
 	db $00, $00
 
-SECTION "analyzed_007870", ROMX[$7870], BANK[$01]
-
 Data_01_7870:
 	db $1c, $00, $00, $00, $00, $00
-
-SECTION "analyzed_007876", ROMX[$7876], BANK[$01]
 
 Data_01_7876:
 	db $1e, $03, $03, $1f, $02, $02, $20, $00, $00, $21, $00, $00
 
-SECTION "analyzed_007882", ROMX[$7882], BANK[$01]
-
 Data_01_7882:
 	db $22, $00, $00
-
-SECTION "analyzed_007885", ROMX[$7885], BANK[$01]
 
 Data_01_7885:
 	db $23, $00, $00, $24, $00, $00, $25, $00, $00
 
-SECTION "analyzed_00788e", ROMX[$788e], BANK[$01]
-
 Data_01_788e:
 	db $26, $00, $00
-
-SECTION "analyzed_007891", ROMX[$7891], BANK[$01]
 
 Data_01_7891:
 	db $27, $00, $00, $28, $00, $00, $29, $00, $00, $2a, $00, $00
 
-SECTION "analyzed_00789d", ROMX[$789d], BANK[$01]
-
 Data_01_789d:
 	db $2b, $00, $00
-
-SECTION "analyzed_0078a0", ROMX[$78a0], BANK[$01]
 
 Data_01_78a0:
 	db $2c, $00, $00, $2d, $00, $00, $2e, $00, $00, $2f, $00, $00, $30, $10, $10, $31
@@ -7212,18 +6956,12 @@ Data_01_790c:
 	db $50, $30, $30, $51, $31, $31, $52, $32, $32, $53, $33, $33, $54, $34, $34, $55
 	db $35, $35
 
-SECTION "analyzed_00791e", ROMX[$791e], BANK[$01]
-
 Data_01_791e:
 	db $50, $30, $30, $50, $30, $30, $50, $30, $30, $50, $30, $30, $50, $30, $30, $50
 	db $30, $30, $50, $30, $30, $50, $30, $30, $50, $30, $30, $50, $30, $30
 
-SECTION "analyzed_00793c", ROMX[$793c], BANK[$01]
-
 Data_01_793c:
 	db $60, $00, $00, $61, $00, $00, $62, $00, $00, $63, $00, $00
-
-SECTION "analyzed_007948", ROMX[$7948], BANK[$01]
 
 Func_01_7948:
 	ld h, b
@@ -7265,59 +7003,37 @@ Func_01_7948:
 	nop
 	nop
 
-SECTION "analyzed_00796e", ROMX[$796e], BANK[$01]
-
 Data_01_796e:
 	db $d6, $72, $46, $70, $4d, $70, $54, $70, $5b, $70, $62, $70, $69, $70, $70, $70
 	db $ae, $70, $77, $70, $86, $70, $ad, $71, $b8, $71, $bf, $71, $c9, $71, $09, $71
 	db $c9, $70, $09, $71, $c9, $70, $09, $71
 
-SECTION "analyzed_007996", ROMX[$7996], BANK[$01]
-
 Data_01_7996:
 	db $c9, $70
-
-SECTION "analyzed_007998", ROMX[$7998], BANK[$01]
 
 Data_01_7998:
 	db $19, $71, $d9, $70, $19, $71, $d9, $70, $19, $71, $d9, $70
 
-SECTION "analyzed_0079a4", ROMX[$79a4], BANK[$01]
-
 Data_01_79a4:
 	db $b5, $70, $bf, $70
-
-SECTION "analyzed_0079a8", ROMX[$79a8], BANK[$01]
 
 Data_01_79a8:
 	db $e6, $74, $b5, $74, $49, $71, $50, $71
 
-SECTION "analyzed_0079b0", ROMX[$79b0], BANK[$01]
-
 Data_01_79b0:
 	db $57, $71
-
-SECTION "analyzed_0079b2", ROMX[$79b2], BANK[$01]
 
 Data_01_79b2:
 	db $5e, $71, $65, $71, $6c, $71
 
-SECTION "analyzed_0079b8", ROMX[$79b8], BANK[$01]
-
 Data_01_79b8:
 	db $73, $71
-
-SECTION "analyzed_0079ba", ROMX[$79ba], BANK[$01]
 
 Data_01_79ba:
 	db $7e, $71, $4b, $72, $9b, $71, $89, $71
 
-SECTION "analyzed_0079c2", ROMX[$79c2], BANK[$01]
-
 Data_01_79c2:
 	db $92, $71
-
-SECTION "analyzed_0079c4", ROMX[$79c4], BANK[$01]
 
 MonsterSpawnScriptTable:
 	db $64, $72, $7d, $72, $87, $72, $91, $72, $f1, $74, $6c, $75, $15, $76, $a8, $76
@@ -7340,13 +7056,9 @@ SECTION "analyzed_007a4c", ROMX[$7a4c], BANK[$01]
 Data_01_7a4c:
 	db $f4, $44, $ea, $4b, $cf, $4d, $2d, $4e
 
-SECTION "analyzed_007a54", ROMX[$7a54], BANK[$01]
-
 Data_01_7a54:
 	db $f4, $44, $f4, $44, $f4, $44, $f4, $44, $f4, $44, $f4, $44, $f4, $44, $f4, $44
 	db $f4, $44, $f4, $44, $f4, $44, $f4, $44
-
-SECTION "analyzed_007a6c", ROMX[$7a6c], BANK[$01]
 
 Data_01_7a6c:
 	db $4b, $4e, $df, $4e, $86, $4f, $25, $50, $cb, $50, $65, $51, $ea, $51, $89, $52
@@ -7363,12 +7075,8 @@ Data_01_7aac:
 	db $9b, $5a, $d9, $5b, $d5, $5c, $87, $5d, $87, $5d, $39, $5e, $24, $48, $bb, $4c
 	db $ef, $4d, $35, $4e
 
-SECTION "analyzed_007ac0", ROMX[$7ac0], BANK[$01]
-
 Data_01_7ac0:
 	db "$H$H$H$H$H$H$H$H$H$H$H$H"
-
-SECTION "analyzed_007ad8", ROMX[$7ad8], BANK[$01]
 
 Data_01_7ad8:
 	db $83, $4e, $1f, $4f, $c6, $4f, $65, $50, $0b, $51, $95, $51, $2a, $52, $c1, $52
@@ -7383,8 +7091,6 @@ SECTION "analyzed_007b18", ROMX[$7b18], BANK[$01]
 
 Data_01_7b18:
 	db $2b, $5b, $21, $5c, $1d, $5d, $c7, $5d, $c7, $5d, $89, $5e
-
-SECTION "analyzed_007b24", ROMX[$7b24], BANK[$01]
 
 Func_01_7b24:
 	push hl
@@ -7463,8 +7169,6 @@ Data_01_7c3b:
 	db $30, $02, $5d, $02, $8f, $02, $b7, $02, $e4, $02, $0c, $03, $2f, $03, $52, $03
 	db $75, $03, $93, $03, $ac, $03, $ca, $03, $de, $03, $f2, $03, $06, $04, $15, $04
 	db $1f, $04, $29, $04, $2e, $04, $2e, $04
-
-SECTION "analyzed_007cb3", ROMX[$7cb3], BANK[$01]
 
 Data_01_7cb3:
 	db $2e, $04
@@ -7575,20 +7279,14 @@ Func_02_4096:
 	pop hl
 	ret
 
-SECTION "analyzed_0080b1", ROMX[$40b1], BANK[$02]
-
 Data_02_40b1:
 	INCBIN "raw_gfx/Data_02_40b1.2bpp", 0, 4096
-
-SECTION "analyzed_0090b1", ROMX[$50b1], BANK[$02]
 
 Data_02_50b1:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $12, $01, $63, $0c, $b5, $01, $3d, $3f
 	db $12, $01, $63, $0c, $ce, $39, $5a, $6b, $12, $01, $63, $0c, $26, $12, $9f, $2f
 	db $12, $01, $63, $0c, $ff, $00, $9f, $63, $12, $01, $63, $0c, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_0090e9", ROMX[$50e9], BANK[$02]
 
 Data_02_50e9:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $5f, $4b, $b5, $01, $e0, $2c
@@ -7623,14 +7321,10 @@ Data_02_50e9:
 	db $52, $20, $02, $f4, $f8, $54, $00, $f4, $00, $5c, $00, $02, $f4, $f8, $5c, $20
 	db $f4, $00, $54, $20
 
-SECTION "analyzed_0092cd", ROMX[$52cd], BANK[$02]
-
 Data_02_52cd:
 	db $02, $f1, $f8, $56, $00, $f1, $00, $5e, $00, $02, $f1, $f8, $5e, $20, $f1, $00
 	db $56, $20, $02, $f1, $f8, $60, $00, $f1, $00, $68, $00, $02, $f1, $f8, $68, $20
 	db $f1, $00, $60, $20
-
-SECTION "analyzed_0092f1", ROMX[$52f1], BANK[$02]
 
 Data_02_52f1:
 	db $02, $f8, $f8, $c2, $02, $f8, $00, $ca, $02, $02, $f8, $f8, $ca, $22, $f8, $00
@@ -7646,26 +7340,18 @@ Data_02_52f1:
 	db $f8, $00, $94, $03, $02, $f8, $f8, $94, $23, $f8, $00, $92, $23, $02, $f8, $f8
 	db $96, $03, $f8, $00, $98, $03, $02, $f8, $f8, $96, $43, $f8, $00, $98, $43
 
-SECTION "analyzed_0093b0", ROMX[$53b0], BANK[$02]
-
 Data_02_53b0:
 	db $02, $f8, $f8, $9a, $03, $f8, $00, $9a, $23
-
-SECTION "analyzed_0093b9", ROMX[$53b9], BANK[$02]
 
 Data_02_53b9:
 	db $02, $f8, $f8, $9c, $03, $f8, $00, $9e, $03, $02, $f8, $f8, $9e, $23, $f8, $00
 	db $9c, $23, $02, $f8, $f8, $a0, $03, $f8, $00, $a2, $03, $02, $f8, $f8, $a0, $43
 	db $f8, $00, $a2, $43
 
-SECTION "analyzed_0093dd", ROMX[$53dd], BANK[$02]
-
 Data_02_53dd:
 	db $02, $f8, $f8, $a8, $03, $f8, $00, $aa, $03, $02, $f8, $f8, $aa, $23, $f8, $00
 	db $a8, $23, $02, $f8, $f8, $ac, $03, $f8, $00, $ae, $03, $02, $f8, $f8, $ae, $23
 	db $f8, $00, $ac, $23
-
-SECTION "analyzed_009401", ROMX[$5401], BANK[$02]
 
 Data_02_5401:
 	db $02, $fb, $f8, $b0, $03, $fb, $00, $b0, $63, $02, $fb, $f8, $b2, $03, $fb, $00
@@ -7690,12 +7376,8 @@ Data_02_5401:
 	db $28, $00, $02, $f1, $f8, $22, $00, $f1, $00, $2a, $00, $02, $f1, $f8, $24, $00
 	db $f1, $00, $2c, $00
 
-SECTION "analyzed_009545", ROMX[$5545], BANK[$02]
-
 Data_02_5545:
 	db $02, $f1, $f8, $26, $00, $f1, $00, $2e, $00
-
-SECTION "analyzed_00954e", ROMX[$554e], BANK[$02]
 
 Data_02_554e:
 	db $02, $f1, $f8, $08, $20, $f1, $00, $00, $20, $02, $f1, $f8, $0a, $20, $f1, $00
@@ -7706,12 +7388,8 @@ Data_02_554e:
 	db $20, $02, $f1, $f8, $2a, $20, $f1, $00, $22, $20, $02, $f1, $f8, $2c, $20, $f1
 	db $00, $24, $20
 
-SECTION "analyzed_0095b1", ROMX[$55b1], BANK[$02]
-
 Data_02_55b1:
 	db $02, $f1, $f8, $2e, $20, $f1, $00, $26, $20
-
-SECTION "analyzed_0095ba", ROMX[$55ba], BANK[$02]
 
 Data_02_55ba:
 	db $02, $f8, $f8, $00, $00, $f8, $00, $08, $00, $02, $f8, $f8, $02, $00, $f8, $00
@@ -7722,12 +7400,8 @@ Data_02_55ba:
 	db $00, $02, $f8, $f8, $22, $00, $f8, $00, $2a, $00, $02, $f8, $f8, $24, $00, $f8
 	db $00, $2c, $00
 
-SECTION "analyzed_00961d", ROMX[$561d], BANK[$02]
-
 Data_02_561d:
 	db $02, $f8, $f8, $26, $00, $f8, $00, $2e, $00
-
-SECTION "analyzed_009626", ROMX[$5626], BANK[$02]
 
 Data_02_5626:
 	db $02, $f8, $f8, $08, $20, $f8, $00, $00, $20, $02, $f8, $f8, $0a, $20, $f8, $00
@@ -7738,63 +7412,43 @@ Data_02_5626:
 	db $20, $02, $f8, $f8, $2a, $20, $f8, $00, $22, $20, $02, $f8, $f8, $2c, $20, $f8
 	db $00, $24, $20
 
-SECTION "analyzed_009689", ROMX[$5689], BANK[$02]
-
 Data_02_5689:
 	db $02, $f8, $f8, $2e, $20, $f8, $00, $26, $20
-
-SECTION "analyzed_009692", ROMX[$5692], BANK[$02]
 
 Data_02_5692:
 	db $02, $f8, $f8, $00, $00, $f8, $00, $08, $00, $02, $f8, $f8, $02, $00, $f8, $00
 	db $0a, $00, $02, $f8, $f8, $04, $00, $f8, $00, $0c, $00, $02, $f8, $f8, $06, $00
 	db $f8, $00, $0e, $00
 
-SECTION "analyzed_0096b6", ROMX[$56b6], BANK[$02]
-
 Data_02_56b6:
 	db $02, $f8, $f8, $10, $00, $f8, $00, $18, $00, $02, $f8, $f8, $12, $00, $f8, $00
 	db $1a, $00, $02, $f8, $f8, $14, $00, $f8, $00, $1c, $00, $02, $f8, $f8, $16, $00
 	db $f8, $00, $1e, $00
 
-SECTION "analyzed_0096da", ROMX[$56da], BANK[$02]
-
 Data_02_56da:
 	db $02, $f8, $f8, $20, $00, $f8, $00, $28, $00, $02, $f8, $f8, $22, $00, $f8, $00
 	db $2a, $00
 
-SECTION "analyzed_0096ec", ROMX[$56ec], BANK[$02]
-
 Data_02_56ec:
 	db $02, $f8, $f8, $24, $00, $f8, $00, $2c, $00, $02, $f8, $f8, $26, $00, $f8, $00
 	db $2e, $00
-
-SECTION "analyzed_0096fe", ROMX[$56fe], BANK[$02]
 
 Data_02_56fe:
 	db $02, $f8, $f8, $08, $20, $f8, $00, $00, $20, $02, $f8, $f8, $0a, $20, $f8, $00
 	db $02, $20, $02, $f8, $f8, $0c, $20, $f8, $00, $04, $20, $02, $f8, $f8, $0e, $20
 	db $f8, $00, $06, $20, $02, $f8, $f8, $10, $40, $f8, $00, $18, $40
 
-SECTION "analyzed_00972b", ROMX[$572b], BANK[$02]
-
 Data_02_572b:
 	db $02, $f8, $f8, $12, $40, $f8, $00, $1a, $40, $02, $f8, $f8, $14, $40, $f8, $00
 	db $1c, $40
-
-SECTION "analyzed_00973d", ROMX[$573d], BANK[$02]
 
 Data_02_573d:
 	db $02, $f8, $f8, $16, $40, $f8, $00, $1e, $40, $02, $f8, $f8, $28, $20, $f8, $00
 	db $20, $20, $02, $f8, $f8, $2a, $20, $f8, $00, $22, $20
 
-SECTION "analyzed_009758", ROMX[$5758], BANK[$02]
-
 Data_02_5758:
 	db $02, $f8, $f8, $24, $40, $f8, $00, $2c, $40, $02, $f8, $f8, $26, $40, $f8, $00
 	db $2e, $40
-
-SECTION "analyzed_00976a", ROMX[$576a], BANK[$02]
 
 Data_02_576a:
 	db $02, $f1, $f8, $1c, $60, $f1, $00, $14, $60, $02, $f1, $f8, $1e, $60, $f1, $00
@@ -7870,8 +7524,6 @@ Data_02_576a:
 	db $2c, $e1, $0c, $2c, $2c, $f1, $ec, $4e, $2c, $f1, $f4, $46, $2c, $f1, $fc, $3e
 	db $2c, $f1, $04, $36, $2c, $f1, $0c, $2e, $2c
 
-SECTION "analyzed_009be3", ROMX[$5be3], BANK[$02]
-
 Data_02_5be3:
 	db $0a, $e1, $ec, $50, $0c, $e1, $f4, $58, $0c, $e1, $fc, $60, $0c, $e1, $04, $68
 	db $0c, $e1, $0c, $70, $0c, $f1, $ec, $52, $0c, $f1, $f4, $5a, $0c, $f1, $fc, $62
@@ -7879,8 +7531,6 @@ Data_02_5be3:
 	db $68, $2c, $e1, $fc, $60, $2c, $e1, $04, $58, $2c, $e1, $0c, $50, $2c, $f1, $ec
 	db $72, $2c, $f1, $f4, $6a, $2c, $f1, $fc, $62, $2c, $f1, $04, $5a, $2c, $f1, $0c
 	db $52, $2c
-
-SECTION "analyzed_009c35", ROMX[$5c35], BANK[$02]
 
 Data_02_5c35:
 	db $0a, $e1, $ec, $54, $0c, $e1, $f4, $5c, $0c, $e1, $fc, $64, $0c, $e1, $04, $6c
@@ -7900,14 +7550,10 @@ Data_02_5c35:
 	db $bc, $2c, $f1, $ec, $de, $2c, $f1, $f4, $d6, $2c, $f1, $fc, $ce, $2c, $f1, $04
 	db $c6, $2c, $f1, $0c, $be, $2c
 
-SECTION "analyzed_009d2b", ROMX[$5d2b], BANK[$02]
-
 Data_02_5d2b:
 	db $0a, $e1, $ec, $d0, $04, $e1, $f4, $d8, $04, $e1, $fc, $e0, $04, $e1, $04, $e8
 	db $04, $e1, $0c, $f0, $04, $f1, $ec, $d2, $04, $f1, $f4, $da, $04, $f1, $fc, $e2
 	db $04, $f1, $04, $ea, $04, $f1, $0c, $f2, $04
-
-SECTION "analyzed_009d54", ROMX[$5d54], BANK[$02]
 
 Data_02_5d54:
 	db $0a, $e1, $ec, $f0, $24, $e1, $f4, $e8, $24, $e1, $fc, $e0, $24, $e1, $04, $d8
@@ -8031,8 +7677,6 @@ Func_04_4013:
 	ld [hl], d
 	ret
 
-SECTION "analyzed_01001a", ROMX[$401a], BANK[$04]
-
 Data_04_401a:
 	db $3c, $40, $41, $40, $4e, $40, $55, $40, $62, $40, $6a, $40, $84, $40, $9f, $40
 	db $ba, $40, $c3, $40, $cc, $40
@@ -8041,8 +7685,6 @@ SECTION "analyzed_01003a", ROMX[$403a], BANK[$04]
 
 Data_04_403a:
 	db $d8, $40
-
-SECTION "analyzed_01003c", ROMX[$403c], BANK[$04]
 
 Func_04_403c:
 	xor a
@@ -8263,13 +7905,9 @@ Func_04_418b:
 	call DrawFloorPiece
 	ret
 
-SECTION "analyzed_01018f", ROMX[$418f], BANK[$04]
-
 Func_04_418f:
 	pop bc
 	ret
-
-SECTION "analyzed_010191", ROMX[$4191], BANK[$04]
 
 Func_04_4191:
 	push bc
@@ -8562,8 +8200,6 @@ Func_04_4355:
 	ldh [c], a
 	ret
 
-SECTION "analyzed_010370", ROMX[$4370], BANK[$04]
-
 Data_04_4370:
 	db $00, $00, $00, $00, $fc, $f3, $08, $0e, $fc, $f3, $08, $0a, $fc, $f5, $08, $08
 
@@ -8572,12 +8208,8 @@ SECTION "analyzed_010388", ROMX[$4388], BANK[$04]
 Data_04_4388:
 	db $fc, $f9, $08, $10, $f0, $f8, $20, $10, $f9, $f9, $0e, $0e, $fa, $fa, $0c, $0c
 
-SECTION "analyzed_010398", ROMX[$4398], BANK[$04]
-
 Data_04_4398:
 	db $f8, $f8, $10, $10, $f8, $00, $10, $08
-
-SECTION "analyzed_0103a0", ROMX[$43a0], BANK[$04]
 
 Data_04_43a0:
 	db $fa, $f3, $0c, $0e, $fc, $f5, $08, $08, $fa, $f9, $0c, $0e, $fc, $fa, $08, $0c
@@ -8596,12 +8228,8 @@ SECTION "analyzed_010430", ROMX[$4430], BANK[$04]
 Data_04_4430:
 	db $fc, $fc, $08, $08, $fc, $fc, $08, $08, $fc, $fc, $08, $08
 
-SECTION "analyzed_01043c", ROMX[$443c], BANK[$04]
-
 Data_04_443c:
 	db $fc, $fc, $08, $08
-
-SECTION "analyzed_010440", ROMX[$4440], BANK[$04]
 
 Data_04_4440:
 	db $fc, $fc, $08, $08, $fc, $fc, $08, $08, $fa, $fa, $0c, $0c, $fa, $fa, $0c, $0c
@@ -8612,12 +8240,8 @@ SECTION "analyzed_010470", ROMX[$4470], BANK[$04]
 Data_04_4470:
 	db $fc, $f4, $08, $08
 
-SECTION "analyzed_010474", ROMX[$4474], BANK[$04]
-
 Data_04_4474:
 	db $fc, $f4, $08, $08
-
-SECTION "analyzed_010478", ROMX[$4478], BANK[$04]
 
 Data_04_4478:
 	db $fc, $f4, $08, $08
@@ -8638,12 +8262,8 @@ SECTION "analyzed_010492", ROMX[$4492], BANK[$04]
 Data_04_4492:
 	db $01, $01, $01, $01, $01, $01
 
-SECTION "analyzed_010498", ROMX[$4498], BANK[$04]
-
 Data_04_4498:
 	db $01, $00, $01
-
-SECTION "analyzed_01049b", ROMX[$449b], BANK[$04]
 
 Data_04_449b:
 	db $01, $11, $11
@@ -8699,17 +8319,11 @@ Func_04_44ec:
 	pop hl
 	ret
 
-SECTION "analyzed_0104f4", ROMX[$44f4], BANK[$04]
-
 Data_04_44f4:
 	db $5a, $53
 
-SECTION "analyzed_0104f6", ROMX[$44f6], BANK[$04]
-
 Data_04_44f6:
 	db $5a, $53
-
-SECTION "analyzed_0104f8", ROMX[$44f8], BANK[$04]
 
 Data_04_44f8:
 	db $00, $00, $00
@@ -8719,12 +8333,8 @@ SECTION "analyzed_0104fc", ROMX[$44fc], BANK[$04]
 Data_04_44fc:
 	db $15, $53
 
-SECTION "analyzed_0104fe", ROMX[$44fe], BANK[$04]
-
 Data_04_44fe:
 	db $15, $53
-
-SECTION "analyzed_010500", ROMX[$4500], BANK[$04]
 
 Data_04_4500:
 	db $00, $00, $00
@@ -8734,12 +8344,8 @@ SECTION "analyzed_010504", ROMX[$4504], BANK[$04]
 Data_04_4504:
 	db $1e, $53
 
-SECTION "analyzed_010506", ROMX[$4506], BANK[$04]
-
 Data_04_4506:
 	db $1e, $53
-
-SECTION "analyzed_010508", ROMX[$4508], BANK[$04]
 
 Data_04_4508:
 	db $00, $00, $00
@@ -8749,12 +8355,8 @@ SECTION "analyzed_01050c", ROMX[$450c], BANK[$04]
 Data_04_450c:
 	db $27, $53
 
-SECTION "analyzed_01050e", ROMX[$450e], BANK[$04]
-
 Data_04_450e:
 	db $27, $53
-
-SECTION "analyzed_010510", ROMX[$4510], BANK[$04]
 
 Data_04_4510:
 	db $00, $00, $00
@@ -8769,12 +8371,8 @@ SECTION "analyzed_01051c", ROMX[$451c], BANK[$04]
 Data_04_451c:
 	db $31, $53
 
-SECTION "analyzed_01051e", ROMX[$451e], BANK[$04]
-
 Data_04_451e:
 	db $31, $53
-
-SECTION "analyzed_010520", ROMX[$4520], BANK[$04]
 
 Data_04_4520:
 	db $00, $00, $00
@@ -8789,12 +8387,8 @@ SECTION "analyzed_01052c", ROMX[$452c], BANK[$04]
 Data_04_452c:
 	db $4c, $53
 
-SECTION "analyzed_01052e", ROMX[$452e], BANK[$04]
-
 Data_04_452e:
 	db $4c, $53
-
-SECTION "analyzed_010530", ROMX[$4530], BANK[$04]
 
 Data_04_4530:
 	db $00, $00, $00
@@ -8804,12 +8398,8 @@ SECTION "analyzed_010534", ROMX[$4534], BANK[$04]
 Data_04_4534:
 	db $51, $53
 
-SECTION "analyzed_010536", ROMX[$4536], BANK[$04]
-
 Data_04_4536:
 	db $51, $53
-
-SECTION "analyzed_010538", ROMX[$4538], BANK[$04]
 
 Data_04_4538:
 	db $00, $00, $00
@@ -8819,12 +8409,8 @@ SECTION "analyzed_01053c", ROMX[$453c], BANK[$04]
 Data_04_453c:
 	db $8c, $53
 
-SECTION "analyzed_01053e", ROMX[$453e], BANK[$04]
-
 Data_04_453e:
 	db $8c, $53
-
-SECTION "analyzed_010540", ROMX[$4540], BANK[$04]
 
 Data_04_4540:
 	db $30, $30, $00
@@ -8834,12 +8420,8 @@ SECTION "analyzed_010544", ROMX[$4544], BANK[$04]
 Data_04_4544:
 	db $95, $53
 
-SECTION "analyzed_010546", ROMX[$4546], BANK[$04]
-
 Data_04_4546:
 	db $95, $53
-
-SECTION "analyzed_010548", ROMX[$4548], BANK[$04]
 
 Data_04_4548:
 	db $30, $30, $00
@@ -8849,12 +8431,8 @@ SECTION "analyzed_01054c", ROMX[$454c], BANK[$04]
 Data_04_454c:
 	db $9e, $53
 
-SECTION "analyzed_01054e", ROMX[$454e], BANK[$04]
-
 Data_04_454e:
 	db $9e, $53
-
-SECTION "analyzed_010550", ROMX[$4550], BANK[$04]
 
 Data_04_4550:
 	db $30, $30, $00
@@ -8864,12 +8442,8 @@ SECTION "analyzed_010554", ROMX[$4554], BANK[$04]
 Data_04_4554:
 	db $a7, $53
 
-SECTION "analyzed_010556", ROMX[$4556], BANK[$04]
-
 Data_04_4556:
 	db $a7, $53
-
-SECTION "analyzed_010558", ROMX[$4558], BANK[$04]
 
 Data_04_4558:
 	db $30, $30, $00
@@ -8879,12 +8453,8 @@ SECTION "analyzed_01055c", ROMX[$455c], BANK[$04]
 Data_04_455c:
 	db $d0, $54
 
-SECTION "analyzed_01055e", ROMX[$455e], BANK[$04]
-
 Data_04_455e:
 	db $d0, $54
-
-SECTION "analyzed_010560", ROMX[$4560], BANK[$04]
 
 Data_04_4560:
 	db $00, $00, $00
@@ -8894,12 +8464,8 @@ SECTION "analyzed_010564", ROMX[$4564], BANK[$04]
 Data_04_4564:
 	db $b9, $53
 
-SECTION "analyzed_010566", ROMX[$4566], BANK[$04]
-
 Data_04_4566:
 	db $b9, $53
-
-SECTION "analyzed_010568", ROMX[$4568], BANK[$04]
 
 Data_04_4568:
 	db $31, $31, $00
@@ -8909,12 +8475,8 @@ SECTION "analyzed_01056c", ROMX[$456c], BANK[$04]
 Data_04_456c:
 	db $c2, $53
 
-SECTION "analyzed_01056e", ROMX[$456e], BANK[$04]
-
 Data_04_456e:
 	db $c2, $53
-
-SECTION "analyzed_010570", ROMX[$4570], BANK[$04]
 
 Data_04_4570:
 	db $31, $31, $00
@@ -8924,12 +8486,8 @@ SECTION "analyzed_010574", ROMX[$4574], BANK[$04]
 Data_04_4574:
 	db $cb, $53
 
-SECTION "analyzed_010576", ROMX[$4576], BANK[$04]
-
 Data_04_4576:
 	db $cb, $53
-
-SECTION "analyzed_010578", ROMX[$4578], BANK[$04]
 
 Data_04_4578:
 	db $31, $31, $00
@@ -8939,12 +8497,8 @@ SECTION "analyzed_01057c", ROMX[$457c], BANK[$04]
 Data_04_457c:
 	db $d4, $53
 
-SECTION "analyzed_01057e", ROMX[$457e], BANK[$04]
-
 Data_04_457e:
 	db $d4, $53
-
-SECTION "analyzed_010580", ROMX[$4580], BANK[$04]
 
 Data_04_4580:
 	db $31, $31, $00
@@ -8974,14 +8528,10 @@ SECTION "analyzed_0105a4", ROMX[$45a4], BANK[$04]
 Data_04_45a4:
 	db $3c, $55, $a8, $55, $00, $00, $00
 
-SECTION "analyzed_0105ab", ROMX[$45ab], BANK[$04]
-
 Data_04_45ab:
 	db $00, $02, $56, $6e, $56, $00, $00, $03, $00, $0b, $56, $77, $56, $00, $00, $03
 	db $00, $14, $56, $80, $56, $00, $00, $03, $00, $1d, $56, $89, $56, $00, $00, $03
 	db $00
-
-SECTION "analyzed_0105cc", ROMX[$45cc], BANK[$04]
 
 Data_04_45cc:
 	db $02, $56, $6e, $56, $00, $00, $01
@@ -9006,12 +8556,8 @@ SECTION "analyzed_0105ec", ROMX[$45ec], BANK[$04]
 Data_04_45ec:
 	db $88, $54
 
-SECTION "analyzed_0105ee", ROMX[$45ee], BANK[$04]
-
 Data_04_45ee:
 	db $88, $54
-
-SECTION "analyzed_0105f0", ROMX[$45f0], BANK[$04]
 
 Data_04_45f0:
 	db $00, $00, $00
@@ -9021,12 +8567,8 @@ SECTION "analyzed_0105f4", ROMX[$45f4], BANK[$04]
 Data_04_45f4:
 	db $91, $54
 
-SECTION "analyzed_0105f6", ROMX[$45f6], BANK[$04]
-
 Data_04_45f6:
 	db $91, $54
-
-SECTION "analyzed_0105f8", ROMX[$45f8], BANK[$04]
 
 Data_04_45f8:
 	db $00, $00, $00
@@ -9036,12 +8578,8 @@ SECTION "analyzed_0105fc", ROMX[$45fc], BANK[$04]
 Data_04_45fc:
 	db $9a, $54
 
-SECTION "analyzed_0105fe", ROMX[$45fe], BANK[$04]
-
 Data_04_45fe:
 	db $9a, $54
-
-SECTION "analyzed_010600", ROMX[$4600], BANK[$04]
 
 Data_04_4600:
 	db $00, $00, $00
@@ -9051,12 +8589,8 @@ SECTION "analyzed_010604", ROMX[$4604], BANK[$04]
 Data_04_4604:
 	db $a3, $54
 
-SECTION "analyzed_010606", ROMX[$4606], BANK[$04]
-
 Data_04_4606:
 	db $a3, $54
-
-SECTION "analyzed_010608", ROMX[$4608], BANK[$04]
 
 Data_04_4608:
 	db $00, $00, $00
@@ -9066,12 +8600,8 @@ SECTION "analyzed_01060c", ROMX[$460c], BANK[$04]
 Data_04_460c:
 	db $ac, $54
 
-SECTION "analyzed_01060e", ROMX[$460e], BANK[$04]
-
 Data_04_460e:
 	db $ac, $54
-
-SECTION "analyzed_010610", ROMX[$4610], BANK[$04]
 
 Data_04_4610:
 	db $00, $00, $00
@@ -9081,12 +8611,8 @@ SECTION "analyzed_010614", ROMX[$4614], BANK[$04]
 Data_04_4614:
 	db $b5, $54
 
-SECTION "analyzed_010616", ROMX[$4616], BANK[$04]
-
 Data_04_4616:
 	db $b5, $54
-
-SECTION "analyzed_010618", ROMX[$4618], BANK[$04]
 
 Data_04_4618:
 	db $00, $00, $00
@@ -9096,12 +8622,8 @@ SECTION "analyzed_01061c", ROMX[$461c], BANK[$04]
 Data_04_461c:
 	db $be, $54
 
-SECTION "analyzed_01061e", ROMX[$461e], BANK[$04]
-
 Data_04_461e:
 	db $be, $54
-
-SECTION "analyzed_010620", ROMX[$4620], BANK[$04]
 
 Data_04_4620:
 	db $00, $00, $00
@@ -9111,12 +8633,8 @@ SECTION "analyzed_010624", ROMX[$4624], BANK[$04]
 Data_04_4624:
 	db $c7, $54
 
-SECTION "analyzed_010626", ROMX[$4626], BANK[$04]
-
 Data_04_4626:
 	db $c7, $54
-
-SECTION "analyzed_010628", ROMX[$4628], BANK[$04]
 
 Data_04_4628:
 	db $00, $00, $00
@@ -9126,12 +8644,8 @@ SECTION "analyzed_01062c", ROMX[$462c], BANK[$04]
 Data_04_462c:
 	db $8a, $5a
 
-SECTION "analyzed_01062e", ROMX[$462e], BANK[$04]
-
 Data_04_462e:
 	db $8a, $5a
-
-SECTION "analyzed_010630", ROMX[$4630], BANK[$04]
 
 Data_04_4630:
 	db $07, $07, $00
@@ -9141,12 +8655,8 @@ SECTION "analyzed_010634", ROMX[$4634], BANK[$04]
 Data_04_4634:
 	db $8a, $5a
 
-SECTION "analyzed_010636", ROMX[$4636], BANK[$04]
-
 Data_04_4636:
 	db $8a, $5a
-
-SECTION "analyzed_010638", ROMX[$4638], BANK[$04]
 
 Data_04_4638:
 	db $07, $00, $00
@@ -9156,12 +8666,8 @@ SECTION "analyzed_01063c", ROMX[$463c], BANK[$04]
 Data_04_463c:
 	db $01, $54
 
-SECTION "analyzed_01063e", ROMX[$463e], BANK[$04]
-
 Data_04_463e:
 	db $01, $54
-
-SECTION "analyzed_010640", ROMX[$4640], BANK[$04]
 
 Data_04_4640:
 	db $30, $00, $00
@@ -9171,12 +8677,8 @@ SECTION "analyzed_010644", ROMX[$4644], BANK[$04]
 Data_04_4644:
 	db $0a, $54
 
-SECTION "analyzed_010646", ROMX[$4646], BANK[$04]
-
 Data_04_4646:
 	db $0a, $54
-
-SECTION "analyzed_010648", ROMX[$4648], BANK[$04]
 
 Data_04_4648:
 	db $30, $00, $00
@@ -9186,12 +8688,8 @@ SECTION "analyzed_01064c", ROMX[$464c], BANK[$04]
 Data_04_464c:
 	db $13, $54
 
-SECTION "analyzed_01064e", ROMX[$464e], BANK[$04]
-
 Data_04_464e:
 	db $13, $54
-
-SECTION "analyzed_010650", ROMX[$4650], BANK[$04]
 
 Data_04_4650:
 	db $30, $00, $00
@@ -9201,12 +8699,8 @@ SECTION "analyzed_010654", ROMX[$4654], BANK[$04]
 Data_04_4654:
 	db $1c, $54
 
-SECTION "analyzed_010656", ROMX[$4656], BANK[$04]
-
 Data_04_4656:
 	db $1c, $54
-
-SECTION "analyzed_010658", ROMX[$4658], BANK[$04]
 
 Data_04_4658:
 	db $30, $00, $00
@@ -9216,12 +8710,8 @@ SECTION "analyzed_01065c", ROMX[$465c], BANK[$04]
 Data_04_465c:
 	db $25, $54
 
-SECTION "analyzed_01065e", ROMX[$465e], BANK[$04]
-
 Data_04_465e:
 	db $25, $54
-
-SECTION "analyzed_010660", ROMX[$4660], BANK[$04]
 
 Data_04_4660:
 	db $30, $00, $00
@@ -9231,12 +8721,8 @@ SECTION "analyzed_010664", ROMX[$4664], BANK[$04]
 Data_04_4664:
 	db $2e, $54
 
-SECTION "analyzed_010666", ROMX[$4666], BANK[$04]
-
 Data_04_4666:
 	db $2e, $54
-
-SECTION "analyzed_010668", ROMX[$4668], BANK[$04]
 
 Data_04_4668:
 	db $30, $00, $00
@@ -9246,12 +8732,8 @@ SECTION "analyzed_01066c", ROMX[$466c], BANK[$04]
 Data_04_466c:
 	db $37, $54
 
-SECTION "analyzed_01066e", ROMX[$466e], BANK[$04]
-
 Data_04_466e:
 	db $37, $54
-
-SECTION "analyzed_010670", ROMX[$4670], BANK[$04]
 
 Data_04_4670:
 	db $30, $00, $00
@@ -9261,12 +8743,8 @@ SECTION "analyzed_010674", ROMX[$4674], BANK[$04]
 Data_04_4674:
 	db $40, $54
 
-SECTION "analyzed_010676", ROMX[$4676], BANK[$04]
-
 Data_04_4676:
 	db $40, $54
-
-SECTION "analyzed_010678", ROMX[$4678], BANK[$04]
 
 Data_04_4678:
 	db $30, $00, $00
@@ -9276,12 +8754,8 @@ SECTION "analyzed_01067c", ROMX[$467c], BANK[$04]
 Data_04_467c:
 	db $49, $54
 
-SECTION "analyzed_01067e", ROMX[$467e], BANK[$04]
-
 Data_04_467e:
 	db $49, $54
-
-SECTION "analyzed_010680", ROMX[$4680], BANK[$04]
 
 Data_04_4680:
 	db $30, $00, $00
@@ -9291,12 +8765,8 @@ SECTION "analyzed_010684", ROMX[$4684], BANK[$04]
 Data_04_4684:
 	db $52, $54
 
-SECTION "analyzed_010686", ROMX[$4686], BANK[$04]
-
 Data_04_4686:
 	db $52, $54
-
-SECTION "analyzed_010688", ROMX[$4688], BANK[$04]
 
 Data_04_4688:
 	db $30, $00, $00
@@ -9306,12 +8776,8 @@ SECTION "analyzed_01068c", ROMX[$468c], BANK[$04]
 Data_04_468c:
 	db $5b, $54
 
-SECTION "analyzed_01068e", ROMX[$468e], BANK[$04]
-
 Data_04_468e:
 	db $5b, $54
-
-SECTION "analyzed_010690", ROMX[$4690], BANK[$04]
 
 Data_04_4690:
 	db $30, $00, $00
@@ -9321,12 +8787,8 @@ SECTION "analyzed_010694", ROMX[$4694], BANK[$04]
 Data_04_4694:
 	db $64, $54
 
-SECTION "analyzed_010696", ROMX[$4696], BANK[$04]
-
 Data_04_4696:
 	db $64, $54
-
-SECTION "analyzed_010698", ROMX[$4698], BANK[$04]
 
 Data_04_4698:
 	db $30, $00, $00
@@ -9336,12 +8798,8 @@ SECTION "analyzed_01069c", ROMX[$469c], BANK[$04]
 Data_04_469c:
 	db $6d, $54
 
-SECTION "analyzed_01069e", ROMX[$469e], BANK[$04]
-
 Data_04_469e:
 	db $6d, $54
-
-SECTION "analyzed_0106a0", ROMX[$46a0], BANK[$04]
 
 Data_04_46a0:
 	db $30, $00, $00
@@ -9351,12 +8809,8 @@ SECTION "analyzed_0106a4", ROMX[$46a4], BANK[$04]
 Data_04_46a4:
 	db $76, $54
 
-SECTION "analyzed_0106a6", ROMX[$46a6], BANK[$04]
-
 Data_04_46a6:
 	db $76, $54
-
-SECTION "analyzed_0106a8", ROMX[$46a8], BANK[$04]
 
 Data_04_46a8:
 	db $30, $00, $00
@@ -9366,12 +8820,8 @@ SECTION "analyzed_0106ac", ROMX[$46ac], BANK[$04]
 Data_04_46ac:
 	db $7f, $54
 
-SECTION "analyzed_0106ae", ROMX[$46ae], BANK[$04]
-
 Data_04_46ae:
 	db $7f, $54
-
-SECTION "analyzed_0106b0", ROMX[$46b0], BANK[$04]
 
 Data_04_46b0:
 	db $30, $00, $00
@@ -9381,12 +8831,8 @@ SECTION "analyzed_0106b4", ROMX[$46b4], BANK[$04]
 Data_04_46b4:
 	db $63, $53
 
-SECTION "analyzed_0106b6", ROMX[$46b6], BANK[$04]
-
 Data_04_46b6:
 	db $63, $53
-
-SECTION "analyzed_0106b8", ROMX[$46b8], BANK[$04]
 
 Data_04_46b8:
 	db $00, $00, $00
@@ -9396,12 +8842,8 @@ SECTION "analyzed_0106bc", ROMX[$46bc], BANK[$04]
 Data_04_46bc:
 	db $68, $53
 
-SECTION "analyzed_0106be", ROMX[$46be], BANK[$04]
-
 Data_04_46be:
 	db $68, $53
-
-SECTION "analyzed_0106c0", ROMX[$46c0], BANK[$04]
 
 Data_04_46c0:
 	db $00, $00, $00
@@ -9411,12 +8853,8 @@ SECTION "analyzed_0106c4", ROMX[$46c4], BANK[$04]
 Data_04_46c4:
 	db $71, $53
 
-SECTION "analyzed_0106c6", ROMX[$46c6], BANK[$04]
-
 Data_04_46c6:
 	db $71, $53
-
-SECTION "analyzed_0106c8", ROMX[$46c8], BANK[$04]
 
 Data_04_46c8:
 	db $00, $00, $00
@@ -9426,12 +8864,8 @@ SECTION "analyzed_0106cc", ROMX[$46cc], BANK[$04]
 Data_04_46cc:
 	db $7a, $53
 
-SECTION "analyzed_0106ce", ROMX[$46ce], BANK[$04]
-
 Data_04_46ce:
 	db $7a, $53
-
-SECTION "analyzed_0106d0", ROMX[$46d0], BANK[$04]
 
 Data_04_46d0:
 	db $00, $00, $00
@@ -9441,12 +8875,8 @@ SECTION "analyzed_0106d4", ROMX[$46d4], BANK[$04]
 Data_04_46d4:
 	db $83, $53
 
-SECTION "analyzed_0106d6", ROMX[$46d6], BANK[$04]
-
 Data_04_46d6:
 	db $83, $53
-
-SECTION "analyzed_0106d8", ROMX[$46d8], BANK[$04]
 
 Data_04_46d8:
 	db $00, $00, $00
@@ -9461,12 +8891,8 @@ SECTION "analyzed_0106e4", ROMX[$46e4], BANK[$04]
 Data_04_46e4:
 	db $33, $55, $9f, $55, $00, $42, $03
 
-SECTION "analyzed_0106eb", ROMX[$46eb], BANK[$04]
-
 Data_04_46eb:
 	db $00, $3c, $55, $a8, $55, $00, $42, $03, $00
-
-SECTION "analyzed_0106f4", ROMX[$46f4], BANK[$04]
 
 Data_04_46f4:
 	db $02, $56, $6e, $56, $00, $00, $01
@@ -9481,13 +8907,9 @@ SECTION "analyzed_010704", ROMX[$4704], BANK[$04]
 Data_04_4704:
 	db $14, $56, $80, $56, $00, $00, $01
 
-SECTION "analyzed_01070b", ROMX[$470b], BANK[$04]
-
 Data_04_470b:
 	db $00, $02, $56, $6e, $56, $00, $00, $01, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00
-
-SECTION "analyzed_01071c", ROMX[$471c], BANK[$04]
 
 Data_04_471c:
 	db $da, $56, $46, $57, $00, $34, $03
@@ -9497,13 +8919,9 @@ SECTION "analyzed_010724", ROMX[$4724], BANK[$04]
 Data_04_4724:
 	db $e3, $56, $4f, $57, $00, $34, $03
 
-SECTION "analyzed_01072b", ROMX[$472b], BANK[$04]
-
 Data_04_472b:
 	db $00, $ec, $56, $58, $57, $00, $34, $03, $00, $f5, $56, $61, $57, $00, $34, $03
 	db $00
-
-SECTION "analyzed_01073c", ROMX[$473c], BANK[$04]
 
 Data_04_473c:
 	db $91, $5d, $91, $5d, $36, $36, $00
@@ -9528,12 +8946,8 @@ SECTION "analyzed_01075c", ROMX[$475c], BANK[$04]
 Data_04_475c:
 	db $cc, $5f
 
-SECTION "analyzed_01075e", ROMX[$475e], BANK[$04]
-
 Data_04_475e:
 	db $cc, $5f
-
-SECTION "analyzed_010760", ROMX[$4760], BANK[$04]
 
 Data_04_4760:
 	db $37, $37, $00
@@ -9543,12 +8957,8 @@ SECTION "analyzed_010764", ROMX[$4764], BANK[$04]
 Data_04_4764:
 	db $d5, $5f
 
-SECTION "analyzed_010766", ROMX[$4766], BANK[$04]
-
 Data_04_4766:
 	db $d5, $5f
-
-SECTION "analyzed_010768", ROMX[$4768], BANK[$04]
 
 Data_04_4768:
 	db $37, $00, $00
@@ -9558,12 +8968,8 @@ SECTION "analyzed_01076c", ROMX[$476c], BANK[$04]
 Data_04_476c:
 	db $de, $5f
 
-SECTION "analyzed_01076e", ROMX[$476e], BANK[$04]
-
 Data_04_476e:
 	db $de, $5f
-
-SECTION "analyzed_010770", ROMX[$4770], BANK[$04]
 
 Data_04_4770:
 	db $37, $00, $00
@@ -9573,12 +8979,8 @@ SECTION "analyzed_010774", ROMX[$4774], BANK[$04]
 Data_04_4774:
 	db $9f, $5f
 
-SECTION "analyzed_010776", ROMX[$4776], BANK[$04]
-
 Data_04_4776:
 	db $9f, $5f
-
-SECTION "analyzed_010778", ROMX[$4778], BANK[$04]
 
 Data_04_4778:
 	db $38, $38, $00
@@ -9588,12 +8990,8 @@ SECTION "analyzed_01077c", ROMX[$477c], BANK[$04]
 Data_04_477c:
 	db $8d, $60
 
-SECTION "analyzed_01077e", ROMX[$477e], BANK[$04]
-
 Data_04_477e:
 	db $8d, $60
-
-SECTION "analyzed_010780", ROMX[$4780], BANK[$04]
 
 Data_04_4780:
 	db $00, $00, $00
@@ -9603,12 +9001,8 @@ SECTION "analyzed_010784", ROMX[$4784], BANK[$04]
 Data_04_4784:
 	db $a8, $62
 
-SECTION "analyzed_010786", ROMX[$4786], BANK[$04]
-
 Data_04_4786:
 	db $a8, $62
-
-SECTION "analyzed_010788", ROMX[$4788], BANK[$04]
 
 Data_04_4788:
 	db $00, $00, $00
@@ -9618,12 +9012,8 @@ SECTION "analyzed_01078c", ROMX[$478c], BANK[$04]
 Data_04_478c:
 	db $d9, $62
 
-SECTION "analyzed_01078e", ROMX[$478e], BANK[$04]
-
 Data_04_478e:
 	db $d9, $62
-
-SECTION "analyzed_010790", ROMX[$4790], BANK[$04]
 
 Data_04_4790:
 	db $00, $00, $00
@@ -9648,12 +9038,8 @@ SECTION "analyzed_0107bc", ROMX[$47bc], BANK[$04]
 Data_04_47bc:
 	db $d9, $54
 
-SECTION "analyzed_0107be", ROMX[$47be], BANK[$04]
-
 Data_04_47be:
 	db $d9, $54
-
-SECTION "analyzed_0107c0", ROMX[$47c0], BANK[$04]
 
 Data_04_47c0:
 	db $00, $00, $00
@@ -9663,12 +9049,8 @@ SECTION "analyzed_0107c4", ROMX[$47c4], BANK[$04]
 Data_04_47c4:
 	db $7d, $5d
 
-SECTION "analyzed_0107c6", ROMX[$47c6], BANK[$04]
-
 Data_04_47c6:
 	db $7d, $5d
-
-SECTION "analyzed_0107c8", ROMX[$47c8], BANK[$04]
 
 Data_04_47c8:
 	db $06, $06, $00
@@ -9678,12 +9060,8 @@ SECTION "analyzed_0107cc", ROMX[$47cc], BANK[$04]
 Data_04_47cc:
 	db $82, $5d
 
-SECTION "analyzed_0107ce", ROMX[$47ce], BANK[$04]
-
 Data_04_47ce:
 	db $82, $5d
-
-SECTION "analyzed_0107d0", ROMX[$47d0], BANK[$04]
 
 Data_04_47d0:
 	db $00, $00, $00
@@ -9693,12 +9071,8 @@ SECTION "analyzed_0107d4", ROMX[$47d4], BANK[$04]
 Data_04_47d4:
 	db $87, $5d
 
-SECTION "analyzed_0107d6", ROMX[$47d6], BANK[$04]
-
 Data_04_47d6:
 	db $87, $5d
-
-SECTION "analyzed_0107d8", ROMX[$47d8], BANK[$04]
 
 Data_04_47d8:
 	db $00, $00, $00
@@ -9708,12 +9082,8 @@ SECTION "analyzed_0107dc", ROMX[$47dc], BANK[$04]
 Data_04_47dc:
 	db $8c, $5d
 
-SECTION "analyzed_0107de", ROMX[$47de], BANK[$04]
-
 Data_04_47de:
 	db $8c, $5d
-
-SECTION "analyzed_0107e0", ROMX[$47e0], BANK[$04]
 
 Data_04_47e0:
 	db $00, $00, $00
@@ -9723,12 +9093,8 @@ SECTION "analyzed_0107e4", ROMX[$47e4], BANK[$04]
 Data_04_47e4:
 	db $a8, $5f
 
-SECTION "analyzed_0107e6", ROMX[$47e6], BANK[$04]
-
 Data_04_47e6:
 	db $a8, $5f
-
-SECTION "analyzed_0107e8", ROMX[$47e8], BANK[$04]
 
 Data_04_47e8:
 	db $00, $00, $00
@@ -9738,12 +9104,8 @@ SECTION "analyzed_0107ec", ROMX[$47ec], BANK[$04]
 Data_04_47ec:
 	db $b1, $5f
 
-SECTION "analyzed_0107ee", ROMX[$47ee], BANK[$04]
-
 Data_04_47ee:
 	db $b1, $5f
-
-SECTION "analyzed_0107f0", ROMX[$47f0], BANK[$04]
 
 Data_04_47f0:
 	db $00, $00, $00
@@ -9753,12 +9115,8 @@ SECTION "analyzed_0107f4", ROMX[$47f4], BANK[$04]
 Data_04_47f4:
 	db $ba, $5f
 
-SECTION "analyzed_0107f6", ROMX[$47f6], BANK[$04]
-
 Data_04_47f6:
 	db $ba, $5f
-
-SECTION "analyzed_0107f8", ROMX[$47f8], BANK[$04]
 
 Data_04_47f8:
 	db $00, $00, $00
@@ -9768,12 +9126,8 @@ SECTION "analyzed_0107fc", ROMX[$47fc], BANK[$04]
 Data_04_47fc:
 	db $c3, $5f
 
-SECTION "analyzed_0107fe", ROMX[$47fe], BANK[$04]
-
 Data_04_47fe:
 	db $c3, $5f
-
-SECTION "analyzed_010800", ROMX[$4800], BANK[$04]
 
 Data_04_4800:
 	db $00, $00, $00
@@ -9798,85 +9152,53 @@ SECTION "analyzed_01081c", ROMX[$481c], BANK[$04]
 Data_04_481c:
 	db $81, $5a, $81, $5a, $00, $00, $00
 
-SECTION "analyzed_010823", ROMX[$4823], BANK[$04]
-
 Data_04_4823:
 	db $00, $ba, $4c
-
-SECTION "analyzed_010826", ROMX[$4826], BANK[$04]
 
 Data_04_4826:
 	db $a0, $48, $a8, $48, $bc, $48, $cf, $48, $dc, $48, $e9, $48, $eb, $48, $59, $49
 	db $f6, $48, $2c, $49, $61, $49, $12, $49, $33, $4b, $3d, $4b, $03, $49, $71, $49
 	db $f4, $49, $f6, $49, $fe, $49, $00, $4a
 
-SECTION "analyzed_01084e", ROMX[$484e], BANK[$04]
-
 Data_04_484e:
 	db $08, $4a
-
-SECTION "analyzed_010850", ROMX[$4850], BANK[$04]
 
 Data_04_4850:
 	db $0a, $4a
 
-SECTION "analyzed_010852", ROMX[$4852], BANK[$04]
-
 Data_04_4852:
 	db $12, $4a
-
-SECTION "analyzed_010854", ROMX[$4854], BANK[$04]
 
 Data_04_4854:
 	db $14, $4a, $bf, $49, $1c, $4a, $1e, $4a, $26, $4a, $28, $4a
 
-SECTION "analyzed_010860", ROMX[$4860], BANK[$04]
-
 Data_04_4860:
 	db $30, $4a
-
-SECTION "analyzed_010862", ROMX[$4862], BANK[$04]
 
 Data_04_4862:
 	db $32, $4a
 
-SECTION "analyzed_010864", ROMX[$4864], BANK[$04]
-
 Data_04_4864:
 	db $3a, $4a
-
-SECTION "analyzed_010866", ROMX[$4866], BANK[$04]
 
 Data_04_4866:
 	db $3c, $4a, $78, $4b, $80, $4b, $97, $4b
 
-SECTION "analyzed_01086e", ROMX[$486e], BANK[$04]
-
 Data_04_486e:
 	db $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_010874", ROMX[$4874], BANK[$04]
 
 Data_04_4874:
 	db $d0, $4b, $ae, $4b, $b6, $4b, $be, $4b, $5d, $4b, $65, $4b, $45, $4b, $52, $4b
 	db $44, $4a, $51, $4a
 
-SECTION "analyzed_010888", ROMX[$4888], BANK[$04]
-
 Data_04_4888:
 	db $7a, $4a
-
-SECTION "analyzed_01088a", ROMX[$488a], BANK[$04]
 
 Data_04_488a:
 	db $a8, $4a, $b8, $4a, $c8, $4a
 
-SECTION "analyzed_010890", ROMX[$4890], BANK[$04]
-
 Data_04_4890:
 	db $f1, $4a
-
-SECTION "analyzed_010892", ROMX[$4892], BANK[$04]
 
 Data_04_4892:
 	db $f9, $4a, $70, $4b
@@ -9886,12 +9208,8 @@ SECTION "analyzed_010898", ROMX[$4898], BANK[$04]
 Data_04_4898:
 	db $19, $4b
 
-SECTION "analyzed_01089a", ROMX[$489a], BANK[$04]
-
 Data_04_489a:
 	db $26, $4b
-
-SECTION "analyzed_01089c", ROMX[$489c], BANK[$04]
 
 Data_04_489c:
 	db $01, $4b, $09, $4b, $04, $02, $01, $00, $02, $03, $03, $00, $05, $04, $01, $01
@@ -9922,43 +9240,27 @@ Data_04_492c:
 	db $02, $03, $01, $37, $02, $02, $03, $00, $04, $0e, $01, $09, $02, $01, $03, $10
 	db $f6, $49, $04, $0e, $01, $0a, $02, $01, $03, $10, $00, $4a
 
-SECTION "analyzed_010a08", ROMX[$4a08], BANK[$04]
-
 Data_04_4a08:
 	db $04, $0e
-
-SECTION "analyzed_010a0a", ROMX[$4a0a], BANK[$04]
 
 Data_04_4a0a:
 	db $01, $0b, $02, $01, $03, $10, $0a, $4a
 
-SECTION "analyzed_010a12", ROMX[$4a12], BANK[$04]
-
 Data_04_4a12:
 	db $04, $0e
-
-SECTION "analyzed_010a14", ROMX[$4a14], BANK[$04]
 
 Data_04_4a14:
 	db $01, $0c, $02, $01, $03, $10, $14, $4a, $04, $0e, $01, $0e, $02, $01, $03, $10
 	db $1e, $4a, $04, $0e, $01, $0f, $02, $01, $03, $10, $28, $4a
 
-SECTION "analyzed_010a30", ROMX[$4a30], BANK[$04]
-
 Data_04_4a30:
 	db $04, $0e
-
-SECTION "analyzed_010a32", ROMX[$4a32], BANK[$04]
 
 Data_04_4a32:
 	db $01, $10, $02, $01, $03, $10, $32, $4a
 
-SECTION "analyzed_010a3a", ROMX[$4a3a], BANK[$04]
-
 Data_04_4a3a:
 	db $04, $0e
-
-SECTION "analyzed_010a3c", ROMX[$4a3c], BANK[$04]
 
 Data_04_4a3c:
 	db $01, $11, $02, $01, $03, $10, $3c, $4a, $01, $12, $02, $05, $03, $01, $13, $02
@@ -9966,14 +9268,10 @@ Data_04_4a3c:
 	db $16, $02, $05, $03, $01, $15, $02, $05, $03, $01, $14, $02, $05, $03, $01, $15
 	db $02, $05, $03, $01, $16, $02, $05, $03, $01, $15, $02, $05, $03
 
-SECTION "analyzed_010a79", ROMX[$4a79], BANK[$04]
-
 Data_04_4a79:
 	db $00, $01, $17, $02, $07, $03, $01, $18, $02, $07, $03, $01, $19, $02, $07, $03
 	db $01, $17, $02, $04, $03, $01, $18, $02, $04, $03, $01, $19, $02, $04, $03, $01
 	db $1a, $02, $03, $03, $01, $18, $02, $03, $03, $01, $17, $02, $03, $03, $00
-
-SECTION "analyzed_010aa8", ROMX[$4aa8], BANK[$04]
 
 Data_04_4aa8:
 	db $01, $1b, $02, $03, $03, $01, $1c, $02, $03, $03, $01, $1d, $02, $03, $03
@@ -9983,24 +9281,16 @@ SECTION "analyzed_010ab8", ROMX[$4ab8], BANK[$04]
 Data_04_4ab8:
 	db $01, $3d, $02, $03, $03, $01, $3e, $02, $03, $03
 
-SECTION "analyzed_010ac2", ROMX[$4ac2], BANK[$04]
-
 Data_04_4ac2:
 	db $01, $3f, $02, $03, $03, $00
-
-SECTION "analyzed_010ac8", ROMX[$4ac8], BANK[$04]
 
 Data_04_4ac8:
 	db $01, $40, $02, $03, $03, $01, $41, $02, $03, $03, $01, $42, $02, $03, $03, $01
 	db $41, $02, $03, $03, $01, $42, $02, $03, $03, $01, $41, $02, $03, $03
 
-SECTION "analyzed_010ae6", ROMX[$4ae6], BANK[$04]
-
 Data_04_4ae6:
 	db $01, $42, $02, $03, $03, $01, $40, $02, $03, $03, $00, $01, $43, $02, $02, $03
 	db $10, $f1, $4a
-
-SECTION "analyzed_010af9", ROMX[$4af9], BANK[$04]
 
 Data_04_4af9:
 	db $01, $1e, $02, $02, $03, $10, $f9, $4a, $01, $62, $02, $02, $03, $10, $01, $4b
@@ -10011,12 +9301,8 @@ SECTION "analyzed_010b19", ROMX[$4b19], BANK[$04]
 Data_04_4b19:
 	db $01, $45, $02, $03, $03, $01, $46, $02, $03, $03, $10, $19, $4b
 
-SECTION "analyzed_010b26", ROMX[$4b26], BANK[$04]
-
 Data_04_4b26:
 	db $01, $47, $02, $03, $03, $01, $48, $02, $03, $03, $10, $26, $4b
-
-SECTION "analyzed_010b33", ROMX[$4b33], BANK[$04]
 
 Data_04_4b33:
 	db $04, $12, $01, $27, $02, $03, $03, $10, $35, $4b, $01, $28, $02, $03, $03, $10
@@ -10041,12 +9327,8 @@ Data_04_4b70:
 	db $01, $54, $02, $02, $03, $01, $55, $02, $02, $03, $01, $56, $02, $02, $03, $01
 	db $55, $02, $02, $03, $01, $54, $02, $02, $03
 
-SECTION "analyzed_010be9", ROMX[$4be9], BANK[$04]
-
 Data_04_4be9:
 	db $00, $41, $51, $4a, $51
-
-SECTION "analyzed_010bee", ROMX[$4bee], BANK[$04]
 
 Data_04_4bee:
 	db $01, $02
@@ -10166,24 +9448,16 @@ SECTION "analyzed_010ca2", ROMX[$4ca2], BANK[$04]
 Data_04_4ca2:
 	db $bb, $52, $c4, $52, $01, $00, $00
 
-SECTION "analyzed_010ca9", ROMX[$4ca9], BANK[$04]
-
 Data_04_4ca9:
 	db $00, $cd, $52, $d6, $52, $01, $02, $00, $00, $df, $52, $e8, $52, $01, $02, $00
 	db $00, $00, $ba, $4c
-
-SECTION "analyzed_010cbd", ROMX[$4cbd], BANK[$04]
 
 Data_04_4cbd:
 	db $e1, $4c, $e9, $4c, $f1, $4c, $08, $4d, $1f, $4d, $2c, $4d, $39, $4d, $4b, $4d
 	db $5d, $4d, $65, $4d, $6d, $4d, $75, $4d
 
-SECTION "analyzed_010cd5", ROMX[$4cd5], BANK[$04]
-
 Data_04_4cd5:
 	db $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_010cdb", ROMX[$4cdb], BANK[$04]
 
 Data_04_4cdb:
 	db $7d, $4d, $ae, $4d, $b8, $4d, $01, $01, $02, $01, $03, $10, $e1, $4c, $01, $02
@@ -10192,45 +9466,29 @@ Data_04_4cdb:
 	db $0a, $03, $01, $07, $02, $0a, $03, $01, $02, $02, $0a, $03, $01, $08, $02, $0a
 	db $03, $10, $08, $4d, $01, $0f, $02, $07, $03, $01, $10, $02, $07, $03
 
-SECTION "analyzed_010d29", ROMX[$4d29], BANK[$04]
-
 Data_04_4d29:
 	db $10, $e1, $4c
-
-SECTION "analyzed_010d2c", ROMX[$4d2c], BANK[$04]
 
 Data_04_4d2c:
 	db $01, $11, $02, $07, $03, $01, $12, $02, $07, $03
 
-SECTION "analyzed_010d36", ROMX[$4d36], BANK[$04]
-
 Data_04_4d36:
 	db $10, $e9, $4c
-
-SECTION "analyzed_010d39", ROMX[$4d39], BANK[$04]
 
 Data_04_4d39:
 	db $01, $09, $02, $05, $03, $01, $0a, $02, $05, $03, $01, $0b, $02, $0a, $03, $10
 	db $e1, $4c, $01, $0c, $02, $05, $03, $01, $0d, $02, $05, $03, $01, $0e, $02, $0a
 	db $03, $10, $e9, $4c, $01, $07, $02, $07, $03
 
-SECTION "analyzed_010d62", ROMX[$4d62], BANK[$04]
-
 Data_04_4d62:
 	db $10, $5d, $4d
-
-SECTION "analyzed_010d65", ROMX[$4d65], BANK[$04]
 
 Data_04_4d65:
 	db $01, $01, $02, $01, $03, $10, $65, $4d, $01, $04, $02, $01, $03, $10, $6d, $4d
 	db $01, $07, $02, $05, $03
 
-SECTION "analyzed_010d7a", ROMX[$4d7a], BANK[$04]
-
 Data_04_4d7a:
 	db $10, $5d, $4d
-
-SECTION "analyzed_010d7d", ROMX[$4d7d], BANK[$04]
 
 Data_04_4d7d:
 	db $04, $0c, $01, $13, $02, $06, $03, $01, $14, $02, $06, $03, $07, $02, $01, $13
@@ -10250,12 +9508,8 @@ SECTION "analyzed_010ddf", ROMX[$4ddf], BANK[$04]
 Data_04_4ddf:
 	db $15, $53
 
-SECTION "analyzed_010de1", ROMX[$4de1], BANK[$04]
-
 Data_04_4de1:
 	db $15, $53
-
-SECTION "analyzed_010de3", ROMX[$4de3], BANK[$04]
 
 Data_04_4de3:
 	db $00, $00, $00
@@ -10265,44 +9519,28 @@ SECTION "analyzed_010de7", ROMX[$4de7], BANK[$04]
 Data_04_4de7:
 	db $1e, $53
 
-SECTION "analyzed_010de9", ROMX[$4de9], BANK[$04]
-
 Data_04_4de9:
 	db $1e, $53
-
-SECTION "analyzed_010deb", ROMX[$4deb], BANK[$04]
 
 Data_04_4deb:
 	db $00, $00, $00
 
-SECTION "analyzed_010dee", ROMX[$4dee], BANK[$04]
-
 Data_04_4dee:
 	db $00, $ba, $4c
-
-SECTION "analyzed_010df1", ROMX[$4df1], BANK[$04]
 
 Data_04_4df1:
 	db $f5, $4d, $20, $4e, $01, $02, $02, $05, $03, $01, $03, $02, $05, $03, $01, $02
 	db $02, $05, $03, $01, $03, $02, $05, $03, $01, $02, $02, $05, $03, $01, $03, $02
 	db $05, $03, $01, $02, $02, $05, $03, $01, $03, $02, $05, $03
 
-SECTION "analyzed_010e1d", ROMX[$4e1d], BANK[$04]
-
 Data_04_4e1d:
 	db $10, $f5, $4d
-
-SECTION "analyzed_010e20", ROMX[$4e20], BANK[$04]
 
 Data_04_4e20:
 	db $01, $00, $02, $05, $03, $01, $01, $02, $05, $03, $10, $20, $4e
 
-SECTION "analyzed_010e2d", ROMX[$4e2d], BANK[$04]
-
 Data_04_4e2d:
 	db $ba, $55, $26, $56
-
-SECTION "analyzed_010e31", ROMX[$4e31], BANK[$04]
 
 Data_04_4e31:
 	db $00, $00
@@ -10312,13 +9550,9 @@ SECTION "analyzed_010e35", ROMX[$4e35], BANK[$04]
 Data_04_4e35:
 	db $ba, $4c
 
-SECTION "analyzed_010e37", ROMX[$4e37], BANK[$04]
-
 Data_04_4e37:
 	db $3b, $4e, $43, $4e, $01, $00, $02, $01, $03, $10, $3b, $4e, $01, $00, $02, $01
 	db $03, $10, $3b, $4e
-
-SECTION "analyzed_010e4b", ROMX[$4e4b], BANK[$04]
 
 Data_04_4e4b:
 	db $e2, $54, $4e, $55, $0c, $0d, $00
@@ -10358,42 +9592,26 @@ SECTION "analyzed_010e83", ROMX[$4e83], BANK[$04]
 Data_04_4e83:
 	db $ba, $4c
 
-SECTION "analyzed_010e85", ROMX[$4e85], BANK[$04]
-
 Data_04_4e85:
 	db $97, $4e
-
-SECTION "analyzed_010e87", ROMX[$4e87], BANK[$04]
 
 Data_04_4e87:
 	db $9f, $4e
 
-SECTION "analyzed_010e89", ROMX[$4e89], BANK[$04]
-
 Data_04_4e89:
 	db $ba, $4c
-
-SECTION "analyzed_010e8b", ROMX[$4e8b], BANK[$04]
 
 Data_04_4e8b:
 	db $b1, $4e
 
-SECTION "analyzed_010e8d", ROMX[$4e8d], BANK[$04]
-
 Data_04_4e8d:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_010e95", ROMX[$4e95], BANK[$04]
 
 Data_04_4e95:
 	db $be, $4e
 
-SECTION "analyzed_010e97", ROMX[$4e97], BANK[$04]
-
 Data_04_4e97:
 	db $01, $00, $02, $01, $03, $10, $97, $4e
-
-SECTION "analyzed_010e9f", ROMX[$4e9f], BANK[$04]
 
 Data_04_4e9f:
 	db $01, $00, $02, $05, $03, $01, $01, $02, $05, $03, $01, $02, $02, $05, $03, $10
@@ -10442,34 +9660,22 @@ SECTION "analyzed_010f1f", ROMX[$4f1f], BANK[$04]
 Data_04_4f1f:
 	db $ba, $4c, $33, $4f, $3b, $4f, $48, $4f, $5a, $4f
 
-SECTION "analyzed_010f29", ROMX[$4f29], BANK[$04]
-
 Data_04_4f29:
 	db $67, $4f, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_010f31", ROMX[$4f31], BANK[$04]
 
 Data_04_4f31:
 	db $74, $4f, $01, $00, $02, $01, $03, $10, $33, $4f, $01, $00, $02, $05, $03, $01
 	db $01, $02, $05, $03, $10, $3b, $4f, $01, $02, $02, $1e, $03, $01, $03, $02, $05
 	db $03, $01, $04, $02, $05, $03
 
-SECTION "analyzed_010f57", ROMX[$4f57], BANK[$04]
-
 Data_04_4f57:
 	db $10, $52, $4f
-
-SECTION "analyzed_010f5a", ROMX[$4f5a], BANK[$04]
 
 Data_04_4f5a:
 	db $01, $05, $02, $02, $03, $01, $06, $02, $02, $03, $10, $5a, $4f
 
-SECTION "analyzed_010f67", ROMX[$4f67], BANK[$04]
-
 Data_04_4f67:
 	db $01, $00, $02, $03, $03, $01, $01, $02, $03, $03, $10, $67, $4f
-
-SECTION "analyzed_010f74", ROMX[$4f74], BANK[$04]
 
 Data_04_4f74:
 	db $01, $07, $02, $04, $03, $09, $01, $07, $02, $02, $03, $08, $02, $02, $03, $10
@@ -10515,24 +9721,16 @@ SECTION "analyzed_010fc6", ROMX[$4fc6], BANK[$04]
 Data_04_4fc6:
 	db $ba, $4c, $da, $4f, $e2, $4f, $f9, $4f, $06, $50
 
-SECTION "analyzed_010fd0", ROMX[$4fd0], BANK[$04]
-
 Data_04_4fd0:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_010fd8", ROMX[$4fd8], BANK[$04]
 
 Data_04_4fd8:
 	db $13, $50, $01, $00, $02, $01, $03, $10, $da, $4f, $01, $00, $02, $03, $03, $01
 	db $01, $02, $03, $03, $01, $02, $02, $03, $03, $01, $01, $02, $03, $03, $10, $e2
 	db $4f, $01, $03, $02, $1e, $03, $01, $04, $02, $09, $03
 
-SECTION "analyzed_011003", ROMX[$5003], BANK[$04]
-
 Data_04_5003:
 	db $10, $fe, $4f
-
-SECTION "analyzed_011006", ROMX[$5006], BANK[$04]
 
 Data_04_5006:
 	db $01, $05, $02, $02, $03, $01, $06, $02, $02, $03, $10, $06, $50, $01, $07, $02
@@ -10574,22 +9772,14 @@ SECTION "analyzed_01105d", ROMX[$505d], BANK[$04]
 Data_04_505d:
 	db $21, $55, $8d, $55, $0c, $00, $00
 
-SECTION "analyzed_011064", ROMX[$5064], BANK[$04]
-
 Data_04_5064:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011067", ROMX[$5067], BANK[$04]
 
 Data_04_5067:
 	db $79, $50, $81, $50, $98, $50, $ac, $50
 
-SECTION "analyzed_01106f", ROMX[$506f], BANK[$04]
-
 Data_04_506f:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011077", ROMX[$5077], BANK[$04]
 
 Data_04_5077:
 	db $b9, $50, $01, $00, $02, $01, $03, $10, $79, $50, $01, $00, $02, $05, $03, $01
@@ -10597,12 +9787,8 @@ Data_04_5077:
 	db $50, $01, $03, $02, $1e, $03, $04, $0f, $01, $04, $02, $28, $03, $01, $03, $02
 	db $05, $03
 
-SECTION "analyzed_0110a9", ROMX[$50a9], BANK[$04]
-
 Data_04_50a9:
 	db $10, $79, $50
-
-SECTION "analyzed_0110ac", ROMX[$50ac], BANK[$04]
 
 Data_04_50ac:
 	db $01, $05, $02, $03, $03, $01, $06, $02, $03, $03, $10, $ac, $50, $01, $07, $02
@@ -10644,34 +9830,22 @@ SECTION "analyzed_011103", ROMX[$5103], BANK[$04]
 Data_04_5103:
 	db $21, $55, $8d, $55, $0c, $00, $00
 
-SECTION "analyzed_01110a", ROMX[$510a], BANK[$04]
-
 Data_04_510a:
 	db $00, $ba, $4c
-
-SECTION "analyzed_01110d", ROMX[$510d], BANK[$04]
 
 Data_04_510d:
 	db $1f, $51, $27, $51, $34, $51, $41, $51
 
-SECTION "analyzed_011115", ROMX[$5115], BANK[$04]
-
 Data_04_5115:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_01111d", ROMX[$511d], BANK[$04]
 
 Data_04_511d:
 	db $4e, $51, $01, $00, $02, $01, $03, $10, $1f, $51, $01, $00, $02, $03, $03, $01
 	db $01, $02, $03, $03, $10, $27, $51, $01, $02, $02, $3c, $03, $01, $03, $02, $05
 	db $03
 
-SECTION "analyzed_01113e", ROMX[$513e], BANK[$04]
-
 Data_04_513e:
 	db $10, $1f, $51
-
-SECTION "analyzed_011141", ROMX[$5141], BANK[$04]
 
 Data_04_5141:
 	db $01, $04, $02, $02, $03, $01, $05, $02, $02, $03, $10, $41, $51, $01, $06, $02
@@ -10683,12 +9857,8 @@ SECTION "analyzed_01116d", ROMX[$516d], BANK[$04]
 Data_04_516d:
 	db $c3, $55, $2f, $56, $0e, $0f, $00
 
-SECTION "analyzed_011174", ROMX[$5174], BANK[$04]
-
 Data_04_5174:
 	db $00, $cc, $55, $38, $56, $0e, $0f, $00, $00
-
-SECTION "analyzed_01117d", ROMX[$517d], BANK[$04]
 
 Data_04_517d:
 	db $d5, $55, $41, $56, $0e, $0f, $00
@@ -10703,43 +9873,27 @@ SECTION "analyzed_01118d", ROMX[$518d], BANK[$04]
 Data_04_518d:
 	db $e7, $55, $53, $56, $0e, $00, $00
 
-SECTION "analyzed_011194", ROMX[$5194], BANK[$04]
-
 Data_04_5194:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011197", ROMX[$5197], BANK[$04]
 
 Data_04_5197:
 	db $a9, $51, $b1, $51
 
-SECTION "analyzed_01119b", ROMX[$519b], BANK[$04]
-
 Data_04_519b:
 	db $be, $51
-
-SECTION "analyzed_01119d", ROMX[$519d], BANK[$04]
 
 Data_04_519d:
 	db $cb, $51
 
-SECTION "analyzed_01119f", ROMX[$519f], BANK[$04]
-
 Data_04_519f:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_0111a7", ROMX[$51a7], BANK[$04]
 
 Data_04_51a7:
 	db $d3, $51, $01, $00, $02, $01, $03, $10, $a9, $51, $01, $00, $02, $05, $03, $01
 	db $01, $02, $05, $03, $10, $b1, $51
 
-SECTION "analyzed_0111be", ROMX[$51be], BANK[$04]
-
 Data_04_51be:
 	db $01, $01, $02, $21, $03, $01, $02, $02, $09, $03, $10, $a9, $51
-
-SECTION "analyzed_0111cb", ROMX[$51cb], BANK[$04]
 
 Data_04_51cb:
 	db $01, $03, $02, $01, $03, $10, $cb, $51, $01, $04, $02, $02, $03, $01, $05, $02
@@ -10781,34 +9935,22 @@ SECTION "analyzed_011222", ROMX[$5222], BANK[$04]
 Data_04_5222:
 	db $f9, $55, $65, $56, $0e, $00, $00
 
-SECTION "analyzed_011229", ROMX[$5229], BANK[$04]
-
 Data_04_5229:
 	db $00, $ba, $4c
-
-SECTION "analyzed_01122c", ROMX[$522c], BANK[$04]
 
 Data_04_522c:
 	db $3e, $52, $46, $52, $5d, $52, $6a, $52
 
-SECTION "analyzed_011234", ROMX[$5234], BANK[$04]
-
 Data_04_5234:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_01123c", ROMX[$523c], BANK[$04]
 
 Data_04_523c:
 	db $77, $52, $01, $00, $02, $01, $03, $10, $3e, $52, $01, $00, $02, $03, $03, $01
 	db $01, $02, $03, $03, $01, $02, $02, $03, $03, $01, $01, $02, $03, $03, $10, $46
 	db $52, $01, $03, $02, $03, $03, $01, $04, $02, $09, $03
 
-SECTION "analyzed_011267", ROMX[$5267], BANK[$04]
-
 Data_04_5267:
 	db $10, $3e, $52
-
-SECTION "analyzed_01126a", ROMX[$526a], BANK[$04]
 
 Data_04_526a:
 	db $01, $05, $02, $03, $03, $01, $06, $02, $03, $03, $10, $6f, $52, $01, $07, $02
@@ -10845,45 +9987,29 @@ SECTION "analyzed_0112b9", ROMX[$52b9], BANK[$04]
 Data_04_52b9:
 	db $f0, $55, $5c, $56, $0e, $00, $00
 
-SECTION "analyzed_0112c0", ROMX[$52c0], BANK[$04]
-
 Data_04_52c0:
 	db $00, $ba, $4c
-
-SECTION "analyzed_0112c3", ROMX[$52c3], BANK[$04]
 
 Data_04_52c3:
 	db $d5, $52, $dd, $52, $ea, $52, $f7, $52, $04, $53
 
-SECTION "analyzed_0112cd", ROMX[$52cd], BANK[$04]
-
 Data_04_52cd:
 	db $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_0112d3", ROMX[$52d3], BANK[$04]
 
 Data_04_52d3:
 	db $11, $53, $01, $00, $02, $01, $03, $10, $d5, $52, $01, $00, $02, $03, $03, $01
 	db $01, $02, $03, $03, $10, $dd, $52, $01, $01, $02, $09, $03, $01, $02, $02, $03
 	db $03
 
-SECTION "analyzed_0112f4", ROMX[$52f4], BANK[$04]
-
 Data_04_52f4:
 	db $10, $ef, $52
-
-SECTION "analyzed_0112f7", ROMX[$52f7], BANK[$04]
 
 Data_04_52f7:
 	db $01, $04, $02, $02, $03, $01, $05, $02, $02, $03, $10, $f7, $52, $01, $01, $02
 	db $09, $03, $01, $03, $02, $03, $03
 
-SECTION "analyzed_01130e", ROMX[$530e], BANK[$04]
-
 Data_04_530e:
 	db $10, $09, $53
-
-SECTION "analyzed_011311", ROMX[$5311], BANK[$04]
 
 Data_04_5311:
 	db $01, $06, $02, $04, $03, $09, $01, $06, $02, $02, $03, $08, $02, $02, $03, $10
@@ -10934,22 +10060,14 @@ SECTION "analyzed_01136b", ROMX[$536b], BANK[$04]
 Data_04_536b:
 	db $73, $57, $85, $57, $0c, $0d, $00
 
-SECTION "analyzed_011372", ROMX[$5372], BANK[$04]
-
 Data_04_5372:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011375", ROMX[$5375], BANK[$04]
 
 Data_04_5375:
 	db $87, $53, $8f, $53, $a6, $53, $bd, $53, $d4, $53
 
-SECTION "analyzed_01137f", ROMX[$537f], BANK[$04]
-
 Data_04_537f:
 	db $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011385", ROMX[$5385], BANK[$04]
 
 Data_04_5385:
 	db $eb, $53, $01, $00, $02, $01, $03, $10, $87, $53, $01, $00, $02, $03, $03, $01
@@ -10996,13 +10114,9 @@ SECTION "analyzed_011435", ROMX[$5435], BANK[$04]
 Data_04_5435:
 	db $cd, $57, $cd, $57, $13, $14, $00
 
-SECTION "analyzed_01143c", ROMX[$543c], BANK[$04]
-
 Data_04_543c:
 	db $00, $cd, $57, $cd, $57, $13, $14, $00, $00, $cd, $57, $cd, $57, $13, $14, $00
 	db $00
-
-SECTION "analyzed_01144d", ROMX[$544d], BANK[$04]
 
 Data_04_544d:
 	db $d6, $57, $d6, $57, $13, $14, $00
@@ -11042,13 +10156,9 @@ SECTION "analyzed_011485", ROMX[$5485], BANK[$04]
 Data_04_5485:
 	db $15, $58, $15, $58, $13, $14, $00
 
-SECTION "analyzed_01148c", ROMX[$548c], BANK[$04]
-
 Data_04_548c:
 	db $00, $15, $58, $15, $58, $13, $14, $00, $00, $15, $58, $15, $58, $13, $14, $00
 	db $00, $ba, $4c
-
-SECTION "analyzed_01149f", ROMX[$549f], BANK[$04]
 
 Data_04_549f:
 	db $37, $55, $44, $55, $51, $55, $5e, $55, $6b, $55, $78, $55, $85, $55, $92, $55
@@ -11087,54 +10197,34 @@ SECTION "analyzed_0115b7", ROMX[$55b7], BANK[$04]
 Data_04_55b7:
 	db $ad, $56, $19, $57, $0e, $00, $00
 
-SECTION "analyzed_0115be", ROMX[$55be], BANK[$04]
-
 Data_04_55be:
 	db $00, $b6, $56
 
-SECTION "analyzed_0115c1", ROMX[$55c1], BANK[$04]
-
 Data_04_55c1:
 	db $22, $57, $0e, $0f, $00
-
-SECTION "analyzed_0115c6", ROMX[$55c6], BANK[$04]
 
 Data_04_55c6:
 	db $00, $bf, $56, $2b, $57, $0e, $0f, $00, $00, $c8, $56, $34, $57, $0e, $0f, $00
 	db $00, $d1, $56
 
-SECTION "analyzed_0115d9", ROMX[$55d9], BANK[$04]
-
 Data_04_55d9:
 	db $3d, $57, $0e, $00, $00
-
-SECTION "analyzed_0115de", ROMX[$55de], BANK[$04]
 
 Data_04_55de:
 	db $00, $ba, $4c
 
-SECTION "analyzed_0115e1", ROMX[$55e1], BANK[$04]
-
 Data_04_55e1:
 	db $f3, $55, $fb, $55, $03, $56
 
-SECTION "analyzed_0115e7", ROMX[$55e7], BANK[$04]
-
 Data_04_55e7:
 	db $10, $56, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_0115ef", ROMX[$55ef], BANK[$04]
 
 Data_04_55ef:
 	db $1d, $56, $2f, $56, $01, $00, $02, $03, $03, $10, $f3, $55, $01, $04, $02, $03
 	db $03, $10, $fb, $55, $01, $01, $02, $1e, $03, $01, $02, $02, $03, $03
 
-SECTION "analyzed_01160d", ROMX[$560d], BANK[$04]
-
 Data_04_560d:
 	db $10, $f3, $55, $01, $05, $02, $1e, $03, $01, $06, $02, $03, $03, $10, $fb, $55
-
-SECTION "analyzed_01161d", ROMX[$561d], BANK[$04]
 
 Data_04_561d:
 	db $01, $03, $02, $03, $03, $09, $01, $03, $02, $02, $03, $08, $02, $02, $03, $10
@@ -11171,22 +10261,14 @@ SECTION "analyzed_011671", ROMX[$5671], BANK[$04]
 Data_04_5671:
 	db $18, $55, $84, $55, $10, $00, $00
 
-SECTION "analyzed_011678", ROMX[$5678], BANK[$04]
-
 Data_04_5678:
 	db $00, $ba, $4c
-
-SECTION "analyzed_01167b", ROMX[$567b], BANK[$04]
 
 Data_04_567b:
 	db $8d, $56, $a8, $56
 
-SECTION "analyzed_01167f", ROMX[$567f], BANK[$04]
-
 Data_04_567f:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_01168b", ROMX[$568b], BANK[$04]
 
 Data_04_568b:
 	db $c3, $56, $01, $00, $02, $03, $03, $01, $01, $02, $03, $03, $07, $02, $01, $00
@@ -11206,37 +10288,25 @@ SECTION "analyzed_0116f0", ROMX[$56f0], BANK[$04]
 Data_04_56f0:
 	db $f4, $54, $60, $55, $0c, $0d, $00
 
-SECTION "analyzed_0116f7", ROMX[$56f7], BANK[$04]
-
 Data_04_56f7:
 	db $00, $fd, $54, $69, $55, $0c, $0d, $00, $00, $06, $55, $72, $55, $0c, $0d, $00
 	db $00, $0f, $55, $7b, $55, $0c, $0d, $00, $00, $18, $55, $84, $55, $0c, $0d, $00
 	db $00, $21, $55, $8d, $55, $0c, $0d, $00, $00, $ba, $4c
 
-SECTION "analyzed_011722", ROMX[$5722], BANK[$04]
-
 Data_04_5722:
 	db $34, $57, $3c, $57
 
-SECTION "analyzed_011726", ROMX[$5726], BANK[$04]
-
 Data_04_5726:
 	db $53, $57, $60, $57, $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c, $6d, $57
-
-SECTION "analyzed_011734", ROMX[$5734], BANK[$04]
 
 Data_04_5734:
 	db $01, $00, $02, $01, $03, $10, $34, $57, $01, $00, $02, $03, $03, $01, $01, $02
 	db $03, $03, $01, $00, $02, $03, $03, $01, $02, $02, $03, $03, $10, $3c, $57
 
-SECTION "analyzed_011753", ROMX[$5753], BANK[$04]
-
 Data_04_5753:
 	db $01, $03, $02, $1e, $03, $01, $04, $02, $05, $03, $10, $34, $57, $01, $05, $02
 	db $02, $03, $01, $06, $02, $02, $03, $10, $60, $57, $01, $07, $02, $02, $03, $10
 	db $6d, $57
-
-SECTION "analyzed_011775", ROMX[$5775], BANK[$04]
 
 Data_04_5775:
 	db $e2, $54, $4e, $55, $0c, $0d, $00
@@ -11251,43 +10321,27 @@ SECTION "analyzed_011785", ROMX[$5785], BANK[$04]
 Data_04_5785:
 	db $f4, $54, $60, $55, $0c, $0d, $00
 
-SECTION "analyzed_01178c", ROMX[$578c], BANK[$04]
-
 Data_04_578c:
 	db $00, $fd, $54
-
-SECTION "analyzed_01178f", ROMX[$578f], BANK[$04]
 
 Data_04_578f:
 	db $69, $55, $0c, $0d, $00
 
-SECTION "analyzed_011794", ROMX[$5794], BANK[$04]
-
 Data_04_5794:
 	db $00, $06, $55
 
-SECTION "analyzed_011797", ROMX[$5797], BANK[$04]
-
 Data_04_5797:
 	db $72, $55, $0c, $0d, $00
-
-SECTION "analyzed_01179c", ROMX[$579c], BANK[$04]
 
 Data_04_579c:
 	db $00, $0f, $55, $7b, $55, $0c, $0d, $00, $00, $18, $55, $84, $55, $0c, $0d, $00
 	db $00, $21, $55, $8d, $55, $0c, $0d, $00, $00, $ba, $4c
 
-SECTION "analyzed_0117b7", ROMX[$57b7], BANK[$04]
-
 Data_04_57b7:
 	db $c9, $57, $d1, $57, $e8, $57, $f5, $57
 
-SECTION "analyzed_0117bf", ROMX[$57bf], BANK[$04]
-
 Data_04_57bf:
 	db $0c, $58, $ba, $4c, $ba, $4c, $ba, $4c, $1e, $58
-
-SECTION "analyzed_0117c9", ROMX[$57c9], BANK[$04]
 
 Data_04_57c9:
 	db $01, $00, $02, $01, $03, $10, $c9, $57, $01, $00, $02, $03, $03, $01, $01, $02
@@ -11296,13 +10350,9 @@ Data_04_57c9:
 	db $03, $01, $01, $02, $02, $03, $01, $00, $02, $02, $03, $01, $02, $02, $02, $03
 	db $10, $f5, $57
 
-SECTION "analyzed_01180c", ROMX[$580c], BANK[$04]
-
 Data_04_580c:
 	db $01, $04, $02, $02, $03, $01, $05, $02, $02, $03, $01, $06, $02, $02, $03, $10
 	db $0c, $58, $01, $07, $02, $03, $03, $10, $1e, $58
-
-SECTION "analyzed_011826", ROMX[$5826], BANK[$04]
 
 Data_04_5826:
 	db $e2, $54, $4e, $55, $0c, $0d, $00
@@ -11332,12 +10382,8 @@ SECTION "analyzed_01184e", ROMX[$584e], BANK[$04]
 Data_04_584e:
 	db $0f, $55
 
-SECTION "analyzed_011850", ROMX[$5850], BANK[$04]
-
 Data_04_5850:
 	db $7b, $55
-
-SECTION "analyzed_011852", ROMX[$5852], BANK[$04]
 
 Data_04_5852:
 	db $0c, $0d, $00
@@ -11347,12 +10393,8 @@ SECTION "analyzed_011856", ROMX[$5856], BANK[$04]
 Data_04_5856:
 	db $18, $55
 
-SECTION "analyzed_011858", ROMX[$5858], BANK[$04]
-
 Data_04_5858:
 	db $84, $55
-
-SECTION "analyzed_01185a", ROMX[$585a], BANK[$04]
 
 Data_04_585a:
 	db $0c, $0d, $00
@@ -11362,55 +10404,35 @@ SECTION "analyzed_01185e", ROMX[$585e], BANK[$04]
 Data_04_585e:
 	db $21, $55
 
-SECTION "analyzed_011860", ROMX[$5860], BANK[$04]
-
 Data_04_5860:
 	db $8d, $55
-
-SECTION "analyzed_011862", ROMX[$5862], BANK[$04]
 
 Data_04_5862:
 	db $0c, $0d, $00
 
-SECTION "analyzed_011865", ROMX[$5865], BANK[$04]
-
 Data_04_5865:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011868", ROMX[$5868], BANK[$04]
 
 Data_04_5868:
 	db $7a, $58, $82, $58, $99, $58, $a6, $58
 
-SECTION "analyzed_011870", ROMX[$5870], BANK[$04]
-
 Data_04_5870:
 	db $b3, $58, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011878", ROMX[$5878], BANK[$04]
 
 Data_04_5878:
 	db $ca, $58, $01, $00, $02, $01, $03, $10, $7a, $58, $01, $00, $02, $03, $03, $01
 	db $01, $02, $03, $03, $01, $00, $02, $03, $03, $01, $02, $02, $03, $03, $10, $82
 	db $58, $01, $03, $02, $1e, $03, $01, $04, $02, $05, $03
 
-SECTION "analyzed_0118a3", ROMX[$58a3], BANK[$04]
-
 Data_04_58a3:
 	db $10, $9e, $58
-
-SECTION "analyzed_0118a6", ROMX[$58a6], BANK[$04]
 
 Data_04_58a6:
 	db $01, $05, $02, $02, $03, $01, $06, $02, $02, $03, $10, $a6, $58
 
-SECTION "analyzed_0118b3", ROMX[$58b3], BANK[$04]
-
 Data_04_58b3:
 	db $01, $00, $02, $02, $03, $01, $01, $02, $02, $03, $01, $00, $02, $02, $03, $01
 	db $02, $02, $02, $03, $10, $b3, $58
-
-SECTION "analyzed_0118ca", ROMX[$58ca], BANK[$04]
 
 Data_04_58ca:
 	db $01, $07, $02, $02, $03, $10, $ca, $58, $ba, $55, $26, $56, $0e, $0f, $00
@@ -11420,12 +10442,8 @@ SECTION "analyzed_0118da", ROMX[$58da], BANK[$04]
 Data_04_58da:
 	db $c3, $55, $2f, $56, $0e, $0f, $00
 
-SECTION "analyzed_0118e1", ROMX[$58e1], BANK[$04]
-
 Data_04_58e1:
 	db $00, $cc, $55, $38, $56, $0e, $0f, $00, $00
-
-SECTION "analyzed_0118ea", ROMX[$58ea], BANK[$04]
 
 Data_04_58ea:
 	db $d5, $55, $41, $56, $0e, $0f, $00
@@ -11435,36 +10453,24 @@ SECTION "analyzed_0118f2", ROMX[$58f2], BANK[$04]
 Data_04_58f2:
 	db $de, $55, $4a, $56, $0e, $0f, $00
 
-SECTION "analyzed_0118f9", ROMX[$58f9], BANK[$04]
-
 Data_04_58f9:
 	db $00, $e7, $55, $53, $56, $0e, $0f, $00, $00, $f0, $55, $5c, $56, $0e, $0f, $00
 	db $00, $f9, $55, $65, $56, $0e, $0f, $00, $00, $ba, $4c
 
-SECTION "analyzed_011914", ROMX[$5914], BANK[$04]
-
 Data_04_5914:
 	db $26, $59, $2e, $59, $3b, $59
 
-SECTION "analyzed_01191a", ROMX[$591a], BANK[$04]
-
 Data_04_591a:
 	db $48, $59, $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c, $55, $59
-
-SECTION "analyzed_011926", ROMX[$5926], BANK[$04]
 
 Data_04_5926:
 	db $01, $00, $02, $01, $03, $10, $26, $59, $01, $00, $02, $05, $03, $01, $01, $02
 	db $05, $03, $10, $2e, $59, $01, $03, $02, $03, $03, $01, $04, $02, $03, $03, $10
 	db $3b, $59
 
-SECTION "analyzed_011948", ROMX[$5948], BANK[$04]
-
 Data_04_5948:
 	db $01, $05, $02, $02, $03, $01, $06, $02, $02, $03, $10, $48, $59, $01, $07, $02
 	db $02, $03, $10, $55, $59
-
-SECTION "analyzed_01195d", ROMX[$595d], BANK[$04]
 
 Data_04_595d:
 	db $e2, $54, $4e, $55, $0c, $0d, $00
@@ -11474,30 +10480,20 @@ SECTION "analyzed_011965", ROMX[$5965], BANK[$04]
 Data_04_5965:
 	db $eb, $54, $57, $55, $0c, $0d, $00
 
-SECTION "analyzed_01196c", ROMX[$596c], BANK[$04]
-
 Data_04_596c:
 	db $00, $f4, $54, $60, $55, $0c, $0d, $00, $00, $fd, $54, $69, $55, $0c, $0d, $00
 	db $00, $06, $55, $72, $55, $0c, $0d, $00, $00, $0f, $55, $7b, $55, $0c, $0d, $00
 	db $00, $18, $55, $84, $55, $0c, $0d, $00, $00, $ba, $4c
 
-SECTION "analyzed_011997", ROMX[$5997], BANK[$04]
-
 Data_04_5997:
 	db $a9, $59, $b1, $59
-
-SECTION "analyzed_01199b", ROMX[$599b], BANK[$04]
 
 Data_04_599b:
 	db $c8, $59, $df, $59, $e7, $59, $ba, $4c, $ba, $4c, $ba, $4c, $fe, $59
 
-SECTION "analyzed_0119a9", ROMX[$59a9], BANK[$04]
-
 Data_04_59a9:
 	db $01, $00, $02, $01, $03, $10, $a9, $59, $01, $00, $02, $08, $03, $01, $01, $02
 	db $08, $03
-
-SECTION "analyzed_0119bb", ROMX[$59bb], BANK[$04]
 
 Data_04_59bb:
 	db $01, $00, $02, $08, $03, $01, $02, $02, $08, $03, $10, $b1, $59, $01, $00, $02
@@ -11505,8 +10501,6 @@ Data_04_59bb:
 	db $03, $10, $d7, $59, $01, $05, $02, $03, $03, $10, $df, $59, $01, $00, $02, $04
 	db $03, $01, $01, $02, $04, $03, $01, $00, $02, $04, $03, $01, $02, $02, $04, $03
 	db $10, $e7, $59, $01, $06, $02, $02, $03, $10, $fe, $59
-
-SECTION "analyzed_011a06", ROMX[$5a06], BANK[$04]
 
 Data_04_5a06:
 	db $e2, $54, $4e, $55, $0c, $0d, $00
@@ -11531,36 +10525,24 @@ SECTION "analyzed_011a26", ROMX[$5a26], BANK[$04]
 Data_04_5a26:
 	db $06, $55, $72, $55, $0c, $0d, $00
 
-SECTION "analyzed_011a2d", ROMX[$5a2d], BANK[$04]
-
 Data_04_5a2d:
 	db $00, $0f, $55, $7b, $55, $0c, $0d, $00, $00, $18, $55, $84, $55, $0c, $0d, $00
 	db $00, $21, $55, $8d, $55, $0c, $0d, $00, $00, $ba, $4c
 
-SECTION "analyzed_011a48", ROMX[$5a48], BANK[$04]
-
 Data_04_5a48:
 	db $5a, $5a, $62, $5a, $74, $5a
 
-SECTION "analyzed_011a4e", ROMX[$5a4e], BANK[$04]
-
 Data_04_5a4e:
 	db $86, $5a, $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c, $93, $5a
-
-SECTION "analyzed_011a5a", ROMX[$5a5a], BANK[$04]
 
 Data_04_5a5a:
 	db $01, $00, $02, $01, $03, $10, $5a, $5a, $01, $00, $02, $05, $03, $01, $01, $02
 	db $05, $03, $01, $02, $02, $05, $03, $10, $62, $5a, $01, $03, $02, $1e, $03, $01
 	db $04, $02, $28, $03, $01, $03, $02, $05, $03
 
-SECTION "analyzed_011a83", ROMX[$5a83], BANK[$04]
-
 Data_04_5a83:
 	db $10, $5a, $5a, $01, $05, $02, $03, $03, $01, $06, $02, $03, $03, $10, $86, $5a
 	db $01, $07, $02, $03, $03, $10, $93, $5a
-
-SECTION "analyzed_011a9b", ROMX[$5a9b], BANK[$04]
 
 Data_04_5a9b:
 	db $1e, $58, $1e, $58, $20, $21, $00
@@ -11610,12 +10592,8 @@ SECTION "analyzed_011ae3", ROMX[$5ae3], BANK[$04]
 Data_04_5ae3:
 	db $39, $5a, $39, $5a, $20, $00, $00
 
-SECTION "analyzed_011aea", ROMX[$5aea], BANK[$04]
-
 Data_04_5aea:
 	db $00, $1e, $58, $1e, $58, $20, $00, $00, $00
-
-SECTION "analyzed_011af3", ROMX[$5af3], BANK[$04]
 
 Data_04_5af3:
 	db $4f, $58, $4f, $58, $20, $00, $00
@@ -11630,33 +10608,21 @@ SECTION "analyzed_011b03", ROMX[$5b03], BANK[$04]
 Data_04_5b03:
 	db $b1, $58, $b1, $58, $20, $00, $00
 
-SECTION "analyzed_011b0a", ROMX[$5b0a], BANK[$04]
-
 Data_04_5b0a:
 	db $00, $e2, $58, $e2, $58, $20, $00, $00, $00, $13, $59, $80, $58, $20, $00, $00
 	db $00
 
-SECTION "analyzed_011b1b", ROMX[$5b1b], BANK[$04]
-
 Data_04_5b1b:
 	db $44, $59, $75, $59, $20, $00, $00
-
-SECTION "analyzed_011b22", ROMX[$5b22], BANK[$04]
 
 Data_04_5b22:
 	db $00, $a6, $59, $d7, $59, $20, $00, $00, $00, $ba, $4c
 
-SECTION "analyzed_011b2d", ROMX[$5b2d], BANK[$04]
-
 Data_04_5b2d:
 	db $3f, $5b, $47, $5b, $77, $5b, $8b, $5b
 
-SECTION "analyzed_011b35", ROMX[$5b35], BANK[$04]
-
 Data_04_5b35:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011b3d", ROMX[$5b3d], BANK[$04]
 
 Data_04_5b3d:
 	db $c7, $5b, $01, $00, $02, $01, $03, $10, $3f, $5b, $01, $00, $02, $0a, $03, $01
@@ -11664,23 +10630,15 @@ Data_04_5b3d:
 	db $02, $0a, $03, $01, $03, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $01, $02
 	db $0a, $03, $01, $00, $02, $0a, $03
 
-SECTION "analyzed_011b74", ROMX[$5b74], BANK[$04]
-
 Data_04_5b74:
 	db $10, $3f, $5b
-
-SECTION "analyzed_011b77", ROMX[$5b77], BANK[$04]
 
 Data_04_5b77:
 	db $01, $01, $02, $0a, $03, $01, $06, $02, $0a, $03, $04, $1f, $01, $07, $02, $1e
 	db $03
 
-SECTION "analyzed_011b88", ROMX[$5b88], BANK[$04]
-
 Data_04_5b88:
 	db $10, $3f, $5b
-
-SECTION "analyzed_011b8b", ROMX[$5b8b], BANK[$04]
 
 Data_04_5b8b:
 	db $01, $0b, $02, $07, $03, $01, $0d, $02, $07, $03, $01, $0c, $02, $07, $03, $01
@@ -11705,12 +10663,8 @@ SECTION "analyzed_011bf1", ROMX[$5bf1], BANK[$04]
 Data_04_5bf1:
 	db $91, $5b, $ba, $5b, $22, $23, $00
 
-SECTION "analyzed_011bf8", ROMX[$5bf8], BANK[$04]
-
 Data_04_5bf8:
 	db $00, $e3, $5b, $0c, $5c, $22, $23, $00, $00
-
-SECTION "analyzed_011c01", ROMX[$5c01], BANK[$04]
 
 Data_04_5c01:
 	db $35, $5c, $5e, $5c, $22, $23, $00
@@ -11725,42 +10679,26 @@ SECTION "analyzed_011c11", ROMX[$5c11], BANK[$04]
 Data_04_5c11:
 	db $d9, $5c, $02, $5d, $22, $23, $00
 
-SECTION "analyzed_011c18", ROMX[$5c18], BANK[$04]
-
 Data_04_5c18:
 	db $00, $2b, $5d
-
-SECTION "analyzed_011c1b", ROMX[$5c1b], BANK[$04]
 
 Data_04_5c1b:
 	db $54, $5d, $22, $00, $00
 
-SECTION "analyzed_011c20", ROMX[$5c20], BANK[$04]
-
 Data_04_5c20:
 	db $00, $ba, $4c, $35, $5c
-
-SECTION "analyzed_011c25", ROMX[$5c25], BANK[$04]
 
 Data_04_5c25:
 	db $3d, $5c, $63, $5c, $77, $5c, $8e, $5c, $ac, $5c
 
-SECTION "analyzed_011c2f", ROMX[$5c2f], BANK[$04]
-
 Data_04_5c2f:
 	db $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011c33", ROMX[$5c33], BANK[$04]
 
 Data_04_5c33:
 	db $b9, $5c
 
-SECTION "analyzed_011c35", ROMX[$5c35], BANK[$04]
-
 Data_04_5c35:
 	db $01, $00, $02, $01, $03, $10, $35, $5c
-
-SECTION "analyzed_011c3d", ROMX[$5c3d], BANK[$04]
 
 Data_04_5c3d:
 	db $01, $00, $02, $0a, $03, $01, $02, $02, $0a, $03, $01, $03, $02, $0a, $03, $01
@@ -11769,24 +10707,16 @@ Data_04_5c3d:
 	db $04, $19, $01, $06, $02, $01, $03, $10, $6f, $5c, $01, $03, $02, $0a, $03, $01
 	db $07, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $00, $02, $0a, $03
 
-SECTION "analyzed_011c8b", ROMX[$5c8b], BANK[$04]
-
 Data_04_5c8b:
 	db $10, $35, $5c
-
-SECTION "analyzed_011c8e", ROMX[$5c8e], BANK[$04]
 
 Data_04_5c8e:
 	db $01, $00, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $06, $02, $0a, $03, $01
 	db $03, $02, $0a, $03, $04, $19, $01, $07, $02, $01, $03, $10, $a4, $5c, $01, $05
 	db $02, $0a, $03, $01, $00, $02, $0a, $03
 
-SECTION "analyzed_011cb6", ROMX[$5cb6], BANK[$04]
-
 Data_04_5cb6:
 	db $10, $35, $5c
-
-SECTION "analyzed_011cb9", ROMX[$5cb9], BANK[$04]
 
 Data_04_5cb9:
 	db $01, $00, $02, $0a, $03, $01, $05, $02, $0a, $03, $01, $08, $02, $0a, $03, $09
@@ -11818,86 +10748,54 @@ SECTION "analyzed_011cfd", ROMX[$5cfd], BANK[$04]
 Data_04_5cfd:
 	db $aa, $5e, $db, $5e, $24, $25, $00
 
-SECTION "analyzed_011d04", ROMX[$5d04], BANK[$04]
-
 Data_04_5d04:
 	db $00, $0c, $5f
-
-SECTION "analyzed_011d07", ROMX[$5d07], BANK[$04]
 
 Data_04_5d07:
 	db $0c, $5f, $24, $00, $00
 
-SECTION "analyzed_011d0c", ROMX[$5d0c], BANK[$04]
-
 Data_04_5d0c:
 	db $00, $3d, $5f
-
-SECTION "analyzed_011d0f", ROMX[$5d0f], BANK[$04]
 
 Data_04_5d0f:
 	db $3d, $5f, $24, $00, $00
 
-SECTION "analyzed_011d14", ROMX[$5d14], BANK[$04]
-
 Data_04_5d14:
 	db $00, $6e, $5f
-
-SECTION "analyzed_011d17", ROMX[$5d17], BANK[$04]
 
 Data_04_5d17:
 	db $6e, $5f, $24, $00, $00
 
-SECTION "analyzed_011d1c", ROMX[$5d1c], BANK[$04]
-
 Data_04_5d1c:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011d1f", ROMX[$5d1f], BANK[$04]
 
 Data_04_5d1f:
 	db $31, $5d
 
-SECTION "analyzed_011d21", ROMX[$5d21], BANK[$04]
-
 Data_04_5d21:
 	db $ba, $4c
-
-SECTION "analyzed_011d23", ROMX[$5d23], BANK[$04]
 
 Data_04_5d23:
 	db $48, $5d, $61, $5d
 
-SECTION "analyzed_011d27", ROMX[$5d27], BANK[$04]
-
 Data_04_5d27:
 	db $ba, $4c, $ba, $4c, $ba, $4c, $ba, $4c
-
-SECTION "analyzed_011d2f", ROMX[$5d2f], BANK[$04]
 
 Data_04_5d2f:
 	db $75, $5d, $01, $00, $02, $0a, $03, $01, $01, $02, $0a, $03, $01, $00, $02, $0a
 	db $03, $01, $02, $02, $0a, $03, $10, $31, $5d, $01, $01, $02, $0a, $03, $01, $03
 	db $02, $0a, $03, $01, $04, $02, $14, $03, $04, $1f, $01, $05, $02, $14, $03
 
-SECTION "analyzed_011d5e", ROMX[$5d5e], BANK[$04]
-
 Data_04_5d5e:
 	db $10, $31, $5d
-
-SECTION "analyzed_011d61", ROMX[$5d61], BANK[$04]
 
 Data_04_5d61:
 	db $01, $00, $02, $0a, $03, $01, $06, $02, $1e, $03, $04, $13, $01, $07, $02, $0a
 	db $03, $10, $6d, $5d, $01, $08, $02, $04, $03, $09, $01, $08, $02, $02, $03, $08
 	db $02, $02, $03, $10, $7a, $5d, $e7, $5f
 
-SECTION "analyzed_011d89", ROMX[$5d89], BANK[$04]
-
 Data_04_5d89:
 	db $e7, $5f
-
-SECTION "analyzed_011d8b", ROMX[$5d8b], BANK[$04]
 
 Data_04_5d8b:
 	db $26, $26, $00
@@ -11907,12 +10805,8 @@ SECTION "analyzed_011d8f", ROMX[$5d8f], BANK[$04]
 Data_04_5d8f:
 	db $08, $60
 
-SECTION "analyzed_011d91", ROMX[$5d91], BANK[$04]
-
 Data_04_5d91:
 	db $08, $60
-
-SECTION "analyzed_011d93", ROMX[$5d93], BANK[$04]
 
 Data_04_5d93:
 	db $26, $26, $00
@@ -11922,12 +10816,8 @@ SECTION "analyzed_011d97", ROMX[$5d97], BANK[$04]
 Data_04_5d97:
 	db $29, $60
 
-SECTION "analyzed_011d99", ROMX[$5d99], BANK[$04]
-
 Data_04_5d99:
 	db $29, $60
-
-SECTION "analyzed_011d9b", ROMX[$5d9b], BANK[$04]
 
 Data_04_5d9b:
 	db $27, $27, $00
@@ -11937,12 +10827,8 @@ SECTION "analyzed_011d9f", ROMX[$5d9f], BANK[$04]
 Data_04_5d9f:
 	db $4a, $60
 
-SECTION "analyzed_011da1", ROMX[$5da1], BANK[$04]
-
 Data_04_5da1:
 	db $4a, $60
-
-SECTION "analyzed_011da3", ROMX[$5da3], BANK[$04]
 
 Data_04_5da3:
 	db $26, $26, $00
@@ -11952,12 +10838,8 @@ SECTION "analyzed_011da7", ROMX[$5da7], BANK[$04]
 Data_04_5da7:
 	db $6b, $60
 
-SECTION "analyzed_011da9", ROMX[$5da9], BANK[$04]
-
 Data_04_5da9:
 	db $6b, $60
-
-SECTION "analyzed_011dab", ROMX[$5dab], BANK[$04]
 
 Data_04_5dab:
 	db $28, $28, $00
@@ -11967,12 +10849,8 @@ SECTION "analyzed_011daf", ROMX[$5daf], BANK[$04]
 Data_04_5daf:
 	db $7c, $60
 
-SECTION "analyzed_011db1", ROMX[$5db1], BANK[$04]
-
 Data_04_5db1:
 	db $7c, $60
-
-SECTION "analyzed_011db3", ROMX[$5db3], BANK[$04]
 
 Data_04_5db3:
 	db $28, $28, $00
@@ -11982,12 +10860,8 @@ SECTION "analyzed_011db7", ROMX[$5db7], BANK[$04]
 Data_04_5db7:
 	db $4a, $60
 
-SECTION "analyzed_011db9", ROMX[$5db9], BANK[$04]
-
 Data_04_5db9:
 	db $4a, $60
-
-SECTION "analyzed_011dbb", ROMX[$5dbb], BANK[$04]
 
 Data_04_5dbb:
 	db $26, $00, $00
@@ -11997,22 +10871,14 @@ SECTION "analyzed_011dbf", ROMX[$5dbf], BANK[$04]
 Data_04_5dbf:
 	db $6b, $60
 
-SECTION "analyzed_011dc1", ROMX[$5dc1], BANK[$04]
-
 Data_04_5dc1:
 	db $6b, $60
-
-SECTION "analyzed_011dc3", ROMX[$5dc3], BANK[$04]
 
 Data_04_5dc3:
 	db $28, $00, $00
 
-SECTION "analyzed_011dc6", ROMX[$5dc6], BANK[$04]
-
 Data_04_5dc6:
 	db $00, $ba, $4c
-
-SECTION "analyzed_011dc9", ROMX[$5dc9], BANK[$04]
 
 Data_04_5dc9:
 	db $d7, $5d, $df, $5d, $e7, $5d, $ff, $5d, $11, $5e, $18, $5e, $31, $5e, $01, $00
@@ -12021,23 +10887,15 @@ Data_04_5dc9:
 	db $02, $02, $03, $10, $ec, $5d, $01, $07, $02, $04, $03, $09, $01, $07, $02, $02
 	db $03, $08, $02, $02, $03, $10, $04, $5e
 
-SECTION "analyzed_011e11", ROMX[$5e11], BANK[$04]
-
 Data_04_5e11:
 	db $08, $02, $02, $03, $10, $11, $5e
-
-SECTION "analyzed_011e18", ROMX[$5e18], BANK[$04]
 
 Data_04_5e18:
 	db $01, $01, $02, $0a, $03, $01, $02, $02, $4e, $03, $04, $10, $01, $03, $02, $1e
 	db $03, $01, $01, $02, $0a, $03
 
-SECTION "analyzed_011e2e", ROMX[$5e2e], BANK[$04]
-
 Data_04_5e2e:
 	db $10, $d7, $5d
-
-SECTION "analyzed_011e31", ROMX[$5e31], BANK[$04]
 
 Data_04_5e31:
 	db $01, $05, $02, $0a, $03, $10, $31, $5e, $8d, $60, $8d, $60, $29, $2a, $00
@@ -12087,12 +10945,8 @@ SECTION "analyzed_011e81", ROMX[$5e81], BANK[$04]
 Data_04_5e81:
 	db $d9, $62
 
-SECTION "analyzed_011e83", ROMX[$5e83], BANK[$04]
-
 Data_04_5e83:
 	db $d9, $62
-
-SECTION "analyzed_011e85", ROMX[$5e85], BANK[$04]
 
 Data_04_5e85:
 	db $29, $00, $00
@@ -12107,49 +10961,31 @@ Data_04_5e89:
 	db $04, $18, $01, $05, $02, $0a, $03, $10, $cb, $5e, $09, $01, $05, $02, $0a, $03
 	db $01, $04, $02, $14, $03, $01, $01, $02, $0a, $03, $01, $00, $02, $3c, $03
 
-SECTION "analyzed_011ee8", ROMX[$5ee8], BANK[$04]
-
 Data_04_5ee8:
 	db $10, $e3, $5e
-
-SECTION "analyzed_011eeb", ROMX[$5eeb], BANK[$04]
 
 Data_04_5eeb:
 	db $09, $01, $01, $02, $0a, $03, $01, $02, $02, $14, $03, $04, $23, $01, $03, $02
 	db $0a, $03, $01, $04, $02, $0a, $03, $01, $00, $02, $3c, $03
 
-SECTION "analyzed_011f07", ROMX[$5f07], BANK[$04]
-
 Data_04_5f07:
 	db $10, $02, $5f
-
-SECTION "analyzed_011f0a", ROMX[$5f0a], BANK[$04]
 
 Data_04_5f0a:
 	db $09, $01, $06, $02, $05, $03
 
-SECTION "analyzed_011f10", ROMX[$5f10], BANK[$04]
-
 Data_04_5f10:
 	db $10, $9f, $5e
-
-SECTION "analyzed_011f13", ROMX[$5f13], BANK[$04]
 
 Data_04_5f13:
 	db $09, $01, $07, $02, $05, $03, $01, $06, $02, $05, $03
 
-SECTION "analyzed_011f1e", ROMX[$5f1e], BANK[$04]
-
 Data_04_5f1e:
 	db $10, $b5, $5e
-
-SECTION "analyzed_011f21", ROMX[$5f21], BANK[$04]
 
 Data_04_5f21:
 	db $04, $22, $09, $01, $09, $02, $3c, $03, $09, $01, $09, $02, $02, $03, $08, $02
 	db $02, $03, $10, $29, $5f, $04, $1a, $09, $01, $08, $02, $02, $03, $10, $39, $5f
-
-SECTION "analyzed_011f41", ROMX[$5f41], BANK[$04]
 
 Data_04_5f41:
 	db $e2, $54, $4e, $55, $0c, $0d, $00, $00, $ba, $4c, $5d, $5f, $ba, $4c, $ba, $4c
@@ -12259,22 +11095,14 @@ Func_05_40b6:
 	ldh [rSCY], a
 	ret
 
-SECTION "analyzed_0140cf", ROMX[$40cf], BANK[$05]
-
 Data_05_40cf:
 	db $00, $01, $00, $ff, $00, $01, $00, $ff
-
-SECTION "analyzed_0140d7", ROMX[$40d7], BANK[$05]
 
 Data_05_40d7:
 	db $00, $01, $00, $02, $00, $fe, $00, $ff
 
-SECTION "analyzed_0140df", ROMX[$40df], BANK[$05]
-
 Data_05_40df:
 	db $00, $02, $00, $03, $00, $fd, $00, $fe
-
-SECTION "analyzed_0140e7", ROMX[$40e7], BANK[$05]
 
 Func_05_40e7:
 	ldh a, [hJoyPressed]
@@ -12399,8 +11227,6 @@ Func_05_41b1:
 	ld [$cf42], a
 	jp Func_05_40f5
 
-SECTION "analyzed_0141c6", ROMX[$41c6], BANK[$05]
-
 Func_05_41c6:
 	xor a
 	ld [$cf62], a
@@ -12412,8 +11238,6 @@ Func_05_41c6:
 	ld [$cf42], a
 	jp Func_05_40f5
 
-SECTION "analyzed_0141d9", ROMX[$41d9], BANK[$05]
-
 Func_05_41d9:
 	inc hl
 	ld a, [hl+]
@@ -12423,8 +11247,6 @@ Func_05_41d9:
 	ld a, h
 	ld [$cf42], a
 	jp Func_05_40f5
-
-SECTION "analyzed_0141e9", ROMX[$41e9], BANK[$05]
 
 Func_05_41e9:
 	inc hl
@@ -12440,8 +11262,6 @@ Func_05_41e9:
 	inc hl
 	inc hl
 	jp Func_05_40f5
-
-SECTION "analyzed_0141fa", ROMX[$41fa], BANK[$05]
 
 Func_05_41fa:
 	ld a, [$cf4b]
@@ -12619,8 +11439,6 @@ Func_05_42fb:
 	ld [$cf4c], a
 	ret
 
-SECTION "analyzed_014327", ROMX[$4327], BANK[$05]
-
 Func_05_4327:
 	inc hl
 	ld a, [hl+]
@@ -12635,8 +11453,6 @@ Func_05_4327:
 	inc hl
 	inc hl
 	jp Func_05_4202
-
-SECTION "analyzed_014338", ROMX[$4338], BANK[$05]
 
 Func_05_4338:
 	ld a, [$cf3f]
@@ -13021,8 +11837,6 @@ Func_05_45c1:
 	call Func_00_10b5
 	ret
 
-SECTION "analyzed_0145da", ROMX[$45da], BANK[$05]
-
 Data_05_45da:
 	db $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $70
 	db $80, $40, $58, $41, $80, $40, $80, $40, $80, $40, $a0, $40, $90, $40, $00, $40
@@ -13030,8 +11844,6 @@ Data_05_45da:
 	db $05, $09, $07, $0c, $06, $0a, $0c, $0e, $08, $09, $07, $0b, $06, $0a, $0c, $0e
 	db $5f, $4a, $6b, $4b, $07, $4c, $80, $50, $0d, $4d, $60, $4d, $2c, $54, $c0, $55
 	db $20, $4b, $b6, $4b, $14, $4c, $db, $52, $3f, $4d, $13, $50, $cd, $54, $99, $57
-
-SECTION "analyzed_01463a", ROMX[$463a], BANK[$05]
 
 Func_05_463a:
 	FAR_CALL $00, Func_00_39ad
@@ -13362,14 +12174,10 @@ Func_05_4843:
 	ld a, $01
 	ret
 
-SECTION "analyzed_01485f", ROMX[$485f], BANK[$05]
-
 Func_05_485f:
 	call Func_05_486a
 	ld a, $01
 	ret
-
-SECTION "analyzed_014865", ROMX[$4865], BANK[$05]
 
 Func_05_4865:
 	call Func_05_486a
@@ -13394,12 +12202,8 @@ Func_05_486a:
 	ld [hl], a
 	ret
 
-SECTION "analyzed_01487f", ROMX[$487f], BANK[$05]
-
 Data_05_487f:
 	db $00, $00, $10, $00, $00
-
-SECTION "analyzed_014884", ROMX[$4884], BANK[$05]
 
 Func_05_4884:
 	xor a
@@ -13605,12 +12409,8 @@ Func_05_4a07:
 	cp $c0
 	jr nz, Func_05_4a0f
 
-SECTION "analyzed_014a0c", ROMX[$4a0c], BANK[$05]
-
 Data_05_4a0c:
 	db $3e, $e3, $77
-
-SECTION "analyzed_014a0f", ROMX[$4a0f], BANK[$05]
 
 Func_05_4a0f:
 	inc hl
@@ -13623,16 +12423,12 @@ Func_05_4a0f:
 	jr nz, Func_05_4a02
 	ret
 
-SECTION "analyzed_014a1c", ROMX[$4a1c], BANK[$05]
-
 Data_05_4a1c:
 	db $3e, $0f, $ea, $c0, $c2, $c9, $3e, $1e, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1
 	db $c2, $3e, $01, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $02, $ea, $c0
 	db $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $03, $ea, $c0, $c2, $c9, $3e, $02, $ea
 	db $c1, $c2, $3e, $04, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $05, $ea
 	db $c0, $c2, $c9
-
-SECTION "analyzed_014a5f", ROMX[$4a5f], BANK[$05]
 
 Data_05_4a5f:
 	db $00, $70, $60, $00, $00, $00, $00, $03, $60, $00, $b2, $59, $00, $03, $60, $00
@@ -13947,12 +12743,8 @@ Data_05_596e:
 	db $7c, $73, $00, $00, $9d, $73, $00, $00, $be, $73, $00, $00, $df, $73, $00, $00
 	db $f0, $73, $00, $00, $0c, $14
 
-SECTION "analyzed_0159b4", ROMX[$59b4], BANK[$05]
-
 Data_05_59b4:
 	db $a8, $5a, $b8, $59
-
-SECTION "analyzed_0159b8", ROMX[$59b8], BANK[$05]
 
 Data_05_59b8:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -13987,12 +12779,8 @@ Data_05_59b8:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $0c, $14
 
-SECTION "analyzed_015b9a", ROMX[$5b9a], BANK[$05]
-
 Data_05_5b9a:
 	db $8e, $5c, $9e, $5b
-
-SECTION "analyzed_015b9e", ROMX[$5b9e], BANK[$05]
 
 Data_05_5b9e:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -14027,12 +12815,8 @@ Data_05_5b9e:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $0c, $14
 
-SECTION "analyzed_015d80", ROMX[$5d80], BANK[$05]
-
 Data_05_5d80:
 	db $74, $5e, $84, $5d
-
-SECTION "analyzed_015d84", ROMX[$5d84], BANK[$05]
 
 Data_05_5d84:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -14067,12 +12851,8 @@ Data_05_5d84:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $0c, $14
 
-SECTION "analyzed_015f66", ROMX[$5f66], BANK[$05]
-
 Data_05_5f66:
 	db $5a, $60, $6a, $5f
-
-SECTION "analyzed_015f6a", ROMX[$5f6a], BANK[$05]
 
 Data_05_5f6a:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -14107,12 +12887,8 @@ Data_05_5f6a:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $0c, $14
 
-SECTION "analyzed_01614c", ROMX[$614c], BANK[$05]
-
 Data_05_614c:
 	db $40, $62, $50, $61
-
-SECTION "analyzed_016150", ROMX[$6150], BANK[$05]
 
 Data_05_6150:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -14147,12 +12923,8 @@ Data_05_6150:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $0c, $14
 
-SECTION "analyzed_016332", ROMX[$6332], BANK[$05]
-
 Data_05_6332:
 	db $26, $64, $36, $63
-
-SECTION "analyzed_016336", ROMX[$6336], BANK[$05]
 
 Data_05_6336:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -14187,12 +12959,8 @@ Data_05_6336:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $0c, $14
 
-SECTION "analyzed_016518", ROMX[$6518], BANK[$05]
-
 Data_05_6518:
 	db $0c, $66, $1c, $65
-
-SECTION "analyzed_01651c", ROMX[$651c], BANK[$05]
 
 Data_05_651c:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -14227,12 +12995,8 @@ Data_05_651c:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $0c, $14
 
-SECTION "analyzed_0166fe", ROMX[$66fe], BANK[$05]
-
 Data_05_66fe:
 	db $f2, $67, $02, $67
-
-SECTION "analyzed_016702", ROMX[$6702], BANK[$05]
 
 Data_05_6702:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -14267,12 +13031,8 @@ Data_05_6702:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $0c, $14
 
-SECTION "analyzed_0168e4", ROMX[$68e4], BANK[$05]
-
 Data_05_68e4:
 	db $d8, $69, $e8, $68
-
-SECTION "analyzed_0168e8", ROMX[$68e8], BANK[$05]
 
 Data_05_68e8:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -14307,12 +13067,8 @@ Data_05_68e8:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $0c, $14
 
-SECTION "analyzed_016aca", ROMX[$6aca], BANK[$05]
-
 Data_05_6aca:
 	db $be, $6b, $ce, $6a
-
-SECTION "analyzed_016ace", ROMX[$6ace], BANK[$05]
 
 Data_05_6ace:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -14951,12 +13707,8 @@ Data_06_6840:
 	db $18, $1e, $00, $40, $20, $28, $00, $40, $28, $32, $00, $40, $30, $3c, $00, $0c
 	db $14
 
-SECTION "analyzed_01b211", ROMX[$7211], BANK[$06]
-
 Data_06_7211:
 	db $05, $73, $15, $72
-
-SECTION "analyzed_01b215", ROMX[$7215], BANK[$06]
 
 Data_06_7215:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -14991,12 +13743,8 @@ Data_06_7215:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $0c, $14
 
-SECTION "analyzed_01b3f7", ROMX[$73f7], BANK[$06]
-
 Data_06_73f7:
 	db $eb, $74, $fb, $73
-
-SECTION "analyzed_01b3fb", ROMX[$73fb], BANK[$06]
 
 Data_06_73fb:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -15031,12 +13779,8 @@ Data_06_73fb:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $0c, $14
 
-SECTION "analyzed_01b5dd", ROMX[$75dd], BANK[$06]
-
 Data_06_75dd:
 	db $d1, $76, $e1, $75
-
-SECTION "analyzed_01b5e1", ROMX[$75e1], BANK[$06]
 
 Data_06_75e1:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -15071,12 +13815,8 @@ Data_06_75e1:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $0c, $14
 
-SECTION "analyzed_01b7c3", ROMX[$77c3], BANK[$06]
-
 Data_06_77c3:
 	db $b7, $78, $c7, $77
-
-SECTION "analyzed_01b7c7", ROMX[$77c7], BANK[$06]
 
 Data_06_77c7:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -15111,12 +13851,8 @@ Data_06_77c7:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $0c, $14
 
-SECTION "analyzed_01b9a9", ROMX[$79a9], BANK[$06]
-
 Data_06_79a9:
 	db $9d, $7a, $ad, $79
-
-SECTION "analyzed_01b9ad", ROMX[$79ad], BANK[$06]
 
 Data_06_79ad:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -15151,12 +13887,8 @@ Data_06_79ad:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $0c, $14
 
-SECTION "analyzed_01bb8f", ROMX[$7b8f], BANK[$06]
-
 Data_06_7b8f:
 	db $83, $7c, $93, $7b
-
-SECTION "analyzed_01bb93", ROMX[$7b93], BANK[$06]
 
 Data_06_7b93:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -15191,12 +13923,8 @@ Data_06_7b93:
 	db $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64, $64
 	db $0c, $14
 
-SECTION "analyzed_01bd75", ROMX[$7d75], BANK[$06]
-
 Data_06_7d75:
 	db $69, $7e, $79, $7d
-
-SECTION "analyzed_01bd79", ROMX[$7d79], BANK[$06]
 
 Data_06_7d79:
 	db $00, $00, $00, $00, $5a, $00, $00, $75, $81, $00, $00, $8c, $80, $00, $00, $00
@@ -15778,12 +14506,8 @@ Data_07_6840:
 	db $30, $30, $6c, $09, $38, $00, $3c, $09, $38, $08, $42, $09, $40, $10, $4c, $09
 	db $0c, $20
 
-SECTION "analyzed_01f262", ROMX[$7262], BANK[$07]
-
 Data_07_7262:
 	db $e6, $73, $66, $72
-
-SECTION "analyzed_01f266", ROMX[$7266], BANK[$07]
 
 Data_07_7266:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -17001,12 +15725,8 @@ Data_09_7158:
 	db $10, $00, $2c, $01, $10, $08, $28, $02, $10, $10, $30, $02, $20, $20, $34, $01
 	db $30, $18, $32, $01, $0c, $20
 
-SECTION "analyzed_02735e", ROMX[$735e], BANK[$09]
-
 Data_09_735e:
 	db $e2, $74, $62, $73
-
-SECTION "analyzed_027362", ROMX[$7362], BANK[$09]
 
 Data_09_7362:
 	db $00, $08, $10, $18, $20, $28, $30, $38, $00, $08, $10, $18, $20, $28, $30, $38
@@ -17624,12 +16344,8 @@ Data_0a_70a0:
 	db $01, $08, $08, $2c, $01, $08, $10, $30, $01, $08, $18, $34, $01, $18, $00, $2a
 	db $01, $18, $08, $2e, $01, $18, $10, $32, $01, $18, $18, $36, $01, $06, $04
 
-SECTION "analyzed_02b39f", ROMX[$739f], BANK[$0a]
-
 Data_0a_739f:
 	db $bb, $73, $a3, $73
-
-SECTION "analyzed_02b3a3", ROMX[$73a3], BANK[$0a]
 
 Data_0a_73a3:
 	db $ff, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -17637,12 +16353,8 @@ Data_0a_73a3:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $41, $61, $09
 	db $06, $04
 
-SECTION "analyzed_02b3d5", ROMX[$73d5], BANK[$0a]
-
 Data_0a_73d5:
 	db $f1, $73, $d9, $73
-
-SECTION "analyzed_02b3d9", ROMX[$73d9], BANK[$0a]
 
 Data_0a_73d9:
 	db $ff, $ff, $05, $ff, $ff, $ff, $04, $03, $01, $ff, $ff, $02, $02, $ff, $ff, $01
@@ -17650,12 +16362,8 @@ Data_0a_73d9:
 	db $01, $09, $69, $61, $01, $09, $69, $61, $01, $01, $09, $09, $09, $01, $09, $09
 	db $06, $04
 
-SECTION "analyzed_02b40b", ROMX[$740b], BANK[$0a]
-
 Data_0a_740b:
 	db $27, $74, $0f, $74
-
-SECTION "analyzed_02b40f", ROMX[$740f], BANK[$0a]
 
 Data_0a_740f:
 	db $06, $09, $0b, $ff, $07, $0a, $ff, $0c, $08, $ff, $ff, $0d, $0d, $ff, $ff, $08
@@ -17663,12 +16371,8 @@ Data_0a_740f:
 	db $01, $09, $69, $01, $61, $09, $69, $61, $61, $09, $61, $61, $09, $61, $61, $61
 	db $06, $04
 
-SECTION "analyzed_02b441", ROMX[$7441], BANK[$0a]
-
 Data_0a_7441:
 	db $5d, $74, $45, $74
-
-SECTION "analyzed_02b445", ROMX[$7445], BANK[$0a]
 
 Data_0a_7445:
 	db $0e, $11, $14, $ff, $0f, $12, $15, $17, $10, $13, $16, $18, $10, $13, $16, $18
@@ -17676,12 +16380,8 @@ Data_0a_7445:
 	db $01, $01, $01, $01, $41, $41, $41, $41, $41, $41, $41, $41, $41, $41, $41, $29
 	db $06, $04
 
-SECTION "analyzed_02b477", ROMX[$7477], BANK[$0a]
-
 Data_0a_7477:
 	db $93, $74, $7b, $74
-
-SECTION "analyzed_02b47b", ROMX[$747b], BANK[$0a]
 
 Data_0a_747b:
 	db $0e, $1b, $1e, $ff, $19, $1c, $1f, $21, $1a, $1d, $20, $22, $1a, $1d, $20, $22
@@ -17689,12 +16389,8 @@ Data_0a_747b:
 	db $01, $01, $01, $01, $41, $41, $41, $41, $41, $41, $41, $41, $41, $41, $41, $29
 	db $06, $04
 
-SECTION "analyzed_02b4ad", ROMX[$74ad], BANK[$0a]
-
 Data_0a_74ad:
 	db $c9, $74, $b1, $74
-
-SECTION "analyzed_02b4b1", ROMX[$74b1], BANK[$0a]
 
 Data_0a_74b1:
 	db $0e, $1b, $1e, $ff, $19, $1c, $1f, $21, $1a, $24, $26, $22, $1a, $25, $27, $22
@@ -17702,12 +16398,8 @@ Data_0a_74b1:
 	db $01, $01, $01, $01, $41, $01, $01, $41, $41, $41, $41, $41, $41, $41, $41, $29
 	db $06, $04
 
-SECTION "analyzed_02b4e3", ROMX[$74e3], BANK[$0a]
-
 Data_0a_74e3:
 	db $ff, $74, $e7, $74
-
-SECTION "analyzed_02b4e7", ROMX[$74e7], BANK[$0a]
 
 Data_0a_74e7:
 	db $0e, $1b, $1e, $ff, $19, $1c, $1f, $21, $1a, $28, $2a, $22, $1a, $29, $2b, $22
@@ -17715,12 +16407,8 @@ Data_0a_74e7:
 	db $01, $01, $01, $01, $41, $01, $01, $41, $41, $41, $41, $41, $41, $41, $41, $29
 	db $0a, $05
 
-SECTION "analyzed_02b519", ROMX[$7519], BANK[$0a]
-
 Data_0a_7519:
 	db $4f, $75, $1d, $75
-
-SECTION "analyzed_02b51d", ROMX[$751d], BANK[$0a]
 
 Data_0a_751d:
 	db $0e, $0e, $0e, $ff, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $ff, $0e, $0e
@@ -17731,12 +16419,8 @@ Data_0a_751d:
 	db $01, $01, $01, $69, $01, $01, $01, $01, $69, $01, $01, $01, $01, $69, $01, $01
 	db $01, $01, $01, $01, $0a, $05
 
-SECTION "analyzed_02b583", ROMX[$7583], BANK[$0a]
-
 Data_0a_7583:
 	db $b9, $75, $87, $75
-
-SECTION "analyzed_02b587", ROMX[$7587], BANK[$0a]
 
 Data_0a_7587:
 	db $0e, $32, $34, $ff, $0e, $2e, $33, $0e, $0e, $0e, $2f, $0e, $0e, $ff, $0e, $30
@@ -17747,12 +16431,8 @@ Data_0a_7587:
 	db $01, $01, $61, $61, $61, $01, $01, $61, $61, $61, $01, $01, $61, $61, $61, $01
 	db $01, $61, $61, $61, $0a, $05
 
-SECTION "analyzed_02b5ed", ROMX[$75ed], BANK[$0a]
-
 Data_0a_75ed:
 	db $23, $76, $f1, $75
-
-SECTION "analyzed_02b5f1", ROMX[$75f1], BANK[$0a]
 
 Data_0a_75f1:
 	db $0e, $39, $3b, $3c, $0e, $35, $3a, $0e, $3d, $3e, $36, $0e, $0e, $ff, $3f, $37
@@ -17763,12 +16443,8 @@ Data_0a_75f1:
 	db $61, $61, $61, $61, $61, $61, $09, $61, $61, $61, $61, $61, $61, $61, $61, $61
 	db $61, $61, $61, $61, $0a, $05
 
-SECTION "analyzed_02b657", ROMX[$7657], BANK[$0a]
-
 Data_0a_7657:
 	db $8d, $76, $5b, $76
-
-SECTION "analyzed_02b65b", ROMX[$765b], BANK[$0a]
 
 Data_0a_765b:
 	db $0e, $39, $3b, $3c, $0e, $35, $3a, $0e, $3d, $3e, $36, $0e, $0e, $ff, $3f, $37
@@ -17779,12 +16455,8 @@ Data_0a_765b:
 	db $61, $61, $61, $61, $61, $61, $09, $61, $61, $61, $61, $61, $61, $61, $61, $61
 	db $61, $61, $61, $61, $0a, $05
 
-SECTION "analyzed_02b6c1", ROMX[$76c1], BANK[$0a]
-
 Data_0a_76c1:
 	db $f7, $76, $c5, $76
-
-SECTION "analyzed_02b6c5", ROMX[$76c5], BANK[$0a]
 
 Data_0a_76c5:
 	db $0e, $39, $3b, $3c, $0e, $35, $3a, $0e, $3d, $3e, $36, $0e, $0e, $ff, $3f, $37
@@ -17795,12 +16467,8 @@ Data_0a_76c5:
 	db $61, $61, $61, $61, $61, $61, $09, $61, $61, $61, $61, $61, $61, $61, $61, $61
 	db $61, $61, $61, $61, $0a, $05
 
-SECTION "analyzed_02b72b", ROMX[$772b], BANK[$0a]
-
 Data_0a_772b:
 	db $61, $77, $2f, $77
-
-SECTION "analyzed_02b72f", ROMX[$772f], BANK[$0a]
 
 Data_0a_772f:
 	db $0e, $39, $3b, $3c, $0e, $35, $3a, $0e, $3d, $3e, $36, $0e, $0e, $ff, $3f, $37
@@ -17811,12 +16479,8 @@ Data_0a_772f:
 	db $61, $61, $61, $61, $61, $61, $09, $61, $61, $61, $61, $61, $61, $61, $61, $61
 	db $61, $61, $61, $61, $0a, $05
 
-SECTION "analyzed_02b795", ROMX[$7795], BANK[$0a]
-
 Data_0a_7795:
 	db $cb, $77, $99, $77
-
-SECTION "analyzed_02b799", ROMX[$7799], BANK[$0a]
 
 Data_0a_7799:
 	db $0e, $39, $3b, $3c, $0e, $35, $3a, $0e, $3d, $3e, $36, $0e, $0e, $ff, $3f, $56
@@ -17827,83 +16491,55 @@ Data_0a_7799:
 	db $01, $01, $01, $01, $01, $61, $09, $61, $61, $61, $61, $61, $61, $61, $61, $61
 	db $61, $61, $61, $61, $04, $04
 
-SECTION "analyzed_02b7ff", ROMX[$77ff], BANK[$0a]
-
 Data_0a_77ff:
 	db $13, $78, $03, $78
-
-SECTION "analyzed_02b803", ROMX[$7803], BANK[$0a]
 
 Data_0a_7803:
 	db $0e, $0e, $0e, $0e, $6a, $6a, $6a, $6a, $6a, $6a, $6a, $6a, $0e, $ff, $0e, $0e
 	db $01, $01, $01, $01, $01, $01, $01, $01, $41, $41, $41, $41, $01, $69, $01, $01
 	db $04, $04
 
-SECTION "analyzed_02b825", ROMX[$7825], BANK[$0a]
-
 Data_0a_7825:
 	db $39, $78, $29, $78
-
-SECTION "analyzed_02b829", ROMX[$7829], BANK[$0a]
 
 Data_0a_7829:
 	db $0e, $0e, $0e, $0e, $6b, $6b, $6b, $6b, $6b, $6b, $6b, $6b, $0e, $ff, $0e, $0e
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $69, $01, $01
 	db $04, $04
 
-SECTION "analyzed_02b84b", ROMX[$784b], BANK[$0a]
-
 Data_0a_784b:
 	db $5f, $78, $4f, $78
-
-SECTION "analyzed_02b84f", ROMX[$784f], BANK[$0a]
 
 Data_0a_784f:
 	db $6c, $70, $74, $78, $6d, $71, $75, $79, $6e, $72, $76, $7a, $6f, $73, $77, $7b
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01
 	db $04, $04
 
-SECTION "analyzed_02b871", ROMX[$7871], BANK[$0a]
-
 Data_0a_7871:
 	db $85, $78, $75, $78
-
-SECTION "analyzed_02b875", ROMX[$7875], BANK[$0a]
 
 Data_0a_7875:
 	db $7c, $00, $04, $08, $7d, $01, $05, $09, $7e, $02, $06, $0a, $7f, $03, $07, $0b
 	db $01, $09, $09, $09, $01, $09, $09, $09, $01, $09, $09, $09, $01, $09, $09, $09
 	db $04, $04
 
-SECTION "analyzed_02b897", ROMX[$7897], BANK[$0a]
-
 Data_0a_7897:
 	db $ab, $78, $9b, $78
-
-SECTION "analyzed_02b89b", ROMX[$789b], BANK[$0a]
 
 Data_0a_789b:
 	db $0c, $10, $14, $18, $0d, $11, $15, $19, $0e, $12, $16, $1a, $0f, $13, $17, $1b
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-
-SECTION "analyzed_02b8bb", ROMX[$78bb], BANK[$0a]
 
 Data_0a_78bb:
 	db $04, $04, $d1, $78, $c1, $78, $1c, $20, $24, $28, $1d, $21, $25, $29, $1e, $22
 	db $26, $2a, $1f, $23, $27, $2b, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $09, $09, $09, $09, $09, $09
 
-SECTION "analyzed_02b8e1", ROMX[$78e1], BANK[$0a]
-
 Data_0a_78e1:
 	db $08, $04
 
-SECTION "analyzed_02b8e3", ROMX[$78e3], BANK[$0a]
-
 Data_0a_78e3:
 	db $07, $79, $e7, $78
-
-SECTION "analyzed_02b8e7", ROMX[$78e7], BANK[$0a]
 
 Data_0a_78e7:
 	db $36, $3e, $46, $4e, $37, $3f, $47, $4f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -17912,12 +16548,8 @@ Data_0a_78e7:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02b929", ROMX[$7929], BANK[$0a]
-
 Data_0a_7929:
 	db $4d, $79, $2d, $79
-
-SECTION "analyzed_02b92d", ROMX[$792d], BANK[$0a]
 
 Data_0a_792d:
 	db $34, $3c, $44, $4c, $35, $3d, $45, $4d, $36, $3e, $46, $4e, $37, $3f, $47, $4f
@@ -17926,12 +16558,8 @@ Data_0a_792d:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02b96f", ROMX[$796f], BANK[$0a]
-
 Data_0a_796f:
 	db $93, $79, $73, $79
-
-SECTION "analyzed_02b973", ROMX[$7973], BANK[$0a]
 
 Data_0a_7973:
 	db $32, $3a, $42, $4a, $33, $3b, $43, $4b, $34, $3c, $44, $4c, $35, $3d, $45, $4d
@@ -17940,12 +16568,8 @@ Data_0a_7973:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02b9b5", ROMX[$79b5], BANK[$0a]
-
 Data_0a_79b5:
 	db $d9, $79, $b9, $79
-
-SECTION "analyzed_02b9b9", ROMX[$79b9], BANK[$0a]
 
 Data_0a_79b9:
 	db $30, $38, $40, $48, $31, $39, $41, $49, $32, $3a, $42, $4a, $33, $3b, $43, $4b
@@ -17954,12 +16578,8 @@ Data_0a_79b9:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02b9fb", ROMX[$79fb], BANK[$0a]
-
 Data_0a_79fb:
 	db $1f, $7a, $ff, $79
-
-SECTION "analyzed_02b9ff", ROMX[$79ff], BANK[$0a]
 
 Data_0a_79ff:
 	db $36, $3e, $46, $4e, $37, $3f, $47, $4f, $30, $38, $40, $48, $31, $39, $41, $49
@@ -17968,12 +16588,8 @@ Data_0a_79ff:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02ba41", ROMX[$7a41], BANK[$0a]
-
 Data_0a_7a41:
 	db $65, $7a, $45, $7a
-
-SECTION "analyzed_02ba45", ROMX[$7a45], BANK[$0a]
 
 Data_0a_7a45:
 	db $34, $3c, $44, $4c, $35, $3d, $45, $4d, $36, $3e, $46, $4e, $37, $3f, $47, $4f
@@ -17982,12 +16598,8 @@ Data_0a_7a45:
 	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
 	db $08, $04
 
-SECTION "analyzed_02ba87", ROMX[$7a87], BANK[$0a]
-
 Data_0a_7a87:
 	db $ab, $7a, $8b, $7a
-
-SECTION "analyzed_02ba8b", ROMX[$7a8b], BANK[$0a]
 
 Data_0a_7a8b:
 	db $32, $3a, $42, $4a, $33, $3b, $43, $4b, $34, $3c, $44, $4c, $35, $3d, $45, $4d
@@ -18558,12 +17170,8 @@ SECTION "analyzed_030000", ROMX[$4000], BANK[$0c]
 Data_0c_4000:
 	db $0c, $0a
 
-SECTION "analyzed_030002", ROMX[$4002], BANK[$0c]
-
 Data_0c_4002:
 	db $7e, $40, $06, $40
-
-SECTION "analyzed_030006", ROMX[$4006], BANK[$0c]
 
 Data_0c_4006:
 	db $fc, $fc, $fc, $fc, $30, $30, $fc, $fc, $fc, $fc, $fc, $fc, $2d, $2f, $31, $31
@@ -18583,12 +17191,8 @@ Data_0c_4006:
 	db $0b, $2b, $2b, $2b, $08, $08, $28, $28, $28, $28, $0d, $2d, $08, $08, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_0300f8", ROMX[$40f8], BANK[$0c]
-
 Data_0c_40f8:
 	db $7c, $42, $fc, $40
-
-SECTION "analyzed_0300fc", ROMX[$40fc], BANK[$0c]
 
 Data_0c_40fc:
 	db $10, $08, $00, $fc, $fc, $28, $20, $18, $10, $08, $00, $fc, $fc, $28, $20, $18
@@ -18641,12 +17245,8 @@ Data_0c_40fc:
 	db $08, $08, $08, $09, $29, $08, $08, $08, $08, $08, $08, $09, $29, $08, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_0303fe", ROMX[$43fe], BANK[$0c]
-
 Data_0c_43fe:
 	db $82, $45, $02, $44
-
-SECTION "analyzed_030402", ROMX[$4402], BANK[$0c]
 
 Data_0c_4402:
 	db $40, $38, $30, $fc, $fc, $58, $50, $48, $40, $38, $30, $fc, $fc, $58, $50, $48
@@ -18699,12 +17299,8 @@ Data_0c_4402:
 	db $08, $08, $01, $01, $01, $01, $08, $08, $08, $08, $01, $01, $01, $01, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_030704", ROMX[$4704], BANK[$0c]
-
 Data_0c_4704:
 	db $88, $48, $08, $47
-
-SECTION "analyzed_030708", ROMX[$4708], BANK[$0c]
 
 Data_0c_4708:
 	db $68, $60, $30, $fc, $fc, $58, $78, $70, $68, $60, $30, $fc, $fc, $58, $78, $70
@@ -18757,12 +17353,8 @@ Data_0c_4708:
 	db $08, $01, $01, $01, $01, $01, $01, $08, $08, $01, $01, $01, $01, $01, $01, $08
 	db $0c, $20
 
-SECTION "analyzed_030a0a", ROMX[$4a0a], BANK[$0c]
-
 Data_0c_4a0a:
 	db $8e, $4b, $0e, $4a
-
-SECTION "analyzed_030a0e", ROMX[$4a0e], BANK[$0c]
 
 Data_0c_4a0e:
 	db $00, $30, $30, $58, $58, $58, $58, $00, $00, $58, $30, $58, $58, $58, $58, $00
@@ -18815,12 +17407,8 @@ Data_0c_4a0e:
 	db $21, $01, $01, $01, $01, $01, $01, $21, $21, $01, $01, $01, $01, $01, $01, $21
 	db $0c, $20
 
-SECTION "analyzed_030d10", ROMX[$4d10], BANK[$0c]
-
 Data_0c_4d10:
 	db $94, $4e, $14, $4d
-
-SECTION "analyzed_030d14", ROMX[$4d14], BANK[$0c]
 
 Data_0c_4d14:
 	db $70, $78, $30, $58, $58, $58, $60, $68, $70, $78, $30, $58, $58, $58, $60, $68
@@ -18873,12 +17461,8 @@ Data_0c_4d14:
 	db $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21
 	db $0c, $20
 
-SECTION "analyzed_031016", ROMX[$5016], BANK[$0c]
-
 Data_0c_5016:
 	db $9a, $51, $1a, $50
-
-SECTION "analyzed_03101a", ROMX[$501a], BANK[$0c]
 
 Data_0c_501a:
 	db $48, $50, $58, $fc, $fc, $30, $38, $40, $48, $50, $58, $fc, $fc, $30, $38, $40
@@ -18931,12 +17515,8 @@ Data_0c_501a:
 	db $08, $08, $21, $21, $21, $21, $08, $08, $08, $08, $21, $21, $21, $21, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_03131c", ROMX[$531c], BANK[$0c]
-
 Data_0c_531c:
 	db $a0, $54, $20, $53
-
-SECTION "analyzed_031320", ROMX[$5320], BANK[$0c]
 
 Data_0c_5320:
 	db $18, $20, $28, $fc, $fc, $00, $08, $10, $18, $20, $28, $fc, $fc, $00, $08, $10
@@ -18989,12 +17569,8 @@ Data_0c_5320:
 	db $08, $08, $08, $09, $29, $08, $08, $08, $08, $08, $08, $09, $29, $08, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_031622", ROMX[$5622], BANK[$0c]
-
 Data_0c_5622:
 	db $a6, $57, $26, $56
-
-SECTION "analyzed_031626", ROMX[$5626], BANK[$0c]
 
 Data_0c_5626:
 	db $40, $38, $30, $fc, $fc, $58, $50, $48, $40, $38, $30, $fc, $fc, $58, $50, $48
@@ -19047,12 +17623,8 @@ Data_0c_5626:
 	db $08, $08, $01, $01, $01, $01, $08, $08, $08, $08, $01, $01, $01, $01, $08, $08
 	db $0c, $20
 
-SECTION "analyzed_031928", ROMX[$5928], BANK[$0c]
-
 Data_0c_5928:
 	db $ac, $5a, $2c, $59
-
-SECTION "analyzed_03192c", ROMX[$592c], BANK[$0c]
 
 Data_0c_592c:
 	db $68, $60, $fc, $fc, $fc, $fc, $78, $70, $68, $60, $fc, $fc, $fc, $fc, $78, $70
@@ -19105,12 +17677,8 @@ Data_0c_592c:
 	db $21, $01, $01, $01, $01, $01, $01, $21, $21, $01, $01, $01, $01, $01, $01, $01
 	db $0c, $20
 
-SECTION "analyzed_031c2e", ROMX[$5c2e], BANK[$0c]
-
 Data_0c_5c2e:
 	db $b2, $5d, $32, $5c
-
-SECTION "analyzed_031c32", ROMX[$5c32], BANK[$0c]
 
 Data_0c_5c32:
 	db $00, $fc, $fc, $fc, $fc, $fc, $fc, $00, $00, $fc, $fc, $fc, $fc, $fc, $fc, $00
@@ -19163,12 +17731,8 @@ Data_0c_5c32:
 	db $08, $21, $21, $21, $21, $21, $21, $08, $08, $21, $21, $21, $21, $21, $21, $08
 	db $0c, $20
 
-SECTION "analyzed_031f34", ROMX[$5f34], BANK[$0c]
-
 Data_0c_5f34:
 	db $b8, $60, $38, $5f
-
-SECTION "analyzed_031f38", ROMX[$5f38], BANK[$0c]
 
 Data_0c_5f38:
 	db $70, $78, $30, $30, $30, $30, $60, $68, $70, $78, $30, $30, $30, $30, $60, $68
@@ -19221,12 +17785,8 @@ Data_0c_5f38:
 	db $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21
 	db $0c, $20
 
-SECTION "analyzed_03223a", ROMX[$623a], BANK[$0c]
-
 Data_0c_623a:
 	db $be, $63, $3e, $62
-
-SECTION "analyzed_03223e", ROMX[$623e], BANK[$0c]
 
 Data_0c_623e:
 	db $48, $50, $58, $fc, $fc, $30, $38, $40, $48, $50, $58, $fc, $fc, $30, $38, $40
@@ -19279,12 +17839,8 @@ Data_0c_623e:
 	db $08, $08, $21, $21, $21, $21, $08, $08, $08, $08, $21, $21, $21, $21, $08, $08
 	db $0c, $14
 
-SECTION "analyzed_032540", ROMX[$6540], BANK[$0c]
-
 Data_0c_6540:
 	db $34, $66, $44, $65
-
-SECTION "analyzed_032544", ROMX[$6544], BANK[$0c]
 
 Data_0c_6544:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19319,12 +17875,8 @@ Data_0c_6544:
 	db $01, $21, $21, $21, $01, $01, $21, $21, $01, $01, $01, $21, $21, $01, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_032726", ROMX[$6726], BANK[$0c]
-
 Data_0c_6726:
 	db $1a, $68, $2a, $67
-
-SECTION "analyzed_03272a", ROMX[$672a], BANK[$0c]
 
 Data_0c_672a:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19359,12 +17911,8 @@ Data_0c_672a:
 	db $01, $21, $21, $21, $01, $01, $21, $21, $01, $01, $01, $21, $21, $01, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_03290c", ROMX[$690c], BANK[$0c]
-
 Data_0c_690c:
 	db $00, $6a, $10, $69
-
-SECTION "analyzed_032910", ROMX[$6910], BANK[$0c]
 
 Data_0c_6910:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19399,12 +17947,8 @@ Data_0c_6910:
 	db $01, $21, $21, $21, $01, $01, $21, $21, $01, $01, $01, $21, $21, $01, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_032af2", ROMX[$6af2], BANK[$0c]
-
 Data_0c_6af2:
 	db $e6, $6b, $f6, $6a
-
-SECTION "analyzed_032af6", ROMX[$6af6], BANK[$0c]
 
 Data_0c_6af6:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19439,12 +17983,8 @@ Data_0c_6af6:
 	db $01, $21, $21, $21, $01, $01, $21, $21, $01, $01, $01, $21, $21, $01, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_032cd8", ROMX[$6cd8], BANK[$0c]
-
 Data_0c_6cd8:
 	db $cc, $6d, $dc, $6c
-
-SECTION "analyzed_032cdc", ROMX[$6cdc], BANK[$0c]
 
 Data_0c_6cdc:
 	db $00, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19479,12 +18019,8 @@ Data_0c_6cdc:
 	db $01, $01, $01, $01, $01, $01, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_032ebe", ROMX[$6ebe], BANK[$0c]
-
 Data_0c_6ebe:
 	db $b2, $6f, $c2, $6e
-
-SECTION "analyzed_032ec2", ROMX[$6ec2], BANK[$0c]
 
 Data_0c_6ec2:
 	db $00, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19519,12 +18055,8 @@ Data_0c_6ec2:
 	db $01, $01, $01, $01, $01, $01, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_0330a4", ROMX[$70a4], BANK[$0c]
-
 Data_0c_70a4:
 	db $98, $71, $a8, $70
-
-SECTION "analyzed_0330a8", ROMX[$70a8], BANK[$0c]
 
 Data_0c_70a8:
 	db $00, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19557,8 +18089,6 @@ Data_0c_70a8:
 	db $21, $21, $21, $21, $21, $21, $21, $21, $01, $01, $01, $01, $01, $01, $01, $01
 	db $01, $01, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21, $01, $01, $01, $01
 	db $01, $01, $01, $01, $01, $01, $21, $21, $21, $21, $21, $21, $21, $21, $21, $21
-
-SECTION "analyzed_033288", ROMX[$7288], BANK[$0c]
 
 Data_0c_7288:
 	db $0c, $14, $7e, $73, $8e, $72, $00, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19593,17 +18123,11 @@ Data_0c_7288:
 	db $22, $22, $02, $02, $02, $02, $02, $02, $02, $02, $02, $02, $22, $22, $22, $22
 	db $22, $22, $22, $22, $22, $22
 
-SECTION "analyzed_03346e", ROMX[$746e], BANK[$0c]
-
 Data_0c_746e:
 	db $0c, $14
 
-SECTION "analyzed_033470", ROMX[$7470], BANK[$0c]
-
 Data_0c_7470:
 	db $64, $75, $74, $74
-
-SECTION "analyzed_033474", ROMX[$7474], BANK[$0c]
 
 Data_0c_7474:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -19638,12 +18162,8 @@ Data_0c_7474:
 	db $01, $21, $21, $21, $01, $01, $21, $21, $01, $01, $01, $21, $21, $01, $21, $21
 	db $0c, $14
 
-SECTION "analyzed_033656", ROMX[$7656], BANK[$0c]
-
 Data_0c_7656:
 	db $4a, $77, $5a, $76
-
-SECTION "analyzed_03365a", ROMX[$765a], BANK[$0c]
 
 Data_0c_765a:
 	db $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f, $3f
@@ -20232,8 +18752,6 @@ SECTION "analyzed_038000", ROMX[$4000], BANK[$0e]
 Data_0e_4000:
 	INCBIN "raw_gfx/Data_0e_4000.2bpp", 0, 5088
 
-SECTION "analyzed_0393e0", ROMX[$53e0], BANK[$0e]
-
 Data_0e_53e0:
 	db $60, $40, $00, $c0, $80, $80, $80
 
@@ -20241,8 +18759,6 @@ SECTION "analyzed_039800", ROMX[$5800], BANK[$0e]
 
 Data_0e_5800:
 	INCBIN "raw_gfx/Data_0e_5800.2bpp", 0, 384
-
-SECTION "analyzed_039980", ROMX[$5980], BANK[$0e]
 
 Data_0e_5980:
 	db $80, $80, $80, $80
@@ -20398,8 +18914,6 @@ Func_0f_4086:
 	bit 4, a
 	ret z
 
-SECTION "analyzed_03c097", ROMX[$4097], BANK[$0f]
-
 Func_0f_4097:
 	ld a, [$c2da]
 	cp $01
@@ -20412,8 +18926,6 @@ Func_0f_4097:
 	ld [$c2da], a
 	FAR_CALL $01, Func_01_4e8c
 	ret
-
-SECTION "analyzed_03c0b2", ROMX[$40b2], BANK[$0f]
 
 Func_0f_40b2:
 	ld a, [$c2da]
@@ -20458,13 +18970,9 @@ Func_0f_40f9:
 	bit 4, a
 	ret z
 
-SECTION "analyzed_03c10a", ROMX[$410a], BANK[$0f]
-
 Data_0f_410a:
 	db $fa, $da, $c2, $fe, $01, $c8, $f5, $3e, $04, $cd, $85, $0a, $f1, $3e, $01, $ea
 	db $da, $c2, $3e, $01, $21, $8c, $4e, $cd, $2e, $04, $c9
-
-SECTION "analyzed_03c125", ROMX[$4125], BANK[$0f]
 
 Func_0f_4125:
 	ld a, [$c2da]
@@ -20771,12 +19279,8 @@ Func_0f_436e:
 	call Func_0f_43c3
 	ret
 
-SECTION "analyzed_03c3ab", ROMX[$43ab], BANK[$0f]
-
 Data_0f_43ab:
 	db $16, $71, $1b, $71, $20, $71, $1b, $71, $25, $71, $2a, $71, $20, $71, $2a, $71
-
-SECTION "analyzed_03c3bb", ROMX[$43bb], BANK[$0f]
 
 Func_0f_43bb:
 	xor a
@@ -20827,8 +19331,6 @@ Func_0f_43c3:
 	ld [$cfb2], a
 	ret
 
-SECTION "analyzed_03c419", ROMX[$4419], BANK[$0f]
-
 Data_0f_4419:
 	db $3f, $04, $5e, $04, $7d, $04, $9c, $04, $bb, $04, $da, $04, $f9, $04, $18, $05
 	db $37, $05, $56, $05, $75, $05, $94, $05, $b3, $05, $d2, $05, $f1, $05, $10, $06
@@ -20842,8 +19344,6 @@ Data_0f_4419:
 	db $2b, $54, $2c, $50, $2d, $4c, $2e, $48, $2f, $44, $30, $40, $31, $44, $32, $38
 	db $33, $34, $34, $30, $35, $2c, $36, $28, $37, $24, $38, $20, $39, $1c, $3a, $18
 	db $3b, $14, $3c, $10, $3d, $0c, $3e, $08, $3f, $04, $00, $00
-
-SECTION "analyzed_03c4d5", ROMX[$44d5], BANK[$0f]
 
 Func_0f_44d5:
 	xor a
@@ -21046,17 +19546,11 @@ Func_0f_465c:
 	ld [$cf3b], a
 	ret
 
-SECTION "analyzed_03c664", ROMX[$4664], BANK[$0f]
-
 DiscStoneDisplayTable:
 	db $ce, $5a, $4e, $5f, $ce, $63
 
-SECTION "analyzed_03c66a", ROMX[$466a], BANK[$0f]
-
 Data_0f_466a:
 	db $4e, $68
-
-SECTION "analyzed_03c66c", ROMX[$466c], BANK[$0f]
 
 Func_0f_466c:
 	xor a
@@ -21108,13 +19602,9 @@ Func_0f_46b4:
 	call CopyBgMap
 	ret
 
-SECTION "analyzed_03c6bb", ROMX[$46bb], BANK[$0f]
-
 DiscStoneDisplayMeta:
 	db $ce, $6c, $07, $e6, $6c, $07, $fe, $6c, $07, $16, $6d, $07, $2e, $6d, $07, $46
 	db $6d, $07, $fe, $6c, $07, $5e, $6d, $07, $bb, $46, $00
-
-SECTION "analyzed_03c6d6", ROMX[$46d6], BANK[$0f]
 
 Func_0f_46d6:
 	xor a
@@ -21229,12 +19719,8 @@ Func_0f_476e:
 	cp $01
 	jr z, Func_0f_47cc
 
-SECTION "analyzed_03c784", ROMX[$4784], BANK[$0f]
-
 Data_0f_4784:
 	db $21, $82, $6e, $11, $25, $9c, $cd, $4e, $0b, $c9
-
-SECTION "analyzed_03c78e", ROMX[$478e], BANK[$0f]
 
 Func_0f_478e:
 	ld hl, $6e26
@@ -21295,13 +19781,9 @@ Func_0f_47ee:
 	call CopyBgMap
 	ret
 
-SECTION "analyzed_03c7f8", ROMX[$47f8], BANK[$0f]
-
 Data_0f_47f8:
 	db $b0, $6e, $ba, $6e, $c4, $6e, $ce, $6e, $d8, $6e, $e2, $6e, $ec, $6e, $f6, $6e
 	db $00, $6f, $0a, $6f
-
-SECTION "analyzed_03c80c", ROMX[$480c], BANK[$0f]
 
 Func_0f_480c:
 	ld a, [wDisplayMonster]
@@ -21460,12 +19942,8 @@ Func_0f_491f:
 	ld [$cf66], a
 	ret
 
-SECTION "analyzed_03c93f", ROMX[$493f], BANK[$0f]
-
 Data_0f_493f:
 	db $65, $51, $77, $51, $89, $51, $9b, $51, $89, $51, $77, $51
-
-SECTION "analyzed_03c94b", ROMX[$494b], BANK[$0f]
 
 Func_0f_494b:
 	call Func_0f_49ca
@@ -21530,12 +20008,8 @@ Func_0f_49b3:
 	cp $64
 	jr nz, Func_0f_49c6
 
-SECTION "analyzed_03c9b9", ROMX[$49b9], BANK[$0f]
-
 Data_0f_49b9:
 	db $21, $ec, $70, $11, $01, $9d, $cd, $4e, $0b, $c1, $3e, $01, $c9
-
-SECTION "analyzed_03c9c6", ROMX[$49c6], BANK[$0f]
 
 Func_0f_49c6:
 	pop bc
@@ -21593,8 +20067,6 @@ Func_0f_4a05:
 	rst AddAToHL
 	jr Func_0f_49dc
 
-SECTION "analyzed_03ca0b", ROMX[$4a0b], BANK[$0f]
-
 Data_0f_4a0b:
 	db $00, $42, $9d, $2c, $6f, $01, $44, $9d, $3a, $6f, $02, $46, $9d, $48, $6f, $03
 	db $48, $9d, $56, $6f, $04, $4a, $9d, $64, $6f, $05, $4c, $9d, $72, $6f, $06, $4e
@@ -21607,8 +20079,6 @@ Data_0f_4a0b:
 	db $8a, $70, $32, $06, $9e, $98, $70, $33, $08, $9e, $a6, $70, $34, $0a, $9e, $b4
 	db $70, $35, $0c, $9e, $c2, $70, $36, $0e, $9e, $d0, $70, $37, $10, $9e, $de, $70
 	db $ff
-
-SECTION "analyzed_03caac", ROMX[$4aac], BANK[$0f]
 
 Func_0f_4aac:
 	ld a, [$c2d8]
@@ -21762,12 +20232,8 @@ Func_0f_4bb7:
 	call Func_00_0732
 	ret
 
-SECTION "analyzed_03cbde", ROMX[$4bde], BANK[$0f]
-
 Data_0f_4bde:
 	db $91, $71, $11, $72, $91, $72, $11, $73, $91, $73, $11, $74, $91, $74
-
-SECTION "analyzed_03cbec", ROMX[$4bec], BANK[$0f]
 
 DrawMonsterPortraitBgMap:
 	ld a, [wDisplayMonster]
@@ -21816,8 +20282,6 @@ Func_0f_4c20:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_03cc3d", ROMX[$4c3d], BANK[$0f]
-
 ; Indexed by wDisplayMonster (0-6). See docs/monster_detail_screen.md.
 MonsterPortraitTileTable:
 	; -> bank $3c portrait tile data ($800 = 128 tiles each)
@@ -21835,8 +20299,6 @@ MonsterPortraitMetaRecords:
 	db $00, $79, $00, $00, $19, $77   ; 5 Suezo
 	db $00, $00, $00, $00, $81, $77   ; 6 Phoenix
 
-SECTION "analyzed_03cc83", ROMX[$4c83], BANK[$0f]
-
 Data_0f_4c83:
 	db $f0, $8c, $cb, $67, $20, $14, $cb, $6f, $20, $01, $c9, $21, $d9, $cf, $7e, $fe
 	db $ff, $28, $1a, $fe, $00, $28, $1a, $3d, $77, $c9, $21, $d9, $cf, $7e, $fe, $ff
@@ -21846,8 +20308,6 @@ Data_0f_4c83:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00
 
-SECTION "analyzed_03cce8", ROMX[$4ce8], BANK[$0f]
-
 Data_0f_4ce8:
 	db $df, $03, $94, $02, $4a, $01, $00, $00
 
@@ -21855,8 +20315,6 @@ SECTION "analyzed_03cd38", ROMX[$4d38], BANK[$0f]
 
 Data_0f_4d38:
 	INCBIN "raw_gfx/Data_0f_4d38.2bpp", 0, 2048
-
-SECTION "analyzed_03d538", ROMX[$5538], BANK[$0f]
 
 Data_0f_5538:
 	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
@@ -22094,17 +20552,11 @@ Data_0f_5538:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03e3ce", ROMX[$63ce], BANK[$0f]
-
 Data_0f_63ce:
 	INCBIN "raw_gfx/Data_0f_63ce.2bpp", 0, 1152
 
-SECTION "analyzed_03e84e", ROMX[$684e], BANK[$0f]
-
 Data_0f_684e:
 	INCBIN "raw_gfx/Data_0f_684e.2bpp", 0, 1152
-
-SECTION "analyzed_03ecce", ROMX[$6cce], BANK[$0f]
 
 Data_0f_6cce:
 	db $03, $03, $dd, $6c, $d4, $6c, $38, $40, $48, $39, $41, $49, $3a, $42, $4a, $08
@@ -22136,14 +20588,10 @@ Data_0f_6cce:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08
 
-SECTION "analyzed_03ee82", ROMX[$6e82], BANK[$0f]
-
 Data_0f_6e82:
 	db $02, $0a, $9c, $6e, $88, $6e, $28, $2a, $2c, $2e, $30, $32, $34, $36, $dd, $fa
 	db $29, $2b, $2d, $2f, $31, $33, $35, $37, $de, $fb, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-
-SECTION "analyzed_03eeb0", ROMX[$6eb0], BANK[$0f]
 
 Data_0f_6eb0:
 	db $02, $01, $b8, $6e, $b6, $6e, $f2, $f3, $08, $08, $02, $01, $c2, $6e, $c0, $6e
@@ -22183,20 +20631,14 @@ Data_0f_6eb0:
 	db $02, $02, $da, $70, $d6, $70, $70, $78, $71, $79, $01, $01, $01, $01, $02, $02
 	db $e8, $70, $e4, $70, $72, $7a, $73, $7b, $01, $01, $01, $01
 
-SECTION "analyzed_03f0ec", ROMX[$70ec], BANK[$0f]
-
 Data_0f_70ec:
 	db $01, $12, $04, $71, $f2, $70, $fc, $fc, $88, $93, $84, $8c, $fc, $82, $8e, $8c
 	db $8f, $8b, $84, $93, $84, $0b, $fc, $fc, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $08, $08, $08, $00, $08, $08
 
-SECTION "analyzed_03f116", ROMX[$7116], BANK[$0f]
-
 Data_0f_7116:
 	db $01, $00, $00, $7e, $0e, $01, $00, $00, $7c, $0e, $01, $00, $00, $7a, $0e, $01
 	db $00, $00, $7e, $2e, $01, $00, $00, $7c, $2e
-
-SECTION "analyzed_03f12f", ROMX[$712f], BANK[$0f]
 
 Data_0f_712f:
 	db $0c, $00, $00, $00, $0d, $00, $08, $08, $0d, $00, $10, $10, $0d, $10, $00, $02
@@ -22209,18 +20651,12 @@ Data_0f_712f:
 	db $da, $32, $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22
 	db $da, $32
 
-SECTION "analyzed_03f1b1", ROMX[$71b1], BANK[$0f]
-
 Data_0f_71b1:
 	db $38, $77, $30, $5a, $20, $55, $a0, $34, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f1c9", ROMX[$71c9], BANK[$0f]
-
 Data_0f_71c9:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f1d9", ROMX[$71d9], BANK[$0f]
 
 Data_0f_71d9:
 	db $00, $00, $00, $00, $1d, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22228,24 +20664,16 @@ Data_0f_71d9:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f211", ROMX[$7211], BANK[$0f]
-
 Data_0f_7211:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f231", ROMX[$7231], BANK[$0f]
 
 Data_0f_7231:
 	db $00, $00, $bf, $6a, $f7, $55, $50, $41, $00, $00, $c0, $00, $a0, $09, $80, $16
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f249", ROMX[$7249], BANK[$0f]
-
 Data_0f_7249:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f259", ROMX[$7259], BANK[$0f]
 
 Data_0f_7259:
 	db $00, $00, $c0, $00, $a0, $09, $80, $16, $00, $00, $5c, $03, $53, $02, $6c, $01
@@ -22253,24 +20681,16 @@ Data_0f_7259:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f291", ROMX[$7291], BANK[$0f]
-
 Data_0f_7291:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f2b1", ROMX[$72b1], BANK[$0f]
 
 Data_0f_72b1:
 	db $00, $00, $c8, $00, $4d, $09, $f3, $11, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f2c9", ROMX[$72c9], BANK[$0f]
-
 Data_0f_72c9:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f2d9", ROMX[$72d9], BANK[$0f]
 
 Data_0f_72d9:
 	db $00, $00, $3b, $53, $75, $3e, $d0, $29, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22278,24 +20698,16 @@ Data_0f_72d9:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f311", ROMX[$7311], BANK[$0f]
-
 Data_0f_7311:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f331", ROMX[$7331], BANK[$0f]
 
 Data_0f_7331:
 	db $a7, $00, $6d, $11, $34, $22, $1b, $33, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f349", ROMX[$7349], BANK[$0f]
-
 Data_0f_7349:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f359", ROMX[$7359], BANK[$0f]
 
 Data_0f_7359:
 	db $00, $00, $de, $7b, $32, $46, $4a, $29, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22303,24 +20715,16 @@ Data_0f_7359:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f391", ROMX[$7391], BANK[$0f]
-
 Data_0f_7391:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f3b1", ROMX[$73b1], BANK[$0f]
 
 Data_0f_73b1:
 	db $08, $1d, $ad, $31, $52, $4a, $18, $63, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f3c9", ROMX[$73c9], BANK[$0f]
-
 Data_0f_73c9:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f3d9", ROMX[$73d9], BANK[$0f]
 
 Data_0f_73d9:
 	db $00, $00, $00, $00, $1d, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22328,24 +20732,16 @@ Data_0f_73d9:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f411", ROMX[$7411], BANK[$0f]
-
 Data_0f_7411:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f431", ROMX[$7431], BANK[$0f]
 
 Data_0f_7431:
 	db $00, $00, $ae, $01, $76, $02, $5f, $03, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f449", ROMX[$7449], BANK[$0f]
-
 Data_0f_7449:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f459", ROMX[$7459], BANK[$0f]
 
 Data_0f_7459:
 	db $00, $00, $de, $7b, $32, $46, $80, $4d, $00, $00, $1b, $01, $00, $00, $00, $00
@@ -22353,24 +20749,16 @@ Data_0f_7459:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f491", ROMX[$7491], BANK[$0f]
-
 Data_0f_7491:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0d, $09, $00, $00, $14, $22, $da, $32
 	db $da, $32, $4a, $29, $52, $4a, $5a, $6b, $12, $01, $63, $0c, $14, $22, $da, $32
-
-SECTION "analyzed_03f4b1", ROMX[$74b1], BANK[$0f]
 
 Data_0f_74b1:
 	db $00, $00, $7d, $57, $1a, $02, $0f, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_03f4c9", ROMX[$74c9], BANK[$0f]
-
 Data_0f_74c9:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $6b, $2d, $5f, $4b, $b5, $01, $63, $0c
-
-SECTION "analyzed_03f4d9", ROMX[$74d9], BANK[$0f]
 
 Data_0f_74d9:
 	db $00, $00, $00, $00, $1d, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22448,8 +20836,6 @@ SECTION "analyzed_040000", ROMX[$4000], BANK[$10]
 Data_10_4000:
 	db $cd, $18, $40, $cd, $3a, $40, $c9
 
-SECTION "analyzed_040007", ROMX[$4007], BANK[$10]
-
 Func_10_4007:
 	xor a
 	ld [rVBK], a
@@ -22473,12 +20859,8 @@ Func_10_4018:
 	call VramCopy16
 	ret
 
-SECTION "analyzed_04003a", ROMX[$403a], BANK[$10]
-
 Data_10_403a:
 	db $21, $b7, $60, $cd, $f2, $04, $c9
-
-SECTION "analyzed_040041", ROMX[$4041], BANK[$10]
 
 Func_10_4041:
 	xor a
@@ -22516,13 +20898,9 @@ Func_10_4081:
 	call Func_00_0732
 	ret
 
-SECTION "analyzed_04008c", ROMX[$408c], BANK[$10]
-
 Data_10_408c:
 	db $b7, $60, $37, $61, $b7, $61, $37, $62, $b7, $62, $37, $63, $b7, $63, $37, $64
 	db $b7, $64, $37, $65, $b7, $65, $37, $66
-
-SECTION "analyzed_0400a4", ROMX[$40a4], BANK[$10]
 
 Func_10_40a4:
 	ld a, [$c4cb]
@@ -22537,12 +20915,8 @@ Func_10_40a4:
 	call Func_00_0716
 	ret
 
-SECTION "analyzed_0400b7", ROMX[$40b7], BANK[$10]
-
 Data_10_40b7:
 	INCBIN "raw_gfx/Data_10_40b7.2bpp", 0, 4096
-
-SECTION "analyzed_0410b7", ROMX[$50b7], BANK[$10]
 
 Data_10_50b7:
 	db $00, $00, $60, $60, $78, $78, $7e, $7e, $7e, $7e, $78, $78, $60, $60, $00, $00
@@ -22594,12 +20968,8 @@ Data_10_50b7:
 	db $f8, $00, $f8, $00, $c0, $00, $c0, $00, $c0, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $c0, $00, $c0, $00, $c0, $00, $f8, $00, $f8, $00
 
-SECTION "analyzed_0413b7", ROMX[$53b7], BANK[$10]
-
 Data_10_53b7:
 	INCBIN "raw_gfx/Data_10_53b7.2bpp", 0, 1280
-
-SECTION "analyzed_0418b7", ROMX[$58b7], BANK[$10]
 
 Data_10_58b7:
 	db $ff, $ff, $80, $ff, $80, $ff, $8e, $f9, $9f, $f0, $9f, $f0, $8e, $f9, $83, $fe
@@ -22735,8 +21105,6 @@ Data_10_58b7:
 	db $4a, $29, $63, $0c, $ff, $00, $9f, $63, $4a, $29, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
 
-SECTION "analyzed_0420ef", ROMX[$60ef], BANK[$10]
-
 Data_10_60ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22744,15 +21112,11 @@ Data_10_60ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042137", ROMX[$6137], BANK[$10]
-
 Data_10_6137:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $8f, $19, $63, $0c, $b5, $01, $3d, $3f
 	db $8f, $19, $63, $0c, $ce, $39, $5a, $6b, $8f, $19, $63, $0c, $26, $12, $9f, $2f
 	db $8f, $19, $63, $0c, $ff, $00, $9f, $63, $8f, $19, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_04216f", ROMX[$616f], BANK[$10]
 
 Data_10_616f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22761,15 +21125,11 @@ Data_10_616f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0421b7", ROMX[$61b7], BANK[$10]
-
 Data_10_61b7:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $ea, $3c, $63, $0c, $b5, $01, $3d, $3f
 	db $ea, $3c, $63, $0c, $ce, $39, $5a, $6b, $ea, $3c, $63, $0c, $26, $12, $9f, $2f
 	db $ea, $3c, $63, $0c, $ff, $00, $9f, $63, $ea, $3c, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_0421ef", ROMX[$61ef], BANK[$10]
 
 Data_10_61ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22778,15 +21138,11 @@ Data_10_61ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042237", ROMX[$6237], BANK[$10]
-
 Data_10_6237:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $c2, $11, $63, $0c, $b5, $01, $3d, $3f
 	db $c2, $11, $63, $0c, $ce, $39, $5a, $6b, $c2, $11, $63, $0c, $26, $12, $9f, $2f
 	db $c2, $11, $63, $0c, $ff, $00, $9f, $63, $c2, $11, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_04226f", ROMX[$626f], BANK[$10]
 
 Data_10_626f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22795,15 +21151,11 @@ Data_10_626f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0422b7", ROMX[$62b7], BANK[$10]
-
 Data_10_62b7:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $0c, $01, $63, $0c, $b5, $01, $3d, $3f
 	db $0c, $01, $63, $0c, $ce, $39, $5a, $6b, $0c, $01, $63, $0c, $26, $12, $9f, $2f
 	db $0c, $01, $63, $0c, $ff, $00, $9f, $63, $0c, $01, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_0422ef", ROMX[$62ef], BANK[$10]
 
 Data_10_62ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22812,15 +21164,11 @@ Data_10_62ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042337", ROMX[$6337], BANK[$10]
-
 Data_10_6337:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $c4, $30, $63, $0c, $b5, $01, $3d, $3f
 	db $c4, $30, $63, $0c, $ce, $39, $5a, $6b, $c4, $30, $63, $0c, $26, $12, $9f, $2f
 	db $c4, $30, $63, $0c, $ff, $00, $9f, $63, $c4, $30, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_04236f", ROMX[$636f], BANK[$10]
 
 Data_10_636f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22829,15 +21177,11 @@ Data_10_636f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0423b7", ROMX[$63b7], BANK[$10]
-
 Data_10_63b7:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $6b, $00, $63, $0c, $b5, $01, $3d, $3f
 	db $6b, $00, $63, $0c, $ce, $39, $5a, $6b, $6b, $00, $63, $0c, $26, $12, $9f, $2f
 	db $6b, $00, $63, $0c, $ff, $00, $9f, $63, $6b, $00, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_0423ef", ROMX[$63ef], BANK[$10]
 
 Data_10_63ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22846,15 +21190,11 @@ Data_10_63ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042437", ROMX[$6437], BANK[$10]
-
 Data_10_6437:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $65, $08, $63, $0c, $b5, $01, $3d, $3f
 	db $65, $08, $63, $0c, $ce, $39, $5a, $6b, $65, $08, $63, $0c, $26, $12, $9f, $2f
 	db $65, $08, $63, $0c, $ff, $00, $9f, $63, $65, $08, $63, $0c, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_04246f", ROMX[$646f], BANK[$10]
 
 Data_10_646f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22863,15 +21203,11 @@ Data_10_646f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0424b7", ROMX[$64b7], BANK[$10]
-
 Data_10_64b7:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $a0, $28, $a8, $4d, $b5, $01, $3d, $3f
 	db $a0, $28, $a8, $4d, $ce, $39, $5a, $6b, $a0, $28, $a8, $4d, $26, $12, $9f, $2f
 	db $a0, $28, $a8, $4d, $ff, $00, $9f, $63, $a0, $28, $a8, $4d, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_0424ef", ROMX[$64ef], BANK[$10]
 
 Data_10_64ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22880,15 +21216,11 @@ Data_10_64ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042537", ROMX[$6537], BANK[$10]
-
 Data_10_6537:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $63, $18, $63, $0c, $b5, $01, $3d, $3f
 	db $63, $18, $63, $0c, $ce, $39, $5a, $6b, $63, $18, $63, $0c, $26, $12, $9f, $2f
 	db $63, $18, $63, $0c, $ff, $00, $9f, $63, $63, $18, $63, $0c, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_04256f", ROMX[$656f], BANK[$10]
 
 Data_10_656f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22897,15 +21229,11 @@ Data_10_656f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0425b7", ROMX[$65b7], BANK[$10]
-
 Data_10_65b7:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $4a, $29, $63, $0c, $b5, $01, $3d, $3f
 	db $4a, $29, $63, $0c, $ce, $39, $5a, $6b, $4a, $29, $63, $0c, $26, $12, $9f, $2f
 	db $4a, $29, $63, $0c, $ff, $00, $9f, $63, $4a, $29, $63, $0c, $60, $7d, $9f, $63
 	db $c4, $01, $63, $0c, $ce, $39, $5a, $6b
-
-SECTION "analyzed_0425ef", ROMX[$65ef], BANK[$10]
 
 Data_10_65ef:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22914,15 +21242,11 @@ Data_10_65ef:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_042637", ROMX[$6637], BANK[$10]
-
 Data_10_6637:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $00, $14, $63, $0c, $b5, $01, $3d, $3f
 	db $00, $14, $63, $0c, $ce, $39, $5a, $6b, $00, $14, $63, $0c, $26, $12, $9f, $2f
 	db $00, $14, $63, $0c, $56, $46, $d9, $66, $00, $14, $63, $0c, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
-
-SECTION "analyzed_04266f", ROMX[$666f], BANK[$10]
 
 Data_10_666f:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $00, $00, $00, $00, $00, $00
@@ -22935,13 +21259,9 @@ Data_10_666f:
 	db $12, $01, $63, $0c, $60, $7d, $9f, $63, $c4, $01, $63, $0c, $ce, $39, $5a, $6b
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b
 
-SECTION "analyzed_0426f7", ROMX[$66f7], BANK[$10]
-
 Data_10_66f7:
 	db $00, $00, $5f, $4b, $b5, $01, $e0, $2c, $00, $00, $05, $7f, $1c, $54, $df, $6f
 	db $00, $00, $1b, $24, $9f, $66, $3f, $4b, $00, $00, $4a, $29, $94, $52, $de, $7b
-
-SECTION "analyzed_042717", ROMX[$6717], BANK[$10]
 
 Data_10_6717:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -23343,38 +21663,26 @@ Func_11_40cc:
 	call LoadObjPalette
 	ret
 
-SECTION "analyzed_0440e3", ROMX[$40e3], BANK[$11]
-
 Data_11_40e3:
 	db $01, $01, $01, $00, $00, $80, $00, $83, $80, $8b, $00, $8d, $5c, $41, $5c, $44
 	db $5c, $47, $5c, $4a, $5c, $4d, $5c, $50, $5c, $53, $5c, $56, $5c, $59, $5c, $5c
 	db $5c, $5f, $5c, $62, $5c, $65
 
-SECTION "analyzed_044109", ROMX[$4109], BANK[$11]
-
 Data_11_4109:
 	db $5c, $68
-
-SECTION "analyzed_04410b", ROMX[$410b], BANK[$11]
 
 Data_11_410b:
 	db $5c, $6b, $5c, $6e, $5c, $71, $5c, $74, $5c, $77, $5c, $7a, $5c, $7d, $64, $7d
 	db $6c, $7d, $74, $7d, $7c, $7d, $84, $7d, $8c, $7d, $94, $7d, $9c, $7d, $a4, $7d
 	db $ac, $7d, $b4, $7d, $bc, $7d
 
-SECTION "analyzed_044131", ROMX[$4131], BANK[$11]
-
 Data_11_4131:
 	db $c4, $7d
-
-SECTION "analyzed_044133", ROMX[$4133], BANK[$11]
 
 Data_11_4133:
 	db $cc, $7d, $d4, $7d, $dc, $7d, $e4, $7d, $ec, $7d, $f4, $7d, $07, $08, $08, $0c
 	db $01, $08, $88, $0e, $01, $08, $90, $0e, $21, $00, $8c, $06, $01, $58, $8c, $06
 	db $41, $f0, $80, $00, $21, $f0, $98, $00, $01
-
-SECTION "analyzed_04415c", ROMX[$415c], BANK[$11]
 
 ; Floor-monster sprite tiles, $300 bytes (32 used) per MONSTER species, indexed by
 ; LoadFloorMonsterSprite. 20 species ($415c..$7d5b): Tacopi, Jell, Naga, Dino,
@@ -23383,8 +21691,6 @@ SECTION "analyzed_04415c", ROMX[$415c], BANK[$11]
 ; the Data_11_* sheets below (analyzer fragmentation). See docs/gfx_loaders.md.
 FloorMonsterSprites:
 	INCBIN "raw_gfx/Data_11_415c.2bpp", 0, 2304
-
-SECTION "analyzed_044a5c", ROMX[$4a5c], BANK[$11]
 
 Data_11_4a5c:
 	db $00, $00, $00, $00, $18, $00, $30, $08, $61, $10, $c1, $20, $c3, $20, $c6, $31
@@ -23436,12 +21742,8 @@ Data_11_4a5c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_044d5c", ROMX[$4d5c], BANK[$11]
-
 Data_11_4d5c:
 	INCBIN "raw_gfx/Data_11_4d5c.2bpp", 0, 3072
-
-SECTION "analyzed_04595c", ROMX[$595c], BANK[$11]
 
 Data_11_595c:
 	db $00, $00, $00, $00, $00, $00, $04, $00, $0c, $00, $0f, $00, $1f, $03, $1f, $04
@@ -23493,12 +21795,8 @@ Data_11_595c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_045c5c", ROMX[$5c5c], BANK[$11]
-
 Data_11_5c5c:
 	INCBIN "raw_gfx/Data_11_5c5c.2bpp", 0, 3072
-
-SECTION "analyzed_04685c", ROMX[$685c], BANK[$11]
 
 Data_11_685c:
 	db $00, $00, $00, $00, $00, $00, $7f, $7f, $92, $92, $92, $92, $92, $92, $92, $92
@@ -23516,8 +21814,6 @@ SECTION "analyzed_046b5c", ROMX[$6b5c], BANK[$11]
 
 Data_11_6b5c:
 	INCBIN "raw_gfx/Data_11_6b5c.2bpp", 0, 768
-
-SECTION "analyzed_046e5c", ROMX[$6e5c], BANK[$11]
 
 Data_11_6e5c:
 	db $00, $00, $00, $00, $07, $00, $0f, $03, $0f, $06, $0f, $06, $0f, $07, $0f, $07
@@ -23617,12 +21913,8 @@ Data_11_6e5c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_04745c", ROMX[$745c], BANK[$11]
-
 Data_11_745c:
 	INCBIN "raw_gfx/Data_11_745c.2bpp", 0, 2304
-
-SECTION "analyzed_047d5c", ROMX[$7d5c], BANK[$11]
 
 ; One OBJ palette (4 RGB555 colors, $08 bytes) per floor-monster species, indexed
 ; by LoadFloorMonsterSprite (FloorMonsterSpritePalettes + MONSTER*8).
@@ -23635,12 +21927,8 @@ FloorMonsterSpritePalettes:
 	db $00, $00, $4a, $29, $5e, $17, $de, $7b, $00, $00, $a2, $69, $1e, $05, $de, $7b
 	db $00, $00, $a2, $69, $1e, $05, $de, $7b
 
-SECTION "analyzed_047dc4", ROMX[$7dc4], BANK[$11]
-
 Data_11_7dc4:
 	db $12, $01, $08, $21, $31, $46, $5a, $6b
-
-SECTION "analyzed_047dcc", ROMX[$7dcc], BANK[$11]
 
 Data_11_7dcc:
 	db $b0, $14, $c0, $40, $4f, $5e, $de, $7b, $88, $49, $80, $01, $74, $49, $5d, $5e
@@ -23960,12 +22248,8 @@ Func_12_41f5:
 	cp $03
 	jr nz, Func_12_4271
 
-SECTION "analyzed_048215", ROMX[$4215], BANK[$12]
-
 Data_12_4215:
 	db $af, $18, $59
-
-SECTION "analyzed_048218", ROMX[$4218], BANK[$12]
 
 Func_12_4218:
 	bit 5, b
@@ -23980,12 +22264,8 @@ Func_12_4218:
 	cp $80
 	jr c, Func_12_4271
 
-SECTION "analyzed_04822c", ROMX[$422c], BANK[$12]
-
 Data_12_422c:
 	db $3e, $02, $18, $41
-
-SECTION "analyzed_048230", ROMX[$4230], BANK[$12]
 
 Func_12_4230:
 	bit 7, b
@@ -24000,12 +22280,8 @@ Func_12_423f:
 	bit 6, b
 	jr z, Func_12_424e
 
-SECTION "analyzed_048243", ROMX[$4243], BANK[$12]
-
 Data_12_4243:
 	db $f5, $3e, $04, $cd, $85, $0a, $f1, $ee, $04, $18, $23
-
-SECTION "analyzed_04824e", ROMX[$424e], BANK[$12]
 
 Func_12_424e:
 	bit 0, b
@@ -24022,12 +22298,8 @@ Func_12_425b:
 	bit 1, b
 	jp z, Func_12_41f5
 
-SECTION "analyzed_048266", ROMX[$4266], BANK[$12]
-
 Data_12_4266:
 	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $3e, $04, $18, $16
-
-SECTION "analyzed_048271", ROMX[$4271], BANK[$12]
 
 Func_12_4271:
 	ld [$c55d], a
@@ -24088,12 +22360,8 @@ Func_12_42d7:
 	cp $06
 	jr c, Func_12_431d
 
-SECTION "analyzed_0482e8", ROMX[$42e8], BANK[$12]
-
 Data_12_42e8:
 	db $e6, $01, $18, $31
-
-SECTION "analyzed_0482ec", ROMX[$42ec], BANK[$12]
 
 Func_12_42ec:
 	bit 6, b
@@ -24106,12 +22374,8 @@ Func_12_42ec:
 	cp $80
 	jr c, Func_12_431d
 
-SECTION "analyzed_0482fd", ROMX[$42fd], BANK[$12]
-
 Data_12_42fd:
 	db $e6, $05, $18, $1c
-
-SECTION "analyzed_048301", ROMX[$4301], BANK[$12]
 
 Func_12_4301:
 	bit 0, b
@@ -24125,12 +22389,8 @@ Func_12_430e:
 	bit 1, b
 	jr z, Func_12_4324
 
-SECTION "analyzed_048312", ROMX[$4312], BANK[$12]
-
 Data_12_4312:
 	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $3e, $04, $18, $0d
-
-SECTION "analyzed_04831d", ROMX[$431d], BANK[$12]
 
 Func_12_431d:
 	ld c, a
@@ -24155,12 +22415,8 @@ Func_12_433e:
 	cp $02
 	jr c, Func_12_434b
 
-SECTION "analyzed_048348", ROMX[$4348], BANK[$12]
-
 Data_12_4348:
 	db $c3, $9a, $42
-
-SECTION "analyzed_04834b", ROMX[$434b], BANK[$12]
 
 Func_12_434b:
 	ld a, $05
@@ -24171,8 +22427,6 @@ Func_12_434b:
 	call Func_00_2df6
 	xor a
 	ret
-
-SECTION "analyzed_048368", ROMX[$4368], BANK[$12]
 
 Func_12_4368:
 	call Func_00_217d
@@ -24207,8 +22461,6 @@ Func_12_4390:
 	pop af
 	jp Func_12_429a
 
-SECTION "analyzed_0483dd", ROMX[$43dd], BANK[$12]
-
 Func_12_43dd:
 	call Func_00_2223
 	jp Func_12_429a
@@ -24216,52 +22468,32 @@ Func_12_43e3:
 	ld a, $01
 	ret
 
-SECTION "analyzed_0483e6", ROMX[$43e6], BANK[$12]
-
 Data_12_43e6:
 	db $e1, $98
-
-SECTION "analyzed_0483e8", ROMX[$43e8], BANK[$12]
 
 Data_12_43e8:
 	db $eb, $98
 
-SECTION "analyzed_0483ea", ROMX[$43ea], BANK[$12]
-
 Data_12_43ea:
 	db $21, $99, $2b, $99
-
-SECTION "analyzed_0483ee", ROMX[$43ee], BANK[$12]
 
 Data_12_43ee:
 	db $65, $99
 
-SECTION "analyzed_0483f0", ROMX[$43f0], BANK[$12]
-
 Data_12_43f0:
 	db $65, $99, $c8, $47
-
-SECTION "analyzed_0483f4", ROMX[$43f4], BANK[$12]
 
 Data_12_43f4:
 	db $10, $48
 
-SECTION "analyzed_0483f6", ROMX[$43f6], BANK[$12]
-
 Data_12_43f6:
 	db $58, $48, $a0, $48
-
-SECTION "analyzed_0483fa", ROMX[$43fa], BANK[$12]
 
 Data_12_43fa:
 	db $e8, $48
 
-SECTION "analyzed_0483fc", ROMX[$43fc], BANK[$12]
-
 Data_12_43fc:
 	db $e8, $48
-
-SECTION "analyzed_0483fe", ROMX[$43fe], BANK[$12]
 
 Func_12_43fe:
 	ld e, c
@@ -24273,12 +22505,8 @@ Func_12_43fe:
 	ld b, $08
 	jr Func_12_4410
 
-SECTION "analyzed_04840e", ROMX[$440e], BANK[$12]
-
 Func_12_440e:
 	ld b, $0a
-
-SECTION "analyzed_048410", ROMX[$4410], BANK[$12]
 
 Func_12_4410:
 	add a, a
@@ -24370,13 +22598,9 @@ Func_12_44a8:
 	call Func_00_31fa
 	ret
 
-SECTION "analyzed_0484af", ROMX[$44af], BANK[$12]
-
 Data_12_44af:
 	db $41, $98, $4b, $98, $a1, $98, $ab, $98, $01, $99, $0b, $99, $65, $99, $65, $99
 	db $c0, $49, $08, $4a, $50, $4a, $98, $4a, $e0, $4a, $28, $4b, $70, $4b, $70, $4b
-
-SECTION "analyzed_0484cf", ROMX[$44cf], BANK[$12]
 
 Func_12_44cf:
 	push af
@@ -24431,12 +22655,8 @@ Func_12_4519:
 	call Func_00_2d88
 	jr z, Func_12_452d
 
-SECTION "analyzed_04851e", ROMX[$451e], BANK[$12]
-
 Data_12_451e:
 	db $fa, $68, $c5, $fe, $21, $28, $1c, $fe, $22, $28, $18, $fe, $42, $28, $14
-
-SECTION "analyzed_04852d", ROMX[$452d], BANK[$12]
 
 Func_12_452d:
 	ld a, [wEditCursorY]
@@ -24447,12 +22667,8 @@ Func_12_452d:
 	cp b
 	jr nz, Func_12_4548
 
-SECTION "analyzed_04853b", ROMX[$453b], BANK[$12]
-
 Data_12_453b:
 	db $fa, $ea, $c2, $b9, $20, $07, $21, $f0, $4f, $cd, $50, $34, $c9
-
-SECTION "analyzed_048548", ROMX[$4548], BANK[$12]
 
 Func_12_4548:
 	call ReadFloorCell
@@ -24466,12 +22682,8 @@ Func_12_4548:
 	bit 7, a
 	jr z, Func_12_455f
 
-SECTION "analyzed_04855b", ROMX[$455b], BANK[$12]
-
 Data_12_455b:
 	db $cb, $f7, $e0, $ac
-
-SECTION "analyzed_04855f", ROMX[$455f], BANK[$12]
 
 Func_12_455f:
 	ld a, [wMenuItemValue]
@@ -24484,25 +22696,17 @@ Func_12_455f:
 	cp c
 	jr nz, Func_12_4584
 
-SECTION "analyzed_048571", ROMX[$4571], BANK[$12]
-
 Data_12_4571:
 	db $af, $12, $77, $ea, $69, $c5, $f5, $3e, $03, $cd, $85, $0a, $f1, $cd, $a8, $2e
 	db $c3, $86, $46
-
-SECTION "analyzed_048584", ROMX[$4584], BANK[$12]
 
 Func_12_4584:
 	ld a, c
 	cp $42
 	jr nz, Func_12_4597
 
-SECTION "analyzed_048589", ROMX[$4589], BANK[$12]
-
 Data_12_4589:
 	db $fa, $70, $c5, $fe, $04, $20, $07, $21, $c8, $50, $cd, $50, $34, $c9
-
-SECTION "analyzed_048597", ROMX[$4597], BANK[$12]
 
 Func_12_4597:
 	ld a, c
@@ -24523,12 +22727,8 @@ Func_12_4597:
 	bit 7, a
 	jr z, Func_12_45bd
 
-SECTION "analyzed_0485b2", ROMX[$45b2], BANK[$12]
-
 Data_12_45b2:
 	db $fe, $c0, $cc, $fb, $2e, $cd, $62, $2e, $c3, $86, $46
-
-SECTION "analyzed_0485bd", ROMX[$45bd], BANK[$12]
 
 Func_12_45bd:
 	call Func_00_2ea8
@@ -24541,13 +22741,9 @@ Func_12_45c3:
 	cp c
 	jr nz, Func_12_45e3
 
-SECTION "analyzed_0485cf", ROMX[$45cf], BANK[$12]
-
 Data_12_45cf:
 	db $af, $12, $f0, $ab, $ea, $69, $c5, $cd, $62, $2e, $f5, $3e, $03, $cd, $85, $0a
 	db $f1, $c3, $86, $46
-
-SECTION "analyzed_0485e3", ROMX[$45e3], BANK[$12]
 
 Func_12_45e3:
 	bit 7, a
@@ -24575,19 +22771,13 @@ Func_12_45fa:
 	cp $21
 	jr nz, Func_12_4616
 
-SECTION "analyzed_048614", ROMX[$4614], BANK[$12]
-
 Data_12_4614:
 	db $af, $77
-
-SECTION "analyzed_048616", ROMX[$4616], BANK[$12]
 
 Func_12_4616:
 	call Func_00_2e42
 	call Func_00_2ea8
 	jr Func_12_4686
-
-SECTION "analyzed_04861e", ROMX[$461e], BANK[$12]
 
 Func_12_461e:
 	ld a, c
@@ -24601,19 +22791,13 @@ Func_12_461e:
 	pop af
 	jr Func_12_4686
 
-SECTION "analyzed_048631", ROMX[$4631], BANK[$12]
-
 Func_12_4631:
 	ldh a, [$ffab]
 	cp c
 	jr nz, Func_12_4646
 
-SECTION "analyzed_048636", ROMX[$4636], BANK[$12]
-
 Data_12_4636:
 	db $af, $77, $f0, $ac, $ea, $69, $c5, $f5, $3e, $03, $cd, $85, $0a, $f1, $18, $40
-
-SECTION "analyzed_048646", ROMX[$4646], BANK[$12]
 
 Func_12_4646:
 	ld a, c
@@ -24624,8 +22808,6 @@ Func_12_4646:
 	ldh a, [$ffac]
 	bit 7, a
 	jr z, Func_12_467a
-
-SECTION "analyzed_048655", ROMX[$4655], BANK[$12]
 
 Func_12_4655:
 	push af
@@ -24649,8 +22831,6 @@ Func_12_465e:
 	call Func_00_2e62
 	jr Func_12_4686
 
-SECTION "analyzed_04867a", ROMX[$467a], BANK[$12]
-
 Func_12_467a:
 	xor a
 	ld [de], a
@@ -24668,15 +22848,11 @@ Func_12_4686:
 	call Func_00_1f71
 	ret
 
-SECTION "analyzed_048695", ROMX[$4695], BANK[$12]
-
 Data_12_4695:
 	db $fa, $62, $c5, $fe, $00, $20, $4c, $cd, $88, $2d, $28, $07, $21, $a0, $51, $cd
 	db $50, $34, $c9, $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $cd, $48, $18, $fe, $00
 	db $20, $ea, $f0, $ac, $fe, $00, $20, $e4, $f5, $3e, $01, $cd, $85, $0a, $f1, $fa
 	db $65, $c5, $ea, $eb, $c2, $fa, $64, $c5, $ea, $ea, $c2
-
-SECTION "analyzed_0486d0", ROMX[$46d0], BANK[$12]
 
 Func_12_46d0:
 	ld a, [wEditCursorY]
@@ -24695,8 +22871,6 @@ Func_12_46d0:
 	call Func_00_20f0
 	ret
 
-SECTION "analyzed_0486e8", ROMX[$46e8], BANK[$12]
-
 Data_12_46e8:
 	db $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $fa, $eb, $c2, $b8, $20, $0d, $fa, $ea
 	db $c2, $b9, $20, $07, $21, $58, $51, $cd, $50, $34, $c9, $fa, $62, $c5, $3d, $5f
@@ -24709,8 +22883,6 @@ Data_12_46e8:
 	db $79, $c6, $10, $0e, $00, $cd, $d1, $20, $f5, $3e, $03, $cd, $85, $0a, $f1, $c9
 	db $fa, $6e, $c5, $3c, $ea, $6e, $c5, $fa, $64, $c5, $22, $fa, $65, $c5, $22, $3e
 	db $22, $22, $af, $22, $73, $cd, $94, $20, $f5, $3e, $01, $cd, $85, $0a, $f1, $c9
-
-SECTION "analyzed_048798", ROMX[$4798], BANK[$12]
 
 Func_12_4798:
 	call Func_12_49c1
@@ -24921,12 +23093,8 @@ Func_12_48d3:
 	cp $10
 	jr c, Func_12_48ea
 
-SECTION "analyzed_0488e8", ROMX[$48e8], BANK[$12]
-
 Data_12_48e8:
 	db $d6, $02
-
-SECTION "analyzed_0488ea", ROMX[$48ea], BANK[$12]
 
 Func_12_48ea:
 	ld d, a
@@ -25157,8 +23325,6 @@ Func_12_4a40:
 Func_12_4a4b:
 	ret
 
-SECTION "analyzed_048a4c", ROMX[$4a4c], BANK[$12]
-
 Data_12_4a4c:
 	db $52, $4f, $4f, $4d, $31, $00
 
@@ -25178,12 +23344,8 @@ Data_12_4a61:
 	db $4c, $4a, $53, $4a, $5a, $4a, $00, $a0, $4f, $a2, $9e, $a4, $03, $a0, $52, $a2
 	db $a1, $a4, $09, $a0
 
-SECTION "analyzed_048a75", ROMX[$4a75], BANK[$12]
-
 Data_12_4a75:
 	db $58, $a2, $a7, $a4
-
-SECTION "analyzed_048a79", ROMX[$4a79], BANK[$12]
 
 Func_12_4a79:
 	call Func_00_09f9
@@ -25215,8 +23377,6 @@ Func_12_4a79:
 	jr nz, Func_12_4ab5
 	ld [hl], $00
 	ret
-
-SECTION "analyzed_048ab5", ROMX[$4ab5], BANK[$12]
 
 Func_12_4ab5:
 	ld [hl], $01
@@ -25274,8 +23434,6 @@ Func_12_4ab8:
 	ld [hl], $02
 	ret
 
-SECTION "analyzed_048b13", ROMX[$4b13], BANK[$12]
-
 Func_12_4b13:
 	call Func_00_09f9
 	ld a, [wActiveFloor]
@@ -25306,18 +23464,12 @@ Func_12_4b13:
 	call Func_00_09ff
 	ret
 
-SECTION "analyzed_048b44", ROMX[$4b44], BANK[$12]
-
 Data_12_4b44:
 	db $cd, $f9, $09, $fa, $c0, $c2, $87, $47, $21, $6d, $4a, $c7, $2a, $56, $5f, $78
 	db $21, $db, $12, $c7, $2a, $66, $6f, $0e, $06, $cd, $0b, $03, $cd, $ff, $09, $c9
 
-SECTION "analyzed_048b64", ROMX[$4b64], BANK[$12]
-
 Data_12_4b64:
 	db $56, $30, $33
-
-SECTION "analyzed_048b67", ROMX[$4b67], BANK[$12]
 
 SaveGameToSram:
 	call Func_00_09f9
@@ -25341,12 +23493,8 @@ Func_12_4b8e:
 	call Func_00_12e1
 	jr z, Func_12_4ba1
 
-SECTION "analyzed_048b9c", ROMX[$4b9c], BANK[$12]
-
 Data_12_4b9c:
 	db $cd, $ff, $09, $af, $c9
-
-SECTION "analyzed_048ba1", ROMX[$4ba1], BANK[$12]
 
 Func_12_4ba1:
 	ld de, $a6ed
@@ -25407,12 +23555,8 @@ Func_12_4bef:
 	call Func_00_12e1
 	jr z, Func_12_4c02
 
-SECTION "analyzed_048bfd", ROMX[$4bfd], BANK[$12]
-
 Data_12_4bfd:
 	db $cd, $ff, $09, $af, $c9
-
-SECTION "analyzed_048c02", ROMX[$4c02], BANK[$12]
 
 Func_12_4c02:
 	ld de, $a6f0
@@ -25513,23 +23657,15 @@ Func_12_4c83:
 	cp $0e
 	jr nz, Func_12_4cb1
 
-SECTION "analyzed_048cad", ROMX[$4cad], BANK[$12]
-
 Data_12_4cad:
 	db $36, $00, $18, $0a
-
-SECTION "analyzed_048cb1", ROMX[$4cb1], BANK[$12]
 
 Func_12_4cb1:
 	cp $0a
 	jr nz, Func_12_4cb9
 
-SECTION "analyzed_048cb5", ROMX[$4cb5], BANK[$12]
-
 Data_12_4cb5:
 	db $36, $01, $18, $02
-
-SECTION "analyzed_048cb9", ROMX[$4cb9], BANK[$12]
 
 Func_12_4cb9:
 	ld [hl], $02
@@ -25814,8 +23950,6 @@ Data_12_65a4:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-
-SECTION "analyzed_04a6a4", ROMX[$66a4], BANK[$12]
 
 Data_12_66a4:
 	db $10, $01, $ba, $66, $aa, $66, $55, $46, $46, $47, $55, $46, $46, $47, $55, $46
@@ -26234,12 +24368,8 @@ Func_13_4362:
 	call Func_00_20fa
 	ret
 
-SECTION "analyzed_04c374", ROMX[$4374], BANK[$13]
-
 Data_13_4374:
 	db $16, $20, $16, $22
-
-SECTION "analyzed_04c378", ROMX[$4378], BANK[$13]
 
 Func_13_4378:
 	ld a, d
@@ -26262,8 +24392,6 @@ Func_13_4378:
 	ld [hl+], a
 	ld [hl], $09
 	ret
-
-SECTION "analyzed_04c395", ROMX[$4395], BANK[$13]
 
 Data_13_4395:
 	db $24, $26, $24
@@ -26307,8 +24435,6 @@ SECTION "analyzed_04c3b7", ROMX[$43b7], BANK[$13]
 Data_13_43b7:
 	db $1c, $1a, $1c
 
-SECTION "analyzed_04c3ba", ROMX[$43ba], BANK[$13]
-
 Func_13_43ba:
 	ld hl, $43b6
 	ld a, d
@@ -26320,12 +24446,8 @@ Func_13_43ba:
 	call Func_13_4419
 	ret
 
-SECTION "analyzed_04c3c8", ROMX[$43c8], BANK[$13]
-
 Data_13_43c8:
 	db $12, $14, $12, $14
-
-SECTION "analyzed_04c3cc", ROMX[$43cc], BANK[$13]
 
 Func_13_43cc:
 	ld hl, $43c8
@@ -26338,12 +24460,8 @@ Func_13_43cc:
 	call Func_13_4406
 	ret
 
-SECTION "analyzed_04c3da", ROMX[$43da], BANK[$13]
-
 Data_13_43da:
 	db $00, $02, $00, $04
-
-SECTION "analyzed_04c3de", ROMX[$43de], BANK[$13]
 
 Func_13_43de:
 	ld hl, $43da
@@ -26356,12 +24474,8 @@ Func_13_43de:
 	call Func_13_4406
 	ret
 
-SECTION "analyzed_04c3ec", ROMX[$43ec], BANK[$13]
-
 Data_13_43ec:
 	db $06, $10, $06, $18
-
-SECTION "analyzed_04c3f0", ROMX[$43f0], BANK[$13]
 
 Func_13_43f0:
 	ld hl, $43ec
@@ -26407,12 +24521,8 @@ Func_13_4419:
 	ld [hl], $28
 	ret
 
-SECTION "analyzed_04c42c", ROMX[$442c], BANK[$13]
-
 Data_13_442c:
 	db $00, $00, $94, $52, $4a, $29, $ff, $7f
-
-SECTION "analyzed_04c434", ROMX[$4434], BANK[$13]
 
 Func_13_4434:
 	ld hl, $442c
@@ -26443,8 +24553,6 @@ Data_13_4884:
 	db $47, $41, $55, $52, $41, $00, $59, $a5, $55, $45, $44, $41, $00, $54, $a5, $49
 	db $4e, $41, $4d, $4f, $54, $4f, $00, $20, $20, $20, $20, $20, $20, $20, $20, $20
 	db $20, $20, $00
-
-SECTION "analyzed_04c947", ROMX[$4947], BANK[$13]
 
 Func_13_4947:
 	ldh a, [rSCY]
@@ -26613,8 +24721,6 @@ Func_13_4a32:
 	pop de
 	pop hl
 	ret
-
-SECTION "analyzed_04ca45", ROMX[$4a45], BANK[$13]
 
 Data_13_4a45:
 	db $07, $07, $08, $0f, $10, $1f, $20, $3f, $2f, $3f, $17, $1a, $1f, $12, $0e, $09
@@ -26936,29 +25042,19 @@ Data_13_5a15:
 	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $02, $00
 	db $00, $00, $08, $00, $08, $08, $08
 
-SECTION "analyzed_04e2fc", ROMX[$62fc], BANK[$13]
-
 Data_13_62fc:
 	db $02, $00, $00, $02, $08, $00, $08, $0a, $08, $02, $00, $00, $04, $08, $00, $08
 	db $0c, $08
 
-SECTION "analyzed_04e30e", ROMX[$630e], BANK[$13]
-
 Data_13_630e:
 	db $02, $00, $00, $06, $08, $00, $08, $0e, $08
-
-SECTION "analyzed_04e317", ROMX[$6317], BANK[$13]
 
 Data_13_6317:
 	db $02, $00, $00, $10, $08, $00, $08, $18, $08, $02, $00, $00, $18, $28, $00, $08
 	db $10, $28
 
-SECTION "analyzed_04e329", ROMX[$6329], BANK[$13]
-
 Data_13_6329:
 	db $02, $00, $00, $12, $08, $00, $08, $1a, $08
-
-SECTION "analyzed_04e332", ROMX[$6332], BANK[$13]
 
 Data_13_6332:
 	db $02, $00, $00, $14, $08, $00, $08, $1c, $08, $02, $00, $00, $1a, $28, $00, $08
@@ -26966,8 +25062,6 @@ Data_13_6332:
 	db $00, $08, $1e, $09, $02, $00, $00, $20, $09, $00, $08, $28, $09, $02, $00, $00
 	db $22, $09, $00, $08, $2a, $09, $02, $00, $00, $24, $09, $00, $08, $2c, $09, $02
 	db $00, $00, $26, $09, $00, $08, $2e, $09
-
-SECTION "analyzed_04e37a", ROMX[$637a], BANK[$13]
 
 Data_13_637a:
 	db $02, $00, $00, $2c, $29, $00, $08, $24, $29, $02, $00, $00, $30, $0a, $00, $08
@@ -26981,8 +25075,6 @@ Data_14_4000:
 	db $02, $00, $de, $77, $55, $4a, $29, $45, $02, $00, $de, $7b, $3e, $27, $54, $19
 	db $02, $00, $3f, $2f, $ba, $01, $55, $10, $4d, $3d, $3d, $3d, $3d, $3e, $3d, $a4
 	db $68, $c5, $68, $f6, $68, $27, $69, $58, $69, $89, $69, $ba, $69
-
-SECTION "analyzed_05004d", ROMX[$404d], BANK[$14]
 
 ShowRegeneratedMonster:
 	push af
@@ -27129,14 +25221,10 @@ Func_14_417b:
 	pop af
 	ret
 
-SECTION "analyzed_050183", ROMX[$4183], BANK[$14]
-
 Data_14_4183:
 	db $0c, $1d, $22, $10, $27, $14, $19, $2c, $2c, $7c, $4d, $42, $65, $37, $59, $71
 	db $7c, $8d, $92, $80, $97, $84, $89, $9c, $01, $11, $16, $04, $1b, $08, $0d, $20
 	db $20, $31, $28, $36, $3b, $24, $2d, $40, $70, $81, $86, $7d, $8b, $78, $74, $90
-
-SECTION "analyzed_0501b3", ROMX[$41b3], BANK[$14]
 
 Func_14_41b3:
 	ld a, [wUiTimer]
@@ -27220,12 +25308,8 @@ Func_14_4214:
 	cp c
 	jr nz, Func_14_4214
 
-SECTION "analyzed_050228", ROMX[$4228], BANK[$14]
-
 Data_14_4228:
 	db $d1, $18, $0e
-
-SECTION "analyzed_05022b", ROMX[$422b], BANK[$14]
 
 Func_14_422b:
 	ld a, $00
@@ -27452,12 +25536,8 @@ Func_14_4363:
 	pop af
 	ret
 
-SECTION "analyzed_05036b", ROMX[$436b], BANK[$14]
-
 Data_14_436b:
 	INCBIN "raw_gfx/Data_14_436b.2bpp", 0, 7344
-
-SECTION "analyzed_05201b", ROMX[$601b], BANK[$14]
 
 Data_14_601b:
 	db $80, $80, $81, $c1, $c0, $e0, $cf, $e0, $75, $73, $9a, $9a
@@ -27575,27 +25655,17 @@ SECTION "analyzed_054000", ROMX[$4000], BANK[$15]
 Data_15_4000:
 	db $06, $40
 
-SECTION "analyzed_054002", ROMX[$4002], BANK[$15]
-
 Data_15_4002:
 	db $0a, $40
-
-SECTION "analyzed_054004", ROMX[$4004], BANK[$15]
 
 Data_15_4004:
 	db $10, $40, $42, $49, $47, $00
 
-SECTION "analyzed_05400a", ROMX[$400a], BANK[$15]
-
 Data_15_400a:
 	db $53, $4d, $41, $4c, $4c, $00
 
-SECTION "analyzed_054010", ROMX[$4010], BANK[$15]
-
 Data_15_4010:
 	db $53, $49, $5a, $45, $00
-
-SECTION "analyzed_054015", ROMX[$4015], BANK[$15]
 
 Func_15_4015:
 	ld hl, $6674
@@ -27653,27 +25723,17 @@ Func_15_4062:
 	call Func_15_41cf
 	ret
 
-SECTION "analyzed_05407e", ROMX[$407e], BANK[$15]
-
 Data_15_407e:
 	db $18, $46
-
-SECTION "analyzed_054080", ROMX[$4080], BANK[$15]
 
 Data_15_4080:
 	db $60, $46
 
-SECTION "analyzed_054082", ROMX[$4082], BANK[$15]
-
 Data_15_4082:
 	db $a8, $46, $f0, $46
 
-SECTION "analyzed_054086", ROMX[$4086], BANK[$15]
-
 Data_15_4086:
 	db $38, $47, $80, $47
-
-SECTION "analyzed_05408a", ROMX[$408a], BANK[$15]
 
 Func_15_408a:
 	ld a, [$c55d]
@@ -27723,12 +25783,8 @@ Func_15_40cc:
 	cp $20
 	jr nz, Func_15_40d6
 
-SECTION "analyzed_0540d1", ROMX[$40d1], BANK[$15]
-
 Data_15_40d1:
 	db $3e, $10, $f7, $18, $f6
-
-SECTION "analyzed_0540d6", ROMX[$40d6], BANK[$15]
 
 Func_15_40d6:
 	cp $21
@@ -27746,12 +25802,8 @@ Func_15_40e8:
 	cp $0a
 	jr nc, Func_15_40f3
 
-SECTION "analyzed_0540ef", ROMX[$40ef], BANK[$15]
-
 Data_15_40ef:
 	db $c6, $9a, $18, $04
-
-SECTION "analyzed_0540f3", ROMX[$40f3], BANK[$15]
 
 Func_15_40f3:
 	sub $11
@@ -27799,17 +25851,11 @@ Func_15_4134:
 	call Func_00_3340
 	ret
 
-SECTION "analyzed_054141", ROMX[$4141], BANK[$15]
-
 Data_15_4141:
 	db $b8, $73
 
-SECTION "analyzed_054143", ROMX[$4143], BANK[$15]
-
 Data_15_4143:
 	db $12, $74, $6c, $74
-
-SECTION "analyzed_054147", ROMX[$4147], BANK[$15]
 
 Func_15_4147:
 	ld a, [$c55d]
@@ -27919,13 +25965,9 @@ Func_15_41fe:
 	or a
 	ret z
 
-SECTION "analyzed_054227", ROMX[$4227], BANK[$15]
-
 Data_15_4227:
 	db $fe, $02, $28, $05, $21, $4e, $62, $18, $03, $21, $ce, $63, $af, $ea, $4f, $ff
 	db $01, $80, $01, $11, $00, $94, $cd, $94, $03, $c9
-
-SECTION "analyzed_054241", ROMX[$4241], BANK[$15]
 
 Func_15_4241:
 	ld hl, $654e
@@ -27933,8 +25975,6 @@ Func_15_4241:
 	ld hl, $658e
 	call LoadObjPalettes
 	ret
-
-SECTION "analyzed_05424e", ROMX[$424e], BANK[$15]
 
 Data_15_424e:
 	db $00, $ff, $70, $fd, $00, $af, $27, $bf, $08, $f8, $13, $f0, $07, $a0, $07, $e0
@@ -28450,12 +26490,8 @@ Data_15_424e:
 	db $01, $fe, $ff, $fe, $ff, $fe, $ff, $fe, $ff, $fe, $3f, $3e, $ff, $00, $00, $00
 	db $01, $fe, $7f, $7e, $bf, $be, $bf, $be, $bf, $be, $7f, $7e, $ff, $00, $00, $00
 
-SECTION "analyzed_05624e", ROMX[$624e], BANK[$15]
-
 Data_15_624e:
 	INCBIN "raw_gfx/Data_15_624e.2bpp", 0, 768
-
-SECTION "analyzed_05654e", ROMX[$654e], BANK[$15]
 
 Data_15_654e:
 	db $c8, $08, $6d, $1d, $32, $32, $f7, $4a, $40, $24, $e0, $40, $a0, $5d, $60, $7a
@@ -28696,8 +26732,6 @@ Data_15_654e:
 	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $03, $03, $03, $03, $03, $03, $03, $03
 	db $03, $03, $03, $03
 
-SECTION "analyzed_057412", ROMX[$7412], BANK[$15]
-
 Data_15_7412:
 	db $07, $06, $42, $74, $18, $74, $80, $82, $92, $92, $82, $80, $81, $83, $93, $93
 	db $83, $81, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78, $78
@@ -28712,8 +26746,6 @@ Data_15_7412:
 	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $05, $05, $05, $05, $05, $05, $05, $05
 	db $05, $05, $05, $05, $6d, $1d, $32, $32, $f7, $4a, $f7, $4a
 
-SECTION "analyzed_0574ce", ROMX[$74ce], BANK[$15]
-
 Data_15_74ce:
 	db $f7, $4a, $32, $32, $6d, $1d, $c8, $08, $0e, $00, $16, $00, $f7, $4a, $6d, $1d
 	db $40, $01, $20, $02, $f7, $4a, $6d, $1d, $93, $01, $3e, $02, $f7, $4a, $6d, $1d
@@ -28724,8 +26756,6 @@ SECTION "analyzed_058000", ROMX[$4000], BANK[$16]
 Data_16_4000:
 	db $7f, $40, $7f, $48, $7f, $50, $7f, $58, $7f, $60, $7f, $68, $7f, $70, $7f, $71
 	db $7f, $72, $7f, $73, $7f, $74
-
-SECTION "analyzed_058016", ROMX[$4016], BANK[$16]
 
 Func_16_4016:
 	ld a, $01
@@ -28772,12 +26802,8 @@ Func_16_4036:
 	call VramCopy16
 	ret
 
-SECTION "analyzed_05807f", ROMX[$407f], BANK[$16]
-
 Data_16_407f:
 	INCBIN "raw_gfx/Data_16_407f.2bpp", 0, 12800
-
-SECTION "analyzed_05b27f", ROMX[$727f], BANK[$16]
 
 Data_16_727f:
 	db $03, $03, $07, $06, $07, $05, $06, $05, $07, $06, $03, $03, $00, $01, $01, $01
@@ -28829,8 +26855,6 @@ Data_16_727f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_05b57f", ROMX[$757f], BANK[$16]
-
 Data_16_757f:
 	db $11, $08, $08, $00, $00, $08, $10, $08, $00, $f0, $10, $7c, $01, $f0, $30, $06
 	db $41, $f0, $30, $06, $41, $f0, $30, $06, $41, $f0, $00, $00, $00, $f0, $00, $00
@@ -28847,148 +26871,90 @@ SECTION "analyzed_05c000", ROMX[$4000], BANK[$17]
 Data_17_4000:
 	db $00, $03, $05, $04, $05, $ff
 
-SECTION "analyzed_05c006", ROMX[$4006], BANK[$17]
-
 Data_17_4006:
 	db $ff, $ff
-
-SECTION "analyzed_05c008", ROMX[$4008], BANK[$17]
 
 Data_17_4008:
 	db $00, $06, $0c, $01, $02, $06, $02, $ff, $00, $09, $0d, $04, $03, $ff
 
-SECTION "analyzed_05c016", ROMX[$4016], BANK[$17]
-
 Data_17_4016:
 	db $ff, $ff
-
-SECTION "analyzed_05c018", ROMX[$4018], BANK[$17]
 
 Data_17_4018:
 	db $00, $0f, $06, $03, $03, $ff
 
-SECTION "analyzed_05c01e", ROMX[$401e], BANK[$17]
-
 Data_17_401e:
 	db $ff, $ff
-
-SECTION "analyzed_05c020", ROMX[$4020], BANK[$17]
 
 Data_17_4020:
 	db $00, $12, $0c, $01, $01, $06, $01, $ff, $00, $16, $0c, $04, $01, $ff
 
-SECTION "analyzed_05c02e", ROMX[$402e], BANK[$17]
-
 Data_17_402e:
 	db $ff, $ff
-
-SECTION "analyzed_05c030", ROMX[$4030], BANK[$17]
 
 Data_17_4030:
 	db $00, $18, $07, $06, $03, $ff
 
-SECTION "analyzed_05c036", ROMX[$4036], BANK[$17]
-
 Data_17_4036:
 	db $ff, $ff
-
-SECTION "analyzed_05c038", ROMX[$4038], BANK[$17]
 
 Data_17_4038:
 	db $00, $1d, $08, $01, $04, $06, $04, $ff, $00, $24, $09, $04, $05, $ff
 
-SECTION "analyzed_05c046", ROMX[$4046], BANK[$17]
-
 Data_17_4046:
 	db $ff, $ff
-
-SECTION "analyzed_05c048", ROMX[$4048], BANK[$17]
 
 Data_17_4048:
 	db $00, $2b, $0a, $01, $01, $06, $01, $ff, $00, $2c, $0c, $04, $03, $09, $03, $ff
 	db $00, $2f, $09, $07, $08, $ff
 
-SECTION "analyzed_05c05e", ROMX[$405e], BANK[$17]
-
 Data_17_405e:
 	db $ff, $ff
-
-SECTION "analyzed_05c060", ROMX[$4060], BANK[$17]
 
 Data_17_4060:
 	db $00, $35, $0b, $01, $01, $ff
 
-SECTION "analyzed_05c066", ROMX[$4066], BANK[$17]
-
 Data_17_4066:
 	db $ff, $ff
-
-SECTION "analyzed_05c068", ROMX[$4068], BANK[$17]
 
 Data_17_4068:
 	db $00, $38, $0c, $04, $01, $ff
 
-SECTION "analyzed_05c06e", ROMX[$406e], BANK[$17]
-
 Data_17_406e:
 	db $ff, $ff
-
-SECTION "analyzed_05c070", ROMX[$4070], BANK[$17]
 
 Data_17_4070:
 	db $00, $3a, $0c, $04, $03, $ff
 
-SECTION "analyzed_05c076", ROMX[$4076], BANK[$17]
-
 Data_17_4076:
 	db $ff, $ff
-
-SECTION "analyzed_05c078", ROMX[$4078], BANK[$17]
 
 Data_17_4078:
 	db $01, $0a, $0f, $01, $05, $06, $05, $ff, $06, $06, $0e, $06, $05, $ff
 
-SECTION "analyzed_05c086", ROMX[$4086], BANK[$17]
-
 Data_17_4086:
 	db $ff, $ff
-
-SECTION "analyzed_05c088", ROMX[$4088], BANK[$17]
 
 Data_17_4088:
 	db $06, $12, $0e, $01, $01, $ff
 
-SECTION "analyzed_05c08e", ROMX[$408e], BANK[$17]
-
 Data_17_408e:
 	db $ff, $ff
-
-SECTION "analyzed_05c090", ROMX[$4090], BANK[$17]
 
 Data_17_4090:
 	db $06, $16, $0e, $03, $02, $ff
 
-SECTION "analyzed_05c096", ROMX[$4096], BANK[$17]
-
 Data_17_4096:
 	db $ff, $ff
-
-SECTION "analyzed_05c098", ROMX[$4098], BANK[$17]
 
 Data_17_4098:
 	db $06, $2c, $0e, $01, $01, $06, $01, $ff, $06, $38, $0e, $01, $05, $ff
 
-SECTION "analyzed_05c0a6", ROMX[$40a6], BANK[$17]
-
 Data_17_40a6:
 	db $ff, $ff
 
-SECTION "analyzed_05c0a8", ROMX[$40a8], BANK[$17]
-
 Data_17_40a8:
 	db $06, $3a, $0e, $04, $01, $ff
-
-SECTION "analyzed_05c0ae", ROMX[$40ae], BANK[$17]
 
 Data_17_40ae:
 	db $ff, $ff
@@ -29115,13 +27081,9 @@ LoadFontTiles:
 	call VramCopy16
 	ret
 
-SECTION "analyzed_05c14c", ROMX[$414c], BANK[$17]
-
 Data_17_414c:
 	db $18, $75, $20, $75, $30, $75, $38, $75, $48, $75, $58, $75, $60, $75, $68, $75
 	db $70, $75, $78, $75, $80, $75, $88, $75, $90, $75, $98, $75, $a0, $75, $a8, $75
-
-SECTION "analyzed_05c16c", ROMX[$416c], BANK[$17]
 
 Func_17_416c:
 	ld a, [$c55c]
@@ -29151,8 +27113,6 @@ Func_17_4190:
 	call Func_00_0716
 	ret
 
-SECTION "analyzed_05c198", ROMX[$4198], BANK[$17]
-
 Data_17_4198:
 	db $e3, $e3, $c9, $c9, $9c, $9c, $9c, $9c, $80, $80, $9c, $9c, $9c, $9c, $ff, $ff
 	db $81, $81, $9c, $9c, $9c, $9c, $81, $81, $9c, $9c, $9c, $9c, $81, $81, $ff, $ff
@@ -29163,12 +27123,8 @@ Data_17_4198:
 	db $e1, $e1, $ce, $ce, $9f, $9f, $9f, $9f, $98, $98, $cc, $cc, $e2, $e2, $ff, $ff
 	db $9c, $9c, $9c, $9c, $9c, $9c, $80, $80, $9c, $9c, $9c, $9c, $9c, $9c, $ff, $ff
 
-SECTION "analyzed_05c218", ROMX[$4218], BANK[$17]
-
 Data_17_4218:
 	db $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $ff, $ff
-
-SECTION "analyzed_05c228", ROMX[$4228], BANK[$17]
 
 Data_17_4228:
 	db $c0, $c0, $f9, $f9, $f9, $f9, $f9, $f9, $b9, $b9, $b1, $b1, $c3, $c3, $ff, $ff
@@ -29179,37 +27135,25 @@ Data_17_4228:
 	db $c1, $c1, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $c1, $c1, $ff, $ff
 	db $81, $81, $9c, $9c, $9c, $9c, $9c, $9c, $81, $81, $9f, $9f, $9f, $9f, $ff, $ff
 
-SECTION "analyzed_05c298", ROMX[$4298], BANK[$17]
-
 Data_17_4298:
 	db $c1, $c1, $9c, $9c, $9c, $9c, $9c, $9c, $84, $84, $98, $98, $c1, $c1, $ff, $ff
-
-SECTION "analyzed_05c2a8", ROMX[$42a8], BANK[$17]
 
 Data_17_42a8:
 	db $81, $81, $9c, $9c, $9c, $9c, $9c, $9c, $81, $81, $9c, $9c, $9c, $9c, $ff, $ff
 	db $c1, $c1, $9c, $9c, $9f, $9f, $c1, $c1, $fc, $fc, $9c, $9c, $c1, $c1, $ff, $ff
 	db $81, $81, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $ff, $ff
 
-SECTION "analyzed_05c2d8", ROMX[$42d8], BANK[$17]
-
 Data_17_42d8:
 	db $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $c1, $c1, $ff, $ff
 	db $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $9c, $c9, $c9, $e3, $e3, $ff, $ff
-
-SECTION "analyzed_05c2f8", ROMX[$42f8], BANK[$17]
 
 Data_17_42f8:
 	db $9c, $9c, $9c, $9c, $9c, $9c, $94, $94, $80, $80, $80, $80, $c9, $c9, $ff, $ff
 	db $9c, $9c, $88, $88, $c1, $c1, $e3, $e3, $c1, $c1, $88, $88, $9c, $9c, $ff, $ff
 	db $9c, $9c, $9c, $9c, $9c, $9c, $c1, $c1, $e3, $e3, $e3, $e3, $e3, $e3, $ff, $ff
 
-SECTION "analyzed_05c328", ROMX[$4328], BANK[$17]
-
 Data_17_4328:
 	db $80, $80, $f8, $f8, $f1, $f1, $e3, $e3, $c7, $c7, $8f, $8f, $80, $80, $ff, $ff
-
-SECTION "analyzed_05c338", ROMX[$4338], BANK[$17]
 
 Data_17_4338:
 	db $ff, $ff, $ff, $ff, $c7, $c7, $f3, $f3, $c3, $c3, $d3, $d3, $c1, $c1, $ff, $ff
@@ -29222,12 +27166,8 @@ Data_17_4338:
 	db $cf, $cf, $cf, $cf, $c3, $c3, $c9, $c9, $c9, $c9, $c9, $c9, $c9, $c9, $ff, $ff
 	db $e7, $e7, $ff, $ff, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $ff, $ff
 
-SECTION "analyzed_05c3c8", ROMX[$43c8], BANK[$17]
-
 Data_17_43c8:
 	db $f3, $f3, $ff, $ff, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $f3, $c7, $c7, $ff, $ff
-
-SECTION "analyzed_05c3d8", ROMX[$43d8], BANK[$17]
 
 Data_17_43d8:
 	db $cf, $cf, $cf, $cf, $c9, $c9, $c3, $c3, $c7, $c7, $c3, $c3, $c9, $c9, $ff, $ff
@@ -29237,12 +27177,8 @@ Data_17_43d8:
 	db $ff, $ff, $ff, $ff, $e3, $e3, $c9, $c9, $c9, $c9, $c9, $c9, $e3, $e3, $ff, $ff
 	db $ff, $ff, $ff, $ff, $c3, $c3, $c9, $c9, $c9, $c9, $c3, $c3, $cf, $cf, $cf, $cf
 
-SECTION "analyzed_05c438", ROMX[$4438], BANK[$17]
-
 Data_17_4438:
 	db $ff, $ff, $ff, $ff, $e1, $e1, $c9, $c9, $c9, $c9, $e1, $e1, $f9, $f9, $f9, $f9
-
-SECTION "analyzed_05c448", ROMX[$4448], BANK[$17]
 
 Data_17_4448:
 	db $ff, $ff, $ff, $ff, $d1, $d1, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $ff, $ff
@@ -29262,18 +27198,12 @@ Data_17_4448:
 	db $ff, $ff, $e7, $e7, $c7, $c7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $e7, $c3, $c3
 	db $ff, $ff, $c1, $c1, $9c, $9c, $9c, $9c, $f9, $f9, $e7, $e7, $cf, $cf, $80, $80
 
-SECTION "analyzed_05c548", ROMX[$4548], BANK[$17]
-
 Data_17_4548:
 	db $ff, $ff, $c1, $c1, $9c, $9c, $9c, $9c, $f1, $f1, $9c, $9c, $9c, $9c, $c1, $c1
-
-SECTION "analyzed_05c558", ROMX[$4558], BANK[$17]
 
 Data_17_4558:
 	db $ff, $ff, $f1, $f1, $e1, $e1, $c9, $c9, $d9, $d9, $99, $99, $80, $80, $f9, $f9
 	db $ff, $ff, $80, $80, $9f, $9f, $81, $81, $fc, $fc, $fc, $fc, $9c, $9c, $c1, $c1
-
-SECTION "analyzed_05c578", ROMX[$4578], BANK[$17]
 
 Data_17_4578:
 	db $ff, $ff, $c1, $c1, $9c, $9c, $9f, $9f, $81, $81, $9c, $9c, $9c, $9c, $c1, $c1
@@ -29281,8 +27211,6 @@ Data_17_4578:
 	db $ff, $ff, $c1, $c1, $9c, $9c, $9c, $9c, $c1, $c1, $9c, $9c, $9c, $9c, $c1, $c1
 	db $ff, $ff, $c1, $c1, $9c, $9c, $9c, $9c, $c0, $c0, $fc, $fc, $9c, $9c, $c1, $c1
 	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-
-SECTION "analyzed_05c5c8", ROMX[$45c8], BANK[$17]
 
 Data_17_45c8:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
@@ -29297,12 +27225,8 @@ Data_17_4618:
 	db $20, $20, $20, $20, $20, $20, $72, $6f, $6f, $6d, $20, $63, $61, $6c, $6c, $65
 	db $64, $20, $20, $20, $20, $20, $20, $20
 
-SECTION "analyzed_05c660", ROMX[$4660], BANK[$17]
-
 Data_17_4660:
 	db "                  This is a small                     room called       "
-
-SECTION "analyzed_05c6a8", ROMX[$46a8], BANK[$17]
 
 Data_17_46a8:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29315,12 +27239,8 @@ Data_17_46a8:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
 
-SECTION "analyzed_05c738", ROMX[$4738], BANK[$17]
-
 Data_17_4738:
 	db "                  Select if only                      sending a room.                     Select if only                      receiving a room. "
-
-SECTION "analyzed_05c7c8", ROMX[$47c8], BANK[$17]
 
 Data_17_47c8:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29329,12 +27249,8 @@ Data_17_47c8:
 	db $20, $20, $20, $20, $20, $20, $57, $69, $6c, $6c, $20, $6c, $6f, $73, $65, $20
 	db $64, $61, $74, $61, $2e, $20, $20, $20
 
-SECTION "analyzed_05c810", ROMX[$4810], BANK[$17]
-
 Data_17_4810:
 	db "                  Reverts to open.                                      "
-
-SECTION "analyzed_05c858", ROMX[$4858], BANK[$17]
 
 Data_17_4858:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29401,12 +27317,8 @@ Data_17_4858:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $70, $72
 	db $65, $73, $73, $69, $6e, $67, $20, $53, $65, $6c, $65, $63, $74, $2e, $20, $20
 
-SECTION "analyzed_05cc48", ROMX[$4c48], BANK[$17]
-
 Data_17_4c48:
 	db "                  3 monster types                     can be placed.                      Can place up                        to 9 monsters.    "
-
-SECTION "analyzed_05ccd8", ROMX[$4cd8], BANK[$17]
 
 Data_17_4cd8:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29424,12 +27336,8 @@ Data_17_4cd8:
 	db $20, $20, $20, $20, $20, $20, $70, $72, $65, $73, $73, $69, $6e, $67, $20, $53
 	db $65, $6c, $65, $63, $74, $2e, $20, $20
 
-SECTION "analyzed_05cdb0", ROMX[$4db0], BANK[$17]
-
 Data_17_4db0:
 	db "                  Sets the speed                      of the monster.                     Sets direction                      of the monster.                     Sets speed of                       special attack.                     Sets facing and                     turn directions.                    Sets life for                       Stone monsters.                     Sets direction                      for monsters.                       Sets speed for                      Stone monsters.                     Picks monster                       for the stone.                      You can't place                     the block there.                    No monster                          chosen for stone.                   Can't place any                     more monsters.                      Can't place                         more stones.      "
-
-SECTION "analyzed_05d110", ROMX[$5110], BANK[$17]
 
 Data_17_5110:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29438,12 +27346,8 @@ Data_17_5110:
 	db $20, $20, $20, $20, $20, $20, $61, $6e, $79, $20, $6d, $6f, $72, $65, $20, $69
 	db $74, $65, $6d, $73, $2e, $20, $20, $20
 
-SECTION "analyzed_05d158", ROMX[$5158], BANK[$17]
-
 Data_17_5158:
 	db "                  Cannot place a                      monster there.                      Cannot place a                      player there.                       That monster is                     set to the stone. "
-
-SECTION "analyzed_05d230", ROMX[$5230], BANK[$17]
 
 Data_17_5230:
 	db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20
@@ -29654,12 +27558,8 @@ Data_17_5230:
 	db $65, $20, $64, $6f, $65, $73, $6e, $27, $74, $20, $20, $20, $20, $20, $64, $69
 	db $73, $61, $70, $70, $65, $61, $72, $20, $20, $20, $20, $20, $20, $20, $20, $20
 
-SECTION "analyzed_05df20", ROMX[$5f20], BANK[$17]
-
 Data_17_5f20:
 	db "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "
-
-SECTION "analyzed_05e118", ROMX[$6118], BANK[$17]
 
 Data_17_6118:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
@@ -29791,12 +27691,8 @@ Data_17_6118:
 	db $07, $05, $05, $03, $03, $05, $0d, $07, $0d, $0b, $0d, $0b, $03, $0d, $0d, $15
 	db $09, $15, $11, $19, $31, $29, $19, $21, $31, $53, $22, $a6, $c4, $0c, $00, $f8
 
-SECTION "analyzed_05e918", ROMX[$6918], BANK[$17]
-
 Data_17_6918:
 	INCBIN "raw_gfx/Data_17_6918.2bpp", 0, 2048
-
-SECTION "analyzed_05f118", ROMX[$7118], BANK[$17]
 
 Data_17_7118:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $aa, $00, $00, $00, $aa, $00, $55, $00
@@ -29917,8 +27813,6 @@ Func_18_4036:
 	ld [wYNResult], a
 	ret
 
-SECTION "analyzed_06003c", ROMX[$403c], BANK[$18]
-
 Pashute_GetActiveMonsterUses:
 	ld hl, wMonsterUses
 	ld a, [wActiveMonster]
@@ -29934,8 +27828,6 @@ Pashute_SetReplaceTargetActive:
 	ld a, [wActiveMonster]
 	ld [wDisplayMonster], a
 	ret
-
-SECTION "analyzed_060054", ROMX[$4054], BANK[$18]
 
 Pashute_ResetRosterKeepNew:
 	ld hl, wMonsterUses
@@ -29962,8 +27854,6 @@ Pashute_ResetRosterKeepNew:
 	ld [hl], a
 	jp Pashute_AddFiveMonsterUses
 
-SECTION "analyzed_060074", ROMX[$4074], BANK[$18]
-
 Pashute_AddFiveMonsterUses:
 	ld hl, wMonsterUses
 	ld a, [wActiveMonster]
@@ -29977,12 +27867,8 @@ Pashute_AddFiveMonsterUses:
 	daa
 	jr nc, Func_18_4088
 
-SECTION "analyzed_060086", ROMX[$4086], BANK[$18]
-
 Func_18_4086:
 	ld a, $99
-
-SECTION "analyzed_060088", ROMX[$4088], BANK[$18]
 
 Func_18_4088:
 	ld [hl], a
@@ -30404,8 +28290,6 @@ LinkStoreRecvRoom:
 	ld [$d5fa], a
 	ret
 
-SECTION "analyzed_061dfa", ROMX[$5dfa], BANK[$18]
-
 Func_18_5dfa:
 	ld hl, $608c
 	call ScriptDispatcherEnterAfterCall
@@ -30685,8 +28569,6 @@ Func_18_6082:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_06208c", ROMX[$608c], BANK[$18]
-
 Data_18_608c:
 	db $0a, $e2, $d0, $01, $83, $64
 
@@ -30839,8 +28721,6 @@ Naji_RenderPortraitAlt:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_062ce3", ROMX[$6ce3], BANK[$18]
-
 Data_18_6ce3:
 	db $0a, $c1, $c2, $01, $2b, $6f, $0a, $d7, $c2, $00, $9b, $6e, $0a, $d7, $c2, $01
 	db $63, $6d, $0e, $9f, $6c, $18, $59, $6f, $75, $20, $67, $6f, $74, $20, $6f, $75
@@ -30863,8 +28743,6 @@ Data_18_6ce3:
 	db $65, $66, $75, $6c, $2e, $20, $49, $27, $6c, $6c, $0d, $68, $65, $6c, $70, $20
 	db $79, $6f, $75, $20, $6f, $75, $74, $2e, $04, $09, $e5, $d0, $01, $ff
 
-SECTION "analyzed_062e21", ROMX[$6e21], BANK[$18]
-
 Data_18_6e21:
 	db $0e, $9f, $6c, $18, $59, $6f, $75, $20, $63, $6c, $69, $6d, $62, $65, $64, $20
 	db $74, $6f, $0d, $74, $68, $65, $20, $74, $6f, $70, $20, $61, $67, $61, $69, $6e
@@ -30874,8 +28752,6 @@ Data_18_6e21:
 	db $68, $65, $0d, $63, $61, $62, $69, $6e, $20, $61, $6e, $64, $20, $72, $65, $74
 	db $75, $72, $6e, $04, $0e, $9f, $6c, $18, $49, $27, $6c, $6c, $20, $62, $65, $20
 	db $77, $61, $69, $74, $69, $6e, $67, $2e, $04, $ff
-
-SECTION "analyzed_062e9b", ROMX[$6e9b], BANK[$18]
 
 Data_18_6e9b:
 	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c, $69, $6b, $65, $20, $79
@@ -30895,8 +28771,6 @@ Data_18_6e9b:
 	db $67, $61, $69, $6e, $20, $73, $75, $63, $63, $65, $73, $73, $04, $70, $6c, $61
 	db $6e, $20, $61, $20, $73, $74, $72, $61, $74, $65, $67, $79, $2e, $0d, $47, $6f
 	db $6f, $64, $20, $6c, $75, $63, $6b, $2e, $04, $ff
-
-SECTION "analyzed_062fa5", ROMX[$6fa5], BANK[$18]
 
 Func_18_6fa5:
 	dec bc
@@ -31091,8 +28965,6 @@ Func_18_706e:
 	ld l, $04
 	rst $38
 
-SECTION "analyzed_063080", ROMX[$7080], BANK[$18]
-
 Data_18_7080:
 	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c
 Func_18_708b:
@@ -31119,8 +28991,6 @@ Func_18_70d2:
 	db $75, $6c, $2c, $20, $61, $6e, $64, $0d, $67, $6f
 Func_18_70dc:
 	db $6f, $64, $20, $6c, $75, $63, $6b, $2e, $04, $ff
-
-SECTION "analyzed_0630e6", ROMX[$70e6], BANK[$18]
 
 Data_18_70e6:
 	db $0e, $27, $6c, $18, $47, $6f, $6f, $64, $20, $77, $6f, $72, $6b, $2c, $20, $62
@@ -31233,8 +29103,6 @@ SECTION "analyzed_0646cb", ROMX[$46cb], BANK[$19]
 Data_19_46cb:
 	INCBIN "raw_gfx/Data_19_46cb.2bpp", 0, 8192
 
-SECTION "analyzed_0666cb", ROMX[$66cb], BANK[$19]
-
 Data_19_66cb:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -31265,8 +29133,6 @@ Data_19_66cb:
 	db $00, $86, $06, $00, $08, $88, $06, $02, $00, $00, $8a, $06, $00, $08, $8c, $06
 	db $01, $00, $00, $82, $07, $01, $08, $00, $82, $47, $01, $00, $00, $80, $27, $01
 	db $00, $00, $80, $07
-
-SECTION "analyzed_06688f", ROMX[$688f], BANK[$19]
 
 Data_19_688f:
 	db $02, $00, $00, $8e, $07, $00, $08, $90, $07
@@ -31368,8 +29234,6 @@ SECTION "analyzed_06dc5d", ROMX[$5c5d], BANK[$1b]
 Data_1b_5c5d:
 	INCBIN "raw_gfx/Data_1b_5c5d.2bpp", 0, 1424
 
-SECTION "analyzed_06e1ed", ROMX[$61ed], BANK[$1b]
-
 Data_1b_61ed:
 	db $00, $10, $00, $78, $00, $f8, $00, $f0, $00, $c0
 
@@ -31377,8 +29241,6 @@ SECTION "analyzed_06e45d", ROMX[$645d], BANK[$1b]
 
 Data_1b_645d:
 	INCBIN "raw_gfx/Data_1b_645d.2bpp", 0, 3696
-
-SECTION "analyzed_06f2cd", ROMX[$72cd], BANK[$1b]
 
 Data_1b_72cd:
 	db $00, $00, $00, $00, $00, $00, $04, $04, $13, $13, $44, $44, $30, $30
@@ -31572,8 +29434,6 @@ SECTION "analyzed_07c000", ROMX[$4000], BANK[$1f]
 Data_1f_4000:
 	db $44, $18, $44, $18, $44, $18, $44, $18
 
-SECTION "analyzed_07c008", ROMX[$4008], BANK[$1f]
-
 Func_1f_4008:
 	ld hl, wBgPalettes
 	ld de, $c181
@@ -31621,8 +29481,6 @@ Func_1f_405d:
 	jr nz, Func_1f_405d
 	ret
 
-SECTION "analyzed_07c062", ROMX[$4062], BANK[$1f]
-
 Func_1f_4062:
 	ld hl, wBgPalettes
 	ld de, $c181
@@ -31649,8 +29507,6 @@ Func_1f_4089:
 	dec c
 	jr nz, Func_1f_4089
 	ret
-
-SECTION "analyzed_07c094", ROMX[$4094], BANK[$1f]
 
 Script_FadeOutPortrait:
 	ld hl, $c181
@@ -31733,8 +29589,6 @@ Func_1f_4109:
 	cp $05
 	jr z, Func_1f_4169
 	ret
-
-SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
 Func_1f_4121:
 	FAR_CALL $1f, Kalum_StartEncounter
@@ -32570,8 +30424,6 @@ Func_1f_4fc7:
 	ld l, a
 	jp hl
 
-SECTION "analyzed_07cfd6", ROMX[$4fd6], BANK[$1f]
-
 Data_1f_4fd6:
 	db $0e, $50, $0e, $50, $0e, $50, $23, $50, $23, $50, $23, $50, $38, $50, $38, $50
 	db $38, $50, $4d, $50, $4d, $50, $4d, $50, $62, $50, $62, $50, $62, $50, $77, $50
@@ -32800,13 +30652,9 @@ Func_1f_592a:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07d942", ROMX[$5942], BANK[$1f]
-
 Data_1f_5942:
 	db $04, $03, $54, $59, $48, $59, $97, $97, $97, $20, $9c, $aa, $97, $97, $97, $15
 	db $a6, $97, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07
-
-SECTION "analyzed_07d960", ROMX[$5960], BANK[$1f]
 
 Toamuna_ShowMenu2:
 	ld de, $98ca
@@ -32863,12 +30711,8 @@ Func_1f_59c8:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07d9cd", ROMX[$59cd], BANK[$1f]
-
 Data_1f_59cd:
 	db $56, $5a, $78, $5a, $9a, $5a
-
-SECTION "analyzed_07d9d3", ROMX[$59d3], BANK[$1f]
 
 Toamuna_ShowMenu1:
 	ld de, $98ca
@@ -32934,8 +30778,6 @@ Func_1f_5a4b:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07da50", ROMX[$5a50], BANK[$1f]
-
 Data_1f_5a50:
 	db $56, $5a, $9a, $5a, $00, $02, $02, $07, $6a, $5a, $5c, $5a, $b8, $c0, $c8, $97
 	db $97, $97, $97, $b9, $c1, $c9, $97, $97, $97, $97, $07, $07, $07, $06, $06, $06
@@ -32944,8 +30786,6 @@ Data_1f_5a50:
 	db $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $02, $07, $ae, $5a, $a0, $5a
 	db $84, $8e, $97, $97, $97, $97, $97, $85, $8f, $97, $97, $97, $97, $97, $07, $07
 	db $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07dabc", ROMX[$5abc], BANK[$1f]
 
 Naji_ShowMenu2:
 	ld de, $98cc
@@ -33011,12 +30851,8 @@ Func_1f_5b34:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07db39", ROMX[$5b39], BANK[$1f]
-
 Data_1f_5b39:
 	db $fe, $5c, $3a, $5d, $58, $5d, $01, $03, $04
-
-SECTION "analyzed_07db42", ROMX[$5b42], BANK[$1f]
 
 Naji_ShowMenu3a:
 	ld de, $98cc
@@ -33082,12 +30918,8 @@ Func_1f_5bba:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07dbbf", ROMX[$5bbf], BANK[$1f]
-
 Data_1f_5bbf:
 	db $e0, $5c, $fe, $5c, $3a, $5d, $58, $5d, $00, $01, $03, $04
-
-SECTION "analyzed_07dbcb", ROMX[$5bcb], BANK[$1f]
 
 Naji_ShowMenu3b:
 	ld de, $98cc
@@ -33153,17 +30985,11 @@ Func_1f_5c43:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07dc48", ROMX[$5c48], BANK[$1f]
-
 Data_1f_5c48:
 	db $fe, $5c, $1c, $5d, $3a, $5d, $58, $5d, $01
 
-SECTION "analyzed_07dc51", ROMX[$5c51], BANK[$1f]
-
 Data_1f_5c51:
 	db $02, $03, $04
-
-SECTION "analyzed_07dc54", ROMX[$5c54], BANK[$1f]
 
 Naji_ShowMenu4:
 	ld de, $98cc
@@ -33229,8 +31055,6 @@ Func_1f_5ccc:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07dcd1", ROMX[$5cd1], BANK[$1f]
-
 Data_1f_5cd1:
 	db $e0, $5c, $fe, $5c, $1c, $5d, $3a, $5d, $58, $5d, $00, $01, $02, $03, $04, $02
 	db $06, $f2, $5c, $e6, $5c, $d8, $e0, $e8, $f0, $97, $97, $d9, $e1, $e9, $f1, $97
@@ -33243,8 +31067,6 @@ Data_1f_5cd1:
 	db $06, $06, $06, $06, $06, $06, $06, $02, $06, $6a, $5d, $5e, $5d, $f8, $ba, $c2
 	db $ca, $97, $97, $f9, $bb, $c3, $cb, $97, $97, $07, $07, $07, $07, $06, $06, $06
 	db $06, $06, $06, $06, $06
-
-SECTION "analyzed_07dd76", ROMX[$5d76], BANK[$1f]
 
 Naji_ShowSubMenu2:
 	ld de, $98cc
@@ -33301,8 +31123,6 @@ Func_1f_5dde:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07dde3", ROMX[$5de3], BANK[$1f]
-
 Data_1f_5de3:
 	db $e9, $5d, $07, $5e, $25, $5e, $02, $06, $fb, $5d, $ef, $5d, $fe, $00, $02, $04
 	db $97, $97, $ff, $01, $03, $05, $97, $97, $07, $07, $07, $07, $06, $06, $06, $06
@@ -33310,8 +31130,6 @@ Data_1f_5de3:
 	db $d3, $db, $e3, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06, $02, $06, $37, $5e, $2b, $5e, $94, $b3, $b5, $97, $97, $97, $95, $b4
 	db $b6, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07de43", ROMX[$5e43], BANK[$1f]
 
 Bodka_ShowMenu:
 	ld de, $98cc
@@ -33368,8 +31186,6 @@ Func_1f_5eab:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07deb0", ROMX[$5eb0], BANK[$1f]
-
 Data_1f_5eb0:
 	db $ba, $5e, $d8, $5e, $f6, $5e, $14, $5f, $32, $5f, $02, $06, $cc, $5e, $c0, $5e
 	db $d4, $dc, $e4, $ec, $97, $97, $d5, $dd, $e5, $ed, $97, $97, $07, $07, $07, $07
@@ -33381,8 +31197,6 @@ Data_1f_5eb0:
 	db $cf, $d7, $df, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06, $02, $06, $44, $5f, $38, $5f, $84, $8e, $97, $97, $97, $97, $85, $8f
 	db $97, $97, $97, $97, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07df50", ROMX[$5f50], BANK[$1f]
 
 Tradehouse_ShowMenu:
 	ld de, $98cc
@@ -33439,12 +31253,8 @@ Func_1f_5fb8:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07dfbd", ROMX[$5fbd], BANK[$1f]
-
 Data_1f_5fbd:
 	db $d8, $5e, $14, $5f, $32, $5f
-
-SECTION "analyzed_07dfc3", ROMX[$5fc3], BANK[$1f]
 
 Bodka_ShowItemsSubMenu:
 	ld de, $98cc
@@ -33501,8 +31311,6 @@ Func_1f_602b:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07e030", ROMX[$6030], BANK[$1f]
-
 Data_1f_6030:
 	db $36, $60, $54, $60, $72, $60, $02, $06, $48, $60, $3c, $60, $e6, $ee, $f6, $97
 	db $97, $97, $e7, $ef, $f7, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06
@@ -33510,8 +31318,6 @@ Data_1f_6030:
 	db $cf, $d7, $df, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06, $02, $06, $84, $60, $78, $60, $94, $b3, $b5, $97, $97, $97, $95, $b4
 	db $b6, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07e090", ROMX[$6090], BANK[$1f]
 
 Pashute_ShowMenu:
 	ld de, $98cb
@@ -33568,8 +31374,6 @@ Func_1f_60f8:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07e0fd", ROMX[$60fd], BANK[$1f]
-
 Data_1f_60fd:
 	db $03, $61, $25, $61, $47, $61, $02, $07, $17, $61, $09, $61, $c6, $ce, $d6, $97
 	db $97, $97, $97, $c7, $cf, $d7, $97, $97, $97, $97, $07, $07, $07, $06, $06, $06
@@ -33578,8 +31382,6 @@ Data_1f_60fd:
 	db $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $02, $07, $5b, $61, $4d, $61
 	db $84, $8e, $97, $97, $97, $97, $97, $85, $8f, $97, $97, $97, $97, $97, $07, $07
 	db $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07e169", ROMX[$6169], BANK[$1f]
 
 Pashute_ShowExplainSubMenu:
 	ld de, $98cb
@@ -33636,8 +31438,6 @@ Func_1f_61d1:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07e1d6", ROMX[$61d6], BANK[$1f]
-
 Data_1f_61d6:
 	db $dc, $61, $fe, $61, $20, $62, $02, $07, $f0, $61, $e2, $61, $de, $e6, $ee, $f6
 	db $fe, $df, $97, $97, $97, $97, $97, $e7, $ef, $f7, $07, $07, $07, $07, $07, $07
@@ -33646,8 +31446,6 @@ Data_1f_61d6:
 	db $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $02, $07, $34, $62, $26, $62
 	db $94, $b3, $b5, $97, $97, $97, $97, $95, $b4, $b6, $97, $97, $97, $97, $07, $07
 	db $07, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07e242", ROMX[$6242], BANK[$1f]
 
 ShowMonsterDiscStoneSelect:
 	call Func_1f_63a6
@@ -33770,8 +31568,6 @@ Func_1f_62f1:
 	jr nz, Func_1f_62f1
 	ret
 
-SECTION "analyzed_07e316", ROMX[$6316], BANK[$1f]
-
 Data_1f_6316:
 	db $26, $63, $36, $63, $46, $63, $56, $63, $66, $63, $76, $63, $86, $63, $96, $63
 	db $01, $05, $31, $63, $2c, $63, $30, $38, $40, $97, $97, $07, $07, $07, $07, $07
@@ -33782,8 +31578,6 @@ Data_1f_6316:
 	db $01, $05, $81, $63, $7c, $63, $31, $39, $41, $97, $97, $07, $07, $07, $07, $07
 	db $01, $05, $91, $63, $8c, $63, $37, $3f, $47, $48, $49, $07, $07, $07, $07, $07
 	db $01, $05, $a1, $63, $9c, $63, $4a, $4b, $4c, $4d, $97, $06, $06, $06, $06, $06
-
-SECTION "analyzed_07e3a6", ROMX[$63a6], BANK[$1f]
 
 Func_1f_63a6:
 	ld de, $d603
@@ -33879,12 +31673,8 @@ Func_1f_6446:
 	inc [hl]
 	ret
 
-SECTION "analyzed_07e44b", ROMX[$644b], BANK[$1f]
-
 Data_1f_644b:
 	db $e0, $64, $02, $65, $46, $65, $68, $65, $00, $01, $03, $04
-
-SECTION "analyzed_07e457", ROMX[$6457], BANK[$1f]
 
 Func_1f_6457:
 	ld de, $98cb
@@ -33961,8 +31751,6 @@ Func_1f_64cf:
 	inc bc
 	inc b
 
-SECTION "analyzed_07e4e0", ROMX[$64e0], BANK[$1f]
-
 Data_1f_64e0:
 	db $02, $07, $f4, $64, $e6, $64, $da, $e2, $ea, $f2, $97, $97, $97, $db, $e3, $eb
 	db $f3, $97, $97, $97, $07, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06
@@ -33970,14 +31758,10 @@ Data_1f_64e0:
 	db $bd, $c5, $97, $97, $97, $97, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06, $06, $06
 
-SECTION "analyzed_07e524", ROMX[$6524], BANK[$1f]
-
 Data_1f_6524:
 	db $02, $07, $38, $65, $2a, $65, $cc, $d4, $dc, $e4, $97, $97, $97, $cd, $d5, $dd
 	db $e5, $97, $97, $97, $07, $07, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06
-
-SECTION "analyzed_07e546", ROMX[$6546], BANK[$1f]
 
 Data_1f_6546:
 	db $02, $07, $5a, $65, $4c, $65, $ec, $f4, $fc, $be, $97, $97, $97, $ed, $f5, $fd
@@ -33985,8 +31769,6 @@ Data_1f_6546:
 	db $06, $06, $02, $07, $7c, $65, $6e, $65, $84, $8e, $97, $97, $97, $97, $97, $85
 	db $8f, $97, $97, $97, $97, $97, $07, $07, $06, $06, $06, $06, $06, $06, $06, $06
 	db $06, $06, $06, $06
-
-SECTION "analyzed_07e58a", ROMX[$658a], BANK[$1f]
 
 Verde_ShowReleaseMonsterSelect:
 	call Func_1f_6590
@@ -34052,40 +31834,26 @@ Func_1f_65d7:
 	call nz, DrawMetasprite
 	ret
 
-SECTION "analyzed_07e5e8", ROMX[$65e8], BANK[$1f]
-
 Data_1f_65e8:
 	db $8a, $68, $00, $00
-
-SECTION "analyzed_07e5ec", ROMX[$65ec], BANK[$1f]
 
 Func_1f_65ec:
 	ld hl, $65f1
 	jr Func_1f_65c1
 
-SECTION "analyzed_07e5f1", ROMX[$65f1], BANK[$1f]
-
 Data_1f_65f1:
 	db $85, $68, $00, $00
-
-SECTION "analyzed_07e5f5", ROMX[$65f5], BANK[$1f]
 
 Func_1f_65f5:
 	ld hl, $65fa
 	jr Func_1f_65c1
 
-SECTION "analyzed_07e5fa", ROMX[$65fa], BANK[$1f]
-
 Data_1f_65fa:
 	db $7b, $68, $00, $00
-
-SECTION "analyzed_07e5fe", ROMX[$65fe], BANK[$1f]
 
 Func_1f_65fe:
 	ld hl, $6603
 	jr Func_1f_65c1
-
-SECTION "analyzed_07e603", ROMX[$6603], BANK[$1f]
 
 Data_1f_6603:
 	db $80, $68, $00, $00
@@ -34189,39 +31957,25 @@ Data_20_7356:
 	db $74, $04, $75, $e3, $74, $04, $75, $e3, $74, $c2, $74, $67, $75, $46, $75, $67
 	db $75, $46, $75, $25, $75, $ca, $75, $a9, $75, $ca, $75, $a9, $75, $88, $75
 
-SECTION "analyzed_083925", ROMX[$7925], BANK[$20]
-
 Data_20_7925:
 	db $ca, $75, $a9, $75, $ca, $75, $a9, $75, $88, $75
-
-SECTION "analyzed_08392f", ROMX[$792f], BANK[$20]
 
 Data_20_792f:
 	db $e5, $76, $3f, $77, $99, $77, $f3, $77, $4d, $78, $65, $76, $38, $76, $0b, $76
 	db $0b, $76
 
-SECTION "analyzed_083941", ROMX[$7941], BANK[$20]
-
 Data_20_7941:
 	db $0b, $76
-
-SECTION "analyzed_083943", ROMX[$7943], BANK[$20]
 
 Data_20_7943:
 	db $c8, $76, $a3, $76, $76, $76, $76, $76
 
-SECTION "analyzed_08394b", ROMX[$794b], BANK[$20]
-
 Data_20_794b:
 	db $76, $76
-
-SECTION "analyzed_08394d", ROMX[$794d], BANK[$20]
 
 Data_20_794d:
 	db $4c, $0e, $4c, $0f, $4c, $0f, $4c, $0e, $4c, $0d, $4c, $0c, $4c, $0c, $4c, $0d
 	db $28, $28, $28, $29, $28, $2a, $28, $2b, $28, $2b, $28, $2a, $28, $29, $28, $28
-
-SECTION "analyzed_08396d", ROMX[$796d], BANK[$20]
 
 Func_20_796d:
 	ld hl, $7939
@@ -34240,12 +31994,8 @@ Func_20_7980:
 	cp $ff
 	jr nz, Func_20_7990
 
-SECTION "analyzed_08398b", ROMX[$798b], BANK[$20]
-
 Data_20_798b:
 	db $7c, $fe, $ff, $28, $1c
-
-SECTION "analyzed_083990", ROMX[$7990], BANK[$20]
 
 Func_20_7990:
 	ld a, [wFadeLevel]
@@ -34278,12 +32028,8 @@ Data_21_7356:
 	db $0d, $15, $1c, $24, $2c, $1d, $25, $2d, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08
 
-SECTION "analyzed_0873aa", ROMX[$73aa], BANK[$21]
-
 Data_21_73aa:
 	db $8c, $73
-
-SECTION "analyzed_0873ac", ROMX[$73ac], BANK[$21]
 
 Func_21_73ac:
 	call WaitForHBlank
@@ -34512,8 +32258,6 @@ Data_23_7356:
 	db $dc, $7a, $da, $7a, $08, $09, $0d, $0d, $02, $01, $e6, $7a, $e4, $7a, $10, $11
 	db $0d, $0d
 
-SECTION "analyzed_08fae8", ROMX[$7ae8], BANK[$23]
-
 Data_23_7ae8:
 	db $02, $01, $f0, $7a, $ee, $7a, $18, $19, $0d, $0d, $02, $01, $fa, $7a, $f8, $7a
 	db $20, $21, $0d, $0d, $02, $01, $04, $7b, $02, $7b, $28, $29, $0d, $0d, $02, $01
@@ -34521,36 +32265,24 @@ Data_23_7ae8:
 	db $0d, $0d, $02, $01, $22, $7b, $20, $7b, $50, $51, $0d, $0d, $02, $01, $2c, $7b
 	db $2a, $7b, $48, $49, $0d, $0d
 
-SECTION "analyzed_08fb2e", ROMX[$7b2e], BANK[$23]
-
 Data_23_7b2e:
 	db $02, $06, $40, $7b, $34, $7b, $79, $24, $2c, $34, $3c, $79, $79, $25, $2d, $35
 	db $3d, $79, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-
-SECTION "analyzed_08fb4c", ROMX[$7b4c], BANK[$23]
 
 Data_23_7b4c:
 	db $02, $06, $5e, $7b, $52, $7b, $74, $7c, $04, $0c, $14, $1c, $75, $7d, $05, $0d
 	db $15, $1d, $03, $03, $0b, $0b, $0b, $0b, $03, $03, $0b, $0b, $0b, $0b
 
-SECTION "analyzed_08fb6a", ROMX[$7b6a], BANK[$23]
-
 Data_23_7b6a:
 	db $e2, $76, $28, $77, $6e, $77, $b4, $77, $cc, $78, $86, $78, $40, $78, $fa, $77
 	db $e4, $79, $9e, $79, $58, $79, $12, $79, $7e, $76, $97, $76, $b0, $76, $c9, $76
 
-SECTION "analyzed_08fb8a", ROMX[$7b8a], BANK[$23]
-
 Data_23_7b8a:
 	db $b0, $76, $97, $76, $7e, $76
-
-SECTION "analyzed_08fb90", ROMX[$7b90], BANK[$23]
 
 Data_23_7b90:
 	db $2a, $7a, $34, $7a, $3e, $7a, $48, $7a, $52, $7a, $5c, $7a, $66, $7a, $70, $7a
 	db $7a, $7a, $84, $7a, $ac, $7a, $b6, $7a, $c0, $7a, $ca, $7a, $d4, $7a, $de, $7a
-
-SECTION "analyzed_08fbb0", ROMX[$7bb0], BANK[$23]
 
 Data_23_7bb0:
 	db $e8, $7a, $f2, $7a, $fc, $7a, $06, $7b
@@ -34559,8 +32291,6 @@ SECTION "analyzed_090000", ROMX[$4000], BANK[$24]
 
 Data_24_4000:
 	INCBIN "raw_gfx/Data_24_4000.2bpp", 0, 6144
-
-SECTION "analyzed_091800", ROMX[$5800], BANK[$24]
 
 Data_24_5800:
 	db $00, $00, $c6, $18, $ad, $35, $94, $52, $c8, $08, $1f, $00, $32, $32, $f7, $4a
@@ -34571,8 +32301,6 @@ Data_24_5800:
 	db $00, $00, $da, $00, $db, $01, $fd, $02, $00, $00, $00, $00, $00, $00, $c8, $08
 	db $00, $00, $e7, $1c, $00, $1c, $e0, $00, $00, $00, $a5, $14, $00, $14, $a0, $00
 	db $00, $00, $63, $0c, $00, $0c, $60, $00, $00, $00, $21, $04, $00, $04, $20, $00
-
-SECTION "analyzed_091880", ROMX[$5880], BANK[$24]
 
 Data_24_5880:
 	db $07, $0b, $d3, $58, $86, $58, $00, $07, $0e, $15, $1c, $23, $2a, $31, $36, $3a
@@ -34815,8 +32543,6 @@ SECTION "analyzed_094000", ROMX[$4000], BANK[$25]
 
 Data_25_4000:
 	INCBIN "raw_gfx/Data_25_4000.2bpp", 0, 6144
-
-SECTION "analyzed_095800", ROMX[$5800], BANK[$25]
 
 Data_25_5800:
 	db $04, $00, $04, $00, $06, $00, $01, $00, $00, $00, $02, $00, $11, $00, $16, $01
@@ -35165,12 +32891,8 @@ Data_26_7356:
 	db $8a, $8f, $97, $8b, $fc, $84, $8c, $05, $0d, $0d, $0d, $0d, $0d, $0d, $0d, $0d
 	db $0d, $0d, $0d, $05, $0d, $0d, $a7, $73, $4d, $74, $f3, $74
 
-SECTION "analyzed_09b692", ROMX[$7692], BANK[$26]
-
 Data_26_7692:
 	db $a7, $73
-
-SECTION "analyzed_09b694", ROMX[$7694], BANK[$26]
 
 Data_26_7694:
 	db $99, $75, $a2, $75, $ab, $75, $b4, $75, $d8, $75, $fc, $75, $d8, $75, $b4, $75
@@ -35191,8 +32913,6 @@ Data_28_7356:
 	db $e7, $ef, $f7, $ff, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0a33cc", ROMX[$73cc], BANK[$28]
-
 Data_28_73cc:
 	db $03, $12, $08, $74, $d2, $73, $3a, $42, $4a, $52, $5a, $62, $6a, $72, $7a, $3d
 	db $45, $4d, $55, $5d, $65, $6d, $75, $7d, $3b, $43, $4b, $53, $5b, $63, $6b, $73
@@ -35203,14 +32923,10 @@ Data_28_73cc:
 	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
 	db $0e, $0e
 
-SECTION "analyzed_0a343e", ROMX[$743e], BANK[$28]
-
 Data_28_743e:
 	db $02, $00, $00, $36, $02, $00, $08, $3e, $02, $02, $00, $00, $46, $02, $00, $08
 	db $4e, $02, $02, $00, $00, $56, $02, $00, $08, $5e, $02, $02, $00, $00, $66, $02
 	db $00, $08, $6e, $02
-
-SECTION "analyzed_0a3462", ROMX[$7462], BANK[$28]
 
 Data_28_7462:
 	db $06, $00, $00, $28, $00, $00, $08, $30, $00, $00, $10, $38, $00, $10, $00, $2a
@@ -35220,8 +32936,6 @@ Data_28_7462:
 	db $00, $5a, $00, $10, $08, $62, $00, $10, $10, $6a, $00, $06, $00, $00, $70, $00
 	db $00, $08, $78, $00, $00, $10, $00, $08, $10, $00, $72, $00, $10, $08, $7a, $00
 	db $10, $10, $02, $08
-
-SECTION "analyzed_0a34c6", ROMX[$74c6], BANK[$28]
 
 Data_28_74c6:
 	db $1e, $08, $58, $08, $01, $08, $60, $10, $01, $08, $68, $18, $01, $18, $28, $82
@@ -35233,8 +32947,6 @@ Data_28_74c6:
 	db $01, $38, $40, $9e, $01, $38, $48, $a6, $01, $38, $50, $06, $01, $38, $58, $0e
 	db $01, $38, $60, $16, $01, $38, $68, $1e, $01, $3e, $74, $47, $74, $50, $74, $59
 	db $74
-
-SECTION "analyzed_0a3547", ROMX[$7547], BANK[$28]
 
 Data_28_7547:
 	db $62, $74, $7b, $74, $94, $74, $ad, $74
@@ -35271,17 +32983,11 @@ Data_29_7216:
 	db $22, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $21, $21, $21, $21
 	db $21, $21, $21, $21, $23, $08
 
-SECTION "analyzed_0a73ac", ROMX[$73ac], BANK[$29]
-
 Data_29_73ac:
 	db $0a, $14
 
-SECTION "analyzed_0a73ae", ROMX[$73ae], BANK[$29]
-
 Data_29_73ae:
 	db $7a, $74, $b2, $73
-
-SECTION "analyzed_0a73b2", ROMX[$73b2], BANK[$29]
 
 Data_29_73b2:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $47, $4b, $53, $5c, $fc, $fc, $fc, $fc, $fc, $fc
@@ -35311,12 +33017,8 @@ Data_29_73b2:
 	db $08, $08, $08, $08, $08, $0b, $0b, $21, $21, $21, $21, $21, $21, $21, $23, $08
 	db $0a, $14
 
-SECTION "analyzed_0a7544", ROMX[$7544], BANK[$29]
-
 Data_29_7544:
 	db $10, $76, $48, $75
-
-SECTION "analyzed_0a7548", ROMX[$7548], BANK[$29]
 
 Data_29_7548:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $6f, $79, $83, $8d, $97, $a1
@@ -35346,12 +33048,8 @@ Data_29_7548:
 	db $08, $08, $08, $08, $08, $08, $0b, $03, $03, $03, $03, $03, $03, $01, $01, $08
 	db $0a, $14
 
-SECTION "analyzed_0a76da", ROMX[$76da], BANK[$29]
-
 Data_29_76da:
 	db $a6, $77, $de, $76
-
-SECTION "analyzed_0a76de", ROMX[$76de], BANK[$29]
 
 Data_29_76de:
 	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -35379,8 +33077,6 @@ Data_29_76de:
 	db $01, $01, $01, $01, $01, $01, $03, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $01, $01, $01, $01, $01, $01, $01, $01, $03, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $08, $08, $03, $03, $03, $03, $03, $03, $01, $01, $03, $08
-
-SECTION "analyzed_0a786e", ROMX[$786e], BANK[$29]
 
 Data_29_786e:
 	db $0a, $14, $3c, $79, $74, $78, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
@@ -35410,8 +33106,6 @@ Data_29_786e:
 	db $03, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $03, $03, $03, $03
 	db $03, $03, $01, $01, $03, $08
 
-SECTION "analyzed_0a7a04", ROMX[$7a04], BANK[$29]
-
 Data_29_7a04:
 	db $1e, $30, $28, $00, $01, $30, $30, $08, $01, $30, $38, $10, $01, $30, $40, $18
 	db $01, $30, $48, $20, $01, $30, $50, $28, $01, $30, $58, $30, $01, $30, $60, $38
@@ -35423,13 +33117,9 @@ Data_29_7a04:
 	db $01, $50, $68, $44, $01, $50, $70, $4c, $01, $04, $00, $00, $80, $00, $00, $08
 	db $88, $00, $00, $10, $90, $00, $00, $18, $98, $00
 
-SECTION "analyzed_0a7a8e", ROMX[$7a8e], BANK[$29]
-
 Data_29_7a8e:
 	db $03, $00, $00, $82, $00, $00, $08, $8a, $00, $00, $10, $92, $00, $02, $00, $00
 	db $84, $00, $00, $08, $8c, $00
-
-SECTION "analyzed_0a7aa4", ROMX[$7aa4], BANK[$29]
 
 Data_29_7aa4:
 	db $04, $00, $00, $a0, $00, $00, $08, $a8, $00, $00, $10, $b0, $00, $00, $18, $b8
@@ -35449,17 +33139,11 @@ SECTION "analyzed_0a8000", ROMX[$4000], BANK[$2a]
 Data_2a_4000:
 	INCBIN "raw_gfx/Data_2a_4000.2bpp", 0, 5120
 
-SECTION "analyzed_0a9400", ROMX[$5400], BANK[$2a]
-
 Data_2a_5400:
 	db $00, $00, $bd, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0a9410", ROMX[$5410], BANK[$2a]
-
 Data_2a_5410:
 	INCBIN "raw_gfx/Data_2a_5410.2bpp", 0, 2048
-
-SECTION "analyzed_0a9c10", ROMX[$5c10], BANK[$2a]
 
 Data_2a_5c10:
 	db $00, $00, $ce, $39, $d6, $5a, $ff, $7f, $00, $00, $c0, $2c, $00, $00, $d6, $5a
@@ -36640,12 +34324,8 @@ Data_2b_6010:
 	db $d2, $03, $50, $70, $da, $03, $50, $78, $e2, $03, $50, $80, $ea, $03, $50, $88
 	db $ec, $03, $02, $11
 
-SECTION "analyzed_0af2a4", ROMX[$72a4], BANK[$2b]
-
 Data_2b_72a4:
 	db $ca, $72, $a8, $72
-
-SECTION "analyzed_0af2a8", ROMX[$72a8], BANK[$2b]
 
 Data_2b_72a8:
 	db $0f, $11, $b0, $03, $99, $02, $04, $b8, $c0, $c8, $d0, $d8, $e0, $e8, $f0, $f8
@@ -36654,12 +34334,8 @@ Data_2b_72a8:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af2ee", ROMX[$72ee], BANK[$2b]
-
 Data_2b_72ee:
 	db $14, $73, $f2, $72
-
-SECTION "analyzed_0af2f2", ROMX[$72f2], BANK[$2b]
 
 Data_2b_72f2:
 	db $12, $13, $00, $06, $04, $c0, $0f, $b8, $0e, $06, $b8, $00, $0c, $e8, $f0, $f8
@@ -36668,12 +34344,8 @@ Data_2b_72f2:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af338", ROMX[$7338], BANK[$2b]
-
 Data_2b_7338:
 	db $5e, $73, $3c, $73
-
-SECTION "analyzed_0af33c", ROMX[$733c], BANK[$2b]
 
 Data_2b_733c:
 	db $04, $03, $08, $13, $c0, $0f, $b8, $0e, $06, $b8, $00, $0c, $e8, $e8, $f0, $f8
@@ -36682,12 +34354,8 @@ Data_2b_733c:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af382", ROMX[$7382], BANK[$2b]
-
 Data_2b_7382:
 	db $a8, $73, $86, $73
-
-SECTION "analyzed_0af386", ROMX[$7386], BANK[$2b]
 
 Data_2b_7386:
 	db $12, $02, $11, $08, $0f, $13, $c0, $0f, $b8, $0e, $06, $b8, $00, $0c, $f0, $f8
@@ -36696,12 +34364,8 @@ Data_2b_7386:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af3cc", ROMX[$73cc], BANK[$2b]
-
 Data_2b_73cc:
 	db $f2, $73, $d0, $73
-
-SECTION "analyzed_0af3d0", ROMX[$73d0], BANK[$2b]
 
 Data_2b_73d0:
 	db $12, $02, $04, $0d, $04, $c0, $0f, $b8, $0e, $06, $b8, $00, $0c, $f0, $f0, $f8
@@ -36710,12 +34374,8 @@ Data_2b_73d0:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af416", ROMX[$7416], BANK[$2b]
-
 Data_2b_7416:
 	db $3c, $74, $1a, $74
-
-SECTION "analyzed_0af41a", ROMX[$741a], BANK[$2b]
 
 Data_2b_741a:
 	db $02, $07, $00, $b8, $00, $02, $13, $04, $b8, $d9, $03, $04, $12, $08, $06, $0d
@@ -36724,12 +34384,8 @@ Data_2b_741a:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af460", ROMX[$7460], BANK[$2b]
-
 Data_2b_7460:
 	db $86, $74, $64, $74
-
-SECTION "analyzed_0af464", ROMX[$7464], BANK[$2b]
 
 Data_2b_7464:
 	db $12, $13, $00, $06, $04, $d1, $06, $11, $00, $0f, $07, $08, $02, $e9, $e9, $f8
@@ -36738,12 +34394,8 @@ Data_2b_7464:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af4aa", ROMX[$74aa], BANK[$2b]
-
 Data_2b_74aa:
 	db $d0, $74, $ae, $74
-
-SECTION "analyzed_0af4ae", ROMX[$74ae], BANK[$2b]
 
 Data_2b_74ae:
 	db $0c, $0e, $0d, $12, $13, $04, $11, $d1, $06, $11, $00, $0f, $07, $08, $02, $f8
@@ -36752,12 +34404,8 @@ Data_2b_74ae:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af4f4", ROMX[$74f4], BANK[$2b]
-
 Data_2b_74f4:
 	db $1a, $75, $f8, $74
-
-SECTION "analyzed_0af4f8", ROMX[$74f8], BANK[$2b]
 
 Data_2b_74f8:
 	db $02, $07, $00, $b8, $00, $02, $13, $04, $b8, $d9, $06, $11, $00, $0f, $07, $08
@@ -36766,12 +34414,8 @@ Data_2b_74f8:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af53e", ROMX[$753e], BANK[$2b]
-
 Data_2b_753e:
 	db $64, $75, $42, $75
-
-SECTION "analyzed_0af542", ROMX[$7542], BANK[$2b]
 
 Data_2b_7542:
 	db $12, $0e, $14, $0d, $03, $d9, $03, $04, $12, $08, $06, $0d, $f9, $f9, $f9, $f9
@@ -36780,12 +34424,8 @@ Data_2b_7542:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $02, $11
 
-SECTION "analyzed_0af588", ROMX[$7588], BANK[$2b]
-
 Data_2b_7588:
 	db $ae, $75, $8c, $75
-
-SECTION "analyzed_0af58c", ROMX[$758c], BANK[$2b]
 
 Data_2b_758c:
 	db $80, $88, $90, $98, $a0, $a8, $b0, $b8, $c0, $c8, $d1, $d1, $f9, $f9, $f9, $f9
@@ -36794,12 +34434,8 @@ Data_2b_758c:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $08, $08, $08, $08, $04, $10
 
-SECTION "analyzed_0af5d2", ROMX[$75d2], BANK[$2b]
-
 Data_2b_75d2:
 	db $16, $76, $d6, $75
-
-SECTION "analyzed_0af5d6", ROMX[$75d6], BANK[$2b]
 
 Data_2b_75d6:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36812,12 +34448,8 @@ Data_2b_75d6:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af658", ROMX[$7658], BANK[$2b]
-
 Data_2b_7658:
 	db $9c, $76, $5c, $76
-
-SECTION "analyzed_0af65c", ROMX[$765c], BANK[$2b]
 
 Data_2b_765c:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36830,12 +34462,8 @@ Data_2b_765c:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af6de", ROMX[$76de], BANK[$2b]
-
 Data_2b_76de:
 	db $22, $77, $e2, $76
-
-SECTION "analyzed_0af6e2", ROMX[$76e2], BANK[$2b]
 
 Data_2b_76e2:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36848,12 +34476,8 @@ Data_2b_76e2:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af764", ROMX[$7764], BANK[$2b]
-
 Data_2b_7764:
 	db $a8, $77, $68, $77
-
-SECTION "analyzed_0af768", ROMX[$7768], BANK[$2b]
 
 Data_2b_7768:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36866,12 +34490,8 @@ Data_2b_7768:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af7ea", ROMX[$77ea], BANK[$2b]
-
 Data_2b_77ea:
 	db $2e, $78, $ee, $77
-
-SECTION "analyzed_0af7ee", ROMX[$77ee], BANK[$2b]
 
 Data_2b_77ee:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36884,12 +34504,8 @@ Data_2b_77ee:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af870", ROMX[$7870], BANK[$2b]
-
 Data_2b_7870:
 	db $b4, $78, $74, $78
-
-SECTION "analyzed_0af874", ROMX[$7874], BANK[$2b]
 
 Data_2b_7874:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36902,12 +34518,8 @@ Data_2b_7874:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af8f6", ROMX[$78f6], BANK[$2b]
-
 Data_2b_78f6:
 	db $3a, $79, $fa, $78
-
-SECTION "analyzed_0af8fa", ROMX[$78fa], BANK[$2b]
 
 Data_2b_78fa:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36920,12 +34532,8 @@ Data_2b_78fa:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0af97c", ROMX[$797c], BANK[$2b]
-
 Data_2b_797c:
 	db $c0, $79, $80, $79
-
-SECTION "analyzed_0af980", ROMX[$7980], BANK[$2b]
 
 Data_2b_7980:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36938,12 +34546,8 @@ Data_2b_7980:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afa02", ROMX[$7a02], BANK[$2b]
-
 Data_2b_7a02:
 	db $46, $7a, $06, $7a
-
-SECTION "analyzed_0afa06", ROMX[$7a06], BANK[$2b]
 
 Data_2b_7a06:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36956,12 +34560,8 @@ Data_2b_7a06:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afa88", ROMX[$7a88], BANK[$2b]
-
 Data_2b_7a88:
 	db $cc, $7a, $8c, $7a
-
-SECTION "analyzed_0afa8c", ROMX[$7a8c], BANK[$2b]
 
 Data_2b_7a8c:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36974,12 +34574,8 @@ Data_2b_7a8c:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afb0e", ROMX[$7b0e], BANK[$2b]
-
 Data_2b_7b0e:
 	db $52, $7b, $12, $7b
-
-SECTION "analyzed_0afb12", ROMX[$7b12], BANK[$2b]
 
 Data_2b_7b12:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -36992,12 +34588,8 @@ Data_2b_7b12:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afb94", ROMX[$7b94], BANK[$2b]
-
 Data_2b_7b94:
 	db $d8, $7b, $98, $7b
-
-SECTION "analyzed_0afb98", ROMX[$7b98], BANK[$2b]
 
 Data_2b_7b98:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -37010,12 +34602,8 @@ Data_2b_7b98:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afc1a", ROMX[$7c1a], BANK[$2b]
-
 Data_2b_7c1a:
 	db $5e, $7c, $1e, $7c
-
-SECTION "analyzed_0afc1e", ROMX[$7c1e], BANK[$2b]
 
 Data_2b_7c1e:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -37028,12 +34616,8 @@ Data_2b_7c1e:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afca0", ROMX[$7ca0], BANK[$2b]
-
 Data_2b_7ca0:
 	db $e4, $7c, $a4, $7c
-
-SECTION "analyzed_0afca4", ROMX[$7ca4], BANK[$2b]
 
 Data_2b_7ca4:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -37046,12 +34630,8 @@ Data_2b_7ca4:
 	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
 	db $04, $10
 
-SECTION "analyzed_0afd26", ROMX[$7d26], BANK[$2b]
-
 Data_2b_7d26:
 	db $6a, $7d, $2a, $7d
-
-SECTION "analyzed_0afd2a", ROMX[$7d2a], BANK[$2b]
 
 Data_2b_7d2a:
 	db $e2, $ea, $f2, $e2, $ea, $e2, $e2, $ea, $f2, $e2, $ea, $e2, $ea, $e2, $ea, $f2
@@ -38137,13 +35717,9 @@ Func_30_4000:
 	ld d, h
 	nop
 
-SECTION "analyzed_0c000a", ROMX[$400a], BANK[$30]
-
 Data_30_400a:
 	db $d9, $41, $dd, $41, $06, $42, $2f, $42, $54, $42, $00, $98, $42, $99, $ac, $98
 	db $4c, $99, $a3, $98
-
-SECTION "analyzed_0c001e", ROMX[$401e], BANK[$30]
 
 DrawTownScreen:
 	xor a
@@ -38303,47 +35879,29 @@ Func_30_4152:
 	ld [wGameScene], a
 	ret
 
-SECTION "analyzed_0c0167", ROMX[$4167], BANK[$30]
-
 Data_30_4167:
 	db $01, $03
-
-SECTION "analyzed_0c0169", ROMX[$4169], BANK[$30]
 
 Data_30_4169:
 	db $01, $03
 
-SECTION "analyzed_0c016b", ROMX[$416b], BANK[$30]
-
 Data_30_416b:
 	db $ff, $00
-
-SECTION "analyzed_0c016d", ROMX[$416d], BANK[$30]
 
 Data_30_416d:
 	db $ff, $00, $ff, $ff, $ff, $ff
 
-SECTION "analyzed_0c0173", ROMX[$4173], BANK[$30]
-
 Data_30_4173:
 	db $00, $ff
-
-SECTION "analyzed_0c0175", ROMX[$4175], BANK[$30]
 
 Data_30_4175:
 	db $00, $ff, $ff, $ff, $ff, $ff
 
-SECTION "analyzed_0c017b", ROMX[$417b], BANK[$30]
-
 Data_30_417b:
 	db $01, $03
 
-SECTION "analyzed_0c017d", ROMX[$417d], BANK[$30]
-
 Data_30_417d:
 	db $01, $03
-
-SECTION "analyzed_0c017f", ROMX[$417f], BANK[$30]
 
 Data_30_417f:
 	db $ff, $00
@@ -38383,8 +35941,6 @@ SECTION "analyzed_0c0188", ROMX[$4188], BANK[$30]
 Data_30_4188:
 	db $ff, $00, $ff, $ff, $ff, $ff, $ff
 
-SECTION "analyzed_0c018f", ROMX[$418f], BANK[$30]
-
 Data_30_418f:
 	db $01, $03, $01, $03, $ff, $00
 
@@ -38417,8 +35973,6 @@ SECTION "analyzed_0c01a1", ROMX[$41a1], BANK[$30]
 
 Data_30_41a1:
 	db $ff, $03, $67, $41, $7b, $41, $8f, $41
-
-SECTION "analyzed_0c01a9", ROMX[$41a9], BANK[$30]
 
 Func_30_41a9:
 	ld d, a
@@ -38551,12 +36105,8 @@ Func_30_428f:
 	call Func_00_35f9
 	ret
 
-SECTION "analyzed_0c0298", ROMX[$4298], BANK[$30]
-
 Data_30_4298:
 	db $f5, $78, $ea, $00, $c1, $f1, $c7, $df, $43, $4a, $cd, $09, $0c, $c9
-
-SECTION "analyzed_0c02a6", ROMX[$42a6], BANK[$30]
 
 Func_30_42a6:
 	ld hl, $792f
@@ -38616,23 +36166,15 @@ Func_30_430c:
 	and a
 	ret z
 
-SECTION "analyzed_0c0315", ROMX[$4315], BANK[$30]
-
 Data_30_4315:
 	db $fa, $f6, $d0, $e6, $03, $20, $09, $fa, $f8, $d0, $3d, $ea, $f8, $d0, $18, $00
-
-SECTION "analyzed_0c0325", ROMX[$4325], BANK[$30]
 
 Func_30_4325:
 	FAR_CALL $20, Func_20_796d
 	ret
 
-SECTION "analyzed_0c032e", ROMX[$432e], BANK[$30]
-
 Data_30_432e:
 	db $eb, $75, $f3, $75, $fb, $75, $03, $76
-
-SECTION "analyzed_0c0336", ROMX[$4336], BANK[$30]
 
 Func_30_4336:
 	ld a, [wScreenInput]
@@ -38813,12 +36355,8 @@ Func_30_4494:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_0c04a4", ROMX[$44a4], BANK[$30]
-
 Data_30_44a4:
 	db $e6, $45, $2d, $46, $8d, $46
-
-SECTION "analyzed_0c04aa", ROMX[$44aa], BANK[$30]
 
 DrawRoomStartScreen:
 	call Func_00_083c
@@ -39093,12 +36631,8 @@ Func_30_46db:
 	call Func_30_4855
 	jr Func_30_46f0
 
-SECTION "analyzed_0c06e4", ROMX[$46e4], BANK[$30]
-
 Data_30_46e4:
 	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
-
-SECTION "analyzed_0c06f0", ROMX[$46f0], BANK[$30]
 
 Func_30_46f0:
 	ret
@@ -39113,12 +36647,8 @@ Func_30_46f1:
 Func_30_4703:
 	jr Func_30_4711
 
-SECTION "analyzed_0c0705", ROMX[$4705], BANK[$30]
-
 Data_30_4705:
 	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
-
-SECTION "analyzed_0c0711", ROMX[$4711], BANK[$30]
 
 Func_30_4711:
 	ret
@@ -39147,12 +36677,8 @@ Func_30_4712:
 	or a
 	jr z, Func_30_4752
 
-SECTION "analyzed_0c0742", ROMX[$4742], BANK[$30]
-
 Data_30_4742:
 	db $fe, $01, $28, $07, $fa, $ec, $c2, $fe, $11, $28, $05, $21, $4c, $7b, $18, $03
-
-SECTION "analyzed_0c0752", ROMX[$4752], BANK[$30]
 
 Func_30_4752:
 	ld hl, $7b2e
@@ -39162,12 +36688,8 @@ Func_30_4752:
 Func_30_475d:
 	jr Func_30_476b
 
-SECTION "analyzed_0c075f", ROMX[$475f], BANK[$30]
-
 Data_30_475f:
 	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
-
-SECTION "analyzed_0c076b", ROMX[$476b], BANK[$30]
 
 Func_30_476b:
 	ret
@@ -39214,12 +36736,8 @@ Func_30_47b5:
 Func_30_47cb:
 	ret
 
-SECTION "analyzed_0c07cc", ROMX[$47cc], BANK[$30]
-
 Data_30_47cc:
 	db $08, $08, $08, $08
-
-SECTION "analyzed_0c07d0", ROMX[$47d0], BANK[$30]
 
 Func_30_47d0:
 	ld a, [wRoomType]
@@ -39279,12 +36797,8 @@ Func_30_4840:
 	call Func_30_486d
 	ret
 
-SECTION "analyzed_0c084d", ROMX[$484d], BANK[$30]
-
 Data_30_484d:
 	db $6e, $51, $80, $51, $92, $51, $a4, $51
-
-SECTION "analyzed_0c0855", ROMX[$4855], BANK[$30]
 
 Func_30_4855:
 	ld a, [wFadeLevel]
@@ -39495,8 +37009,6 @@ SECTION "analyzed_0c09f4", ROMX[$49f4], BANK[$30]
 Data_30_49f4:
 	db $00, $00, $00, $01, $01, $01, $02, $02, $02
 
-SECTION "analyzed_0c09fd", ROMX[$49fd], BANK[$30]
-
 Func_30_49fd:
 	ld a, [wRoomType]
 	cp $01
@@ -39571,8 +37083,6 @@ Func_30_4a81:
 	call Func_00_35d4
 	ret
 
-SECTION "analyzed_0c0a8d", ROMX[$4a8d], BANK[$30]
-
 Data_30_4a8d:
 	db $88, $70, $88, $70, $87, $6f, $87, $6f, $86, $6e, $86, $6e, $85, $6d, $85, $6d
 	db $84, $6c, $84, $6c, $83, $6b, $83, $6b, $82, $6a, $81, $69, $81, $69, $80, $68
@@ -39628,8 +37138,6 @@ Data_30_4a8d:
 	db $83, $70, $83, $71, $84, $71, $84, $72, $85, $72, $86, $73, $86, $73, $87, $74
 	db $87, $74, $88, $75, $89, $76, $65, $51, $77, $51, $89, $51, $9b, $51, $6e, $51
 	db $80, $51, $92, $51, $a4, $51
-
-SECTION "analyzed_0c0de3", ROMX[$4de3], BANK[$30]
 
 Func_30_4de3:
 	ld a, [$d0ff]
@@ -39705,50 +37213,32 @@ Func_30_4e47:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_0c0e66", ROMX[$4e66], BANK[$30]
-
 Func_30_4e66:
 	db $01
 	sbc a, e
 
-SECTION "analyzed_0c0e68", ROMX[$4e68], BANK[$30]
-
 Data_30_4e68:
 	db $e2, $9a, $c2, $9a, $a2, $9a, $82, $9a
-
-SECTION "analyzed_0c0e70", ROMX[$4e70], BANK[$30]
 
 Data_30_4e70:
 	db $41, $9a
 
-SECTION "analyzed_0c0e72", ROMX[$4e72], BANK[$30]
-
 Data_30_4e72:
 	db $22, $9a, $02, $9a, $e2, $99, $c2, $99
-
-SECTION "analyzed_0c0e7a", ROMX[$4e7a], BANK[$30]
 
 Data_30_4e7a:
 	db $82, $99
 
-SECTION "analyzed_0c0e7c", ROMX[$4e7c], BANK[$30]
-
 Data_30_4e7c:
 	db $62, $99, $42, $99, $22, $99, $02, $99
-
-SECTION "analyzed_0c0e84", ROMX[$4e84], BANK[$30]
 
 Func_30_4e84:
 	db $10
 	sub b
 
-SECTION "analyzed_0c0e86", ROMX[$4e86], BANK[$30]
-
 Data_30_4e86:
 	db $18, $88, $18, $80, $18, $78, $18, $70, $10, $60, $18, $58, $18, $50, $18, $48
 	db $18, $40, $10, $30, $20, $40, $60, $80
-
-SECTION "analyzed_0c0e9e", ROMX[$4e9e], BANK[$30]
 
 Func_30_4e9e:
 	ld a, [wFadeLevel]
@@ -39976,12 +37466,8 @@ Func_30_5023:
 	call DrawMetasprite
 	ret
 
-SECTION "analyzed_0c1033", ROMX[$5033], BANK[$30]
-
 Data_30_5033:
 	db $5e, $51, $7c, $51, $43, $52, $b1, $52
-
-SECTION "analyzed_0c103b", ROMX[$503b], BANK[$30]
 
 DrawRoomClearScreen:
 	xor a
@@ -40141,12 +37627,8 @@ Func_30_5178:
 	or a
 	jr z, Func_30_51ab
 
-SECTION "analyzed_0c11a0", ROMX[$51a0], BANK[$30]
-
 Data_30_51a0:
 	db $21, $c6, $c2, $3e, $99, $22, $22, $22, $22, $af, $77
-
-SECTION "analyzed_0c11ab", ROMX[$51ab], BANK[$30]
 
 Func_30_51ab:
 	ld hl, wFloorTimer
@@ -40213,12 +37695,8 @@ Func_30_51c2:
 	or a
 	jr z, Func_30_5219
 
-SECTION "analyzed_0c120e", ROMX[$520e], BANK[$30]
-
 Data_30_520e:
 	db $21, $c6, $c2, $3e, $99, $22, $22, $22, $22, $af, $77
-
-SECTION "analyzed_0c1219", ROMX[$5219], BANK[$30]
 
 Func_30_5219:
 	ld a, [wScreenFrame]
@@ -40560,12 +38038,8 @@ Func_30_552f:
 	cp $02
 	jr z, Func_30_55a6
 
-SECTION "analyzed_0c1544", ROMX[$5544], BANK[$30]
-
 Data_30_5544:
 	db $c3, $ca, $55
-
-SECTION "analyzed_0c1547", ROMX[$5547], BANK[$30]
 
 Func_30_5547:
 	call Func_30_565c
@@ -40619,16 +38093,12 @@ Func_30_55a6:
 	and a
 	jr nz, Func_30_555d
 
-SECTION "analyzed_0c15b7", ROMX[$55b7], BANK[$30]
-
 Data_30_55b7:
 	db $06, $28, $21, $cc, $73, $11, $a1, $99, $cd, $e9, $35, $3e, $03, $ea, $f3, $d0
 	db $c3, $47, $55, $f0, $8d, $fe, $00, $ca, $47, $55, $cd, $f8, $56, $06, $28, $21
 	db $7c, $73, $11, $66, $99, $cd, $e9, $35, $3e, $01, $ea, $f3, $d0, $af, $ea, $fe
 	db $d0, $ea, $ff, $d0, $ea, $f4, $d0, $ea, $f5, $d0, $ea, $f6, $d0, $ea, $f7, $d0
 	db $ca, $47, $55
-
-SECTION "analyzed_0c15fa", ROMX[$55fa], BANK[$30]
 
 Func_30_55fa:
 	ldh a, [hJoyRepeat]
@@ -40758,8 +38228,6 @@ Func_30_56d3:
 	call Func_30_5751
 	ret
 
-SECTION "analyzed_0c16f8", ROMX[$56f8], BANK[$30]
-
 Data_30_56f8:
 	db $11, $b2, $99, $0e, $03, $c5, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd
 	db $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd, $51, $57, $cd, $d1
@@ -40767,8 +38235,6 @@ Data_30_56f8:
 	db $cd, $51, $57, $cd, $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd
 	db $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd, $51, $57, $c1, $21
 	db $32, $00, $19, $54, $5d, $0d, $20, $ad, $c9
-
-SECTION "analyzed_0c1751", ROMX[$5751], BANK[$30]
 
 Func_30_5751:
 	ld a, $f8
@@ -40782,13 +38248,9 @@ Func_30_5751:
 	dec de
 	ret
 
-SECTION "analyzed_0c1760", ROMX[$5760], BANK[$30]
-
 Data_30_5760:
 	db $ed, $58, $54, $59, $c4, $59, $58, $5a, $b0, $5a, $05, $5b, $66, $5b, $ca, $5b
 	db $6b, $5c, $c8, $5c, $24, $5d, $5e, $5d, $cf, $5d, $54, $5e, $d9, $5e
-
-SECTION "analyzed_0c177e", ROMX[$577e], BANK[$30]
 
 DrawIntroBookScreen:
 	xor a
@@ -40893,17 +38355,11 @@ Func_30_5816:
 	call Func_00_36b8
 	ret
 
-SECTION "analyzed_0c1868", ROMX[$5868], BANK[$30]
-
 Data_30_5868:
 	db $29, $29
 
-SECTION "analyzed_0c186a", ROMX[$586a], BANK[$30]
-
 Data_30_586a:
 	db $29, $29
-
-SECTION "analyzed_0c186c", ROMX[$586c], BANK[$30]
 
 Data_30_586c:
 	db $29, $29, $29, $29, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
@@ -40919,12 +38375,8 @@ SECTION "analyzed_0c188a", ROMX[$588a], BANK[$30]
 Data_30_588a:
 	db $29, $29, $29, $04, $7a, $7d, $7a
 
-SECTION "analyzed_0c1891", ROMX[$5891], BANK[$30]
-
 Data_30_5891:
 	db $8e, $7a, $9b, $7a
-
-SECTION "analyzed_0c1895", ROMX[$5895], BANK[$30]
 
 Data_30_5895:
 	db $a4, $7a, $b5, $7a, $c2, $7a, $cb, $7a, $30, $74, $49, $74, $7a, $74, $ab, $74
@@ -40932,17 +38384,11 @@ Data_30_5895:
 	db $1c, $77, $8d, $77, $fe, $77, $6f, $78, $e0, $78, $51, $79, $c2, $79, $40, $70
 	db $c1, $70, $26, $71, $8f, $71, $ec, $71, $45, $72
 
-SECTION "analyzed_0c18cf", ROMX[$58cf], BANK[$30]
-
 Data_30_58cf:
 	db $16, $72
 
-SECTION "analyzed_0c18d1", ROMX[$58d1], BANK[$30]
-
 Data_30_58d1:
 	db $ac, $73, $42, $75, $d8, $76
-
-SECTION "analyzed_0c18d7", ROMX[$58d7], BANK[$30]
 
 Func_30_58d7:
 	push af
@@ -41005,13 +38451,9 @@ Func_30_592f:
 	call Func_30_58d7
 	ret
 
-SECTION "analyzed_0c1934", ROMX[$5934], BANK[$30]
-
 Data_30_5934:
 	db $68, $01, $20, $02, $20, $03, $28, $04, $20, $04, $18, $04, $18, $05, $18, $06
 	db $68, $04, $60, $04, $58, $04, $50, $04, $48, $04, $40, $04, $38, $04, $30, $04
-
-SECTION "analyzed_0c1954", ROMX[$5954], BANK[$30]
 
 Func_30_5954:
 	ld a, [wScreenPhase]
@@ -41838,14 +39280,10 @@ Func_30_5f84:
 	ld [wScreenFrame], a
 	jr Func_30_5f9a
 
-SECTION "analyzed_0c1f92", ROMX[$5f92], BANK[$30]
-
 Func_30_5f92:
 	ld a, [wFadeLevel]
 	and $01
 	ld [wScreenFrame], a
-
-SECTION "analyzed_0c1f9a", ROMX[$5f9a], BANK[$30]
 
 Func_30_5f9a:
 	ld a, [wScreenTimer]
@@ -41867,14 +39305,10 @@ Func_30_5fad:
 	ld [wScreenFrame], a
 	jr Func_30_5fc3
 
-SECTION "analyzed_0c1fbb", ROMX[$5fbb], BANK[$30]
-
 Func_30_5fbb:
 	ld a, [wFadeLevel]
 	and $01
 	ld [wScreenFrame], a
-
-SECTION "analyzed_0c1fc3", ROMX[$5fc3], BANK[$30]
 
 Func_30_5fc3:
 	ld a, [wScreenTimer]
@@ -41882,15 +39316,11 @@ Func_30_5fc3:
 	ld [wScreenTimer], a
 	ret
 
-SECTION "analyzed_0c1fcb", ROMX[$5fcb], BANK[$30]
-
 Data_30_5fcb:
 	db $a2, $72, $d0, $75, $ff, $ff, $56, $76, $ec, $72, $dc, $76, $36, $73, $62, $77
 	db $80, $73, $e8, $77, $ca, $73, $6e, $78, $ff, $ff, $f4, $78, $14, $74, $7a, $79
 	db $5e, $74, $00, $7a, $a8, $74, $86, $7a, $f2, $74, $0c, $7b, $ff, $ff, $92, $7b
 	db $3c, $75, $18, $7c, $ff, $ff, $9e, $7c, $86, $75, $24, $7d
-
-SECTION "analyzed_0c2007", ROMX[$6007], BANK[$30]
 
 Func_30_6007:
 	ld a, [wScreenInput]
@@ -41931,8 +39361,6 @@ Func_31_4000:
 	sbc a, [hl]
 	and h
 
-SECTION "analyzed_0c4006", ROMX[$4006], BANK[$31]
-
 Func_31_4006:
 	xor a
 	ldh [rIF], a
@@ -41959,8 +39387,6 @@ Func_31_4022:
 	ld [hl], a
 	ret
 
-SECTION "analyzed_0c402c", ROMX[$402c], BANK[$31]
-
 Func_31_402c:
 	ld hl, $c297
 	ld a, $a3
@@ -41975,8 +39401,6 @@ Func_31_4036:
 	ld a, $3e
 	ld [hl], a
 	ret
-
-SECTION "analyzed_0c4040", ROMX[$4040], BANK[$31]
 
 LinkExchangeConnect:
 	call Func_31_4022
@@ -42016,18 +39440,12 @@ Func_31_4085:
 	cp $00
 	jr nz, Func_31_4090
 
-SECTION "analyzed_0c408c", ROMX[$408c], BANK[$31]
-
 Data_31_408c:
 	db $3e, $01, $18, $0a
-
-SECTION "analyzed_0c4090", ROMX[$4090], BANK[$31]
 
 Func_31_4090:
 	ld a, $02
 	jr Func_31_409a
-
-SECTION "analyzed_0c4094", ROMX[$4094], BANK[$31]
 
 Func_31_4094:
 	ld a, $03
@@ -42035,14 +39453,10 @@ Func_31_4094:
 Func_31_4098:
 	ld a, $00
 
-SECTION "analyzed_0c409a", ROMX[$409a], BANK[$31]
-
 Func_31_409a:
 	ld [$d5c2], a
 	call Func_31_4010
 	ret
-
-SECTION "analyzed_0c40a1", ROMX[$40a1], BANK[$31]
 
 Func_31_40a1:
 	ld hl, $c297
@@ -42279,16 +39693,12 @@ Func_31_4267:
 	jp z, Func_31_42a4
 	jp LinkExchangeConnect
 
-SECTION "analyzed_0c4289", ROMX[$4289], BANK[$31]
-
 Func_31_4289:
 	ld a, $f1
 	ldh [rSB], a
 	ld a, $81
 	ldh [rSC], a
 	ret
-
-SECTION "analyzed_0c4292", ROMX[$4292], BANK[$31]
 
 Func_31_4292:
 	ld a, $f3
@@ -43082,8 +40492,6 @@ Data_32_401c:
 	db $00, $00, $ff, $7f, $ff, $7f, $ff, $7f, $00, $00, $1f, $00, $1f, $00, $1f, $00
 	db $00, $00, $5f, $4b, $b5, $01, $e0, $2c
 
-SECTION "analyzed_0c8034", ROMX[$4034], BANK[$32]
-
 Func_32_4034:
 	ld a, [wDisplayMonster]
 	ld hl, wMonsterUses
@@ -43134,12 +40542,8 @@ Func_32_4034:
 	ld [hl], c
 	ret
 
-SECTION "analyzed_0c809d", ROMX[$409d], BANK[$32]
-
 Data_32_409d:
 	db $01, $01, $a4, $40, $a3, $40, $a4, $08
-
-SECTION "analyzed_0c80a5", ROMX[$40a5], BANK[$32]
 
 ShowMonsterDetailScreen:
 	ld a, [wDisplayMonster]
@@ -43301,13 +40705,9 @@ LoadMonsterPalettes:
 	pop hl
 	ret
 
-SECTION "analyzed_0c81f7", ROMX[$41f7], BANK[$32]
-
 MonsterPaletteTable:
 	; per-monster -> $80-byte palette block, bank $0f $7191+$80*id
 	db $91, $71, $11, $72, $91, $72, $11, $73, $91, $73, $11, $74, $91, $74
-
-SECTION "analyzed_0c8205", ROMX[$4205], BANK[$32]
 
 Func_32_4205:
 	ld hl, MonsterDetailSetupTable
@@ -43323,13 +40723,9 @@ Func_32_4205:
 	ld l, a
 	jp hl
 
-SECTION "analyzed_0c8217", ROMX[$4217], BANK[$32]
-
 MonsterDetailSetupTable:
 	; per-monster -> a per-monster setup routine (jp hl)
 	db $25, $42, $3e, $42, $57, $42, $70, $42, $89, $42, $a2, $42, $bb, $42
-
-SECTION "analyzed_0c8225", ROMX[$4225], BANK[$32]
 
 Func_32_4225:
 	ld c, $00
@@ -43552,8 +40948,6 @@ Func_32_43ae:
 	xor a
 	ld [hObjPaletteDirty], a
 	jp Func_32_4339
-
-SECTION "analyzed_0c83bb", ROMX[$43bb], BANK[$32]
 
 Data_32_43bb:
 	db $01, $3c, $70, $48, $d5, $6a
@@ -43940,8 +41334,6 @@ SECTION "analyzed_0c9613", ROMX[$5613], BANK[$32]
 Data_32_5613:
 	INCBIN "raw_gfx/Data_32_5613.2bpp", 0, 1392
 
-SECTION "analyzed_0c9b83", ROMX[$5b83], BANK[$32]
-
 Data_32_5b83:
 	db $c8, $f0, $0c, $f0, $82, $fc, $c1, $fe, $01, $fe, $7f, $80, $40, $80, $c0
 
@@ -43949,8 +41341,6 @@ SECTION "analyzed_0c9dd3", ROMX[$5dd3], BANK[$32]
 
 Data_32_5dd3:
 	INCBIN "raw_gfx/Data_32_5dd3.2bpp", 0, 2112
-
-SECTION "analyzed_0ca613", ROMX[$6613], BANK[$32]
 
 Data_32_6613:
 	db $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c
@@ -44046,19 +41436,13 @@ SECTION "analyzed_0cc000", ROMX[$4000], BANK[$33]
 Data_33_4000:
 	INCBIN "raw_gfx/Data_33_4000.2bpp", 0, 12288
 
-SECTION "analyzed_0cf000", ROMX[$7000], BANK[$33]
-
 Data_33_7000:
 	db $82, $24, $d0, $39, $58, $46, $7d, $67, $82, $24, $24, $41, $65, $52, $19, $53
 	db $82, $24, $31, $31, $da, $2d, $24, $31, $82, $24, $31, $31, $3d, $2e, $7f, $63
 	db $82, $24, $27, $45, $cc, $35, $f6, $41, $b7, $10, $19, $26, $fc, $52, $7d, $67
 
-SECTION "analyzed_0cf030", ROMX[$7030], BANK[$33]
-
 Data_33_7030:
 	db $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03
-
-SECTION "analyzed_0cf040", ROMX[$7040], BANK[$33]
 
 Data_33_7040:
 	db $e0, $03, $52, $4a, $18, $57, $68, $3d, $00, $00, $00, $00, $00, $00, $00, $00
@@ -44678,8 +42062,6 @@ Func_38_4000:
 	call VramCopy16
 	ret
 
-SECTION "analyzed_0e001a", ROMX[$401a], BANK[$38]
-
 Data_38_401a:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
 	db $f8, $07, $f8, $07, $80, $7f, $80, $7f, $81, $7e, $10, $00, $10, $00, $10, $00
@@ -44938,12 +42320,8 @@ Data_38_401a:
 	db $0f, $f0, $01, $00, $01, $00, $01, $00, $ff, $00, $f0, $00, $00, $f0, $00, $f0
 	db $0f, $f0, $0f, $f0, $0f, $f0, $01, $fe, $01, $fe, $10, $00, $10, $00, $10, $00
 
-SECTION "analyzed_0e101a", ROMX[$501a], BANK[$38]
-
 Data_38_501a:
 	INCBIN "raw_gfx/Data_38_501a.2bpp", 0, 2048
-
-SECTION "analyzed_0e181a", ROMX[$581a], BANK[$38]
 
 Data_38_581a:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
@@ -45011,12 +42389,8 @@ Data_38_581a:
 	db $0f, $f0, $01, $00, $01, $00, $01, $00, $ff, $00, $f0, $00, $00, $f0, $00, $f0
 	db $0f, $f0, $0f, $f0, $0f, $f0, $01, $fe, $01, $fe, $10, $00, $10, $00, $10, $00
 
-SECTION "analyzed_0e1c1a", ROMX[$5c1a], BANK[$38]
-
 Data_38_5c1a:
 	INCBIN "raw_gfx/Data_38_5c1a.2bpp", 0, 1024
-
-SECTION "analyzed_0e201a", ROMX[$601a], BANK[$38]
 
 Data_38_601a:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
@@ -45084,12 +42458,8 @@ Data_38_601a:
 	db $0f, $f0, $01, $00, $01, $00, $01, $00, $ff, $00, $f0, $00, $00, $f0, $00, $f0
 	db $0f, $f0, $0f, $f0, $0f, $f0, $01, $fe, $01, $fe, $10, $00, $10, $00, $10, $00
 
-SECTION "analyzed_0e241a", ROMX[$641a], BANK[$38]
-
 Data_38_641a:
 	INCBIN "raw_gfx/Data_38_641a.2bpp", 0, 1024
-
-SECTION "analyzed_0e281a", ROMX[$681a], BANK[$38]
 
 Data_38_681a:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
@@ -45174,18 +42544,12 @@ Func_3b_4000:
 	call VramCopy16
 	ret
 
-SECTION "analyzed_0ec022", ROMX[$4022], BANK[$3b]
-
 Data_3b_4022:
 	db $3e, $01, $ea, $4f, $ff, $21, $b4, $54, $11, $00, $80, $01, $80, $02, $cd, $94
 	db $03, $c9
 
-SECTION "analyzed_0ec034", ROMX[$4034], BANK[$3b]
-
 Data_3b_4034:
 	INCBIN "raw_gfx/Data_3b_4034.2bpp", 0, 5120
-
-SECTION "analyzed_0ed434", ROMX[$5434], BANK[$3b]
 
 Data_3b_5434:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $fc, $ff, $ff, $fc
@@ -45704,8 +43068,6 @@ SECTION "analyzed_0f28a1", ROMX[$68a1], BANK[$3c]
 Data_3c_68a1:
 	INCBIN "raw_gfx/Data_3c_68a1.2bpp", 0, 1296
 
-SECTION "analyzed_0f2db1", ROMX[$6db1], BANK[$3c]
-
 Data_3c_6db1:
 	db $70, $30, $40, $30, $40, $30, $40, $20, $c0, $00, $80
 
@@ -45830,8 +43192,6 @@ Func_3d_4051:
 	ld b, $04
 	call Func_00_0732
 	ret
-
-SECTION "analyzed_0f4065", ROMX[$4065], BANK[$3d]
 
 Data_3d_4065:
 	db $8d, $4c, $ad, $5b, $cd, $67, $ed, $6f, $0d, $7f, $8d, $40, $ad, $4c, $cd, $5b
@@ -46274,12 +43634,8 @@ Data_3d_4065:
 	db $00, $00, $8c, $31, $94, $52, $bd, $77, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0f5bcd", ROMX[$5bcd], BANK[$3d]
-
 Data_3d_5bcd:
 	INCBIN "raw_gfx/Data_3d_5bcd.2bpp", 0, 2288
-
-SECTION "analyzed_0f64bd", ROMX[$64bd], BANK[$3d]
 
 Data_3d_64bd:
 	db $02, $08, $00, $00, $04, $00, $00, $00, $02, $00, $00, $00, $10, $00, $20
@@ -46290,12 +43646,8 @@ Data_3d_67cf:
 	db $0c, $09, $58, $2e, $5f, $20, $00, $00, $11, $28, $16, $39, $fa, $41, $00, $00
 	db $5d, $0d, $94, $52, $bd, $77, $00, $00, $00, $00, $00, $00, $00, $00
 
-SECTION "analyzed_0f67ed", ROMX[$67ed], BANK[$3d]
-
 Data_3d_67ed:
 	INCBIN "raw_gfx/Data_3d_67ed.2bpp", 0, 2048
-
-SECTION "analyzed_0f6fed", ROMX[$6fed], BANK[$3d]
 
 Data_3d_6fed:
 	db $00, $00, $49, $00, $71, $00, $b6, $1d, $00, $00, $72, $00, $df, $0c, $5f, $2e

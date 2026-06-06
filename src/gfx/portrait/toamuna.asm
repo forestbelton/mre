@@ -14,7 +14,6 @@ SECTION "ToamunaPortraitTiles", ROMX[$4000], BANK[$1a]
 ToamunaPortraitTiles:
 	INCBIN "assets/toamuna/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
 
-SECTION "ToamunaPortraitPaletteBg", ROMX[$5800], BANK[$1a]
 ToamunaPortraitPaletteBg:
 	INCBIN "assets/toamuna/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
@@ -28,10 +27,8 @@ ToamunaPortraitMapDesc:
 	dw ToamunaPortraitAttrMap                       ; CGB attribute map pointer
 	dw ToamunaPortraitIndexMap                      ; tile index map pointer
 
-SECTION "ToamunaPortraitIndexMap", ROMX[$5886], BANK[$1a]
 ToamunaPortraitIndexMap:
 	INCBIN "assets/toamuna/tilemap.bin"  ; 20x11 tile indices
 
-SECTION "ToamunaPortraitAttrMap", ROMX[$5962], BANK[$1a]
 ToamunaPortraitAttrMap:
 	INCBIN "assets/toamuna/attrmap.bin"  ; 20x11 CGB BG attributes
