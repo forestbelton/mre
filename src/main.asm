@@ -7,6 +7,7 @@ INCLUDE "wram.inc"
 INCLUDE "hram.inc"
 INCLUDE "util.inc"
 
+INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
 INCLUDE "banks.asm"
 INCLUDE "entity_script.inc"
