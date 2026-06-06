@@ -38,6 +38,12 @@ FIXARGS := --validate \
 SRC_ASM    := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
 INCLUDES   := $(wildcard include/*.inc)
 ASSET_SRC  := $(shell find assets -type f 2>/dev/null)
+# raw_gfx is 1:1 PNG -> 2bpp (rebuilt per-PNG); the PNG-driven assets are gated by
+# one stamp so they only rebuild when an asset PNG, the YAML, or a build script
+# changes -- not on every .asm edit.
+GFX_PNG     := $(wildcard $(GFX_DIR)/*.png)
+GFX_2BPP    := $(GFX_PNG:.png=.2bpp)
+ASSET_STAMP := $(BUILD_DIR)/assets.stamp
 # Linker script — centralizes section placement; sections are progressively
 # migrated off their source ROMX[$addr] offsets into here (see the file header).
 LINKSCRIPT := layout.link
@@ -57,23 +63,24 @@ verify: $(OUT)
 
 rom: $(OUT)
 
-$(OUT): $(SRC_ASM) $(INCLUDES) $(ASSET_SRC) $(LINKSCRIPT) | $(BUILD_DIR)
-	@# Build every gfx PNG into its 2bpp tile data.
-	@# `-c embedded` maps PNG pixels back to 2bpp values by the embedded
-	@# palette's index order, so the round-trip is byte-exact (the asm
-	@# INCBINs only the leading bytes; rgbgfx zero-pads the last tile-row).
-	@if [ -d $(GFX_DIR) ]; then \
-		for png in $(GFX_DIR)/*.png; do \
-			[ -e "$$png" ] || continue; \
-			$(RGBGFX) -c embedded -o "$${png%.png}.2bpp" "$$png" || exit 1; \
-		done; \
-	fi
-	@# All graphics assets are PNG-driven: assets/assets.yaml -> pngasset, via the
-	@# one entry point below. Adding an asset is a YAML edit, not a Makefile change.
-	$(PYTHON) tools/buildassets.py
+$(OUT): $(SRC_ASM) $(INCLUDES) $(GFX_2BPP) $(ASSET_STAMP) $(LINKSCRIPT) | $(BUILD_DIR)
 	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
 	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o
 	$(RGBFIX) $(FIXARGS) $@
+
+# raw_gfx: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.
+# `-c embedded` maps PNG pixels back to 2bpp values by the embedded palette's
+# index order, so the round-trip is byte-exact (the asm INCBINs only the leading
+# bytes; rgbgfx zero-pads the last tile-row).
+$(GFX_DIR)/%.2bpp: $(GFX_DIR)/%.png
+	$(RGBGFX) -c embedded -o $@ $<
+
+# All graphics assets are PNG-driven: assets/assets.yaml -> pngasset for each,
+# into build/assets/. The stamp gates the whole batch so it reruns only when an
+# asset PNG, the YAML, or a build script changes. Adding an asset is a YAML edit.
+$(ASSET_STAMP): $(ASSET_SRC) tools/buildassets.py tools/pngasset.py | $(BUILD_DIR)
+	$(PYTHON) tools/buildassets.py
+	@touch $@
 
 $(BUILD_DIR):
 	@mkdir -p $@
