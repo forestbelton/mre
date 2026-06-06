@@ -9,6 +9,7 @@ INCLUDE "util.inc"
 
 INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "link.asm"
 INCLUDE "banks.asm"
 INCLUDE "entity_script.inc"
 INCLUDE "room/scripts/fx.asm"
