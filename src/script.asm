@@ -7,6 +7,7 @@ ScriptDispatcherEnterAfterCall:
 	push hl
 	call WaitForNextFrame
 	pop hl
+
 ScriptDispatcherNext:
 	ld c, [hl]
 	inc hl

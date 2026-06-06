@@ -42,6 +42,14 @@ wMonsterMeta1Ptr:: ds 2  ; $CF34: portrait metasprite 1 (drawn by DrawMonster*Sp
 wMonsterMeta2Ptr:: ds 2  ; $CF36: portrait metasprite 2 (overlay; 0 if none)
 wMonsterBgMapPtr:: ds 2  ; $CF38: portrait BG tilemap (CopyBgMap; drawn by DrawMonster*BgMap)
 
+SECTION "wram_console", WRAM0[$C283]
+; Console / hardware detection, latched once at the reset entry (Func_00_0150).
+; The boot ROM hands the cartridge a hardware id in A -- $11 on Game Boy Color,
+; $01 on DMG -- stored in wConsoleType. wIsCgb caches the "== $11" test
+; (Func_00_01e2) so the hot CGB checks compile to a single `rst CheckCgb`.
+wConsoleType:: ds 1  ; $C283: boot hardware id ($11 = CGB, $01 = DMG/other)
+wIsCgb::       ds 1  ; $C284: 1 when running on Game Boy Color (wConsoleType == $11)
+
 SECTION "wram_sound_vars", WRAM0[$C28C]
 wCurrentSound:: ds 1 ; $C28C: ID of sound currently being played
 

@@ -10,8 +10,7 @@
 
 INCLUDE "script.inc"
 
-SECTION "kalum_07c2b1", ROMX[$42b1], BANK[$1f]
-
+SECTION "Kalum script", ROMX
 
 KalumScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.KalumVictory

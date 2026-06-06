@@ -2,8 +2,12 @@
 
 SECTION "analyzed_000000", ROM0[$0000]
 
-Data_00_0000:
-	db $85, $6f
+; RST $00 helper -- HL += A. The workhorse for table indexing:
+;   ld hl, Table  /  ld a, index  /  rst AddAToHL   (then rst DerefHL to load the
+; entry). 1-byte call; carry into H is handled by the $0002 tail below.
+AddAToHL:
+	add a, l
+	ld l, a
 
 SECTION "analyzed_000002", ROM0[$0002]
 
@@ -14,7 +18,8 @@ Func_00_0002:
 
 SECTION "analyzed_000008", ROM0[$0008]
 
-Func_00_0008:
+; RST $08 helper -- HL -= A (negates A via cpl/inc, then adds).
+SubAFromHL:
 	cpl
 	inc a
 	add a, l
@@ -25,7 +30,9 @@ Func_00_0008:
 
 SECTION "analyzed_000018", ROM0[$0018]
 
-Func_00_0018:
+; RST $18 helper -- HL = [HL]: load the little-endian word HL points at into HL.
+; Pairs with rst AddAToHL to fetch a table entry.
+DerefHL:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33,14 +40,19 @@ Func_00_0018:
 
 SECTION "analyzed_000020", ROM0[$0020]
 
-Func_00_0020:
-	ld a, [$c284]
+; RST $20 helper -- set Z from wIsCgb: `rst CheckCgb` then `jr z` (DMG) / `jr nz`
+; (CGB). The boot ROM leaves A = $11 on Game Boy Color / $01 on DMG; that's
+; latched in wConsoleType and cached here as wIsCgb. Gates the CGB-only paths
+; (rVBK VRAM banking, bulk VRAM copies, ...).
+CheckCgb:
+	ld a, [wIsCgb]
 	and a
 	ret
 
 SECTION "analyzed_000030", ROM0[$0030]
 
-Func_00_0030:
+; RST $30 helper -- DE += A.
+AddAToDE:
 	add a, e
 	ld e, a
 	ret nc
@@ -247,7 +259,7 @@ Func_00_005b:
 SECTION "analyzed_000150", ROM0[$0150]
 
 Func_00_0150:
-	ld [$c283], a
+	ld [wConsoleType], a
 Func_00_0153:
 	di
 	ld sp, $de00
@@ -303,7 +315,7 @@ Func_00_019e:
 	jr nz, Func_00_019e
 	dec c
 	jr nz, Func_00_0199
-	ld a, [$c284]
+	ld a, [wIsCgb]
 	cp $01
 	jr z, Func_00_01b3
 
@@ -358,7 +370,7 @@ Data_00_01d8:
 SECTION "analyzed_0001e2", ROM0[$01e2]
 
 Func_00_01e2:
-	ld a, [$c283]
+	ld a, [wConsoleType]
 	cp $11
 	jr z, Func_00_01ee
 
@@ -366,14 +378,14 @@ SECTION "analyzed_0001e9", ROM0[$01e9]
 
 Func_00_01e9:
 	xor a
-	ld [$c284], a
+	ld [wIsCgb], a
 	ret
 
 SECTION "analyzed_0001ee", ROM0[$01ee]
 
 Func_00_01ee:
 	ld a, $01
-	ld [$c284], a
+	ld [wIsCgb], a
 	call Func_00_0a04
 	jp Func_00_04cc
 Func_00_01f9:
@@ -402,7 +414,7 @@ Func_00_01fe:
 	ld hl, $9000
 	ld bc, $0010
 	call FillVram
-	rst $20
+	rst CheckCgb
 	jr z, Func_00_023c
 	ld a, $01
 	ldh [rVBK], a
@@ -418,7 +430,7 @@ Func_00_023c:
 	ld a, $81
 	ldh [rLCDC], a
 	ld sp, $de00
-	ld a, [$c283]
+	ld a, [wConsoleType]
 	jp Func_00_0153
 
 SECTION "analyzed_000252", ROM0[$0252]
@@ -541,7 +553,7 @@ WaitForNextFrame:
 	ldh a, [rIE]
 	rra
 	ret nc
-	rst $20
+	rst CheckCgb
 	jr z, HaltOnly
 	call Func_00_0643
 	call Func_00_0666
@@ -555,7 +567,7 @@ HaltIfC286Set:
 	jr z, HaltOnly
 	xor a
 	ld [$c286], a
-	rst $20
+	rst CheckCgb
 	ret nz
 	; NB: Not sure why ret immediately follows ret nz here.
 	ret
@@ -588,74 +600,81 @@ Data_00_031b:
 
 SECTION "analyzed_000348", ROM0[$0348]
 
-Func_00_0348:
-	rst $20
-	jr nz, Func_00_0361
-
-SECTION "analyzed_00034b", ROM0[$034b]
-
-Data_00_034b:
-	db $f3, $f0, $41, $cb, $4f, $20, $fa, $7e, $12, $f0, $41, $cb, $4f, $20, $f2, $fb
-	db $23, $13, $0d, $20, $eb, $c9
-
-SECTION "analyzed_000361", ROM0[$0361]
-
-Func_00_0361:
+; CopyToVramSafe -- copy C bytes from HL to DE without corrupting the display,
+; choosing a strategy by hardware (rst CheckCgb). DE is typically VRAM/OAM, which
+; the CPU may only touch while the PPU is blanked. C is the byte count, with C = 0
+; meaning 256 (CopyHLtoDE leans on this to move whole 256-byte pages). HL/DE are
+; left just past the copied range, C = 0. This is the per-segment worker behind
+; CopyHLtoDE / CopyBytesBanked.
+;
+;   CGB (.loop):     di, sync to the PPU via WaitForHBlank (returns instantly when
+;     the LCD is off), then blast a batch of up to 7 bytes, re-enabling interrupts
+;     briefly between batches -- double-speed CGB has the cycles to move several
+;     bytes per blanking window.
+;   DMG (.slowCopy): di, then one byte at a time -- poll rSTAT until the PPU is
+;     blanked (bit 1 clear = mode 0/1), write the byte, then re-check rSTAT: if the
+;     window closed around the write, retry the same byte (HL/DE/C not advanced);
+;     only commit (ei, inc hl, inc de, dec c) once the write is confirmed safe.
+;
+; in:  hl = source, de = destination, c = byte count (0 means 256)
+; out: hl, de advanced past the range; c = 0
+CopyToVramSafe:
+	rst CheckCgb
+	jr nz, .gbcCopy
+.dmgCopy:
+	di
+.waitVram:
+	ldh a, [rSTAT]
+	bit 1, a
+	jr nz, .waitVram
+	ld a, [hl]
+	ld [de], a
+	ldh a, [rSTAT]
+	bit 1, a
+	jr nz, .waitVram
+	ei
+	inc hl
+	inc de
+	dec c
+	jr nz, .dmgCopy
+	ret
+.gbcCopy:
 	di
 	call WaitForHBlank
+REPT 7
 	ld a, [hl+]
 	ld [de], a
 	inc de
 	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_0392
+	jr z, .done
+ENDR
 	ei
-	jr Func_00_0361
-Func_00_0392:
+	jr .gbcCopy
+.done:
 	ei
 	ret
+
+; TODO: Rename
+; CopyHLtoDE switches to the given ROM bank and performs a VRAM-safe copy.
+;
+; a		Bank to switch to
+; hl    Source address
+; de	Target address
+; bc    Number of bytes to copy
 CopyHLtoDE:
 	ld a, c
 	and c
-	jr z, Func_00_039e
-	call Func_00_0348
+	jr z, .copy2
+	call CopyToVramSafe
 	ld a, b
 	and b
 	ret z
-Func_00_039e:
-	call Func_00_0348
+.copy2:
+	call CopyToVramSafe
 	dec b
-	jr nz, Func_00_039e
+	jr nz, .copy2
 	ret
+
 FillVram:
 	call WaitForHBlank
 	ld a, d
@@ -728,7 +747,7 @@ Func_00_03e3:
 	add hl, bc
 	ld a, [hl+]
 	ld b, a
-	rst $18
+	rst DerefHL
 	ret
 	reti
 
@@ -764,7 +783,7 @@ Func_00_0413:
 	ret
 CallBankedHL:
 	ld d, a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, d
 	ld [$2fff], a
@@ -793,7 +812,7 @@ Func_00_0467:
 	ld [wSpawnX], a
 	pop af
 	ld d, a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, d
 	ld [$2fff], a
@@ -821,7 +840,7 @@ Func_00_0495:
 	ld [wSpawnPtr], a
 	ld a, l
 	ld [wSpawnPtr+1], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -880,7 +899,7 @@ FlushDirtyPalettes:
 	ret
 ; LoadBgPalettes: copy all 8 BG palettes ($40 bytes) from [HL] -> wBgPalettes.
 LoadBgPalettes:
-	rst $20
+	rst CheckCgb
 	ret z
 	di
 	ld d, h
@@ -927,7 +946,7 @@ FlushBgPalettes:
 ; LoadBgPalette: copy one BG palette ($08 bytes) from [HL] -> wBgPalettes + A*8.
 LoadBgPalette:
 	ld c, a
-	rst $20
+	rst CheckCgb
 	ret z
 	ld d, h
 	ld e, l
@@ -937,7 +956,7 @@ LoadBgPalette:
 	add a, a
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld c, $08
 	call CopyDEtoHL
 	ld a, $08
@@ -946,7 +965,7 @@ LoadBgPalette:
 	ret
 ; LoadObjPalettes: copy all 8 OBJ palettes ($40 bytes) from [HL] -> wObjPalettes.
 LoadObjPalettes:
-	rst $20
+	rst CheckCgb
 	ret z
 	di
 	ld d, h
@@ -993,7 +1012,7 @@ FlushObjPalettes:
 ; LoadObjPalette: copy one OBJ palette ($08 bytes) from [HL] -> wObjPalettes + A*8.
 LoadObjPalette:
 	ld b, a
-	rst $20
+	rst CheckCgb
 	ret z
 	ld a, b
 	di
@@ -1004,7 +1023,7 @@ LoadObjPalette:
 	add a, a
 	add a, a
 	ld hl, wObjPalettes
-	rst $00
+	rst AddAToHL
 	ld c, $08
 	call CopyDEtoHL
 	pop af
@@ -1021,7 +1040,7 @@ Data_00_059c:
 SECTION "analyzed_0005ae", ROM0[$05ae]
 
 Func_00_05ae:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld a, $01
 	ldh [$ffa6], a
@@ -1038,7 +1057,7 @@ Func_00_05ae:
 	ei
 	ret
 Func_00_05ca:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld a, $01
 	ldh [$ffa6], a
@@ -1080,7 +1099,7 @@ Func_00_05fd:
 SECTION "analyzed_000602", ROM0[$0602]
 
 Func_00_0602:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld a, $01
 	ldh [$ffa6], a
@@ -1098,7 +1117,7 @@ Func_00_0608:
 	ei
 	ret
 Func_00_061e:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld a, $01
 	ldh [$ffa6], a
@@ -1288,7 +1307,7 @@ Func_00_06f6:
 	ret
 Func_00_0716:
 	ld c, a
-	rst $20
+	rst CheckCgb
 	ret z
 	ld d, h
 	ld e, l
@@ -1298,7 +1317,7 @@ Func_00_0716:
 	add a, a
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, b
 	add a, a
 	add a, a
@@ -1311,7 +1330,7 @@ Func_00_0716:
 	ret
 Func_00_0732:
 	ld c, a
-	rst $20
+	rst CheckCgb
 	ret z
 	ld d, h
 	ld e, l
@@ -1321,7 +1340,7 @@ Func_00_0732:
 	add a, a
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, b
 	add a, a
 	add a, a
@@ -1346,7 +1365,7 @@ Func_00_076f:
 SECTION "analyzed_000786", ROM0[$0786]
 
 Func_00_0786:
-	rst $20
+	rst CheckCgb
 	ret z
 Func_00_0788:
 	call WaitForNextFrame
@@ -1355,7 +1374,7 @@ Func_00_0788:
 	call WaitForNextFrame
 	ret
 Func_00_0794:
-	rst $20
+	rst CheckCgb
 	ret z
 	call Func_00_0786
 	ld hl, $c201
@@ -1364,7 +1383,7 @@ Func_00_0794:
 	call Func_00_0602
 	jr Func_00_0786
 Func_00_07a7:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
 	ld hl, $c201
@@ -1377,7 +1396,7 @@ Func_00_07a7:
 	call Func_00_0602
 	jr Func_00_0786
 Func_00_07c5:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
 	ld hl, $c201
@@ -1390,7 +1409,7 @@ Func_00_07c5:
 	call Func_00_0602
 	jp Func_00_0786
 Func_00_07e4:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
 	ld hl, $c201
@@ -1406,7 +1425,7 @@ Func_00_07e4:
 SECTION "analyzed_000803", ROM0[$0803]
 
 Func_00_0803:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
 	ld hl, $c201
@@ -1422,7 +1441,7 @@ Func_00_0803:
 SECTION "analyzed_000822", ROM0[$0822]
 
 Func_00_0822:
-	rst $20
+	rst CheckCgb
 	jr z, Func_00_0834
 	ld hl, $0857
 	call LoadBgPalettes
@@ -1442,7 +1461,7 @@ Func_00_0834:
 SECTION "analyzed_00083c", ROM0[$083c]
 
 Func_00_083c:
-	rst $20
+	rst CheckCgb
 	jr z, Func_00_084e
 	ld hl, $0897
 	call LoadBgPalettes
@@ -1490,7 +1509,7 @@ Func_00_08e9:
 	push hl
 	and $07
 	ld hl, $0913
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	pop hl
 	ld b, $00
@@ -1500,7 +1519,7 @@ Func_00_08f6:
 	push de
 	push hl
 	ld a, b
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ldh [rBGP], a
 	ldh [rOBP0], a
@@ -1538,7 +1557,7 @@ Func_00_0903:
 	add a, a
 	add a, a
 	ld hl, wBgPalettes
-	rst $00
+	rst AddAToHL
 	ld c, $08
 	call CopyDEtoHL
 	ld a, [wBankCallTmp]
@@ -1553,7 +1572,7 @@ Func_00_094a:
 	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
@@ -1565,7 +1584,7 @@ Func_00_094a:
 	add a, a
 	add a, a
 	ld hl, wObjPalettes
-	rst $00
+	rst AddAToHL
 	ld c, $08
 	call CopyDEtoHL
 	ld a, [wBankCallTmp]
@@ -1580,7 +1599,7 @@ Func_00_0979:
 	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
@@ -1592,7 +1611,7 @@ Func_00_0979:
 	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
@@ -1610,7 +1629,7 @@ Func_00_09b1:
 	ld [$c29d], a
 	ld a, c
 	ld [$c29e], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
@@ -1627,7 +1646,7 @@ Func_00_09d5:
 	ld [$c29d], a
 	ld a, c
 	ld [$c29e], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [$c29e]
 	ld [$2fff], a
@@ -1647,7 +1666,7 @@ Func_00_09ff:
 	ld [Data_00_1fff], a
 	ret
 Func_00_0a04:
-	rst $20
+	rst CheckCgb
 	ret z
 	ld hl, $ff4d
 	bit 7, [hl]
@@ -1674,7 +1693,7 @@ CopyBgMap:
 	ld b, a
 	ld a, [hl+]
 	ld c, a
-	rst $20
+	rst CheckCgb
 	jr z, Func_00_0b65
 	push hl
 	push de
@@ -1691,7 +1710,7 @@ Func_00_0b65:
 	inc hl
 	inc hl
 Func_00_0b67:
-	rst $18
+	rst DerefHL
 Func_00_0b68:
 	push bc
 	ld b, $00
@@ -1699,7 +1718,7 @@ Func_00_0b68:
 	call CopyHLtoDE
 	pop de
 	ld a, $20
-	rst $30
+	rst AddAToDE
 	pop bc
 	dec b
 	jr nz, Func_00_0b68
@@ -1744,9 +1763,9 @@ Func_00_0bb4:
 	pop de
 	pop hl
 	ld a, $20
-	rst $00
+	rst AddAToHL
 	ld a, $20
-	rst $30
+	rst AddAToDE
 	dec b
 	jr nz, Func_00_0bb4
 	ret
@@ -1804,7 +1823,7 @@ Func_00_0c04:
 	ldh [$ffa7], a
 	ret
 DrawMetasprite:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wDrawBank]
 	ld [$2fff], a
@@ -1903,7 +1922,7 @@ Func_00_0c84:
 	push hl
 	ld hl, $0ce4
 	ld a, e
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	ldh [$ff9f], a
@@ -2347,7 +2366,7 @@ RunIntroScene:
 	add a, a
 	add a, l
 	ld hl, $0f71
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld [$2fff], a
 	ld a, [hl+]
@@ -2562,7 +2581,7 @@ Func_00_106f:
 	ret
 Func_00_108f:
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -2584,7 +2603,7 @@ Func_00_108f:
 	ret
 Func_00_10b5:
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -2602,7 +2621,7 @@ Func_00_10b5:
 	ld [$2fff], a
 	ret
 Func_00_10dc:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
@@ -2700,7 +2719,7 @@ Func_00_113e:
 	ret
 Func_00_1150:
 	push de
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
@@ -2711,20 +2730,21 @@ Func_00_1150:
 	ld [$2fff], a
 	pop de
 	ret
+
 Func_00_1164:
 	push bc
 	push hl
 	push af
 	and $07
 	ld hl, $1209
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	pop af
 	sra a
 	sra a
 	sra a
 	ld hl, $cfe9
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	or b
 	ld [hl], a
@@ -2732,13 +2752,26 @@ Func_00_1164:
 	pop bc
 	ret
 
-SECTION "analyzed_00117f", ROM0[$117f]
-
-Data_00_117f:
-	db $c5, $e5, $f5, $e6, $07, $21, $11, $12, $c7, $46, $f1, $cb, $2f, $cb, $2f, $cb
-	db $2f, $21, $e9, $cf, $c7, $7e, $a0, $77, $e1, $c1, $c9
-
-SECTION "analyzed_00119a", ROM0[$119a]
+Func_00_117f:
+	push bc
+	push hl
+	push af
+	and $07
+	ld hl, $1211
+	rst AddAToHL
+	ld b, [hl]
+	pop af
+	sra a
+	sra a
+	sra a
+	ld hl, $cfe9
+	rst AddAToHL
+	ld a, [hl]
+	and b
+	ld [hl], a
+	pop hl
+	pop bc
+	ret
 
 Func_00_119a:
 	push bc
@@ -2746,14 +2779,14 @@ Func_00_119a:
 	push af
 	and $07
 	ld hl, $1209
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	pop af
 	sra a
 	sra a
 	sra a
 	ld hl, $cfe9
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	and b
 	pop hl
@@ -2914,7 +2947,7 @@ SECTION "analyzed_001290", ROM0[$1290]
 Func_00_1290:
 	push hl
 	ld hl, $1220
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	ret
@@ -2933,15 +2966,15 @@ Func_00_12a8:
 Func_00_12ab:
 	ld d, a
 	ld hl, $1567
-	rst $00
-	ld a, [$7fff]
+	rst AddAToHL
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [hl]
 	ld [$2fff], a
 	ld a, d
 	add a, a
 	ld hl, $15bf
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
@@ -3849,13 +3882,13 @@ Func_00_1a6c:
 	FAR_CALL $12, Func_12_4798
 	ld a, [wMenuId]
 	ld hl, $1873
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wMenuItemCount], a
 	ld a, [wMenuId]
 	add a, a
 	ld hl, $1877
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld [wMenuItemPtr], a
 	ld a, [hl+]
@@ -4140,7 +4173,7 @@ Func_00_1c7e:
 	rrca
 	and $03
 	ld hl, $1bd9
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $03
 	ld c, $02
@@ -4250,7 +4283,7 @@ SECTION "analyzed_001d40", ROM0[$1d40]
 
 Func_00_1d40:
 	ld hl, $c4cd
-	rst $00
+	rst AddAToHL
 	call Func_00_1e34
 	jp z, Func_00_1de5
 Func_00_1d4a:
@@ -4298,7 +4331,7 @@ SECTION "analyzed_001d92", ROM0[$1d92]
 
 Func_00_1d92:
 	ld hl, $c4cd
-	rst $00
+	rst AddAToHL
 	call Func_00_1e34
 	jr z, Func_00_1de5
 Func_00_1d9b:
@@ -4346,7 +4379,7 @@ Func_00_1de5:
 	and $03
 	ld [$d0e7], a
 	ld hl, $1bd9
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $03
 	ld c, $02
@@ -4367,7 +4400,7 @@ Func_00_1de5:
 Func_00_1e1c:
 	ld a, [$d0e7]
 	ld hl, $1bdd
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $05
 	ld c, $02
@@ -4383,7 +4416,7 @@ Func_00_1e34:
 	ld hl, $c4fe
 Func_00_1e3b:
 	ld a, $05
-	rst $00
+	rst AddAToHL
 	ld e, $06
 Func_00_1e40:
 	ld a, [hl+]
@@ -4607,17 +4640,17 @@ Func_00_1f55:
 	cp $ff
 	jr z, Func_00_1f70
 	ld a, $05
-	rst $30
+	rst AddAToDE
 	jr Func_00_1f55
 Func_00_1f62:
 	ld hl, $9800
 Func_00_1f65:
 	ld a, $20
-	rst $00
+	rst AddAToHL
 	dec b
 	jr nz, Func_00_1f65
 	ld a, c
-	rst $00
+	rst AddAToHL
 	call StampFloorMetatile
 Func_00_1f70:
 	ret
@@ -4631,17 +4664,17 @@ Func_00_1f75:
 	cp $ff
 	jr z, Func_00_1f90
 	ld a, $05
-	rst $30
+	rst AddAToDE
 	jr Func_00_1f75
 Func_00_1f82:
 	ld hl, $9800
 Func_00_1f85:
 	ld a, $20
-	rst $00
+	rst AddAToHL
 	dec b
 	jr nz, Func_00_1f85
 	ld a, c
-	rst $00
+	rst AddAToHL
 	call Func_00_1f91
 Func_00_1f90:
 	ret
@@ -4668,12 +4701,12 @@ Func_00_1fa4:
 	jr z, Func_00_1fb2
 Func_00_1fac:
 	ld a, $20
-	rst $30
+	rst AddAToDE
 	dec b
 	jr nz, Func_00_1fac
 Func_00_1fb2:
 	ld a, c
-	rst $30
+	rst AddAToDE
 	pop bc
 Func_00_1fb5:
 	ld a, [hl+]
@@ -4771,7 +4804,7 @@ Func_00_2035:
 	add a, a
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld c, $04
 Func_00_203b:
 	ld a, [hl]
@@ -4860,7 +4893,7 @@ Func_00_20d1:
 	add a, a
 	add a, a
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld [hl], d
 	ret
 Func_00_20da:
@@ -4882,7 +4915,7 @@ Func_00_20f0:
 	ld hl, $c000
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, b
 	ld [hl+], a
 	ld [hl], c
@@ -4891,7 +4924,7 @@ Func_00_20fa:
 	ld hl, $c000
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, b
 	ld [hl+], a
 	ld a, c
@@ -4908,7 +4941,7 @@ Func_00_210d:
 	ld hl, $c002
 	add a, a
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, b
 	ld [hl+], a
 	ld [hl], c
@@ -4918,7 +4951,7 @@ Func_00_2117:
 	add a, a
 	add a, a
 	add a, $02
-	rst $00
+	rst AddAToHL
 	ld a, b
 	ld [hl+], a
 	ld a, c
@@ -4947,7 +4980,7 @@ Data_00_213b:
 SECTION "analyzed_002140", ROM0[$2140]
 
 Func_00_2140:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, $15
 	ld [$2fff], a
@@ -4973,7 +5006,7 @@ Func_00_2140:
 Func_00_217d:
 	xor a
 	ld [$c55f], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, $15
 	ld [$2fff], a
@@ -5061,7 +5094,7 @@ Func_00_221e:
 Func_00_2223:
 	xor a
 	ld [$c55f], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, $15
 	ld [$2fff], a
@@ -5421,10 +5454,10 @@ Func_00_25a9:
 	inc hl
 	ld a, [hl]
 	ld hl, $c4cd
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld hl, $2494
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	cp $01
@@ -5705,7 +5738,7 @@ Func_00_27e1:
 	add a, a
 	add a, c
 	add a, $05
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wGridCol], a
 Func_00_27f9:
@@ -5900,7 +5933,7 @@ Func_00_295d:
 	ld [wGridCol], a
 	ld hl, $c7d3
 	ld a, [wGridRow]
-	rst $00
+	rst AddAToHL
 	ld a, [wGridCol]
 	ld [hl], a
 	jr Func_00_29d7
@@ -5921,7 +5954,7 @@ Func_00_2984:
 	ld [wGridCol], a
 	ld hl, $c7d3
 	ld a, [wGridRow]
-	rst $00
+	rst AddAToHL
 	ld a, [wGridCol]
 	ld [hl], a
 	jr Func_00_29d7
@@ -5965,7 +5998,7 @@ Func_00_29d7:
 	and $03
 	push af
 	ld hl, $1be1
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $02
 	ld c, $02
@@ -5973,7 +6006,7 @@ Func_00_29d7:
 	call Func_00_2bf1
 	pop af
 	ld hl, $1bd9
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, [wGridRow]
 	add a, $03
@@ -6089,14 +6122,14 @@ Func_00_2ab6:
 	and $03
 	push af
 	ld hl, $1be1
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $00
 	ld c, $02
 	call Func_00_20d1
 	pop af
 	ld hl, $1bd9
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, $01
 	ld c, $02
@@ -6131,7 +6164,7 @@ Func_00_2b07:
 	ret
 Func_00_2b0d:
 	ld hl, $c4cd
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	cp $03
 	jr nc, Func_00_2b18
@@ -6184,7 +6217,7 @@ Func_00_2b4d:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	cp $ff
 	jr nz, Func_00_2b67
@@ -6204,7 +6237,7 @@ Func_00_2b6b:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [wGridCol]
 	cp $03
 	jr nz, Func_00_2b87
@@ -6221,7 +6254,7 @@ Func_00_2b89:
 	add a, a
 	add a, c
 	add a, $05
-	rst $00
+	rst AddAToHL
 	ld d, $00
 Func_00_2b99:
 	ld a, [hl+]
@@ -6256,7 +6289,7 @@ Func_00_2bbf:
 	inc d
 Func_00_2bc5:
 	ld a, $05
-	rst $00
+	rst AddAToHL
 	dec c
 	jr nz, Func_00_2bbf
 	ld c, $04
@@ -6266,7 +6299,7 @@ Func_00_2bd0:
 	cp $ff
 	jr z, Func_00_2be6
 	ld a, $04
-	rst $00
+	rst AddAToHL
 	ld e, $06
 Func_00_2bda:
 	ld a, [hl+]
@@ -6280,7 +6313,7 @@ Func_00_2be0:
 	jr Func_00_2be9
 Func_00_2be6:
 	ld a, $0b
-	rst $00
+	rst AddAToHL
 Func_00_2be9:
 	dec c
 	jr nz, Func_00_2bd0
@@ -6361,12 +6394,12 @@ Func_00_2c54:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wGridColCount], a
 	ld hl, $c7d3
 	ld a, [wGridRow]
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wGridCol], a
 	ret
@@ -6395,7 +6428,7 @@ Func_00_2c85:
 	add a, a
 	add a, c
 	add a, $02
-	rst $00
+	rst AddAToHL
 	ld de, $2c73
 	ld a, [$c7d2]
 	ld c, a
@@ -6404,7 +6437,7 @@ Func_00_2c85:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	cp $01
 	jr z, Func_00_2cc7
@@ -6455,7 +6488,7 @@ Func_00_2ce1:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [wGridCol]
 	ld [hl], a
 	ret
@@ -6468,7 +6501,7 @@ Func_00_2cf9:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	cp $05
 	jr z, Func_00_2d1d
@@ -6650,7 +6683,7 @@ SECTION "analyzed_002e20", ROM0[$2e20]
 
 Func_00_2e20:
 	ld a, $04
-	rst $00
+	rst AddAToHL
 	dec c
 	jr nz, Func_00_2e1a
 	ld a, b
@@ -6672,7 +6705,7 @@ SECTION "analyzed_002e37", ROM0[$2e37]
 
 Func_00_2e37:
 	ld a, $0b
-	rst $00
+	rst AddAToHL
 	dec c
 	jr nz, Func_00_2e31
 	ld a, b
@@ -6752,7 +6785,7 @@ Func_00_2e94:
 	ld hl, $c571
 	ld a, [$c56f]
 	add a, a
-	rst $00
+	rst AddAToHL
 	ld a, c
 	ld [hl+], a
 	ld a, b
@@ -6834,7 +6867,7 @@ Func_00_2f41:
 	cp $ff
 	jr z, Func_00_2f4b
 	ld a, $0c
-	rst $00
+	rst AddAToHL
 	jr Func_00_2f41
 Func_00_2f4b:
 	ld a, [wEditCursorX]
@@ -6872,14 +6905,14 @@ Func_00_2f65:
 	call Func_00_3700
 	add a, l
 	ld de, wFloorCollision
-	rst $30
+	rst AddAToDE
 	ld c, l
 	ld b, h
 	call Func_00_2e6a
 	ld a, [de]
 	ld l, a
 	ld a, $ee
-	rst $30
+	rst AddAToDE
 	ld a, $00
 	ld [de], a
 	ld a, l
@@ -6905,7 +6938,7 @@ Func_00_2fad:
 	call Func_00_3700
 	ld c, a
 	ld hl, $c58e
-	rst $00
+	rst AddAToHL
 	ld d, $00
 Func_00_2fb9:
 	ld a, [hl+]
@@ -6965,7 +6998,7 @@ Func_00_3005:
 	ld c, a
 	call CopyDEtoHL
 	ld a, [wFloorRowStride]
-	rst $30
+	rst AddAToDE
 	dec b
 	jr nz, Func_00_3005
 	ld de, wFloorGrid
@@ -6976,7 +7009,7 @@ Func_00_301a:
 	ld c, a
 	call CopyDEtoHL
 	ld a, [wFloorRowStride]
-	rst $30
+	rst AddAToDE
 	dec b
 	jr nz, Func_00_301a
 	ld c, $04
@@ -7025,7 +7058,7 @@ SECTION "analyzed_00305b", ROM0[$305b]
 Func_00_305b:
 	add a, a
 	ld hl, $3041
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -7046,7 +7079,7 @@ SECTION "analyzed_003071", ROM0[$3071]
 Func_00_3071:
 	add a, a
 	ld hl, $3041
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -7067,7 +7100,7 @@ Func_00_3089:
 	ld b, a
 	add a, a
 	ld hl, $3081
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -7082,7 +7115,7 @@ Func_00_3089:
 	jr z, Func_00_30ab
 Func_00_30a5:
 	ld a, $48
-	rst $00
+	rst AddAToHL
 	dec c
 	jr nz, Func_00_30a5
 Func_00_30ab:
@@ -7098,13 +7131,13 @@ Func_00_30b3:
 	jr z, Func_00_30cb
 	dec a
 	ld de, $c4cd
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	inc a
 	ld c, a
 Func_00_30c5:
 	ld a, $48
-	rst $00
+	rst AddAToHL
 	dec c
 	jr nz, Func_00_30c5
 Func_00_30cb:
@@ -7169,11 +7202,11 @@ Func_00_3121:
 	ld c, a
 	ld a, [wGridRow]
 	add a, c
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	add a, a
 	ld hl, $3113
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -7214,13 +7247,13 @@ Func_00_315e:
 	ld a, [$c55d]
 	add a, a
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	ld a, [$c55f]
 	ld e, a
-	rst $00
+	rst AddAToHL
 Func_00_316e:
 	ld [hl], c
 	ld a, e
@@ -7296,7 +7329,7 @@ Func_00_31c4:
 	call Func_00_31fa
 	ld a, $20
 	sub b
-	rst $00
+	rst AddAToHL
 	ld c, b
 	ld d, $fa
 	call Func_00_31fa
@@ -7307,7 +7340,7 @@ Func_00_31d5:
 	call Func_00_31e6
 	ld a, $20
 	sub b
-	rst $00
+	rst AddAToHL
 	ld c, b
 	ld d, $07
 	call Func_00_31e6
@@ -7354,13 +7387,7 @@ Func_00_31fa:
 	ld [hl+], a
 	dec c
 	jr nz, Func_00_31fa
-
-SECTION "analyzed_00320d", ROM0[$320d]
-
-Data_00_320d:
-	db $c9
-
-SECTION "analyzed_00320e", ROM0[$320e]
+	ret
 
 Func_00_320e:
 	call Func_00_083c
@@ -7393,7 +7420,7 @@ Func_00_3268:
 	ld h, a
 	push hl
 	ld a, [wMenuCursor]
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wMenuItemValue], a
 	pop hl
@@ -7406,7 +7433,7 @@ Func_00_3268:
 	ld a, [wMenuItemCount]
 	add a, c
 Func_00_3289:
-	rst $00
+	rst AddAToHL
 	ld d, $04
 	ld b, $01
 Func_00_328e:
@@ -7487,7 +7514,7 @@ Func_00_3355:
 	dec c
 	jr nz, Func_00_3355
 	ld a, $0e
-	rst $00
+	rst AddAToHL
 	dec e
 	jr nz, Func_00_3353
 	ld a, $01
@@ -7505,12 +7532,12 @@ Func_00_3374:
 	dec c
 	jr nz, Func_00_3374
 	ld a, $0e
-	rst $00
+	rst AddAToHL
 	dec e
 	jr nz, Func_00_3372
 	ret
 Func_00_3386:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, $17
 	ld [$2fff], a
@@ -7574,7 +7601,7 @@ Func_00_33dd:
 	ld hl, $4198
 	add hl, bc
 	ld c, $10
-	call Func_00_0348
+	call CopyToVramSafe
 	pop hl
 	pop bc
 	inc hl
@@ -7664,7 +7691,7 @@ Func_00_347e:
 	ld [$c7dc], a
 	add a, a
 	ld hl, $c7d6
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -7830,20 +7857,20 @@ Func_00_35c8:
 	ret
 Func_00_35d4:
 	ld c, a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
 	ld a, c
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
 	ret
 CopyBgMapBanked:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
@@ -7853,14 +7880,14 @@ CopyBgMapBanked:
 	ret
 Func_00_35f9:
 	ld c, a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
 	ld a, c
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, b
 	ld [wDrawBank], a
 	ld b, d
@@ -7870,7 +7897,7 @@ Func_00_35f9:
 	ld [$2fff], a
 	ret
 LoadPalettesBanked:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
 	ld [$2fff], a
@@ -7880,7 +7907,7 @@ LoadPalettesBanked:
 	call CopyDEtoHL
 	pop de
 	ld a, $40
-	rst $30
+	rst AddAToDE
 	ld hl, $c241
 	ld c, $40
 	call CopyDEtoHL
@@ -7899,7 +7926,7 @@ Func_00_3635:
 	dec de
 	ret
 Func_00_3646:
-	rst $20
+	rst CheckCgb
 	jr nz, Func_00_365f
 
 SECTION "analyzed_003649", ROM0[$3649]
@@ -7970,7 +7997,7 @@ Func_00_369c:
 	ret
 Func_00_36a3:
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -8215,7 +8242,7 @@ Func_00_380f:
 	db $db
 	sbc a, $e1
 	db $e4
-	rst $20
+	rst CheckCgb
 	ld [$eeec], a
 	pop af
 	di
@@ -8283,11 +8310,11 @@ Func_00_380f:
 	inc c
 	ld b, $00
 	ld a, [$eef4]
-	rst $20
+	rst CheckCgb
 	pop hl
 	db $db
 	push de
-	rst $08
+	rst SubAFromHL
 	ret z
 	jp nz, $b6bc
 	or b
@@ -8388,32 +8415,40 @@ Func_00_38e3:
 	push de
 	db $db
 	pop hl
-	rst $20
+	rst CheckCgb
 	xor $f4
 	db $fa
 
 SECTION "analyzed_003913", ROM0[$3913]
 
+; Func_00_3913 switches to a new ROM bank and copies bytes in it.
+; a		Bank to switch to
+; hl	Source address
+; de	Target address
+; bc	Number of bytes to copy
 Func_00_3913:
+	; Save current bank in wBankCallTmp and switch to target bank
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
-Func_00_3920:
+.loop:
 	ld a, [hl+]
 	ld [de], a
 	inc de
 	dec bc
 	ld a, c
 	or b
-	jr nz, Func_00_3920
+	jr nz, .loop
+	; Switch back to original bank
 	pop af
 	ld [$2fff], a
 	ret
+
 CopyBytesBanked:
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -8424,7 +8459,7 @@ CopyBytesBanked:
 
 CopyBgMapBankedA:
 	ld [wBankCallTmp], a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
@@ -8761,7 +8796,7 @@ Func_01_42e6:
 	dec a
 	add a, a
 	ld hl, $4335
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -8800,7 +8835,7 @@ Func_01_42f2:
 	call Func_01_4124
 	pop hl
 	ld a, $06
-	rst $00
+	rst AddAToHL
 	jr Func_01_42f2
 
 SECTION "analyzed_004335", ROMX[$4335], BANK[$01]
@@ -9818,7 +9853,7 @@ Func_01_4ab6:
 	cp $06
 	jr nz, Func_01_4b07
 	ld hl, wMonsterUses
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	or a
 	jr z, Func_01_4b07
@@ -10324,7 +10359,7 @@ Func_01_4dd9:
 	ld [$c2e5], a
 	and $07
 	ld hl, $4e01
-	rst $00
+	rst AddAToHL
 	ld a, [$c289]
 	add a, [hl]
 	ld [$c289], a
@@ -10855,7 +10890,7 @@ Func_01_57d0:
 	ld a, [$cf8e]
 	and $07
 	ld hl, $1209
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld a, [$cf8e]
 	sra a
@@ -10878,7 +10913,7 @@ Func_01_57f3:
 	ld a, [$cf8e]
 	and $07
 	ld hl, $1209
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld a, [$cf8e]
 	sra a
@@ -11266,7 +11301,7 @@ Func_01_5a90:
 	ret nc
 	add a, a
 	ld hl, $5aa1
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -11455,7 +11490,7 @@ Func_01_5ba8:
 	add a, b
 	add a, c
 	ld hl, wFloorGrid
-	rst $00
+	rst AddAToHL
 	pop bc
 	pop af
 	cp $00
@@ -11500,7 +11535,7 @@ Func_01_5be2:
 	add a, b
 	add a, c
 	ld hl, wFloorGrid
-	rst $00
+	rst AddAToHL
 	pop bc
 	pop af
 	cp $01
@@ -11651,13 +11686,7 @@ Func_01_5cbe:
 	jr z, Func_01_5d3b
 	cp $05
 	jr z, Func_01_5d59
-
-SECTION "analyzed_005ce1", ROMX[$5ce1], BANK[$01]
-
-Data_01_5ce1:
-	db $c9
-
-SECTION "analyzed_005ce2", ROMX[$5ce2], BANK[$01]
+	ret
 
 Func_01_5ce2:
 	ld a, $00
@@ -11672,6 +11701,7 @@ Func_01_5ce2:
 	ld a, $00
 	call Func_00_1164
 	ret
+
 Func_01_5cff:
 	ld a, $02
 	call Func_00_119a
@@ -11685,6 +11715,7 @@ Func_01_5cff:
 	ld a, $02
 	call Func_00_1164
 	ret
+
 Func_01_5d1d:
 	ld a, $04
 	call Func_00_119a
@@ -11698,6 +11729,7 @@ Func_01_5d1d:
 	ld a, $04
 	call Func_00_1164
 	ret
+
 Func_01_5d3b:
 	ld a, $06
 	call Func_00_119a
@@ -11711,6 +11743,7 @@ Func_01_5d3b:
 	ld a, $06
 	call Func_00_1164
 	ret
+
 Func_01_5d59:
 	ld a, $08
 	call Func_00_119a
@@ -11724,19 +11757,15 @@ Func_01_5d59:
 	ld a, $08
 	call Func_00_1164
 	ret
+
 Func_01_5d77:
 	ld a, [wActiveFloor]
 	cp $0f
 	jr z, Func_01_5d84
 	cp $1e
 	jr z, Func_01_5d99
-
-SECTION "analyzed_005d82", ROMX[$5d82], BANK[$01]
-
-Data_01_5d82:
-	db $af, $c9
-
-SECTION "analyzed_005d84", ROMX[$5d84], BANK[$01]
+	xor a
+	ret
 
 Func_01_5d84:
 	ld a, $0c
@@ -11747,6 +11776,7 @@ Func_01_5d84:
 	ld a, $0c
 	call Func_00_1164
 	ret
+
 Func_01_5d99:
 	ld a, $0d
 	call Func_00_119a
@@ -11756,6 +11786,7 @@ Func_01_5d99:
 	ld a, $0d
 	call Func_00_1164
 	ret
+
 Player_SummonMonster:
 	ld a, [wRoomType]
 	cp $02
@@ -13089,7 +13120,7 @@ Func_01_6613:
 	pop hl
 	push hl
 	ld hl, $666c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld b, [hl]
 	ld c, a
@@ -13358,7 +13389,7 @@ Func_01_686f:
 	sub $40
 	push hl
 	ld hl, wMonsterDiscStones
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	cp $09
 	jr z, Func_01_68c8
@@ -16258,7 +16289,7 @@ Func_02_4058:
 	ret
 Func_02_4065:
 	ld a, $08
-	rst $08
+	rst SubAFromHL
 	ld a, [hl]
 	or a
 	call nz, Func_02_4071
@@ -16911,7 +16942,7 @@ Func_04_4100:
 	ld a, [$cf68]
 	ld h, a
 	ld a, $04
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld [$cf6b], a
 	ld a, [hl]
@@ -16977,7 +17008,7 @@ Func_04_4157:
 	jr nz, Func_04_418f
 	ld a, c
 	ld hl, wFloorCollision
-	rst $00
+	rst AddAToHL
 	ld [hl], $22
 	pop bc
 	ret
@@ -17429,7 +17460,7 @@ SECTION "analyzed_0104ec", ROMX[$44ec], BANK[$04]
 Func_04_44ec:
 	push hl
 	ld hl, $447c
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	ret
@@ -20987,7 +21018,7 @@ Func_05_40b6:
 	ld [$cf63], a
 	and $07
 	ld hl, $40d7
-	rst $00
+	rst AddAToHL
 	ld c, [hl]
 	ldh a, [rSCY]
 	add a, c
@@ -21397,7 +21428,7 @@ Func_05_4349:
 	push hl
 	ld a, [wSceneState]
 	ld hl, $460a
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld de, $9800
 	ld a, [$cf49]
@@ -21421,7 +21452,7 @@ Func_05_4385:
 	push hl
 	ld a, [wSceneState]
 	ld hl, $460a
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld de, $9a00
 	ld a, [$cf49]
@@ -21472,7 +21503,7 @@ Func_05_43db:
 	push hl
 	ld a, [wSceneState]
 	ld hl, $4602
-	rst $00
+	rst AddAToHL
 	ld c, [hl]
 	pop hl
 	ld a, [$cf5a]
@@ -21505,7 +21536,7 @@ Func_05_440c:
 	push hl
 	ld a, [wSceneState]
 	ld hl, $4602
-	rst $00
+	rst AddAToHL
 	ld c, [hl]
 	pop hl
 	ld a, [$cf5a]
@@ -21587,7 +21618,7 @@ Func_05_449a:
 Func_05_44b4:
 	ld a, [wSceneState]
 	ld hl, $4612
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wDrawBank], a
 	ld a, [$cf50]
@@ -21614,14 +21645,14 @@ Func_05_44d8:
 	add a, a
 	push af
 	ld hl, $461a
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld [$cf41], a
 	ld a, [hl]
 	ld [$cf42], a
 	pop af
 	ld hl, $462a
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld [$cf4b], a
 	ld a, [hl]
@@ -21724,13 +21755,13 @@ Func_05_4588:
 Func_05_45a2:
 	ld a, [wSceneState]
 	ld hl, $45fa
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	push af
 	ld a, [wSceneState]
 	add a, a
 	ld hl, $45ea
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -21742,13 +21773,13 @@ Func_05_45a2:
 Func_05_45c1:
 	ld a, [wSceneState]
 	ld hl, $4602
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	push af
 	ld a, [wSceneState]
 	add a, a
 	ld hl, $45da
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -29478,7 +29509,7 @@ Func_0f_436e:
 	and $0c
 	srl a
 	ld hl, $43b3
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -29492,7 +29523,7 @@ Func_0f_436e:
 	and $0c
 	srl a
 	ld hl, $43ab
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -29761,7 +29792,7 @@ LoadDiscStoneDisplay:
 	dec a
 	add a, a
 	ld hl, DiscStoneDisplayTable
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -29990,7 +30021,7 @@ Func_0f_47a2:
 	ld a, l
 	add a, a
 	ld hl, $47f8
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30000,7 +30031,7 @@ Func_0f_47a2:
 	ld a, h
 	add a, a
 	ld hl, $47f8
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30017,7 +30048,7 @@ Func_0f_47cc:
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $47f8
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30047,7 +30078,7 @@ Func_0f_480c:
 	call WaitForHBlank
 	ld a, [wDisplayMonster]
 	ld hl, wMonsterUses
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, a
 	swap a
@@ -30155,7 +30186,7 @@ Func_0f_48f1:
 	ld a, [$cf66]
 	add a, a
 	ld hl, $493f
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30284,7 +30315,7 @@ Func_0f_49ca:
 	ld hl, $0000
 Func_0f_49d2:
 	ld a, [de]
-	rst $00
+	rst AddAToHL
 	inc de
 	dec c
 	jr nz, Func_0f_49d2
@@ -30301,12 +30332,12 @@ Func_0f_49dc:
 	swap a
 	and $0f
 	ld hl, wItemsSeen
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, b
 	and $07
 	ld hl, $1209
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	and d
@@ -30325,7 +30356,7 @@ Func_0f_49dc:
 Func_0f_4a05:
 	pop hl
 	ld a, $05
-	rst $00
+	rst AddAToHL
 	jr Func_0f_49dc
 
 SECTION "analyzed_03ca0b", ROMX[$4a0b], BANK[$0f]
@@ -30434,7 +30465,7 @@ LoadMonsterPortrait:
 	jr z, Func_0f_4ba3
 	add a, a
 	ld hl, MonsterPortraitMetaTable
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30455,7 +30486,7 @@ LoadMonsterPortrait:
 	ld a, [wDisplayMonster]
 	add a, a
 	ld hl, MonsterPortraitTileTable
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -30479,7 +30510,7 @@ Func_0f_4bb7:
 	ret z
 	add a, a
 	ld hl, $4bde
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -31263,7 +31294,7 @@ Func_10_40a4:
 	ld a, [$c4cb]
 	add a, a
 	ld hl, $408c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -31965,7 +31996,7 @@ Func_11_4036:
 	add a, a
 	add a, a
 	ld hl, FloorMonsterSpritePalettes
-	rst $00
+	rst AddAToHL
 	ld a, c
 	add a, $04
 	call LoadObjPalette
@@ -32003,7 +32034,7 @@ LoadFloorMonsterSprite:
 	add a, a
 	add a, a
 	ld hl, FloorMonsterSpritePalettes
-	rst $00
+	rst AddAToHL
 	ld a, [wMenuCursor]
 	add a, $03
 	call LoadObjPalette
@@ -32387,7 +32418,7 @@ SECTION "analyzed_048000", ROMX[$4000], BANK[$12]
 Func_12_4000:
 	ld e, [hl]
 	ld a, $ee
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld d, a
 	cp $40
@@ -32419,7 +32450,7 @@ Func_12_402c:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
-	rst $00
+	rst AddAToHL
 Func_12_4035:
 	xor a
 	cp c
@@ -32438,7 +32469,7 @@ Func_12_4046:
 	inc b
 	ld a, [wFloorRowStride]
 	inc a
-	rst $00
+	rst AddAToHL
 	ld a, [wFloorHeight]
 	dec a
 	cp b
@@ -32451,7 +32482,7 @@ Func_12_4057:
 	or a
 	jr nz, Func_12_4068
 	ld a, $ee
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	bit 7, a
 	jr z, Func_12_4068
@@ -32499,27 +32530,27 @@ Func_12_40a6:
 	ld hl, $9801
 Func_12_40b6:
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
 	jr z, Func_12_40ec
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $03
 	call FillVram
 	dec e
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $04
 	call FillVram
 	dec e
 	jr z, Func_12_40ec
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $05
 	call FillVram
@@ -32561,29 +32592,29 @@ Func_12_4120:
 	add a, a
 	dec a
 	ld hl, $9801
-	rst $00
+	rst AddAToHL
 Func_12_412f:
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $03
 	call FillVram
 	dec e
 	jr z, Func_12_4163
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $04
 	call FillVram
 	dec e
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $05
 	call FillVram
@@ -32597,7 +32628,7 @@ Func_12_4163:
 	ld hl, $9801
 Func_12_416e:
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
@@ -32619,10 +32650,10 @@ Func_12_4180:
 	add a, a
 	dec a
 	ld hl, $9801
-	rst $00
+	rst AddAToHL
 Func_12_419a:
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
@@ -32632,7 +32663,7 @@ Func_12_419a:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
-	rst $00
+	rst AddAToHL
 Func_12_41b2:
 	xor a
 	cp c
@@ -32651,7 +32682,7 @@ Func_12_41c3:
 	inc b
 	ld a, [wFloorRowStride]
 	inc a
-	rst $00
+	rst AddAToHL
 	ld a, [wFloorHeight]
 	dec a
 	cp b
@@ -33018,7 +33049,7 @@ SECTION "analyzed_048410", ROMX[$4410], BANK[$12]
 Func_12_4410:
 	add a, a
 	ld hl, $43e6
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33033,7 +33064,7 @@ Func_12_4424:
 Func_12_4426:
 	add a, a
 	ld hl, $43e6
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33042,7 +33073,7 @@ Func_12_4426:
 	ld [$c55e], a
 	add a, a
 	ld hl, $43f2
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33056,7 +33087,7 @@ Func_12_4441:
 	ld a, [$c55f]
 	ld hl, $9847
 	ld c, $01
-	rst $00
+	rst AddAToHL
 	ld d, $f8
 	call Func_00_31fa
 	ld a, [$c560]
@@ -33077,7 +33108,7 @@ Func_12_4477:
 	ld hl, $9982
 	ld c, $04
 Func_12_447e:
-	rst $00
+	rst AddAToHL
 	ld d, $06
 	call Func_00_31e6
 	pop bc
@@ -33100,7 +33131,7 @@ Func_12_44a1:
 	ld hl, $9982
 	ld c, $04
 Func_12_44a8:
-	rst $00
+	rst AddAToHL
 	ld d, $f8
 	call Func_00_31fa
 	ret
@@ -33132,7 +33163,7 @@ Func_12_44e6:
 Func_12_44e8:
 	add a, a
 	ld hl, $44af
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33147,7 +33178,7 @@ Func_12_44fc:
 Func_12_44fe:
 	add a, a
 	ld hl, $44af
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33156,7 +33187,7 @@ Func_12_44fe:
 	ld [wMenuId], a
 	add a, a
 	ld hl, $44bf
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33193,10 +33224,10 @@ Func_12_4548:
 	call ReadFloorCell
 	ld a, c
 	ld hl, wFloorCollision
-	rst $00
+	rst AddAToHL
 	ld a, c
 	ld de, wFloorGrid
-	rst $30
+	rst AddAToDE
 	ldh a, [$ffac]
 	bit 7, a
 	jr z, Func_12_455f
@@ -33458,7 +33489,7 @@ Func_12_4798:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
-	rst $00
+	rst AddAToHL
 Func_12_47b4:
 	xor a
 	cp c
@@ -33477,7 +33508,7 @@ Func_12_47c5:
 	inc b
 	ld a, [wFloorRowStride]
 	inc a
-	rst $00
+	rst AddAToHL
 	ld a, [wFloorHeight]
 	dec a
 	cp b
@@ -33521,7 +33552,7 @@ Func_12_480e:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
-	rst $00
+	rst AddAToHL
 Func_12_481d:
 	xor a
 	cp c
@@ -33540,7 +33571,7 @@ Func_12_482e:
 	inc b
 	ld a, [wFloorRowStride]
 	inc a
-	rst $00
+	rst AddAToHL
 	ld a, [wFloorHeight]
 	dec a
 	cp b
@@ -33589,11 +33620,11 @@ Func_12_4870:
 	cp $40
 	jr z, Func_12_48aa
 	ld a, $2a
-	rst $00
+	rst AddAToHL
 	jr Func_12_4870
 Func_12_488e:
 	ld a, $0c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	srl a
 	add a, e
@@ -33609,7 +33640,7 @@ Func_12_488e:
 	call Func_00_20f0
 	pop hl
 	ld a, $1b
-	rst $00
+	rst AddAToHL
 	jr Func_12_4870
 Func_12_48aa:
 	ld a, [hl]
@@ -33618,7 +33649,7 @@ Func_12_48aa:
 	bit 6, a
 	jr nz, Func_12_48c5
 	ld a, $0c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	srl a
 	add a, e
@@ -33632,7 +33663,7 @@ Func_12_48aa:
 	jr Func_12_48d3
 Func_12_48c5:
 	ld a, $0c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	srl a
 	add a, e
@@ -33685,12 +33716,12 @@ Func_12_48fb:
 	pop de
 	pop hl
 	ld a, $1b
-	rst $00
+	rst AddAToHL
 	jp Func_12_4870
 Func_12_490d:
 	ld e, [hl]
 	ld a, $ee
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld d, a
 	cp $40
@@ -33739,7 +33770,7 @@ Func_12_4941:
 Func_12_4958:
 	call WaitForHBlank
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	xor a
 	ldh [rVBK], a
 	ld [hl], d
@@ -33752,7 +33783,7 @@ Func_12_4958:
 	ld d, $54
 	call WaitForHBlank
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	xor a
 	ldh [rVBK], a
 	ld [hl], d
@@ -33789,12 +33820,12 @@ Func_12_4985:
 	ld a, [wFloorWidth]
 	dec a
 	pop hl
-	rst $00
+	rst AddAToHL
 	ld d, $51
 Func_12_49ad:
 	call WaitForHBlank
 	ld a, $1f
-	rst $00
+	rst AddAToHL
 	xor a
 	ldh [rVBK], a
 	ld [hl], d
@@ -33874,7 +33905,7 @@ Func_12_4a2b:
 	cp $ff
 	jr z, Func_12_4a4b
 	ld a, $05
-	rst $30
+	rst AddAToDE
 	jr Func_12_4a2b
 Func_12_4a38:
 	ld a, [$c7df]
@@ -33883,11 +33914,11 @@ Func_12_4a38:
 	ld h, a
 Func_12_4a40:
 	ld a, $20
-	rst $00
+	rst AddAToHL
 	dec b
 	jr nz, Func_12_4a40
 	ld a, c
-	rst $00
+	rst AddAToHL
 	call Func_00_1f91
 Func_12_4a4b:
 	ret
@@ -33925,7 +33956,7 @@ Func_12_4a79:
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a73
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33935,7 +33966,7 @@ Func_12_4a79:
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33944,7 +33975,7 @@ Func_12_4a79:
 	call Func_00_09ff
 	ld a, [wActiveFloor]
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, [wFloorHeight]
 	cp $0e
 	jr nz, Func_12_4ab5
@@ -33962,13 +33993,13 @@ Func_12_4ab8:
 	add a, a
 	ld b, a
 	ld hl, $4a61
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
 	ld hl, $4a6d
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33980,7 +34011,7 @@ Func_12_4ab8:
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -33991,13 +34022,13 @@ Func_12_4ab8:
 	add a, a
 	ld b, a
 	ld hl, $4a61
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34005,7 +34036,7 @@ Func_12_4ab8:
 	call CopyDEtoHL
 	ld a, [wActiveFloor]
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld [hl], $02
 	ret
 
@@ -34017,13 +34048,13 @@ Func_12_4b13:
 	add a, a
 	ld b, a
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
 	ld hl, $4a6d
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34032,7 +34063,7 @@ Func_12_4b13:
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34165,7 +34196,7 @@ Func_12_4c1a:
 	ld a, [$d0e7]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34175,7 +34206,7 @@ Func_12_4c1a:
 	ld a, [$d0e7]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34186,7 +34217,7 @@ Func_12_4c3e:
 	ld a, [$d0e7]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34197,13 +34228,13 @@ Func_12_4c3e:
 	add a, a
 	ld b, a
 	ld hl, $4a61
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
 	ld hl, $4a6d
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34215,7 +34246,7 @@ Func_12_4c3e:
 	ld a, [$d0e7]
 	add a, a
 	ld hl, $4a67
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34226,13 +34257,13 @@ Func_12_4c83:
 	add a, a
 	ld b, a
 	ld hl, $4a6d
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -34241,9 +34272,9 @@ Func_12_4c83:
 	ld [hl], $00
 	ld a, [$d0e7]
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, $06
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	cp $0e
 	jr nz, Func_12_4cb1
@@ -34984,14 +35015,14 @@ Func_13_4378:
 	rrca
 	and $03
 	ld hl, $4374
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	ld hl, $c00a
 	ld a, e
 	ld [hl+], a
 	ld [hl], $09
 	ld a, $03
-	rst $00
+	rst AddAToHL
 	ld a, e
 	add a, $08
 	ld [hl+], a
@@ -35018,14 +35049,14 @@ Func_13_4399:
 	rrca
 	and $03
 	ld hl, $4395
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	ld hl, $c00a
 	ld a, e
 	ld [hl+], a
 	ld [hl], $09
 	ld a, $03
-	rst $00
+	rst AddAToHL
 	ld a, e
 	add a, $08
 	ld [hl+], a
@@ -35114,28 +35145,28 @@ Func_13_4402:
 	call Func_13_4419
 	ret
 Func_13_4406:
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	ld hl, $c002
 	ld a, e
 	ld [hl+], a
 	ld [hl], $08
 	ld a, $03
-	rst $00
+	rst AddAToHL
 	ld a, e
 	add a, $08
 	ld [hl+], a
 	ld [hl], $08
 	ret
 Func_13_4419:
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	ld hl, $c002
 	ld a, e
 	ld [hl+], a
 	ld [hl], $28
 	ld a, $03
-	rst $00
+	rst AddAToHL
 	ld a, e
 	sub $08
 	ld [hl+], a
@@ -35196,7 +35227,7 @@ Func_13_4947:
 	ld a, [$cfbc]
 	add a, a
 	ld hl, $4884
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -35216,12 +35247,12 @@ Func_13_4972:
 	jr z, Func_13_497f
 Func_13_4979:
 	ld a, $20
-	rst $30
+	rst AddAToDE
 	dec c
 	jr nz, Func_13_4979
 Func_13_497f:
 	ld a, $02
-	rst $30
+	rst AddAToDE
 Func_13_4982:
 	ld a, [hl+]
 	ld c, a
@@ -35287,7 +35318,7 @@ Func_13_49d1:
 	ret
 Func_13_49df:
 	ld a, $40
-	rst $30
+	rst AddAToDE
 	ld a, e
 	and $e0
 	add a, $02
@@ -35326,7 +35357,7 @@ Func_13_4a18:
 	ld h, d
 	ld l, e
 	ld a, $20
-	rst $00
+	rst AddAToHL
 	xor a
 	ldh [rVBK], a
 	ld bc, $0001
@@ -35747,7 +35778,7 @@ ShowRegeneratedMonster:
 	ld a, [wActiveMonster]
 	add a, a
 	ld hl, $403f
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -35764,7 +35795,7 @@ ShowRegeneratedMonster:
 	ld a, [wActiveMonster]
 	swap a
 	rrca
-	rst $00
+	rst AddAToHL
 	ld a, $07
 	ld b, $01
 	call Func_00_0732
@@ -35895,11 +35926,11 @@ Func_14_41b3:
 	jr nz, Func_14_41de
 	ld a, c
 	ld hl, $419b
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, c
 	ld hl, $418b
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	jr Func_14_420e
 Func_14_41de:
@@ -35907,11 +35938,11 @@ Func_14_41de:
 	jr nz, Func_14_41f0
 	ld a, c
 	ld hl, $41a3
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, c
 	ld hl, $4193
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	jr Func_14_420e
 Func_14_41f0:
@@ -35919,21 +35950,21 @@ Func_14_41f0:
 	jr nz, Func_14_4202
 	ld a, c
 	ld hl, $41ab
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, c
 	ld hl, $418b
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 	jr Func_14_420e
 Func_14_4202:
 	ld a, c
 	ld hl, $41a3
-	rst $00
+	rst AddAToHL
 	ld d, [hl]
 	ld a, c
 	ld hl, $4183
-	rst $00
+	rst AddAToHL
 	ld e, [hl]
 Func_14_420e:
 	push de
@@ -35942,7 +35973,7 @@ Func_14_420e:
 Func_14_4214:
 	ld de, $d0eb
 	ld a, c
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	cp $10
 	jr nc, Func_14_422b
@@ -35980,7 +36011,7 @@ Func_14_4239:
 Func_14_423e:
 	ld de, $d0eb
 	ld a, c
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	cp $10
 	jr c, Func_14_4251
@@ -36145,7 +36176,7 @@ Func_14_4329:
 	ld a, [wActiveMonster]
 	ld d, a
 	ld hl, $4038
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld hl, $c050
 	ld c, $0c
@@ -36352,11 +36383,11 @@ Func_15_4015:
 Func_15_4041:
 	ld a, d
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	add a, a
 	ld hl, $4000
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36416,12 +36447,12 @@ Func_15_408a:
 	cp $03
 	jr nc, Func_15_40ac
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, a
 	add a, a
 	ld hl, $407e
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36436,7 +36467,7 @@ Func_15_40ac:
 	ld a, [$cfbe]
 	add a, a
 	ld hl, $4084
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36446,7 +36477,7 @@ Func_15_40bb:
 	ld a, c
 	add a, a
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36503,7 +36534,7 @@ Func_15_4101:
 	ld hl, $8000
 	add hl, bc
 	ld c, $10
-	call Func_00_0348
+	call CopyToVramSafe
 	pop hl
 	jr Func_15_40cc
 
@@ -36551,7 +36582,7 @@ Func_15_4147:
 	add a, a
 	push af
 	ld hl, $4141
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36559,7 +36590,7 @@ Func_15_4147:
 	call CopyBgMap
 	pop af
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36568,11 +36599,11 @@ Func_15_4147:
 	call Func_00_1fa4
 	ld a, [$c55d]
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	add a, a
 	ld hl, $4000
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -36624,7 +36655,7 @@ Func_15_41cf:
 	swap a
 	rrca
 	ld hl, $74c6
-	rst $00
+	rst AddAToHL
 	ld a, b
 	add a, $03
 	ld b, $01
@@ -37469,7 +37500,7 @@ Func_16_4016:
 	ld c, a
 	add a, a
 	ld hl, $4000
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -37818,7 +37849,7 @@ Func_17_4113:
 	inc hl
 	inc e
 	ld a, $0d
-	rst $00
+	rst AddAToHL
 	dec d
 	jr nz, Func_17_40fc
 	pop hl
@@ -37865,7 +37896,7 @@ Func_17_416c:
 	ld c, a
 	add a, a
 	ld hl, $414c
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -40423,9 +40454,10 @@ Func_1f_40bd:
 	dec c
 	jr nz, Func_1f_40bd
 	ret
-Func_1f_40d9:
+
+ScriptWaitForBgSwap:
 	ld c, $20
-Func_1f_40db:
+.loop:
 	push bc
 	ld a, $09
 	ld [hBgPaletteDirty], a
@@ -40435,11 +40467,13 @@ Func_1f_40db:
 	call WaitForNextFrame
 	pop bc
 	dec c
-	jr nz, Func_1f_40db
+	jr nz, .loop
 	ret
-Func_1f_40f1:
+
+; ScriptWaitForObjSwap swaps between 32 OBJ palettes, swapping every other frame.
+ScriptWaitForObjSwap:
 	ld c, $20
-Func_1f_40f3:
+.loop:
 	push bc
 	ld a, $09
 	ld [hObjPaletteDirty], a
@@ -40449,8 +40483,9 @@ Func_1f_40f3:
 	call WaitForNextFrame
 	pop bc
 	dec c
-	jr nz, Func_1f_40f3
+	jr nz, .loop
 	ret
+
 Func_1f_4109:
 	ld a, [wActiveFloor]
 	cp $01
@@ -40463,11 +40498,7 @@ Func_1f_4109:
 	jr z, Func_1f_4157
 	cp $05
 	jr z, Func_1f_4169
-
-SECTION "analyzed_07c120", ROMX[$4120], BANK[$1f]
-
-Data_1f_4120:
-	db $c9
+	ret
 
 SECTION "analyzed_07c121", ROMX[$4121], BANK[$1f]
 
@@ -40478,6 +40509,7 @@ Func_1f_4121:
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
+
 Func_1f_4133:
 	FAR_CALL $1f, Mistral_StartEncounter
 	push af
@@ -40485,6 +40517,7 @@ Func_1f_4133:
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
+
 Func_1f_4145:
 	FAR_CALL $1f, Rafaga_StartEncounter
 	push af
@@ -40506,6 +40539,7 @@ Func_1f_4169:
 	call PlaySoundTracked
 	pop af
 	jp Func_00_3957
+
 Kalum_StartEncounter:
 	call Func_00_0822
 	call HideAllSprites
@@ -40513,23 +40547,23 @@ Kalum_StartEncounter:
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1d
-	ld hl, $4000
+	ld hl, KalumPortraitTiles
 	ld de, $8000
 	ld bc, $1800
 	call CopyBytesBanked
-	ld hl, $5880
+	ld hl, KalumPortraitMapDesc
 	ld a, $1d
-	ld de, $9800
+	ld de, TILEMAP0
 	call CopyBgMapBankedA
 	call Kalum_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1d
-	ld hl, $5800
+	ld hl, KalumPortraitPaletteBg
 	ld de, wBgPalettes
 	ld bc, $0030
 	call Func_00_3913
 	ld a, $1d
-	ld hl, $5840
+	ld hl, KalumPortraitPaletteObj
 	ld de, wObjPalettes
 	ld bc, $0030
 	call Func_00_3913
@@ -40540,30 +40574,35 @@ Kalum_StartEncounter:
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
-	ld hl, $42b1
+	ld hl, KalumScript
 	jp ScriptDispatcherEnterAfterCall
+
 Func_1f_41da:
 	ld de, $4000
 	ld hl, wBgPalettes
 	ld c, $08
 	call CopyDEtoHL
 	ret
+
 Func_1f_41e6:
 	ld de, $4000
 	ld hl, $c169
 	ld c, $08
 	call CopyDEtoHL
 	ret
+
 Kalum_ShowMonsterPortrait:
 	call Kalum_LoadMonsterTiles
 	call Func_1f_41e6
-	jp Func_1f_40d9
+	jp ScriptWaitForBgSwap
+
 Kalum_ShowMonsterPortrait2:
 	call Kalum_LoadMonsterTiles
-	jp Func_1f_40f1
+	jp ScriptWaitForObjSwap
+
 Kalum_LoadMonsterTiles:
 	ld a, $1d
-	ld hl, $5800
+	ld hl, KalumPortraitPaletteBg
 	ld de, $c181
 	ld bc, $0030
 	call Func_00_3913
@@ -40572,7 +40611,7 @@ Kalum_LoadMonsterTiles:
 	ld c, $10
 	call CopyDEtoHL
 	ld a, $1d
-	ld hl, $5840
+	ld hl, KalumPortraitPaletteObj
 	ld de, $c1c1
 	ld bc, $0030
 	call Func_00_3913
@@ -40581,6 +40620,7 @@ Kalum_LoadMonsterTiles:
 	ld c, $10
 	call CopyDEtoHL
 	ret
+
 Kalum_AnimateMonsterPortrait:
 	ld a, $34
 	ld [wRendererAddr], a
@@ -40684,10 +40724,10 @@ Mistral_StartEncounter:
 Mistral_ShowMonsterPortrait:
 	call Mistral_LoadMonsterTiles
 	call Func_1f_41e6
-	jp Func_1f_40d9
+	jp ScriptWaitForBgSwap
 Mistral_ShowMonsterPortrait2:
 	call Mistral_LoadMonsterTiles
-	jp Func_1f_40f1
+	jp ScriptWaitForObjSwap
 Mistral_LoadMonsterTiles:
 	ld a, $35
 	ld hl, $6000
@@ -40839,10 +40879,10 @@ Rafaga_StartEncounter:
 Rafaga_ShowMonsterPortrait:
 	call Rafaga_LoadMonsterTiles
 	call Func_1f_41e6
-	jp Func_1f_40d9
+	jp ScriptWaitForBgSwap
 Rafaga_ShowMonsterPortrait2:
 	call Rafaga_LoadMonsterTiles
-	jp Func_1f_40f1
+	jp ScriptWaitForObjSwap
 Rafaga_LoadMonsterTiles:
 	ld a, $1d
 	ld hl, $7319
@@ -40951,10 +40991,10 @@ Tempest_StartEncounter:
 Tempest_ShowMonsterPortrait:
 	call Tempest_LoadMonsterTiles
 	call Func_1f_41e6
-	jp Func_1f_40d9
+	jp ScriptWaitForBgSwap
 Tempest_ShowMonsterPortrait2:
 	call Tempest_LoadMonsterTiles
-	jp Func_1f_40f1
+	jp ScriptWaitForObjSwap
 Tempest_LoadMonsterTiles:
 	ld a, $1e
 	ld hl, $73e7
@@ -41173,10 +41213,12 @@ Nada_ShowRageScene:
 Nada_ShowMonsterPortrait:
 	call Nada_LoadMonsterTiles
 	call Func_1f_41e6
-	jp Func_1f_40d9
+	jp ScriptWaitForBgSwap
+
 Nada_ShowMonsterPortrait2:
 	call Nada_LoadMonsterTiles
-	jp Func_1f_40f1
+	jp ScriptWaitForObjSwap
+
 Nada_LoadMonsterTiles:
 	ld a, $1c
 	ld hl, $7000
@@ -42958,8 +43000,8 @@ Func_20_796d:
 Func_20_7980:
 	ld a, [wScreenAnim2]
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, l
 	cp $ff
 	jr nz, Func_20_7990
@@ -42979,7 +43021,7 @@ Func_20_7990:
 	srl a
 	and $07
 	add a, a
-	rst $30
+	rst AddAToDE
 	ld a, [de]
 	ld c, a
 	inc de
@@ -46903,8 +46945,8 @@ Func_30_405a:
 	ld hl, $4014
 	ld a, c
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld d, h
 	ld e, l
 	ld hl, $78f3
@@ -46997,8 +47039,8 @@ Func_30_411b:
 	ld a, [wScreenInput]
 	add a, a
 	ld hl, $400a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	jp hl
 Func_30_4129:
 	call Func_30_42ef
@@ -47149,13 +47191,13 @@ Func_30_41a9:
 	ld hl, $41a3
 	ld a, [$d0fb]
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, [wScreenInput]
 	add a, a
 	add a, a
 	add a, d
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld c, a
 	cp $ff
@@ -47405,8 +47447,8 @@ Func_30_4387:
 	ld a, [wScreenAnim]
 	add a, a
 	ld hl, $432e
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	push hl
 	ld a, $02
 	ld b, $01
@@ -47642,8 +47684,8 @@ Func_30_456a:
 	ld a, [wScreenPhase]
 	add a, a
 	ld hl, $44a4
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	jp hl
 	ld a, [wScreenPhase]
 	cp $03
@@ -47857,7 +47899,7 @@ Func_30_4712:
 	ld a, [wScreenAnim]
 	add a, a
 	ld hl, $12db
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -47866,7 +47908,7 @@ Func_30_4712:
 	call Func_00_1fa4
 	ld a, [wScreenAnim]
 	ld hl, $c7f6
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	or a
 	jr z, Func_30_4752
@@ -48017,8 +48059,8 @@ Func_30_4855:
 	srl a
 	add a, a
 	ld hl, $484d
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, $02
 	ld [wDrawBank], a
 	call DrawMetasprite
@@ -48030,7 +48072,7 @@ Func_30_486d:
 	call CopyHLtoDE
 	pop de
 	ld a, $20
-	rst $30
+	rst AddAToDE
 	pop bc
 	dec b
 	jr nz, Func_30_486d
@@ -48124,7 +48166,7 @@ Func_30_4931:
 	call Func_00_09b1
 	pop hl
 	ld a, $40
-	rst $00
+	rst AddAToHL
 	xor a
 	ld b, $08
 	ld c, $25
@@ -48247,7 +48289,7 @@ Func_30_4a1a:
 Func_30_4a2b:
 	ld a, [wActiveFloor]
 	ld hl, $49f2
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, $24
 	ld hl, $65cb
@@ -48378,7 +48420,7 @@ Func_30_4df3:
 	srl a
 	add a, a
 	ld hl, $4dd3
-	rst $00
+	rst AddAToHL
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4e2e
@@ -48386,7 +48428,7 @@ Func_30_4df3:
 	cp $5a
 	jr nc, Func_30_4e29
 	ld a, $08
-	rst $00
+	rst AddAToHL
 Func_30_4e29:
 	ld de, $4a8d
 	jr Func_30_4e3b
@@ -48395,11 +48437,11 @@ Func_30_4e2e:
 	cp $7e
 	jr nc, Func_30_4e38
 	ld a, $08
-	rst $00
+	rst AddAToHL
 Func_30_4e38:
 	ld de, $4c2f
 Func_30_4e3b:
-	rst $18
+	rst DerefHL
 	call Func_30_4e47
 	ld a, [wScreenAnim2]
 	inc a
@@ -48505,7 +48547,7 @@ Func_30_4ece:
 	ld a, c
 	add a, a
 	ld hl, $4e84
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld c, a
 	ld a, [hl]
@@ -48528,7 +48570,7 @@ Func_30_4ef8:
 	sub c
 	jp c, Func_30_4f0f
 	ld hl, $4e9a
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, a
 	ld a, $24
@@ -48595,8 +48637,8 @@ Func_30_4f5e:
 Func_30_4f6e:
 	add a, a
 	ld hl, $4e66
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, l
 	ld e, a
 	ld a, h
@@ -48678,7 +48720,7 @@ Func_30_5000:
 	push bc
 	ld hl, $4e9a
 	ld a, b
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, a
 	ld a, $24
@@ -48777,8 +48819,8 @@ Func_30_50d7:
 	ld a, [wScreenPhase]
 	add a, a
 	ld hl, $5033
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	jp hl
 	ld a, [wScreenPhase]
 	cp $04
@@ -49203,7 +49245,7 @@ Func_30_5408:
 SECTION "analyzed_0c147f", ROMX[$547f], BANK[$30]
 
 Func_30_547f:
-	rst $20
+	rst CheckCgb
 	ret nz
 
 SECTION "analyzed_0c1481", ROMX[$5481], BANK[$30]
@@ -49556,8 +49598,8 @@ Func_30_57ef:
 	push hl
 	add a, a
 	ld hl, $5760
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	jp hl
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
@@ -49659,14 +49701,14 @@ SECTION "analyzed_0c18d7", ROMX[$58d7], BANK[$30]
 Func_30_58d7:
 	push af
 	ld hl, $5868
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld [wDrawBank], a
 	pop af
 	ld hl, $588d
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld b, d
 	ld c, e
 	call DrawMetasprite
@@ -50510,14 +50552,14 @@ Func_30_5f43:
 Func_30_5f4b:
 	push af
 	ld hl, $5868
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	ld b, a
 	pop af
 	ld hl, $588d
 	add a, a
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld a, [$cf3f]
 	or a
 	jr z, Func_30_5f64
@@ -50609,9 +50651,9 @@ Func_30_6007:
 	add a, a
 	add a, a
 	ld hl, $5fcb
-	rst $00
+	rst AddAToHL
 	push hl
-	rst $18
+	rst DerefHL
 	ld a, h
 	cp $ff
 	jr nz, Func_30_6022
@@ -50626,8 +50668,8 @@ Func_30_6022:
 Func_30_602a:
 	pop hl
 	ld a, $02
-	rst $00
-	rst $18
+	rst AddAToHL
+	rst DerefHL
 	ld de, $9c83
 	ld b, $2b
 	call Func_00_10dc
@@ -51262,7 +51304,7 @@ Func_31_4449:
 	res 2, a
 	add a, a
 	ld hl, $4000
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -51285,7 +51327,7 @@ Func_31_446e:
 	ld a, [$d5fa]
 	add a, a
 	ld hl, $4000
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -51457,7 +51499,7 @@ Func_31_45ce:
 	dec a
 	sla a
 	sla a
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld e, a
 	ld a, [hl+]
@@ -51494,7 +51536,7 @@ Func_31_45fe:
 	dec a
 	sla a
 	sla a
-	rst $00
+	rst AddAToHL
 	ld a, e
 	ld [hl+], a
 	ld a, d
@@ -54489,7 +54531,7 @@ Func_3d_4000:
 	dec a
 	add a, a
 	ld hl, $406f
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -54503,7 +54545,7 @@ Func_3d_401d:
 	dec a
 	add a, a
 	ld hl, $4079
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -54519,7 +54561,7 @@ Func_3d_4035:
 	dec a
 	add a, a
 	ld hl, $4083
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
@@ -54534,7 +54576,7 @@ Func_3d_4051:
 	dec a
 	add a, a
 	ld hl, $4065
-	rst $00
+	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a

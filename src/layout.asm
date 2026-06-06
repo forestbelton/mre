@@ -9,8 +9,8 @@
 ;   FloorBankTable/FloorPtrTable lookup chain.
 ;
 ; Two RST vectors are used heavily as 16-bit add helpers:
-;   rst $00  ->  hl += a       ($0000: add a,l / ld l,a / ret nc / inc h / ret)
-;   rst $30  ->  de += a       ($0030: add a,e / ld e,a / ret nc / inc d / ret)
+;   rst AddAToHL  ->  hl += a       ($0000: add a,l / ld l,a / ret nc / inc h / ret)
+;   rst AddAToDE  ->  de += a       ($0030: add a,e / ld e,a / ret nc / inc d / ret)
 ;
 ; Labels referenced from analyzed.asm keep their curated names (added to
 ; map.json labels[]); two whose behaviour is clear but whose purpose isn't
@@ -115,7 +115,7 @@ LoadFloorData:
 ParseFloorRecord:
 	ld d, a                ; d = record index
 	ld hl, FloorBankTable
-	rst $00                ; hl = FloorBankTable + index
+	rst AddAToHL                ; hl = FloorBankTable + index
 	ld a, [$7fff]          ; save current bank
 	push af
 	ld a, [hl]
@@ -123,7 +123,7 @@ ParseFloorRecord:
 	ld a, d
 	add a, a               ; index * 2 (FloorPtrTable is words)
 	ld hl, FloorPtrTable
-	rst $00                ; hl = FloorPtrTable + index*2
+	rst AddAToHL                ; hl = FloorPtrTable + index*2
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a                ; hl = record pointer (bank-mapped $4000-$7fff)
@@ -160,7 +160,7 @@ ParseFloorRecord:
 	ld c, a
 	call CopyDEtoHL         ; copy one packed row (width bytes) de -> hl
 	ld a, [wFloorRowStride]
-	rst $00                 ; advance hl over the WRAM row margin
+	rst AddAToHL                 ; advance hl over the WRAM row margin
 	dec b
 	jr nz, .copyCollision
 
@@ -172,7 +172,7 @@ ParseFloorRecord:
 	ld c, a
 	call CopyDEtoHL
 	ld a, [wFloorRowStride]
-	rst $00
+	rst AddAToHL
 	dec b
 	jr nz, .copyPieces
 
@@ -305,7 +305,7 @@ DrawFloorPiece:
 	cp h
 	jr z, .found
 	ld a, l
-	rst $30                ; de += 5 -> next entry
+	rst AddAToDE                ; de += 5 -> next entry
 	jr .search
 .found:
 	sla b                  ; cell row -> BG tile row (x2, minus 1)
@@ -313,13 +313,13 @@ DrawFloorPiece:
 	ld hl, $9800           ; BG map base
 .downRows:
 	ld a, $20
-	rst $00                ; hl += $20 -> down one tile row
+	rst AddAToHL                ; hl += $20 -> down one tile row
 	dec b
 	jr nz, .downRows
 	ld a, c                ; cell col -> BG tile col (x2, minus 1)
 	rlca
 	dec a
-	rst $00
+	rst AddAToHL
 	call StampFloorMetatile
 	ret
 
@@ -338,7 +338,7 @@ StampFloorMetatile:
 	ld c, a
 	ld [hl+], a            ; top-right = T+8
 	ld a, $1e
-	rst $00                ; hl += $1e -> next tile row of the 2x2
+	rst AddAToHL                ; hl += $1e -> next tile row of the 2x2
 	ld a, c
 	sub $07
 	ld [hl+], a            ; bottom-left  = T+1
@@ -354,7 +354,7 @@ StampFloorMetatile:
 	ld [hl+], a
 	ld [hl+], a
 	ld a, $1e
-	rst $00
+	rst AddAToHL
 	ld a, c
 	ld [hl+], a
 	ld [hl], a
@@ -957,7 +957,7 @@ RemoveOpenItemAtCell:
 	ldh [$ffaa], a         ; return the taken item
 	ld a, c
 	ld hl, wFloorGrid
-	rst $00                ; hl = wFloorGrid + cell index
+	rst AddAToHL                ; hl = wFloorGrid + cell index
 	xor a
 	ld [hl], a             ; clear the piece cell
 	pop bc
@@ -1065,7 +1065,7 @@ RemoveConditionalItemsPass:
 	and $3f                ; base id
 	push hl
 	ld hl, $5162           ; Data_01_5162 per-id flag table
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	or a
@@ -1276,13 +1276,13 @@ TrackItemCollection:
 	ld a, d
 	and $07
 	ld hl, $1209           ; bit-mask table
-	rst $00
+	rst AddAToHL
 	ld b, [hl]
 	ld a, d
 	swap a
 	and $0f
 	ld hl, $cff4           ; collected-flags bitfield
-	rst $00
+	rst AddAToHL
 	ld a, [hl]
 	or b
 	ld [hl], a
@@ -1352,6 +1352,6 @@ IncFloorCollectCounter:
 	add a, $3b
 .store:
 	ld hl, $cff8
-	rst $00
+	rst AddAToHL
 	inc [hl]
 	ret

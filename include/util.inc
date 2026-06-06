@@ -1,6 +1,8 @@
 IF !DEF(UTIL_INC)
 DEF UTIL_INC EQU 1
 
+DEF CUR_BANK_TAG EQU $7fff
+
 ; Perform a call to another bank using CallBankedHL
 ; \1 Bank
 ; \2 Address

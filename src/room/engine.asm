@@ -67,7 +67,7 @@ Func_03_402a:
 	call RunEntity
 Func_03_4030:
 	ld a, $2a
-	rst $08
+	rst SubAFromHL
 	dec c
 	jr nz, Func_03_400b
 	ret
@@ -1730,7 +1730,7 @@ Func_03_4b20:
 	bit 7, a
 	ret z
 	ld a, $06
-	rst $00
+	rst AddAToHL
 	set 7, [hl]
 	ret
 SpawnPushSprite6:

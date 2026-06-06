@@ -32,6 +32,9 @@ ROMX $1e
     ORG $4000
     "Bodka graphics"
     "Tempest graphics"
+ROMX $1f
+    ORG $42b1
+    "Kalum script"
 ROMX $20
     ORG $4000
     "Town screen graphics"
