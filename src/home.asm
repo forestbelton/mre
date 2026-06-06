@@ -69,15 +69,14 @@ SECTION "RST_60", ROM0[$60]
 	jp $c299
 
 SECTION "Header", ROM0[$0100]
-
 	nop
-	jp Func_00_0150
+	jp GameInit
 
 	DS $150 - @, 0
 
 SECTION "analyzed_000150", ROM0[$0150]
 
-Func_00_0150:
+GameInit:
 	ld [wConsoleType], a
 Func_00_0153:
 	di
@@ -101,21 +100,16 @@ Func_00_0153:
 	call PlaySoundTracked
 	pop af
 	ld c, $0a
-Func_00_017f:
+.wait:
 	push bc
 	call WaitForNextFrame
 	pop bc
 	dec c
-	jr nz, Func_00_017f
+	jr nz, .wait
 	call Func_00_35c8
+.update:
 	call Func_00_0f41
-
-SECTION "analyzed_00018d", ROM0[$018d]
-
-Data_00_018d:
-	db $18, $fb
-
-SECTION "analyzed_00018f", ROM0[$018f]
+	jr .update
 
 Func_00_018f:
 	xor a
@@ -2173,7 +2167,7 @@ Func_00_0f41:
 	ld [$c2a8], a
 	ld a, $01
 	ld [wGameScene], a
-	call ResetFloorScroll
+	call ResetScrollState
 	FAR_CALL $05, Func_05_463a
 RunIntroScene:
 	ld hl, $0f6e
@@ -2191,11 +2185,7 @@ RunIntroScene:
 	ld l, a
 	jp hl
 	jr RunIntroScene
-
-SECTION "analyzed_000f70", ROM0[$0f70]
-
-Data_00_0f70:
-	db $c9
+	ret
 
 SECTION "analyzed_000f71", ROM0[$0f71]
 
@@ -3620,7 +3610,7 @@ EnterSelectedRoom:
 	FAR_CALL $05, Func_05_47c6
 	FAR_CALL $00, Func_00_3508
 	FAR_CALL $01, Func_01_439e
-	call ResetFloorScroll
+	call ResetScrollState
 	ret
 
 SECTION "analyzed_001982", ROM0[$1982]
@@ -3680,7 +3670,7 @@ Func_00_1a1e:
 	FAR_CALL $05, Func_05_47c6
 	FAR_CALL $00, Func_00_3508
 	FAR_CALL $01, Func_01_439e
-	call ResetFloorScroll
+	call ResetScrollState
 	call LoadFloorByMode
 	FAR_CALL $10, Func_10_4041
 	FAR_CALL $11, Func_11_4000
@@ -7546,7 +7536,7 @@ Func_00_34bc:
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
 	FAR_CALL $00, Func_00_1219
-	call ResetFloorScroll
+	call ResetScrollState
 	push af
 	ld a, $2f
 	call PlaySoundTracked
@@ -7556,7 +7546,7 @@ Func_00_34bc:
 	call DrawTownScreen
 	ret
 Func_00_34e3:
-	call ResetFloorScroll
+	call ResetScrollState
 	push af
 	ld a, $28
 	call PlaySoundTracked
@@ -7581,7 +7571,7 @@ Func_00_3502:
 SECTION "analyzed_003508", ROM0[$3508]
 
 Func_00_3508:
-	call ResetFloorScroll
+	call ResetScrollState
 	push af
 	ld a, $28
 	call PlaySoundTracked
@@ -7595,7 +7585,7 @@ Func_00_3508:
 	ld a, $12
 	ld [wGameScene], a
 	ret
-	call ResetFloorScroll
+	call ResetScrollState
 	push af
 	ld a, $31
 	call PlaySoundTracked
@@ -7610,7 +7600,7 @@ Func_00_3508:
 	call PlaySoundTracked
 	pop af
 	ret
-	call ResetFloorScroll
+	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call DrawRoomClearScreen
@@ -7620,7 +7610,7 @@ Func_00_3508:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	call ResetFloorScroll
+	call ResetScrollState
 	ld a, [wC2D7]
 	cp $00
 	jr nz, Func_00_3572
@@ -7633,14 +7623,14 @@ Func_00_3572:
 	ld [wGameScene], a
 	ret
 IntroScene_TecmoLogo:
-	call ResetFloorScroll
+	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call DrawTecmoLogo
 	ld a, $02
 	ld [wGameScene], a
 	ret
-	call ResetFloorScroll
+	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call DrawIntroBookScreen
@@ -7651,7 +7641,7 @@ IntroScene_TecmoLogo:
 	call PlaySoundTracked
 	pop af
 	ret
-	call ResetFloorScroll
+	call ResetScrollState
 	push af
 	ld a, $37
 	call PlaySoundTracked
@@ -7666,12 +7656,14 @@ IntroScene_TecmoLogo:
 	ld a, $03
 	ld [wGameSceneArg], a
 	ret
+
 Func_00_35c8:
-	call ResetFloorScroll
+	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_547f
 	ret
+
 Func_00_35d4:
 	ld c, a
 	ld a, [CUR_BANK_TAG]
@@ -7686,7 +7678,8 @@ Func_00_35d4:
 	pop af
 	ld [$2fff], a
 	ret
-CopyBgMapBanked:
+
+BankMapCopyB:
 	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
@@ -7695,6 +7688,7 @@ CopyBgMapBanked:
 	pop af
 	ld [$2fff], a
 	ret
+
 Func_00_35f9:
 	ld c, a
 	ld a, [CUR_BANK_TAG]
@@ -7742,76 +7736,62 @@ Func_00_3635:
 	ldh [rVBK], a
 	dec de
 	ret
+
 Func_00_3646:
 	rst CheckCgb
-	jr nz, Func_00_365f
-
-SECTION "analyzed_003649", ROM0[$3649]
-
-Data_00_3649:
-	db $f3, $f0, $41, $cb, $4f, $20, $fa, $7e, $12, $f0, $41, $cb, $4f, $20, $f2, $fb
-	db $23, $13, $0d, $20, $eb, $c9
-
-SECTION "analyzed_00365f", ROM0[$365f]
-
-Func_00_365f:
-	call WaitForHBlank
-	ld a, [hl+]
+	jr nz, .gbc
+.dmg:
+	di
+.loop:
+	ldh a, [rSTAT]
+	bit 1, a
+	jr nz, .loop
+	ld a, [hl]
 	ld [de], a
+	ldh a, [rSTAT]
+	bit 1, a
+	jr nz, .loop
+	ei
+	inc hl
 	inc de
 	dec c
-	jr z, Func_00_3691
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	call WaitForHBlank
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	ld a, [hl+]
-	ld [de], a
-	inc de
-	dec c
-	jr z, Func_00_3691
-	jr Func_00_365f
-Func_00_3691:
+	jr nz, .dmg
 	ret
+.gbc:
+	call WaitForHBlank
+	REPT 4
+		ld a, [hl+]
+		ld [de], a
+		inc de
+		dec c
+		jr z, .done
+	ENDR
+	call WaitForHBlank
+	REPT 3
+		ld a, [hl+]
+		ld [de], a
+		inc de
+		dec c
+		jr z, .done
+	ENDR
+	jr .gbc
+.done:
+	ret
+
 Func_00_3692:
 	ld a, c
 	and c
 	jr z, Func_00_369c
-
-SECTION "analyzed_003696", ROM0[$3696]
-
-Data_00_3696:
-	db $cd, $46, $36, $78, $a0, $c8
-
-SECTION "analyzed_00369c", ROM0[$369c]
-
+	call Func_00_3646
+	ld a, b
+	and b
+	ret z
 Func_00_369c:
 	call Func_00_3646
 	dec b
 	jr nz, Func_00_369c
 	ret
+
 Func_00_36a3:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
@@ -7822,9 +7802,11 @@ Func_00_36a3:
 	pop af
 	ld [$2fff], a
 	ret
+
 Func_00_36b8:
 	call Func_00_36bc
 	ret
+
 Func_00_36bc:
 	push af
 	push bc
@@ -8279,7 +8261,7 @@ BankVramCopy:
 	ld [$2fff], a
 	ret
 
-CopyBgMapBankedA:
+BankMapCopyA:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -8314,7 +8296,7 @@ Func_00_397a:
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld a, $19
 	ld hl, $66cb
 	ld de, wBgPalettes

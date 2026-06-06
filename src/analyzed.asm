@@ -160,7 +160,7 @@ Func_01_447f:
 	call Func_00_04c4
 	call HideAllSprites
 	call WaitForNextFrame
-	call ResetFloorScroll
+	call ResetScrollState
 	call Func_01_459a
 	FAR_CALL $05, Func_05_473d
 	ret
@@ -24195,7 +24195,7 @@ Func_12_4390:
 	FAR_CALL $05, Func_05_47c6
 	FAR_CALL $00, Func_00_3508
 	FAR_CALL $01, Func_01_439e
-	call ResetFloorScroll
+	call ResetScrollState
 	call LoadFloorByMode
 	FAR_CALL $10, Func_10_4041
 	FAR_CALL $11, Func_11_4000
@@ -26085,7 +26085,7 @@ Func_13_4204:
 	ret
 Func_13_4222:
 	call Func_13_4266
-	call ResetFloorScroll
+	call ResetScrollState
 	xor a
 	ld [$cfbc], a
 	call Func_00_0794
@@ -26101,7 +26101,7 @@ Func_13_4232:
 	ld a, e
 	or d
 	jr nz, Func_13_4232
-	call ResetFloorScroll
+	call ResetScrollState
 	ld hl, $62c9
 	ld de, $9907
 	call CopyBgMap
@@ -30066,7 +30066,7 @@ Pashute_LoadShrineTilemap:
 	ld hl, $5880
 	ld a, $1b
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Pashute_RenderPortraitNeutral:
 	ld a, $50
@@ -30089,7 +30089,7 @@ Pashute_RenderPortraitNeutral:
 	ld hl, $5b3e
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -30106,7 +30106,7 @@ Pashute_RenderPortraitNeutral:
 	ld hl, $5a3e
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a54
 	ld bc, $1d28
 	call DrawMetasprite
@@ -30115,7 +30115,7 @@ Func_18_41b7:
 	ld hl, $5a7d
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a93
 	ld bc, $1d28
 	call DrawMetasprite
@@ -30124,7 +30124,7 @@ Func_18_41cc:
 	ld hl, $5abc
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5ad2
 	ld bc, $1d28
 	call DrawMetasprite
@@ -30150,7 +30150,7 @@ Pashute_RenderPortraitPanic:
 	ld hl, $5b56
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5b6e
 	ld bc, $1d28
 	call DrawMetasprite
@@ -30176,7 +30176,7 @@ Pashute_RenderPortraitShocked:
 	ld hl, $5b97
 	ld a, $1b
 	ld de, $9885
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5baf
 	ld bc, $1d28
 	call DrawMetasprite
@@ -30280,7 +30280,7 @@ Verde_LoadBgMap:
 	ld hl, $74dd
 	ld a, $1b
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Verde_RenderPortrait:
 	ld a, $f7
@@ -30300,7 +30300,7 @@ Verde_RenderPortrait:
 	ld hl, $77b2
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -30317,7 +30317,7 @@ Verde_RenderPortrait:
 	ld hl, $769b
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $76a9
 	ld bc, $142d
 	call DrawMetasprite
@@ -30326,7 +30326,7 @@ Func_18_5455:
 	ld hl, $76e6
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $76f4
 	ld bc, $142d
 	call DrawMetasprite
@@ -30335,7 +30335,7 @@ Func_18_546a:
 	ld hl, $7731
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $773f
 	ld bc, $142d
 	call DrawMetasprite
@@ -30355,7 +30355,7 @@ Verde_RenderPortraitSurprised:
 	ld hl, $782c
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7881
 	ld bc, $4435
 	call DrawMetasprite
@@ -30378,7 +30378,7 @@ Verde_RenderPortraitCalm:
 	ld hl, $77ca
 	ld a, $1b
 	ld de, $98a5
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $781f
 	ld bc, $4435
 	call DrawMetasprite
@@ -30462,7 +30462,7 @@ Bodka_BuildTowerScene:
 	ld hl, $5bd9
 	ld a, $1e
 	ld de, $9845
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
@@ -30484,7 +30484,7 @@ Bodka_LoadStudioBgMap:
 	ld hl, $5880
 	ld a, $1e
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Bodka_RenderPortrait:
 	ld a, $c8
@@ -30514,7 +30514,7 @@ Bodka_RenderPortrait:
 	ld hl, $5a3e
 	ld a, $1e
 	ld de, $98a6
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a4a
 	ld bc, $2833
 	call DrawMetasprite
@@ -30523,7 +30523,7 @@ Func_18_5f12:
 	ld hl, $5a73
 	ld a, $1e
 	ld de, $98a6
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a7f
 	ld bc, $2833
 	call DrawMetasprite
@@ -30532,7 +30532,7 @@ Func_18_5f27:
 	ld hl, $5aa8
 	ld a, $1e
 	ld de, $98a6
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5ab4
 	ld bc, $2833
 	call DrawMetasprite
@@ -30552,7 +30552,7 @@ Bodka_RenderPortraitAlt:
 	ld hl, $5b1e
 	ld a, $1e
 	ld de, $98a6
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5b30
 	ld bc, $2833
 	call DrawMetasprite
@@ -30593,7 +30593,7 @@ Tradehouse_LoadBgMap:
 	ld hl, $7080
 	ld a, $33
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Tradehouse_BuildNoteScene:
 	ld a, $c7
@@ -30627,7 +30627,7 @@ Func_18_6013:
 	ld hl, $723e
 	ld a, $33
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Func_18_601f:
 	ld a, $1f
@@ -30760,7 +30760,7 @@ Naji_LoadPortraitTilemap:
 	ld hl, $7368
 	ld a, $1a
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Naji_RenderPortraitTalking:
 	ld a, $27
@@ -30774,7 +30774,7 @@ Naji_RenderPortraitTalking:
 	ld hl, $75d3
 	ld a, $1a
 	ld de, $9886
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7590
 	ld bc, $3e3c
 	call DrawMetasprite
@@ -30798,7 +30798,7 @@ Naji_RenderPortraitTalking:
 	ld hl, $7526
 	ld a, $1a
 	ld de, $9886
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7532
 	ld bc, $1e34
 	call DrawMetasprite
@@ -30807,7 +30807,7 @@ Func_18_6c8a:
 	ld hl, $755b
 	ld a, $1a
 	ld de, $9886
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7567
 	ld bc, $1e34
 	call DrawMetasprite
@@ -30824,7 +30824,7 @@ Naji_RenderPortraitAlt:
 	ld hl, $75eb
 	ld a, $1a
 	ld de, $9886
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7603
 	ld bc, $1e34
 	call DrawMetasprite
@@ -31186,7 +31186,7 @@ Toamuna_LoadPortraitTilemap:
 	ld hl, $5880
 	ld a, $1a
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Toamuna_RenderPortrait:
 	ld a, $8b
@@ -31203,7 +31203,7 @@ Toamuna_RenderPortrait:
 	ld hl, $5a3e
 	ld a, $1a
 	ld de, $98c4
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 Toamuna_RenderPortraitAlt:
 	ld a, $b4
@@ -31220,7 +31220,7 @@ Toamuna_RenderPortraitAlt:
 	ld hl, $5a93
 	ld a, $1a
 	ld de, $98c4
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 
 SECTION "analyzed_0646ca", ROMX[$46ca], BANK[$19]
@@ -31788,7 +31788,7 @@ Kalum_StartEncounter:
 	ld hl, KalumPortraitMapDesc
 	ld a, $1d
 	ld de, TILEMAP0
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Kalum_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1d
@@ -31886,7 +31886,7 @@ Kalum_AnimateMonsterPortrait:
 	ld hl, $5a3e
 	ld a, $1d
 	ld de, $988d
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a50
 	ld bc, $2068
 	call DrawMetasprite
@@ -31895,7 +31895,7 @@ Func_1f_4287:
 	ld hl, $5a81
 	ld a, $1d
 	ld de, $988d
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5a93
 	ld bc, $2068
 	call DrawMetasprite
@@ -31904,7 +31904,7 @@ Func_1f_429c:
 	ld hl, $5ac4
 	ld a, $1d
 	ld de, $988d
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $5ad6
 	ld bc, $2068
 	call DrawMetasprite
@@ -31933,7 +31933,7 @@ Mistral_StartEncounter:
 	ld hl, $6080
 	ld a, $35
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Func_1f_44ca
 	call HideUnusedOamSprites
 	ld a, $35
@@ -32021,7 +32021,7 @@ Func_1f_4515:
 	ld hl, $623e
 	ld a, $35
 	ld de, $984b
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $62d4
 	ld bc, $405a
 	call DrawMetasprite
@@ -32039,7 +32039,7 @@ Func_1f_4545:
 	ld hl, $6334
 	ld a, $35
 	ld de, $984b
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $63ca
 	ld bc, $4060
 	call DrawMetasprite
@@ -32057,7 +32057,7 @@ Func_1f_4575:
 	ld hl, $6422
 	ld a, $35
 	ld de, $984b
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $64b8
 	ld bc, $4063
 	call DrawMetasprite
@@ -32088,7 +32088,7 @@ Rafaga_StartEncounter:
 	ld hl, $7399
 	ld a, $1d
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Func_1f_47ea
 	call HideUnusedOamSprites
 	ld a, $1d
@@ -32169,7 +32169,7 @@ Func_1f_47ea:
 	ld hl, $7557
 	ld a, $1d
 	ld de, $98ad
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7565
 	ld bc, $3860
 	call DrawMetasprite
@@ -32178,7 +32178,7 @@ Func_1f_4842:
 	ld hl, $758e
 	ld a, $1d
 	ld de, $98ad
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $759c
 	ld bc, $3860
 	call DrawMetasprite
@@ -32200,7 +32200,7 @@ Tempest_StartEncounter:
 	ld hl, $7467
 	ld a, $1e
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Func_1f_4b15
 	call HideUnusedOamSprites
 	ld a, $1e
@@ -32281,7 +32281,7 @@ Func_1f_4b15:
 	ld hl, $7625
 	ld a, $1e
 	ld de, $98ad
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7633
 	ld bc, $3560
 	call DrawMetasprite
@@ -32290,7 +32290,7 @@ Func_1f_4b6d:
 	ld hl, $7670
 	ld a, $1e
 	ld de, $98ad
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $767e
 	ld bc, $3560
 	call DrawMetasprite
@@ -32345,7 +32345,7 @@ Nada_ShowScene:
 	ld hl, $7080
 	ld a, $1c
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Nada_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1c
@@ -32385,7 +32385,7 @@ Nada_ShowSnapReaction:
 	ld hl, $7080
 	ld a, $1c
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Nada_RenderPortrait
 	call HideUnusedOamSprites
 	ld a, $1c
@@ -32424,7 +32424,7 @@ Nada_ShowRageScene:
 	ld hl, $7e07
 	ld a, $1f
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Func_1f_50a1
 	call HideUnusedOamSprites
 	ld a, $1c
@@ -32497,7 +32497,7 @@ Nada_RenderPortraitAngry:
 	ld hl, $76ea
 	ld a, $1c
 	ld de, $986c
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $76fc
 	ld bc, $1360
 	call DrawMetasprite
@@ -32520,7 +32520,7 @@ Func_1f_4f5b:
 	ld hl, $75b5
 	ld a, $1c
 	ld de, $986c
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $75c7
 	ld bc, $1360
 	call DrawMetasprite
@@ -32529,7 +32529,7 @@ Func_1f_4f88:
 	ld hl, $761c
 	ld a, $1c
 	ld de, $986c
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $762e
 	ld bc, $1360
 	call DrawMetasprite
@@ -32538,7 +32538,7 @@ Func_1f_4f9d:
 	ld hl, $7683
 	ld a, $1c
 	ld de, $986c
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7695
 	ld bc, $1360
 	call DrawMetasprite
@@ -32584,7 +32584,7 @@ Func_1f_500e:
 	ld hl, $723e
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $729e
 	ld bc, $4858
 	call DrawMetasprite
@@ -32592,7 +32592,7 @@ Func_1f_500e:
 	ld hl, $72c7
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7327
 	ld bc, $485b
 	call DrawMetasprite
@@ -32600,7 +32600,7 @@ Func_1f_500e:
 	ld hl, $7348
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $73a8
 	ld bc, $4550
 	call DrawMetasprite
@@ -32608,7 +32608,7 @@ Func_1f_500e:
 	ld hl, $73d9
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7439
 	ld bc, $4851
 	call DrawMetasprite
@@ -32616,7 +32616,7 @@ Func_1f_500e:
 	ld hl, $7462
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $74c2
 	ld bc, $4860
 	call DrawMetasprite
@@ -32624,7 +32624,7 @@ Func_1f_500e:
 	ld hl, $74d3
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $7533
 	ld bc, $4860
 	call DrawMetasprite
@@ -32632,7 +32632,7 @@ Func_1f_500e:
 	ld hl, $7544
 	ld a, $1c
 	ld de, $98c9
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $75a4
 	ld bc, $4860
 	call DrawMetasprite
@@ -32649,7 +32649,7 @@ Func_1f_50a1:
 	ld hl, $76ea
 	ld a, $1c
 	ld de, $986c
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, $76fc
 	ld bc, $1360
 	call DrawMetasprite
@@ -38716,7 +38716,7 @@ DrawTowerEntranceScreen:
 	ld b, $22
 	ld hl, $7080
 	ld de, $9800
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld a, $03
 	call Func_30_4487
 	call Func_30_4494
@@ -38848,14 +38848,14 @@ DrawRoomStartScreen:
 	ld b, $23
 	ld hl, $7080
 	ld de, $9800
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld a, [wRoomType]
 	cp $05
 	jr nz, Func_30_4506
 	ld b, $23
 	ld hl, $73b2
 	ld de, $9886
-	call CopyBgMapBanked
+	call BankMapCopyB
 	jr Func_30_4524
 Func_30_4506:
 	ld a, [wActiveFloor]
@@ -39020,11 +39020,11 @@ Func_30_463d:
 	ld hl, $73a0
 	ld de, $984f
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld hl, $737c
 	ld de, $990f
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_465a:
 	ld a, [wRoomType]
 	cp $06
@@ -39072,7 +39072,7 @@ Func_30_46a4:
 	ld hl, $73d8
 	ld de, $9845
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_30_47d0
 	ld a, [wLives]
 	and $0f
@@ -39109,7 +39109,7 @@ Func_30_46f1:
 	ld hl, $759c
 	ld de, $9845
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_4703:
 	jr Func_30_4711
 
@@ -39129,7 +39129,7 @@ Func_30_4712:
 	ld hl, $74ba
 	ld de, $9845
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld a, [wScreenAnim]
 	add a, a
 	ld hl, $12db
@@ -39158,7 +39158,7 @@ Func_30_4752:
 	ld hl, $7b2e
 	ld de, $98e7
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_475d:
 	jr Func_30_476b
 
@@ -39196,11 +39196,11 @@ Func_30_4796:
 	ld hl, $7aa2
 	ld de, $9889
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld hl, $7a98
 	ld de, $988a
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	jr Func_30_47cb
 Func_30_47b5:
 	ld hl, $7b90
@@ -39210,7 +39210,7 @@ Func_30_47b5:
 	ld hl, $7a8e
 	ld de, $9889
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_47cb:
 	ret
 
@@ -39251,11 +39251,11 @@ Func_30_4800:
 	ld hl, $7aa2
 	ld de, $986c
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld hl, $7a98
 	ld de, $986d
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 	jr Func_30_4838
 Func_30_4822:
 	ld hl, $7b90
@@ -39265,7 +39265,7 @@ Func_30_4822:
 	ld hl, $7a8e
 	ld de, $986c
 	ld b, $23
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_4838:
 	pop bc
 	ld de, $986c
@@ -39337,7 +39337,7 @@ DrawNextRoomScreen:
 	ld b, $24
 	ld hl, $5880
 	ld de, $9c00
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld a, [wActiveFloor]
 	ld b, a
 	ld c, $00
@@ -39375,7 +39375,7 @@ Func_30_48c9:
 	ld b, $25
 	ld hl, $7100
 	ld de, $9909
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_30_5023
 	ld hl, $7000
 	jr Func_30_4931
@@ -39390,7 +39390,7 @@ Func_30_4911:
 	ld b, $25
 	ld hl, $71f8
 	ld de, $9909
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld hl, $7080
 Func_30_4931:
 	push hl
@@ -40027,7 +40027,7 @@ DrawRoomClearScreen:
 	ld b, $21
 	ld hl, $7080
 	ld de, $9800
-	call CopyBgMapBanked
+	call BankMapCopyB
 	FAR_CALL $21, Func_21_7409
 	xor a
 	ld b, $08
@@ -40227,11 +40227,11 @@ Func_30_5219:
 	ld b, $21
 	ld hl, $7356
 	ld de, $9964
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld b, $21
 	ld hl, $738c
 	ld de, $99a9
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_5236:
 	push af
 	ld a, $00
@@ -40333,7 +40333,7 @@ DrawTowerOpenScreen:
 	ld b, $26
 	ld hl, $7080
 	ld de, $9800
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_30_5408
 	call HideUnusedOamSprites
 	xor a
@@ -40481,16 +40481,28 @@ SECTION "analyzed_0c147f", ROMX[$547f], BANK[$30]
 Func_30_547f:
 	rst CheckCgb
 	ret nz
-
-SECTION "analyzed_0c1481", ROMX[$5481], BANK[$30]
-
-Data_30_5481:
-	db $cd, $e6, $02, $3e, $80, $e0, $40, $af, $e0, $4f, $3e, $27, $21, $de, $5a, $11
-	db $00, $88, $01, $00, $10, $cd, $2d, $39, $06, $27, $21, $de, $6a, $11, $00, $98
-	db $cd, $e9, $35, $cd, $d1, $02, $3e, $1b, $e0, $47, $cd, $e6, $02, $3e, $81, $e0
-	db $40, $cd, $e6, $02, $c3, $b2, $54
-
-SECTION "analyzed_0c14b8", ROMX[$54b8], BANK[$30]
+	call $02e6
+	ld a, $80
+	ldh [$ff40], a
+	xor a
+	ldh [$ff4f], a
+	ld a, $27
+	ld hl, $5ade
+	ld de, $8800
+	ld bc, $1000
+	call $392d
+	ld b, $27
+	ld hl, $6ade
+	ld de, $9800
+	call $35e9
+	call $02d1
+	ld a, $1b
+	ldh [$ff47], a
+	call $02e6
+	ld a, $81
+	ldh [$ff40], a
+	call $02e6
+	jp $54b2
 
 Func_30_54b8:
 	xor a
@@ -40525,11 +40537,11 @@ DrawTitleScreen:
 	ld b, $28
 	ld hl, $7080
 	ld de, $9800
-	call CopyBgMapBanked
+	call BankMapCopyB
 	ld b, $28
 	ld hl, $7356
 	ld de, $9986
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_30_5698
 	call Func_30_565c
 	call Func_00_0822
@@ -40582,7 +40594,7 @@ Func_30_5571:
 	ld b, $28
 	ld hl, $737c
 	ld de, $9966
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_30_56d3
 	ld a, [wScreenPhase]
 	and a
@@ -40590,7 +40602,7 @@ Func_30_5571:
 	ld b, $28
 	ld hl, $73a2
 	ld de, $99a6
-	call CopyBgMapBanked
+	call BankMapCopyB
 Func_30_5596:
 	ld a, $01
 	ld [wScreenInput], a
@@ -40803,7 +40815,7 @@ DrawIntroBookScreen:
 	ld b, $29
 	ld hl, $7080
 	ld de, $9880
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_00_0822
 	ld b, $29
 	ld de, $7000
@@ -43058,7 +43070,7 @@ Func_31_47ce:
 
 SECTION "analyzed_0c8000", ROMX[$4000], BANK[$32]
 
-; Indexed by wActiveMonster (0-6). CopyBgMapBankedA descriptors (db rows,cols /
+; Indexed by wActiveMonster (0-6). BankMapCopyA descriptors (db rows,cols /
 ; dw attr / dw idx). See docs/monster_detail_screen.md.
 MonsterNameMapTable:
 	; -> name-plate descriptor, drawn to $9827
@@ -43158,7 +43170,7 @@ ShowMonsterDetailScreen:
 	ld hl, $6313
 	ld a, $32
 	ld de, $9800
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, MonsterNameMapTable
 	ld a, [wActiveMonster]
 	sla a
@@ -43172,7 +43184,7 @@ ShowMonsterDetailScreen:
 	ld l, a
 	ld a, $32
 	ld de, $9827
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ld hl, MonsterAbilityMapTable
 	ld a, [wActiveMonster]
 	sla a
@@ -43186,7 +43198,7 @@ ShowMonsterDetailScreen:
 	ld l, a
 	ld a, $32
 	ld de, $99a1
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	call Func_32_4034
 	FAR_CALL $0f, LoadMonsterPortrait
 	call DrawMonsterDetailBgMap
@@ -43229,7 +43241,7 @@ DrawMonsterDetailBgMap:
 	ret z
 	ld a, $0f
 	ld de, $98a3
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	ret
 DrawMonsterDetailSprites:
 	ld a, $0f
@@ -43510,7 +43522,7 @@ Func_32_4381:
 	ld a, l
 	or h
 	ld a, $32
-	call nz, CopyBgMapBankedA
+	call nz, BankMapCopyA
 	jp Func_32_436b
 Func_32_4394:
 	inc hl

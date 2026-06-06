@@ -400,8 +400,8 @@ ReadFloorCell:
 	pop hl
 	ret
 
-; ResetFloorScroll ($1863) -- zero the camera shadow vars and BG scroll registers.
-ResetFloorScroll:
+; ResetScrollState ($1863) -- zero the camera shadow vars and BG scroll registers.
+ResetScrollState:
 	xor a
 	ld [$c289], a
 	ld [$c28a], a

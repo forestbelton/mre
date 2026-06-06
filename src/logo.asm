@@ -36,7 +36,7 @@ DrawTecmoLogo:
 	ld b, TECMO_LOGO_GFX_BANK
 	ld hl, TecmoLogoMapDesc     ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
 	ld de, TILEMAP0
-	call CopyBgMapBanked
+	call BankMapCopyB
 	call Func_00_0822
 	ld b, TECMO_LOGO_GFX_BANK
 	ld de, TecmoLogoPalette     ; TecmoLogoPalette -> BG/OBJ palette buffers

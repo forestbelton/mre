@@ -441,7 +441,7 @@ DrawTextWindow:
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	pop hl
 	ret
 
@@ -450,7 +450,7 @@ Data_00_3c69:
 	ld hl, $6161
 	ld a, $13
 	ld de, $9c00
-	call CopyBgMapBankedA
+	call BankMapCopyA
 	pop hl
 	ret
 
