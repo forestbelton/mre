@@ -38,6 +38,23 @@ def _signed_byte(b: int) -> int:
     return b if b < 0x80 else b - 0x100
 
 
+def _branch_warn(target: int, valid_range: "tuple[int, int] | None") -> str:
+    """Trailing `; WARN` comment when a relative (`jr`) target lands outside the
+    decoded byte range. Unlike absolute `jp`/`call`, a `jr` target is computed
+    from the start address, so an out-of-range one almost always means the wrong
+    base was passed (e.g. decoding a snippet with the default `--addr 0`, which
+    makes every target relative to $0000)."""
+    if valid_range is None:
+        return ""
+    lo, hi = valid_range
+    if lo <= target < hi:
+        return ""
+    return (
+        f"\t; WARN: jr target ${target:04x} outside decoded range "
+        f"${lo:04x}-${hi - 1:04x} — wrong --addr? (jr needs the real base address)"
+    )
+
+
 FmtTarget = Callable[[str, int], str]
 FmtIO = Callable[[int], str]
 
@@ -56,6 +73,7 @@ def decode(
     addr: int,
     fmt_target: FmtTarget = _default_fmt_target,
     fmt_io: FmtIO = _default_fmt_io,
+    valid_range: "tuple[int, int] | None" = None,
 ) -> tuple[str, int]:
     """Decode one GBZ80 instruction.
 
@@ -69,6 +87,9 @@ def decode(
             `$XXXX` hex formatting.
         fmt_io: called with the full 16-bit address (`$ff00 + n`) for every
             8-bit LDH operand. Defaults to `$XXXX` hex formatting.
+        valid_range: optional `(start, end_exclusive)` of the decoded buffer. When
+            given, a relative `jr` whose resolved target falls outside it gets a
+            trailing `; WARN` comment (catches a wrong `addr` base).
 
     Returns:
         (rgbasm_mnemonic, n_bytes_consumed). For truncated or invalid
@@ -112,14 +133,14 @@ def decode(
                 if e is None:
                     return (f"db ${op:02x}", 1)
                 t = _signed_offset(e, addr + 2)
-                return (f"jr {fmt_target('code', t)}", 2)
+                return (f"jr {fmt_target('code', t)}{_branch_warn(t, valid_range)}", 2)
             # y in 4..7
             cc = COND[y - 4]
             e = imm8()
             if e is None:
                 return (f"db ${op:02x}", 1)
             t = _signed_offset(e, addr + 2)
-            return (f"jr {cc}, {fmt_target('code', t)}", 2)
+            return (f"jr {cc}, {fmt_target('code', t)}{_branch_warn(t, valid_range)}", 2)
 
         if z == 1:
             if q == 0:
@@ -305,11 +326,23 @@ def disassemble(data: bytes, addr: int = 0) -> list[str]:
     out: list[str] = []
     pos = 0
     a = addr
+    rng = (addr, addr + len(data))
+    saw_jr = False
     while pos < len(data):
-        text, length = decode(data, pos, a)
+        text, length = decode(data, pos, a, valid_range=rng)
+        saw_jr = saw_jr or text.startswith("jr")
         out.append(f"\t{text}")
         pos += length
         a += length
+    # Decoding at the default base $0000 makes every `jr` target relative to 0 and
+    # often lands it *inside* a small buffer, so the per-line range check can't see
+    # it. Flag the likely-forgotten --addr up front.
+    if addr == 0 and saw_jr:
+        out.insert(
+            0,
+            "; NOTE: decoded at addr $0000 (default --addr). `jr` targets are relative "
+            "to this base — pass the real --addr if this code lives elsewhere.",
+        )
     return out
 
 
