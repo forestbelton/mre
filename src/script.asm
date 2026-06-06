@@ -402,14 +402,14 @@ Func_00_3c03:
 	call WriteWindowRow
 	ld a, [wTextStateV2]
 	sub $02
-Func_00_3c28:
+.loop:
 	push af
 	ld c, $79
 	ld de, $977c
 	call WriteWindowRow
 	pop af
 	dec a
-	jr nz, Func_00_3c28
+	jr nz, .loop
 	ld c, $7a
 	ld de, $7f7d
 	call WriteWindowRow
@@ -424,11 +424,11 @@ WriteWindowRow:
 	inc hl
 	ld a, [wTextStateV2+1]
 	sub $02
-Func_00_3c4d:
+.loop:
 	ld [hl], d
 	inc hl
 	dec a
-	jr nz, Func_00_3c4d
+	jr nz, .loop
 	ld [hl], e
 	inc hl
 	ret
@@ -436,7 +436,7 @@ Func_00_3c4d:
 DrawTextWindow:
 	ld a, [$d61a]
 	or a
-	jr nz, Data_00_3c69
+	jr nz, Func_00_3c69
 	push hl
 	ld hl, $674b
 	ld a, $19
@@ -444,8 +444,7 @@ DrawTextWindow:
 	call BankMapCopyA
 	pop hl
 	ret
-
-Data_00_3c69:
+Func_00_3c69:
 	push hl
 	ld hl, $6161
 	ld a, $13
@@ -460,7 +459,7 @@ PrintCharacterAtCursor:
 	push hl
 	ld a, c
 	cp $40
-	jr z, Data_00_3c98
+	jr z, Func_00_3c98
 	ld a, [$d617]
 	ld d, a
 	ld a, [wTextCursor]
@@ -476,8 +475,7 @@ Func_00_3c94:
 	pop de
 	pop bc
 	ret
-
-Data_00_3c98:
+Func_00_3c98:
 	ld a, [$d61b]
 	inc a
 	and $01
@@ -489,10 +487,8 @@ PrintCharacterAtCursor_Helper1:
 	ld a, c
 	call PrintCharacterAtCursor_Helper2
 	jr nc, Func_00_3cad
-
-Func_00_3caa:
-	db $1b, $18, $08   ; dec de / jr $3cb5 (unreached stray)
-
+	dec de
+	jr Func_00_3cb5
 Func_00_3cad:
 	ld a, e
 	add a, $20
@@ -500,6 +496,7 @@ Func_00_3cad:
 	ld a, d
 	adc a, $00
 	ld d, a
+Func_00_3cb5:
 	ld b, $00
 	ld hl, $3d10
 	add hl, bc
@@ -514,12 +511,10 @@ Func_00_3cad:
 	ld a, [$d61b]
 	or a
 	jr z, Func_00_3cd3
-
 Func_00_3ccf:
 	ld a, $38
 	add a, b
 	ld b, a
-
 Func_00_3cd3:
 	ld a, $01
 	ldh [rVBK], a
@@ -534,20 +529,20 @@ Func_00_3cd3:
 	ei
 	pop bc
 	ret
+
 PrintCharacterAtCursor_Helper2:
 	cp $de
-	jr z, Data_00_3cf1
+	jr z, .done
 	cp $df
-	jr z, Data_00_3cf1
+	jr z, .done
 	xor a
 	ret
-
-Data_00_3cf1:
+.done:
 	scf
 	ret
 
 DispatchTextRenderer:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wRendererBank]
 	ld [$2fff], a

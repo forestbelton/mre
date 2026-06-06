@@ -119,14 +119,15 @@ SECTION "wram_story_flags", WRAM0[$C2D7]
 wC2D7::             ds 1    ; story flag read by Naji's entry cascade
                     ds 16   ; $C2D8-$C2E7
 wHasBattleCard::    ds 1    ; $C2E8: BATTLE_CARD collected (battle available)
-                    ds 3    ; $C2E9-$C2EB
+                    ds 1    ; $C2E9
 
 
-SECTION "wram_floor_grid", WRAM0[$C2EC]
+SECTION "wram_floor_grid", WRAM0[$C2EA]
 ; The active floor's layout, expanded from its per-floor record by LoadFloorData
 ; ($00:$16EA) — selected via FloorBankTable ($1567) + FloorPtrTable ($15BF). The
 ; record's header gives width/height; two parallel 17-wide grids follow.
-
+wFloorPlayerX::     ds 1    ; $C2EA: player spawn X-coordinate
+wFloorPlayerY::     ds 1    ; $C2EB: player spawn Y-coordinate
 wFloorWidth::       ds 1    ; $C2EC: floor width in cells (<= 17)
 wFloorHeight::      ds 1    ; $C2ED: floor height in cells (<= 14)
 wFloorRowStride::   ds 1    ; $C2EE: $11 - width (grid rows are 17 cells apart)
@@ -203,7 +204,9 @@ wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partn
                             ;   bank-$32 portrait table ($32:$40A5). Set by Pashute's
                             ;   and Verde's menus (SCRIPT_JUMP_TABLE $cfbb). Transient:
                             ;   it sits below the saved block, so it is NOT persisted.
-                    ds 19   ; $CFBC-$CFCE
+                    ds 1    ; $CFBC
+wFloorType::        ds 1    ; $CFBD
+                    ds 17   ; $CFBC-$CFCE
 
 ; --- Persistent save block ($CFCF..$D0E6, $118 bytes) ------------------------
 ; The game's saved state. On save (Func_12_4b67, bank $12) this block is stamped

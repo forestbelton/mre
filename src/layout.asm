@@ -26,15 +26,9 @@ SECTION "layout_code", ROM0[$166f]
 ; See docs/floor_data.md "Conditional-appearance gate".
 ; -----------------------------------------------------------------------------
 FloorPostLoadCleanup:
-	ld a, $01
-	ld hl, RemoveKeyPass           ; pass 1: strip gold KEY when wProgressFlags bit 1 set
-	call CallBankedHL
-	ld a, $01
-	ld hl, RemoveSilverKeyGate     ; pass 2: strip SILVER_KEY unless progress allows
-	call CallBankedHL
-	ld a, $01
-	ld hl, RemoveConditionalItemsPass  ; pass 3: conditional-item gate (Data_01_5162)
-	call CallBankedHL
+	FAR_CALL $01, RemoveKeyPass              ; pass 1: strip gold KEY when wProgressFlags bit 1 set
+	FAR_CALL $01, RemoveSilverKeyGate        ; pass 2: strip SILVER_KEY unless progress allows
+	FAR_CALL $01, RemoveConditionalItemsPass ; pass 3: conditional-item gate (Data_01_5162)
 	FAR_CALL $05, Func_05_496b
 	FAR_CALL $05, Func_05_49c8
 	FAR_CALL $05, Func_05_499d
@@ -49,7 +43,7 @@ FloorPostLoadCleanup:
 ; previously-mapped bank afterwards. Also called standalone from elsewhere.
 ; (Behaviour is clear; the bank-$12 routines aren't decoded, so the name is kept.)
 Func_00_16ad:
-	ld a, [$7fff]          ; save current bank ($7fff mirrors the bank register)
+	ld a, [CUR_BANK_TAG]          ; save current bank (CUR_BANK_TAG mirrors the bank register)
 	push af
 	ld a, $12
 	ld [$2fff], a          ; map bank $12 into $4000-$7fff
@@ -116,7 +110,7 @@ ParseFloorRecord:
 	ld d, a                ; d = record index
 	ld hl, FloorBankTable
 	rst AddAToHL                ; hl = FloorBankTable + index
-	ld a, [$7fff]          ; save current bank
+	ld a, [CUR_BANK_TAG]          ; save current bank
 	push af
 	ld a, [hl]
 	ld [$2fff], a          ; map the record's ROM bank
@@ -130,11 +124,11 @@ ParseFloorRecord:
 
 	; -- 8-byte header --
 	ld a, [hl+]
-	ld [$cfbd], a          ; [0] type/theme
+	ld [wFloorType], a
 	ld a, [hl+]
-	ld [$c2ea], a          ; [1] spawn column
+	ld [wFloorPlayerX], a
 	ld a, [hl+]
-	ld [$c2eb], a          ; [2] spawn row
+	ld [wFloorPlayerY], a
 	ld a, [hl+]
 	ld [$c2e9], a          ; [3] pad (always $00)
 	ld a, [hl+]
