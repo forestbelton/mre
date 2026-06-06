@@ -44,3 +44,11 @@ ROMX $27
 ROMX $35
     ORG $4000
     "Mistral graphics"
+ROMX $3e
+    ORG $4000
+    "Sound driver 0"
+    "Sound bank 0"
+ROMX $3f
+    ORG $4000
+    "Sound driver 1"
+    "Sound bank 1"

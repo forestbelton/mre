@@ -8,9 +8,11 @@
 ; s_call. All pointers are offsets/relatives the macros compute from labels, so
 ; the source has no hard ROM offsets in the operands.
 
-IF !DEF(SND_SONG_INC)
-DEF SND_SONG_INC EQU 1
+IF !DEF(SOUND_INC)
+DEF SOUND_INC EQU 1
 
+DEF SOUND_BANK_0 EQU $3e
+DEF SOUND_BANK_1 EQU $3f
 DEF SND_BASE EQU $4b00      ; table/descriptor offsets are relative to here
 
 ; --- note columns (note & $0f -> semitone); $07/$0f are rests. Cols 10/14 are
@@ -105,9 +107,27 @@ ENDM
 MACRO s_songptr ; \1 descriptor-label ; one $4b00 table slot (offset rel SND_BASE)
     dw \1 - SND_BASE
 ENDM
+
 MACRO s_chan    ; \1 priority, \2 stream-label ; one descriptor channel record
     db \1
     dw \2 - SND_BASE
+ENDM
+
+MACRO SOUND_TABLE
+	DEF _count = 0
+ENDM
+
+MACRO SOUND
+    dw \1 - SND_BASE
+	DEF _count += 1
+ENDM
+
+MACRO END_SOUND_TABLE
+	ASSERT _count <= $100
+	REPT $100 - _count
+		s_songptr Snd_3e_4d00
+	ENDR
+	PURGE _count
 ENDM
 
 ENDC

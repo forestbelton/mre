@@ -7,7 +7,7 @@
 ;
 ; See docs/sound_engine.md for the architecture and the command/bytecode tables.
 
-SECTION "snd_{SB}_000", ROMX[$4000], BANK[${SB}]
+SECTION "Sound driver {SBI}", ROMX
 
 Func_{SB}_4000:
 	jp Sound_Reset_{SB}

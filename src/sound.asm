@@ -24,9 +24,9 @@
 SECTION "analyzed_000a30", ROM0[$0a30]
 
 ResetSoundEngine:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, $3f
+	ld a, SOUND_BANK_1
 	ld [$2fff], a
 	call Func_3f_4000
 	pop af
@@ -36,9 +36,9 @@ ResetSoundEngine:
 	ret
 
 UpdateSoundEngine:
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, $3f
+	ld a, SOUND_BANK_1
 	ld [$2fff], a
 	call Func_3f_4003
 	pop af
@@ -63,7 +63,7 @@ PlaySoundTracked:
 	push hl
 	ld c, a
 	ld b, $00
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld hl, $0ad8
 	add hl, bc
@@ -85,7 +85,7 @@ PlaySound:
 	push hl
 	ld c, a
 	ld b, $00
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
 	ld hl, $0ad8
 	add hl, bc
@@ -112,11 +112,11 @@ SetSoundFade:
 	push bc
 	push de
 	push hl
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, $3f
+	ld a, SOUND_BANK_1
 	ld [$2fff], a
-	call $400c
+	call Func_3f_400c
 	pop af
 	ld [$2fff], a
 	pop hl
@@ -133,9 +133,9 @@ SetSoundMute:
 	push de
 	push hl
 	ld b, a
-	ld a, [$7fff]
+	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, $3f
+	ld a, SOUND_BANK_1
 	ld [$2fff], a
 	ld a, b
 	call $400f
@@ -163,28 +163,30 @@ ENDM
 SoundCommandTable:
 	; ids $00-$2e -> bank $3f, index = id
 	FOR I, $2f
-		SOUND_COMMAND $3f, I
+		SOUND_COMMAND SOUND_BANK_1, I
 	ENDR
 	; ids $2f-$3a -> bank $3e, index = id-$2f
 	FOR I, $2f, $3b
-		SOUND_COMMAND $3e, (I - $2f)
+		SOUND_COMMAND SOUND_BANK_0, (I - $2f)
 	ENDR
 
 ; ----- Shared driver ($4000-$4aff), instantiated into both banks --------------
 ; sound_driver.asm is byte-identical in $3e and $3f; include it once per bank
 ; with SB/SBU set to the bank suffix. See sound_driver.asm for the details.
-def SB equs "3f"
-INCLUDE "sound_driver.asm"
-redef SB equs "3e"
-INCLUDE "sound_driver.asm"
+DEF SB EQUS "3f"
+DEF SBI EQUS "1"
+INCLUDE "sound/driver.asm"
+REDEF SB EQUS "3e"
+REDEF SBI EQUS "0"
+INCLUDE "sound/driver.asm"
 
 ; Song/SFX bytecode macros (used by the generated data files below).
-INCLUDE "snd_song.inc"
+INCLUDE "sound.inc"
 
 ; ----- Bank $3e: song/SFX data ($4b00+) for sound ids $2f-$3a -----------------
 ; Readable, byte-exact macro source: per-bank pointer table + one file per song
 ; under src/sound/{sfx,bgm}/. (Dis)assembled by tools/songdisasm.py.
-INCLUDE "sound/bank_3e.asm"
+INCLUDE "sound/bank0.asm"
 
 ; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
-INCLUDE "sound/bank_3f.asm"
+INCLUDE "sound/bank1.asm"
