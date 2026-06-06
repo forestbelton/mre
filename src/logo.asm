@@ -25,14 +25,14 @@ DrawTecmoLogo:
 	ld hl, TecmoLogoTiles       ; bank $27 $4000 -> VRAM $8000 (tiles, incl logo @ $9000)
 	ld de, $8000
 	ld bc, TecmoLogoTilesEnd - TecmoLogoTiles
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a               ; VRAM bank 1
 	ld a, TECMO_LOGO_GFX_BANK
 	ld hl, TecmoLogoPalette     ; bank-1 plane (palette/maps/tail ride along, unused as tiles)
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, TECMO_LOGO_GFX_BANK
 	ld hl, TecmoLogoMapDesc     ; TecmoLogoMapDesc -> BG tilemap + CGB attrs
 	ld de, TILEMAP0

@@ -600,12 +600,12 @@ Data_00_031b:
 
 SECTION "analyzed_000348", ROM0[$0348]
 
-; CopyToVramSafe -- copy C bytes from HL to DE without corrupting the display,
+; VramCopy8 -- copy C bytes from HL to DE without corrupting the display,
 ; choosing a strategy by hardware (rst CheckCgb). DE is typically VRAM/OAM, which
 ; the CPU may only touch while the PPU is blanked. C is the byte count, with C = 0
-; meaning 256 (CopyHLtoDE leans on this to move whole 256-byte pages). HL/DE are
+; meaning 256 (VramCopy16 leans on this to move whole 256-byte pages). HL/DE are
 ; left just past the copied range, C = 0. This is the per-segment worker behind
-; CopyHLtoDE / CopyBytesBanked.
+; VramCopy16 / BankVramCopy.
 ;
 ;   CGB (.loop):     di, sync to the PPU via WaitForHBlank (returns instantly when
 ;     the LCD is off), then blast a batch of up to 7 bytes, re-enabling interrupts
@@ -618,7 +618,7 @@ SECTION "analyzed_000348", ROM0[$0348]
 ;
 ; in:  hl = source, de = destination, c = byte count (0 means 256)
 ; out: hl, de advanced past the range; c = 0
-CopyToVramSafe:
+VramCopy8:
 	rst CheckCgb
 	jr nz, .gbcCopy
 .dmgCopy:
@@ -654,23 +654,21 @@ ENDR
 	ei
 	ret
 
-; TODO: Rename
-; CopyHLtoDE switches to the given ROM bank and performs a VRAM-safe copy.
+; VramCopy16 performs a VRAM-safe copy with 16-bit length.
 ;
-; a		Bank to switch to
 ; hl    Source address
 ; de	Target address
 ; bc    Number of bytes to copy
-CopyHLtoDE:
+VramCopy16:
 	ld a, c
 	and c
 	jr z, .copy2
-	call CopyToVramSafe
+	call VramCopy8
 	ld a, b
 	and b
 	ret z
 .copy2:
-	call CopyToVramSafe
+	call VramCopy8
 	dec b
 	jr nz, .copy2
 	ret
@@ -1715,7 +1713,7 @@ Func_00_0b68:
 	push bc
 	ld b, $00
 	push de
-	call CopyHLtoDE
+	call VramCopy16
 	pop de
 	ld a, $20
 	rst AddAToDE
@@ -1758,7 +1756,7 @@ Func_00_0bb4:
 	push de
 	push bc
 	ld b, $00
-	call CopyHLtoDE
+	call VramCopy16
 	pop bc
 	pop de
 	pop hl
@@ -2590,14 +2588,14 @@ Func_00_108f:
 	push bc
 	push de
 	push hl
-	call CopyHLtoDE
+	call VramCopy16
 	pop hl
 	pop de
 	pop bc
 	ld a, $01
 	ldh [rVBK], a
 	add hl, bc
-	call CopyHLtoDE
+	call VramCopy16
 	pop af
 	ld [$2fff], a
 	ret
@@ -7601,7 +7599,7 @@ Func_00_33dd:
 	ld hl, $4198
 	add hl, bc
 	ld c, $10
-	call CopyToVramSafe
+	call VramCopy8
 	pop hl
 	pop bc
 	inc hl
@@ -8421,12 +8419,12 @@ Func_00_38e3:
 
 SECTION "analyzed_003913", ROM0[$3913]
 
-; Func_00_3913 switches to a new ROM bank and copies bytes in it.
+; BankCopy switches to a new ROM bank and performs a copy.
 ; a		Bank to switch to
 ; hl	Source address
 ; de	Target address
 ; bc	Number of bytes to copy
-Func_00_3913:
+BankCopy:
 	; Save current bank in wBankCallTmp and switch to target bank
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
@@ -8446,13 +8444,18 @@ Func_00_3913:
 	ld [$2fff], a
 	ret
 
-CopyBytesBanked:
+; BankCopy switches to a new ROM bank and performs a VRAM-safe copy.
+; a		Bank to switch to
+; hl	Source address
+; de	Target address
+; bc	Number of bytes to copy
+BankVramCopy:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
-	call CopyHLtoDE
+	call VramCopy16
 	pop af
 	ld [$2fff], a
 	ret
@@ -8473,6 +8476,7 @@ Func_00_3957:
 	ld a, $04
 	ld [wGameScene], a
 	ret
+
 Func_00_3965:
 	ld a, $00
 	ldh [rVBK], a
@@ -8487,7 +8491,7 @@ Func_00_3971:
 Func_00_397a:
 	ld de, $8800
 	ld bc, $1000
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $674b
 	ld a, $19
 	ld de, $9960
@@ -8496,14 +8500,15 @@ Func_00_397a:
 	ld hl, $66cb
 	ld de, wBgPalettes
 	ld bc, $0080
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [$d61b], a
 	ld [wRendererAddr], a
-	ld [$d61f], a
+	ld [wRendererAddr+1], a
 	ld [wRendererBank], a
 	ld [$d61a], a
 	ret
+
 Func_00_39ad:
 	ld a, $00
 	ld [$d60e], a
@@ -8511,10 +8516,10 @@ Func_00_39ad:
 	ld hl, wRanchProgress
 	ld c, $0b
 	xor a
-Func_00_39bb:
+.loop:
 	ld [hl+], a
 	dec c
-	jr nz, Func_00_39bb
+	jr nz, .loop
 	ret
 
 SECTION "analyzed_003d30", ROM0[$3d30]
@@ -16243,7 +16248,7 @@ Func_02_4000:
 	ld hl, $40b1
 	ld de, $8000
 	ld bc, $1000
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_02_4010:
 	ld a, $07
@@ -29800,7 +29805,7 @@ LoadDiscStoneDisplay:
 	ldh [rVBK], a
 	ld de, $9380
 	ld bc, $0480
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, $bb
 	ld [$cf3a], a
 	ld a, $46
@@ -30447,7 +30452,7 @@ Func_0f_4b27:
 	ld hl, $4d38
 	ld de, $8800
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_0f_4b4f:
 	FAR_CALL $10, Func_10_40a4
@@ -30493,7 +30498,7 @@ LoadMonsterPortrait:
 	ld a, $3c
 	ld de, $8800
 	ld bc, $0800
-	call CopyBytesBanked
+	call BankVramCopy
 	ret
 Func_0f_4ba3:
 	xor a
@@ -31222,7 +31227,7 @@ Func_10_4007:
 	ld hl, $44b7
 	ld de, $9400
 	ld bc, $0400
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_10_4018:
 	xor a
@@ -31230,13 +31235,13 @@ Func_10_4018:
 	ld hl, $40b7
 	ld de, $9000
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, $01
 	ld [rVBK], a
 	ld hl, $48b7
 	ld de, $8800
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 
 SECTION "analyzed_04003a", ROMX[$403a], BANK[$10]
@@ -31252,7 +31257,7 @@ Func_10_4041:
 	ld hl, $50b7
 	ld de, $8000
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ld hl, $66f7
 	ld a, $00
 	ld b, $04
@@ -31265,7 +31270,7 @@ Func_10_405f:
 	ld hl, $53b7
 	ld de, $8300
 	ld bc, $0500
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_10_4070:
 	xor a
@@ -31273,7 +31278,7 @@ Func_10_4070:
 	ld hl, $58b7
 	ld de, $8800
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_10_4081:
 	ld hl, $66f7
@@ -32029,7 +32034,7 @@ LoadFloorMonsterSprite:
 	ld a, $01
 	ld [rVBK], a
 	ld bc, $0200
-	call CopyHLtoDE
+	call VramCopy16
 	pop af
 	add a, a
 	add a, a
@@ -32069,7 +32074,7 @@ Func_11_4081:
 	ld e, a
 	pop hl
 	ld bc, $0300
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_11_40b1:
 	ld de, $c4cd
@@ -34647,7 +34652,7 @@ Func_13_4061:
 	ld hl, $4a45
 	ld de, $8000
 	ld bc, $1000
-	call CopyHLtoDE
+	call VramCopy16
 	xor a
 	ld [$d61b], a
 	ld [wRendererAddr], a
@@ -34658,7 +34663,7 @@ Func_13_4061:
 	ld hl, $46cb
 	ld de, $8800
 	ld bc, $1000
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $5ac5
 	ld de, $9800
 	call CopyBgMap
@@ -35761,12 +35766,12 @@ ShowRegeneratedMonster:
 	ld bc, $1800
 	ld hl, $436b
 	ld de, $8000
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, $01
 	ldh [rVBK], a
 	ld bc, $0800
 	ld de, $8000
-	call CopyHLtoDE
+	call VramCopy16
 	ld hl, $63eb
 	ld de, $9800
 	call CopyBgMap
@@ -36534,7 +36539,7 @@ Func_15_4101:
 	ld hl, $8000
 	add hl, bc
 	ld c, $10
-	call CopyToVramSafe
+	call VramCopy8
 	pop hl
 	jr Func_15_40cc
 
@@ -36674,13 +36679,13 @@ Func_15_41fe:
 	ld bc, $1000
 	ld hl, $424e
 	ld de, $8800
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, $01
 	ld [rVBK], a
 	ld bc, $1000
 	ld hl, $524e
 	ld de, $8800
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, [$cfbe]
 	or a
 	ret z
@@ -37509,33 +37514,33 @@ Func_16_4016:
 	jr nc, Func_16_4036
 	ld de, $9000
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_16_4036:
 	ld de, $9000
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $9140
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $9160
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $9760
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $9080
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $91c0
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $91e0
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ld de, $97e0
 	ld bc, $0020
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 
 SECTION "analyzed_05807f", ROMX[$407f], BANK[$16]
@@ -37878,7 +37883,7 @@ LoadFontTiles:
 	add a, h
 	ld h, a
 	ld de, $9400
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 
 SECTION "analyzed_05c14c", ROMX[$414c], BANK[$17]
@@ -38775,7 +38780,7 @@ Pashute_LoadShrineScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Pashute_LoadShrineTilemap
 	call Pashute_RenderPortraitNeutral
 	call HideUnusedOamSprites
@@ -38783,12 +38788,12 @@ Pashute_LoadShrineScene:
 	ld hl, $5800
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1b
 	ld hl, $5840
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -38808,7 +38813,7 @@ Pashute_LoadIntroScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Pashute_LoadShrineTilemap
 	call Pashute_RenderPortraitNeutral
 	call HideUnusedOamSprites
@@ -38816,12 +38821,12 @@ Pashute_LoadIntroScene:
 	ld hl, $5bdd
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1b
 	ld hl, $5c1d
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	push af
 	ld a, $32
 	call PlaySoundTracked
@@ -38986,7 +38991,7 @@ Verde_BuildPortraitScene:
 	ld hl, $5c5d
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Verde_LoadBgMap
 	call Verde_RenderPortrait
 	call HideUnusedOamSprites
@@ -38994,12 +38999,12 @@ Verde_BuildPortraitScene:
 	ld hl, $745d
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1b
 	ld hl, $749d
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39019,7 +39024,7 @@ Verde_BuildIntroScene:
 	ld hl, $5c5d
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Verde_LoadBgMap
 	call Verde_RenderPortrait
 	call HideUnusedOamSprites
@@ -39027,12 +39032,12 @@ Verde_BuildIntroScene:
 	ld hl, $788e
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1b
 	ld hl, $78ce
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39188,7 +39193,7 @@ Bodka_BuildStudioScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Bodka_LoadStudioBgMap
 	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
@@ -39196,12 +39201,12 @@ Bodka_BuildStudioScene:
 	ld hl, $5800
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1e
 	ld hl, $5840
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39223,7 +39228,7 @@ Bodka_BuildTowerScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Bodka_LoadStudioBgMap
 	ld hl, $5bd9
 	ld a, $1e
@@ -39235,12 +39240,12 @@ Bodka_BuildTowerScene:
 	ld hl, $5b59
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1e
 	ld hl, $5b99
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39336,7 +39341,7 @@ Tradehouse_BuildSceneNoInit:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Tradehouse_LoadBgMap
 	call Func_18_601f
 	call HideUnusedOamSprites
@@ -39344,12 +39349,12 @@ Tradehouse_BuildSceneNoInit:
 	ld hl, $7000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $33
 	ld hl, $7040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39372,18 +39377,18 @@ Tradehouse_BuildNoteScene:
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Func_18_6013
 	ld a, $33
 	ld hl, $7000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $33
 	ld hl, $7040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39499,7 +39504,7 @@ Func_18_6bc8:
 	ld hl, $5ae8
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Naji_LoadPortraitTilemap
 	call Naji_RenderPortraitTalking
 	call HideUnusedOamSprites
@@ -39507,12 +39512,12 @@ Func_18_6bc8:
 	ld hl, $72e8
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1a
 	ld hl, $7328
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -39923,7 +39928,7 @@ Toamuna_CheckSaveExists:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	call Toamuna_LoadPortraitTilemap
 	call Toamuna_RenderPortrait
 	call HideUnusedOamSprites
@@ -39931,12 +39936,12 @@ Toamuna_CheckSaveExists:
 	ld hl, $5800
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1a
 	ld hl, $5840
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -40550,7 +40555,7 @@ Kalum_StartEncounter:
 	ld hl, KalumPortraitTiles
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, KalumPortraitMapDesc
 	ld a, $1d
 	ld de, TILEMAP0
@@ -40561,12 +40566,12 @@ Kalum_StartEncounter:
 	ld hl, KalumPortraitPaletteBg
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1d
 	ld hl, KalumPortraitPaletteObj
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	call Func_1f_41da
 	call Func_1f_41e6
 	push af
@@ -40605,7 +40610,7 @@ Kalum_LoadMonsterTiles:
 	ld hl, KalumPortraitPaletteBg
 	ld de, $c181
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
@@ -40614,7 +40619,7 @@ Kalum_LoadMonsterTiles:
 	ld hl, KalumPortraitPaletteObj
 	ld de, $c1c1
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
@@ -40688,14 +40693,14 @@ Mistral_StartEncounter:
 	ld hl, $4000
 	ld de, $9000
 	ld bc, $0800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ld [rVBK], a
 	ld a, $35
 	ld hl, $4800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $6080
 	ld a, $35
 	ld de, $9800
@@ -40706,12 +40711,12 @@ Mistral_StartEncounter:
 	ld hl, $6000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $35
 	ld hl, $6040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	call Func_1f_41da
 	call Func_1f_41e6
 	push af
@@ -40733,7 +40738,7 @@ Mistral_LoadMonsterTiles:
 	ld hl, $6000
 	ld de, $c181
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
@@ -40742,7 +40747,7 @@ Mistral_LoadMonsterTiles:
 	ld hl, $6040
 	ld de, $c1c1
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
@@ -40850,7 +40855,7 @@ Rafaga_StartEncounter:
 	ld hl, $5b19
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $7399
 	ld a, $1d
 	ld de, $9800
@@ -40861,12 +40866,12 @@ Rafaga_StartEncounter:
 	ld hl, $7319
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1d
 	ld hl, $7359
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	call Func_1f_41da
 	call Func_1f_41e6
 	push af
@@ -40888,7 +40893,7 @@ Rafaga_LoadMonsterTiles:
 	ld hl, $7319
 	ld de, $c181
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
@@ -40897,7 +40902,7 @@ Rafaga_LoadMonsterTiles:
 	ld hl, $7359
 	ld de, $c1c1
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
@@ -40962,7 +40967,7 @@ Tempest_StartEncounter:
 	ld hl, $5be7
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $7467
 	ld a, $1e
 	ld de, $9800
@@ -40973,12 +40978,12 @@ Tempest_StartEncounter:
 	ld hl, $73e7
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1e
 	ld hl, $7427
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	call Func_1f_41da
 	call Func_1f_41e6
 	push af
@@ -41000,7 +41005,7 @@ Tempest_LoadMonsterTiles:
 	ld hl, $73e7
 	ld de, $c181
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
@@ -41009,7 +41014,7 @@ Tempest_LoadMonsterTiles:
 	ld hl, $7427
 	ld de, $c1c1
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
@@ -41100,14 +41105,14 @@ Nada_ShowScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1c
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $7080
 	ld a, $1c
 	ld de, $9800
@@ -41118,12 +41123,12 @@ Nada_ShowScene:
 	ld hl, $7000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1c
 	ld hl, $7040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	push af
 	ld a, $36
 	call PlaySoundTracked
@@ -41140,14 +41145,14 @@ Nada_ShowSnapReaction:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1c
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $7080
 	ld a, $1c
 	ld de, $9800
@@ -41158,12 +41163,12 @@ Nada_ShowSnapReaction:
 	ld hl, $7000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1c
 	ld hl, $7040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -41179,14 +41184,14 @@ Nada_ShowRageScene:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1f
 	ld hl, $6607
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $7e07
 	ld a, $1f
 	ld de, $9800
@@ -41197,12 +41202,12 @@ Nada_ShowRageScene:
 	ld hl, $7000
 	ld de, wBgPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld a, $1c
 	ld hl, $7040
 	ld de, wObjPalettes
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	call Func_1f_41da
 	call Func_1f_41e6
 	xor a
@@ -41224,7 +41229,7 @@ Nada_LoadMonsterTiles:
 	ld hl, $7000
 	ld de, $c181
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
@@ -41233,7 +41238,7 @@ Nada_LoadMonsterTiles:
 	ld hl, $7040
 	ld de, $c1c1
 	ld bc, $0030
-	call Func_00_3913
+	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
 	ld c, $10
@@ -46924,14 +46929,14 @@ DrawTownScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $20
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld c, $00
 	ld a, [$d0fb]
 	ld b, $02
@@ -47471,14 +47476,14 @@ DrawTowerEntranceScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $22
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $22
 	ld hl, $7080
 	ld de, $9800
@@ -47603,14 +47608,14 @@ DrawRoomStartScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $23
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $23
 	ld hl, $7080
 	ld de, $9800
@@ -48069,7 +48074,7 @@ Func_30_486d:
 	push bc
 	ld b, $00
 	push de
-	call CopyHLtoDE
+	call VramCopy16
 	pop de
 	ld a, $20
 	rst AddAToDE
@@ -48099,7 +48104,7 @@ DrawNextRoomScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $24
 	ld hl, $5880
 	ld de, $9c00
@@ -48137,7 +48142,7 @@ Func_30_48c9:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $25
 	ld hl, $7100
 	ld de, $9909
@@ -48152,7 +48157,7 @@ Func_30_4911:
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $25
 	ld hl, $71f8
 	ld de, $9909
@@ -48782,14 +48787,14 @@ DrawRoomClearScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $21
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $21
 	ld hl, $7080
 	ld de, $9800
@@ -49088,14 +49093,14 @@ DrawTowerOpenScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $26
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $26
 	ld hl, $7080
 	ld de, $9800
@@ -49280,14 +49285,14 @@ DrawTitleScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $28
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $28
 	ld hl, $7080
 	ld de, $9800
@@ -49558,14 +49563,14 @@ DrawIntroBookScreen:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $29
 	ld hl, $5800
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld b, $29
 	ld hl, $7080
 	ld de, $9880
@@ -51908,19 +51913,19 @@ ShowMonsterDetailScreen:
 	ld hl, $4613
 	ld de, $8000
 	ld bc, $1800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $01
 	ld [rVBK], a
 	ld a, $32
 	ld hl, $5e13
 	ld de, $9000
 	ld bc, $0800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld a, $3b
 	ld hl, $48b4
 	ld de, $8800
 	ld bc, $0800
-	call CopyBytesBanked
+	call BankVramCopy
 	ld hl, $6313
 	ld a, $32
 	ld de, $9800
@@ -51962,7 +51967,7 @@ ShowMonsterDetailScreen:
 	ld hl, $6293
 	ld de, wBgPalettes
 	ld bc, $0080
-	call Func_00_3913
+	call BankCopy
 	call LoadMonsterPalettes
 	xor a
 	ld [hBgPaletteDirty], a
@@ -52043,7 +52048,7 @@ LoadMonsterPalettes:
 	ld de, wBgPalettes + $20
 	ld bc, $0018
 	ld a, $0f
-	call Func_00_3913
+	call BankCopy
 	pop hl
 	push hl
 	ld bc, $0048
@@ -52051,7 +52056,7 @@ LoadMonsterPalettes:
 	ld de, wObjPalettes + $8
 	ld bc, $0010
 	ld a, $0f
-	call Func_00_3913
+	call BankCopy
 	pop hl
 	ret
 
@@ -53429,7 +53434,7 @@ Func_38_4000:
 	add a, h
 	ld h, a
 	ld de, $9400
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 
 SECTION "analyzed_0e001a", ROMX[$401a], BANK[$38]
@@ -53919,13 +53924,13 @@ Func_3b_4000:
 	ld hl, $4034
 	ld de, $9000
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 	ld a, $01
 	ld [rVBK], a
 	ld hl, $4834
 	ld de, $8780
 	ld bc, $0c00
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 
 SECTION "analyzed_0ec022", ROMX[$4022], BANK[$3b]
@@ -54539,7 +54544,7 @@ Func_3d_4000:
 	jr z, Func_3d_401d
 	ld de, $8000
 	ld bc, $0800
-	call CopyHLtoDE
+	call VramCopy16
 Func_3d_401d:
 	ld a, [wActiveFloor]
 	dec a
@@ -54553,7 +54558,7 @@ Func_3d_401d:
 	jr z, Func_3d_4035
 	ld de, $8b80
 	ld bc, $0400
-	call CopyHLtoDE
+	call VramCopy16
 Func_3d_4035:
 	xor a
 	ld [rVBK], a
@@ -54569,7 +54574,7 @@ Func_3d_4035:
 	ret z
 	ld de, $8d00
 	ld bc, $0300
-	call CopyHLtoDE
+	call VramCopy16
 	ret
 Func_3d_4051:
 	ld a, [wActiveFloor]
