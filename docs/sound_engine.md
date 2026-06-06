@@ -288,8 +288,13 @@ call. Use `[$c28c]` to know the current tracked track.
   subroutines, looping via `s_goto`. ~30% of each bank is **unused/dead**
   patterns (decoded but referenced by nothing — flagged `; unused/dead pattern`).
   `tools/songexport.py --dump` is a frame-accurate channel emulator for analysis.
-  Next: lift instruments/CH3 waves into PNG/2bpp-style assets, and optionally a
-  GBS export for bit-exact listening.
+- **Done — GBS export:** `tools/songtogbs.py src/sound/.../<sound>.asm` builds a
+  GBS (Game Boy Sound) file that plays that one sound on a GBS player (bit-exact,
+  since it runs the real driver). It lifts the sound's bank from the built ROM,
+  patches the `$7fff` bank tag to the GBS bank it places the data in (the driver
+  re-banks to that tag per voice), and prepends a tiny INIT/PLAY stub
+  (INIT: select bank, `$4000` reset, `$4006`/`$4009` start; PLAY: `$4003` update).
+  Verified with gbsplay. Next: lift instruments/CH3 waves into PNG/2bpp assets.
 - Give the three data tables (`$442e`, `$454b`, `$4708`) merged single-section
   homes + names (currently still fragmented into the static pass's `db` sections).
 - Fill in the SFX ids with no observed caller (`$03`,`$07`,`$0c`,`$0f`,`$10`,
