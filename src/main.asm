@@ -9,6 +9,8 @@ INCLUDE "util.inc"
 
 INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "room/gameplay.asm"
+INCLUDE "editor.asm"
 INCLUDE "screens.asm"
 INCLUDE "monster_detail.asm"
 INCLUDE "link.asm"
