@@ -97,12 +97,40 @@ Each channel's stream is interpreted one byte at a time (`Func_3f_414a`):
 A **note** byte (`$00-$7f`, handler `$432c`→`$4382`) keys on the channel's
 hardware voice with an 11-bit frequency looked up from the `$442e` table, which
 is a 2-D grid: **`row = [block+1]` (the octave register set by `$9x`), `column =
-note & $0f` (semitone)** — `freq = $442e[row*32 + col*2]`. Note bits 5-6 apply a
-further octave shift (handlers `$43ff/$4401/$4403`); bit 4 flags that a length
-operand byte follows. `note & $0f` of `$07`/`$0f` is a rest. The voice's hardware
-target is `voice index & 3`: 0→CH1 (`rAUD1*`), 1→CH2 (`rAUD2*`), 2→CH3 wave
-(`rAUD3LEVEL`), 3→CH4 noise (`rAUD4*`). Volume/timbre come from the instrument
+note & $0f` (semitone)** — `freq = $442e[row*32 + col*2]`. The note byte's
+bit fields are:
+
+- **bits 3-0** — the semitone column. The table is exact equal temperament;
+  columns map `0..6 = C D E F G A B`, `8..14 = C# D# (E#) F# G# A# (B#)`, and
+  **`$07`/`$0f` are rests**. Cols `$0a`/`$0e` are enharmonic duplicates of F/C.
+  block `1` col `0` = C2 (MIDI 36); block N selects octave N+1.
+- **bit 4** — a length-operand byte follows (the note's frame count); see timing
+  below.
+- **bits 5-6** — **stereo panning** (NR51/`rAUDTERM` via `$43ff/$4401/$4403`),
+  *not* an octave shift. The handler shifts a per-channel L/R enable mask into
+  `rAUDTERM`. (Earlier drafts of this doc misread this as an octave shift.)
+
+The voice's hardware target is `voice index & 3`: 0→CH1 (`rAUD1*`), 1→CH2
+(`rAUD2*`), 2→CH3 wave (`rAUD3LEVEL`), 3→CH4 noise (`rAUD4*`). For CH4 the
+"frequency" value is written to `rAUD4POLY` (the noise polynomial), so note names
+are not musical pitches on that channel. Volume/timbre come from the instrument
 envelope (`$fc`), not the note.
+
+### Note timing (frames)
+
+The interpreter ticks once per frame (`UpdateSoundEngine` runs in the VBlank
+handler, ~59.7 Hz). Voice `+0` is a frame countdown: while nonzero the note holds
+and `+0` is decremented; at zero the next stream byte is read. A note sets `+0`
+as follows (handler tail `$43e8`, using `+5`/`+6`):
+
+- **bit 4 set** → `+0 = ` the explicit length-operand byte; `+6` (an
+  explicit-length flag) is set, then cleared.
+- **bit 4 clear** → `+6` is 0, so `+0 = +5`, the **default note length** set by
+  `$fd n`.
+
+So `$fd n` sets the default length and length-less notes reuse it — durations in
+real songs come out as clean multiples (e.g. default `7`, with `14`/`28` for
+half/quarter-note feel).
 
 **Commands** (`$80-$fe`) dispatch via `Func_3f_452e`. `$9x` is special; the rest
 index the `$454b` jump table by `(cmd-$ea)`:
@@ -247,12 +275,21 @@ call. Use `[$c28c]` to know the current tracked track.
 - **Done:** the command set (`$9x`, `$ea-$fe`), the note/`$ff` encoding, the song
   descriptor format, and the instrument/envelope blocks (`$4708`/`$4754`/`$474c`
   pair streams + `$4760` wave samples) are all enumerated above.
-- Remaining detail: the exact bits of the note byte's `$70` field that `$432c`
-  tests (octave shift vs. the length-operand flag), and a couple of voice-block
-  scratch bytes (`+5`/`+$10`) whose role isn't pinned down.
-- Tooling: with the formats known, the songs/instruments could be lifted into an
-  editable form (the project's north-star) — e.g. export instruments as
-  `[value,duration]` lists and CH3 waves as the existing PNG/2bpp-style assets.
+- **Done:** the note byte's `$70` field is resolved — bit 4 = length-operand
+  flag, bits 5-6 = stereo panning (not octave); `+5` = default note length (set
+  by `$fd`, used by length-less notes). `+$10` (set by `$ef`) is still unpinned.
+- **Done — editable source:** the whole song-data region (`$4b00-$7ffe`, both
+  banks) is now carved into readable RGBDS macro source —
+  `src/snd_data_3f.asm` / `src/snd_data_3e.asm`, using the opcode macros in
+  `include/snd_song.inc` (note columns, octave, envelopes, `s_call`/`s_goto`,
+  descriptors). `tools/songdisasm.py` is the byte-exact (dis)assembler
+  (`--verify` round-trips both banks; `--emit 3f|3e` regenerates the source).
+  A song is an order-list of per-channel `s_call`s into shared pattern
+  subroutines, looping via `s_goto`. ~30% of each bank is **unused/dead**
+  patterns (decoded but referenced by nothing — flagged `; unused/dead pattern`).
+  `tools/songexport.py --dump` is a frame-accurate channel emulator for analysis.
+  Next: lift instruments/CH3 waves into PNG/2bpp-style assets, and optionally a
+  GBS export for bit-exact listening.
 - Give the three data tables (`$442e`, `$454b`, `$4708`) merged single-section
   homes + names (currently still fragmented into the static pass's `db` sections).
 - Fill in the SFX ids with no observed caller (`$03`,`$07`,`$0c`,`$0f`,`$10`,
