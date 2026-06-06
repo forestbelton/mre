@@ -3,9 +3,7 @@
 ; each instantiation gets its own bank-suffixed labels (Func_3f_*/Func_3e_* ...)
 ; and BANK[] directive. Data references ($442e freq table, $454b command jump
 ; table, $4708 instrument table, $4b00 song table) are raw bank-agnostic 16-bit
-; addresses, so the emitted bytes are identical in both banks. The only bank-
-; specific symbol is BANK_TAG_{SBU} -- both BANK_TAG_3E and BANK_TAG_3F live at
-; $7fff (each bank's self-tag byte), so that operand is identical too.
+; addresses, so the emitted bytes are identical in both banks.
 ;
 ; See docs/sound_engine.md for the architecture and the command/bytecode tables.
 
@@ -153,7 +151,7 @@ Func_{SB}_40d9:
 	ld a, [hl+]
 	ld [de], a
 	inc de
-	ld a, [BANK_TAG_{SBU}]
+	ld a, [CUR_BANK_TAG]
 	ld [de], a
 	inc de
 	ld a, [hl+]

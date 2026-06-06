@@ -174,10 +174,8 @@ SoundCommandTable:
 ; sound_driver.asm is byte-identical in $3e and $3f; include it once per bank
 ; with SB/SBU set to the bank suffix. See sound_driver.asm for the details.
 def SB equs "3f"
-def SBU equs "3F"
 INCLUDE "sound_driver.asm"
 redef SB equs "3e"
-redef SBU equs "3E"
 INCLUDE "sound_driver.asm"
 
 ; Song/SFX bytecode macros (used by the generated data files below).
