@@ -38,20 +38,17 @@ Safety / ergonomics:
     nothing.
   * Returns a list of Change(file, line, rule, before, after).
 
-A `%NAME` reused within one line (or across the pattern's lines) is a
-back-reference: every occurrence must capture the same text -- e.g.
-`ld a, %X` / `ld b, %X` matches only when both operands are identical.
-
-FUTURE -- capture wildcards (designed-in, not yet exposed): a `%NAME` token in a
-pattern captures one whitespace-delimited operand, usable in the replacement,
-e.g.
+Capture wildcards: a `%NAME` token in a pattern captures one operand (a single
+token: non-space, non-comma -- not a spaced expression) and is substituted back
+into the replacement, e.g.
         ld a, %BANK
         ld hl, %ADDR
         call CallBankedHL
     ->  FAR_CALL %BANK, %ADDR
-The compiler already turns `%NAME` into a named regex group and the renderer
-already substitutes `%NAME` back; `_TOKEN_RX` is the only knob to tune for what
-an operand may look like. It is intentionally conservative until we use it.
+A `%NAME` reused within one line, or across the pattern's lines, is a
+back-reference: every occurrence must capture the same text -- so `ld a, %X` /
+`ld b, %X` matches only when both operands are identical. Names must start with a
+letter/underscore (a literal `%10101010` binary in a pattern stays literal).
 """
 import glob as _glob
 import os
@@ -61,10 +58,15 @@ from collections import namedtuple
 
 Change = namedtuple("Change", "file line rule before after")
 
-# What a `%NAME` wildcard may capture (one operand). Conservative for now: a run
-# of non-space chars. Refine when the capture feature is turned on for real.
-_TOKEN_RX = r"\S+"
-_WILDCARD = re.compile(r"%(\w+)")
+# What a `%NAME` wildcard captures: one operand token -- a run of non-space,
+# non-comma chars (so adjacent `%A, %B` split on the comma). Trailing brackets/
+# colons are handled by the surrounding literal context via backtracking. A
+# capture is a single token; spaced expressions (e.g. `[$c000 + 3]`) aren't one.
+_TOKEN_RX = r"[^\s,]+"
+# Wildcard names must start with a letter/underscore, so a literal binary operand
+# like `%10101010` in a pattern is NOT mistaken for a wildcard.
+_WILDCARD = re.compile(r"%([A-Za-z_]\w*)")
+_WILDCARD_SPLIT = r"(%[A-Za-z_]\w*)"
 # A label line: one token then 1-2 colons, e.g. `Foo:`, `.local:`, `Exported::`.
 _LABEL_RX = re.compile(r"[^\s:]+::?$")
 
@@ -90,7 +92,7 @@ def _compile_line(canon_pat):
     `ld a, %X` / `ld b, %X` only matches when both operands are identical. (Across
     lines the same effect is enforced by _match_window merging captures.)"""
     rx, names, seen = "", [], set()
-    for part in re.split(r"(%\w+)", canon_pat):
+    for part in re.split(_WILDCARD_SPLIT, canon_pat):
         if _WILDCARD.fullmatch(part):
             name = part[1:]
             if name in seen:
