@@ -31,6 +31,3 @@ TecmoLogoAttrMap:
 
 Data_27_5ade:
 	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408
-
-Data_27_6ffe:
-	db $00, $00
