@@ -35,6 +35,22 @@ ROMX $12
     "Suezo room"
     "Tiger room"
     "Mocchi room"
+ROMX $13
+    ORG $4449
+    "Alf/Nox script"
+    "Cox letter script"
+ROMX $18
+    ORG $4272
+    "Pashute script"
+    ORG $54f5
+    "Verde script"
+    ORG $6092
+    "Bodka script"
+    ORG $717e
+    "Naji script"
+ROMX $19
+    ORG $40dd
+    "Toamuna script"
 ROMX $1a
     "Toamuna graphics"
     "Naji graphics"
@@ -49,6 +65,14 @@ ROMX $1e
 ROMX $1f
     ORG $42b1
     "Kalum script"
+    ORG $45a5
+    "Mistral script"
+    ORG $4857
+    "Rafaga script"
+    ORG $4b82
+    "Tempest script"
+    ORG $50d6
+    "Nada script"
     ORG $6607
     "Nada graphics 2"
 ROMX $20

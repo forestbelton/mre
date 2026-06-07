@@ -16,7 +16,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "toamuna_0640dd", ROMX[$40dd], BANK[$19]
+SECTION "Toamuna script", ROMX
 
 
 ToamunaScript:

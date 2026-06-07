@@ -10,7 +10,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "letter_from_cox", ROMX[$47ff], BANK[$13]
+SECTION "Cox letter script", ROMX
 
 
 LetterFromCox:

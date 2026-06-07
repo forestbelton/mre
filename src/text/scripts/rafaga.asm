@@ -12,7 +12,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "rafaga_07c857", ROMX[$4857], BANK[$1f]
+SECTION "Rafaga script", ROMX
 
 
 RafagaScript:

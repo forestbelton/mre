@@ -12,7 +12,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "mistral_07c5a5", ROMX[$45a5], BANK[$1f]
+SECTION "Mistral script", ROMX
 
 
 MistralScript:

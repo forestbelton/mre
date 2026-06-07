@@ -22,7 +22,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "naji_06317e", ROMX[$717e], BANK[$18]
+SECTION "Naji script", ROMX
 
 NajiScript:
     ; Dialog box at BG tilemap $9982, 16 tiles wide × 4 tiles tall.

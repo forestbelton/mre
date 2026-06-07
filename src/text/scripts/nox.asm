@@ -23,8 +23,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "nox_04c449", ROMX[$4449], BANK[$13]
-
+SECTION "Alf/Nox script", ROMX
 
 NoxScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9c22, .Width=$10, .Height=$04

@@ -9,7 +9,7 @@
 
 INCLUDE "text.inc"
 
-SECTION "pashute_060272", ROMX[$4272], BANK[$18]
+SECTION "Pashute script", ROMX
 
 
 PashuteScript:
