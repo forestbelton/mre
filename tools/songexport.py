@@ -8,7 +8,7 @@ durations, instruments, octaves, loops, CALL/RET, GOTO -- into a per-channel
 note-event timeline (`--dump`).
 
 It is an *analysis* tool: the canonical editable form of the songs is the
-byte-exact macro source produced by tools/songdisasm.py (see docs/sound_engine.md
+hand-maintained byte-exact macro source under src/sound/ (see docs/sound_engine.md
 "editable source").  A tracker (XM) export from this timeline was considered but
 rejected -- it cannot round-trip to the exact ROM bytecode; a GBS register-replay
 export is the bit-exact listening route if one is ever wanted.

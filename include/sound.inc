@@ -11,8 +11,8 @@
 IF !DEF(SOUND_INC)
 DEF SOUND_INC EQU 1
 
-DEF SOUND_BANK_0 EQU $3e
-DEF SOUND_BANK_1 EQU $3f
+DEF SOUND_BANK_0 EQU $3f    ; primary: sound ids $00-$2e (SFX + BGM $28-$2e)
+DEF SOUND_BANK_1 EQU $3e    ; secondary: BGM ids $2f-$3a
 DEF SND_BASE EQU $4b00      ; table/descriptor offsets are relative to here
 
 ; --- note columns (note & $0f -> semitone); $07/$0f are rests. Cols 10/14 are

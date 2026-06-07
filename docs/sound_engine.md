@@ -281,15 +281,20 @@ call. Use `[$c28c]` to know the current tracked track.
   flag, bits 5-6 = stereo panning (not octave); `+5` = default note length (set
   by `$fd`, used by length-less notes). `+$10` (set by `$ef`) is still unpinned.
 - **Done — editable source:** the whole song-data region (`$4b00-$7ffe`, both
-  banks) is now carved into readable RGBDS macro source —
-  `src/snd_data_3f.asm` / `src/snd_data_3e.asm`, using the opcode macros in
-  `include/snd_song.inc` (note columns, octave, envelopes, `s_call`/`s_goto`,
-  descriptors). `tools/songdisasm.py` is the byte-exact (dis)assembler
-  (`--verify` round-trips both banks; `--emit 3f|3e` regenerates the source).
-  A song is an order-list of per-channel `s_call`s into shared pattern
-  subroutines, looping via `s_goto`. ~30% of each bank is **unused/dead**
-  patterns (decoded but referenced by nothing — flagged `; unused/dead pattern`).
-  `tools/songexport.py --dump` is a frame-accurate channel emulator for analysis.
+  banks) is readable RGBDS macro source, **one file per sound** under
+  `src/sound/{sfx,bgm}/` (ids `$00-$27` SFX, `$28-$3a` BGM), using the opcode
+  macros in `include/sound.inc` (note columns, octave, envelopes,
+  `s_call`/`s_goto`, descriptors). Per bank, `src/sound/bank{0,1}.asm` hold the
+  `$4b00` pointer table (`SOUND_TABLE`/`SOUND`) and `INCLUDE` their songs in
+  address order; `src/sound/driver.asm` is the shared driver. Sections float and
+  are placed by `layout.link`. **Bank naming:** `SOUND_BANK_0` = `$3f`
+  (`bank0.asm`, ids `$00-$2e`), `SOUND_BANK_1` = `$3e` (`bank1.asm`, `$2f-$3a`).
+  These files are **hand-maintained** (the original `songdisasm.py`
+  (dis)assembler was retired once the source was carved). A song is an order-list
+  of per-channel `s_call`s into shared pattern subroutines, looping via `s_goto`.
+  ~30% of each bank is **unused/dead** patterns (referenced by nothing — flagged
+  `; unused/dead pattern`). `tools/songexport.py --dump` is a frame-accurate
+  channel emulator for analysis.
 - **Done — GBS export:** `tools/songtogbs.py src/sound/.../<sound>.asm` builds a
   GBS (Game Boy Sound) file that plays that one sound on a GBS player (bit-exact,
   since it runs the real driver). It lifts the sound's bank from the built ROM,

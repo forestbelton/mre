@@ -9,7 +9,7 @@
 ;   * HOME API ($0a30-$0b4d)  -- the public entry points the rest of the game
 ;     calls (PlaySound / PlaySoundTracked / ResetSoundEngine / UpdateSoundEngine)
 ;     and the SoundCommandTable that maps a sound id -> (driver bank, local idx).
-;   * Shared driver           -- sound_driver.asm ($4000-$4aff) INCLUDEd once per
+;   * Shared driver           -- sound/driver.asm ($4000-$4aff) INCLUDEd once per
 ;     bank; the code is byte-identical in $3e and $3f.
 ;   * Bank $3e song/SFX data  -- $4b00+, for sound ids $2f-$3a.
 ;   * Bank $3f song/SFX data  -- $4b00+, for sound ids $00-$2e (primary).
@@ -26,7 +26,7 @@ SECTION "analyzed_000a30", ROM0[$0a30]
 ResetSoundEngine:
 	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, SOUND_BANK_1
+	ld a, SOUND_BANK_0
 	ld [$2fff], a
 	call Func_3f_4000
 	pop af
@@ -38,7 +38,7 @@ ResetSoundEngine:
 UpdateSoundEngine:
 	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, SOUND_BANK_1
+	ld a, SOUND_BANK_0
 	ld [$2fff], a
 	call Func_3f_4003
 	pop af
@@ -114,7 +114,7 @@ SetSoundFade:
 	push hl
 	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, SOUND_BANK_1
+	ld a, SOUND_BANK_0
 	ld [$2fff], a
 	call Func_3f_400c
 	pop af
@@ -135,7 +135,7 @@ SetSoundMute:
 	ld b, a
 	ld a, [CUR_BANK_TAG]
 	push af
-	ld a, SOUND_BANK_1
+	ld a, SOUND_BANK_0
 	ld [$2fff], a
 	ld a, b
 	call $400f
@@ -163,30 +163,31 @@ ENDM
 SoundCommandTable:
 	; ids $00-$2e -> bank $3f, index = id
 	FOR I, $2f
-		SOUND_COMMAND SOUND_BANK_1, I
+		SOUND_COMMAND SOUND_BANK_0, I
 	ENDR
 	; ids $2f-$3a -> bank $3e, index = id-$2f
 	FOR I, $2f, $3b
-		SOUND_COMMAND SOUND_BANK_0, (I - $2f)
+		SOUND_COMMAND SOUND_BANK_1, (I - $2f)
 	ENDR
 
 ; ----- Shared driver ($4000-$4aff), instantiated into both banks --------------
-; sound_driver.asm is byte-identical in $3e and $3f; include it once per bank
-; with SB/SBU set to the bank suffix. See sound_driver.asm for the details.
+; sound/driver.asm is byte-identical in $3e and $3f; include it once per bank
+; with SB (bank suffix) + SBI (bank index 0/1) set. See sound/driver.asm.
 DEF SB EQUS "3f"
-DEF SBI EQUS "1"
+DEF SBI EQUS "0"
 INCLUDE "sound/driver.asm"
+
 REDEF SB EQUS "3e"
-REDEF SBI EQUS "0"
+REDEF SBI EQUS "1"
 INCLUDE "sound/driver.asm"
 
 ; Song/SFX bytecode macros (used by the generated data files below).
 INCLUDE "sound.inc"
 
+; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
+INCLUDE "sound/bank0.asm"
+
 ; ----- Bank $3e: song/SFX data ($4b00+) for sound ids $2f-$3a -----------------
 ; Readable, byte-exact macro source: per-bank pointer table + one file per song
 ; under src/sound/{sfx,bgm}/. (Dis)assembled by tools/songdisasm.py.
-INCLUDE "sound/bank0.asm"
-
-; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
 INCLUDE "sound/bank1.asm"

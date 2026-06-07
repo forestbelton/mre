@@ -1,9 +1,10 @@
 ; Shared sound driver ($4000-$4aff): byte-identical in banks $3e and $3f.
-; INCLUDEd once per bank from sound.asm with SB/SBU set to the bank suffix, so
-; each instantiation gets its own bank-suffixed labels (Func_3f_*/Func_3e_* ...)
-; and BANK[] directive. Data references ($442e freq table, $454b command jump
-; table, $4708 instrument table, $4b00 song table) are raw bank-agnostic 16-bit
-; addresses, so the emitted bytes are identical in both banks.
+; INCLUDEd once per bank from sound.asm with SB set to the bank suffix (3f/3e)
+; and SBI to the bank index (0/1), so each instantiation gets its own
+; bank-suffixed labels (Func_3f_*/Func_3e_* ...) and a distinct floating section
+; ("Sound driver {SBI}") placed by layout.link. Data references ($442e freq
+; table, $454b command jump table, $4708 instrument table, $4b00 song table) are
+; raw bank-agnostic 16-bit addresses, so the emitted bytes are identical in both.
 ;
 ; See docs/sound_engine.md for the architecture and the command/bytecode tables.
 
