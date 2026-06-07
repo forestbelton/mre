@@ -1,7 +1,12 @@
 ; Song/SFX data for sound driver bank $3e (ids $2f-$3a) -- SOUND_BANK_1.
 ; The $4b00 pointer table + one INCLUDE per song (address order).
+INCLUDE "sound.inc"
 
 SECTION "Sound bank 1", ROMX
+
+REDEF SB EQUS "3e"
+INCLUDE "sound/driver.asm"
+PURGE SB
 
 SOUND_TABLE
 	SOUND Snd_3e_4d00 ; id $2f

@@ -8,8 +8,6 @@
 ;
 ; See docs/sound_engine.md for the architecture and the command/bytecode tables.
 
-SECTION "Sound driver {SBI}", ROMX
-
 Func_{SB}_4000:
 	jp Sound_Reset_{SB}
 Func_{SB}_4003:

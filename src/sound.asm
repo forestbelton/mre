@@ -21,7 +21,7 @@
 
 
 ; ----- HOME: public sound API -------------------------------------------------
-SECTION "analyzed_000a30", ROM0[$0a30]
+SECTION "Sound API", ROM0
 
 ResetSoundEngine:
 	ld a, [CUR_BANK_TAG]
@@ -147,12 +147,6 @@ SetSoundMute:
 	pop af
 	ret
 
-; \1 Bank
-; \2 Local command index
-MACRO SOUND_COMMAND
-	db \1, \2
-ENDM
-
 ; Sound id (the A passed to PlaySound/PlaySoundTracked) -> (driver bank, that
 ; bank's local command index). 2 bytes/entry. ids $00-$2e are in bank $3f
 ; (index == id); ids $2f-$3a are in bank $3e (index == id-$2f). 59 ids total.
@@ -161,28 +155,13 @@ ENDM
 ;   ids $00-$27 = SFX  (started via PlaySound, transient path; $00 = silence/stop)
 ;   ids $28-$3a = BGM  (started via PlaySoundTracked; $28 = main/title theme)
 SoundCommandTable:
-	; ids $00-$2e -> bank $3f, index = id
-	FOR I, $2f
-		SOUND_COMMAND SOUND_BANK_0, I
+	FOR I, $3b
+		IF I < $2f
+			db SOUND_BANK_0, I
+		ELSE
+			db SOUND_BANK_1, (I - $2f)
+		ENDC
 	ENDR
-	; ids $2f-$3a -> bank $3e, index = id-$2f
-	FOR I, $2f, $3b
-		SOUND_COMMAND SOUND_BANK_1, (I - $2f)
-	ENDR
-
-; ----- Shared driver ($4000-$4aff), instantiated into both banks --------------
-; sound/driver.asm is byte-identical in $3e and $3f; include it once per bank
-; with SB (bank suffix) + SBI (bank index 0/1) set. See sound/driver.asm.
-DEF SB EQUS "3f"
-DEF SBI EQUS "0"
-INCLUDE "sound/driver.asm"
-
-REDEF SB EQUS "3e"
-REDEF SBI EQUS "1"
-INCLUDE "sound/driver.asm"
-
-; Song/SFX bytecode macros (used by the generated data files below).
-INCLUDE "sound.inc"
 
 ; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
 INCLUDE "sound/bank0.asm"

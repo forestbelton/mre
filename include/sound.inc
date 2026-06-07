@@ -104,10 +104,6 @@ MACRO s_end              ; $ff end of channel stream
 ENDM
 
 ; ---- structure ----
-MACRO s_songptr ; \1 descriptor-label ; one $4b00 table slot (offset rel SND_BASE)
-    dw \1 - SND_BASE
-ENDM
-
 MACRO s_chan    ; \1 priority, \2 stream-label ; one descriptor channel record
     db \1
     dw \2 - SND_BASE
@@ -125,7 +121,7 @@ ENDM
 MACRO END_SOUND_TABLE
 	ASSERT _count <= $100
 	REPT $100 - _count
-		s_songptr Snd_3e_4d00
+        SOUND Snd_3e_4d00
 	ENDR
 	PURGE _count
 ENDM

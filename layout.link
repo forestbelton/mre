@@ -21,6 +21,9 @@
 ;
 ; --- nothing migrated yet: this is the scaffold; all sections are still placed
 ;     by their source offsets. ---
+ROM0
+    ORG $0a30
+    "Sound API"
 ROMX $01
     ORG $5162
     "Items"
@@ -56,9 +59,7 @@ ROMX $35
     "Mistral graphics"
 ROMX $3e
     ORG $4000
-    "Sound driver 1"
     "Sound bank 1"
 ROMX $3f
     ORG $4000
-    "Sound driver 0"
     "Sound bank 0"
