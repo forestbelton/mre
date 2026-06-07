@@ -27,20 +27,23 @@ ROM0
 ROMX $01
     ORG $5162
     "Items"
+ROMX $12
+    ORG $5906
+    "Hare room"
+    "Gali room"
+    "Golem room"
+    "Suezo room"
+    "Tiger room"
+    "Mocchi room"
 ROMX $1a
-    ORG $4000
     "Toamuna graphics"
-    ORG $5ae8
     "Naji graphics"
 ROMX $1c
-    ORG $4000
     "Nada graphics"
 ROMX $1d
-    ORG $4000
     "Kalum graphics"
     "Rafaga graphics"
 ROMX $1e
-    ORG $4000
     "Bodka graphics"
     "Tempest graphics"
 ROMX $1f
@@ -49,17 +52,12 @@ ROMX $1f
     ORG $6607
     "Nada graphics 2"
 ROMX $20
-    ORG $4000
     "Town screen graphics"
 ROMX $27
-    ORG $4000
     "TECMO logo graphics"
 ROMX $35
-    ORG $4000
     "Mistral graphics"
 ROMX $3e
-    ORG $4000
     "Sound bank 1"
 ROMX $3f
-    ORG $4000
     "Sound bank 0"
