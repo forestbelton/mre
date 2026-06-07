@@ -1,4 +1,4 @@
-; Golem summon-animation assets (drawn by src/scene.asm, scene 4 / wDisplayMonster=4). Palette block ($4000), BG+OBJ tileset ($4080, $3000 B loaded across VRAM banks 0+1 by Func_05_45a2), and the CopyBgMap descriptor frames. Indexed via the scene.asm tables (SceneBgTilesetBank/ScenePaletteBank/SceneDescBank). See docs/screen_tilemaps.md.
+; Golem summon-animation assets (drawn by src/scene.asm, scene 4 / wDisplayMonster=4). Palette block ($4000), BG+OBJ tileset ($4080, $3000 B loaded across VRAM banks 0+1 by SceneLoadTiles), and the CopyBgMap descriptor frames. Indexed via the scene.asm tables (SceneBgTilesetBank/ScenePaletteBank/SceneDescBank). See docs/screen_tilemaps.md.
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
 SECTION "analyzed_018000", ROMX[$4000], BANK[$06]

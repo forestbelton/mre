@@ -1,4 +1,9 @@
-; Assets for scene-engine scene 7 (src/scene.asm): palette, tileset, descriptors, metasprite defs. The 8th scene-engine entry -- a fixed StartKeyUnlock scene (wSceneState hardcoded to 7 in gameplay, not one of the 7 monster indices 0-6); exact purpose TBD. See docs/screen_tilemaps.md.
+; Assets for scene 7 of the bank-$05 scene engine (src/scene.asm): the monster
+; CAPTURE animation -- the golden, engraved disc stone glowing/charging, played
+; when you capture a monster with a disc stone. This is the shared wSceneState=7
+; scene (hardcoded, not one of the per-monster reveal scenes 0-6).
+; Palette, tileset, CopyBgMap descriptor frames, and metasprite defs.
+; See docs/screen_tilemaps.md.
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
 SECTION "analyzed_038000", ROMX[$4000], BANK[$0e]

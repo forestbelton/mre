@@ -434,11 +434,11 @@ ItemEffect_CoxHat:  ; COX_HAT: +1 life (wLives BCD, cap 99); 1-up SFX $08
 	ld [hl], a
 	ret
 
-ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit (wProgressFlags bit 1; StartKeyUnlock)
+ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit (wProgressFlags bit 1; StartRoomAnimation)
 	ld hl, wProgressFlags
 	set 1, [hl]
 	ld c, $01
-	call StartKeyUnlock
+	call StartRoomAnimation
 	ret
 
 ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (GrantSilverKey)
@@ -475,7 +475,7 @@ ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp (wProgressF
 	set 3, [hl]
 	ret
 
-ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartKeyUnlock; never placed
+ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartRoomAnimation; never placed
 	call SpawnPickupEffect
 	push af
 	ld a, $05
@@ -491,7 +491,7 @@ ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartKey
 	ld a, $01
 	ld [wSceneState], a
 	ld c, $04
-	call StartKeyUnlock
+	call StartRoomAnimation
 	ret
 
 ItemEffect_Item22:  ; $22: key-like (wProgressFlags bit 7 + GrantSilverKey); never placed

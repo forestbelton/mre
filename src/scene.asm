@@ -1,9 +1,9 @@
-; Bank $05 — the intro/cutscene SCENE engine and its assets. A two-level scene-scripting VM (Func_05_4103 BG track + Func_05_4202 sprite track, driven per-frame by Func_05_407d, set up by Func_05_4000/44d8) plays the eight scenes selected by wSceneState. Scene bytecode is carved into SCENE_BG_*/SCENE_SPR_* macros (see include/scene_script.inc, docs/screen_tilemaps.md): Scene{0-7}_VM1/_VM2. Per-scene dispatch/param tables live around $461a; the rest is CopyBgMap tilemap descriptors + metasprite lists. (Also hosts a small floor-fill helper at Func_05_4a02 that merely abuts the scripts.)
+; Bank $05 — the intro/cutscene SCENE engine and its assets. A two-level scene-scripting VM (SceneBgVm_Dispatch BG track + SceneSprVm_Enter sprite track, driven per-frame by SceneRunFrame, set up by SceneInit/44d8) plays the eight scenes selected by wSceneState. Scene bytecode is carved into SCENE_BG_*/SCENE_SPR_* macros (see include/scene_script.inc, docs/screen_tilemaps.md): Scene{0-7}_VM1/_VM2. Per-scene dispatch/param tables live around $461a; the rest is CopyBgMap tilemap descriptors + metasprite lists. (Also hosts a small floor-fill helper at FloorFillTiles that merely abuts the scripts.)
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
 SECTION "analyzed_014000", ROMX[$4000], BANK[$05]
 
-Func_05_4000:
+SceneInit:
 	xor a
 	ld [$cf3f], a
 	ld [$cf5b], a
@@ -31,9 +31,9 @@ Func_05_4000:
 	ld hl, $9c00
 	ld bc, $0400
 	call Func_00_1002
-	call Func_05_44d8
-	call Func_05_45a2
-	call Func_05_45c1
+	call SceneSetupTracks
+	call SceneLoadTiles
+	call SceneLoadPalettes
 	ld a, $07
 	ldh [rWX], a
 	xor a
@@ -57,20 +57,22 @@ Func_05_4074:
 	ldh [rSCX], a
 	ldh [rSCY], a
 	ret
-Func_05_407d:
+
+SceneRunFrame:
 	ld a, [wSceneState]
 	bit 7, a
 	ret nz
-	call Func_05_40e7
-	call Func_05_41fa
-	call Func_05_40b6
-	call Func_05_449a
+	call SceneBgVm_Enter
+	call SceneSprVm_Step
+	call SceneScrollWobble
+	call SceneDrawMetasprites
 	call Func_05_409c
 	ld a, [wSceneState]
 	bit 7, a
 	ret z
-	call Func_05_4516
+	call SceneFinish
 	ret
+
 Func_05_409c:
 	ld a, [wSceneState]
 	cp $02
@@ -87,7 +89,7 @@ Func_05_40ae:
 Func_05_40b2:
 	call Func_05_443d
 	ret
-Func_05_40b6:
+SceneScrollWobble:
 	ld a, [$cf62]
 	or a
 	ret z
@@ -112,42 +114,42 @@ Data_05_40d7:
 Data_05_40df:
 	db $00, $02, $00, $03, $00, $fd, $00, $fe
 
-Func_05_40e7:
+SceneBgVm_Enter:
 	ldh a, [hJoyPressed]
 	bit 1, a
-	jr nz, Func_05_4128
+	jr nz, SceneBgVm_End
 	ld a, [$cf41]
 	ld l, a
 	ld a, [$cf42]
 	ld h, a
-Func_05_40f5:
+SceneBgVm_Step:
 	ld a, [$cf45]
 	cp $ff
 	ret z
 	or a
-	jr z, Func_05_4103
+	jr z, SceneBgVm_Dispatch
 	dec a
 	ld [$cf45], a
 	ret
-Func_05_4103:
+SceneBgVm_Dispatch:
 	ld a, [hl]
 	cp $00
-	jr z, Func_05_415a
+	jr z, SceneBgOp_Draw
 	cp $02
-	jr z, Func_05_4147
+	jr z, SceneBgOp_Flip
 	cp $03
-	jr z, Func_05_4187
+	jr z, SceneBgOp_Row
 	cp $01
-	jr z, Func_05_4138
+	jr z, SceneBgOp_Sound
 	cp $fb
-	jp z, Func_05_41d9
+	jp z, SceneBgOp_Scroll
 	cp $fd
-	jp z, Func_05_41b1
+	jp z, SceneBgOp_WobbleOn
 	cp $fc
-	jp z, Func_05_41c6
+	jp z, SceneBgOp_WobbleOff
 	cp $fa
-	jp z, Func_05_41e9
-Func_05_4128:
+	jp z, SceneBgOp_FarCall
+SceneBgVm_End:
 	push af
 	ld a, $00
 	call PlaySound
@@ -156,7 +158,7 @@ Func_05_4128:
 	set 7, a
 	ld [wSceneState], a
 	ret
-Func_05_4138:
+SceneBgOp_Sound:
 	inc hl
 	ld a, [hl+]
 	call PlaySound
@@ -164,8 +166,8 @@ Func_05_4138:
 	ld [$cf41], a
 	ld a, h
 	ld [$cf42], a
-	jr Func_05_40f5
-Func_05_4147:
+	jr SceneBgVm_Step
+SceneBgOp_Flip:
 	inc hl
 	ld a, l
 	ld [$cf41], a
@@ -174,9 +176,9 @@ Func_05_4147:
 	push hl
 	call Func_05_43b1
 	pop hl
-	call Func_05_4338
-	jr Func_05_40f5
-Func_05_415a:
+	call SceneFlipDrawBuffer
+	jr SceneBgVm_Step
+SceneBgOp_Draw:
 	inc hl
 	ld a, [hl+]
 	ld [$cf45], a
@@ -193,14 +195,14 @@ Func_05_415a:
 	ld a, h
 	ld [$cf42], a
 	push hl
-	call Func_05_4349
+	call SceneDrawBgMap
 	pop hl
 	ld a, [$cf45]
 	or a
-	jp z, Func_05_40f5
-	call Func_05_4338
+	jp z, SceneBgVm_Step
+	call SceneFlipDrawBuffer
 	ret
-Func_05_4187:
+SceneBgOp_Row:
 	inc hl
 	ld a, [hl+]
 	ld [$cf45], a
@@ -221,9 +223,9 @@ Func_05_4187:
 	pop hl
 	ld a, [$cf45]
 	or a
-	jp z, Func_05_40f5
+	jp z, SceneBgVm_Step
 	ret
-Func_05_41b1:
+SceneBgOp_WobbleOn:
 	ld a, $01
 	ld [$cf62], a
 	xor a
@@ -233,9 +235,9 @@ Func_05_41b1:
 	ld [$cf41], a
 	ld a, h
 	ld [$cf42], a
-	jp Func_05_40f5
+	jp SceneBgVm_Step
 
-Func_05_41c6:
+SceneBgOp_WobbleOff:
 	xor a
 	ld [$cf62], a
 	ld [$cf63], a
@@ -244,9 +246,9 @@ Func_05_41c6:
 	ld [$cf41], a
 	ld a, h
 	ld [$cf42], a
-	jp Func_05_40f5
+	jp SceneBgVm_Step
 
-Func_05_41d9:
+SceneBgOp_Scroll:
 	inc hl
 	ld a, [hl+]
 	ld [$cf61], a
@@ -254,9 +256,9 @@ Func_05_41d9:
 	ld [$cf41], a
 	ld a, h
 	ld [$cf42], a
-	jp Func_05_40f5
+	jp SceneBgVm_Step
 
-Func_05_41e9:
+SceneBgOp_FarCall:
 	inc hl
 	ld a, [hl+]
 	push hl
@@ -269,47 +271,47 @@ Func_05_41e9:
 	pop hl
 	inc hl
 	inc hl
-	jp Func_05_40f5
+	jp SceneBgVm_Step
 
-Func_05_41fa:
+SceneSprVm_Step:
 	ld a, [$cf4b]
 	ld l, a
 	ld a, [$cf4c]
 	ld h, a
-Func_05_4202:
+SceneSprVm_Enter:
 	ld a, [$cf4f]
 	cp $ff
 	ret z
 	or a
-	jr z, Func_05_4210
+	jr z, SceneSprVm_Dispatch
 	dec a
 	ld [$cf4f], a
 	ret
-Func_05_4210:
+SceneSprVm_Dispatch:
 	ld a, [hl]
 	cp $00
-	jp z, Func_05_42a8
+	jp z, SceneSprOp_Show
 	cp $07
-	jp z, Func_05_42cd
+	jp z, SceneSprOp_Move
 	cp $08
-	jp z, Func_05_42fb
+	jp z, SceneSprOp_Step
 	cp $03
-	jr z, Func_05_427e
+	jr z, SceneSprOp_Anim
 	cp $01
-	jr z, Func_05_4261
+	jr z, SceneSprOp_Sound
 	cp $04
-	jr z, Func_05_4270
+	jr z, SceneSprOp_Jump
 	cp $05
-	jr z, Func_05_4242
+	jr z, SceneSprOp_LoopOn
 	cp $06
-	jr z, Func_05_4252
+	jr z, SceneSprOp_LoopOff
 	cp $fa
-	jp z, Func_05_4327
+	jp z, SceneSprOp_FarCall
 	ld a, [wSceneState]
 	set 7, a
 	ld [wSceneState], a
 	ret
-Func_05_4242:
+SceneSprOp_LoopOn:
 	inc hl
 	ld a, $01
 	ld [$cf52], a
@@ -317,8 +319,8 @@ Func_05_4242:
 	ld [$cf4b], a
 	ld a, h
 	ld [$cf4c], a
-	jr Func_05_4202
-Func_05_4252:
+	jr SceneSprVm_Enter
+SceneSprOp_LoopOff:
 	inc hl
 	xor a
 	ld [$cf52], a
@@ -326,8 +328,8 @@ Func_05_4252:
 	ld [$cf4b], a
 	ld a, h
 	ld [$cf4c], a
-	jr Func_05_4202
-Func_05_4261:
+	jr SceneSprVm_Enter
+SceneSprOp_Sound:
 	inc hl
 	ld a, [hl+]
 	call PlaySound
@@ -335,8 +337,8 @@ Func_05_4261:
 	ld [$cf4b], a
 	ld a, h
 	ld [$cf4c], a
-	jr Func_05_4202
-Func_05_4270:
+	jr SceneSprVm_Enter
+SceneSprOp_Jump:
 	inc hl
 	ld a, [hl+]
 	ld h, [hl]
@@ -345,8 +347,8 @@ Func_05_4270:
 	ld [$cf4b], a
 	ld a, h
 	ld [$cf4c], a
-	jr Func_05_4202
-Func_05_427e:
+	jr SceneSprVm_Enter
+SceneSprOp_Anim:
 	inc hl
 	ld a, [hl+]
 	ld [$cf4f], a
@@ -367,7 +369,7 @@ Func_05_427e:
 	pop hl
 	ld a, [$cf4f]
 	or a
-	jp z, Func_05_4202
+	jp z, SceneSprVm_Enter
 
 SECTION "analyzed_0142a7", ROMX[$42a7], BANK[$05]
 
@@ -376,7 +378,7 @@ Data_05_42a7:
 
 SECTION "analyzed_0142a8", ROMX[$42a8], BANK[$05]
 
-Func_05_42a8:
+SceneSprOp_Show:
 	inc hl
 	ld a, [hl+]
 	ld [$cf4f], a
@@ -394,9 +396,9 @@ Func_05_42a8:
 	ld [$cf4c], a
 	ld a, [$cf4f]
 	or a
-	jp z, Func_05_4202
+	jp z, SceneSprVm_Enter
 	ret
-Func_05_42cd:
+SceneSprOp_Move:
 	inc hl
 	xor a
 	ld [$cf4f], a
@@ -421,7 +423,7 @@ Func_05_42cd:
 	ld a, h
 	ld [$cf4c], a
 	ret
-Func_05_42fb:
+SceneSprOp_Step:
 	ld a, [$cf50]
 	ld c, a
 	ld a, [$cf55]
@@ -447,7 +449,7 @@ Func_05_42fb:
 	ld [$cf4c], a
 	ret
 
-Func_05_4327:
+SceneSprOp_FarCall:
 	inc hl
 	ld a, [hl+]
 	push hl
@@ -460,9 +462,9 @@ Func_05_4327:
 	pop hl
 	inc hl
 	inc hl
-	jp Func_05_4202
+	jp SceneSprVm_Enter
 
-Func_05_4338:
+SceneFlipDrawBuffer:
 	ld a, [$cf3f]
 	or a
 	jr z, Func_05_4343
@@ -473,7 +475,7 @@ Func_05_4343:
 	ld a, $01
 	ld [$cf3f], a
 	ret
-Func_05_4349:
+SceneDrawBgMap:
 	ld a, [$cf43]
 	ld l, a
 	ld a, [$cf44]
@@ -538,18 +540,18 @@ Func_05_43b1:
 	ld c, $20
 	ld b, $10
 	ld a, $fc
-	call Func_05_4557
+	call SceneVramFillBank0
 	ld a, $08
-	call Func_05_457e
+	call SceneVramFillBank1
 	ret
 Func_05_43c9:
 	ld de, $9a00
 	ld c, $20
 	ld b, $10
 	ld a, $fc
-	call Func_05_4557
+	call SceneVramFillBank0
 	ld a, $08
-	call Func_05_457e
+	call SceneVramFillBank1
 	ret
 Func_05_43db:
 	ld a, [$cf57]
@@ -658,7 +660,7 @@ Func_05_447f:
 	ld [$cf5f], a
 	ld [$cf60], a
 	ret
-Func_05_449a:
+SceneDrawMetasprites:
 	ld a, [$cf4d]
 	ld e, a
 	ld a, [$cf4e]
@@ -698,7 +700,7 @@ Func_05_44c7:
 	pop de
 	pop bc
 	jr Func_05_44c7
-Func_05_44d8:
+SceneSetupTracks:
 	ld a, [wSceneState]
 	add a, a
 	push af
@@ -727,7 +729,7 @@ Func_05_44d8:
 	ld [$cf62], a
 	ld [$cf63], a
 	ret
-Func_05_4516:
+SceneFinish:
 	call Func_00_0bdd
 	call Func_00_083c
 	call Func_00_16ad
@@ -750,7 +752,7 @@ Func_05_4516:
 	call Func_05_48fc
 	call Func_00_0786
 	ret
-Func_05_4557:
+SceneVramFillBank0:
 	ld l, a
 	xor a
 	ldh [rVBK], a
@@ -782,7 +784,7 @@ Func_05_4562:
 	pop de
 	pop bc
 	ret
-Func_05_457e:
+SceneVramFillBank1:
 	ld l, a
 	ld a, $01
 	ldh [rVBK], a
@@ -810,7 +812,7 @@ Func_05_4588:
 	dec b
 	jr nz, Func_05_4586
 	ret
-Func_05_45a2:
+SceneLoadTiles:
 	ld a, [wSceneState]
 	ld hl, SceneBgTilesetBank
 	rst AddAToHL
@@ -828,7 +830,7 @@ Func_05_45a2:
 	pop af
 	call Func_00_108f
 	ret
-Func_05_45c1:
+SceneLoadPalettes:
 	ld a, [wSceneState]
 	ld hl, ScenePaletteBank
 	rst AddAToHL
@@ -846,16 +848,16 @@ Func_05_45c1:
 	ret
 
 ; --- Per-scene tables, indexed by wSceneState (the dispatch). Set up by
-; Func_05_44d8 (script roots), Func_05_45a2 (BG tiles), Func_05_45c1 (palettes). ---
-ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (Func_05_45c1 -> LoadBgPalettes/LoadObjPalettes)
+; SceneSetupTracks (script roots), SceneLoadTiles (BG tiles), SceneLoadPalettes (palettes). ---
+ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (SceneLoadPalettes -> LoadBgPalettes/LoadObjPalettes)
 	dw $4000, $4000, $4000, $4000, $4000, $4000, $4000, $7000
-SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; Func_05_45a2/Func_00_108f loads $1800 to bank0 then the next $1800 to bank1
+SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; SceneLoadTiles/Func_00_108f loads $1800 to bank0 then the next $1800 to bank1
 	dw $4080, $4158, $4080, $4080, $4080, $40a0, $4090, $4000
 SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
-SceneDescBank:       ; $460a: per-scene bank the CopyBgMap descriptor is read from (Func_05_4349 -> b -> Func_00_10dc)
+SceneDescBank:       ; $460a: per-scene bank the CopyBgMap descriptor is read from (SceneDrawBgMap -> b -> Func_00_10dc)
 	db $05, $09, $07, $0c, $06, $0a, $0c, $0e
 SceneDrawBank:          ; $4612: per-scene metasprite bank -> wDrawBank (Func_05_44b4)
 	db $08, $09, $07, $0b, $06, $0a, $0c, $0e
@@ -1421,7 +1423,7 @@ Func_05_49ef:
 	ld hl, wFloorGrid
 	ld a, [wFloorHeight]
 	ld b, a
-Func_05_4a02:
+FloorFillTiles:
 	ld a, [wFloorWidth]
 	ld c, a
 	push hl
@@ -1430,7 +1432,7 @@ Func_05_4a07:
 	cp $c0
 	jr nz, Func_05_4a0f
 
-Func_05_4a0c:           ; alt entry: stamp tile $e3, then fall into the fill loop
+FloorFillTiles_StampE3:           ; alt entry: stamp tile $e3, then fall into the fill loop
 	ld a, $e3
 	ld [hl], a
 
@@ -1442,13 +1444,13 @@ Func_05_4a0f:
 	ld de, $0011
 	add hl, de
 	dec b
-	jr nz, Func_05_4a02
+	jr nz, FloorFillTiles
 	ret
 
 ; Floor/room-type setup stubs, dispatched via the bank-$04 jump table at $04:$4858
 ; ($4a1c $4a1e $4a26 $4a28 ...). Each writes wActiveFloor and/or wRoomType; the table
 ; also targets the store+ret tails mid-stub (e.g. $4a1e) to share code.
-Func_05_4a1c:
+FloorRoomSetters:
 	ld a, $0f
 	ld [wActiveFloor], a
 	ret

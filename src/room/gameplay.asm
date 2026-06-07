@@ -103,7 +103,7 @@ Func_01_439e:
 	ldh [hJoyHeld], a
 	ldh [hJoyPressed], a
 	ld c, $03
-	call StartKeyUnlock
+	call StartRoomAnimation
 	call Func_00_0d41
 	call Func_00_04bc
 Func_01_4412:
@@ -938,7 +938,7 @@ Func_01_49e0:
 	call Func_01_4a3b
 	call Func_01_4a4e
 	ld c, $00
-	call StartKeyUnlock
+	call StartRoomAnimation
 	xor a
 	ldh [rSCX], a
 	ldh [rSCY], a
@@ -1060,7 +1060,7 @@ Func_01_4ae1:
 	ld a, $06
 	ld [wSceneState], a
 	ld c, $04
-	call StartKeyUnlock
+	call StartRoomAnimation
 	ld a, $01
 	ld [$c2c5], a
 	xor a
@@ -1766,7 +1766,7 @@ Func_01_5538:
 	cp $02
 	ret z
 	ld c, $02
-	call StartKeyUnlock
+	call StartRoomAnimation
 	ret
 TransformMonstersToSuzurin:
 	ld hl, $c823
@@ -2117,7 +2117,7 @@ Data_01_5833:
 	db $d2, $d3, $d4, $d5, $d6, $d7, $d8, $d9, $da, $db, $dc, $dd, $de, $df, $e0, $e3
 	db $00
 
-StartKeyUnlock:
+StartRoomAnimation:
 	ld a, c
 	ld [$c2db], a
 	xor a
@@ -2421,12 +2421,12 @@ Func_01_5a5f:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	FAR_CALL $05, Func_05_4000
+	FAR_CALL $05, SceneInit
 	ld a, $01
 	ld [$c2dd], a
 	ret
 Func_01_5a7a:
-	FAR_CALL $05, Func_05_407d
+	FAR_CALL $05, SceneRunFrame
 	bit 7, a
 	ret z
 	call Func_01_5a90
@@ -2934,7 +2934,7 @@ Player_SummonMonster:
 	ld a, [wDisplayMonster]
 	ld [wSceneState], a
 	ld c, $04
-	FAR_CALL $01, StartKeyUnlock
+	FAR_CALL $01, StartRoomAnimation
 	pop de
 	xor a
 	ld [$c2ab], a
@@ -4505,7 +4505,7 @@ Func_01_686f:
 	ld a, $07
 	ld [wSceneState], a
 	ld c, $04
-	call StartKeyUnlock
+	call StartRoomAnimation
 	ret
 
 Func_01_68c8:
