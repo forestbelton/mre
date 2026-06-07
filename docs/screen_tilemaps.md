@@ -1,17 +1,110 @@
 # Screen tilemap libraries — plan (PINNED)
 
-Status: **deferred / not started.** This captures everything needed to turn the
-ROM's BG-tilemap "screen libraries" into editable, comprehensible assets, so the
-work can be resumed without re-deriving it. The screens are already mapped as
-plain `data` (no coverage gap); this is *phase-2 comprehension* work, optional
-and per-screen — see `memory` (project_screen_libraries) and
-docs/philosophy.md. **Comprehensibility over coverage; never bulk-emit opaque
-`db` walls.**
+Status: **in progress — inventory done, driver found.** This captures everything
+needed to turn the ROM's BG-tilemap "screen libraries" into editable,
+comprehensible assets, so the work can be resumed without re-deriving it. The
+screens are already mapped as plain `data` (no coverage gap), but turning them
+into editable-asset form **is** the north-star (editable assets, end state drops
+section offsets — docs/philosophy.md), not optional polish. **Comprehensibility
+over coverage; never bulk-emit opaque `db` walls.**
+
+## Inventory (2026-06-07, `scratch/screen_inventory.py`)
+
+Auto-detected back-to-back descriptor runs (≥2) per bank via the invariant
+`idx_ptr == desc+6` and `attr_ptr == idx_ptr + rows*cols`:
+
+| bank  | screens | bytes     | notes                                                             |
+| ----- | ------- | --------- | ----------------------------------------------------------------- |
+| `$05` | 10      | 4860      | 10× 12×20                                                         |
+| `$0a` | 27      | 1838      | small (6×4, 10×5, 4×4, 8×4) — some likely false positives         |
+| `$0c` | **23**  | **14394** | 1× 12×10, 12× 12×32, 10× 12×20 — **the editor set; proof target** |
+| `$0f` | 75      | 4022      | incl. 3× 17×20 + 7× 7×7; many tiny (2×2/2×1) are false positives  |
+| `$15` | 10      | 3832      | 4×20, 6× 14×20, 3× 7×6                                            |
+| `$23` | 46      | 1930      | mixed small; verify                                               |
+| `$2b` | 26      | 2824      | 11× 2×17, 15× 4×16                                                |
+
+~217 raw hits / 33 KB; the **big clean runs** (`$05`,`$0c`,`$15`,`$2b`, the
+`$0f` 17×20 and 7×7 sets) are real libraries — the micro-dimension runs need the
+back-to-back filter tightened (a descriptor <32 B matches by chance).
+
+## The driver — bank `$05` screen-composition bytecode (KEY FINDING, 2026-06-07)
+
+The bank-`$0c` descriptors are **NOT unused**. They are consumed by a
+**screen-composition script** in bank `$05` (~`$5000`–`$54xx`) that is currently
+**MISFILED AS `data`** (`Data_05_5058` etc.) — the classic indirect-dispatch-as-
+data trap (memory: project_carve_readable_code). A source grep finds no caller
+_because the caller isn't disassembled as code_; the link was found by scanning
+raw ROM bytes (`scratch/find_screen_refs.py`) for a pointer table of the 23
+descriptor start-addresses.
+
+Bytecode structure (`scratch/decode_records.py`):
+
+- **Inner** (~`$05:$5124`): 6-byte records `[page:LE16][dest:LE16=$0060][descriptor_ptr:LE16]`
+  whose `descriptor_ptr` field cycles through the bank-`$0c` starts
+  (`$40f6 $43fc $4702 … $6238` = the twelve 12×32 screens) — confirmed
+  `is_desc($0c, ptr)` for every entry. `fb fc/fd/fe/ff` page-begin ops bracket
+  each page group (page field `$05→$06→$07→$08` parallels the `fb` arg).
+- **Mid** (`$05:$5058`): header of 7 pointer-pairs into `$70xx–$73xx`.
+- **Outer** (`$05:$5000`+): VM ops with sub-script pointers (`$74/$77/$78/$79xx`)
+  and literal BG-map destinations (`$4080`/`$4088`).
+
+## The interpreter — bank `$05` scene engine (FOUND, 2026-06-07)
+The bytecode is run by a **two-level scene-scripting engine that was ALREADY
+disassembled as code** (Func_05_*) — it just had never been connected to the
+screen libraries (the Explore agent missed it because the VM never does a literal
+`ld a,$0c`; the bank comes from the script). So: the *interpreter* is real code;
+the *bytecode* (`Data_05_5058+`) is the opaque-data part to carve.
+
+- `Func_05_4000` — scene **init** (clears `$cf3f`..`$cf64` state, sets up VRAM,
+  reads `wSceneState`).
+- `Func_05_407d` — per-frame **driver**: runs `Func_05_40e7`→VM1, `Func_05_41fa`→
+  VM2, plus scroll/wobble (`Func_05_40b6`) and finalizers.
+- **VM1** `Func_05_4103` (loop `Func_05_40f5`, frame-delay `$cf45`, script-ptr
+  `$cf41/$cf42`): opcodes `$00`=`Func_05_415a`, `$01`=`4138`(sound), `$02`=`4147`,
+  `$03`=`4187`, `$fa`=`41e9`, `$fb`=`41d9`, `$fc`=`41c6`, `$fd`=`41b1`.
+- **VM2** `Func_05_4202` (loop `Func_05_41fa`, counter `$cf4f`, script-ptr
+  `$cf4b/$cf4c`): opcodes `$00`=`42a8`, `$01`=`4261`(sound), `$03`=`427e`,
+  `$04`=`4270`, `$05`=`4242`, `$06`=`4252`, `$07`=`42cd`, `$08`=`42fb`, `$fa`=`4327`.
+- Draw handlers (`Func_05_4349/4385/43b1/43db/440c`) write the tilemaps to
+  `$9800`/`$9a00` via banked far-calls (`Func_00_0467`/`Func_00_0495`,
+  `CopyBgMap`, `BankMapCopyA`/`BankMapCopyB` — the old `CopyBgMapBankedA`/`…B`),
+  bank from `$cf4a`, indexed through tables `$05:$4602`/`$460a` keyed by
+  `wSceneState`.
+
+**So these "screens" are animated, scripted scenes, not static pictures** — which
+reframes the asset question (see Open decisions).
+
+## First carve — scene 4 (DONE, 2026-06-07, byte-exact)
+Proved the representation on the smallest scene (wSceneState==4: BG track 50 B/9
+cmds, sprite track 21 B/4 cmds). Bytecode macros live in
+`include/scene_script.inc` (`SCENE_BG_*` for VM1, `SCENE_SPR_*` for VM2; each
+emits the exact opcode bytes). The opaque `Data_05_4c14` db-wall tail was split:
+`Scene4_VM1:` / `Scene4_VM2:` now read as commented macro calls
+(`SCENE_BG_DRAW $0c,$0060,$720f`, `SCENE_SPR_SHOW $28,$30,$20,$4d54`, …); the
+stray 1-byte `analyzed_014d53` section ($FE terminator) was folded into a clean
+`SCENE_BG_END`/`SCENE_SPR_END`. `make verify` OK (sha256 unchanged). Tools:
+`scratch/scene_disasm.py` (disassembler), `scratch/carve_scene4.py` (generator +
+splicer, self-verifies bytes before writing).
+
+**VM1 opcodes** (Func_05_4103): `$00` BG_DRAW [delay,dest,descptr], `$01` SOUND,
+`$02` FLIP, `$03` ROW [delay,src,start,count], `$FA` FARCALL [bank,addr], `$FB`
+SCROLL [spd], `$FC`/`$FD` WOBBLE off/on, `$FE` END.
+**VM2 opcodes** (Func_05_4202): `$00` SHOW [dur,x,y,list], `$01` SOUND, `$03`
+ANIM, `$04` JUMP, `$05`/`$06` LOOP on/off, `$07` MOVE (8 args), `$08` STEP, `$FA`
+FARCALL, `$FE` END. (VM2 `$03`/`$07` macros not yet written — no scene needs them
+until carved.)
+
+**Next:** carve the remaining 7 scenes (states 0-3,5-7) the same way — order by
+size (4✓, then 4→71B done; 1=120, 0=232, 2=234, 6=348, 5=760, 3=899, 7=942).
+Then optionally convert the root-pointer tables `$05:$461A`/`$462A` (and params
+`$4602/$460A/$4612`) from raw `db` to `dw Scene*_VM1` labels so the dispatch is
+self-documenting. The referenced tilemap descriptors + metasprite lists stay as
+data for now (carve later, or render to PNG once palettes/tilesets are traced).
 
 ## What these are
 
 A large slice of `data`-typed ROM is **`CopyBgMap` screen descriptors** — BG
-tilemaps (tile indices + CGB attributes), *not* tile pixels (those are VRAM tile
+tilemaps (tile indices + CGB attributes), _not_ tile pixels (those are VRAM tile
 data, loaded separately). Each screen:
 
 ```
@@ -26,34 +119,39 @@ yflip(6) | priority(7). Confirmed by decoding bank `$0c` (a 12×10 then a run of
 12×32 screens; `scratch/screen_probe.py` decodes descriptors).
 
 ### Loaders (confirmed)
+
 - `CopyBgMap` (HOME): `ld a,[hl+]→rows; ld a,[hl+]→cols`; on CGB derefs the
   `attr_ptr` into VRAM bank 1, then derefs `idx_ptr` into VRAM bank 0; copies
   `cols` per row, `de += $20` between rows. hl must already point at a
-  descriptor in the *currently mapped* bank.
-- Banked path `CopyBgMapBankedA` (`$3942`, per memory): `ld a,<bank>;
-  ld [$c29c],a; ld hl,<descriptor>; call $3942`.
+  descriptor in the _currently mapped_ bank.
+- Banked path `BankMapCopyA` (`$3942`, per memory): `ld a,<bank>;
+ld [$c29c],a; ld hl,<descriptor>; call $3942`.
 - The level editor (bank `$12`) draws some screens from its **own** bank — e.g.
   `Func_12_406f`: `hl=$66a4→$9820`, `$66ca→$983f`, `$66f0→$9a20` via `CopyBgMap`.
 
 ### Where they live
+
 ~54 libraries / ~65 KB / ~400 screens across banks **`$0c`** (the editor's set,
 ~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`. Currently raw `data` in
 `src/analyzed.asm`.
 
 ## What's already done
+
 The **full-screen `$X:$7080` family + NPC portraits** are editable PNGs:
+
 - `assets/screen/{town,tower,tower_open,room_start,room_done,title}/*.png`,
   `assets/intro/intro.png`, `assets/portrait/*`.
 - Pipeline: `assets/assets.yaml` lists each; `tools/buildassets.py` runs
   `tools/pngasset.py` per entry → `build/assets/<name>/` (INCBIN'd by `src/gfx/`).
-- A `mode: screen` asset = **one PNG** (tile data + palette *derived* from it) +
+- A `mode: screen` asset = **one PNG** (tile data + palette _derived_ from it) +
   committed **`tilemap.bin`** and **`attrmap.bin`** (the non-derivable maps).
   See docs/gfx_assets.md, docs/philosophy.md.
 
 ## The gating dependency (the actual work)
+
 A tilemap is only indices+attributes; to render a **picture** you also need the
 screen's **tileset** (2bpp tile pixels in VRAM) and **palettes** (8 BG palettes
-of 4 colours). These are set up by the *code that draws the screen*, per context
+of 4 colours). These are set up by the _code that draws the screen_, per context
 — so "which tiles + which palette feed screen N" is a **per-screen / per-group
 trace** of the VRAM tile load + palette load around each draw site. The old
 VRAM-provenance tooling for this was removed and must be re-derived. This trace,
@@ -73,7 +171,7 @@ project_vram_provenance / project_cgb_palettes / project_gfx_loaders in memory.
    editor `$0c` set is the best first target: many partial screens likely
    sharing one tileset+palette). Trace that group's tileset + BG palettes. Build
    a renderer `(descriptor + tileset + palette) → PNG` and validate one screen
-   looks correct. *This is the milestone that de-risks everything.*
+   looks correct. _This is the milestone that de-risks everything._
 2. **One group → editable assets** — extend `pngasset.py` with a "screen-lib"
    mode (shared tileset, partial/non-full-screen tilemaps; commit
    `tilemap.bin`/`attrmap.bin` per screen, derive/ share the tileset+palette);
@@ -82,15 +180,17 @@ project_vram_provenance / project_cgb_palettes / project_gfx_loaders in memory.
 3. **Scale** — repeat per group/bank, sharing tilesets where groups share them.
 
 ## Open decisions (revisit when resumed)
+
 - **Editable pictures vs comprehensible-as-data.** Full PNG round-trip (phase
-  1-3) is the north-star, but a cheaper interim is a *structured* carve (per
+  1-3) is the north-star, but a cheaper interim is a _structured_ carve (per
   screen: a label + `rows,cols` + idx/attr as 2-D `db` grids) — comprehensible &
-  editable as tilemap data, byte-exact, *no tileset trace needed*. Not opaque
+  editable as tilemap data, byte-exact, _no tileset trace needed_. Not opaque
   `db`, but not a picture. Decide per appetite; default is the PNG route.
 - How widely tilesets are shared within/across banks (determines grouping).
 - Start target: editor `$0c` set (assumed shared tileset) vs another group.
 
 ## Guardrails
+
 - Byte-exact always (`make verify`); never bulk-emit opaque `db`.
 - Tooling via `tools/`; run from `scratch/*.py`. Surgical asm edits via
   `tools/asmrepl.py`.

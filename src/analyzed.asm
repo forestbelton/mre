@@ -5332,16 +5332,28 @@ Data_05_4c14:
 	db $28, $28, $09, $4d, $00, $01, $30, $20, $09, $4d, $00, $01, $38, $18, $09, $4d
 	db $00, $01, $30, $20, $09, $4d, $00, $38, $00, $00, $00, $00, $fe, $a9, $70, $80
 	db $70, $00, $00, $b6, $70, $00, $00, $eb, $70, $00, $00, $30, $71, $00, $00, $de
-	db $71, $7d, $71, $00, $00, $fb, $71, $00, $00, $00, $30, $60, $00, $00, $00, $fd
-	db $00, $0c, $60, $00, $0f, $72, $00, $18, $60, $00, $f5, $73, $00, $0c, $60, $00
-	db $db, $75, $00, $20, $60, $00, $c1, $77, $00, $20, $60, $00, $a7, $79, $00, $18
-	db $60, $00, $8d, $7b, $00, $40, $60, $00, $73, $7d, $fe, $00, $28, $30, $20, $54
-	db $4d, $00, $04, $30, $20, $58, $4d, $01, $15, $00, $ff, $30, $20, $5c, $4d
+	db $71, $7d, $71, $00, $00, $fb, $71, $00, $00
 
-SECTION "analyzed_014d53", ROMX[$4d53], BANK[$05]
+; --- Scene 4 (wSceneState==4): BG track, root from $05:$461A[4] ($4622) ---
+Scene4_VM1:
+	SCENE_BG_DRAW   $30, $0060, $0000
+	SCENE_BG_WOBBLE_ON
+	SCENE_BG_DRAW   $0c, $0060, $720f
+	SCENE_BG_DRAW   $18, $0060, $73f5
+	SCENE_BG_DRAW   $0c, $0060, $75db
+	SCENE_BG_DRAW   $20, $0060, $77c1
+	SCENE_BG_DRAW   $20, $0060, $79a7
+	SCENE_BG_DRAW   $18, $0060, $7b8d
+	SCENE_BG_DRAW   $40, $0060, $7d73
+	SCENE_BG_END
 
-Data_05_4d53:
-	db $fe
+; --- Scene 4: sprite track, root from $05:$462A[4] ($4632) ---
+Scene4_VM2:
+	SCENE_SPR_SHOW  $28, $30, $20, $4d54
+	SCENE_SPR_SHOW  $04, $30, $20, $4d58
+	SCENE_SPR_SOUND $15
+	SCENE_SPR_SHOW  $ff, $30, $20, $4d5c
+	SCENE_SPR_END
 
 SECTION "analyzed_014d54", ROMX[$4d54], BANK[$05]
 

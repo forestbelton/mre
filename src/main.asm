@@ -6,6 +6,7 @@ INCLUDE "hardware.inc"
 INCLUDE "wram.inc"
 INCLUDE "hram.inc"
 INCLUDE "scene.inc"
+INCLUDE "scene_script.inc"
 INCLUDE "util.inc"
 
 INCLUDE "home.asm"
