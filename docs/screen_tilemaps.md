@@ -121,18 +121,28 @@ Verified rather than assumed (`scratch/coverage.py`). Of the bank-`$05` scene ar
   disassembled as `Func_05_4a0c`/`Func_05_4a1c` (byte-exact). NB: these are
   *floor* code that merely abuts the scene scripts — unrelated to the scene VM.
 
+## Now lives in `src/scene.asm` (carved out of analyzed.asm, 2026-06-07)
+The whole bank-`$05` engine + scripts + scene asset data is now in `src/scene.asm`
+(commit `0495ffe`). The per-scene dispatch/param tables are labelled (commit
+`ffe9d0b`): `SceneBgScriptTable`/`SceneSprScriptTable` (VM1/VM2 roots),
+`SceneBgTilesetSrc`/`SceneBgTilesetBank`, `SceneObjTilesetSrc`/`SceneObjTilesetBank`,
+`SceneBgCopyParam`, `SceneDrawBank`.
+
+**The gating dependency is half-solved.** The doc below flags "which tileset +
+which palette feed screen N" as the real cost of rendering. The **tileset half is
+now answered in source**: scene N loads `$1800` bytes from bank
+`SceneBgTilesetBank[N]` : ptr `SceneBgTilesetSrc[N]` into VRAM `$8000`
+(`Func_05_45a2`), plus a 2nd load from `SceneObjTilesetBank`/`Src` (`Func_05_45c1`).
+So a renderer now needs only the **palette** trace per scene.
+
 **Next:**
-- Convert the root-pointer tables `$05:$461A`/`$462A` (and params
-  `$4602/$460A/$4612`) from raw `db` to `dw Scene{N}_VM1` labels so the dispatch
-  is self-documenting (currently the scenes are labelled but the tables still
-  reference them by raw address).
-- The referenced **tilemap descriptors + metasprite lists** are still `db` data
-  (the `descptr`/`list` args point at them). Carve those next, or render to PNG
-  once palettes/tilesets are traced — this is the remaining path to *editable
-  pictures* (the original Open-decisions north-star).
+- Trace the per-scene **BG palettes** (the only missing render input now) — see
+  docs/palettes.md (`$c101` WRAM shadow, `Func_00_04f2/052e`). Then build the
+  `(scene tileset + descriptors + palette) -> PNG` renderer and prove one scene.
+- Carve the referenced **tilemap descriptors + metasprite lists** (still `db`)
+  into structured/PNG form — the path to *editable pictures*.
 - Name the `$CF40+` scene-engine WRAM fields (script ptrs `$CF41/$CF4B`, delays
-  `$CF45/$CF4F`, etc.) and the per-scene param-table semantics
-  (`$4602/$460A/$4612`).
+  `$CF45/$CF4F`, etc.).
 - Apply the same VM treatment to the **other screen-library banks** (the
   inventory's `$0a/$0f/$15/$23/$2b` runs) — confirm whether they're driven by
   this same bank-`$05` engine or their own loaders.
