@@ -1,0 +1,25 @@
+IF !DEF(SCENE_INC)
+DEF SCENE_INC EQU 1
+
+INCLUDE "enum.inc"
+
+enum SCENE
+    case TITLE
+    case LOGO
+    case INTRO
+    skip
+    case TOWN
+    REPT 5
+        skip ; story/cutscene
+    endr
+    REPT 6
+        skip ; unused
+    ENDR
+    case NEXT_ROOM
+    case ROOM_START
+    case ROOM
+    case ROOM_CLEAR
+    case TOWER
+end_enum
+
+ENDC

@@ -2894,7 +2894,7 @@ Func_01_5d84:
 	call Func_00_119a
 	or a
 	ret nz
-	FAR_CALL $18, Func_18_4097
+	FAR_CALL $18, Pashute_StartTownScript
 	ld a, $0c
 	call Func_00_1164
 	ret

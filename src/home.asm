@@ -8130,9 +8130,9 @@ BankMapCopyA:
 	ld [$2fff], a
 	ret
 
-Func_00_3957:
+LeaveTownBuilding:
 	FAR_CALL $1f, Script_FadeOutPortrait
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 

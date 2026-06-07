@@ -5,6 +5,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "wram.inc"
 INCLUDE "hram.inc"
+INCLUDE "scene.inc"
 INCLUDE "util.inc"
 
 INCLUDE "home.asm"

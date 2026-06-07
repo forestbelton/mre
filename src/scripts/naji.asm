@@ -383,19 +383,22 @@ Func_18_6b65:
 	ld [wPashuteState], a
 	ld [wVerdeState], a
 	ret
+
 Func_18_6b71:
 	call Func_18_6bc8
 	ld hl, $6ce3
 	call ScriptDispatcherEnterAfterCall
 	FAR_CALL $1f, Script_FadeOutPortrait
 	ret
+
 	call Func_18_6bc8
-	ld hl, $717e
+	ld hl, NajiScript
 	call ScriptDispatcherEnterAfterCall
 	ld a, [wMainMenuResult]
 	cp $04
-	jp z, Func_00_3957
+	jp z, LeaveTownBuilding
 	ret
+
 Naji_StartTowerClimb:
 	FAR_CALL $05, Func_05_4785
 	FAR_CALL $00, Func_00_34e3
@@ -408,6 +411,7 @@ Naji_StartTowerFromBottom:
 	FAR_CALL $05, Func_05_47b2
 	FAR_CALL $00, Func_00_34e3
 	ret
+
 Func_18_6bc8:
 	call Func_00_0822
 	call HideAllSprites

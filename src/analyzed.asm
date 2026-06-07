@@ -16254,30 +16254,31 @@ Pashute_GetMonsterUsesDecimal:
 	swap a
 	and $0f
 	ld b, a
-Func_18_4014:
+.loop:
 	ld a, b
 	or a
-	jr z, Func_18_401f
+	jr z, .done
 	ld a, c
 	add a, $0a
 	ld c, a
 	dec b
-	jr Func_18_4014
-Func_18_401f:
+	jr .loop
+.done:
 	ld a, [hl]
 	and $0f
 	add a, c
 	ld [wYNResult], a
 	ret
+
 Pashute_IsReplacingActiveMonster:
 	ld hl, wActiveMonster
 	ld a, [wDisplayMonster]
 	cp [hl]
-	jr z, Func_18_4036
+	jr z, .yes
 	ld a, $01
 	ld [wYNResult], a
 	ret
-Func_18_4036:
+.yes:
 	ld a, $00
 	ld [wYNResult], a
 	ret
@@ -16293,6 +16294,7 @@ Pashute_GetActiveMonsterUses:
 	ld a, [hl]
 	ld [wYNResult], a
 	ret
+
 Pashute_SetReplaceTargetActive:
 	ld a, [wActiveMonster]
 	ld [wDisplayMonster], a
@@ -16334,12 +16336,9 @@ Pashute_AddFiveMonsterUses:
 	ld a, [hl]
 	add a, $05
 	daa
-	jr nc, Func_18_4088
-
-Func_18_4086:
+	jr nc, .update
 	ld a, $99
-
-Func_18_4088:
+.update:
 	ld [hl], a
 	ld hl, wMonsterDiscStones
 	ld a, [wActiveMonster]
@@ -16350,10 +16349,12 @@ Func_18_4088:
 	ld h, a
 	dec [hl]
 	ret
-Func_18_4097:
-	ld hl, $4272
+
+Pashute_StartTownScript:
+	ld hl, PashuteScript
 	call ScriptDispatcherEnterAfterCall
-	jp Func_00_3957
+	jp LeaveTownBuilding
+
 Pashute_LoadShrineScene:
 	call Func_00_0822
 	call HideAllSprites
@@ -16564,7 +16565,7 @@ Func_18_5331:
 Func_18_533c:
 	ld hl, $54f5
 	call ScriptDispatcherEnterAfterCall
-	jp Func_00_3957
+	jp LeaveTownBuilding
 Verde_BuildPortraitScene:
 	call Func_00_0822
 	call HideAllSprites
@@ -16762,7 +16763,7 @@ LinkStoreRecvRoom:
 Func_18_5dfa:
 	ld hl, $608c
 	call ScriptDispatcherEnterAfterCall
-	jp Func_00_3957
+	jp LeaveTownBuilding
 Bodka_BuildStudioScene:
 	call Func_00_0822
 	ld a, $c7
@@ -17088,7 +17089,7 @@ Toamuna_CheckSaveExists:
 	pop af
 	ld hl, $40dd
 	call ScriptDispatcherEnterAfterCall
-	jp Func_00_3957
+	jp LeaveTownBuilding
 Toamuna_LoadPortraitTilemap:
 	ld hl, $5880
 	ld a, $1a
@@ -17495,7 +17496,7 @@ Func_1f_4121:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	jp Func_00_3957
+	jp LeaveTownBuilding
 
 Func_1f_4133:
 	FAR_CALL $1f, Mistral_StartEncounter
@@ -17503,7 +17504,7 @@ Func_1f_4133:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	jp Func_00_3957
+	jp LeaveTownBuilding
 
 Func_1f_4145:
 	FAR_CALL $1f, Rafaga_StartEncounter
@@ -17511,21 +17512,21 @@ Func_1f_4145:
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	jp Func_00_3957
+	jp LeaveTownBuilding
 Func_1f_4157:
 	FAR_CALL $1f, Tempest_StartEncounter
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	jp Func_00_3957
+	jp LeaveTownBuilding
 Func_1f_4169:
 	FAR_CALL $1f, Func_1f_4d8c
 	push af
 	ld a, $28
 	call PlaySoundTracked
 	pop af
-	jp Func_00_3957
+	jp LeaveTownBuilding
 
 Kalum_StartEncounter:
 	call Func_00_0822
