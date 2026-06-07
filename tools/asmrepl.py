@@ -24,9 +24,9 @@ How matching works:
   * Matching is **whitespace-normalized**: leading indentation and runs of
     spaces/tabs are collapsed, so `\\tld a, $00` matches `ld a, $00`. It is
     otherwise literal -- comments and comma spacing must match the file's style.
-  * Replacement lines are re-indented to the indentation of the first matched
-    line (author them flush-left; relative indentation between replacement lines
-    is preserved). Blank lines stay blank.
+  * Replacement lines are re-indented (author them flush-left): a label line
+    (`Foo:`, `.local:`, `Exported::`) goes to column 0, every other line goes to
+    the matched block's instruction indent. Blank lines stay blank.
   * Rules are applied in order; scanning resumes past each replacement, so a
     replacement that re-contains its own pattern won't loop.
 
@@ -37,6 +37,10 @@ Safety / ergonomics:
   * `dry_run=True` prints the proposed changes (with line numbers) and writes
     nothing.
   * Returns a list of Change(file, line, rule, before, after).
+
+A `%NAME` reused within one line (or across the pattern's lines) is a
+back-reference: every occurrence must capture the same text -- e.g.
+`ld a, %X` / `ld b, %X` matches only when both operands are identical.
 
 FUTURE -- capture wildcards (designed-in, not yet exposed): a `%NAME` token in a
 pattern captures one whitespace-delimited operand, usable in the replacement,
@@ -61,6 +65,8 @@ Change = namedtuple("Change", "file line rule before after")
 # of non-space chars. Refine when the capture feature is turned on for real.
 _TOKEN_RX = r"\S+"
 _WILDCARD = re.compile(r"%(\w+)")
+# A label line: one token then 1-2 colons, e.g. `Foo:`, `.local:`, `Exported::`.
+_LABEL_RX = re.compile(r"[^\s:]+::?$")
 
 
 def _canon(line):
@@ -78,13 +84,21 @@ def _indent(line):
 
 
 def _compile_line(canon_pat):
-    """canon pattern line -> (compiled regex over a canon file line, [capture names])."""
-    rx, names = "", []
+    """canon pattern line -> (compiled regex over a canon file line, [capture names]).
+
+    A `%NAME` repeated within the same line becomes a back-reference, so e.g.
+    `ld a, %X` / `ld b, %X` only matches when both operands are identical. (Across
+    lines the same effect is enforced by _match_window merging captures.)"""
+    rx, names, seen = "", [], set()
     for part in re.split(r"(%\w+)", canon_pat):
         if _WILDCARD.fullmatch(part):
             name = part[1:]
-            names.append(name)
-            rx += rf"(?P<{name}>{_TOKEN_RX})"
+            if name in seen:
+                rx += rf"(?P={name})"                 # back-reference to earlier capture
+            else:
+                seen.add(name)
+                names.append(name)
+                rx += rf"(?P<{name}>{_TOKEN_RX})"
         else:
             rx += re.escape(part)
     return re.compile("^" + rx + "$"), names
@@ -111,14 +125,26 @@ def _match_window(window, pat_lines):
     return caps
 
 
-def _render(repl_lines, base_indent, caps):
+def _instr_indent(window):
+    """Indent for non-label replacement lines: the first non-label, non-blank
+    matched line's indentation (fallback: one tab)."""
+    for fl in window:
+        if fl.strip() and not _LABEL_RX.fullmatch(fl.strip()):
+            return _indent(fl)
+    return "\t"
+
+
+def _render(repl_lines, instr_indent, caps):
+    """Re-indent replacement lines: a label (`Foo:`/`.x:`/`Foo::`) goes to column 0,
+    everything else to the matched block's instruction indent. Authored leading
+    whitespace is ignored (so author replacements flush-left)."""
     out = []
     for line in repl_lines:
         if not line.strip():
             out.append("")
             continue
-        line = _WILDCARD.sub(lambda m: caps.get(m.group(1), m.group(0)), line)
-        out.append(base_indent + line)
+        s = _WILDCARD.sub(lambda m: caps.get(m.group(1), m.group(0)), line).strip()
+        out.append(s if _LABEL_RX.fullmatch(s) else instr_indent + s)
     return out
 
 
@@ -131,7 +157,7 @@ def _apply_rule(lines, pat_lines, repl_lines, rule_idx):
         if len(window) == n:
             caps = _match_window(window, pat_lines)
             if caps is not None:
-                repl = _render(repl_lines, _indent(window[0]), caps)
+                repl = _render(repl_lines, _instr_indent(window), caps)
                 changes.append(Change(None, i + 1, rule_idx, "\n".join(window),
                                       "\n".join(repl)))
                 out.extend(repl)
