@@ -4835,9 +4835,7 @@ Func_00_22fc:
 	ld a, [$c55f]
 	or a
 	jr nz, Func_00_2313
-	ld a, $12
-	ld hl, $4b44
-	call CallBankedHL
+	FAR_CALL $12, $4b44
 	ret
 Func_00_2313:
 	dec a
