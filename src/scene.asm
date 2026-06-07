@@ -485,7 +485,7 @@ Func_05_4349:
 	jr z, Func_05_4385
 	push hl
 	ld a, [wSceneState]
-	ld hl, $460a
+	ld hl, SceneBgCopyParam
 	rst AddAToHL
 	ld b, [hl]
 	ld de, $9800
@@ -509,7 +509,7 @@ Func_05_4349:
 Func_05_4385:
 	push hl
 	ld a, [wSceneState]
-	ld hl, $460a
+	ld hl, SceneBgCopyParam
 	rst AddAToHL
 	ld b, [hl]
 	ld de, $9a00
@@ -560,7 +560,7 @@ Func_05_43db:
 	ret z
 	push hl
 	ld a, [wSceneState]
-	ld hl, $4602
+	ld hl, SceneObjTilesetBank
 	rst AddAToHL
 	ld c, [hl]
 	pop hl
@@ -593,7 +593,7 @@ Func_05_440c:
 	ret z
 	push hl
 	ld a, [wSceneState]
-	ld hl, $4602
+	ld hl, SceneObjTilesetBank
 	rst AddAToHL
 	ld c, [hl]
 	pop hl
@@ -675,7 +675,7 @@ Func_05_449a:
 	ret nz
 Func_05_44b4:
 	ld a, [wSceneState]
-	ld hl, $4612
+	ld hl, SceneDrawBank
 	rst AddAToHL
 	ld a, [hl]
 	ld [wDrawBank], a
@@ -702,14 +702,14 @@ Func_05_44d8:
 	ld a, [wSceneState]
 	add a, a
 	push af
-	ld hl, $461a
+	ld hl, SceneBgScriptTable
 	rst AddAToHL
 	ld a, [hl+]
 	ld [$cf41], a
 	ld a, [hl]
 	ld [$cf42], a
 	pop af
-	ld hl, $462a
+	ld hl, SceneSprScriptTable
 	rst AddAToHL
 	ld a, [hl+]
 	ld [$cf4b], a
@@ -812,13 +812,13 @@ Func_05_4588:
 	ret
 Func_05_45a2:
 	ld a, [wSceneState]
-	ld hl, $45fa
+	ld hl, SceneBgTilesetBank
 	rst AddAToHL
 	ld a, [hl]
 	push af
 	ld a, [wSceneState]
 	add a, a
-	ld hl, $45ea
+	ld hl, SceneBgTilesetSrc
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -830,13 +830,13 @@ Func_05_45a2:
 	ret
 Func_05_45c1:
 	ld a, [wSceneState]
-	ld hl, $4602
+	ld hl, SceneObjTilesetBank
 	rst AddAToHL
 	ld a, [hl]
 	push af
 	ld a, [wSceneState]
 	add a, a
-	ld hl, $45da
+	ld hl, SceneObjTilesetSrc
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -845,13 +845,26 @@ Func_05_45c1:
 	call Func_00_10b5
 	ret
 
-Data_05_45da:
-	db $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $40, $00, $70
-	db $80, $40, $58, $41, $80, $40, $80, $40, $80, $40, $a0, $40, $90, $40, $00, $40
-	db $08, $09, $07, $0b, $06, $0a, $0d, $0e, $08, $09, $07, $0b, $06, $0a, $0d, $0e
-	db $05, $09, $07, $0c, $06, $0a, $0c, $0e, $08, $09, $07, $0b, $06, $0a, $0c, $0e
-	db $5f, $4a, $6b, $4b, $07, $4c, $80, $50, $0d, $4d, $60, $4d, $2c, $54, $c0, $55
-	db $20, $4b, $b6, $4b, $14, $4c, $db, $52, $3f, $4d, $13, $50, $cd, $54, $99, $57
+; --- Per-scene tables, indexed by wSceneState (the dispatch). Set up by
+; Func_05_44d8 (script roots), Func_05_45a2 (BG tiles), Func_05_45c1 (obj tiles). ---
+SceneObjTilesetSrc:     ; $45da: obj/sprite tile source ptr (2nd load, Func_05_45c1)
+	dw $4000, $4000, $4000, $4000, $4000, $4000, $4000, $7000
+SceneBgTilesetSrc:      ; $45ea: BG tile source ptr -> VRAM $8000 ($1800 bytes, Func_05_45a2)
+	dw $4080, $4158, $4080, $4080, $4080, $40a0, $4090, $4000
+SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
+	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
+SceneObjTilesetBank:    ; $4602: bank for the obj load (also the metasprite draw bank, Func_05_43db)
+	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
+SceneBgCopyParam:       ; $460a: per-scene byte -> b in the BG tilemap copy (Func_05_4349)
+	db $05, $09, $07, $0c, $06, $0a, $0c, $0e
+SceneDrawBank:          ; $4612: per-scene metasprite bank -> wDrawBank (Func_05_44b4)
+	db $08, $09, $07, $0b, $06, $0a, $0c, $0e
+SceneBgScriptTable:     ; $461a: VM1 (BG track) script roots, by wSceneState
+	dw Scene0_VM1, Scene1_VM1, Scene2_VM1, Scene3_VM1
+	dw Scene4_VM1, Scene5_VM1, Scene6_VM1, Scene7_VM1
+SceneSprScriptTable:    ; $462a: VM2 (sprite track) script roots
+	dw Scene0_VM2, Scene1_VM2, Scene2_VM2, Scene3_VM2
+	dw Scene4_VM2, Scene5_VM2, Scene6_VM2, Scene7_VM2
 
 Func_05_463a:
 	FAR_CALL $00, Func_00_39ad
