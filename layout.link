@@ -24,6 +24,14 @@
 ROMX $01
     ORG $5162
     "Items"
+ROMX $1a
+    ORG $4000
+    "Toamuna graphics"
+    ORG $5ae8
+    "Naji graphics"
+ROMX $1c
+    ORG $4000
+    "Nada graphics"
 ROMX $1d
     ORG $4000
     "Kalum graphics"
@@ -35,6 +43,8 @@ ROMX $1e
 ROMX $1f
     ORG $42b1
     "Kalum script"
+    ORG $6607
+    "Nada graphics 2"
 ROMX $20
     ORG $4000
     "Town screen graphics"
