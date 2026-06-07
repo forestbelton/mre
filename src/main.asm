@@ -11,6 +11,8 @@ INCLUDE "util.inc"
 
 INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "scene/scene7.asm"
+INCLUDE "scene/summon_maps.asm"
 INCLUDE "scene/summon_phenix.asm"
 INCLUDE "scene/summon_gali.asm"
 INCLUDE "scene/summon_tiger.asm"
