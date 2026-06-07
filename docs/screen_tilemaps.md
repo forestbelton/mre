@@ -135,30 +135,53 @@ now answered in source**: scene N loads `$1800` bytes from bank
 (`Func_05_45a2`), plus a 2nd load from `SceneObjTilesetBank`/`Src` (`Func_05_45c1`).
 So a renderer now needs only the **palette** trace per scene.
 
-## Render PROVEN — all 8 scenes, BG + sprites (2026-06-07)
-The doc's milestone is done. `scratch/render_scene.py` renders the BG of all 8
-scenes; `scratch/render_full.py` composites the monster metasprites on top
-(scene 0 = the purple cracked-egg energy field with the blue monster emerging).
-These 8 scenes are the **monster summon / key-unlock animations**
-(`wSceneState = wDisplayMonster`, set in gameplay before `StartKeyUnlock`).
+## Render — DECODE proven; renderer is scratch only (2026-06-07)
+The render-input **decode is confirmed correct**: all 7 monster scenes render as
+the right creatures with the right palettes across 7 banks, with no per-scene
+special-casing (Tiger, Mocchi, Hare, Gali, Golem, Suezo, Phenix — these 8 scenes
+are the **monster summon / key-unlock animations**, `wSceneState = wDisplayMonster`,
+set in gameplay before `StartKeyUnlock`). That validates the table labels below.
+The renderer itself (`scratch/render_anim.py`) is **NOT promoted to tools/** — it
+is a static approximation with known fidelity gaps (see "Renderer gaps").
 
-The full render-input map (each is a per-scene table in `scene.asm`, indexed by
-`wSceneState`), corrected after the render debugging exposed three mislabels:
+The full render-input map (each a per-scene table in `scene.asm`, indexed by
+`wSceneState`) — render debugging corrected three mislabels here:
 - **BG tileset** — `SceneBgTilesetBank` : `SceneBgTilesetSrc` -> `Func_00_108f`
-  loads `$1800` to VRAM **bank 0** then the next `$1800` to **bank 1**; the BG
-  attrs use the bank-1 half. BG uses **`$8800` signed** tile addressing (LCDC bit4=0).
+  loads `$1800` to VRAM **bank 0** then the next `$1800` to **bank 1**; BG attrs
+  pick the bank via attr bit 3. BG uses **`$8800` signed** addressing (LCDC bit4=0).
 - **Palette** — `ScenePaletteBank` : `ScenePaletteSrc` (was mislabeled
-  `SceneObjTileset*`): `Func_05_45c1`->`LoadBgPalettes`/`LoadObjPalettes`. The
-  per-monster block at `$0f:$7191+$80*id` overlays BG 4-6 / OBJ 1-2 on top.
+  `SceneObjTileset*`): `Func_05_45c1`->`LoadBgPalettes`/`LoadObjPalettes` ($40 B = 8
+  BG pals at +$00, 8 OBJ pals at +$40). `LoadMonsterPalettes` then overlays BG 4-6
+  and OBJ 1-2 from the per-monster block `$0f:$7191+$80*id` (this is where e.g.
+  the Tiger's red appears — OBJ pal 1 colour 2).
 - **Descriptor bank** — `SceneDescBank` (was `SceneBgCopyParam`): the ROM bank the
   `CopyBgMap` descriptor is read from (`$05,$09,$07,$0c,$06,$0a,$0c,$0e`).
 - **Sprites** — VM2 `SHOW` lists (2-byte ptrs in bank `$05`) -> metasprite defs in
   `SceneDrawBank` (`wDrawBank`); each def = `[count]` + N×`[Yoff,Xoff,tile,attr]`.
-  OBJ tiles = the bank-0 tileset (unsigned), OBJ palettes from `ScenePalette*+$40`.
+  OBJ tiles = the bank-0/1 BG tileset (unsigned, **8×16** OBJ — LCDC bit 2). Sprite
+  screen pos = `base + entry offset` exactly: the scene sets global offsets
+  `[$ffa8]=$10`/`[$ffa9]=$08` which cancel the GB 16/8 OAM hardware offset. GB OBJ
+  priority = lower OAM index on top (paint last→first).
 
-**Next:** monster animates across multiple `SHOW` poses (render shows the last);
-verify the OBJ tile source; promote the renderers to `tools/` and emit per-scene
-PNGs as editable assets.
+### Renderer gaps (why it's not promoted) — pinned for later
+- **Multi-piece BG not modelled.** Most scenes draw all BG frames to one dest
+  ($0060 = animation, latest wins), but **scene 3 (2 dests) and scene 5 (5 dests:
+  $0060,$0061,$0085,$00ca,$0161)** build the BG from pieces at different dests that
+  persist. The renderer shows one descriptor per frame, so Suezo's green beam and
+  Gali's full field are missing. Fix = a persistent 32×32 BG tile-buffer (same-dest
+  overwrites, different-dest accumulate), not image compositing.
+- **No scroll/raster.** `SCROLL_SPD`/`WOBBLE` ($cf61-$cf64) and `Func_05_443d/445a/
+  447f`/`40b6` drive `rSCX`/`rSCY` and likely per-row offsets — Hare's "warp
+  speed-line" BG animation is a scroll/raster effect the static renderer omits.
+- **Timing approximate.** Driver assumed 60 fps with literal script delays; Golem's
+  cadence looks off. Needs a real frame-rate reference.
+- **Some sprite tile corruption** on Mocchi/Hare (a few tiles) — unresolved;
+  suspect their OBJ tiles draw from a VRAM region the BG tileset doesn't fully cover.
+- Phenix opening "fire interior" needs in-game verification.
+
+**Next (when resumed):** implement the BG tile-buffer + scroll; reconcile timing;
+then the renderer could be promoted and emit per-scene assets. NOT blocking the
+analyzed.asm carve work.
 - Carve the referenced **tilemap descriptors + metasprite lists** (still `db`)
   into structured/PNG form — the path to *editable pictures*.
 - Name the `$CF40+` scene-engine WRAM fields (script ptrs `$CF41/$CF4B`, delays
