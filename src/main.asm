@@ -11,6 +11,7 @@ INCLUDE "util.inc"
 
 INCLUDE "home.asm"
 INCLUDE "analyzed.asm"
+INCLUDE "scene.asm"
 INCLUDE "room/gameplay.asm"
 INCLUDE "editor.asm"
 INCLUDE "editor_descriptions.asm"
