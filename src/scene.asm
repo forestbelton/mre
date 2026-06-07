@@ -485,7 +485,7 @@ Func_05_4349:
 	jr z, Func_05_4385
 	push hl
 	ld a, [wSceneState]
-	ld hl, SceneBgCopyParam
+	ld hl, SceneDescBank
 	rst AddAToHL
 	ld b, [hl]
 	ld de, $9800
@@ -509,7 +509,7 @@ Func_05_4349:
 Func_05_4385:
 	push hl
 	ld a, [wSceneState]
-	ld hl, SceneBgCopyParam
+	ld hl, SceneDescBank
 	rst AddAToHL
 	ld b, [hl]
 	ld de, $9a00
@@ -855,7 +855,7 @@ SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
-SceneBgCopyParam:       ; $460a: per-scene byte -> b in the BG tilemap copy (Func_05_4349)
+SceneDescBank:       ; $460a: per-scene bank the CopyBgMap descriptor is read from (Func_05_4349 -> b -> Func_00_10dc)
 	db $05, $09, $07, $0c, $06, $0a, $0c, $0e
 SceneDrawBank:          ; $4612: per-scene metasprite bank -> wDrawBank (Func_05_44b4)
 	db $08, $09, $07, $0b, $06, $0a, $0c, $0e
