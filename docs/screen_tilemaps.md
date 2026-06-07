@@ -74,17 +74,23 @@ the *bytecode* (`Data_05_5058+`) is the opaque-data part to carve.
 **So these "screens" are animated, scripted scenes, not static pictures** — which
 reframes the asset question (see Open decisions).
 
-## First carve — scene 4 (DONE, 2026-06-07, byte-exact)
-Proved the representation on the smallest scene (wSceneState==4: BG track 50 B/9
-cmds, sprite track 21 B/4 cmds). Bytecode macros live in
-`include/scene_script.inc` (`SCENE_BG_*` for VM1, `SCENE_SPR_*` for VM2; each
-emits the exact opcode bytes). The opaque `Data_05_4c14` db-wall tail was split:
-`Scene4_VM1:` / `Scene4_VM2:` now read as commented macro calls
-(`SCENE_BG_DRAW $0c,$0060,$720f`, `SCENE_SPR_SHOW $28,$30,$20,$4d54`, …); the
-stray 1-byte `analyzed_014d53` section ($FE terminator) was folded into a clean
-`SCENE_BG_END`/`SCENE_SPR_END`. `make verify` OK (sha256 unchanged). Tools:
-`scratch/scene_disasm.py` (disassembler), `scratch/carve_scene4.py` (generator +
-splicer, self-verifies bytes before writing).
+## Carve — all 8 scenes (DONE, 2026-06-07, byte-exact)
+All eight scenes (wSceneState 0-7) are carved from the `Data_05_*` db walls into
+commented macro form. Bytecode macros live in `include/scene_script.inc`
+(`SCENE_BG_*` for VM1, `SCENE_SPR_*` for VM2; each emits the exact opcode bytes).
+Each scene's two tracks read as a labelled command list `Scene{N}_VM1` /
+`Scene{N}_VM2` (e.g. `SCENE_BG_DRAW $0c,$0060,$720f`,
+`SCENE_SPR_SHOW $28,$30,$20,$4d54`, scene 3's backward `SCENE_SPR_JUMP $53ed`
+loop). 658 macro calls; `make verify` sha256 unchanged. Commits `fb4ccfc`
+(scene 4 + VM) and `1bb42b7` (the other 7).
+
+Method: per-span surgery on `db` lines only — engine code (`Func_05_*`) and the
+interleaved metasprite/tilemap data are untouched. Adjacent spans (VM1 end ==
+VM2 start) are merged so they don't share a `db` line; `$FE` terminators that sit
+in their own 1-byte section are converted in place to `SCENE_*_END`; addresses
+are tracked by resyncing at each `Data/Func_05` label (never through code).
+Tools: `scratch/scene_disasm.py` (disassembler), `scratch/carve_scenes_v3.py`
+(merged-interval splicer; self-verifies bytes per region before writing).
 
 **VM1 opcodes** (Func_05_4103): `$00` BG_DRAW [delay,dest,descptr], `$01` SOUND,
 `$02` FLIP, `$03` ROW [delay,src,start,count], `$FA` FARCALL [bank,addr], `$FB`
@@ -94,12 +100,21 @@ ANIM, `$04` JUMP, `$05`/`$06` LOOP on/off, `$07` MOVE (8 args), `$08` STEP, `$FA
 FARCALL, `$FE` END. (VM2 `$03`/`$07` macros not yet written — no scene needs them
 until carved.)
 
-**Next:** carve the remaining 7 scenes (states 0-3,5-7) the same way — order by
-size (4✓, then 4→71B done; 1=120, 0=232, 2=234, 6=348, 5=760, 3=899, 7=942).
-Then optionally convert the root-pointer tables `$05:$461A`/`$462A` (and params
-`$4602/$460A/$4612`) from raw `db` to `dw Scene*_VM1` labels so the dispatch is
-self-documenting. The referenced tilemap descriptors + metasprite lists stay as
-data for now (carve later, or render to PNG once palettes/tilesets are traced).
+**Next:**
+- Convert the root-pointer tables `$05:$461A`/`$462A` (and params
+  `$4602/$460A/$4612`) from raw `db` to `dw Scene{N}_VM1` labels so the dispatch
+  is self-documenting (currently the scenes are labelled but the tables still
+  reference them by raw address).
+- The referenced **tilemap descriptors + metasprite lists** are still `db` data
+  (the `descptr`/`list` args point at them). Carve those next, or render to PNG
+  once palettes/tilesets are traced — this is the remaining path to *editable
+  pictures* (the original Open-decisions north-star).
+- Name the `$CF40+` scene-engine WRAM fields (script ptrs `$CF41/$CF4B`, delays
+  `$CF45/$CF4F`, etc.) and the per-scene param-table semantics
+  (`$4602/$460A/$4612`).
+- Apply the same VM treatment to the **other screen-library banks** (the
+  inventory's `$0a/$0f/$15/$23/$2b` runs) — confirm whether they're driven by
+  this same bank-`$05` engine or their own loaders.
 
 ## What these are
 
