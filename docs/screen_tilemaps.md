@@ -135,10 +135,26 @@ now answered in source**: scene N loads `$1800` bytes from bank
 (`Func_05_45a2`), plus a 2nd load from `SceneObjTilesetBank`/`Src` (`Func_05_45c1`).
 So a renderer now needs only the **palette** trace per scene.
 
+## First render PROVEN (2026-06-07, `scratch/render_scene.py`)
+The doc's milestone — "prove one render" — is done. Scene 0 renders to a colored
+PNG from fully-traced ROM inputs: tileset (`SceneBgTilesetBank[0]=$08` :
+`SceneBgTilesetSrc[0]=$4080` -> `$8000`, 384 tiles), the scene's BG_DRAW
+descriptor (e.g. `$6516`, a 12x20 CopyBgMap map in bank `$05`), and the palette.
+**Palette source:** these 8 scenes are the monster summon / key-unlock animations
+(`wSceneState = wDisplayMonster`, set in gameplay before `StartKeyUnlock`); the BG
+palettes come from the per-monster `$80`-byte block at `$0f:$7191 + $80*id`
+(`block+$00` = BG pals 0-3 scene background, `+$20` = BG 4-6, via
+`LoadMonsterPalettes`). Scene 0's base frame is the green summon cocoon on a
+purple field; the later frames ($66fc/$68e2/$6ac8) are a looping cloud overlay.
+
 **Next:**
-- Trace the per-scene **BG palettes** (the only missing render input now) — see
-  docs/palettes.md (`$c101` WRAM shadow, `Func_00_04f2/052e`). Then build the
-  `(scene tileset + descriptors + palette) -> PNG` renderer and prove one scene.
+- **Per-scene descriptor bank.** Only scene 0's descriptors are in bank `$05`;
+  scenes 1-7 remap (scene 3's were bank `$0c`). The BG copy goes via
+  `Func_00_0467` from the mapped bank — trace how each scene sets it, then the
+  renderer generalizes to all 8 (scene 2 is a static held frame = a clean still).
+- The summoned **monster itself is the sprite track** (VM2 metasprites + OBJ
+  palettes 1-2); compositing those over the BG completes the picture.
+- Promote `scratch/render_scene.py` to `tools/` once it handles all scenes.
 - Carve the referenced **tilemap descriptors + metasprite lists** (still `db`)
   into structured/PNG form — the path to *editable pictures*.
 - Name the `$CF40+` scene-engine WRAM fields (script ptrs `$CF41/$CF4B`, delays
