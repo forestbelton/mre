@@ -100,6 +100,27 @@ ANIM, `$04` JUMP, `$05`/`$06` LOOP on/off, `$07` MOVE (8 args), `$08` STEP, `$FA
 FARCALL, `$FE` END. (VM2 `$03`/`$07` macros not yet written — no scene needs them
 until carved.)
 
+## Coverage check — is the leftover really data, not uncarved script? (2026-06-07)
+Verified rather than assumed (`scratch/coverage.py`). Of the bank-`$05` scene area
+(`$4200-$7e00`): **~3.7 KB carved script · ~2.0 KB code · ~9.7 KB data**, with only
+~75 B genuinely unexplained.
+- **The script set is provably complete.** The engine enters scenes ONLY via
+  `Func_05_44d8` → root tables `$461A`/`$462A`, indexed by `wSceneState*2`; those
+  tables are exactly 8 entries each (bounded by the adjacent param table at
+  `$462A`/`$463A`). Every root + every `$04` jump was followed; there is **no
+  `$FA` FAR_CALL in any scene**, so no other reachable entry.
+- **The data is what it claims.** All 66 `SHOW`/`ANIM` `list` args parse as clean
+  2-byte-pointer lists terminated by `$0000` (metasprite lists); 32 `descptr`
+  args validate as real `CopyBgMap` descriptors, the rest point at tile data in
+  another mapped bank. The unexplained bytes either fail to decode as bytecode
+  (opcode 0) or are the dispatch/param tables read by engine code.
+- **Two code-as-data bugs flushed out** (the inverse problem) and fixed:
+  `Data_05_4a0c` and `Data_05_4a1c` were CODE mislabeled as `db` — a floor-fill
+  alt-entry and a table of floor/room-type setter stubs (set `wActiveFloor` /
+  `wRoomType`) dispatched from a bank-`$04` jump table at `$04:$4858`. Now
+  disassembled as `Func_05_4a0c`/`Func_05_4a1c` (byte-exact). NB: these are
+  *floor* code that merely abuts the scene scripts — unrelated to the scene VM.
+
 **Next:**
 - Convert the root-pointer tables `$05:$461A`/`$462A` (and params
   `$4602/$460A/$4612`) from raw `db` to `dw Scene{N}_VM1` labels so the dispatch

@@ -5240,8 +5240,9 @@ Func_05_4a07:
 	cp $c0
 	jr nz, Func_05_4a0f
 
-Data_05_4a0c:
-	db $3e, $e3, $77
+Func_05_4a0c:           ; alt entry: stamp tile $e3, then fall into the fill loop
+	ld a, $e3
+	ld [hl], a
 
 Func_05_4a0f:
 	inc hl
@@ -5254,12 +5255,41 @@ Func_05_4a0f:
 	jr nz, Func_05_4a02
 	ret
 
-Data_05_4a1c:
-	db $3e, $0f, $ea, $c0, $c2, $c9, $3e, $1e, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1
-	db $c2, $3e, $01, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $02, $ea, $c0
-	db $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $03, $ea, $c0, $c2, $c9, $3e, $02, $ea
-	db $c1, $c2, $3e, $04, $ea, $c0, $c2, $c9, $3e, $02, $ea, $c1, $c2, $3e, $05, $ea
-	db $c0, $c2, $c9
+; Floor/room-type setup stubs, dispatched via the bank-$04 jump table at $04:$4858
+; ($4a1c $4a1e $4a26 $4a28 ...). Each writes wActiveFloor and/or wRoomType; the table
+; also targets the store+ret tails mid-stub (e.g. $4a1e) to share code.
+Func_05_4a1c:
+	ld a, $0f
+	ld [wActiveFloor], a
+	ret
+	ld a, $1e
+	ld [wActiveFloor], a
+	ret
+	ld a, $02
+	ld [wRoomType], a
+	ld a, $01
+	ld [wActiveFloor], a
+	ret
+	ld a, $02
+	ld [wRoomType], a
+	ld a, $02
+	ld [wActiveFloor], a
+	ret
+	ld a, $02
+	ld [wRoomType], a
+	ld a, $03
+	ld [wActiveFloor], a
+	ret
+	ld a, $02
+	ld [wRoomType], a
+	ld a, $04
+	ld [wActiveFloor], a
+	ret
+	ld a, $02
+	ld [wRoomType], a
+	ld a, $05
+	ld [wActiveFloor], a
+	ret
 
 Data_05_4a5f:
 Scene0_VM1:
