@@ -135,26 +135,30 @@ now answered in source**: scene N loads `$1800` bytes from bank
 (`Func_05_45a2`), plus a 2nd load from `SceneObjTilesetBank`/`Src` (`Func_05_45c1`).
 So a renderer now needs only the **palette** trace per scene.
 
-## First render PROVEN (2026-06-07, `scratch/render_scene.py`)
-The doc's milestone — "prove one render" — is done. Scene 0 renders to a colored
-PNG from fully-traced ROM inputs: tileset (`SceneBgTilesetBank[0]=$08` :
-`SceneBgTilesetSrc[0]=$4080` -> `$8000`, 384 tiles), the scene's BG_DRAW
-descriptor (e.g. `$6516`, a 12x20 CopyBgMap map in bank `$05`), and the palette.
-**Palette source:** these 8 scenes are the monster summon / key-unlock animations
-(`wSceneState = wDisplayMonster`, set in gameplay before `StartKeyUnlock`); the BG
-palettes come from the per-monster `$80`-byte block at `$0f:$7191 + $80*id`
-(`block+$00` = BG pals 0-3 scene background, `+$20` = BG 4-6, via
-`LoadMonsterPalettes`). Scene 0's base frame is the green summon cocoon on a
-purple field; the later frames ($66fc/$68e2/$6ac8) are a looping cloud overlay.
+## Render PROVEN — all 8 scenes, BG + sprites (2026-06-07)
+The doc's milestone is done. `scratch/render_scene.py` renders the BG of all 8
+scenes; `scratch/render_full.py` composites the monster metasprites on top
+(scene 0 = the purple cracked-egg energy field with the blue monster emerging).
+These 8 scenes are the **monster summon / key-unlock animations**
+(`wSceneState = wDisplayMonster`, set in gameplay before `StartKeyUnlock`).
 
-**Next:**
-- **Per-scene descriptor bank.** Only scene 0's descriptors are in bank `$05`;
-  scenes 1-7 remap (scene 3's were bank `$0c`). The BG copy goes via
-  `Func_00_0467` from the mapped bank — trace how each scene sets it, then the
-  renderer generalizes to all 8 (scene 2 is a static held frame = a clean still).
-- The summoned **monster itself is the sprite track** (VM2 metasprites + OBJ
-  palettes 1-2); compositing those over the BG completes the picture.
-- Promote `scratch/render_scene.py` to `tools/` once it handles all scenes.
+The full render-input map (each is a per-scene table in `scene.asm`, indexed by
+`wSceneState`), corrected after the render debugging exposed three mislabels:
+- **BG tileset** — `SceneBgTilesetBank` : `SceneBgTilesetSrc` -> `Func_00_108f`
+  loads `$1800` to VRAM **bank 0** then the next `$1800` to **bank 1**; the BG
+  attrs use the bank-1 half. BG uses **`$8800` signed** tile addressing (LCDC bit4=0).
+- **Palette** — `ScenePaletteBank` : `ScenePaletteSrc` (was mislabeled
+  `SceneObjTileset*`): `Func_05_45c1`->`LoadBgPalettes`/`LoadObjPalettes`. The
+  per-monster block at `$0f:$7191+$80*id` overlays BG 4-6 / OBJ 1-2 on top.
+- **Descriptor bank** — `SceneDescBank` (was `SceneBgCopyParam`): the ROM bank the
+  `CopyBgMap` descriptor is read from (`$05,$09,$07,$0c,$06,$0a,$0c,$0e`).
+- **Sprites** — VM2 `SHOW` lists (2-byte ptrs in bank `$05`) -> metasprite defs in
+  `SceneDrawBank` (`wDrawBank`); each def = `[count]` + N×`[Yoff,Xoff,tile,attr]`.
+  OBJ tiles = the bank-0 tileset (unsigned), OBJ palettes from `ScenePalette*+$40`.
+
+**Next:** monster animates across multiple `SHOW` poses (render shows the last);
+verify the OBJ tile source; promote the renderers to `tools/` and emit per-scene
+PNGs as editable assets.
 - Carve the referenced **tilemap descriptors + metasprite lists** (still `db`)
   into structured/PNG form — the path to *editable pictures*.
 - Name the `$CF40+` scene-engine WRAM fields (script ptrs `$CF41/$CF4B`, delays
