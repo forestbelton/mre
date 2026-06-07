@@ -89,6 +89,44 @@ MACRO SCENE_SPR_SOUND ; id
     db $01, \1
 ENDM
 
+; Animate a run of `count` metasprites from list `src` (start index `start`),
+; holding `dur` frames (Func_05_440C, sibling of the BG track's ROW). ($03 — 6 bytes)
+MACRO SCENE_SPR_ANIM  ; dur, src, start, count
+    db $03, \1
+    dw \2
+    db \3, \4
+ENDM
+
+; Jump the sprite track to `target` (same-bank goto; sets $CF4B/$CF4C). ($04 — 3 bytes)
+MACRO SCENE_SPR_JUMP  ; target
+    db $04
+    dw \1
+ENDM
+
+MACRO SCENE_SPR_LOOP_ON     ; $05 — 1 byte (mark loop point / enable every-other-frame)
+    db $05
+ENDM
+
+MACRO SCENE_SPR_LOOP_OFF    ; $06 — 1 byte
+    db $06
+ENDM
+
+; Move/scroll: 8 params into $CF50,$CF51,$CF53..$CF56,$CF4D,$CF4E (Func_05_42CD).
+; Steps toward a target position over frames; advances on STEP. ($07 — 9 bytes)
+MACRO SCENE_SPR_MOVE  ; p1,p2,p3,p4,p5,p6,p7,p8
+    db $07, \1, \2, \3, \4, \5, \6, \7, \8
+ENDM
+
+MACRO SCENE_SPR_STEP        ; $08 — 1 byte (advance the MOVE until target reached)
+    db $08
+ENDM
+
+; Far-call Z80 routine {bank,addr} from the sprite track (Func_00_0495). ($FA — 4 bytes)
+MACRO SCENE_SPR_FARCALL ; bank, addr
+    db $FA, \1
+    dw \2
+ENDM
+
 MACRO SCENE_SPR_END         ; $FE — 1 byte (terminate the sprite track)
     db $FE
 ENDM
