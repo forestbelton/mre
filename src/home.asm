@@ -2100,7 +2100,7 @@ Func_00_0f41:
 	xor a
 	ld [wGameScene], a
 	ld [$c2a8], a
-	ld a, $01
+	ld a, SCENE_LOGO
 	ld [wGameScene], a
 	call ResetScrollState
 	FAR_CALL $05, Func_05_463a
@@ -3509,7 +3509,7 @@ Func_00_1a1e:
 	pop af
 	jp Func_00_19ba
 Func_00_1a66:
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 Func_00_1a6c:
@@ -7365,12 +7365,12 @@ Func_00_34e3:
 	ld a, [wRoomType]
 	cp $02
 	jr z, Func_00_3502
-	ld a, $11
+	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	ret
 
 Func_00_3502:
-	ld a, $12
+	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
 
@@ -7386,7 +7386,7 @@ Func_00_3508:
 	ld a, [wRoomType]
 	cp $05
 	ret z
-	ld a, $12
+	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
 	call ResetScrollState
@@ -7397,7 +7397,7 @@ Func_00_3508:
 	ld a, $30
 	ld [$2fff], a
 	call DrawNextRoomScreen
-	ld a, $11
+	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	push af
 	ld a, $28
@@ -7423,7 +7423,7 @@ Func_00_3508:
 	call DrawTowerOpenScreen
 Func_00_3572:
 	FAR_CALL $18, Func_18_6b71
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 IntroScene_TecmoLogo:
@@ -7431,14 +7431,14 @@ IntroScene_TecmoLogo:
 	ld a, $30
 	ld [$2fff], a
 	call DrawTecmoLogo
-	ld a, $02
+	ld a, SCENE_INTRO
 	ld [wGameScene], a
 	ret
 	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call DrawIntroBookScreen
-	ld a, $00
+	ld a, SCENE_TITLE
 	ld [wGameScene], a
 	push af
 	ld a, $28

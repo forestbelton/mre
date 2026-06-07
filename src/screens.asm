@@ -1878,7 +1878,7 @@ Func_30_514b:
 	ld a, $04
 	ld [wC2D7], a
 	FAR_CALL $18, Func_18_6b71
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 	ld a, [wScreenTimer]
@@ -2349,7 +2349,7 @@ Func_30_5547:
 	ld [$d0ff], a
 	jp Func_30_552f
 Func_30_555d:
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ld c, $5a
 Func_30_5564:

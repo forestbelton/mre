@@ -333,7 +333,7 @@ Func_01_45ad:
 	FAR_CALL $05, Func_05_481d
 	call Func_01_4b7c
 	call Func_01_45d6
-	ld a, $13
+	ld a, SCENE_ROOM_CLEAR
 	ld [wGameScene], a
 	ret
 Func_01_45cf:
@@ -437,7 +437,7 @@ Func_01_4679:
 	ld a, $01
 	ld [wC2D7], a
 	FAR_CALL $18, Func_18_6b71
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 Func_01_4698:
@@ -458,7 +458,7 @@ Func_01_46a0:
 	ld a, $06
 	ld [wRoomType], a
 	call Func_00_1219
-	ld a, $11
+	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	ret
 Func_01_46c8:
@@ -511,27 +511,27 @@ Func_01_470d:
 	call Func_00_1164
 	ld a, $03
 	ld [wGameSceneArg], a
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 
 Func_01_473a:
 	FAR_CALL $18, Func_18_6b71
-	ld a, $04
+	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 
 Func_01_4748:
 	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
-	ld a, $10
+	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_4759:
 	call Func_01_5d77
 	FAR_CALL $05, Func_05_4800
 	call Func_00_1219
-	ld a, $10
+	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_476d:
@@ -541,23 +541,23 @@ Func_01_476d:
 	jp nz, Func_01_46d5
 	call Func_01_48af
 	call Func_00_1219
-	ld a, $12
+	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_4782:
 	call Func_01_479e
 	jr z, Func_01_4798
-	ld a, $11
+	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	ret
 Func_01_478d:
 	call Func_01_479e
 	jr z, Func_01_4798
-	ld a, $12
+	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_4798:
-	ld a, $14
+	ld a, SCENE_TOWER
 	ld [wGameScene], a
 	ret
 Func_01_479e:
