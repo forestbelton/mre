@@ -20,7 +20,7 @@
 ;   $7809  NajiAskItem     Ask -> Item
 ;   $7966  NajiAskStop     Ask -> Stop (bare GOTO back to NajiMenu)
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "naji_06317e", ROMX[$717e], BANK[$18]
 

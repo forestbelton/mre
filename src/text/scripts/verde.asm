@@ -23,7 +23,7 @@
 ;
 ; See docs/text_engine.md for the bytecode reference.
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "verde_0614f5", ROMX[$54f5], BANK[$18]
 

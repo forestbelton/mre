@@ -47,6 +47,7 @@ Func_02_4047:
 	ld c, $1c
 	call Func_02_4065
 	ret
+
 Func_02_4058:
 	ld a, [hl]
 	or a

@@ -7,7 +7,7 @@
 ;
 ; Carved out of analyzed.asm via map.json; see docs/text_engine.md.
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "pashute_060272", ROMX[$4272], BANK[$18]
 

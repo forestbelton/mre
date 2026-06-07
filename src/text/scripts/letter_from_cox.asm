@@ -8,7 +8,7 @@
 ; "Cox" is mentioned in the doc; he might be a character or the
 ; letter's author. Worth checking against the in-game context.
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "letter_from_cox", ROMX[$47ff], BANK[$13]
 

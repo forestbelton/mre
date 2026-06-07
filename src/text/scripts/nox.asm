@@ -21,7 +21,7 @@
 ;
 ; See docs/text_engine.md for the bytecode reference.
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "nox_04c449", ROMX[$4449], BANK[$13]
 

@@ -14,7 +14,7 @@
 ;   $45E3  ToamunaConfirm      Confirm branch (load flow)
 ;   $46B4  ToamunaExit         Exit branch ('Be careful.')
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "toamuna_0640dd", ROMX[$40dd], BANK[$19]
 

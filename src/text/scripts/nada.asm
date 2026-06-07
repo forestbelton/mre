@@ -16,7 +16,7 @@
 ; tools/script_disasm.py — hand-curate freely; the extractor's
 ; append-only rule on non-auto-managed files preserves your edits.
 
-INCLUDE "script.inc"
+INCLUDE "text.inc"
 
 SECTION "nada_07d0d6", ROMX[$50d6], BANK[$1f]
 

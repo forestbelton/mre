@@ -9,8 +9,8 @@
 ; This is just rgbds-structs' `dstruct` named-init: each macro emits its fixed
 ; opcode byte, then lays out the operands from a per-opcode struct (below).
 
-    IF !DEF(SCRIPT_INC)
-DEF SCRIPT_INC EQU 1
+IF !DEF(TEXT_INC)
+DEF TEXT_INC EQU 1
 
 INCLUDE "wram.inc"
 ; rgbds-structs powers the named-operand support. room.inc usually pulls it in
