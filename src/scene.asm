@@ -560,7 +560,7 @@ Func_05_43db:
 	ret z
 	push hl
 	ld a, [wSceneState]
-	ld hl, SceneObjTilesetBank
+	ld hl, ScenePaletteBank
 	rst AddAToHL
 	ld c, [hl]
 	pop hl
@@ -593,7 +593,7 @@ Func_05_440c:
 	ret z
 	push hl
 	ld a, [wSceneState]
-	ld hl, SceneObjTilesetBank
+	ld hl, ScenePaletteBank
 	rst AddAToHL
 	ld c, [hl]
 	pop hl
@@ -830,13 +830,13 @@ Func_05_45a2:
 	ret
 Func_05_45c1:
 	ld a, [wSceneState]
-	ld hl, SceneObjTilesetBank
+	ld hl, ScenePaletteBank
 	rst AddAToHL
 	ld a, [hl]
 	push af
 	ld a, [wSceneState]
 	add a, a
-	ld hl, SceneObjTilesetSrc
+	ld hl, ScenePaletteSrc
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -846,14 +846,14 @@ Func_05_45c1:
 	ret
 
 ; --- Per-scene tables, indexed by wSceneState (the dispatch). Set up by
-; Func_05_44d8 (script roots), Func_05_45a2 (BG tiles), Func_05_45c1 (obj tiles). ---
-SceneObjTilesetSrc:     ; $45da: obj/sprite tile source ptr (2nd load, Func_05_45c1)
+; Func_05_44d8 (script roots), Func_05_45a2 (BG tiles), Func_05_45c1 (palettes). ---
+ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (Func_05_45c1 -> LoadBgPalettes/LoadObjPalettes)
 	dw $4000, $4000, $4000, $4000, $4000, $4000, $4000, $7000
-SceneBgTilesetSrc:      ; $45ea: BG tile source ptr -> VRAM $8000 ($1800 bytes, Func_05_45a2)
+SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; Func_05_45a2/Func_00_108f loads $1800 to bank0 then the next $1800 to bank1
 	dw $4080, $4158, $4080, $4080, $4080, $40a0, $4090, $4000
 SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
-SceneObjTilesetBank:    ; $4602: bank for the obj load (also the metasprite draw bank, Func_05_43db)
+ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 SceneBgCopyParam:       ; $460a: per-scene byte -> b in the BG tilemap copy (Func_05_4349)
 	db $05, $09, $07, $0c, $06, $0a, $0c, $0e
