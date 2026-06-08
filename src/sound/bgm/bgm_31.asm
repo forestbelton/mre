@@ -1,6 +1,10 @@
 ; Sound id $31 (BGM) -- room transition (between floors)
 ; Bank $3e, ROM $559d-$5709. INCLUDEd by sound/bank1.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $31", ROMX
+
 ; ===== sound id $31 =====
 Snd_3e_559d:
 	s_chan $f0, Snd_3e_55a9

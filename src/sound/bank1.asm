@@ -1,12 +1,11 @@
 ; Song/SFX data for sound driver bank $3e (ids $2f-$3a) -- SOUND_BANK_1.
 ; The $4b00 pointer table + one INCLUDE per song (address order).
+INCLUDE "hardware.inc"      ; APU registers used by the shared driver
 INCLUDE "sound.inc"
 
 SECTION "Sound bank 1", ROMX
 
-REDEF SB EQUS "3e"
-INCLUDE "sound/driver.asm"
-PURGE SB
+SOUND_DRIVER SOUND_BANK_1
 
 SOUND_TABLE
 	SOUND Snd_3e_4d00 ; id $2f
@@ -22,16 +21,3 @@ SOUND_TABLE
     SOUND Snd_3e_6b85 ; id $39
     SOUND Snd_3e_6f12 ; id $3a
 END_SOUND_TABLE
-
-INCLUDE "sound/bgm/bgm_2f.asm"
-INCLUDE "sound/bgm/bgm_30.asm"
-INCLUDE "sound/bgm/bgm_31.asm"
-INCLUDE "sound/bgm/bgm_32.asm"
-INCLUDE "sound/bgm/bgm_33.asm"
-INCLUDE "sound/bgm/bgm_34.asm"
-INCLUDE "sound/bgm/bgm_35.asm"
-INCLUDE "sound/bgm/bgm_36.asm"
-INCLUDE "sound/bgm/bgm_37.asm"
-INCLUDE "sound/bgm/bgm_38.asm"
-INCLUDE "sound/bgm/bgm_39.asm"
-INCLUDE "sound/bgm/bgm_3a.asm"

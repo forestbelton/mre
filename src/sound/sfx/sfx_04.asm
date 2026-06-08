@@ -1,6 +1,10 @@
 ; Sound id $04 (SFX) -- UI cursor move
 ; Bank $3f, ROM $4d79-$4d94. INCLUDEd by sound/bank0.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "SFX - $04", ROMX
+
 ; ===== sound id $04 =====
 Snd_3f_4d79:
 	s_chan $00, Snd_3f_4d94

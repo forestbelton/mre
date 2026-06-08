@@ -23,6 +23,7 @@
 ; ----- HOME: public sound API -------------------------------------------------
 
 INCLUDE "hardware.inc"
+INCLUDE "sound.inc"
 INCLUDE "util.inc"
 
 SECTION "Sound API", ROM0
@@ -166,11 +167,3 @@ SoundCommandTable:
 			db SOUND_BANK_1, (I - $2f)
 		ENDC
 	ENDR
-
-; ----- Bank $3f: song/SFX data ($4b00+) for sound ids $00-$2e (primary) -------
-INCLUDE "sound/bank0.asm"
-
-; ----- Bank $3e: song/SFX data ($4b00+) for sound ids $2f-$3a -----------------
-; Readable, byte-exact macro source: per-bank pointer table + one file per song
-; under src/sound/{sfx,bgm}/. (Dis)assembled by tools/songdisasm.py.
-INCLUDE "sound/bank1.asm"

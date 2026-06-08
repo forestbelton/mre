@@ -1,6 +1,10 @@
 ; Sound id $1e (SFX) -- ?
 ; Bank $3f, ROM $55fe-$562f. INCLUDEd by sound/bank0.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "SFX - $1e", ROMX
+
 ; ===== sound id $1e =====
 Snd_3f_55fe:
 	s_chan $00, Snd_3f_562f

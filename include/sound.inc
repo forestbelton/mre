@@ -11,6 +11,12 @@
 IF !DEF(SOUND_INC)
 DEF SOUND_INC EQU 1
 
+MACRO SOUND_DRIVER
+    DEF SB EQUS "{02x:\1}"      ; bank value ($3f/$3e) -> suffix string "3f"/"3e"
+    INCLUDE "sound/driver.inc"
+    PURGE SB
+ENDM
+
 DEF SOUND_BANK_0 EQU $3f    ; primary: sound ids $00-$2e (SFX + BGM $28-$2e)
 DEF SOUND_BANK_1 EQU $3e    ; secondary: BGM ids $2f-$3a
 DEF SND_BASE EQU $4b00      ; table/descriptor offsets are relative to here

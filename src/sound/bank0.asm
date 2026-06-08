@@ -4,9 +4,7 @@ INCLUDE "sound.inc"
 
 SECTION "Sound bank 0", ROMX
 
-REDEF SB EQUS "3f"
-INCLUDE "sound/driver.asm"
-PURGE SB
+SOUND_DRIVER SOUND_BANK_0
 
 SOUND_TABLE
     SOUND Snd_3f_4d00 ; id $00
@@ -57,51 +55,3 @@ SOUND_TABLE
     SOUND Snd_3f_6a2f ; id $2d
     SOUND Snd_3f_6eb6 ; id $2e
 END_SOUND_TABLE
-
-INCLUDE "sound/sfx/sfx_00.asm"
-INCLUDE "sound/sfx/sfx_01.asm"
-INCLUDE "sound/sfx/sfx_02.asm"
-INCLUDE "sound/sfx/sfx_03.asm"
-INCLUDE "sound/sfx/sfx_04.asm"
-INCLUDE "sound/sfx/sfx_05.asm"
-INCLUDE "sound/sfx/sfx_06.asm"
-INCLUDE "sound/sfx/sfx_07.asm"
-INCLUDE "sound/sfx/sfx_08.asm"
-INCLUDE "sound/sfx/sfx_09.asm"
-INCLUDE "sound/sfx/sfx_0a.asm"
-INCLUDE "sound/sfx/sfx_0b.asm"
-INCLUDE "sound/sfx/sfx_0c.asm"
-INCLUDE "sound/sfx/sfx_0d.asm"
-INCLUDE "sound/sfx/sfx_0e.asm"
-INCLUDE "sound/sfx/sfx_0f.asm"
-INCLUDE "sound/sfx/sfx_10.asm"
-INCLUDE "sound/sfx/sfx_11.asm"
-INCLUDE "sound/sfx/sfx_12.asm"
-INCLUDE "sound/sfx/sfx_13.asm"
-INCLUDE "sound/sfx/sfx_14.asm"
-INCLUDE "sound/sfx/sfx_15.asm"
-INCLUDE "sound/sfx/sfx_16.asm"
-INCLUDE "sound/sfx/sfx_17.asm"
-INCLUDE "sound/sfx/sfx_18.asm"
-INCLUDE "sound/sfx/sfx_19.asm"
-INCLUDE "sound/sfx/sfx_1a.asm"
-INCLUDE "sound/sfx/sfx_1b.asm"
-INCLUDE "sound/sfx/sfx_1c.asm"
-INCLUDE "sound/sfx/sfx_1d.asm"
-INCLUDE "sound/sfx/sfx_1e.asm"
-INCLUDE "sound/sfx/sfx_1f.asm"
-INCLUDE "sound/sfx/sfx_20.asm"
-INCLUDE "sound/sfx/sfx_21.asm"
-INCLUDE "sound/sfx/sfx_22.asm"
-INCLUDE "sound/sfx/sfx_23.asm"
-INCLUDE "sound/sfx/sfx_24.asm"
-INCLUDE "sound/sfx/sfx_25.asm"
-INCLUDE "sound/sfx/sfx_26.asm"
-INCLUDE "sound/sfx/sfx_27.asm"
-INCLUDE "sound/bgm/bgm_28.asm"
-INCLUDE "sound/bgm/bgm_29.asm"
-INCLUDE "sound/bgm/bgm_2a.asm"
-INCLUDE "sound/bgm/bgm_2b.asm"
-INCLUDE "sound/bgm/bgm_2c.asm"
-INCLUDE "sound/bgm/bgm_2d.asm"
-INCLUDE "sound/bgm/bgm_2e.asm"

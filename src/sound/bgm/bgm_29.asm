@@ -1,6 +1,10 @@
 ; Sound id $29 (BGM) -- room
 ; Bank $3f, ROM $581b-$5ca2. INCLUDEd by sound/bank0.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $29", ROMX
+
 ; ===== sound id $29 =====
 Snd_3f_581b:
 	s_chan $f0, Snd_3f_5827

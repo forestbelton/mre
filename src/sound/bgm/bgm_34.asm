@@ -1,6 +1,10 @@
 ; Sound id $34 (BGM) -- Toamuna
 ; Bank $3e, ROM $5cb6-$5ef8. INCLUDEd by sound/bank1.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $34", ROMX
+
 ; ===== sound id $34 =====
 Snd_3e_5cb6:
 	s_chan $f0, Snd_3e_5cc2

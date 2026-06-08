@@ -1,6 +1,10 @@
 ; Sound id $32 (BGM) -- Pashute
 ; Bank $3e, ROM $570a-$5a2f. INCLUDEd by sound/bank1.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $32", ROMX
+
 ; ===== sound id $32 =====
 Snd_3e_570a:
 	s_chan $f0, Snd_3e_5716

@@ -7,6 +7,8 @@
 ; raw bank-agnostic 16-bit addresses, so the emitted bytes are identical in both.
 ;
 ; See docs/sound_engine.md for the architecture and the command/bytecode tables.
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
 
 Func_{SB}_4000:
 	jp Sound_Reset_{SB}

@@ -1,6 +1,10 @@
 ; Sound id $2b (BGM) -- bonus stage (tentative)
 ; Bank $3f, ROM $60bf-$660c. INCLUDEd by sound/bank0.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $2b", ROMX
+
 ; ===== sound id $2b =====
 Snd_3f_60bf:
 	s_chan $f0, Snd_3f_60cb

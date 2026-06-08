@@ -1,6 +1,10 @@
 ; Sound id $35 (BGM) -- disc stone regeneration
 ; Bank $3e, ROM $5ef9-$62f9. INCLUDEd by sound/bank1.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $35", ROMX
+
 ; ===== sound id $35 =====
 Snd_3e_5ef9:
 	s_chan $f0, Snd_3e_5f05

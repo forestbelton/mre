@@ -1,6 +1,10 @@
 ; Sound id $36 (BGM) -- rival encounter
 ; Bank $3e, ROM $62fa-$6469. INCLUDEd by sound/bank1.asm into its $4b00 section.
 
+INCLUDE "sound.inc"
+
+SECTION "BGM - $36", ROMX
+
 ; ===== sound id $36 =====
 Snd_3e_62fa:
 	s_chan $f0, Snd_3e_6306
