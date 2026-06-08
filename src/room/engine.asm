@@ -123,7 +123,7 @@ Func_03_407f:
 	ldh a, [hEntityUpdate2]
 	or a
 	jr z, Func_03_408c
-	FAR_CALL $04, Func_04_4000
+	FAR_CALL $04, EntityAnim_Run
 Func_03_408c:
 	ldh a, [hEntityPtrLo]
 	ld l, a
@@ -297,7 +297,7 @@ EntityOp_Gfx:
 	ld a, [de]
 	ld b, a
 	push de
-	FAR_CALL $04, Func_04_40e2
+	FAR_CALL $04, EntityAnim_SetAnimation
 	pop de
 	inc de
 	jp RunEntityScript

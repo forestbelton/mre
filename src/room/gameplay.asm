@@ -141,7 +141,7 @@ Func_01_444a:
 	jr nz, Func_01_446b
 Func_01_4458:
 	call Func_01_4dd9
-	FAR_CALL $04, Func_04_425c
+	FAR_CALL $04, EntityAnim_ResetState
 	FAR_CALL $02, Func_02_4023
 Func_01_446b:
 	FAR_CALL $0f, Func_0f_4000
