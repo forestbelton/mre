@@ -67,31 +67,44 @@ The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader u
 `wFloorRowStride = $11 − width` to skip the margin. After the arrays, bank-5/bank-1
 post-load routines (`Func_05_49EF`, `Func_01_572D`) finish entity setup.
 
-### Record trailer (offset ~`$145`, 256 bytes) — editor-only, undecoded
+### Record trailer (the 10×11 floors' 256-byte slot slack)
 
-`ParseFloorRecord` stops after `arr3` (a 10×11 floor's front is `8 + 2·110 + 4 +
-45 + 48 = 325` = `$145` bytes), so the remaining **256 bytes** of the 581-byte
-slot are **never read by gameplay**. They're not pad: each is structured 2bpp-ish
-data (≈16 tiles), mostly distinct per floor (29 unique across 53), occasionally
-byte-identical between floors, and **not** keyed to the `type` byte.
+Every record occupies a fixed **581-byte slot** (the `$245` `FloorPtrTable`
+stride). 581 is exactly the size of a maximal **14×17** floor:
+`8 + 2·238 + 4 + 45 + 48 = 581`. A floor's data fills `8 + 2·H·W + 97` bytes; the
+rest of the slot is unused slack. Floors come in **several sizes** (the editor
+offers small / medium / large):
 
-The trailer is only ever **copied wholesale** — never interpreted. The in-room
-**level editor** (bank `$12`, `src/editor.asm`) is the one thing that reads it:
-`LoadFloorRecordToBuffer` (`$00:$12AB`) copies the whole 581-byte record (front +
-trailer) into `wFloorSnapshot` (`$C586`); the editor edits only the **front**
-(grids/entities, via `wEditCursor` → `wFloorGrid`) and saves the whole record to
-**SRAM** with an XOR checksum (`Func_00_12ee`; cart-RAM dests in `Data_12_4a61`).
-The trailer rides along untouched. The menu "floor preview" is `PackFloorSnapshot`
-re-packing the *live* WRAM grids into the buffer's front (so it tracks current
-player/item state), trailer left alone.
+| size | H×W | cells | front | **slack** | where |
+|---|---|---|---|---|---|
+| small  | 10×11 | 110 | 325 | **256** | normal tower (53) + some bonus |
+| medium | 10×17 / 14×12 / 14×13 | 168–182 | 441–469 | **112–140** | bonus/boss (bank `$12`) |
+| large  | 14×17 | 238 | 581 | **0** | normal tower (17) + some bonus |
 
-So **no code anywhere reads or writes individual trailer bytes** — not gameplay,
-not even the editor (nothing accesses the buffer's trailer region `$C6CB–$C7CA`,
-and the trailer's ROM addresses appear in no pointer table). It's preserved purely
-because the editor persists the record as one opaque blob. Most likely it's
-**vestigial output of the level-authoring tool** (a thumbnail / source layer the
-GB ROM never consumes): structured 2bpp-ish data, but dead weight at runtime. It's
-colocated raw (a `.trailer` `db` block) in each `src/layout/roomNN.asm`.
+(The normal tower floors in banks `$2d/$2e/$2f` are only small or large; the
+medium sizes appear on the bonus/boss records in bank `$12`.) A large floor fills
+the slot exactly — no trailer; every smaller floor leaves a slack tail.
+
+The **256-byte tail of the 10×11 floors** (what's folded into the small
+`roomNN.asm` files) is **never read by anything** — `ParseFloorRecord` stops after
+`arr3`, and no other code computes `record+$145` or interprets the tail. Its
+content is
+just leftover/default bytes, which is why it's structured-but-meaningless and
+shared across unrelated floors (analysis in `scratch/trailer_analysis.py`):
+
+- **14 floors** carry the same trivial `ff 00×8 ff×7` fill (entropy 1.0, 2 byte
+  values) — a default pattern;
+- **8 floors** carry a verbatim copy of some 14×17 floor's tail (`[325:581]`) — a
+  buffer-reuse remnant;
+- the rest hold other leftover patterns. None of it correlates with `type`, the
+  grids, or the layout.
+
+So the "trailer" is **padding, not a field**: the record format is fixed-size for
+the biggest floor, and small floors leave the tail uninitialized. (The in-room
+level editor copies the whole 581-byte slot — `LoadFloorRecordToBuffer` →
+`wFloorSnapshot` → SRAM with an XOR checksum — so the slack rides along, but it
+edits only the front and never touches the tail.) It's colocated raw (a `.trailer`
+`db` block) in each `src/layout/roomNN.asm` only to keep the build byte-exact.
 
 ### Collision grid cells
 `$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = **crate**

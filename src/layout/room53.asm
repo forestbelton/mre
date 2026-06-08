@@ -55,9 +55,10 @@ Room53:
     EMPTY_SPAWNER_SLOT
     assert @ - .spawners == sizeof_Spawner * 4
 
-    ; --- record trailer (256 bytes), undecoded. Read only by the level
-    ; editor (LoadFloorRecordToBuffer -> wFloorSnapshot); gameplay never
-    ; reads it. See docs/floor_data.md "Record trailer". ---
+    ; --- 256 bytes of unused slot slack: every floor record is a fixed
+    ; 581-byte slot (sized for the max 14x17 floor); this 10x11 floor fills
+    ; only 325, leaving this leftover/default tail. Never read by anything.
+    ; See docs/floor_data.md "Record trailer". ---
 .trailer
     db $66, $70, $d5, $3b, $af, $dc, $55, $aa, $21, $b9, $0e, $32, $40, $1b, $d8, $76
     db $7a, $e3, $29, $d2, $60, $b8, $e9, $7c, $71, $66, $a9, $8d, $13, $c6, $30, $3e

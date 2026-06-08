@@ -55,9 +55,10 @@ Room51:
     dstruct Spawner, , .X=2, .Y=1, .P0=$00, .P1=$02, .P2=$04, .Spawn0=2, .Spawn1=SPAWN_NONE, .Spawn2=SPAWN_NONE, .Spawn3=SPAWN_NONE, .Spawn4=SPAWN_NONE, .Spawn5=SPAWN_NONE, .End=INERT
     assert @ - .spawners == sizeof_Spawner * 4
 
-    ; --- record trailer (256 bytes), undecoded. Read only by the level
-    ; editor (LoadFloorRecordToBuffer -> wFloorSnapshot); gameplay never
-    ; reads it. See docs/floor_data.md "Record trailer". ---
+    ; --- 256 bytes of unused slot slack: every floor record is a fixed
+    ; 581-byte slot (sized for the max 14x17 floor); this 10x11 floor fills
+    ; only 325, leaving this leftover/default tail. Never read by anything.
+    ; See docs/floor_data.md "Record trailer". ---
 .trailer
     db $ff, $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff
     db $ff, $00, $00, $00, $00, $00, $00, $00, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff
