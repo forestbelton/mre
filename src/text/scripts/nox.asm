@@ -23,6 +23,141 @@
 
 INCLUDE "text.inc"
 
+SECTION "analyzed_04c284", ROMX[$4284], BANK[$13]
+
+Nox_RenderPortrait_AlfSpeaking:
+	ld hl, $627d
+	ld de, $9900
+	call CopyBgMap
+	ld a, $13
+	ld [wDrawBank], a
+	call Func_13_42f6
+	call Func_13_433e
+	call Func_13_4362
+	ret
+Nox_RenderPortrait_NoxSpeaking:
+	ld hl, $6257
+	ld de, $9900
+	call CopyBgMap
+	ld a, $13
+	ld [wDrawBank], a
+	call Func_13_42f6
+	call Func_13_433e
+	call Func_13_4362
+	ret
+Nox_RenderPortrait_Reminiscing:
+	ld hl, $6257
+	ld de, $9900
+	call CopyBgMap
+	ld a, $13
+	ld [wDrawBank], a
+	call Func_13_4308
+	call Func_13_4350
+	call Func_13_4362
+	ret
+Nox_RenderPortrait_GoSeeFriends:
+	ld hl, $6257
+	ld de, $9900
+	call CopyBgMap
+	ld a, $13
+	ld [wDrawBank], a
+	call Func_13_431a
+	call Func_13_4350
+	call Func_13_4362
+	ret
+Nox_RenderPortrait_Note:
+	ld hl, $6257
+	ld de, $9900
+	call CopyBgMap
+	ld a, $13
+	ld [wDrawBank], a
+	call Func_13_432c
+	ret
+Func_13_42f6:
+	ld hl, $6329
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $00
+	ld bc, $3088
+	call Func_00_20fa
+	ret
+Func_13_4308:
+	ld hl, $62f3
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $00
+	ld bc, $3088
+	call Func_00_20fa
+	ret
+Func_13_431a:
+	ld hl, $62f3
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $00
+	ld bc, $5050
+	call Func_00_20fa
+	ret
+Func_13_432c:
+	ld hl, $630e
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $00
+	ld bc, $4058
+	call Func_00_20fa
+	ret
+Func_13_433e:
+	ld hl, $637a
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $02
+	ld bc, $3078
+	call Func_00_20fa
+	ret
+Func_13_4350:
+	ld hl, $637a
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $02
+	ld bc, $f0f0
+	call Func_00_20fa
+	ret
+Func_13_4362:
+	ld hl, $6383
+	ld bc, $1008
+	call DrawMetasprite
+	ld a, $04
+	ld bc, $3048
+	call Func_00_20fa
+	ret
+
+Data_13_4374:
+	db $16, $20, $16, $22
+
+Func_13_4378:
+	ld a, d
+	rrca
+	rrca
+	rrca
+	rrca
+	and $03
+	ld hl, $4374
+	rst AddAToHL
+	ld e, [hl]
+	ld hl, $c00a
+	ld a, e
+	ld [hl+], a
+	ld [hl], $09
+	ld a, $03
+	rst AddAToHL
+	ld a, e
+	add a, $08
+	ld [hl+], a
+	ld [hl], $09
+	ret
+
+Data_13_4395:
+	db $24, $26, $24
+
 SECTION "Alf/Nox script", ROMX
 
 NoxScript:
