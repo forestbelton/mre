@@ -262,6 +262,9 @@ NoxScript:
     db "see you later!"
     SCRIPT_WAIT
     SCRIPT_END
+
+; $46d5 — Nox reminiscing solo after the flashback ("Whew! I forgot...").
+NoxReminisceScript:
     SCRIPT_RENDERER .Addr=Nox_RenderPortrait_Reminiscing, .Bank=$13
     db "Whew! I forgot"
     SCRIPT_NEWLINE
@@ -278,6 +281,9 @@ NoxScript:
     db "everyone is."
     SCRIPT_WAIT
     SCRIPT_END
+
+; $473d — Nox decides to go see old friends.
+NoxGoSeeFriendsScript:
     SCRIPT_RENDERER .Addr=Nox_RenderPortrait_GoSeeFriends, .Bank=$13
     db "I know!"
     SCRIPT_WAIT
@@ -300,6 +306,9 @@ NoxScript:
     db "Okay, off I go!"
     SCRIPT_WAIT
     SCRIPT_END
+
+; $47c3 — Nox remembers to leave a note ("Wait, I forgot").
+NoxNoteScript:
     SCRIPT_RENDERER .Addr=Nox_RenderPortrait_Note, .Bank=$13
     db "Wait, I forgot."
     SCRIPT_NEWLINE

@@ -4947,28 +4947,28 @@ Func_13_4000:
 	ld [$d61a], a
 	ld a, $e7
 	ldh [rLCDC], a
-	ld hl, $4449
+	ld hl, NoxScript
 	call ScriptDispatcherEnterAfterCall
 	ld a, $c7
 	ldh [rLCDC], a
 	call Func_13_40b7
 	ld a, $e7
 	ldh [rLCDC], a
-	ld hl, $46d5
+	ld hl, NoxReminisceScript
 	call ScriptDispatcherEnterAfterCall
 	ld a, $c7
 	ldh [rLCDC], a
 	call Func_13_4108
 	ld a, $e7
 	ldh [rLCDC], a
-	ld hl, $473d
+	ld hl, NoxGoSeeFriendsScript
 	call ScriptDispatcherEnterAfterCall
 	ld a, $c7
 	ldh [rLCDC], a
 	call Func_13_4143
 	ld a, $e7
 	ldh [rLCDC], a
-	ld hl, $47c3
+	ld hl, NoxNoteScript
 	call ScriptDispatcherEnterAfterCall
 	call Func_13_4434
 	push af
