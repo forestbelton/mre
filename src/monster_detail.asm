@@ -1456,13 +1456,13 @@ MonsterPortraitMetaTable:
 	db $59, $4c, $5f, $4c, $65, $4c, $6b, $4c, $71, $4c, $77, $4c, $7d, $4c
 MonsterPortraitMetaRecords:
 	; [meta1, meta2, bgmap] little-endian bank-$0f pointers (0 = none)
-	db $e9, $77, $00, $00, $11, $75   ; 0 Tiger
-	db $3b, $78, $26, $78, $79, $75   ; 1 Mocchi
-	db $50, $78, $00, $00, $e1, $75   ; 2 Hare
-	db $b2, $78, $81, $78, $49, $76   ; 3 Gali
-	db $d7, $78, $00, $00, $b1, $76   ; 4 Golem
-	db $00, $79, $00, $00, $19, $77   ; 5 Suezo
-	db $00, $00, $00, $00, $81, $77   ; 6 Phoenix
+	dw $77e9, $0000, $7511 ; 0 Tiger
+	dw $783b, $7826, $7579 ; 1 Mocchi
+	dw $7850, $0000, $75e1 ; 2 Hare
+	dw $78b2, $7881, $7649 ; 3 Gali
+	dw $78d7, $0000, $76b1 ; 4 Golem
+	dw $7900, $0000, $7719 ; 5 Suezo
+	dw $0000, $0000, $7781 ; 6 Phoenix
 
 Data_0f_4c83:
 	db $f0, $8c, $cb, $67, $20, $14, $cb, $6f, $20, $01, $c9, $21, $d9, $cf, $7e, $fe
