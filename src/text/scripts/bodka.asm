@@ -119,11 +119,11 @@ Bodka_RenderPortrait:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_18_5f12
+	jr z, .frame1
 	cp $02
-	jr z, Func_18_5f27
+	jr z, .frame2
 	cp $03
-	jr z, Func_18_5f12
+	jr z, .frame1
 	ld hl, $5a3e
 	ld a, $1e
 	ld de, $98a6
@@ -132,7 +132,7 @@ Bodka_RenderPortrait:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
-Func_18_5f12:
+.frame1:
 	ld hl, $5a73
 	ld a, $1e
 	ld de, $98a6
@@ -141,7 +141,7 @@ Func_18_5f12:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
-Func_18_5f27:
+.frame2:
 	ld hl, $5aa8
 	ld a, $1e
 	ld de, $98a6
@@ -185,7 +185,7 @@ Tradehouse_BuildSceneNoInit:
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadBgMap
-	call Func_18_601f
+	call Tradehouse_AnimateNoteScene
 	call HideUnusedOamSprites
 	ld a, $33
 	ld hl, $7000
@@ -220,7 +220,7 @@ Tradehouse_BuildNoteScene:
 	ld de, $8000
 	ld bc, $1800
 	call BankVramCopy
-	call Func_18_6013
+	call Tradehouse_LoadNoteBgMap
 	ld a, $33
 	ld hl, $7000
 	ld de, wBgPalettes
@@ -236,13 +236,13 @@ Tradehouse_BuildNoteScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
-Func_18_6013:
+Tradehouse_LoadNoteBgMap:
 	ld hl, $723e
 	ld a, $33
 	ld de, $9800
 	call BankMapCopyA
 	ret
-Func_18_601f:
+Tradehouse_AnimateNoteScene:
 	ld a, $1f
 	ld [wRendererAddr], a
 	ld a, $60
@@ -255,44 +255,44 @@ Func_18_601f:
 	ld a, [hl]
 	inc a
 	cp $1c
-	jr c, Func_18_603d
+	jr c, .selectFrame
 	xor a
-Func_18_603d:
+.selectFrame:
 	ld [hl], a
 	srl a
 	srl a
 	cp $01
-	jr z, Func_18_6064
+	jr z, .frame1
 	cp $02
-	jr z, Func_18_606e
+	jr z, .frame2
 	cp $03
-	jr z, Func_18_6078
+	jr z, .frame3
 	cp $04
-	jr z, Func_18_6082
+	jr z, .frame4
 	cp $05
-	jr z, Func_18_606e
+	jr z, .frame2
 	cp $06
-	jr z, Func_18_6064
+	jr z, .frame1
 	ld hl, $73fc
 	ld bc, $1e98
 	call DrawMetasprite
 	ret
-Func_18_6064:
+.frame1:
 	ld hl, $7405
 	ld bc, $1e98
 	call DrawMetasprite
 	ret
-Func_18_606e:
+.frame2:
 	ld hl, $740e
 	ld bc, $1e98
 	call DrawMetasprite
 	ret
-Func_18_6078:
+.frame3:
 	ld hl, $7417
 	ld bc, $1e98
 	call DrawMetasprite
 	ret
-Func_18_6082:
+.frame4:
 	ld hl, $7420
 	ld bc, $1e98
 	call DrawMetasprite

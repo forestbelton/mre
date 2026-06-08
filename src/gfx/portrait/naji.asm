@@ -3,7 +3,7 @@
 ; Kalum: 384 tiles -> VRAM bank 1 $8000 ($8800 signed addressing), arranged by the
 ; CopyBgMap descriptor below. Assembled from assets/portrait/naji/ via
 ; tools/pngasset.py (Makefile, output under build/assets/). The 6 BG + 6 OBJ
-; palettes (loaded by Func_18_6bc8 from $1a:$72e8/$7328) are carved here from the
+; palettes (loaded by Naji_BuildPortraitScene from $1a:$72e8/$7328) are carved here from the
 ; PNG's colour table.
 
 SECTION "Naji graphics", ROMX

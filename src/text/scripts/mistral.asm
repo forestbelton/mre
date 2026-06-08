@@ -114,7 +114,7 @@ Mistral_StartEncounter:
 	ld a, $35
 	ld de, $9800
 	call BankMapCopyA
-	call Func_1f_44ca
+	call Mistral_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $35
 	ld hl, $6000
@@ -162,7 +162,7 @@ Mistral_LoadMonsterTiles:
 	ld c, $10
 	call CopyDEtoHL
 	ret
-Func_1f_44ca:
+Mistral_AnimateMonsterPortrait:
 	ld a, $ca
 	ld [wRendererAddr], a
 	ld a, $44
@@ -177,10 +177,10 @@ Func_1f_44ca:
 	ld hl, $6531
 	ld bc, $1039
 	call DrawMetasprite
-Func_1f_44f0:
+.waitScanline:
 	ld a, [rLY]
 	cp $50
-	jr nz, Func_1f_44f0
+	jr nz, .waitScanline
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -190,14 +190,14 @@ Func_1f_44f0:
 	srl a
 	srl a
 	cp $00
-	jr z, Func_1f_4515
+	jr z, .frame0
 	cp $01
-	jr z, Func_1f_4545
+	jr z, .frame1
 	cp $02
-	jr z, Func_1f_4575
+	jr z, .frame2
 	cp $03
-	jr z, Func_1f_4545
-Func_1f_4515:
+	jr z, .frame1
+.frame0:
 	ld hl, $623e
 	ld a, $35
 	ld de, $984b
@@ -215,7 +215,7 @@ Func_1f_4515:
 	ld bc, $2088
 	call DrawMetasprite
 	ret
-Func_1f_4545:
+.frame1:
 	ld hl, $6334
 	ld a, $35
 	ld de, $984b
@@ -233,7 +233,7 @@ Func_1f_4545:
 	ld bc, $2088
 	call DrawMetasprite
 	ret
-Func_1f_4575:
+.frame2:
 	ld hl, $6422
 	ld a, $35
 	ld de, $984b

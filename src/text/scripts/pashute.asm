@@ -226,11 +226,11 @@ Pashute_RenderPortraitNeutral:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_18_41b7
+	jr z, .frame1
 	cp $02
-	jr z, Func_18_41cc
+	jr z, .frame2
 	cp $03
-	jr z, Func_18_41b7
+	jr z, .frame1
 	ld hl, $5a3e
 	ld a, $1b
 	ld de, $9885
@@ -239,7 +239,7 @@ Pashute_RenderPortraitNeutral:
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
-Func_18_41b7:
+.frame1:
 	ld hl, $5a7d
 	ld a, $1b
 	ld de, $9885
@@ -248,7 +248,7 @@ Func_18_41b7:
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
-Func_18_41cc:
+.frame2:
 	ld hl, $5abc
 	ld a, $1b
 	ld de, $9885

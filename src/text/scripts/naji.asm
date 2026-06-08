@@ -388,13 +388,13 @@ Func_18_6b65:
 	ret
 
 Func_18_6b71:
-	call Func_18_6bc8
+	call Naji_BuildPortraitScene
 	ld hl, $6ce3
 	call ScriptDispatcherEnterAfterCall
 	FAR_CALL $1f, Script_FadeOutPortrait
 	ret
 
-	call Func_18_6bc8
+	call Naji_BuildPortraitScene
 	ld hl, NajiScript
 	call ScriptDispatcherEnterAfterCall
 	ld a, [wMainMenuResult]
@@ -415,7 +415,7 @@ Naji_StartTowerFromBottom:
 	FAR_CALL $00, Func_00_34e3
 	ret
 
-Func_18_6bc8:
+Naji_BuildPortraitScene:
 	call Func_00_0822
 	call HideAllSprites
 	call Func_00_3965
@@ -484,9 +484,9 @@ Naji_RenderPortraitTalking:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_18_6c8a
+	jr z, .frame1
 	cp $02
-	jr z, Func_18_6c8a
+	jr z, .frame1
 	ld hl, $7526
 	ld a, $1a
 	ld de, $9886
@@ -495,7 +495,7 @@ Naji_RenderPortraitTalking:
 	ld bc, $1e34
 	call DrawMetasprite
 	ret
-Func_18_6c8a:
+.frame1:
 	ld hl, $755b
 	ld a, $1a
 	ld de, $9886

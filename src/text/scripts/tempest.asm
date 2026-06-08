@@ -115,7 +115,7 @@ Tempest_StartEncounter:
 	ld a, $1e
 	ld de, $9800
 	call BankMapCopyA
-	call Func_1f_4b15
+	call Tempest_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1e
 	ld hl, $73e7
@@ -163,7 +163,7 @@ Tempest_LoadMonsterTiles:
 	ld c, $10
 	call CopyDEtoHL
 	ret
-Func_1f_4b15:
+Tempest_AnimateMonsterPortrait:
 	ld a, $15
 	ld [wRendererAddr], a
 	ld a, $4b
@@ -189,9 +189,9 @@ Func_1f_4b15:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_1f_4b6d
+	jr z, .frame1
 	cp $02
-	jr z, Func_1f_4b6d
+	jr z, .frame1
 	ld hl, $7625
 	ld a, $1e
 	ld de, $98ad
@@ -200,7 +200,7 @@ Func_1f_4b15:
 	ld bc, $3560
 	call DrawMetasprite
 	ret
-Func_1f_4b6d:
+.frame1:
 	ld hl, $7670
 	ld a, $1e
 	ld de, $98ad

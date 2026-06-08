@@ -36,13 +36,13 @@ Func_1f_4d66:
 	jp WaitForNextFrame
 Func_1f_4d82:
 	ld c, $18
-Func_1f_4d84:
+.loop:
 	ld [hl], e
 	inc hl
 	ld [hl], d
 	inc hl
 	dec c
-	jr nz, Func_1f_4d84
+	jr nz, .loop
 	ret
 Func_1f_4d8c:
 	ld a, $00
@@ -207,7 +207,7 @@ Nada_RenderPortrait:
 	ld [wRendererBank], a
 	ld a, $1c
 	ld [wDrawBank], a
-	call Func_1f_4f5b
+	call Nada_AnimatePortrait
 	call Func_1f_4fb2
 	ret
 Nada_RenderPortraitAngry:
@@ -228,7 +228,7 @@ Nada_RenderPortraitAngry:
 	call DrawMetasprite
 	call Func_1f_4fb2
 	ret
-Func_1f_4f5b:
+Nada_AnimatePortrait:
 	ld hl, $d610
 	ld a, [hl]
 	inc a
@@ -237,11 +237,11 @@ Func_1f_4f5b:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_1f_4f88
+	jr z, .frame1
 	cp $02
-	jr z, Func_1f_4f9d
+	jr z, .frame2
 	cp $03
-	jr z, Func_1f_4f88
+	jr z, .frame1
 	ld hl, $75b5
 	ld a, $1c
 	ld de, $986c
@@ -250,7 +250,7 @@ Func_1f_4f5b:
 	ld bc, $1360
 	call DrawMetasprite
 	ret
-Func_1f_4f88:
+.frame1:
 	ld hl, $761c
 	ld a, $1c
 	ld de, $986c
@@ -259,7 +259,7 @@ Func_1f_4f88:
 	ld bc, $1360
 	call DrawMetasprite
 	ret
-Func_1f_4f9d:
+.frame2:
 	ld hl, $7683
 	ld a, $1c
 	ld de, $986c
@@ -272,17 +272,17 @@ Func_1f_4fb2:
 	ld hl, $d611
 	ld a, [hl]
 	or a
-	jr z, Func_1f_4fbf
+	jr z, .clamp
 	cp $ff
-	jr z, Func_1f_4fbf
+	jr z, .clamp
 	inc a
 	ld [hl], a
-Func_1f_4fbf:
+.clamp:
 	srl a
 	cp $1b
-	jr c, Func_1f_4fc7
+	jr c, .dispatch
 	ld a, $1a
-Func_1f_4fc7:
+.dispatch:
 	ld hl, $4fd6
 	sla a
 	add a, l

@@ -1,19 +1,19 @@
 ; Nox flashback dialogues (bank 19).
 ;
 ; The player watches a series of flashback / memory scenes featuring
-; Nox and his childhood friend Alf. The four SCRIPT_END sub-scripts
-; in this region run independently — each dispatched by the engine
+; Nox and his childhood friend Alf. NoxScript holds four SCRIPT_END
+; sub-scripts back to back; each runs independently, dispatched by the
+; engine (re-entered at the address after the preceding SCRIPT_END)
 ; when the corresponding story trigger fires:
 ;
-;   NoxScript        $4C449  Nox/Alf flashback ("Wow, you were cool
-;                            back then... It's a promise between
-;                            men!"). Two-speaker scene using
-;                            renderers $4284 / $429C alternately for
-;                            left vs right bubble positions.
-;   nox_46d5         $46D5   Nox reminiscing solo ("Whew! I forgot
-;                            just how much fun it was...").
-;   nox_473d         $473D   Nox "I'll go see old friends".
-;   nox_47c3         $47C3   Nox "Wait, I forgot" — short.
+;   $4C449  Nox/Alf flashback ("Wow, you were cool back then... It's
+;           a promise between men!"). Two-speaker scene alternating
+;           the Nox_RenderPortrait_AlfSpeaking / _NoxSpeaking renderers
+;           for the left vs right bubble positions.
+;   $46D5   Nox reminiscing solo ("Whew! I forgot just how much fun it
+;           was...") — Nox_RenderPortrait_Reminiscing.
+;   $473D   Nox "I'll go see old friends" — Nox_RenderPortrait_GoSeeFriends.
+;   $47C3   Nox "Wait, I forgot" (short) — Nox_RenderPortrait_Note.
 ;
 ; The flashbacks use textbox tilemap position $9C22 (vs the standard
 ; $9982 used by overworld NPCs), placing the dialog in a different

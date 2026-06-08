@@ -24,18 +24,18 @@ CountCheckedInMonsters:
 	ld hl, wMonsterUses
 	ld c, $00
 	ld b, $00
-Func_18_5328:
+.loop:
 	ld a, [hl+]
 	or a
-	jr z, Func_18_5331
+	jr z, .next
 	ld a, c
 	ld [wActiveMonster], a
 	inc b
-Func_18_5331:
+.next:
 	inc c
 	ld a, c
 	cp $07
-	jr nz, Func_18_5328
+	jr nz, .loop
 	ld a, b
 	ld [wYNResult], a
 	ret
@@ -142,11 +142,11 @@ Verde_RenderPortrait:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_18_5455
+	jr z, .frame1
 	cp $02
-	jr z, Func_18_546a
+	jr z, .frame2
 	cp $03
-	jr z, Func_18_5455
+	jr z, .frame1
 	ld hl, $769b
 	ld a, $1b
 	ld de, $98a5
@@ -155,7 +155,7 @@ Verde_RenderPortrait:
 	ld bc, $142d
 	call DrawMetasprite
 	ret
-Func_18_5455:
+.frame1:
 	ld hl, $76e6
 	ld a, $1b
 	ld de, $98a5
@@ -164,7 +164,7 @@ Func_18_5455:
 	ld bc, $142d
 	call DrawMetasprite
 	ret
-Func_18_546a:
+.frame2:
 	ld hl, $7731
 	ld a, $1b
 	ld de, $98a5

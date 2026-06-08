@@ -119,7 +119,7 @@ Rafaga_StartEncounter:
 	ld a, $1d
 	ld de, $9800
 	call BankMapCopyA
-	call Func_1f_47ea
+	call Rafaga_AnimateMonsterPortrait
 	call HideUnusedOamSprites
 	ld a, $1d
 	ld hl, $7319
@@ -167,7 +167,7 @@ Rafaga_LoadMonsterTiles:
 	ld c, $10
 	call CopyDEtoHL
 	ret
-Func_1f_47ea:
+Rafaga_AnimateMonsterPortrait:
 	ld a, $ea
 	ld [wRendererAddr], a
 	ld a, $47
@@ -193,9 +193,9 @@ Func_1f_47ea:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_1f_4842
+	jr z, .frame1
 	cp $02
-	jr z, Func_1f_4842
+	jr z, .frame1
 	ld hl, $7557
 	ld a, $1d
 	ld de, $98ad
@@ -204,7 +204,7 @@ Func_1f_47ea:
 	ld bc, $3860
 	call DrawMetasprite
 	ret
-Func_1f_4842:
+.frame1:
 	ld hl, $758e
 	ld a, $1d
 	ld de, $98ad

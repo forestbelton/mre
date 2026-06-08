@@ -117,11 +117,11 @@ Kalum_AnimateMonsterPortrait:
 	srl a
 	srl a
 	cp $01
-	jr z, Func_1f_4287
+	jr z, .frame1
 	cp $02
-	jr z, Func_1f_429c
+	jr z, .frame2
 	cp $03
-	jr z, Func_1f_4287
+	jr z, .frame1
 	ld hl, $5a3e
 	ld a, $1d
 	ld de, $988d
@@ -130,7 +130,7 @@ Kalum_AnimateMonsterPortrait:
 	ld bc, $2068
 	call DrawMetasprite
 	ret
-Func_1f_4287:
+.frame1:
 	ld hl, $5a81
 	ld a, $1d
 	ld de, $988d
@@ -139,7 +139,7 @@ Func_1f_4287:
 	ld bc, $2068
 	call DrawMetasprite
 	ret
-Func_1f_429c:
+.frame2:
 	ld hl, $5ac4
 	ld a, $1d
 	ld de, $988d
