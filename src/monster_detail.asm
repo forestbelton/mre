@@ -1449,8 +1449,10 @@ Func_0f_4c20:
 
 ; Indexed by wDisplayMonster (0-6). See docs/monster_detail_screen.md.
 MonsterPortraitTileTable:
-	; -> bank $3c portrait tile data ($800 = 128 tiles each)
-	db $00, $40, $00, $48, $00, $50, $00, $58, $00, $60, $00, $68, $00, $70
+	; -> bank $3c portrait tile data ($800 = 128 tiles each), keyed by monster id
+	dw MonsterPortraitTiles_Tiger, MonsterPortraitTiles_Mocchi, MonsterPortraitTiles_Hare
+	dw MonsterPortraitTiles_Gali, MonsterPortraitTiles_Golem, MonsterPortraitTiles_Suezo
+	dw MonsterPortraitTiles_Phoenix
 MonsterPortraitMetaTable:
 	; -> a MonsterPortraitMetaRecords entry below
 	db $59, $4c, $5f, $4c, $65, $4c, $6b, $4c, $71, $4c, $77, $4c, $7d, $4c

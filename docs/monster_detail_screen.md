@@ -83,9 +83,14 @@ CGB palette mechanism this revealed (`$c101`/`$c141` WRAM shadow buffers).
 
 ## TODO
 
-- Decide an editable representation (BG `bgmap` + metasprites + `$3c` tile set +
+- **Done — `$3c` tile sets carved:** the seven portrait tile sheets are now
+  `assets/monster_portrait/{tiger,mocchi,hare,gali,golem,suezo,phoenix}.2bpp`
+  (128 tiles / `$800` each), INCBINed by `src/gfx/monster_portraits.asm` as
+  `MonsterPortraitTiles_<Name>`, which `MonsterPortraitTileTable` now points at
+  by label. (Originally `$00`-padded `db` blobs split mid-sheet in analyzed.asm.)
+- Decide a fuller editable representation (BG `bgmap` + metasprites +
   the bank-`$0f` palette block per monster) when the sprite/metasprite system is
-  brought under the asset pipeline.
+  brought under the asset pipeline — and lift the `.2bpp` sheets to PNG.
 - The id↔name mapping above is from color visual ID; cross-checking
   `wMonsterDiscStones` (Phoenix is index 6, `wMonsterDiscStones+6`) confirms the
   count and Phoenix.
