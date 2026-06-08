@@ -87,25 +87,25 @@ ScriptOpcode03Handler_WaitAndRenderPrep:
 
 ScriptWaitInputCore:
 	push hl
-Func_00_3a3a:
+.loop:
 	call WaitForNextFrame
 	call ReadJoypad
 	call DispatchTextRenderer
 	ld a, [$d61a]
 	or a
-	jr nz, Data_00_3a4e
+	jr nz, .useAltCursor
 	ld bc, $8c92
-	jr Func_00_3a51
+	jr .poll
 
-Data_00_3a4e:
+.useAltCursor:
 	ld bc, $8c9a
 
-Func_00_3a51:
+.poll:
 	call Func_00_3e10
 	call HideUnusedOamSprites
 	ldh a, [hJoyPressed]
 	bit 0, a
-	jr z, Func_00_3a3a
+	jr z, .loop
 	push af
 	ld a, $0d
 	call PlaySound
@@ -269,11 +269,11 @@ ScriptPrintDecimal:
 	call NumberToDecimal3
 	ld a, [wBcdHigh]
 	or a
-	jr z, Func_00_3b31
+	jr z, .printOnes
 	add a, $30
 	ld c, a
 	call PrintCharacterAtCursor
-Func_00_3b31:
+.printOnes:
 	ld a, [wBcdLow]
 	add a, $30
 	ld c, a
@@ -285,14 +285,14 @@ ScriptRepeatChar:
 	ld c, [hl]
 	inc hl
 	push hl
-Func_00_3b41:
+.loop:
 	push bc
 	call WaitForNextFrame
 	call DispatchTextRenderer
 	call HideUnusedOamSprites
 	pop bc
 	dec c
-	jr nz, Func_00_3b41
+	jr nz, .loop
 	pop hl
 	jp ScriptDispatcherNext
 
@@ -388,14 +388,14 @@ ScriptOpcode05Helper:
 	call WriteWindowRow
 	ld a, [wTextStateV2]
 	sub $02
-Func_00_3c03:
+.fillTop:
 	push af
 	ld c, $06
 	ld de, $0606
 	call WriteWindowRow
 	pop af
 	dec a
-	jr nz, Func_00_3c03
+	jr nz, .fillTop
 	ld c, $86
 	ld de, $0686
 	call WriteWindowRow
@@ -439,7 +439,7 @@ WriteWindowRow:
 DrawTextWindow:
 	ld a, [$d61a]
 	or a
-	jr nz, Func_00_3c69
+	jr nz, .altWindow
 	push hl
 	ld hl, $674b
 	ld a, $19
@@ -447,7 +447,7 @@ DrawTextWindow:
 	call BankMapCopyA
 	pop hl
 	ret
-Func_00_3c69:
+.altWindow:
 	push hl
 	ld hl, $6161
 	ld a, $13
@@ -462,7 +462,7 @@ PrintCharacterAtCursor:
 	push hl
 	ld a, c
 	cp $40
-	jr z, Func_00_3c98
+	jr z, .specialChar
 	ld a, [$d617]
 	ld d, a
 	ld a, [wTextCursor]
@@ -470,55 +470,54 @@ PrintCharacterAtCursor:
 	call PrintCharacterAtCursor_Helper1
 	ld a, c
 	call PrintCharacterAtCursor_Helper2
-	jr c, Func_00_3c94
+	jr c, .done
 	ld hl, wTextCursor
 	inc [hl]
-Func_00_3c94:
+.done:
 	pop hl
 	pop de
 	pop bc
 	ret
-Func_00_3c98:
+.specialChar:
 	ld a, [$d61b]
 	inc a
 	and $01
 	ld [$d61b], a
-	jr Func_00_3c94
+	jr .done
 
 PrintCharacterAtCursor_Helper1:
 	push bc
 	ld a, c
 	call PrintCharacterAtCursor_Helper2
-	jr nc, Func_00_3cad
+	jr nc, .nextRow
 	dec de
-	jr Func_00_3cb5
-Func_00_3cad:
+	jr .lookupTile
+.nextRow:
 	ld a, e
 	add a, $20
 	ld e, a
 	ld a, d
 	adc a, $00
 	ld d, a
-Func_00_3cb5:
+.lookupTile:
 	ld b, $00
 	ld hl, $3d10
 	add hl, bc
 	ld b, [hl]
 	ld a, c
 	cp $de
-	jr z, Func_00_3cd3
+	jr z, .writeTile
 	cp $df
-	jr z, Func_00_3cd3
+	jr z, .writeTile
 	cp $b0
-	jr z, Func_00_3cd3
+	jr z, .writeTile
 	ld a, [$d61b]
 	or a
-	jr z, Func_00_3cd3
-Func_00_3ccf:
+	jr z, .writeTile
 	ld a, $38
 	add a, b
 	ld b, a
-Func_00_3cd3:
+.writeTile:
 	ld a, $01
 	ldh [rVBK], a
 	di
