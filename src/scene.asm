@@ -851,9 +851,11 @@ SceneLoadPalettes:
 ; --- Per-scene tables, indexed by wSceneState (the dispatch). Set up by
 ; SceneSetupTracks (script roots), SceneLoadTiles (BG tiles), SceneLoadPalettes (palettes). ---
 ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (SceneLoadPalettes -> LoadBgPalettes/LoadObjPalettes)
-	dw $4000, $4000, $4000, $4000, $4000, $4000, $4000, $7000
+	dw TigerPalettes, MocchiPalettes, HarePalettes, GaliPalettes
+	dw GolemPalettes, SuezoPalettes, PhenixPalettes, Scene7Palettes
 SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; SceneLoadTiles/Func_00_108f loads $1800 to bank0 then the next $1800 to bank1
-	dw $4080, $4158, $4080, $4080, $4080, $40a0, $4090, $4000
+	dw TigerTiles, MocchiTiles, HareTiles, GaliTiles
+	dw GolemTiles, SuezoTiles, PhenixTiles, Scene7Tiles
 SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
