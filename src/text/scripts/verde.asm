@@ -18,7 +18,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
 
-SECTION "analyzed_061321", ROMX[$5321], BANK[$18]
+SECTION "Verde script functions", ROMX
 
 CountCheckedInMonsters:
 	ld hl, wMonsterUses

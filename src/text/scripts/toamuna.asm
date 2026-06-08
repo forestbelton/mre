@@ -18,7 +18,7 @@ INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
 
-SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
+SECTION "Toamuna script functions", ROMX
 
 Toamuna_LoadGame:
 	FAR_CALL $12, Func_12_4b8e

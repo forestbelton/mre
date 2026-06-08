@@ -52,16 +52,16 @@ ROMX $13
     "Alf/Nox script"
     "Cox letter script"
 ROMX $18
-    ORG $4272
+    "Pashute script functions"
     "Pashute script"
-    ORG $54f5
+    "Verde script functions"
     "Verde script"
-    ORG $608c
+    "Bodka script functions"
     "Bodka script"
-    ORG $717e
+    "Naji script functions"
     "Naji script"
 ROMX $19
-    ORG $40dd
+    "Toamuna script functions"
     "Toamuna script"
 ROMX $1a
     "Toamuna graphics"

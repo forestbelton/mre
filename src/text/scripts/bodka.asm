@@ -2,7 +2,7 @@ INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
 
-SECTION "analyzed_061de3", ROMX[$5de3], BANK[$18]
+SECTION "Bodka script functions", ROMX
 
 LinkClampResultCode:
 	ld a, [$d5c2]

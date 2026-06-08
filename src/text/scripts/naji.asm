@@ -378,7 +378,7 @@ NajiAskItem:
 NajiAskStop:
     SCRIPT_GOTO .Target=NajiMenu
 
-SECTION "analyzed_062b65", ROMX[$6b65], BANK[$18]
+SECTION "Naji script functions", ROMX
 
 Func_18_6b65:
 	ld a, $04

@@ -11,7 +11,7 @@ INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
 
-SECTION "analyzed_060000", ROMX[$4000], BANK[$18]
+SECTION "Pashute script functions", ROMX
 
 Pashute_GetMonsterUsesDecimal:
 	ld hl, wMonsterUses

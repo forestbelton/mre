@@ -15,10 +15,6 @@
 ; See docs/text_engine.md for the script-engine variables ($D5FE,
 ; $D5FF, $D600, $D60D, $D614-$D622, $CFF0, $CFF2).
 
-    IF !DEF(WRAM_INC)
-DEF WRAM_INC EQU 1
-
-
 ; CGB palette shadow buffers, flushed to the hardware palette registers in VBlank
 ; (FlushBgPalettes / FlushObjPalettes, gated by hBgPaletteDirty / hObjPaletteDirty).
 ; 8 palettes each, 4 little-endian RGB555 colors per palette. See docs/palettes.md.
@@ -348,5 +344,3 @@ wTextHeight::       ds 1    ; $D619: textbox height
 wRendererAddr::     ds 2    ; $D61E/$D61F: text-renderer routine address (set by $0E)
 wRendererBank::     ds 1    ; $D620: text-renderer bank (set by $0E)
 wTextStateV2::      ds 2    ; $D621/$D622: $05 opcode's BC target
-
-    ENDC ; WRAM_INC
