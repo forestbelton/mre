@@ -1,7 +1,7 @@
 ; Gali summon-animation assets (src/scene.asm scene 3): palette, tileset, metasprite defs. Gali's descriptor frames are in the shared bank $0c (see summon_maps). See docs/screen_tilemaps.md.
 ; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
 
-SECTION "scene_gali", ROMX[$4000], BANK[$0b]
+SECTION "Gali summon", ROMX
 
 GaliPalettes:
 	INCBIN "assets/scene/gali/palette.bin"

@@ -1,7 +1,7 @@
 ; Hare summon-animation assets (src/scene.asm, scene 2). Palette + tileset + CopyBgMap descriptor frames; see docs/screen_tilemaps.md and the scene.asm per-scene tables.
 ; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
 
-SECTION "scene_hare", ROMX[$4000], BANK[$07]
+SECTION "Hare summon", ROMX
 
 HarePalettes:
 	INCBIN "assets/scene/hare/palette.bin"

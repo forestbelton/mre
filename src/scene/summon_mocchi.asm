@@ -1,7 +1,7 @@
 ; Mocchi summon-animation assets (src/scene.asm, scene 1). Palette + tileset + CopyBgMap descriptor frames; see docs/screen_tilemaps.md.
 ; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
 
-SECTION "scene_mocchi", ROMX[$4000], BANK[$09]
+SECTION "Mocchi summon", ROMX
 
 MocchiPalettes:
 	INCBIN "assets/scene/mocchi/palette.bin"

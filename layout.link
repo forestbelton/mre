@@ -27,6 +27,18 @@ ROM0
 ROMX $01
     ORG $5162
     "Items"
+ROMX $06
+    "Golem summon"
+ROMX $07
+    "Hare summon"
+ROMX $08
+    "Tiger summon"
+ROMX $09
+    "Mocchi summon"
+ROMX $0a
+    "Suezo summon"
+ROMX $0b
+    "Gali summon"
 ROMX $12
     ORG $5906
     "Hare room"

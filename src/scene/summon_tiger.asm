@@ -1,7 +1,7 @@
 ; Tiger summon-animation assets (src/scene.asm scene 0): palette, tileset, and metasprite defs (SceneDrawBank[0]). Tiger's CopyBgMap descriptor frames live in bank $05 (scene.asm itself). See docs/screen_tilemaps.md.
 ; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
 
-SECTION "scene_tiger", ROMX[$4000], BANK[$08]
+SECTION "Tiger summon", ROMX
 
 TigerPalettes:
 	INCBIN "assets/scene/tiger/palette.bin"

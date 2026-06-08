@@ -1,7 +1,7 @@
 ; Suezo summon-animation assets (src/scene.asm, scene 5). Palette + tileset + CopyBgMap descriptor frames; see docs/screen_tilemaps.md.
 ; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
 
-SECTION "scene_suezo", ROMX[$4000], BANK[$0a]
+SECTION "Suezo summon", ROMX
 
 SuezoPalettes:
 	INCBIN "assets/scene/suezo/palette.bin"
