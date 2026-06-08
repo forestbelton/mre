@@ -138,7 +138,7 @@ Rafaga_StartEncounter:
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
-	ld hl, $4857
+	ld hl, RafagaScript
 	jp ScriptDispatcherEnterAfterCall
 Rafaga_ShowMonsterPortrait:
 	call Rafaga_LoadMonsterTiles

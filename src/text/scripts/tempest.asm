@@ -134,7 +134,7 @@ Tempest_StartEncounter:
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
-	ld hl, $4b82
+	ld hl, TempestScript
 	jp ScriptDispatcherEnterAfterCall
 Tempest_ShowMonsterPortrait:
 	call Tempest_LoadMonsterTiles

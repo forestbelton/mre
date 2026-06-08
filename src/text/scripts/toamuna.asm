@@ -63,7 +63,7 @@ Toamuna_CheckSaveExists:
 	ld a, $34
 	call PlaySoundTracked
 	pop af
-	ld hl, $40dd
+	ld hl, ToamunaScript
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
 Toamuna_LoadPortraitTilemap:

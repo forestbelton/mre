@@ -40,7 +40,7 @@ CountCheckedInMonsters:
 	ld [wYNResult], a
 	ret
 Func_18_533c:
-	ld hl, $54f5
+	ld hl, VerdeEntry
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
 Verde_BuildPortraitScene:

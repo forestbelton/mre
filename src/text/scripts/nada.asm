@@ -47,7 +47,7 @@ Func_1f_4d82:
 Func_1f_4d8c:
 	ld a, $00
 	ld [$d611], a
-	ld hl, $50d6
+	ld hl, NadaScript
 	jp ScriptDispatcherEnterAfterCall
 Nada_ShowScene:
 	call Func_00_0822

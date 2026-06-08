@@ -20,7 +20,7 @@ LinkStoreRecvRoom:
 	ret
 
 Func_18_5dfa:
-	ld hl, $608c
+	ld hl, BodkaScript
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
 Bodka_BuildStudioScene:
@@ -298,11 +298,15 @@ Tradehouse_AnimateNoteScene:
 	call DrawMetasprite
 	ret
 
-Data_18_608c:
-	db $0a, $e2, $d0, $01, $83, $64
-
 SECTION "Bodka script", ROMX
 
+; Top-level Bodka script entry ($608c), reached from Func_18_5dfa. Dispatch on
+; the studio-mode flag: when [$d0e2]==1 Bodka is the post-game studio host
+; (BodkaStudioGreet); otherwise fall through to the tradehouse scene. The
+; leading IF_EQ was previously misfiled as Data_18_608c at the tail of the
+; portrait-code section, so the script appeared to start at TradehouseEntry.
+BodkaScript:
+    SCRIPT_IF_EQ .Addr=$d0e2, .Value=$01, .Target=BodkaStudioGreet
 TradehouseEntry:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=TradehouseReady
@@ -498,6 +502,9 @@ BodkaGreet:
     db "for now."
     SCRIPT_WAIT
     SCRIPT_END
+
+; Studio-host greeting ($6483) — target of the BodkaScript studio-flag branch.
+BodkaStudioGreet:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
     SCRIPT_CYCLE .Count=4

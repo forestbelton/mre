@@ -56,7 +56,7 @@ ROMX $18
     "Pashute script"
     ORG $54f5
     "Verde script"
-    ORG $6092
+    ORG $608c
     "Bodka script"
     ORG $717e
     "Naji script"

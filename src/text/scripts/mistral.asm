@@ -133,7 +133,7 @@ Mistral_StartEncounter:
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
-	ld hl, $45a5
+	ld hl, MistralScript
 	jp ScriptDispatcherEnterAfterCall
 Mistral_ShowMonsterPortrait:
 	call Mistral_LoadMonsterTiles
