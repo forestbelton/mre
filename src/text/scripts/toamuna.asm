@@ -14,7 +14,98 @@
 ;   $45E3  ToamunaConfirm      Confirm branch (load flow)
 ;   $46B4  ToamunaExit         Exit branch ('Be careful.')
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
 INCLUDE "text.inc"
+
+SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
+
+Toamuna_LoadGame:
+	FAR_CALL $12, Func_12_4b8e
+	ld [wYNResult], a
+	ret
+Toamuna_SaveGame:
+	FAR_CALL $12, SaveGameToSram
+	ld [wYNResult], a
+	ret
+Toamuna_CheckSaveExists:
+	FAR_CALL $12, Func_12_4bb3
+	ld [wYNResult], a
+	ret
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1a
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Toamuna_LoadPortraitTilemap
+	call Toamuna_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1a
+	ld hl, $5800
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1a
+	ld hl, $5840
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	push af
+	ld a, $34
+	call PlaySoundTracked
+	pop af
+	ld hl, $40dd
+	call ScriptDispatcherEnterAfterCall
+	jp LeaveTownBuilding
+Toamuna_LoadPortraitTilemap:
+	ld hl, $5880
+	ld a, $1a
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Toamuna_RenderPortrait:
+	ld a, $8b
+	ld [wRendererAddr], a
+	ld a, $40
+	ld [$d61f], a
+	ld a, $19
+	ld [wRendererBank], a
+	ld a, $1a
+	ld [wDrawBank], a
+	ld hl, $5a56
+	ld bc, $2828
+	call DrawMetasprite
+	ld hl, $5a3e
+	ld a, $1a
+	ld de, $98c4
+	call BankMapCopyA
+	ret
+Toamuna_RenderPortraitAlt:
+	ld a, $b4
+	ld [wRendererAddr], a
+	ld a, $40
+	ld [$d61f], a
+	ld a, $19
+	ld [wRendererBank], a
+	ld a, $1a
+	ld [wDrawBank], a
+	ld hl, $5aab
+	ld bc, $2828
+	call DrawMetasprite
+	ld hl, $5a93
+	ld a, $1a
+	ld de, $98c4
+	call BankMapCopyA
+	ret
 
 SECTION "Toamuna script", ROMX
 

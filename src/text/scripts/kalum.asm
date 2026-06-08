@@ -8,7 +8,146 @@
 ; tools/script_disasm.py — hand-curate freely; the extractor's
 ; append-only rule on non-auto-managed files preserves your edits.
 
+INCLUDE "hardware.inc"
 INCLUDE "text.inc"
+
+SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
+
+Kalum_StartEncounter:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1d
+	ld hl, KalumPortraitTiles
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	ld hl, KalumPortraitMapDesc
+	ld a, $1d
+	ld de, TILEMAP0
+	call BankMapCopyA
+	call Kalum_AnimateMonsterPortrait
+	call HideUnusedOamSprites
+	ld a, $1d
+	ld hl, KalumPortraitPaletteBg
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1d
+	ld hl, KalumPortraitPaletteObj
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	call Func_1f_41da
+	call Func_1f_41e6
+	push af
+	ld a, $36
+	call PlaySoundTracked
+	pop af
+	call Func_1f_4008
+	ld hl, KalumScript
+	jp ScriptDispatcherEnterAfterCall
+
+Func_1f_41da:
+	ld de, $4000
+	ld hl, wBgPalettes
+	ld c, $08
+	call CopyDEtoHL
+	ret
+
+Func_1f_41e6:
+	ld de, $4000
+	ld hl, $c169
+	ld c, $08
+	call CopyDEtoHL
+	ret
+
+Kalum_ShowMonsterPortrait:
+	call Kalum_LoadMonsterTiles
+	call Func_1f_41e6
+	jp ScriptWaitForBgSwap
+
+Kalum_ShowMonsterPortrait2:
+	call Kalum_LoadMonsterTiles
+	jp ScriptWaitForObjSwap
+
+Kalum_LoadMonsterTiles:
+	ld a, $1d
+	ld hl, KalumPortraitPaletteBg
+	ld de, $c181
+	ld bc, $0030
+	call BankCopy
+	ld de, $c131
+	ld hl, $c1b1
+	ld c, $10
+	call CopyDEtoHL
+	ld a, $1d
+	ld hl, KalumPortraitPaletteObj
+	ld de, $c1c1
+	ld bc, $0030
+	call BankCopy
+	ld de, $c171
+	ld hl, $c1f1
+	ld c, $10
+	call CopyDEtoHL
+	ret
+
+Kalum_AnimateMonsterPortrait:
+	ld a, $34
+	ld [wRendererAddr], a
+	ld a, $42
+	ld [$d61f], a
+	ld a, $1f
+	ld [wRendererBank], a
+	ld a, $1d
+	ld [wDrawBank], a
+	ld hl, $5b07
+	ld bc, $5070
+	call DrawMetasprite
+	ld hl, $5b10
+	ld bc, $2058
+	call DrawMetasprite
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_1f_4287
+	cp $02
+	jr z, Func_1f_429c
+	cp $03
+	jr z, Func_1f_4287
+	ld hl, $5a3e
+	ld a, $1d
+	ld de, $988d
+	call BankMapCopyA
+	ld hl, $5a50
+	ld bc, $2068
+	call DrawMetasprite
+	ret
+Func_1f_4287:
+	ld hl, $5a81
+	ld a, $1d
+	ld de, $988d
+	call BankMapCopyA
+	ld hl, $5a93
+	ld bc, $2068
+	call DrawMetasprite
+	ret
+Func_1f_429c:
+	ld hl, $5ac4
+	ld a, $1d
+	ld de, $988d
+	call BankMapCopyA
+	ld hl, $5ad6
+	ld bc, $2068
+	call DrawMetasprite
+	ret
 
 SECTION "Kalum script", ROMX
 

@@ -11,7 +11,7 @@ SECTION "analyzed_008000", ROMX[$4000], BANK[$02]
 Func_02_4000:
 	xor a
 	ldh [rVBK], a
-	ld hl, $40b1
+	ld hl, Data_02_40b1
 	ld de, $8000
 	ld bc, $1000
 	call VramCopy16
@@ -19,13 +19,14 @@ Func_02_4000:
 
 Func_02_4010:
 	ld a, $07
-	ld hl, $50e9
+	ld hl, Data_02_50e9
 	call LoadBgPalette
 	ld a, $00
 	ld b, $08
 	ld hl, $50f1
 	call Func_00_0732
 	ret
+
 Func_02_4023:
 	ld hl, $cc94
 	ld c, $01
@@ -60,6 +61,7 @@ Func_02_4058:
 	dec c
 	jr nz, Func_02_4058
 	ret
+
 Func_02_4065:
 	ld a, $08
 	rst SubAFromHL
@@ -69,6 +71,7 @@ Func_02_4065:
 	dec c
 	jr nz, Func_02_4065
 	ret
+
 Func_02_4071:
 	push hl
 	push bc
@@ -8396,95 +8399,6 @@ Data_17_7118:
 	db $4a, $29, $00, $00, $85, $10, $e2, $30, $4a, $29, $00, $00, $85, $10, $e2, $30
 	db $4a, $29, $00, $00, $29, $04, $e1, $28
 
-SECTION "analyzed_064000", ROMX[$4000], BANK[$19]
-
-Toamuna_LoadGame:
-	FAR_CALL $12, Func_12_4b8e
-	ld [wYNResult], a
-	ret
-Toamuna_SaveGame:
-	FAR_CALL $12, SaveGameToSram
-	ld [wYNResult], a
-	ret
-Toamuna_CheckSaveExists:
-	FAR_CALL $12, Func_12_4bb3
-	ld [wYNResult], a
-	ret
-	call Func_00_0822
-	call HideAllSprites
-	call Func_00_3971
-	ld a, $01
-	ld [rVBK], a
-	ld a, $1a
-	ld hl, $4000
-	ld de, $8000
-	ld bc, $1800
-	call BankVramCopy
-	call Toamuna_LoadPortraitTilemap
-	call Toamuna_RenderPortrait
-	call HideUnusedOamSprites
-	ld a, $1a
-	ld hl, $5800
-	ld de, wBgPalettes
-	ld bc, $0030
-	call BankCopy
-	ld a, $1a
-	ld hl, $5840
-	ld de, wObjPalettes
-	ld bc, $0030
-	call BankCopy
-	xor a
-	ld [hBgPaletteDirty], a
-	ld [hObjPaletteDirty], a
-	call WaitForNextFrame
-	push af
-	ld a, $34
-	call PlaySoundTracked
-	pop af
-	ld hl, $40dd
-	call ScriptDispatcherEnterAfterCall
-	jp LeaveTownBuilding
-Toamuna_LoadPortraitTilemap:
-	ld hl, $5880
-	ld a, $1a
-	ld de, $9800
-	call BankMapCopyA
-	ret
-Toamuna_RenderPortrait:
-	ld a, $8b
-	ld [wRendererAddr], a
-	ld a, $40
-	ld [$d61f], a
-	ld a, $19
-	ld [wRendererBank], a
-	ld a, $1a
-	ld [wDrawBank], a
-	ld hl, $5a56
-	ld bc, $2828
-	call DrawMetasprite
-	ld hl, $5a3e
-	ld a, $1a
-	ld de, $98c4
-	call BankMapCopyA
-	ret
-Toamuna_RenderPortraitAlt:
-	ld a, $b4
-	ld [wRendererAddr], a
-	ld a, $40
-	ld [$d61f], a
-	ld a, $19
-	ld [wRendererBank], a
-	ld a, $1a
-	ld [wDrawBank], a
-	ld hl, $5aab
-	ld bc, $2828
-	call DrawMetasprite
-	ld hl, $5a93
-	ld a, $1a
-	ld de, $98c4
-	call BankMapCopyA
-	ret
-
 SECTION "analyzed_0646ca", ROMX[$46ca], BANK[$19]
 
 Data_19_46ca:
@@ -8881,142 +8795,6 @@ Func_1f_4169:
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
-
-Kalum_StartEncounter:
-	call Func_00_0822
-	call HideAllSprites
-	call Func_00_3971
-	ld a, $01
-	ld [rVBK], a
-	ld a, $1d
-	ld hl, KalumPortraitTiles
-	ld de, $8000
-	ld bc, $1800
-	call BankVramCopy
-	ld hl, KalumPortraitMapDesc
-	ld a, $1d
-	ld de, TILEMAP0
-	call BankMapCopyA
-	call Kalum_AnimateMonsterPortrait
-	call HideUnusedOamSprites
-	ld a, $1d
-	ld hl, KalumPortraitPaletteBg
-	ld de, wBgPalettes
-	ld bc, $0030
-	call BankCopy
-	ld a, $1d
-	ld hl, KalumPortraitPaletteObj
-	ld de, wObjPalettes
-	ld bc, $0030
-	call BankCopy
-	call Func_1f_41da
-	call Func_1f_41e6
-	push af
-	ld a, $36
-	call PlaySoundTracked
-	pop af
-	call Func_1f_4008
-	ld hl, KalumScript
-	jp ScriptDispatcherEnterAfterCall
-
-Func_1f_41da:
-	ld de, $4000
-	ld hl, wBgPalettes
-	ld c, $08
-	call CopyDEtoHL
-	ret
-
-Func_1f_41e6:
-	ld de, $4000
-	ld hl, $c169
-	ld c, $08
-	call CopyDEtoHL
-	ret
-
-Kalum_ShowMonsterPortrait:
-	call Kalum_LoadMonsterTiles
-	call Func_1f_41e6
-	jp ScriptWaitForBgSwap
-
-Kalum_ShowMonsterPortrait2:
-	call Kalum_LoadMonsterTiles
-	jp ScriptWaitForObjSwap
-
-Kalum_LoadMonsterTiles:
-	ld a, $1d
-	ld hl, KalumPortraitPaletteBg
-	ld de, $c181
-	ld bc, $0030
-	call BankCopy
-	ld de, $c131
-	ld hl, $c1b1
-	ld c, $10
-	call CopyDEtoHL
-	ld a, $1d
-	ld hl, KalumPortraitPaletteObj
-	ld de, $c1c1
-	ld bc, $0030
-	call BankCopy
-	ld de, $c171
-	ld hl, $c1f1
-	ld c, $10
-	call CopyDEtoHL
-	ret
-
-Kalum_AnimateMonsterPortrait:
-	ld a, $34
-	ld [wRendererAddr], a
-	ld a, $42
-	ld [$d61f], a
-	ld a, $1f
-	ld [wRendererBank], a
-	ld a, $1d
-	ld [wDrawBank], a
-	ld hl, $5b07
-	ld bc, $5070
-	call DrawMetasprite
-	ld hl, $5b10
-	ld bc, $2058
-	call DrawMetasprite
-	ld hl, $d610
-	ld a, [hl]
-	inc a
-	and $ff
-	ld [hl], a
-	srl a
-	srl a
-	cp $01
-	jr z, Func_1f_4287
-	cp $02
-	jr z, Func_1f_429c
-	cp $03
-	jr z, Func_1f_4287
-	ld hl, $5a3e
-	ld a, $1d
-	ld de, $988d
-	call BankMapCopyA
-	ld hl, $5a50
-	ld bc, $2068
-	call DrawMetasprite
-	ret
-Func_1f_4287:
-	ld hl, $5a81
-	ld a, $1d
-	ld de, $988d
-	call BankMapCopyA
-	ld hl, $5a93
-	ld bc, $2068
-	call DrawMetasprite
-	ret
-Func_1f_429c:
-	ld hl, $5ac4
-	ld a, $1d
-	ld de, $988d
-	call BankMapCopyA
-	ld hl, $5ad6
-	ld bc, $2068
-	call DrawMetasprite
-	ret
 
 SECTION "analyzed_07d00e", ROMX[$500e], BANK[$1f]
 
