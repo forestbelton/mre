@@ -7,7 +7,311 @@
 ;
 ; Carved out of analyzed.asm via map.json; see docs/text_engine.md.
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
 INCLUDE "text.inc"
+
+SECTION "analyzed_060000", ROMX[$4000], BANK[$18]
+
+Pashute_GetMonsterUsesDecimal:
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld c, $00
+	ld a, [hl]
+	swap a
+	and $0f
+	ld b, a
+.loop:
+	ld a, b
+	or a
+	jr z, .done
+	ld a, c
+	add a, $0a
+	ld c, a
+	dec b
+	jr .loop
+.done:
+	ld a, [hl]
+	and $0f
+	add a, c
+	ld [wYNResult], a
+	ret
+
+Pashute_IsReplacingActiveMonster:
+	ld hl, wActiveMonster
+	ld a, [wDisplayMonster]
+	cp [hl]
+	jr z, .yes
+	ld a, $01
+	ld [wYNResult], a
+	ret
+.yes:
+	ld a, $00
+	ld [wYNResult], a
+	ret
+
+Pashute_GetActiveMonsterUses:
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl]
+	ld [wYNResult], a
+	ret
+
+Pashute_SetReplaceTargetActive:
+	ld a, [wActiveMonster]
+	ld [wDisplayMonster], a
+	ret
+
+Pashute_ResetRosterKeepNew:
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl]
+	push af
+	push hl
+	ld hl, wMonsterUses
+	xor a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	pop hl
+	pop af
+	ld [hl], a
+	jp Pashute_AddFiveMonsterUses
+
+Pashute_AddFiveMonsterUses:
+	ld hl, wMonsterUses
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	ld a, [hl]
+	add a, $05
+	daa
+	jr nc, .update
+	ld a, $99
+.update:
+	ld [hl], a
+	ld hl, wMonsterDiscStones
+	ld a, [wActiveMonster]
+	add a, l
+	ld l, a
+	ld a, h
+	adc a, $00
+	ld h, a
+	dec [hl]
+	ret
+
+Pashute_StartTownScript:
+	ld hl, PashuteScript
+	call ScriptDispatcherEnterAfterCall
+	jp LeaveTownBuilding
+
+Pashute_LoadShrineScene:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1b
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Pashute_LoadShrineTilemap
+	call Pashute_RenderPortraitNeutral
+	call HideUnusedOamSprites
+	ld a, $1b
+	ld hl, $5800
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1b
+	ld hl, $5840
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	push af
+	ld a, $32
+	call PlaySoundTracked
+	pop af
+	ret
+Pashute_LoadIntroScene:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1b
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Pashute_LoadShrineTilemap
+	call Pashute_RenderPortraitNeutral
+	call HideUnusedOamSprites
+	ld a, $1b
+	ld hl, $5bdd
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1b
+	ld hl, $5c1d
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	push af
+	ld a, $32
+	call PlaySoundTracked
+	pop af
+	FAR_CALL $1f, Func_1f_4008
+	ret
+Pashute_LoadShrineTilemap:
+	ld hl, $5880
+	ld a, $1b
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Pashute_RenderPortraitNeutral:
+	ld a, $50
+	ld [wRendererAddr], a
+	ld a, $41
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $5afb
+	ld bc, $5018
+	call DrawMetasprite
+	ld hl, $5b0c
+	ld bc, $5058
+	call DrawMetasprite
+	ld hl, $5b1d
+	ld bc, $482f
+	call DrawMetasprite
+	ld hl, $5b3e
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_18_41b7
+	cp $02
+	jr z, Func_18_41cc
+	cp $03
+	jr z, Func_18_41b7
+	ld hl, $5a3e
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $5a54
+	ld bc, $1d28
+	call DrawMetasprite
+	ret
+Func_18_41b7:
+	ld hl, $5a7d
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $5a93
+	ld bc, $1d28
+	call DrawMetasprite
+	ret
+Func_18_41cc:
+	ld hl, $5abc
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $5ad2
+	ld bc, $1d28
+	call DrawMetasprite
+	ret
+Pashute_RenderPortraitPanic:
+	ld a, $e1
+	ld [wRendererAddr], a
+	ld a, $41
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $5afb
+	ld bc, $5018
+	call DrawMetasprite
+	ld hl, $5b0c
+	ld bc, $5058
+	call DrawMetasprite
+	ld hl, $5b1d
+	ld bc, $482f
+	call DrawMetasprite
+	ld hl, $5b56
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $5b6e
+	ld bc, $1d28
+	call DrawMetasprite
+	ret
+Pashute_RenderPortraitShocked:
+	ld a, $25
+	ld [wRendererAddr], a
+	ld a, $42
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $5afb
+	ld bc, $5018
+	call DrawMetasprite
+	ld hl, $5b0c
+	ld bc, $5058
+	call DrawMetasprite
+	ld hl, $5b1d
+	ld bc, $482f
+	call DrawMetasprite
+	ld hl, $5b97
+	ld a, $1b
+	ld de, $9885
+	call BankMapCopyA
+	ld hl, $5baf
+	ld bc, $1d28
+	call DrawMetasprite
+	ld hl, $5bd8
+	ld bc, $3d3a
+	call DrawMetasprite
+	ret
 
 SECTION "Pashute script", ROMX
 

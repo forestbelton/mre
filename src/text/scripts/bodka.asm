@@ -1,4 +1,305 @@
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
 INCLUDE "text.inc"
+
+SECTION "analyzed_061de3", ROMX[$5de3], BANK[$18]
+
+LinkClampResultCode:
+	ld a, [$d5c2]
+	cp $04
+	ret c
+	ld a, $03
+	ret
+LinkStoreSendRoom:
+	ld a, [wActiveFloor]
+	ld [$d5f9], a
+	ret
+LinkStoreRecvRoom:
+	ld a, [wActiveFloor]
+	ld [$d5fa], a
+	ret
+
+Func_18_5dfa:
+	ld hl, $608c
+	call ScriptDispatcherEnterAfterCall
+	jp LeaveTownBuilding
+Bodka_BuildStudioScene:
+	call Func_00_0822
+	ld a, $c7
+	ld [rLCDC], a
+	call HideAllSprites
+	call Func_00_3965
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1e
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Bodka_LoadStudioBgMap
+	call Bodka_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1e
+	ld hl, $5800
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1e
+	ld hl, $5840
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	push af
+	ld a, $30
+	call PlaySoundTracked
+	pop af
+	ret
+Bodka_BuildTowerScene:
+	FAR_CALL $1f, Func_1f_4d66
+	ld a, $c7
+	ld [rLCDC], a
+	call HideAllSprites
+	call Func_00_3965
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1e
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Bodka_LoadStudioBgMap
+	ld hl, $5bd9
+	ld a, $1e
+	ld de, $9845
+	call BankMapCopyA
+	call Bodka_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1e
+	ld hl, $5b59
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1e
+	ld hl, $5b99
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	ret
+Bodka_LoadStudioBgMap:
+	ld hl, $5880
+	ld a, $1e
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Bodka_RenderPortrait:
+	ld a, $c8
+	ld [wRendererAddr], a
+	ld a, $5e
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1e
+	ld [wDrawBank], a
+	ld hl, $5add
+	ld bc, $482b
+	call DrawMetasprite
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_18_5f12
+	cp $02
+	jr z, Func_18_5f27
+	cp $03
+	jr z, Func_18_5f12
+	ld hl, $5a3e
+	ld a, $1e
+	ld de, $98a6
+	call BankMapCopyA
+	ld hl, $5a4a
+	ld bc, $2833
+	call DrawMetasprite
+	ret
+Func_18_5f12:
+	ld hl, $5a73
+	ld a, $1e
+	ld de, $98a6
+	call BankMapCopyA
+	ld hl, $5a7f
+	ld bc, $2833
+	call DrawMetasprite
+	ret
+Func_18_5f27:
+	ld hl, $5aa8
+	ld a, $1e
+	ld de, $98a6
+	call BankMapCopyA
+	ld hl, $5ab4
+	ld bc, $2833
+	call DrawMetasprite
+	ret
+Bodka_RenderPortraitAlt:
+	ld a, $3c
+	ld [wRendererAddr], a
+	ld a, $5f
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1e
+	ld [wDrawBank], a
+	ld hl, $5add
+	ld bc, $482b
+	call DrawMetasprite
+	ld hl, $5b1e
+	ld a, $1e
+	ld de, $98a6
+	call BankMapCopyA
+	ld hl, $5b30
+	ld bc, $2833
+	call DrawMetasprite
+	ret
+Tradehouse_BuildScene:
+	call Func_00_0822
+Tradehouse_BuildSceneNoInit:
+	ld a, $c7
+	ld [rLCDC], a
+	call HideAllSprites
+	call Func_00_3965
+	ld a, $01
+	ld [rVBK], a
+	ld a, $33
+	ld hl, $4000
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Tradehouse_LoadBgMap
+	call Func_18_601f
+	call HideUnusedOamSprites
+	ld a, $33
+	ld hl, $7000
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $33
+	ld hl, $7040
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	ret
+Tradehouse_LoadBgMap:
+	ld hl, $7080
+	ld a, $33
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Tradehouse_BuildNoteScene:
+	ld a, $c7
+	ld [rLCDC], a
+	call HideAllSprites
+	call Func_00_3965
+	ld a, $01
+	ld [rVBK], a
+	ld a, $33
+	ld hl, $5800
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Func_18_6013
+	ld a, $33
+	ld hl, $7000
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $33
+	ld hl, $7040
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	ret
+Func_18_6013:
+	ld hl, $723e
+	ld a, $33
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Func_18_601f:
+	ld a, $1f
+	ld [wRendererAddr], a
+	ld a, $60
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $33
+	ld [wDrawBank], a
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	cp $1c
+	jr c, Func_18_603d
+	xor a
+Func_18_603d:
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_18_6064
+	cp $02
+	jr z, Func_18_606e
+	cp $03
+	jr z, Func_18_6078
+	cp $04
+	jr z, Func_18_6082
+	cp $05
+	jr z, Func_18_606e
+	cp $06
+	jr z, Func_18_6064
+	ld hl, $73fc
+	ld bc, $1e98
+	call DrawMetasprite
+	ret
+Func_18_6064:
+	ld hl, $7405
+	ld bc, $1e98
+	call DrawMetasprite
+	ret
+Func_18_606e:
+	ld hl, $740e
+	ld bc, $1e98
+	call DrawMetasprite
+	ret
+Func_18_6078:
+	ld hl, $7417
+	ld bc, $1e98
+	call DrawMetasprite
+	ret
+Func_18_6082:
+	ld hl, $7420
+	ld bc, $1e98
+	call DrawMetasprite
+	ret
+
+Data_18_608c:
+	db $0a, $e2, $d0, $01, $83, $64
 
 SECTION "Bodka script", ROMX
 

@@ -15,7 +15,210 @@
 ;
 ; See docs/text_engine.md for the bytecode reference.
 
+INCLUDE "hardware.inc"
 INCLUDE "text.inc"
+
+SECTION "analyzed_061321", ROMX[$5321], BANK[$18]
+
+CountCheckedInMonsters:
+	ld hl, wMonsterUses
+	ld c, $00
+	ld b, $00
+Func_18_5328:
+	ld a, [hl+]
+	or a
+	jr z, Func_18_5331
+	ld a, c
+	ld [wActiveMonster], a
+	inc b
+Func_18_5331:
+	inc c
+	ld a, c
+	cp $07
+	jr nz, Func_18_5328
+	ld a, b
+	ld [wYNResult], a
+	ret
+Func_18_533c:
+	ld hl, $54f5
+	call ScriptDispatcherEnterAfterCall
+	jp LeaveTownBuilding
+Verde_BuildPortraitScene:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1b
+	ld hl, $5c5d
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Verde_LoadBgMap
+	call Verde_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1b
+	ld hl, $745d
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1b
+	ld hl, $749d
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	push af
+	ld a, $33
+	call PlaySoundTracked
+	pop af
+	ret
+Verde_BuildIntroScene:
+	call Func_00_0822
+	call HideAllSprites
+	call Func_00_3971
+	ld a, $01
+	ld [rVBK], a
+	ld a, $1b
+	ld hl, $5c5d
+	ld de, $8000
+	ld bc, $1800
+	call BankVramCopy
+	call Verde_LoadBgMap
+	call Verde_RenderPortrait
+	call HideUnusedOamSprites
+	ld a, $1b
+	ld hl, $788e
+	ld de, wBgPalettes
+	ld bc, $0030
+	call BankCopy
+	ld a, $1b
+	ld hl, $78ce
+	ld de, wObjPalettes
+	ld bc, $0030
+	call BankCopy
+	xor a
+	ld [hBgPaletteDirty], a
+	ld [hObjPaletteDirty], a
+	call WaitForNextFrame
+	push af
+	ld a, $33
+	call PlaySoundTracked
+	pop af
+	ret
+Verde_LoadBgMap:
+	ld hl, $74dd
+	ld a, $1b
+	ld de, $9800
+	call BankMapCopyA
+	ret
+Verde_RenderPortrait:
+	ld a, $f7
+	ld [wRendererAddr], a
+	ld a, $53
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $777c
+	ld bc, $4435
+	call DrawMetasprite
+	ld hl, $7789
+	ld bc, $502c
+	call DrawMetasprite
+	ld hl, $77b2
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $d610
+	ld a, [hl]
+	inc a
+	and $ff
+	ld [hl], a
+	srl a
+	srl a
+	cp $01
+	jr z, Func_18_5455
+	cp $02
+	jr z, Func_18_546a
+	cp $03
+	jr z, Func_18_5455
+	ld hl, $769b
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $76a9
+	ld bc, $142d
+	call DrawMetasprite
+	ret
+Func_18_5455:
+	ld hl, $76e6
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $76f4
+	ld bc, $142d
+	call DrawMetasprite
+	ret
+Func_18_546a:
+	ld hl, $7731
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $773f
+	ld bc, $142d
+	call DrawMetasprite
+	ret
+Verde_RenderPortraitSurprised:
+	ld a, $7f
+	ld [wRendererAddr], a
+	ld a, $54
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $7789
+	ld bc, $502c
+	call DrawMetasprite
+	ld hl, $782c
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $7881
+	ld bc, $4435
+	call DrawMetasprite
+	ld hl, $7844
+	ld bc, $142d
+	call DrawMetasprite
+	ret
+Verde_RenderPortraitCalm:
+	ld a, $ba
+	ld [wRendererAddr], a
+	ld a, $54
+	ld [$d61f], a
+	ld a, $18
+	ld [wRendererBank], a
+	ld a, $1b
+	ld [wDrawBank], a
+	ld hl, $7789
+	ld bc, $502c
+	call DrawMetasprite
+	ld hl, $77ca
+	ld a, $1b
+	ld de, $98a5
+	call BankMapCopyA
+	ld hl, $781f
+	ld bc, $4435
+	call DrawMetasprite
+	ld hl, $77e2
+	ld bc, $142d
+	call DrawMetasprite
+	ret
 
 SECTION "Verde script", ROMX
 

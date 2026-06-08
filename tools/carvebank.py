@@ -39,6 +39,10 @@ def main() -> int:
     ap.add_argument('--out', required=True)
     ap.add_argument('--desc', default='')
     ap.add_argument('--append', action='store_true')
+    ap.add_argument('--at-top', action='store_true',
+                    help='with --append, insert after the target file header (before its '
+                         'first SECTION) instead of at EOF -- e.g. NPC scene functions '
+                         'placed above their script, matching text/scripts/nada.asm')
     args = ap.parse_args()
 
     lines = open(ANALYZED).readlines()
@@ -66,9 +70,18 @@ def main() -> int:
         remove.update(range(s[0], s[1]))
     block = ''.join(block).rstrip('\n') + '\n'
 
-    if args.append and __import__('os').path.exists(args.out):
-        with open(args.out, 'a') as f:
-            f.write('\n' + block)
+    import os
+    if args.append and os.path.exists(args.out):
+        if args.at_top:
+            tgt = open(args.out).read().split('\n')
+            i = 0  # skip the leading comment/blank header block
+            while i < len(tgt) and (tgt[i].strip() == '' or tgt[i].lstrip().startswith(';')):
+                i += 1
+            tgt[i:i] = block.rstrip('\n').split('\n') + ['']
+            open(args.out, 'w').write('\n'.join(tgt))
+        else:
+            with open(args.out, 'a') as f:
+                f.write('\n' + block)
     else:
         hdr = f"; {args.desc}\n; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).\n\n" if args.desc \
               else "; Carved out of analyzed.asm (byte-exact).\n\n"
@@ -76,16 +89,21 @@ def main() -> int:
 
     open(ANALYZED, 'w').write(''.join(l for i, l in enumerate(lines) if i not in remove))
 
+    # In the multi-object build every src/**.asm is compiled on its own (no central
+    # INCLUDE list); main.asm is gone, so there is nothing to register here.
     inc = args.out[len('src/'):] if args.out.startswith('src/') else args.out
-    mlines = open(MAIN).readlines()
-    if not any(f'INCLUDE "{inc}"' in l for l in mlines):
-        for i, ln in enumerate(mlines):
-            if ln.strip() == 'INCLUDE "analyzed.asm"':
-                mlines.insert(i + 1, f'INCLUDE "{inc}"\n'); break
-        open(MAIN, 'w').write(''.join(mlines))
-        added = f'; INCLUDE "{inc}" added'
+    if os.path.exists(MAIN):
+        mlines = open(MAIN).readlines()
+        if not any(f'INCLUDE "{inc}"' in l for l in mlines):
+            for i, ln in enumerate(mlines):
+                if ln.strip() == 'INCLUDE "analyzed.asm"':
+                    mlines.insert(i + 1, f'INCLUDE "{inc}"\n'); break
+            open(MAIN, 'w').write(''.join(mlines))
+            added = f'; INCLUDE "{inc}" added'
+        else:
+            added = '; already included'
     else:
-        added = '; already included'
+        added = '; multi-object build: auto-compiled, no INCLUDE needed'
 
     print(f"carved {len(pick)} section(s), {len(remove)} lines -> {args.out} {added}")
     return 0
