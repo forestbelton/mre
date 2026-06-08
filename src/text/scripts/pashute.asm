@@ -10,6 +10,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Pashute script functions", ROMX
 
@@ -156,7 +157,7 @@ Pashute_LoadShrineScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $32
+	ld a, SOUND_BGM_Pashute
 	call PlaySoundTracked
 	pop af
 	ret
@@ -185,7 +186,7 @@ Pashute_LoadIntroScene:
 	ld bc, $0030
 	call BankCopy
 	push af
-	ld a, $32
+	ld a, SOUND_BGM_Pashute
 	call PlaySoundTracked
 	pop af
 	FAR_CALL $1f, Func_1f_4008

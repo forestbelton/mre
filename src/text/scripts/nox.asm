@@ -23,6 +23,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 ; The Nox flashback driver and its scene-setup helpers ($4000-$4283),
 ; relocated here from analyzed.asm to sit with the renderers and scripts they
@@ -33,7 +34,7 @@ SECTION "analyzed_04c000", ROMX[$4000], BANK[$13]
 
 Func_13_4000:
 	push af
-	ld a, $39
+	ld a, SOUND_BGM_39
 	call PlaySoundTracked
 	pop af
 	call Func_13_4061
@@ -66,7 +67,7 @@ Func_13_4000:
 	call ScriptDispatcherEnterAfterCall
 	call Func_13_4434
 	push af
-	ld a, $3a
+	ld a, SOUND_BGM_3a
 	call PlaySoundTracked
 	pop af
 	ld a, $c7
@@ -231,7 +232,7 @@ Func_13_41a7:
 	dec d
 	jr nz, Func_13_41a7
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld d, $b4
@@ -311,7 +312,7 @@ Func_13_4232:
 	call Func_13_4442
 	call Func_00_07c5
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ret

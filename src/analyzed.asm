@@ -5,6 +5,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_008000", ROMX[$4000], BANK[$02]
 
@@ -5617,7 +5618,7 @@ Data_14_4000:
 
 ShowRegeneratedMonster:
 	push af
-	ld a, $35
+	ld a, SOUND_BGM_DiscRegen
 	call PlaySoundTracked
 	pop af
 	call Func_00_07c5
@@ -5755,7 +5756,7 @@ Func_14_4158:
 	call Func_14_4351
 Func_14_417b:
 	push af
-	ld a, $32
+	ld a, SOUND_BGM_Pashute
 	call PlaySoundTracked
 	pop af
 	ret
@@ -6070,7 +6071,7 @@ Func_14_4351:
 	jr Func_14_4351
 Func_14_4363:
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8328,7 +8329,7 @@ Func_1f_4109:
 Func_1f_4121:
 	FAR_CALL $1f, Kalum_StartEncounter
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
@@ -8336,7 +8337,7 @@ Func_1f_4121:
 Func_1f_4133:
 	FAR_CALL $1f, Mistral_StartEncounter
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
@@ -8344,21 +8345,21 @@ Func_1f_4133:
 Func_1f_4145:
 	FAR_CALL $1f, Rafaga_StartEncounter
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
 Func_1f_4157:
 	FAR_CALL $1f, Tempest_StartEncounter
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
 Func_1f_4169:
 	FAR_CALL $1f, Func_1f_4d8c
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
@@ -8455,7 +8456,7 @@ Func_1f_5855:
 	jr z, Func_1f_5868
 	inc [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_1f_5868:
@@ -8467,7 +8468,7 @@ Func_1f_5868:
 	jr z, Func_1f_587b
 	dec [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_1f_587b:
@@ -8491,7 +8492,7 @@ Func_1f_587c:
 	jr z, Func_1f_58a2
 	inc [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -8499,7 +8500,7 @@ Func_1f_58a2:
 	ld hl, $d60c
 	inc [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -8517,7 +8518,7 @@ Func_1f_58ae:
 	jr z, Func_1f_58ca
 	dec [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -8525,7 +8526,7 @@ Func_1f_58ca:
 	ld hl, $d60c
 	dec [hl]
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -8550,7 +8551,7 @@ Func_1f_58ed:
 	call HideUnusedOamSprites
 	call DrawTextWindow
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8564,7 +8565,7 @@ Func_1f_590b:
 	and $01
 	ld [hl], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_1f_5921:
@@ -8603,7 +8604,7 @@ Func_1f_596d:
 	bit 0, a
 	jr z, Func_1f_5985
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8670,7 +8671,7 @@ Func_1f_59e0:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8743,7 +8744,7 @@ Func_1f_5ac9:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8810,7 +8811,7 @@ Func_1f_5b4f:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8877,7 +8878,7 @@ Func_1f_5bd8:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -8947,7 +8948,7 @@ Func_1f_5c61:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9015,7 +9016,7 @@ Func_1f_5d83:
 	bit 0, a
 	jr z, Func_1f_5d9b
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9078,7 +9079,7 @@ Func_1f_5e50:
 	bit 0, a
 	jr z, Func_1f_5e68
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9145,7 +9146,7 @@ Func_1f_5f5d:
 	bit 0, a
 	jr z, Func_1f_5f75
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9203,7 +9204,7 @@ Func_1f_5fd0:
 	bit 0, a
 	jr z, Func_1f_5fe8
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9266,7 +9267,7 @@ Func_1f_609d:
 	bit 0, a
 	jr z, Func_1f_60b5
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9330,7 +9331,7 @@ Func_1f_6176:
 	bit 0, a
 	jr z, Func_1f_618e
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9415,7 +9416,7 @@ Func_1f_6266:
 	ld a, [hl]
 	ld [wActiveMonster], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9565,7 +9566,7 @@ Func_1f_63db:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -9632,7 +9633,7 @@ Func_1f_6464:
 	ld a, [hl]
 	ld [wMainMenuResult], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret

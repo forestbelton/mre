@@ -3,6 +3,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0c4000", ROMX[$4000], BANK[$31]
 
@@ -933,7 +934,7 @@ Func_31_4697:
 	cp $20
 	jr nz, Func_31_46a5
 	push af
-	ld a, $22
+	ld a, SOUND_SFX_22
 	call PlaySound
 	pop af
 Func_31_46a5:
@@ -974,7 +975,7 @@ Func_31_46e0:
 	cp $7c
 	jr nz, Func_31_46ee
 	push af
-	ld a, $26
+	ld a, SOUND_SFX_26
 	call PlaySound
 	pop af
 Func_31_46ee:

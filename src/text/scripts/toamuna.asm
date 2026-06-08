@@ -17,6 +17,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Toamuna script functions", ROMX
 
@@ -60,7 +61,7 @@ Toamuna_CheckSaveExists:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $34
+	ld a, SOUND_BGM_Toamuna
 	call PlaySoundTracked
 	pop af
 	ld hl, ToamunaScript

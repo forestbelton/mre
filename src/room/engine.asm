@@ -37,6 +37,7 @@
 ; only appends map.json sections not already covered by a SECTION here.
 
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Room engine", ROMX[$4000], BANK[$03]
 
@@ -953,7 +954,7 @@ Func_03_45a0:
 	ld a, $01
 	ret
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld a, $02
@@ -1210,7 +1211,7 @@ Player_WalkThinkLeft:
 	ret
 Player_LiftThink:
 	push af
-	ld a, $25
+	ld a, SOUND_SFX_Lift
 	call PlaySound
 	pop af
 Player_ThrowWindupThink:
@@ -1450,7 +1451,7 @@ Func_03_4978:
 	or a
 	jr z, Func_03_4985
 	push af
-	ld a, $02
+	ld a, SOUND_SFX_02
 	call PlaySound
 	pop af
 Func_03_4985:
@@ -1807,7 +1808,7 @@ Func_03_4ba1:
 	or a
 	jp nz, Func_03_4c07
 	push af
-	ld a, $21
+	ld a, SOUND_SFX_21
 	call PlaySound
 	pop af
 	call Func_03_63bf
@@ -1821,7 +1822,7 @@ Func_03_4bb8:
 	or a
 	jp nz, Func_03_4c07
 	push af
-	ld a, $21
+	ld a, SOUND_SFX_21
 	call PlaySound
 	pop af
 	call Func_03_63d4
@@ -1838,7 +1839,7 @@ Func_03_4bcf:
 	jp Func_03_4c07
 Func_03_4bde:
 	push af
-	ld a, $21
+	ld a, SOUND_SFX_21
 	call PlaySound
 	pop af
 	call Func_03_6704
@@ -1853,7 +1854,7 @@ Func_03_4bea:
 	cp $03
 	jp nz, Func_03_4c07
 	push af
-	ld a, $21
+	ld a, SOUND_SFX_21
 	call PlaySound
 	pop af
 	call Func_03_66f6
@@ -1901,7 +1902,7 @@ Func_03_4c39:
 	FAR_CALL $01, Func_01_4ce1
 	pop de
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor a
@@ -1911,7 +1912,7 @@ Func_03_4c4c:
 	FAR_CALL $01, Func_01_4cfe
 	pop de
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor a
@@ -6632,7 +6633,7 @@ Func_03_6a89:
 	ld a, $b4
 	ld [$c2e5], a
 	push af
-	ld a, $15
+	ld a, SOUND_SFX_15
 	call PlaySound
 	pop af
 	ret

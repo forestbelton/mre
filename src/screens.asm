@@ -4,6 +4,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "scene.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0c0000", ROMX[$4000], BANK[$30]
 
@@ -130,7 +131,7 @@ Func_30_40e4:
 	jr c, Func_30_4104
 Func_30_40f7:
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	call Func_30_42c2
@@ -293,7 +294,7 @@ Func_30_41a9:
 	cp $ff
 	jr nz, Func_30_41c9
 	push af
-	ld a, $02
+	ld a, SOUND_SFX_02
 	call PlaySound
 	pop af
 	jr Func_30_41d8
@@ -301,7 +302,7 @@ Func_30_41c9:
 	ld a, c
 	ld [wScreenInput], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor a
@@ -590,7 +591,7 @@ Func_30_4403:
 	cp $01
 	jp z, Func_30_4403
 	push af
-	ld a, $11
+	ld a, SOUND_SFX_11
 	call PlaySound
 	pop af
 	call Func_30_42c2
@@ -748,7 +749,7 @@ Func_30_4554:
 	ld a, $01
 	ld [wScreenInput], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	jr Func_30_456a
@@ -1240,7 +1241,7 @@ Func_30_4957:
 	cp $01
 	jp z, Func_30_4982
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 Func_30_4973:
@@ -1893,7 +1894,7 @@ Func_30_514b:
 	jr Func_30_5178
 Func_30_516b:
 	push af
-	ld a, $0b
+	ld a, SOUND_SFX_0b
 	call PlaySound
 	pop af
 	ld a, $01
@@ -2014,7 +2015,7 @@ Func_30_5219:
 	call BankMapCopyB
 Func_30_5236:
 	push af
-	ld a, $00
+	ld a, SOUND_SFX_Silence
 	call PlaySound
 	pop af
 	ld a, $02
@@ -2025,7 +2026,7 @@ Func_30_5242:
 	cp $01
 	jr nz, Func_30_5251
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 Func_30_5251:
@@ -2045,7 +2046,7 @@ Func_30_5259:
 	ld a, $01
 	ld [wScreenInput], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, $98
@@ -2058,7 +2059,7 @@ Func_30_527e:
 	cp $00
 	jr z, Func_30_52b0
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, $88
@@ -2070,7 +2071,7 @@ Func_30_529c:
 	bit 0, b
 	jr z, Func_30_52b0
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	xor a
@@ -2148,7 +2149,7 @@ Func_30_5341:
 	jr c, Func_30_53a0
 	jr nz, Func_30_5351
 	push af
-	ld a, $11
+	ld a, SOUND_SFX_11
 	call PlaySound
 	pop af
 Func_30_5351:
@@ -2167,7 +2168,7 @@ Func_30_5368:
 	cp $00
 	jr z, Func_30_537e
 	push af
-	ld a, $00
+	ld a, SOUND_SFX_Silence
 	call PlaySound
 	pop af
 	xor a
@@ -2416,7 +2417,7 @@ Func_30_55fa:
 	ld a, $01
 	ld [wScreenTimer], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	jr Func_30_5646
@@ -2427,7 +2428,7 @@ Func_30_561d:
 	cp $00
 	jr z, Func_30_5646
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, $00
@@ -2437,7 +2438,7 @@ Func_30_5636:
 	bit 0, b
 	jr z, Func_30_5646
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld a, $02
@@ -2586,7 +2587,7 @@ DrawIntroBookScreen:
 	call LoadPalettesBanked
 	call Func_00_0794
 	push af
-	ld a, $38
+	ld a, SOUND_BGM_Intro
 	call PlaySoundTracked
 	pop af
 Func_30_57d4:

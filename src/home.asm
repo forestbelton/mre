@@ -7,6 +7,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "scene.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "RST_00", ROM0[$00]
 
@@ -94,11 +95,11 @@ Func_00_0153:
 	ldh [rLCDC], a
 	ei
 	push af
-	ld a, $00
+	ld a, SOUND_SFX_Silence
 	call PlaySound
 	pop af
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld c, $0a
@@ -195,7 +196,7 @@ Func_00_01f9:
 	call ResetSoundEngine
 	call HideAllSprites
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	call WaitForNextFrame
@@ -3448,7 +3449,7 @@ EnterSelectedRoom:
 
 OpenRoomArrangeMenu:
 	push af
-	ld a, $30
+	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
 	pop af
 	ld a, $00
@@ -3508,7 +3509,7 @@ Func_00_1a1e:
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 	push af
-	ld a, $30
+	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
 	pop af
 	jp Func_00_19ba
@@ -3707,7 +3708,7 @@ Func_00_1be5:
 	bit 7, b
 	jr z, Func_00_1c20
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuCursor]
@@ -3739,7 +3740,7 @@ Func_00_1c20:
 	bit 6, b
 	jr z, Func_00_1c57
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuCursor]
@@ -3772,7 +3773,7 @@ Func_00_1c57:
 	bit 0, b
 	jr z, Func_00_1c6c
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld a, $02
@@ -3784,7 +3785,7 @@ Func_00_1c6c:
 	bit 1, a
 	jr z, Func_00_1c7e
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $00
@@ -3813,7 +3814,7 @@ Func_00_1c9d:
 	bit 7, b
 	jr z, Func_00_1cdc
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuCursor]
@@ -3845,7 +3846,7 @@ Func_00_1cdc:
 	bit 6, b
 	jr z, Func_00_1d17
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuCursor]
@@ -3882,7 +3883,7 @@ Func_00_1d17:
 	cp $80
 	jr nc, Func_00_1d69
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	cp $03
@@ -3930,7 +3931,7 @@ Func_00_1d69:
 	cp $80
 	jr nc, Func_00_1db8
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	cp $03
@@ -3973,7 +3974,7 @@ Func_00_1db8:
 
 Data_00_1dbc:
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld a, $02
@@ -3987,7 +3988,7 @@ Func_00_1dd0:
 	bit 1, a
 	jr z, Func_00_1de5
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $00
@@ -4086,7 +4087,7 @@ Func_00_1e72:
 	bit 7, b
 	jr z, Func_00_1e93
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wEditCursorY]
@@ -4104,7 +4105,7 @@ Func_00_1e93:
 	bit 6, b
 	jr z, Func_00_1eb0
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wEditCursorY]
@@ -4123,7 +4124,7 @@ Func_00_1eb0:
 	bit 5, b
 	jr z, Func_00_1ecd
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wEditCursorX]
@@ -4145,7 +4146,7 @@ Func_00_1ecd:
 	bit 4, b
 	jr z, Func_00_1eeb
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wEditCursorX]
@@ -4163,7 +4164,7 @@ Func_00_1eeb:
 	bit 1, b
 	jr z, Func_00_1f07
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $01
@@ -4649,7 +4650,7 @@ Func_00_21a5:
 	cp $02
 	jr nc, Func_00_21a5
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
@@ -4660,7 +4661,7 @@ Func_00_21c4:
 	cp $02
 	jr nc, Func_00_21a5
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
@@ -4671,7 +4672,7 @@ Func_00_21d7:
 
 Data_00_21db:
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	add a, $02
@@ -4686,7 +4687,7 @@ Func_00_21ec:
 
 Data_00_21f0:
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	sub $02
@@ -4699,7 +4700,7 @@ Func_00_2201:
 	bit 0, b
 	jr z, Func_00_220d
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ret
@@ -4707,7 +4708,7 @@ Func_00_220d:
 	bit 1, b
 	jr z, Func_00_21a5
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $02
@@ -4743,7 +4744,7 @@ Func_00_2253:
 	bit 4, b
 	jr z, Func_00_228f
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	cp $20
@@ -4770,7 +4771,7 @@ Func_00_228f:
 	bit 5, b
 	jr z, Func_00_22bb
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	cp $20
@@ -4796,7 +4797,7 @@ Func_00_22bb:
 	bit 7, b
 	jr z, Func_00_22d0
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	add a, $10
@@ -4809,7 +4810,7 @@ Func_00_22d0:
 	bit 6, b
 	jr z, Func_00_22e5
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	sub $10
@@ -4821,7 +4822,7 @@ Func_00_22e5:
 	bit 0, b
 	jp z, Func_00_22f7
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	call Func_00_313d
@@ -4832,7 +4833,7 @@ Func_00_22f7:
 	jp z, Func_00_2253
 Func_00_22fc:
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld b, a
@@ -4911,7 +4912,7 @@ Func_00_2391:
 	bit 0, b
 	jr z, Func_00_23a2
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	call Func_00_23c3
@@ -4924,7 +4925,7 @@ Func_00_23a2:
 Data_00_23a6:
 	ld a, $06
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	call Func_00_23c3
@@ -5020,7 +5021,7 @@ Func_00_245d:
 	bit 7, a
 	ret z
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	bit 6, a
@@ -5494,7 +5495,7 @@ Func_00_28fb:
 	bit 7, b
 	jr z, Func_00_2922
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuItemCount]
@@ -5513,7 +5514,7 @@ Func_00_2922:
 	bit 6, b
 	jr z, Func_00_2945
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wGridRow]
@@ -5531,7 +5532,7 @@ Func_00_2945:
 	bit 4, b
 	jr z, Func_00_296d
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wGridColCount]
@@ -5553,7 +5554,7 @@ Func_00_296d:
 	bit 5, b
 	jr z, Func_00_2994
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wGridCol]
@@ -5577,7 +5578,7 @@ Func_00_2994:
 	cp $06
 	jr nz, Func_00_29c1
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld a, [$c7d3]
@@ -5598,7 +5599,7 @@ Func_00_29c1:
 	jr z, Func_00_29d7
 Func_00_29cb:
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $00
@@ -5633,7 +5634,7 @@ Func_00_2a05:
 	bit 7, b
 	jr z, Func_00_2a25
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_00_2a13:
@@ -5650,7 +5651,7 @@ Func_00_2a25:
 	bit 6, b
 	jr z, Func_00_2a41
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_00_2a30:
@@ -5667,7 +5668,7 @@ Func_00_2a41:
 	bit 4, b
 	jr z, Func_00_2a60
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wMenuItemCount]
@@ -5685,7 +5686,7 @@ Func_00_2a60:
 	bit 5, b
 	jr z, Func_00_2a7f
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, [wGridRow]
@@ -5702,7 +5703,7 @@ Func_00_2a7f:
 	bit 0, b
 	jr z, Func_00_2a9d
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	xor a
@@ -5721,7 +5722,7 @@ Func_00_2a9d:
 	jr z, Func_00_2ab6
 Func_00_2aa7:
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $00
@@ -7280,7 +7281,7 @@ Func_00_3450:
 	ld a, $78
 	ld [$c7de], a
 	push af
-	ld a, $02
+	ld a, SOUND_SFX_02
 	call PlaySound
 	pop af
 	call Func_00_3386
@@ -7348,7 +7349,7 @@ Func_00_34bc:
 	FAR_CALL $00, Func_00_1219
 	call ResetScrollState
 	push af
-	ld a, $2f
+	ld a, SOUND_BGM_Town
 	call PlaySoundTracked
 	pop af
 	ld a, $30
@@ -7358,7 +7359,7 @@ Func_00_34bc:
 Func_00_34e3:
 	call ResetScrollState
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld a, $30
@@ -7379,7 +7380,7 @@ Func_00_3502:
 Func_00_3508:
 	call ResetScrollState
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld a, $30
@@ -7393,7 +7394,7 @@ Func_00_3508:
 	ret
 	call ResetScrollState
 	push af
-	ld a, $31
+	ld a, SOUND_BGM_RoomTransition
 	call PlaySoundTracked
 	pop af
 	ld a, $30
@@ -7402,7 +7403,7 @@ Func_00_3508:
 	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ret
@@ -7413,7 +7414,7 @@ Func_00_3508:
 	FAR_CALL $05, Func_05_46ba
 	ret
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	call ResetScrollState
@@ -7443,20 +7444,20 @@ IntroScene_TecmoLogo:
 	ld a, SCENE_TITLE
 	ld [wGameScene], a
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ret
 	call ResetScrollState
 	push af
-	ld a, $37
+	ld a, SOUND_BGM_Title
 	call PlaySoundTracked
 	pop af
 	ld a, $30
 	ld [$2fff], a
 	call Func_30_54b8
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ld a, $03

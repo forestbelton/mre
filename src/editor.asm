@@ -3,6 +3,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_048000", ROMX[$4000], BANK[$12]
 
@@ -315,7 +316,7 @@ Func_12_41f5:
 	cp $04
 	jr nc, Func_12_41f5
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	inc a
@@ -331,7 +332,7 @@ Func_12_4218:
 	cp $04
 	jr nc, Func_12_41f5
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	dec a
@@ -345,7 +346,7 @@ Func_12_4230:
 	bit 7, b
 	jr z, Func_12_423f
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $04
@@ -361,7 +362,7 @@ Func_12_424e:
 	bit 0, b
 	jr z, Func_12_425b
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	jr Func_12_4287
@@ -407,7 +408,7 @@ Func_12_42a2:
 	cp $04
 	jr nc, Func_12_42a2
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
@@ -418,7 +419,7 @@ Func_12_42c4:
 	cp $04
 	jr nc, Func_12_42a2
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
@@ -427,7 +428,7 @@ Func_12_42d7:
 	bit 7, b
 	jr z, Func_12_42ec
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	add a, $02
@@ -441,7 +442,7 @@ Func_12_42ec:
 	bit 6, b
 	jr z, Func_12_4301
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	sub $02
@@ -455,7 +456,7 @@ Func_12_4301:
 	bit 0, b
 	jr z, Func_12_430e
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	jr Func_12_432a
@@ -530,7 +531,7 @@ Func_12_4390:
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 	push af
-	ld a, $30
+	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
 	pop af
 	jp Func_12_429a
@@ -678,7 +679,7 @@ Data_12_44af:
 
 Func_12_44cf:
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 Func_12_44d6:
@@ -777,7 +778,7 @@ Func_12_455f:
 	ld [hl], a
 	ld [$c569], a
 	push af
-	ld a, $03
+	ld a, SOUND_SFX_03
 	call PlaySound
 	pop af
 	call $2ea8
@@ -804,7 +805,7 @@ Func_12_4597:
 	pop hl
 	pop de
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	xor a
@@ -835,7 +836,7 @@ Data_12_45cf:
 	ld [$c569], a
 	call Func_00_2e62
 	push af
-	ld a, $03
+	ld a, SOUND_SFX_03
 	call PlaySound
 	pop af
 	jp Func_12_4686
@@ -859,7 +860,7 @@ Func_12_45fa:
 	ld [de], a
 	ld [$c569], a
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	ldh a, [$ffab]
@@ -879,7 +880,7 @@ Func_12_461e:
 	cp $c0
 	call z, Func_00_2f65
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	jr Func_12_4686
@@ -895,7 +896,7 @@ Data_12_4636:
 	ldh a, [$ffac]
 	ld [$c569], a
 	push af
-	ld a, $03
+	ld a, SOUND_SFX_03
 	call PlaySound
 	pop af
 	jr Func_12_4686
@@ -910,7 +911,7 @@ Func_12_4646:
 	bit 7, a
 	jr z, Func_12_467a
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	jr Func_12_4686
@@ -918,7 +919,7 @@ Func_12_465e:
 	xor a
 	ld [de], a
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	call Func_00_2ea8
@@ -934,7 +935,7 @@ Func_12_467a:
 	xor a
 	ld [de], a
 	push af
-	ld a, $01
+	ld a, SOUND_SFX_01
 	call PlaySound
 	pop af
 	call Func_00_2ea8

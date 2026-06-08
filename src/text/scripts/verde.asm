@@ -17,6 +17,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Verde script functions", ROMX
 
@@ -72,7 +73,7 @@ Verde_BuildPortraitScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $33
+	ld a, SOUND_BGM_Verde
 	call PlaySoundTracked
 	pop af
 	ret
@@ -105,7 +106,7 @@ Verde_BuildIntroScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $33
+	ld a, SOUND_BGM_Verde
 	call PlaySoundTracked
 	pop af
 	ret

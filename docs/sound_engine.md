@@ -233,6 +233,12 @@ inferred from it). **ids `$00-$27` are SFX** (always the transient `PlaySound`
 path) and **ids `$28-$3a` are BGM** (always `PlaySoundTracked`). ids not listed
 exist in the data but have no disassembled trigger yet.
 
+These ids are the `SOUND` enum in `include/sound_ids.inc` (built with
+`enum.inc`; discriminant == id byte). Call sites pass them by name —
+`ld a, SOUND_SFX_Cursor` / `ld a, SOUND_BGM_Town`; ids whose role isn't pinned
+down keep a `SOUND_{SFX,BGM}_<hexid>` placeholder. Keep the table below and the
+enum's per-case comments in sync.
+
 | id | kind | trigger context → inferred role |
 |---|---|---|
 | `$00` | SFX | played at boot/scene-change right after `ResetSoundEngine`; the default `$4d00` entry — **silence / stop**. |

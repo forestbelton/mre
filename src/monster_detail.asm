@@ -3,6 +3,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_03c000", ROMX[$4000], BANK[$0f]
 
@@ -21,7 +22,7 @@ Func_0f_4000:
 	ret nz
 	FAR_CALL $01, Func_01_4c4d
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld hl, wProgressFlags
@@ -30,7 +31,7 @@ Func_0f_4000:
 	ld [$c2d8], a
 	call Func_0f_43bb
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ret
@@ -83,7 +84,7 @@ Func_0f_4097:
 	cp $01
 	ret z
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, $01
@@ -96,7 +97,7 @@ Func_0f_40b2:
 	or a
 	ret z
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor a
@@ -107,7 +108,7 @@ Func_0f_40cb:
 	FAR_CALL $01, Func_01_4e09
 	FAR_CALL $01, Func_01_4eb8
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $11
@@ -118,7 +119,7 @@ Func_0f_40e8:
 	or a
 	jr nz, Func_0f_40cb
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	call Func_0f_427b
@@ -143,7 +144,7 @@ Func_0f_4125:
 	or a
 	ret z
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor a
@@ -154,7 +155,7 @@ Func_0f_413e:
 	FAR_CALL $01, Func_01_4e09
 	FAR_CALL $01, Func_01_4eb8
 	push af
-	ld a, $0e
+	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
 	ld a, $11
@@ -165,7 +166,7 @@ Func_0f_415b:
 	or a
 	jr nz, Func_0f_413e
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	call Func_0f_4265
@@ -192,7 +193,7 @@ Func_0f_416c:
 	ld [$c2d9], a
 	FAR_CALL $01, Func_01_4eb8
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -204,7 +205,7 @@ Func_0f_41a3:
 	ld [$c2d9], a
 	FAR_CALL $01, Func_01_4eb8
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -216,7 +217,7 @@ Func_0f_41bd:
 	ld [$c2d9], a
 	FAR_CALL $01, Func_01_4eb8
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -231,7 +232,7 @@ Func_0f_41d6:
 	ld a, $13
 	ld [$c2d8], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	FAR_CALL $01, Func_01_4e55
@@ -249,7 +250,7 @@ Func_0f_420f:
 	ld [$c2d8], a
 	call Func_00_04bc
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ldh a, [$ffa8]
@@ -262,7 +263,7 @@ Func_0f_4229:
 	ld [$c2d8], a
 	call Func_00_04bc
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ldh a, [$ffa8]
@@ -274,7 +275,7 @@ Func_0f_4243:
 	ld a, $12
 	ld [$c2d8], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	FAR_CALL $01, Func_01_4e55
@@ -293,7 +294,7 @@ Func_0f_4265:
 Func_0f_427b:
 	call Func_0f_42a2
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	FAR_CALL $03, RequestFloorExit
@@ -312,7 +313,7 @@ Func_0f_42a2:
 	xor a
 	ld [$c2d8], a
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	FAR_CALL $01, Func_01_449d
@@ -353,7 +354,7 @@ Func_0f_42dd:
 	ld a, $22
 	ld [$c2d8], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret
@@ -377,7 +378,7 @@ Func_0f_4307:
 	ld a, $20
 	ld [$c2d8], a
 	push af
-	ld a, $04
+	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ret

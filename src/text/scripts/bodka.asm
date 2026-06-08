@@ -1,6 +1,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Bodka script functions", ROMX
 
@@ -54,7 +55,7 @@ Bodka_BuildStudioScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $30
+	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
 	pop af
 	ret

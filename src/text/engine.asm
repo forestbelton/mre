@@ -3,6 +3,7 @@ INCLUDE "util.inc"
 
 INCLUDE "enum.inc"
 INCLUDE "monster.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "ScriptEngine", ROM0[$39c0]
 
@@ -107,7 +108,7 @@ ScriptWaitInputCore:
 	bit 0, a
 	jr z, .loop
 	push af
-	ld a, $0d
+	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld hl, wTextAnchor

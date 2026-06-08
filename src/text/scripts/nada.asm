@@ -19,6 +19,7 @@
 INCLUDE "hardware.inc"
 
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 
 SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]
@@ -84,7 +85,7 @@ Nada_ShowScene:
 	ld bc, $0030
 	call BankCopy
 	push af
-	ld a, $36
+	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008

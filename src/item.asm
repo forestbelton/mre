@@ -9,6 +9,7 @@ INCLUDE "monster.inc"
 INCLUDE "enum.inc"
 INCLUDE "room.inc"
 INCLUDE "util.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Items", ROMX
 
@@ -173,7 +174,7 @@ ItemEffectHandlers:
 ItemEffect_ScoreOnly:  ; generic: just the ItemPoints score (gems, coins, medals, peaches)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ret
@@ -181,7 +182,7 @@ ItemEffect_ScoreOnly:  ; generic: just the ItemPoints score (gems, coins, medals
 ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece (wDiscStoneFragments, cap 4); at 4 -> assemble a stone (wFreeDiscStones)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wDiscStoneFragments
@@ -207,7 +208,7 @@ ItemEffect_DiscPiece:  ; DISC_STONE_PIECE: +1 piece (wDiscStoneFragments, cap 4)
 ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot (wBombCapacity, max 8)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wBombCapacity
@@ -220,7 +221,7 @@ ItemEffect_Fireplace:  ; FIREPLACE: +1 bomb slot (wBombCapacity, max 8)
 ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large (wBombLargeFlags bit 0)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, [wBombCount]
@@ -233,7 +234,7 @@ ItemEffect_Gunpowder:  ; GUNPOWDER: if a bomb is held, flag bomb 0 large (wBombL
 ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb (wBombCount), small type
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, [wBombCapacity]
@@ -263,7 +264,7 @@ ItemEffect_BombSmall:  ; BOMB_SMALL: +1 held bomb (wBombCount), small type
 ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, [wBombCapacity]
@@ -290,7 +291,7 @@ ItemEffect_BombLarge:  ; BOMB_LARGE: +1 held bomb, large/piercing type
 ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter (wCrystalCount)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wCrystalCount
@@ -305,7 +306,7 @@ ItemEffect_BlueCrystal:  ; BLUE_CRYSTAL: add to the crystal score counter (wCrys
 ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter (wCrystalCount)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wCrystalCount
@@ -320,7 +321,7 @@ ItemEffect_RedCrystal:  ; RED_CRYSTAL: add (more) to the crystal score counter (
 ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the wSpawnCellX/wSpawnCellY slot (gfx $1f)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, [wSpawnCellY]
@@ -348,7 +349,7 @@ ItemEffect_Bell:  ; BELL: spawn a Suzurin pickup at the wSpawnCellX/wSpawnCellY 
 ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (TransformMonstersToDuck)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	call TransformMonstersToDuck
@@ -357,7 +358,7 @@ ItemEffect_DuckDoll:  ; DUCK_DOLL: transform all monsters (TransformMonstersToDu
 ItemEffect_Item1c:  ; $1c: score-only; never placed (stripped by the gate)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ret
@@ -365,7 +366,7 @@ ItemEffect_Item1c:  ; $1c: score-only; never placed (stripped by the gate)
 ItemEffect_AlfDoll:  ; ALF_DOLL: transform all monsters into Suzurins ($5544)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	call TransformMonstersToSuzurin
@@ -374,7 +375,7 @@ ItemEffect_AlfDoll:  ; ALF_DOLL: transform all monsters into Suzurins ($5544)
 ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 (wTimeMultiplier=2, DoubleFloorTimer)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, $02
@@ -385,7 +386,7 @@ ItemEffect_HalfTororon:  ; HALF_TORORON: time x2 (wTimeMultiplier=2, DoubleFloor
 ItemEffect_FullTororon:  ; FULL_TORORON: time x5 (wTimeMultiplier=5, QuintupleFloorTimer)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, $05
@@ -396,7 +397,7 @@ ItemEffect_FullTororon:  ; FULL_TORORON: time x5 (wTimeMultiplier=5, QuintupleFl
 ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s (wFloorTimer-wFloorTimer+2)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wFloorTimer+2
@@ -411,7 +412,7 @@ ItemEffect_OrangeHourglass:  ; ORANGE_HOURGLASS: set floor timer to 50s (wFloorT
 ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wFloorTimer+2
@@ -425,7 +426,7 @@ ItemEffect_BlueHourglass:  ; BLUE_HOURGLASS: set floor timer to 100s
 ItemEffect_CoxHat:  ; COX_HAT: +1 life (wLives BCD, cap 99); 1-up SFX $08
 	call SpawnPickupEffectAlt
 	push af
-	ld a, $08
+	ld a, SOUND_SFX_08
 	call PlaySound
 	pop af
 	ld hl, wLives
@@ -447,7 +448,7 @@ ItemEffect_GoldKey:  ; GOLD_KEY: unlock the exit (wProgressFlags bit 1; StartRoo
 ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (GrantSilverKey)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	call GrantSilverKey
@@ -456,7 +457,7 @@ ItemEffect_SilverKey:  ; SILVER_KEY: unlock a basement room (GrantSilverKey)
 ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag (wHasBattleCard=1; wBattleCardPending=1 unless mode 5)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, $01
@@ -471,7 +472,7 @@ ItemEffect_BattleCard:  ; BATTLE_CARD: set battle flag (wHasBattleCard=1; wBattl
 ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp (wProgressFlags bit 3)
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wProgressFlags
@@ -481,7 +482,7 @@ ItemEffect_MonsterFlame:  ; MONSTER_FLAME: flag the bonus-stage warp (wProgressF
 ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartRoomAnimation; never placed
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld a, [wToken21Count]
@@ -500,7 +501,7 @@ ItemEffect_Item21:  ; $21: collect 4 (wToken21Count) -> wSceneState=1 + StartRoo
 ItemEffect_Item22:  ; $22: key-like (wProgressFlags bit 7 + GrantSilverKey); never placed
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld hl, wProgressFlags
@@ -512,12 +513,12 @@ ItemEffect_Item22:  ; $22: key-like (wProgressFlags bit 7 + GrantSilverKey); nev
 
 ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX $28, bumps wMonsterDiscStones+6
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	call SpawnPickupEffect
 	push af
-	ld a, $05
+	ld a, SOUND_SFX_ItemUse
 	call PlaySound
 	pop af
 	ld bc, SUMMON_PHOENIX

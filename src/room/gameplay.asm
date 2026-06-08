@@ -4,6 +4,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "scene.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0042c9", ROMX[$42c9], BANK[$01]
 
@@ -168,13 +169,13 @@ Func_01_449d:
 	cp $02
 	jr z, Func_01_44b5
 	push af
-	ld a, $2a
+	ld a, SOUND_BGM_2a
 	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44b5:
 	push af
-	ld a, $2d
+	ld a, SOUND_BGM_2d
 	call PlaySoundTracked
 	pop af
 	ret
@@ -185,7 +186,7 @@ Func_01_44bd:
 	cp $06
 	jr z, Func_01_44e7
 	push af
-	ld a, $29
+	ld a, SOUND_BGM_Room
 	call PlaySoundTracked
 	pop af
 	ret
@@ -194,19 +195,19 @@ Func_01_44d0:
 	cp $05
 	jr z, Func_01_44df
 	push af
-	ld a, $2c
+	ld a, SOUND_BGM_2c
 	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44df:
 	push af
-	ld a, $2e
+	ld a, SOUND_BGM_2e
 	call PlaySoundTracked
 	pop af
 	ret
 Func_01_44e7:
 	push af
-	ld a, $2b
+	ld a, SOUND_BGM_2b
 	call PlaySoundTracked
 	pop af
 	ret
@@ -250,7 +251,7 @@ Func_01_4530:
 	cp $01
 	ret nz
 	push af
-	ld a, $2d
+	ld a, SOUND_BGM_2d
 	call PlaySoundTracked
 	pop af
 	ld a, $01
@@ -261,21 +262,21 @@ Func_01_4543:
 	cp $06
 	jr z, Func_01_4552
 	push af
-	ld a, $29
+	ld a, SOUND_BGM_Room
 	call PlaySoundTracked
 	pop af
 	ret
 
 Func_01_4552:
 	push af
-	ld a, $2b
+	ld a, SOUND_BGM_2b
 	call PlaySoundTracked
 	pop af
 	ret
 
 Func_01_455a:
 	push af
-	ld a, $2a
+	ld a, SOUND_BGM_2a
 	call PlaySoundTracked
 	pop af
 	ret
@@ -1084,7 +1085,7 @@ Func_01_4b07:
 	ret
 Func_01_4b0e:
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	xor a
@@ -2252,13 +2253,13 @@ Func_01_5922:
 	ret
 Func_01_5934:
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	ret
 Func_01_593c:
 	push af
-	ld a, $09
+	ld a, SOUND_SFX_09
 	call PlaySound
 	pop af
 	ret
@@ -2279,7 +2280,7 @@ Func_01_5949:
 	or a
 	ret nz
 	push af
-	ld a, $0a
+	ld a, SOUND_SFX_0a
 	call PlaySound
 	pop af
 	ld a, $01
@@ -2422,7 +2423,7 @@ Func_01_5a5f:
 	or a
 	jr nz, Func_01_5a7a
 	push af
-	ld a, $28
+	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	FAR_CALL $05, SceneInit
@@ -4417,7 +4418,7 @@ Func_01_67ee:
 	ld hl, $4593
 	call Func_00_0467
 	push af
-	ld a, $06
+	ld a, SOUND_SFX_06
 	call PlaySound
 	pop af
 	ret
@@ -4448,7 +4449,7 @@ Func_01_6856:
 	xor a
 	ld [$c2c4], a
 	push af
-	ld a, $08
+	ld a, SOUND_SFX_08
 	call PlaySound
 	pop af
 	ret
@@ -4457,7 +4458,7 @@ Func_01_6862:
 	or a
 	ret z
 	push af
-	ld a, $24
+	ld a, SOUND_SFX_24
 	call PlaySound
 	pop af
 	ret

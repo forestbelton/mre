@@ -4,6 +4,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "scene_script.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_014000", ROMX[$4000], BANK[$05]
 
@@ -156,7 +157,7 @@ SceneBgVm_Dispatch:
 	jp z, SceneBgOp_FarCall
 SceneBgVm_End:
 	push af
-	ld a, $00
+	ld a, SOUND_SFX_Silence
 	call PlaySound
 	pop af
 	ld a, [wSceneState]

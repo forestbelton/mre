@@ -24,6 +24,7 @@ INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "Naji script", ROMX
 
@@ -444,7 +445,7 @@ Naji_BuildPortraitScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	push af
-	ld a, $2f
+	ld a, SOUND_BGM_Town
 	call PlaySoundIfChanged
 	pop af
 	ret

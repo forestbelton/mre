@@ -10,6 +10,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
+INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
 
@@ -43,7 +44,7 @@ Kalum_StartEncounter:
 	call Func_1f_41da
 	call Func_1f_41e6
 	push af
-	ld a, $36
+	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
 	pop af
 	call Func_1f_4008
