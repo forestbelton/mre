@@ -54,3 +54,23 @@ Room27:
     dstruct Spawner, , .X=7, .Y=7, .P0=$02, .P1=$00, .P2=$02, .Spawn0=SPAWN_NONE, .Spawn1=SPAWN_NONE, .Spawn2=SPAWN_NONE, .Spawn3=SPAWN_NONE, .Spawn4=SPAWN_NONE, .Spawn5=SPAWN_NONE, .End=INERT
     EMPTY_SPAWNER_SLOT
     assert @ - .spawners == sizeof_Spawner * 4
+
+    ; --- unknown trailer (256 bytes): nonzero record data not yet
+    ; modeled in the Header struct; colocated from analyzed.asm. ---
+.trailer
+    db $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00, $00
+    db $00, $ce, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00, $00
+    db $00, $cd, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00, $00, $00
+    db $00, $00, $00, $00, $c2, $00, $00, $00, $40, $00, $20, $20, $00, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $00, $00
+    db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $20, $20, $20
+    db $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $20, $00
+    db $01, $02, $0e, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff
+    db $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01
+    db $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff, $ff, $ff, $ff, $01, $ff
+    db $04, $02, $01, $00, $03, $00, $ff, $ff, $ff, $ff, $ff, $ff, $02, $02, $01, $00
+    db $03, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+    db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff

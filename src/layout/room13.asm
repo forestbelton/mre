@@ -54,3 +54,23 @@ Room13:
     EMPTY_SPAWNER_SLOT
     EMPTY_SPAWNER_SLOT
     assert @ - .spawners == sizeof_Spawner * 4
+
+    ; --- unknown trailer (256 bytes): nonzero record data not yet
+    ; modeled in the Header struct; colocated from analyzed.asm. ---
+.trailer
+    db $a2, $0e, $aa, $d4, $27, $15, $45, $ba, $a8, $57, $75, $aa, $ab, $aa, $aa, $55
+    db $15, $55, $55, $a8, $8b, $aa, $aa, $b7, $91, $4e, $a2, $1d, $e5, $05, $55, $ab
+    db $22, $ea, $aa, $9d, $05, $54, $d1, $ba, $aa, $d5, $74, $a9, $3a, $ba, $aa, $11
+    db $57, $54, $55, $8a, $ab, $aa, $aa, $73, $45, $ac, $aa, $55, $c6, $d7, $61, $a3
+    db $ee, $af, $40, $55, $17, $7d, $45, $8a, $72, $51, $79, $aa, $a2, $ea, $aa, $4c
+    db $05, $d5, $55, $8b, $a2, $a8, $aa, $f7, $54, $ba, $aa, $d1, $15, $b5, $8d, $2a
+    db $f2, $ee, $ca, $75, $45, $dd, $dd, $aa, $b8, $56, $50, $aa, $be, $ba, $aa, $45
+    db $77, $95, $55, $a8, $a2, $88, $2a, $c5, $77, $2b, $ba, $17, $60, $55, $4d, $6e
+    db $ea, $8b, $aa, $10, $55, $54, $d4, $aa, $b9, $51, $55, $a8, $ea, $a8, $ba, $55
+    db $75, $44, $55, $9a, $ae, $bf, $aa, $55, $d8, $ea, $aa, $d7, $67, $15, $50, $9a
+    db $bb, $aa, $8a, $55, $b5, $4d, $dd, $e2, $b8, $55, $55, $a2, $8a, $ab, $8a, $75
+    db $d7, $57, $51, $aa, $88, $ba, $e8, $15, $17, $02, $aa, $55, $55, $74, $61, $a8
+    db $2a, $ba, $a3, $75, $25, $55, $57, $aa, $9c, $75, $55, $aa, $af, $aa, $82, $55
+    db $55, $57, $55, $2b, $aa, $ba, $2a, $55, $55, $aa, $aa, $17, $1d, $51, $5d, $a2
+    db $8a, $af, $ea, $55, $55, $5d, $55, $28, $bb, $45, $55, $aa, $9a, $aa, $ee, $5a
+    db $5d, $45, $55, $00, $ab, $a8, $aa, $31, $55, $ed, $ae, $4c, $05, $55, $5d, $aa
