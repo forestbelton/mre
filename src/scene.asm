@@ -89,6 +89,7 @@ Func_05_40ae:
 Func_05_40b2:
 	call Func_05_443d
 	ret
+
 SceneScrollWobble:
 	ld a, [$cf62]
 	or a
