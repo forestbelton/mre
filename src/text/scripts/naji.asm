@@ -389,7 +389,7 @@ Func_18_6b65:
 
 Func_18_6b71:
 	call Naji_BuildPortraitScene
-	ld hl, $6ce3
+	ld hl, NajiEncounterScript
 	call ScriptDispatcherEnterAfterCall
 	FAR_CALL $1f, Script_FadeOutPortrait
 	ret
@@ -531,103 +531,200 @@ Naji_RenderPortraitAlt:
 	call DrawMetasprite
 	ret
 
-; --- Naji dialogue table ---
-; Raw text-script bytecode (see include/text.inc / docs/text_engine.md), the
-; same opcodes the carved scripts express via SCRIPT_* macros:
-;   $0E lo hi bank  set renderer ($6c27=Naji_RenderPortraitTalking,
-;                                 $6c9f=Naji_RenderPortraitAlt)
-;   $0D newline   $04 wait-for-A / end message   $FF end of script
-;   $0A/$0B addr val tgt  IF_EQ/IF_NEQ branch     $09 addr val  write WRAM
-; Each block is entered via a pointer embedded in the scene scripts or an
-; earlier block. Data_18_6fa5 and Data_18_7080 were previously
-; misdisassembled as code (the $18 script byte aliases the Z80 `jr` opcode,
-; which spawned bogus jr labels into the strings); re-carved here as data.
-; Still raw hex like the rest of the table — decoding to SCRIPT_* + db "text"
-; is future work.
-Data_18_6ce3:
-	db $0a, $c1, $c2, $01, $2b, $6f, $0a, $d7, $c2, $00, $9b, $6e, $0a, $d7, $c2, $01
-	db $63, $6d, $0e, $9f, $6c, $18, $59, $6f, $75, $20, $67, $6f, $74, $20, $6f, $75
-	db $74, $20, $73, $61, $66, $65, $2e, $0d, $47, $6f, $6f, $64, $20, $74, $6f, $20
-	db $73, $65, $65, $20, $79, $6f, $75, $2e, $04, $0e, $27, $6c, $18, $49, $27, $6c
-	db $6c, $20, $6d, $61, $6b, $65, $20, $73, $75, $72, $65, $0d, $79, $6f, $75, $20
-	db $77, $69, $6c, $6c, $20, $73, $74, $61, $72, $74, $04, $4c, $65, $76, $65, $6c
-	db $20, $0f, $f2, $cf, $0d, $6e, $65, $78, $74, $20, $74, $69, $6d, $65, $2e, $04
-	db $47, $65, $74, $20, $73, $6f, $6d, $65, $20, $72, $65, $73, $74, $2e, $04, $ff
-	db $0b, $e5, $d0, $00, $21, $6e, $0e, $9f, $6c, $18, $47, $6f, $6f, $64, $20, $74
-	db $6f, $20, $73, $65, $65, $20, $79, $6f, $75, $2e, $0d, $59, $6f, $75, $20, $66
-	db $69, $6e, $61, $6c, $6c, $79, $20, $64, $69, $64, $04, $69, $74, $2e, $20, $54
-	db $68, $61, $6e, $6b, $73, $21, $20, $41, $6c, $6c, $0d, $74, $68, $61, $74, $27
-	db $73, $20, $6c, $65, $66, $74, $20, $69, $73, $04, $74, $68, $65, $20, $63, $6f
-	db $6d, $70, $6c, $65, $74, $65, $0d, $63, $6f, $6e, $71, $75, $65, $72, $20, $6f
-	db $66, $20, $74, $68, $69, $73, $04, $74, $6f, $77, $65, $72, $2e, $20, $54, $68
-	db $65, $72, $65, $20, $61, $72, $65, $0d, $6d, $6f, $72, $65, $20, $74, $68, $69
-	db $6e, $67, $73, $04, $68, $69, $64, $69, $6e, $67, $20, $69, $6e, $20, $74, $68
-	db $69, $73, $0d, $74, $6f, $77, $65, $72, $2e, $20, $42, $65, $04, $63, $61, $72
-	db $65, $66, $75, $6c, $2e, $20, $49, $27, $6c, $6c, $0d, $68, $65, $6c, $70, $20
-	db $79, $6f, $75, $20, $6f, $75, $74, $2e, $04, $09, $e5, $d0, $01, $ff
+; --- Naji's encounter dialogue (entered at $6ce3 via Func_18_6b71) ---
+; State-dependent greeting tree, dispatched on the tower-run flags $c2c1 /
+; $c2d7 and the one-time-message flags $d0e5 / $d0e6 (set with WRITE_WRAM
+; after first showing); $cff2 holds the level number printed by SCRIPT_DECIMAL.
+; Previously misfiled as raw-hex Data_18_* blocks (and the $6fa5/$7080 stretch
+; was further misdisassembled as code); decoded here to SCRIPT_* macros.
+NajiEncounterScript:
+    SCRIPT_IF_EQ .Addr=$c2c1, .Value=$01, .Target=.clearedRun
+    SCRIPT_IF_EQ .Addr=$c2d7, .Value=$00, .Target=.thrownOutTried
+    SCRIPT_IF_EQ .Addr=$c2d7, .Value=$01, .Target=.firstClearThanks
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "You got out safe."
+    SCRIPT_NEWLINE
+    db "Good to see you."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "I'll make sure"
+    SCRIPT_NEWLINE
+    db "you will start"
+    SCRIPT_WAIT
+    db "Level "
+    SCRIPT_DECIMAL .Addr=$cff2
+    SCRIPT_NEWLINE
+    db "next time."
+    SCRIPT_WAIT
+    db "Get some rest."
+    SCRIPT_WAIT
+    SCRIPT_END
+.firstClearThanks:
+    SCRIPT_IF_NEQ .Addr=$d0e5, .Value=$00, .Target=.climbedAgain
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "Good to see you."
+    SCRIPT_NEWLINE
+    db "You finally did"
+    SCRIPT_WAIT
+    db "it. Thanks! All"
+    SCRIPT_NEWLINE
+    db "that's left is"
+    SCRIPT_WAIT
+    db "the complete"
+    SCRIPT_NEWLINE
+    db "conquer of this"
+    SCRIPT_WAIT
+    db "tower. There are"
+    SCRIPT_NEWLINE
+    db "more things"
+    SCRIPT_WAIT
+    db "hiding in this"
+    SCRIPT_NEWLINE
+    db "tower. Be"
+    SCRIPT_WAIT
+    db "careful. I'll"
+    SCRIPT_NEWLINE
+    db "help you out."
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM .Addr=$d0e5, .Value=$01
+    SCRIPT_END
+.climbedAgain:
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "You climbed to"
+    SCRIPT_NEWLINE
+    db "the top again."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "If you feel you"
+    SCRIPT_NEWLINE
+    db "haven't finished"
+    SCRIPT_WAIT
+    db "rest at the"
+    SCRIPT_NEWLINE
+    db "cabin and return"
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "I'll be waiting."
+    SCRIPT_WAIT
+    SCRIPT_END
+.thrownOutTried:
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "Looks like you"
+    SCRIPT_NEWLINE
+    db "were thrown out."
+    SCRIPT_WAIT
+    db "It's okay since"
+    SCRIPT_NEWLINE
+    db "you tried!"
+    SCRIPT_WAIT
+    db "Don't be hard"
+    SCRIPT_NEWLINE
+    db "on yourself."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "I'll make sure"
+    SCRIPT_NEWLINE
+    db "you will get"
+    SCRIPT_WAIT
+    db "Level "
+    SCRIPT_DECIMAL .Addr=$cff2
+    SCRIPT_NEWLINE
+    db "next time."
+    SCRIPT_WAIT
+    SCRIPT_END
+.clearedRun:
+    SCRIPT_IF_EQ .Addr=$c2d7, .Value=$00, .Target=.thrownOutHard
+    SCRIPT_IF_EQ .Addr=$c2d7, .Value=$03, .Target=.basementOpened
+    SCRIPT_IF_EQ .Addr=$c2d7, .Value=$02, .Target=.needSilverKey
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "You made it out!"
+    SCRIPT_NEWLINE
+    db "Glad you're safe"
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "To move forward"
+    SCRIPT_NEWLINE
+    db "and gain success"
+    SCRIPT_WAIT
+    db "plan a strategy."
+    SCRIPT_NEWLINE
+    db "Good luck."
+    SCRIPT_WAIT
+    SCRIPT_END
+.basementOpened:
+    SCRIPT_IF_NEQ .Addr=$d0e6, .Value=$00, .Target=.backSafely
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "Oh, you're here."
+    SCRIPT_NEWLINE
+    db "I didn't think"
+    SCRIPT_WAIT
+    db "you'd open all"
+    SCRIPT_NEWLINE
+    db "the basement"
+    SCRIPT_WAIT
+    db "rooms. Great!"
+    SCRIPT_NEWLINE
+    db "Go ahead and"
+    SCRIPT_WAIT
+    db "explore as you"
+    SCRIPT_NEWLINE
+    db "please."
+    SCRIPT_WAIT
+    SCRIPT_WRITE_WRAM .Addr=$d0e6, .Value=$01
+    SCRIPT_END
+.backSafely:
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "Good. You made"
+    SCRIPT_NEWLINE
+    db "it back safely."
+    SCRIPT_WAIT
+    db "You're getting"
+    SCRIPT_NEWLINE
+    db "used to it here."
+    SCRIPT_WAIT
+    db "Rest first and"
+    SCRIPT_NEWLINE
+    db "come back."
+    SCRIPT_WAIT
+    SCRIPT_END
+.thrownOutHard:
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "Looks like you"
+    SCRIPT_NEWLINE
+    db "were thrown out."
+    SCRIPT_WAIT
+    db "Bad happens when"
+    SCRIPT_NEWLINE
+    db "you try too hard"
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "Be careful, and"
+    SCRIPT_NEWLINE
+    db "good luck."
+    SCRIPT_WAIT
+    SCRIPT_END
+.needSilverKey:
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    db "Good work, but"
+    SCRIPT_NEWLINE
+    db "you can't go any"
+    SCRIPT_WAIT
+    db "further. To"
+    SCRIPT_NEWLINE
+    db "move on, you"
+    SCRIPT_WAIT
+    db "need another"
+    SCRIPT_NEWLINE
+    db "silver key. One"
+    SCRIPT_WAIT
+    db "still exists"
+    SCRIPT_NEWLINE
+    db "in the tower."
+    SCRIPT_WAIT
+    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    db "You can do it!"
+    SCRIPT_NEWLINE
+    db "Don't give up!"
+    SCRIPT_WAIT
+    SCRIPT_END
 
-Data_18_6e21:
-	db $0e, $9f, $6c, $18, $59, $6f, $75, $20, $63, $6c, $69, $6d, $62, $65, $64, $20
-	db $74, $6f, $0d, $74, $68, $65, $20, $74, $6f, $70, $20, $61, $67, $61, $69, $6e
-	db $2e, $04, $0e, $27, $6c, $18, $49, $66, $20, $79, $6f, $75, $20, $66, $65, $65
-	db $6c, $20, $79, $6f, $75, $0d, $68, $61, $76, $65, $6e, $27, $74, $20, $66, $69
-	db $6e, $69, $73, $68, $65, $64, $04, $72, $65, $73, $74, $20, $61, $74, $20, $74
-	db $68, $65, $0d, $63, $61, $62, $69, $6e, $20, $61, $6e, $64, $20, $72, $65, $74
-	db $75, $72, $6e, $04, $0e, $9f, $6c, $18, $49, $27, $6c, $6c, $20, $62, $65, $20
-	db $77, $61, $69, $74, $69, $6e, $67, $2e, $04, $ff
-
-Data_18_6e9b:
-	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c, $69, $6b, $65, $20, $79
-	db $6f, $75, $0d, $77, $65, $72, $65, $20, $74, $68, $72, $6f, $77, $6e, $20, $6f
-	db $75, $74, $2e, $04, $49, $74, $27, $73, $20, $6f, $6b, $61, $79, $20, $73, $69
-	db $6e, $63, $65, $0d, $79, $6f, $75, $20, $74, $72, $69, $65, $64, $21, $04, $44
-	db $6f, $6e, $27, $74, $20, $62, $65, $20, $68, $61, $72, $64, $0d, $6f, $6e, $20
-	db $79, $6f, $75, $72, $73, $65, $6c, $66, $2e, $04, $0e, $9f, $6c, $18, $49, $27
-	db $6c, $6c, $20, $6d, $61, $6b, $65, $20, $73, $75, $72, $65, $0d, $79, $6f, $75
-	db $20, $77, $69, $6c, $6c, $20, $67, $65, $74, $04, $4c, $65, $76, $65, $6c, $20
-	db $0f, $f2, $cf, $0d, $6e, $65, $78, $74, $20, $74, $69, $6d, $65, $2e, $04, $ff
-	db $0a, $d7, $c2, $00, $80, $70, $0a, $d7, $c2, $03, $a5, $6f, $0a, $d7, $c2, $02
-	db $e6, $70, $0e, $9f, $6c, $18, $59, $6f, $75, $20, $6d, $61, $64, $65, $20, $69
-	db $74, $20, $6f, $75, $74, $21, $0d, $47, $6c, $61, $64, $20, $79, $6f, $75, $27
-	db $72, $65, $20, $73, $61, $66, $65, $04, $0e, $27, $6c, $18, $54, $6f, $20, $6d
-	db $6f, $76, $65, $20, $66, $6f, $72, $77, $61, $72, $64, $0d, $61, $6e, $64, $20
-	db $67, $61, $69, $6e, $20, $73, $75, $63, $63, $65, $73, $73, $04, $70, $6c, $61
-	db $6e, $20, $61, $20, $73, $74, $72, $61, $74, $65, $67, $79, $2e, $0d, $47, $6f
-	db $6f, $64, $20, $6c, $75, $63, $6b, $2e, $04, $ff
-
-Data_18_6fa5:
-	db $0b, $e6, $d0, $00, $22, $70, $0e, $9f, $6c, $18, $4f, $68, $2c, $20, $79, $6f
-	db $75, $27, $72, $65, $20, $68, $65, $72, $65, $2e, $0d, $49, $20, $64, $69, $64
-	db $6e, $27, $74, $20, $74, $68, $69, $6e, $6b, $04, $79, $6f, $75, $27, $64, $20
-	db $6f, $70, $65, $6e, $20, $61, $6c, $6c, $0d, $74, $68, $65, $20, $62, $61, $73
-	db $65, $6d, $65, $6e, $74, $04, $72, $6f, $6f, $6d, $73, $2e, $20, $47, $72, $65
-	db $61, $74, $21, $0d, $47, $6f, $20, $61, $68, $65, $61, $64, $20, $61, $6e, $64
-	db $04, $65, $78, $70, $6c, $6f, $72, $65, $20, $61, $73, $20, $79, $6f, $75, $0d
-	db $70, $6c, $65, $61, $73, $65, $2e, $04, $09, $e6, $d0, $01, $ff, $0e, $9f, $6c
-	db $18, $47, $6f, $6f, $64, $2e, $20, $59, $6f, $75, $20, $6d, $61, $64, $65, $0d
-	db $69, $74, $20, $62, $61, $63, $6b, $20, $73, $61, $66, $65, $6c, $79, $2e, $04
-	db $59, $6f, $75, $27, $72, $65, $20, $67, $65, $74, $74, $69, $6e, $67, $0d, $75
-	db $73, $65, $64, $20, $74, $6f, $20, $69, $74, $20, $68, $65, $72, $65, $2e, $04
-	db $52, $65, $73, $74, $20, $66, $69, $72, $73, $74, $20, $61, $6e, $64, $0d, $63
-	db $6f, $6d, $65, $20, $62, $61, $63, $6b, $2e, $04, $ff
-
-Data_18_7080:
-	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c, $69, $6b, $65, $20, $79
-	db $6f, $75, $0d, $77, $65, $72, $65, $20, $74, $68, $72, $6f, $77, $6e, $20, $6f
-	db $75, $74, $2e, $04, $42, $61, $64, $20, $68, $61, $70, $70, $65, $6e, $73, $20
-	db $77, $68, $65, $6e, $0d, $79, $6f, $75, $20, $74, $72, $79, $20, $74, $6f, $6f
-	db $20, $68, $61, $72, $64, $04, $0e, $9f, $6c, $18, $42, $65, $20, $63, $61, $72
-	db $65, $66, $75, $6c, $2c, $20, $61, $6e, $64, $0d, $67, $6f, $6f, $64, $20, $6c
-	db $75, $63, $6b, $2e, $04, $ff
-
-Data_18_70e6:
-	db $0e, $27, $6c, $18, $47, $6f, $6f, $64, $20, $77, $6f, $72, $6b, $2c, $20, $62
-	db $75, $74, $0d, $79, $6f, $75, $20, $63, $61, $6e, $27, $74, $20, $67, $6f, $20
-	db $61, $6e, $79, $04, $66, $75, $72, $74, $68, $65, $72, $2e, $20, $54, $6f, $0d
-	db $6d, $6f, $76, $65, $20, $6f, $6e, $2c, $20, $79, $6f, $75, $04, $6e, $65, $65
-	db $64, $20, $61, $6e, $6f, $74, $68, $65, $72, $0d, $73, $69, $6c, $76, $65, $72
-	db $20, $6b, $65, $79, $2e, $20, $4f, $6e, $65, $04, $73, $74, $69, $6c, $6c, $20
-	db $65, $78, $69, $73, $74, $73, $0d, $69, $6e, $20, $74, $68, $65, $20, $74, $6f
-	db $77, $65, $72, $2e, $04, $0e, $9f, $6c, $18, $59, $6f, $75, $20, $63, $61, $6e
-	db $20, $64, $6f, $20, $69, $74, $21, $0d, $44, $6f, $6e, $27, $74, $20, $67, $69
-	db $76, $65, $20, $75, $70, $21, $04, $ff
