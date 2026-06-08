@@ -161,6 +161,17 @@ wMenuItemPtr::      ds 2    ; $C56B/$C56C: pointer to the active menu's item-val
 wGridColCount::     ds 1    ; $C56D: number of columns in the current grid row (bounds wGridCol)
 
 
+SECTION "wram_floor_snapshot", WRAM0[$C586]
+; 581-byte ($245) floor-record buffer for the in-room level editor / floor
+; preview (bank $12, src/editor.asm). LoadFloorRecordToBuffer copies a whole
+; record here (the 325-byte front AND the 256-byte trailer); PackFloorSnapshot
+; re-packs the *live* WRAM floor (current player/item state) into the front.
+; The editor edits and saves the whole record. Gameplay never reads this -- it
+; runs off the WRAM grids expanded by ParseFloorRecord. This is the only path
+; that touches the record trailer; see docs/floor_data.md.
+wFloorSnapshot::    ds $245
+
+
 SECTION "wram_player", WRAM0[$C7F9]
 ; The player avatar is entity slot 0 of the entity array (base $C7F9), so its
 ; live record fields sit at fixed addresses -- the rest of the engine reads the

@@ -2684,11 +2684,16 @@ Func_00_1298:
 	jr nz, Func_00_12a8
 	ld a, $4e
 	add a, d
-	jr Func_00_12ab
+	jr LoadFloorRecordToBuffer
 Func_00_12a8:
 	ld a, $4c
 	add a, d
-Func_00_12ab:
+; LoadFloorRecordToBuffer (a = record index): map the record's bank
+; (FloorBankTable) + pointer (FloorPtrTable) and copy the WHOLE 581-byte record
+; -- the 325-byte front AND the 256-byte trailer -- into wFloorSnapshot for the
+; in-room level editor / preview. This is the only code that reads the trailer
+; (gameplay's ParseFloorRecord stops after the front). See docs/floor_data.md.
+LoadFloorRecordToBuffer:
 	ld d, a
 	ld hl, $1567
 	rst AddAToHL
@@ -2705,7 +2710,7 @@ Func_00_12ab:
 	ld e, a
 	call Func_00_09f9
 	ld bc, $0245
-	ld hl, $c586
+	ld hl, wFloorSnapshot
 	call CopyDEtoHLLong
 	call Func_00_09ff
 	pop af
@@ -4591,7 +4596,7 @@ Func_00_212c:
 	ld a, $04
 	ld [wRoomType], a
 	call Func_00_1298
-	ld a, [$c586]
+	ld a, [wFloorSnapshot]
 	cp $ff
 	jr z, Func_00_2140
 
@@ -4950,7 +4955,7 @@ Func_00_23c3:
 	jr z, Func_00_2420
 	jr Func_00_2443
 Func_00_23d8:
-	call Func_00_2fd4
+	call PackFloorSnapshot
 	call Func_00_2fa2
 	jr z, Func_00_2443
 	ld hl, $5230
@@ -4962,7 +4967,7 @@ Func_00_23e8:
 	call Func_00_217d
 	or a
 	jr nz, Func_00_2401
-	call Func_00_2fd4
+	call PackFloorSnapshot
 	FAR_CALL $12, Func_12_4a79
 Func_00_2401:
 	call Func_00_0bdd
@@ -4985,7 +4990,7 @@ Func_00_2420:
 	jr nc, Func_00_2401
 	or a
 	jr nz, Func_00_2443
-	call Func_00_2fd4
+	call PackFloorSnapshot
 	FAR_CALL $12, Func_12_4a79
 Func_00_2443:
 	or $01
@@ -6587,8 +6592,13 @@ Func_00_2fcd:
 	cp d
 	ret
 
-Func_00_2fd4:
-	ld hl, $c586
+; PackFloorSnapshot: the inverse of ParseFloorRecord -- re-pack the *live* WRAM
+; floor (header fields + the collision/piece grids + arr1/2/3, with the 17-wide
+; row stride removed) into the front of wFloorSnapshot, so the editor/preview
+; captures the current floor state (player + revealed items). Leaves the buffer's
+; trailer bytes untouched (they come from the last LoadFloorRecordToBuffer).
+PackFloorSnapshot:
+	ld hl, wFloorSnapshot
 	ld a, [$cfbd]
 	ld [hl+], a
 	ld a, [$c2ea]
@@ -6612,25 +6622,25 @@ Func_00_2fd4:
 	ld de, wFloorCollision
 	ld a, [wFloorHeight]
 	ld b, a
-Func_00_3005:
+.copyCollision:
 	ld a, [wFloorWidth]
 	ld c, a
 	call CopyDEtoHL
 	ld a, [wFloorRowStride]
 	rst AddAToDE
 	dec b
-	jr nz, Func_00_3005
+	jr nz, .copyCollision
 	ld de, wFloorGrid
 	ld a, [wFloorHeight]
 	ld b, a
-Func_00_301a:
+.copyPieces:
 	ld a, [wFloorWidth]
 	ld c, a
 	call CopyDEtoHL
 	ld a, [wFloorRowStride]
 	rst AddAToDE
 	dec b
-	jr nz, Func_00_301a
+	jr nz, .copyPieces
 	ld c, $04
 	ld de, $c4cd
 	call CopyDEtoHL
@@ -7108,7 +7118,7 @@ Func_00_3318:
 	ld a, $01
 	ld [$c2c1], a
 	call LoadFloorByMode
-	call Func_00_2fd4
+	call PackFloorSnapshot
 	ld a, [$c55d]
 	ld [$c2c0], a
 	FAR_CALL $12, Func_12_4a79

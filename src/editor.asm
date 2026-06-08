@@ -1457,7 +1457,7 @@ Func_12_4a79:
 	ld h, [hl]
 	ld l, a
 	ld bc, $0245
-	ld de, $c586
+	ld de, wFloorSnapshot
 	call CopyDEtoHLLong
 	ld a, [wActiveFloor]
 	add a, a

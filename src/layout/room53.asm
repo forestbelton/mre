@@ -55,8 +55,9 @@ Room53:
     EMPTY_SPAWNER_SLOT
     assert @ - .spawners == sizeof_Spawner * 4
 
-    ; --- unknown trailer (256 bytes): nonzero record data not yet
-    ; modeled in the Header struct; colocated from analyzed.asm. ---
+    ; --- record trailer (256 bytes), undecoded. Read only by the level
+    ; editor (LoadFloorRecordToBuffer -> wFloorSnapshot); gameplay never
+    ; reads it. See docs/floor_data.md "Record trailer". ---
 .trailer
     db $66, $70, $d5, $3b, $af, $dc, $55, $aa, $21, $b9, $0e, $32, $40, $1b, $d8, $76
     db $7a, $e3, $29, $d2, $60, $b8, $e9, $7c, $71, $66, $a9, $8d, $13, $c6, $30, $3e

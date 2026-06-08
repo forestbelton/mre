@@ -67,6 +67,26 @@ The grids are stored packed at H×W; the WRAM grids are 17 wide, so the loader u
 `wFloorRowStride = $11 − width` to skip the margin. After the arrays, bank-5/bank-1
 post-load routines (`Func_05_49EF`, `Func_01_572D`) finish entity setup.
 
+### Record trailer (offset ~`$145`, 256 bytes) — editor-only, undecoded
+
+`ParseFloorRecord` stops after `arr3` (a 10×11 floor's front is `8 + 2·110 + 4 +
+45 + 48 = 325` = `$145` bytes), so the remaining **256 bytes** of the 581-byte
+slot are **never read by gameplay**. They're not pad: each is structured 2bpp-ish
+data (≈16 tiles), mostly distinct per floor (29 unique across 53), occasionally
+byte-identical between floors, and **not** keyed to the `type` byte.
+
+The trailer **is** read — but only by the in-room **level editor** (bank `$12`,
+`src/editor.asm`): `LoadFloorRecordToBuffer` (`$00:$12AB`) copies the whole 581-byte
+record (front + trailer) into `wFloorSnapshot` (`$C586`), where the editor edits
+and saves it back. Gameplay's render/preview never touch it — the "floor preview"
+seen in the menu is `PackFloorSnapshot` re-packing the *live* WRAM grids into the
+same buffer's front (so it reflects current player/item state), trailer left alone.
+
+So the trailer is **opaque editor data**: round-tripped by the editor, ignored by
+the game. Its meaning is still unknown — it's colocated raw (a `.trailer` `db`
+block) in each `src/layout/roomNN.asm`. (No code computes `record+$145` or holds
+those addresses in a pointer table outside this editor path.)
+
 ### Collision grid cells
 `$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = **crate**
 (breakable; an open item on a `$22` cell is "in a crate"). There is no separate
