@@ -531,6 +531,19 @@ Naji_RenderPortraitAlt:
 	call DrawMetasprite
 	ret
 
+; --- Naji dialogue table ---
+; Raw text-script bytecode (see include/text.inc / docs/text_engine.md), the
+; same opcodes the carved scripts express via SCRIPT_* macros:
+;   $0E lo hi bank  set renderer ($6c27=Naji_RenderPortraitTalking,
+;                                 $6c9f=Naji_RenderPortraitAlt)
+;   $0D newline   $04 wait-for-A / end message   $FF end of script
+;   $0A/$0B addr val tgt  IF_EQ/IF_NEQ branch     $09 addr val  write WRAM
+; Each block is entered via a pointer embedded in the scene scripts or an
+; earlier block. Data_18_6fa5 and Data_18_7080 were previously
+; misdisassembled as code (the $18 script byte aliases the Z80 `jr` opcode,
+; which spawned bogus jr labels into the strings); re-carved here as data.
+; Still raw hex like the rest of the table — decoding to SCRIPT_* + db "text"
+; is future work.
 Data_18_6ce3:
 	db $0a, $c1, $c2, $01, $2b, $6f, $0a, $d7, $c2, $00, $9b, $6e, $0a, $d7, $c2, $01
 	db $63, $6d, $0e, $9f, $6c, $18, $59, $6f, $75, $20, $67, $6f, $74, $20, $6f, $75
@@ -582,225 +595,30 @@ Data_18_6e9b:
 	db $6e, $20, $61, $20, $73, $74, $72, $61, $74, $65, $67, $79, $2e, $0d, $47, $6f
 	db $6f, $64, $20, $6c, $75, $63, $6b, $2e, $04, $ff
 
-Func_18_6fa5:
-	dec bc
-	and $d0
-	nop
-	ld [hl+], a
-	ld [hl], b
-	ld c, $9f
-	ld l, h
-	jr Func_18_6fff
-	ld l, b
-	inc l
-	jr nz, Func_18_702d
-	ld l, a
-	ld [hl], l
-	daa
-	ld [hl], d
-	ld h, l
-	jr nz, Func_18_7023
-	ld h, l
-	ld [hl], d
-	ld h, l
-	ld l, $0d
-	ld c, c
-	jr nz, Func_18_7027
-	ld l, c
-	ld h, h
-	ld l, [hl]
-	daa
-	ld [hl], h
-	jr nz, Func_18_703e
-	ld l, b
-	ld l, c
-	ld l, [hl]
-	ld l, e
-	inc b
-	ld a, c
-	ld l, a
-	ld [hl], l
-	daa
-	ld h, h
-	jr nz, Func_18_7045
-	ld [hl], b
-	ld h, l
-	ld l, [hl]
-	jr nz, Func_18_703c
-	ld l, h
-	ld l, h
-	dec c
-	ld [hl], h
-	ld l, b
-	ld h, l
-	jr nz, Func_18_7045
-	ld h, c
-	ld [hl], e
-	ld h, l
-	ld l, l
-	ld h, l
-	ld l, [hl]
-	ld [hl], h
-	inc b
-	ld [hl], d
-	ld l, a
-	ld l, a
-	ld l, l
-	ld [hl], e
-	ld l, $20
-	ld b, a
-	ld [hl], d
-	ld h, l
-	ld h, c
-	ld [hl], h
-	ld hl, $470d
-	ld l, a
-	jr nz, Func_18_705e
-	ld l, b
-	ld h, l
-Func_18_6fff:
-	ld h, c
-	ld h, h
-	jr nz, $7064
-	ld l, [hl]
-	ld h, h
-	inc b
-	ld h, l
-	ld a, b
-	ld [hl], b
-	ld l, h
-	ld l, a
-	ld [hl], d
-	ld h, l
-	jr nz, $7070
-	ld [hl], e
-	jr nz, Func_18_708b
-	ld l, a
-	ld [hl], l
-	dec c
-	ld [hl], b
-	ld l, h
-	ld h, l
-	ld h, c
-	ld [hl], e
-	ld h, l
-	ld l, $04
-	add hl, bc
-	and $d0
-	ld bc, $0eff
-Func_18_7023:
-	sbc a, a
-	ld l, h
-	jr Func_18_706e
-Func_18_7027:
-	ld l, a
-	ld l, a
-	ld h, h
-	ld l, $20
-	ld e, c
-Func_18_702d:
-	ld l, a
-	ld [hl], l
-	jr nz, Func_18_709e
-	ld h, c
-	ld h, h
-	ld h, l
-	dec c
-	ld l, c
-	ld [hl], h
-	jr nz, Func_18_709b
-	ld h, c
-	ld h, e
-	ld l, e
-Func_18_703c:
-	jr nz, Func_18_70b1
-Func_18_703e:
-	ld h, c
-	ld h, [hl]
-	ld h, l
-	ld l, h
-	ld a, c
-	ld l, $04
-Func_18_7045:
-	ld e, c
-	ld l, a
-	ld [hl], l
-	daa
-	ld [hl], d
-	ld h, l
-	jr nz, Func_18_70b4
-	ld h, l
-	ld [hl], h
-	ld [hl], h
-	ld l, c
-	ld l, [hl]
-	ld h, a
-	dec c
-	ld [hl], l
-	ld [hl], e
-	ld h, l
-	ld h, h
-	jr nz, Func_18_70ce
-	ld l, a
-	jr nz, Func_18_70c6
-	ld [hl], h
-Func_18_705e:
-	jr nz, Func_18_70c8
-	ld h, l
-	ld [hl], d
-	ld h, l
-	ld l, $04
-	ld d, d
-	ld h, l
-	ld [hl], e
-	ld [hl], h
-	jr nz, Func_18_70d1
-	ld l, c
-	ld [hl], d
-	ld [hl], e
-Func_18_706e:
-	ld [hl], h
-	jr nz, Func_18_70d2
-	ld l, [hl]
-	ld h, h
-	dec c
-	ld h, e
-	ld l, a
-	ld l, l
-	ld h, l
-	jr nz, Func_18_70dc
-	ld h, c
-	ld h, e
-	ld l, e
-	ld l, $04
-	rst $38
+Data_18_6fa5:
+	db $0b, $e6, $d0, $00, $22, $70, $0e, $9f, $6c, $18, $4f, $68, $2c, $20, $79, $6f
+	db $75, $27, $72, $65, $20, $68, $65, $72, $65, $2e, $0d, $49, $20, $64, $69, $64
+	db $6e, $27, $74, $20, $74, $68, $69, $6e, $6b, $04, $79, $6f, $75, $27, $64, $20
+	db $6f, $70, $65, $6e, $20, $61, $6c, $6c, $0d, $74, $68, $65, $20, $62, $61, $73
+	db $65, $6d, $65, $6e, $74, $04, $72, $6f, $6f, $6d, $73, $2e, $20, $47, $72, $65
+	db $61, $74, $21, $0d, $47, $6f, $20, $61, $68, $65, $61, $64, $20, $61, $6e, $64
+	db $04, $65, $78, $70, $6c, $6f, $72, $65, $20, $61, $73, $20, $79, $6f, $75, $0d
+	db $70, $6c, $65, $61, $73, $65, $2e, $04, $09, $e6, $d0, $01, $ff, $0e, $9f, $6c
+	db $18, $47, $6f, $6f, $64, $2e, $20, $59, $6f, $75, $20, $6d, $61, $64, $65, $0d
+	db $69, $74, $20, $62, $61, $63, $6b, $20, $73, $61, $66, $65, $6c, $79, $2e, $04
+	db $59, $6f, $75, $27, $72, $65, $20, $67, $65, $74, $74, $69, $6e, $67, $0d, $75
+	db $73, $65, $64, $20, $74, $6f, $20, $69, $74, $20, $68, $65, $72, $65, $2e, $04
+	db $52, $65, $73, $74, $20, $66, $69, $72, $73, $74, $20, $61, $6e, $64, $0d, $63
+	db $6f, $6d, $65, $20, $62, $61, $63, $6b, $2e, $04, $ff
 
 Data_18_7080:
-	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c
-Func_18_708b:
-	db $69, $6b, $65, $20, $79, $6f, $75, $0d, $77, $65, $72, $65, $20, $74, $68, $72
-Func_18_709b:
-	db $6f, $77, $6e
-Func_18_709e:
-	db $20, $6f, $75, $74, $2e, $04, $42, $61, $64, $20, $68, $61, $70, $70, $65, $6e
-	db $73, $20, $77
-Func_18_70b1:
-	db $68, $65, $6e
-Func_18_70b4:
-	db $0d, $79, $6f, $75, $20, $74, $72, $79, $20, $74, $6f, $6f, $20, $68, $61, $72
-	db $64, $04
-Func_18_70c6:
-	db $0e, $9f
-Func_18_70c8:
-	db $6c, $18, $42, $65, $20, $63
-Func_18_70ce:
-	db $61, $72, $65
-Func_18_70d1:
-	db $66
-Func_18_70d2:
-	db $75, $6c, $2c, $20, $61, $6e, $64, $0d, $67, $6f
-Func_18_70dc:
-	db $6f, $64, $20, $6c, $75, $63, $6b, $2e, $04, $ff
+	db $0e, $27, $6c, $18, $4c, $6f, $6f, $6b, $73, $20, $6c, $69, $6b, $65, $20, $79
+	db $6f, $75, $0d, $77, $65, $72, $65, $20, $74, $68, $72, $6f, $77, $6e, $20, $6f
+	db $75, $74, $2e, $04, $42, $61, $64, $20, $68, $61, $70, $70, $65, $6e, $73, $20
+	db $77, $68, $65, $6e, $0d, $79, $6f, $75, $20, $74, $72, $79, $20, $74, $6f, $6f
+	db $20, $68, $61, $72, $64, $04, $0e, $9f, $6c, $18, $42, $65, $20, $63, $61, $72
+	db $65, $66, $75, $6c, $2c, $20, $61, $6e, $64, $0d, $67, $6f, $6f, $64, $20, $6c
+	db $75, $63, $6b, $2e, $04, $ff
 
 Data_18_70e6:
 	db $0e, $27, $6c, $18, $47, $6f, $6f, $64, $20, $77, $6f, $72, $6b, $2c, $20, $62
