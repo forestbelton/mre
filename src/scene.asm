@@ -1538,14 +1538,17 @@ Data_05_4b46:
 SECTION "analyzed_014b47", ROMX[$4b47], BANK[$05]
 
 Data_05_4b47:
-	db $c9, $70, $80, $70, $00, $00, $4b, $71, $fe, $70, $00, $00, $d5, $71, $80, $71
-	db $00, $00, $57, $72, $0a, $72, $00, $00, $d9, $72, $8c, $72, $00, $00, $53, $73
-	db $06, $73, $00, $00
+	SCENE_SPRITE_LIST TigerSprites, $0049, $0000
+	SCENE_SPRITE_LIST TigerSprites, $00cb, $007e
+	SCENE_SPRITE_LIST TigerSprites, $0155, $0100
+	SCENE_SPRITE_LIST TigerSprites, $01d7, $018a
+	SCENE_SPRITE_LIST TigerSprites, $0259, $020c
+	SCENE_SPRITE_LIST TigerSprites, $02d3, $0286
 Scene1_VM1:
 	SCENE_BG_DRAW   $68, $0060, $0000
 	SCENE_BG_SOUND  $17
-	SCENE_BG_DRAW   $01, $0060, $735c
-	SCENE_BG_DRAW   $07, $0060, $735c
+	SCENE_BG_DRAW   $01, $0060, MocchiMaps
+	SCENE_BG_DRAW   $07, $0060, MocchiMaps
 	SCENE_BG_ROW    $08, $4080, $01, $03
 	SCENE_BG_ROW    $08, $4098, $01, $03
 	SCENE_BG_ROW    $08, $40b0, $01, $03
@@ -1574,12 +1577,15 @@ Data_05_4be2:
 SECTION "analyzed_014be3", ROMX[$4be3], BANK[$05]
 
 Data_05_4be3:
-	db $89, $71, $58, $71, $00, $00, $c3, $71, $a2, $71, $00, $00, $11, $72, $dc, $71
-	db $00, $00, $6b, $72, $2a, $72, $00, $00, $cd, $72, $84, $72, $00, $00, $3f, $73
-	db $f2, $72, $00, $00
+	SCENE_SPRITE_LIST MocchiSprites, $0031, $0000
+	SCENE_SPRITE_LIST MocchiSprites, $006b, $004a
+	SCENE_SPRITE_LIST MocchiSprites, $00b9, $0084
+	SCENE_SPRITE_LIST MocchiSprites, $0113, $00d2
+	SCENE_SPRITE_LIST MocchiSprites, $0175, $012c
+	SCENE_SPRITE_LIST MocchiSprites, $01e7, $019a
 Scene2_VM1:
-	SCENE_BG_DRAW   $01, $0060, $7260
-	SCENE_BG_DRAW   $ff, $0060, $7260
+	SCENE_BG_DRAW   $01, $0060, HareMaps
+	SCENE_BG_DRAW   $ff, $0060, HareMaps
 
 SECTION "analyzed_014c13", ROMX[$4c13], BANK[$05]
 
@@ -1631,21 +1637,24 @@ Scene2_VM2:
 	SCENE_SPR_SHOW  $01, $30, $20, $4d09
 	SCENE_SPR_SHOW  $38, $00, $00, $0000
 	SCENE_SPR_END
-	db $a9, $70, $80
-	db $70, $00, $00, $b6, $70, $00, $00, $eb, $70, $00, $00, $30, $71, $00, $00, $de
-	db $71, $7d, $71, $00, $00, $fb, $71, $00, $00
+	SCENE_SPRITE_LIST HareSprites, $0029, $0000
+	SCENE_SPRITE_LIST HareSprites, $0036
+	SCENE_SPRITE_LIST HareSprites, $006b
+	SCENE_SPRITE_LIST HareSprites, $00b0
+	SCENE_SPRITE_LIST HareSprites, $015e, $00fd
+	SCENE_SPRITE_LIST HareSprites, $017b
 
 ; --- Scene 4 (wSceneState==4): BG track, root from $05:$461A[4] ($4622) ---
 Scene4_VM1:
 	SCENE_BG_DRAW   $30, $0060, $0000
 	SCENE_BG_WOBBLE_ON
-	SCENE_BG_DRAW   $0c, $0060, $720f
-	SCENE_BG_DRAW   $18, $0060, $73f5
-	SCENE_BG_DRAW   $0c, $0060, $75db
-	SCENE_BG_DRAW   $20, $0060, $77c1
-	SCENE_BG_DRAW   $20, $0060, $79a7
-	SCENE_BG_DRAW   $18, $0060, $7b8d
-	SCENE_BG_DRAW   $40, $0060, $7d73
+	SCENE_BG_DRAW   $0c, $0060, GolemMaps
+	SCENE_BG_DRAW   $18, $0060, GolemMaps + $01e6
+	SCENE_BG_DRAW   $0c, $0060, GolemMaps + $03cc
+	SCENE_BG_DRAW   $20, $0060, GolemMaps + $05b2
+	SCENE_BG_DRAW   $20, $0060, GolemMaps + $0798
+	SCENE_BG_DRAW   $18, $0060, GolemMaps + $097e
+	SCENE_BG_DRAW   $40, $0060, GolemMaps + $0b64
 	SCENE_BG_END
 
 ; --- Scene 4: sprite track, root from $05:$462A[4] ($4632) ---
@@ -1659,127 +1668,129 @@ Scene4_VM2:
 SECTION "analyzed_014d54", ROMX[$4d54], BANK[$05]
 
 Data_05_4d54:
-	db $80, $70, $00, $00, $01, $71, $00, $00, $8a, $71, $00, $00
+	SCENE_SPRITE_LIST GolemSprites, $0000
+	SCENE_SPRITE_LIST GolemSprites, $0081
+	SCENE_SPRITE_LIST GolemSprites, $010a
 Scene5_VM1:
 	SCENE_BG_DRAW   $72, $0060, $0000
 	SCENE_BG_SOUND  $01
-	SCENE_BG_DRAW   $08, $00ca, $739d
-	SCENE_BG_DRAW   $06, $00ca, $73d3
-	SCENE_BG_DRAW   $06, $00ca, $7409
-	SCENE_BG_DRAW   $06, $00ca, $743f
-	SCENE_BG_DRAW   $08, $00ca, $7475
-	SCENE_BG_DRAW   $04, $00ca, $74ab
-	SCENE_BG_DRAW   $04, $00ca, $74e1
+	SCENE_BG_DRAW   $08, $00ca, SuezoMaps
+	SCENE_BG_DRAW   $06, $00ca, SuezoMaps + $0036
+	SCENE_BG_DRAW   $06, $00ca, SuezoMaps + $006c
+	SCENE_BG_DRAW   $06, $00ca, SuezoMaps + $00a2
+	SCENE_BG_DRAW   $08, $00ca, SuezoMaps + $00d8
+	SCENE_BG_DRAW   $04, $00ca, SuezoMaps + $010e
+	SCENE_BG_DRAW   $04, $00ca, SuezoMaps + $0144
 	SCENE_BG_SOUND  $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $06, $0085, $7517
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $06, $0085, $7581
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $06, $0085, $75eb
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $06, $0085, $7655
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $04, $0085, $76bf
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $04, $0085, $7729
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $10, $0085, $7793
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $04, $0061, $78e1
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7927
-	SCENE_BG_DRAW   $04, $0161, $77fd
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $796d
-	SCENE_BG_DRAW   $04, $0161, $7823
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $06, $0085, SuezoMaps + $017a
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $06, $0085, SuezoMaps + $01e4
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $06, $0085, SuezoMaps + $024e
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $06, $0085, SuezoMaps + $02b8
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $04, $0085, SuezoMaps + $0322
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $04, $0085, SuezoMaps + $038c
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $10, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $04, $0061, SuezoMaps + $0544
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $058a
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $0460
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $05d0
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $0486
 	SCENE_BG_SOUND  $02
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79b3
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $0616
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79f9
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $065c
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a3f
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06a2
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a85
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06e8
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_SOUND  $02
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79b3
-	SCENE_BG_DRAW   $04, $0161, $7895
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $0616
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04f8
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79f9
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $065c
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a3f
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06a2
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a85
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06e8
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_SOUND  $02
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79b3
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $0616
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79f9
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $065c
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a3f
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06a2
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a85
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06e8
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_SOUND  $02
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79b3
-	SCENE_BG_DRAW   $04, $0161, $7895
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $0616
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04f8
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $79f9
-	SCENE_BG_DRAW   $04, $0161, $7849
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $065c
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04ac
 	SCENE_BG_ROW    $00, $4080, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a3f
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06a2
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_ROW    $00, $4088, $01, $01
-	SCENE_BG_DRAW   $00, $00ca, $74e1
-	SCENE_BG_DRAW   $00, $0085, $7793
-	SCENE_BG_DRAW   $00, $0061, $7a85
-	SCENE_BG_DRAW   $04, $0161, $786f
+	SCENE_BG_DRAW   $00, $00ca, SuezoMaps + $0144
+	SCENE_BG_DRAW   $00, $0085, SuezoMaps + $03f6
+	SCENE_BG_DRAW   $00, $0061, SuezoMaps + $06e8
+	SCENE_BG_DRAW   $04, $0161, SuezoMaps + $04d2
 	SCENE_BG_END
 Scene5_VM2:
 	SCENE_SPR_SHOW  $08, $70, $30, $5058
@@ -1803,13 +1814,17 @@ Data_05_5057:
 SECTION "analyzed_015058", ROMX[$5058], BANK[$05]
 
 Data_05_5058:
-	db $f1, $70, $a0, $70, $00, $00, $63, $71, $12, $71, $00, $00, $d5, $71, $84, $71
-	db $00, $00, $f6, $71, $00, $00, $98, $72, $47, $72, $00, $00, $0a, $73, $b9, $72
-	db $00, $00, $7c, $73, $2b, $73, $00, $00
+	SCENE_SPRITE_LIST SuezoSprites, $0051, $0000
+	SCENE_SPRITE_LIST SuezoSprites, $00c3, $0072
+	SCENE_SPRITE_LIST SuezoSprites, $0135, $00e4
+	SCENE_SPRITE_LIST SuezoSprites, $0156
+	SCENE_SPRITE_LIST SuezoSprites, $01f8, $01a7
+	SCENE_SPRITE_LIST SuezoSprites, $026a, $0219
+	SCENE_SPRITE_LIST SuezoSprites, $02dc, $028b
 Scene3_VM1:
 	SCENE_BG_DRAW   $72, $0060, $0000
 	SCENE_BG_DRAW   $06, $0060, $0000
-	SCENE_BG_DRAW   $06, $0065, $4000
+	SCENE_BG_DRAW   $06, $0065, GaliMaps
 	SCENE_BG_DRAW   $06, $0060, $0000
 	SCENE_BG_DRAW   $06, $0060, $0000
 	SCENE_BG_DRAW   $06, $0060, $0000
@@ -1835,83 +1850,83 @@ Scene3_VM1:
 	SCENE_BG_DRAW   $03, $0060, $0000
 	SCENE_BG_SOUND  $1c
 	SCENE_BG_SCROLL $fc
-	SCENE_BG_DRAW   $05, $0060, $40f6
-	SCENE_BG_DRAW   $05, $0060, $43fc
-	SCENE_BG_DRAW   $05, $0060, $4702
-	SCENE_BG_DRAW   $05, $0060, $4a08
-	SCENE_BG_DRAW   $05, $0060, $4d0e
-	SCENE_BG_DRAW   $05, $0060, $5014
-	SCENE_BG_DRAW   $05, $0060, $531a
-	SCENE_BG_DRAW   $05, $0060, $5620
-	SCENE_BG_DRAW   $05, $0060, $5926
-	SCENE_BG_DRAW   $05, $0060, $5c2c
-	SCENE_BG_DRAW   $05, $0060, $5f32
-	SCENE_BG_DRAW   $05, $0060, $6238
-	SCENE_BG_DRAW   $05, $0060, $40f6
-	SCENE_BG_DRAW   $05, $0060, $43fc
-	SCENE_BG_DRAW   $05, $0060, $4702
-	SCENE_BG_DRAW   $05, $0060, $4a08
-	SCENE_BG_DRAW   $05, $0060, $4d0e
-	SCENE_BG_DRAW   $05, $0060, $5014
-	SCENE_BG_DRAW   $05, $0060, $531a
-	SCENE_BG_DRAW   $05, $0060, $5620
-	SCENE_BG_DRAW   $05, $0060, $5926
-	SCENE_BG_DRAW   $05, $0060, $5c2c
-	SCENE_BG_DRAW   $05, $0060, $5f32
-	SCENE_BG_DRAW   $05, $0060, $6238
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1f32
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $2238
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $1f32
+	SCENE_BG_DRAW   $05, $0060, GaliMaps + $2238
 	SCENE_BG_SCROLL $fd
-	SCENE_BG_DRAW   $06, $0060, $40f6
-	SCENE_BG_DRAW   $06, $0060, $43fc
-	SCENE_BG_DRAW   $06, $0060, $4702
-	SCENE_BG_DRAW   $06, $0060, $4a08
-	SCENE_BG_DRAW   $06, $0060, $4d0e
-	SCENE_BG_DRAW   $06, $0060, $5014
-	SCENE_BG_DRAW   $06, $0060, $531a
-	SCENE_BG_DRAW   $06, $0060, $5620
-	SCENE_BG_DRAW   $06, $0060, $5926
-	SCENE_BG_DRAW   $06, $0060, $5c2c
-	SCENE_BG_DRAW   $06, $0060, $5f32
-	SCENE_BG_DRAW   $06, $0060, $6238
-	SCENE_BG_DRAW   $06, $0060, $40f6
-	SCENE_BG_DRAW   $06, $0060, $43fc
-	SCENE_BG_DRAW   $06, $0060, $4702
-	SCENE_BG_DRAW   $06, $0060, $4a08
-	SCENE_BG_DRAW   $06, $0060, $4d0e
-	SCENE_BG_DRAW   $06, $0060, $5014
-	SCENE_BG_DRAW   $06, $0060, $531a
-	SCENE_BG_DRAW   $06, $0060, $5620
-	SCENE_BG_DRAW   $06, $0060, $5926
-	SCENE_BG_DRAW   $06, $0060, $5c2c
-	SCENE_BG_DRAW   $06, $0060, $5f32
-	SCENE_BG_DRAW   $06, $0060, $6238
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1f32
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $2238
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $1f32
+	SCENE_BG_DRAW   $06, $0060, GaliMaps + $2238
 	SCENE_BG_SCROLL $fe
-	SCENE_BG_DRAW   $07, $0060, $40f6
-	SCENE_BG_DRAW   $07, $0060, $43fc
-	SCENE_BG_DRAW   $07, $0060, $4702
-	SCENE_BG_DRAW   $07, $0060, $4a08
-	SCENE_BG_DRAW   $07, $0060, $4d0e
-	SCENE_BG_DRAW   $07, $0060, $5014
-	SCENE_BG_DRAW   $07, $0060, $531a
-	SCENE_BG_DRAW   $07, $0060, $5620
-	SCENE_BG_DRAW   $07, $0060, $5926
-	SCENE_BG_DRAW   $07, $0060, $5c2c
-	SCENE_BG_DRAW   $07, $0060, $5f32
-	SCENE_BG_DRAW   $07, $0060, $6238
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $1f32
+	SCENE_BG_DRAW   $07, $0060, GaliMaps + $2238
 	SCENE_BG_SCROLL $ff
-	SCENE_BG_DRAW   $08, $0060, $40f6
-	SCENE_BG_DRAW   $08, $0060, $43fc
-	SCENE_BG_DRAW   $08, $0060, $4702
-	SCENE_BG_DRAW   $08, $0060, $4a08
-	SCENE_BG_DRAW   $08, $0060, $4d0e
-	SCENE_BG_DRAW   $08, $0060, $5014
-	SCENE_BG_DRAW   $08, $0060, $531a
-	SCENE_BG_DRAW   $08, $0060, $5620
-	SCENE_BG_DRAW   $08, $0060, $5926
-	SCENE_BG_DRAW   $08, $0060, $5c2c
-	SCENE_BG_DRAW   $08, $0060, $5f32
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $00f6
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $03fc
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $0702
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $0a08
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $0d0e
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $1014
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $131a
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $1620
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $1926
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $1c2c
+	SCENE_BG_DRAW   $08, $0060, GaliMaps + $1f32
 	SCENE_BG_SCROLL $00
 	SCENE_BG_SOUND  $00
-	SCENE_BG_DRAW   $30, $0060, $6238
+	SCENE_BG_DRAW   $30, $0060, GaliMaps + $2238
 	SCENE_BG_END
 Scene3_VM2:
 	SCENE_SPR_SOUND $18
@@ -1981,22 +1996,25 @@ Scene3_VM2:
 	SCENE_SPR_SHOW  $06, $30, $28, $5426
 	SCENE_SPR_SHOW  $06, $30, $28, $541a
 	SCENE_SPR_JUMP  $53ed
-	db $cd, $70, $80, $70, $00, $00
-	db $43, $71, $ee, $70, $00, $00, $b5, $71, $64, $71, $00, $00, $1f, $72, $d6, $71
-	db $00, $00, $8d, $72, $38, $72, $00, $00, $ff, $72, $a6, $72, $00, $00, $71, $73
-	db $18, $73, $00, $00
+	SCENE_SPRITE_LIST GaliSprites, $004d, $0000
+	SCENE_SPRITE_LIST GaliSprites, $00c3, $006e
+	SCENE_SPRITE_LIST GaliSprites, $0135, $00e4
+	SCENE_SPRITE_LIST GaliSprites, $019f, $0156
+	SCENE_SPRITE_LIST GaliSprites, $020d, $01b8
+	SCENE_SPRITE_LIST GaliSprites, $027f, $0226
+	SCENE_SPRITE_LIST GaliSprites, $02f1, $0298
 Scene6_VM1:
 	SCENE_BG_DRAW   $5a, $0060, $0000
-	SCENE_BG_DRAW   $04, $0060, $746e
-	SCENE_BG_DRAW   $04, $0060, $7654
-	SCENE_BG_DRAW   $48, $0060, $653e
-	SCENE_BG_DRAW   $04, $0060, $6724
-	SCENE_BG_DRAW   $04, $0060, $690a
+	SCENE_BG_DRAW   $04, $0060, PhenixMaps + $0f30
+	SCENE_BG_DRAW   $04, $0060, PhenixMaps + $1116
+	SCENE_BG_DRAW   $48, $0060, PhenixMaps
+	SCENE_BG_DRAW   $04, $0060, PhenixMaps + $01e6
+	SCENE_BG_DRAW   $04, $0060, PhenixMaps + $03cc
 	SCENE_BG_SOUND  $13
-	SCENE_BG_DRAW   $04, $0060, $6af0
-	SCENE_BG_DRAW   $06, $0060, $6cd6
-	SCENE_BG_DRAW   $06, $0060, $6ebc
-	SCENE_BG_DRAW   $38, $0060, $70a2
+	SCENE_BG_DRAW   $04, $0060, PhenixMaps + $05b2
+	SCENE_BG_DRAW   $06, $0060, PhenixMaps + $0798
+	SCENE_BG_DRAW   $06, $0060, PhenixMaps + $097e
+	SCENE_BG_DRAW   $38, $0060, PhenixMaps + $0b64
 	SCENE_BG_SOUND  $12
 	SCENE_BG_ROW    $04, $4080, $01, $01
 	SCENE_BG_ROW    $04, $4088, $01, $01
@@ -2059,13 +2077,23 @@ Data_05_5587:
 SECTION "analyzed_015588", ROMX[$5588], BANK[$05]
 
 Data_05_5588:
-	db $3a, $78, $00, $00, $43, $78, $00, $00, $54, $78, $00, $00, $6d, $78, $00, $00
-	db $a6, $78, $00, $00, $e7, $78, $00, $00, $30, $79, $00, $00, $51, $79, $00, $00
-	db $82, $79, $00, $00, $d3, $79, $00, $00, $24, $7a, $00, $00, $75, $7a, $00, $00
-	db $16, $7b, $00, $00, $b7, $7b, $00, $00
+	SCENE_SPRITE_LIST PhenixSprites, $0000
+	SCENE_SPRITE_LIST PhenixSprites, $0009
+	SCENE_SPRITE_LIST PhenixSprites, $001a
+	SCENE_SPRITE_LIST PhenixSprites, $0033
+	SCENE_SPRITE_LIST PhenixSprites, $006c
+	SCENE_SPRITE_LIST PhenixSprites, $00ad
+	SCENE_SPRITE_LIST PhenixSprites, $00f6
+	SCENE_SPRITE_LIST PhenixSprites, $0117
+	SCENE_SPRITE_LIST PhenixSprites, $0148
+	SCENE_SPRITE_LIST PhenixSprites, $0199
+	SCENE_SPRITE_LIST PhenixSprites, $01ea
+	SCENE_SPRITE_LIST PhenixSprites, $023b
+	SCENE_SPRITE_LIST PhenixSprites, $02dc
+	SCENE_SPRITE_LIST PhenixSprites, $037d
 Scene7_VM1:
-	SCENE_BG_DRAW   $02, $0188, $70d0
-	SCENE_BG_DRAW   $1e, $0188, $70d0
+	SCENE_BG_DRAW   $02, $0188, Scene7Maps
+	SCENE_BG_DRAW   $1e, $0188, Scene7Maps
 	SCENE_BG_DRAW   $38, $0000, $0000
 	SCENE_BG_DRAW   $08, $0000, $0000
 	SCENE_BG_DRAW   $06, $0000, $0000
@@ -2137,8 +2165,8 @@ Scene7_VM1:
 	SCENE_BG_DRAW   $07, $0000, $0000
 	SCENE_BG_DRAW   $07, $0000, $0000
 	SCENE_BG_DRAW   $01, $0000, $0000
-	SCENE_BG_DRAW   $04, $00a6, $70e6
-	SCENE_BG_DRAW   $04, $00a6, $70e6
+	SCENE_BG_DRAW   $04, $00a6, Scene7Maps + $0016
+	SCENE_BG_DRAW   $04, $00a6, Scene7Maps + $0016
 	SCENE_BG_ROW    $08, $70b0, $02, $01
 	SCENE_BG_ROW    $08, $70b8, $02, $01
 	SCENE_BG_ROW    $08, $70c0, $02, $01
@@ -2238,11 +2266,24 @@ Data_05_596d:
 SECTION "analyzed_01596e", ROMX[$596e], BANK[$05]
 
 Data_05_596e:
-	db $6c, $71, $00, $00, $ad, $71, $00, $00, $e6, $71, $00, $00, $4f, $72, $00, $00
-	db $94, $72, $00, $00, $bd, $72, $00, $00, $d6, $72, $00, $00, $e7, $72, $00, $00
-	db $08, $73, $00, $00, $29, $73, $00, $00, $4a, $73, $00, $00, $6b, $73, $00, $00
-	db $7c, $73, $00, $00, $9d, $73, $00, $00, $be, $73, $00, $00, $df, $73, $00, $00
-	db $f0, $73, $00, $00, $0c, $14
+	db $6c, $71, $00, $00
+	SCENE_SPRITE_LIST Scene7Sprites, $0041
+	SCENE_SPRITE_LIST Scene7Sprites, $007a
+	SCENE_SPRITE_LIST Scene7Sprites, $00e3
+	SCENE_SPRITE_LIST Scene7Sprites, $0128
+	SCENE_SPRITE_LIST Scene7Sprites, $0151
+	SCENE_SPRITE_LIST Scene7Sprites, $016a
+	SCENE_SPRITE_LIST Scene7Sprites, $017b
+	SCENE_SPRITE_LIST Scene7Sprites, $019c
+	SCENE_SPRITE_LIST Scene7Sprites, $01bd
+	SCENE_SPRITE_LIST Scene7Sprites, $01de
+	SCENE_SPRITE_LIST Scene7Sprites, $01ff
+	SCENE_SPRITE_LIST Scene7Sprites, $0210
+	SCENE_SPRITE_LIST Scene7Sprites, $0231
+	SCENE_SPRITE_LIST Scene7Sprites, $0252
+	SCENE_SPRITE_LIST Scene7Sprites, $0273
+	SCENE_SPRITE_LIST Scene7Sprites, $0284
+	db $0c, $14
 
 Data_05_59b4:
 	db $a8, $5a, $b8, $59
