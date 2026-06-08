@@ -75,17 +75,23 @@ slot are **never read by gameplay**. They're not pad: each is structured 2bpp-is
 data (≈16 tiles), mostly distinct per floor (29 unique across 53), occasionally
 byte-identical between floors, and **not** keyed to the `type` byte.
 
-The trailer **is** read — but only by the in-room **level editor** (bank `$12`,
-`src/editor.asm`): `LoadFloorRecordToBuffer` (`$00:$12AB`) copies the whole 581-byte
-record (front + trailer) into `wFloorSnapshot` (`$C586`), where the editor edits
-and saves it back. Gameplay's render/preview never touch it — the "floor preview"
-seen in the menu is `PackFloorSnapshot` re-packing the *live* WRAM grids into the
-same buffer's front (so it reflects current player/item state), trailer left alone.
+The trailer is only ever **copied wholesale** — never interpreted. The in-room
+**level editor** (bank `$12`, `src/editor.asm`) is the one thing that reads it:
+`LoadFloorRecordToBuffer` (`$00:$12AB`) copies the whole 581-byte record (front +
+trailer) into `wFloorSnapshot` (`$C586`); the editor edits only the **front**
+(grids/entities, via `wEditCursor` → `wFloorGrid`) and saves the whole record to
+**SRAM** with an XOR checksum (`Func_00_12ee`; cart-RAM dests in `Data_12_4a61`).
+The trailer rides along untouched. The menu "floor preview" is `PackFloorSnapshot`
+re-packing the *live* WRAM grids into the buffer's front (so it tracks current
+player/item state), trailer left alone.
 
-So the trailer is **opaque editor data**: round-tripped by the editor, ignored by
-the game. Its meaning is still unknown — it's colocated raw (a `.trailer` `db`
-block) in each `src/layout/roomNN.asm`. (No code computes `record+$145` or holds
-those addresses in a pointer table outside this editor path.)
+So **no code anywhere reads or writes individual trailer bytes** — not gameplay,
+not even the editor (nothing accesses the buffer's trailer region `$C6CB–$C7CA`,
+and the trailer's ROM addresses appear in no pointer table). It's preserved purely
+because the editor persists the record as one opaque blob. Most likely it's
+**vestigial output of the level-authoring tool** (a thumbnail / source layer the
+GB ROM never consumes): structured 2bpp-ish data, but dead weight at runtime. It's
+colocated raw (a `.trailer` `db` block) in each `src/layout/roomNN.asm`.
 
 ### Collision grid cells
 `$20` = outer border · `$21` = wall · `$00` = walkable floor · `$22` = **crate**

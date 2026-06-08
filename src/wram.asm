@@ -166,9 +166,10 @@ SECTION "wram_floor_snapshot", WRAM0[$C586]
 ; preview (bank $12, src/editor.asm). LoadFloorRecordToBuffer copies a whole
 ; record here (the 325-byte front AND the 256-byte trailer); PackFloorSnapshot
 ; re-packs the *live* WRAM floor (current player/item state) into the front.
-; The editor edits and saves the whole record. Gameplay never reads this -- it
-; runs off the WRAM grids expanded by ParseFloorRecord. This is the only path
-; that touches the record trailer; see docs/floor_data.md.
+; The editor edits only the front (grids/entities) and saves the WHOLE record to
+; SRAM with a checksum; the trailer is carried along untouched -- no code reads
+; or writes individual trailer bytes. Gameplay never reads this -- it runs off
+; the WRAM grids expanded by ParseFloorRecord. See docs/floor_data.md.
 wFloorSnapshot::    ds $245
 
 
