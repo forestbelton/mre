@@ -1,6 +1,7 @@
 ; Monster detail / portrait display screen (banks $0f + $32). See docs/monster_detail_screen.md
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "monster.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "sound_ids.inc"
@@ -1449,13 +1450,19 @@ Func_0f_4c20:
 
 ; Indexed by wDisplayMonster (0-6). See docs/monster_detail_screen.md.
 MonsterPortraitTileTable:
-	; -> bank $3c portrait tile data ($800 = 128 tiles each), keyed by monster id
-	dw MonsterPortraitTiles_Tiger, MonsterPortraitTiles_Mocchi, MonsterPortraitTiles_Hare
-	dw MonsterPortraitTiles_Gali, MonsterPortraitTiles_Golem, MonsterPortraitTiles_Suezo
-	dw MonsterPortraitTiles_Phoenix
+	enum_table SUMMON, dw, \
+		.TIGER = MonsterPortraitTiles_Tiger, \
+		.MOCCHI = MonsterPortraitTiles_Mocchi, \
+		.HARE = MonsterPortraitTiles_Hare, \
+		.GALI = MonsterPortraitTiles_Gali, \
+		.GOLEM = MonsterPortraitTiles_Golem, \
+		.SUEZO = MonsterPortraitTiles_Suezo, \
+		.PHOENIX = MonsterPortraitTiles_Phoenix
+
 MonsterPortraitMetaTable:
 	; -> a MonsterPortraitMetaRecords entry below
 	db $59, $4c, $5f, $4c, $65, $4c, $6b, $4c, $71, $4c, $77, $4c, $7d, $4c
+
 MonsterPortraitMetaRecords:
 	; [meta1, meta2, bgmap] little-endian bank-$0f pointers (0 = none)
 	dw $77e9, $0000, $7511 ; 0 Tiger
