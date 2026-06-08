@@ -1256,7 +1256,7 @@ Func_05_48a5:
 	FAR_CALL $10, Func_10_4018
 	FAR_CALL $02, Func_02_4000
 	FAR_CALL $16, Func_16_4016
-	FAR_CALL $17, Func_17_4122
+	FAR_CALL $17, SpecialScene_LoadGraphics
 	call Func_05_48c9
 	ret
 Func_05_48c9:
@@ -1292,7 +1292,7 @@ Func_05_48fc:
 	FAR_CALL $02, Func_02_4010
 	call Func_05_4918
 	FAR_CALL $10, Func_10_40a4
-	FAR_CALL $17, Func_17_416c
+	FAR_CALL $17, SpecialScene_LoadTilemap
 	ret
 Func_05_4918:
 	ld a, [wRoomType]

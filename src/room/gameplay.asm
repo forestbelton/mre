@@ -87,7 +87,7 @@ Func_01_439e:
 	call Func_00_083c
 	FAR_CALL $05, Func_05_4884
 	call LoadFloorByMode
-	FAR_CALL $17, Func_17_40b1
+	FAR_CALL $17, SpecialScene_SelectIndex
 	call FloorPostLoadCleanup
 	FAR_CALL $05, Func_05_4931
 	xor a
