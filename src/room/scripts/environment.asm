@@ -2,6 +2,8 @@
 ; explosion, items, shards, the Zan exit flame, and the vestigial Spawn3F.
 ; See docs/entity_scripts.md.
 
+INCLUDE "entity_script.inc"
+
 SECTION "scripts_spawn3f", ROMX[$7092], BANK[$03]
 
 Spawn3F_Sweep:

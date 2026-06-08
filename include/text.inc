@@ -12,7 +12,6 @@
 IF !DEF(TEXT_INC)
 DEF TEXT_INC EQU 1
 
-INCLUDE "wram.inc"
 ; rgbds-structs powers the named-operand support. room.inc usually pulls it in
 ; first; guard so a standalone script assembly still gets it (and we never
 ; double-include the unguarded library).

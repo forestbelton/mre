@@ -1,6 +1,9 @@
 ; Save-to-SRAM + the level editor (layout/room_bonus_* / room_unused_* are its room data)
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "analyzed_048000", ROMX[$4000], BANK[$12]
 
 Func_12_4000:

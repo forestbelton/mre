@@ -36,6 +36,14 @@ FIXARGS := --validate \
 # needed). Wildcards are evaluated at parse time, which is fine: these are all
 # committed source. find covers subdirs (src/scripts/, assets/<name>/).
 SRC_ASM    := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
+# A .asm pulled in by another .asm via INCLUDE is part of that file's translation
+# unit, NOT its own object — e.g. the sound driver is INCLUDEd into both bank $3e
+# and $3f. Compile only the "root" .asm (every .asm minus those nested includes);
+# each root assembles to its own object and they link together.
+NESTED_ASM := $(sort $(shell grep -hoE 'INCLUDE "[^"]+\.asm"' $(SRC_ASM) 2>/dev/null | sed -E 's#INCLUDE "(.*)"#$(SRC_DIR)/\1#'))
+ROOT_ASM   := $(filter-out $(NESTED_ASM),$(SRC_ASM))
+OBJ_DIR    := $(BUILD_DIR)/obj
+OBJS       := $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(ROOT_ASM))
 INCLUDES   := $(wildcard include/*.inc)
 ASSET_SRC  := $(shell find assets -type f 2>/dev/null)
 # raw_gfx is 1:1 PNG -> 2bpp (rebuilt per-PNG); the PNG-driven assets are gated by
@@ -63,9 +71,15 @@ verify: $(OUT)
 
 rom: $(OUT)
 
-$(OUT): $(SRC_ASM) $(INCLUDES) $(GFX_2BPP) $(ASSET_STAMP) $(LINKSCRIPT) | $(BUILD_DIR)
-	$(RGBASM) -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $(BUILD_DIR)/main.o $(SRC_DIR)/main.asm
-	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -o $@ $(BUILD_DIR)/main.o
+# Each root .asm -> its own object. -E (export-all) makes every label visible to
+# the linker so cross-file references resolve without hand-written EXPORTs; EQU
+# constants are NOT exported, so the constant/macro .inc files stay per-object.
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm $(INCLUDES) $(NESTED_ASM) $(GFX_2BPP) $(ASSET_STAMP) | $(BUILD_DIR)
+	@mkdir -p $(dir $@)
+	$(RGBASM) -E -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $@ $<
+
+$(OUT): $(OBJS) $(LINKSCRIPT) | $(BUILD_DIR)
+	$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -n $@.sym -o $@ $(OBJS)
 	$(RGBFIX) $(FIXARGS) $@
 
 # raw_gfx: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.

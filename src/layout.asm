@@ -16,6 +16,9 @@
 ; map.json labels[]); two whose behaviour is clear but whose purpose isn't
 ; (Func_00_16ad, Func_00_17c0) keep their auto-generated names with a note.
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "layout_code", ROM0[$166f]
 
 ; -----------------------------------------------------------------------------

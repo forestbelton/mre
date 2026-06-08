@@ -7,11 +7,13 @@
 ; RunIntroScene / IntroSceneTable. It calls shared engine routines
 ; (CopyBytesBanked, etc.) defined in analyzed.asm, and references the logo's
 ; tile/palette/map data (TecmoLogo*) carved into src/gfx/logo.asm.
-INCLUDE "hram.inc"
 
 ; NB: Using BANK(TecmoLogoTiles) as the definition does not work as the bank is
 ; only known at link time. There may be a workaround possible that doesn't
 ; require hardcoding this value.
+
+INCLUDE "hardware.inc"
+
 DEF TECMO_LOGO_GFX_BANK EQU $27
 
 SECTION "DrawTecmoLogo", ROMX[$5418], BANK[$30]

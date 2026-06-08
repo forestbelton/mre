@@ -2,6 +2,8 @@
 ; boss floors after 10/20/40/50/60 -- Selketo/Ferious/Punisher/Dragon(+body)/Zan
 ; (engine types $50-$55), spawned via Data_01_4335. See docs/entity_scripts.md.
 
+INCLUDE "entity_script.inc"
+
 SECTION "scripts_boss", ROMX[$7d36], BANK[$03]
 
 ; --- The five tower bosses, engine types $50-$55 ($7d36-$7fec). Fought on the

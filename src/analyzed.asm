@@ -3,6 +3,9 @@
 ; main.asm). What remains is still-unsorted ROMX code/data, each section
 ; placed by its explicit ROMX[$xxxx]/BANK[$nn] address.
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "analyzed_008000", ROMX[$4000], BANK[$02]
 
 Func_02_4000:

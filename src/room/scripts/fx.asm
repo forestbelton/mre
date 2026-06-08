@@ -2,6 +2,8 @@
 ; effects dispatched by id from the bank-1 pointer tables -- Popup_*, Glide_*,
 ; Burst*, Vanish_*, Fly_*, Shatter_*. See docs/entity_scripts.md.
 
+INCLUDE "entity_script.inc"
+
 SECTION "scripts_fx_lo", ROMX[$7046], BANK[$03]
 
 ; --- FX/animation library, part 1 ($7046): single-frame timed popups

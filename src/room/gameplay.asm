@@ -1,6 +1,10 @@
 ; Tower in-room gameplay: stairs, pickups/item effects, floor timers, monster transforms, key unlock, summon (drives the bank-$03 entity engine)
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+INCLUDE "scene.inc"
+
 SECTION "analyzed_0042c9", ROMX[$42c9], BANK[$01]
 
 Data_01_42c9:

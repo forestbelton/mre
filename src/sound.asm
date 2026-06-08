@@ -21,6 +21,10 @@
 
 
 ; ----- HOME: public sound API -------------------------------------------------
+
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "Sound API", ROM0
 
 ResetSoundEngine:

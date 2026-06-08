@@ -1,6 +1,8 @@
 ; Player-avatar entity scripts (bank $03): walk / push / pull / grab / carry /
 ; throw / kick state machine. See docs/entity_scripts.md.
 
+INCLUDE "entity_script.inc"
+
 SECTION "scripts_player", ROMX[$72d6], BANK[$03]
 
 Player_SpawnIntro:

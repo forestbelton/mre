@@ -2,6 +2,8 @@
 ; each a Stand/Chase/Windup/Hurt/... state machine, plus the shared velocity
 ; tables they read via ent_vel_x_indexed. See docs/entity_scripts.md.
 
+INCLUDE "entity_script.inc"
+
 SECTION "scripts_vel", ROMX[$6fc4], BANK[$03]
 
 ; --- entity horizontal-velocity tables: 16-bit values (db lo/hi pairs) read by

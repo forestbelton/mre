@@ -1,6 +1,10 @@
 ; Full-screen draw routines: Town/Title/Intro/Tower screens (gfx/screen/* holds their data)
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+INCLUDE "scene.inc"
+
 SECTION "analyzed_0c0000", ROMX[$4000], BANK[$30]
 
 Func_30_4000:

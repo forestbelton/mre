@@ -1,6 +1,10 @@
 ; Bank $05 — the intro/cutscene SCENE engine and its assets. A two-level scene-scripting VM (SceneBgVm_Dispatch BG track + SceneSprVm_Enter sprite track, driven per-frame by SceneRunFrame, set up by SceneInit/44d8) plays the eight scenes selected by wSceneState. Scene bytecode is carved into SCENE_BG_*/SCENE_SPR_* macros (see include/scene_script.inc, docs/screen_tilemaps.md): Scene{0-7}_VM1/_VM2. Per-scene dispatch/param tables live around $461a; the rest is CopyBgMap tilemap descriptors + metasprite lists. (Also hosts a small floor-fill helper at FloorFillTiles that merely abuts the scripts.)
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+INCLUDE "scene_script.inc"
+
 SECTION "analyzed_014000", ROMX[$4000], BANK[$05]
 
 SceneInit:

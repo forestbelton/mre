@@ -36,6 +36,8 @@
 ; names and are honest about being undecoded. This file is hand-editable: extract
 ; only appends map.json sections not already covered by a SECTION here.
 
+INCLUDE "util.inc"
+
 SECTION "Room engine", ROMX[$4000], BANK[$03]
 
 UpdateEntities:

@@ -1,6 +1,9 @@
 ; ROM bank $31 -- Game Link cable exchange protocol (LinkExchange*). Carved out of analyzed.asm; section
 ; names and placement are unchanged (byte-exact). 1 sections.
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "analyzed_0c4000", ROMX[$4000], BANK[$31]
 
 Func_31_4000:

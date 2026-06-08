@@ -1,3 +1,6 @@
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 INCLUDE "enum.inc"
 INCLUDE "monster.inc"
 

@@ -1,6 +1,9 @@
 ; Monster detail / portrait display screen (banks $0f + $32). See docs/monster_detail_screen.md
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+
 SECTION "analyzed_03c000", ROMX[$4000], BANK[$0f]
 
 Func_0f_4000:

@@ -11,6 +11,8 @@
 ; tools/script_disasm.py — hand-curate freely; the extractor's
 ; append-only rule on non-auto-managed files preserves your edits.
 
+INCLUDE "hardware.inc"
+
 INCLUDE "text.inc"
 
 SECTION "Tempest script", ROMX

@@ -4,6 +4,10 @@
 ; shared library routines the rest of the game far-calls into. Sections are
 ; placed by their explicit ROM0[$xxxx] addresses.
 
+INCLUDE "hardware.inc"
+INCLUDE "util.inc"
+INCLUDE "scene.inc"
+
 SECTION "RST_00", ROM0[$00]
 
 ; AddAToHL adds A to HL.
