@@ -5,7 +5,7 @@ INCLUDE "room.inc"
 SECTION "Gali room", ROMX
 
 RoomBonusGali:
-    dstruct Header, , .Type=$67, .SpawnX=1, .SpawnY=7, .Pad=$00, .Param0=$00, .Param1=$00, .Height=10, .Width=11
+    dstruct Header, , .Id=$67, .SpawnX=1, .SpawnY=7, .Pad=$00, .Tileset=$00, .Palette=$00, .Height=10, .Width=11
     assert @ - RoomBonusGali == sizeof_Header
 
     ; collision grid (10 rows x 11)

@@ -213,8 +213,11 @@ wActiveMonster::    ds 1    ; $CFBB: index (0-6) of the currently-selected partn
                             ;   and Verde's menus (SCRIPT_JUMP_TABLE $cfbb). Transient:
                             ;   it sits below the saved block, so it is NOT persisted.
                     ds 1    ; $CFBC
-wFloorType::        ds 1    ; $CFBD
-                    ds 17   ; $CFBC-$CFCE
+wFloorId::          ds 1    ; $CFBD: floor record header byte 0 -- a per-floor unique id
+                            ;   (all 70 distinct). INERT: written by ParseFloorRecord, read
+                            ;   only by PackFloorSnapshot (editor); no gameplay/render use.
+                            ;   The floor's look is the record's Tileset+Palette, not this.
+                    ds 17   ; $CFBE-$CFCE
 
 ; --- Persistent save block ($CFCF..$D0E6, $118 bytes) ------------------------
 ; The game's saved state. On save (Func_12_4b67, bank $12) this block is stamped

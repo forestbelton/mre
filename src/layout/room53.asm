@@ -4,7 +4,7 @@ INCLUDE "room.inc"
 
 SECTION "room53", ROMX[$78bd], BANK[$2e]
 Room53:
-    dstruct Header, , .Type=$28, .SpawnX=9, .SpawnY=1, .Pad=$00, .Param0=$00, .Param1=$00, .Height=10, .Width=11
+    dstruct Header, , .Id=$28, .SpawnX=9, .SpawnY=1, .Pad=$00, .Tileset=$00, .Palette=$00, .Height=10, .Width=11
     assert @ - Room53 == sizeof_Header
 
     ; collision grid (10 rows x 11)

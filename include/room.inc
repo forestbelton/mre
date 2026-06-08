@@ -107,14 +107,21 @@ DEF COLL_W  EQU $21   ; wall
 DEF COLL_C  EQU $22   ; breakable crate (an item on this cell is in-crate)
 
 ; The 8-byte floor-record header. Instantiate with e.g.
-;   dstruct Header, , .Type=$61, .SpawnX=2, .SpawnY=7, .Pad=0, .Param0=0, .Param1=1, .Height=10, .Width=11
+;   dstruct Header, , .Id=$61, .SpawnX=2, .SpawnY=7, .Pad=0, .Tileset=0, .Palette=1, .Height=10, .Width=11
 struct Header
-    bytes 1, Type     ; floor theme/type
+    bytes 1, Id       ; per-floor unique id (all 70 distinct). INERT -- loaded to
+                      ;   wFloorId ($CFBD) but never read by gameplay or rendering;
+                      ;   only the editor snapshots it. It is NOT the theme (that's
+                      ;   Tileset+Palette); likely the design-tool's floor identifier.
     bytes 1, SpawnX   ; player start column
     bytes 1, SpawnY   ; player start row
     bytes 1, Pad      ; always $00
-    bytes 1, Param0   ; undecoded (observed 0-5)
-    bytes 1, Param1   ; undecoded (observed 0-6)
+    bytes 1, Tileset  ; tile-graphics set, 0-5 (was "Param0"). Func_16_4016 copies
+                      ;   set [Tileset] (bank $16) to VRAM $9000 and it keys
+                      ;   FloorPieceDefs -- the floor's tile appearance.
+    bytes 1, Palette  ; BG colour set, 0-6 (was "Param1"). Func_10_40a4 loads
+                      ;   palette block [Palette] (bank $10 $408c) into wBgPalettes
+                      ;   via Func_00_0716 -- the floor's colour scheme.
     bytes 1, Height
     bytes 1, Width
 end_struct

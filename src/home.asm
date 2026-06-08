@@ -6599,7 +6599,7 @@ Func_00_2fcd:
 ; trailer bytes untouched (they come from the last LoadFloorRecordToBuffer).
 PackFloorSnapshot:
 	ld hl, wFloorSnapshot
-	ld a, [$cfbd]
+	ld a, [wFloorId]
 	ld [hl+], a
 	ld a, [$c2ea]
 	ld [hl+], a

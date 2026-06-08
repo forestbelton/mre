@@ -51,12 +51,18 @@ label differs.
 
 | Offset | Size | Field | Meaning |
 |---|---|---|---|
-| 0 | 1 | type | 🟡 floor type/theme (`$61` for floor 1) |
+| 0 | 1 | id | ✅ per-floor unique id (all 70 distinct) → `wFloorId` (`$CFBD`). **Inert** — never read by gameplay/render; only the editor snapshots it. *Not* the theme. |
 | 1 | 1 | spawnX | ✅ player start column |
 | 2 | 1 | spawnY | ✅ player start row |
-| 3–5 | 3 | params | 🟡 unknown (floor 1: `00 00 01`) |
+| 3 | 1 | pad | always `$00` |
+| 4 | 1 | tileset | ✅ tile-graphics set, 0–5 → `$C4CC`. `Func_16_4016` copies set *N* (bank `$16`) to VRAM `$9000`; also keys `FloorPieceDefs`. |
+| 5 | 1 | palette | ✅ BG colour set, 0–6 → `$C4CB`. `Func_10_40a4` loads palette block *N* (bank `$10` `$408c`) into `wBgPalettes` via `Func_00_0716`. |
 | 6 | 1 | height | ✅ grid height (≤14) |
 | 7 | 1 | width | ✅ grid width (≤17) |
+
+So a floor's **look = `tileset` (which tile graphics) + `palette` (which colours)**; both are
+editor-selectable (the floor-edit menu `Func_00_1b87` sets `tileset` from the cursor and cycles
+`palette` 0–6). The `id` byte despite its old "type" name has no effect — it's a per-floor tag.
 | 8 | H×W | **collision grid** → `wFloorCollision` (`$C2EF`) | room geometry |
 | 8+H×W | H×W | **piece grid** → `wFloorGrid` (`$C3DD`) | visual + object markers |
 | … | 4 | arr1 → `$C4CD` | ✅ per-floor sprite-gfx lookup (indexed by a monster's gfxIndex) |

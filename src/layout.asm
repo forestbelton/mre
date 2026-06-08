@@ -127,7 +127,7 @@ ParseFloorRecord:
 
 	; -- 8-byte header --
 	ld a, [hl+]
-	ld [wFloorType], a
+	ld [wFloorId], a
 	ld a, [hl+]
 	ld [wFloorPlayerX], a
 	ld a, [hl+]
