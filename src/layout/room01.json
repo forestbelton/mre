@@ -1,0 +1,66 @@
+{
+    "id": 97,
+    "name": "Room 01",
+    "spawn": {
+        "x": 2,
+        "y": 7
+    },
+    "tileset": 0,
+    "palette": 1,
+    "height": 10,
+    "width": 11,
+    "collision": [
+        "BBBBBBBBBBB",
+        "BWWWWWWWWWB",
+        "BWFFFFFFFWB",
+        "BWFFFFFFWWB",
+        "BWFCFFFCWWB",
+        "BWFFFFCWWWB",
+        "BWFFFCWWWWB",
+        "BWFFWWWWWWB",
+        "BWWWWWWWWWB",
+        "BBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 9,
+            "y": 3,
+            "type": "exit"
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 4,
+            "y": 5,
+            "type": "item",
+            "item": "SILVER_MEDAL"
+        },
+        {
+            "x": 6,
+            "y": 6,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        }
+    ],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 6,
+            "y": 4,
+            "type": 34,
+            "index": 1,
+            "facing": 0
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}
