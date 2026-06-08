@@ -36,14 +36,14 @@ Room45:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=9, .Y=8, .Type=$22, .Param=$00, .Index=0   ; FLAME_RED
-    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Param=$02, .Index=1   ; GHOST
-    dstruct Monster, , .X=1, .Y=8, .Type=$22, .Param=$00, .Index=0   ; FLAME_RED
-    dstruct Monster, , .X=9, .Y=6, .Type=$22, .Param=$00, .Index=2   ; HENGER
-    dstruct Monster, , .X=8, .Y=8, .Type=$22, .Param=$00, .Index=0   ; FLAME_RED
-    dstruct Monster, , .X=7, .Y=6, .Type=$22, .Param=$02, .Index=1   ; GHOST
+    dstruct Monster, , .X=9, .Y=8, .Type=$22, .Facing=$00, .Index=0   ; FLAME_RED
+    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Facing=$02, .Index=1   ; GHOST
+    dstruct Monster, , .X=1, .Y=8, .Type=$22, .Facing=$00, .Index=0   ; FLAME_RED
+    dstruct Monster, , .X=9, .Y=6, .Type=$22, .Facing=$00, .Index=2   ; HENGER
+    dstruct Monster, , .X=8, .Y=8, .Type=$22, .Facing=$00, .Index=0   ; FLAME_RED
+    dstruct Monster, , .X=7, .Y=6, .Type=$22, .Facing=$02, .Index=1   ; GHOST
     EMPTY_MONSTER_SLOT
-    dstruct Monster, , .X=9, .Y=1, .Type=$22, .Param=$00, .Index=2   ; HENGER
+    dstruct Monster, , .X=9, .Y=1, .Type=$22, .Facing=$00, .Index=2   ; HENGER
     EMPTY_MONSTER_SLOT
     assert @ - .monsters == sizeof_Monster * 9
 

@@ -44,11 +44,11 @@ Room20:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=15, .Y=1, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=10, .Y=5, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=12, .Y=10, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=1, .Y=9, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=6, .Y=12, .Type=$22, .Param=$00, .Index=2   ; NAGA
+    dstruct Monster, , .X=15, .Y=1, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=10, .Y=5, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=12, .Y=10, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=1, .Y=9, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=6, .Y=12, .Type=$22, .Facing=$00, .Index=2   ; NAGA
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

@@ -36,10 +36,10 @@ Room49:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=5, .Y=1, .Type=$23, .Param=$00, .Index=2   ; JOKER
-    dstruct Monster, , .X=8, .Y=4, .Type=$23, .Param=$00, .Index=2   ; JOKER
-    dstruct Monster, , .X=9, .Y=2, .Type=$32, .Param=$01, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=1, .Y=2, .Type=$22, .Param=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=5, .Y=1, .Type=$23, .Facing=$00, .Index=2   ; JOKER
+    dstruct Monster, , .X=8, .Y=4, .Type=$23, .Facing=$00, .Index=2   ; JOKER
+    dstruct Monster, , .X=9, .Y=2, .Type=$32, .Facing=$01, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=1, .Y=2, .Type=$22, .Facing=$00, .Index=1   ; JELL
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

@@ -36,9 +36,9 @@ Room04:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=4, .Y=6, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=6, .Y=4, .Type=$22, .Param=$00, .Index=0   ; HENGER
-    dstruct Monster, , .X=4, .Y=2, .Type=$22, .Param=$00, .Index=2   ; PUNCHO
+    dstruct Monster, , .X=4, .Y=6, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=6, .Y=4, .Type=$22, .Facing=$00, .Index=0   ; HENGER
+    dstruct Monster, , .X=4, .Y=2, .Type=$22, .Facing=$00, .Index=2   ; PUNCHO
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

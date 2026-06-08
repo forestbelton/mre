@@ -36,7 +36,7 @@ Room34:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=1, .Y=2, .Type=$32, .Param=$00, .Index=1   ; DUCKEN
+    dstruct Monster, , .X=1, .Y=2, .Type=$32, .Facing=$00, .Index=1   ; DUCKEN
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

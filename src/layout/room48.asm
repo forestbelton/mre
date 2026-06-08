@@ -36,7 +36,7 @@ Room48:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=5, .Y=1, .Type=$22, .Param=$00, .Index=2   ; NAGA
+    dstruct Monster, , .X=5, .Y=1, .Type=$22, .Facing=$00, .Index=2   ; NAGA
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

@@ -44,8 +44,8 @@ Room02:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=11, .Y=9, .Type=$21, .Param=$01, .Index=1   ; JELL
-    dstruct Monster, , .X=8, .Y=5, .Type=$21, .Param=$00, .Index=2   ; TACOPI
+    dstruct Monster, , .X=11, .Y=9, .Type=$21, .Facing=$01, .Index=1   ; JELL
+    dstruct Monster, , .X=8, .Y=5, .Type=$21, .Facing=$00, .Index=2   ; TACOPI
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

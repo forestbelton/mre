@@ -36,15 +36,15 @@ RoomUnused02:
 
     ; arr2: 9 monster slots
 .monsters
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
-    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Param=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
+    dstruct Monster, , .X=255, .Y=255, .Type=$ff, .Facing=$ff, .Index=255
     assert @ - .monsters == sizeof_Monster * 9
 
     ; arr3: 4 spawner slots

@@ -128,12 +128,18 @@ end_struct
 
 ; A monster slot (arr2; 9 per floor). Sprite/species = MonsterSprites[Index];
 ; Index == INERT marks an empty slot. Instantiate with e.g.
-;   dstruct Monster, , .X=6, .Y=4, .Type=$22, .Param=0, .Index=1
+;   dstruct Monster, , .X=6, .Y=4, .Type=$22, .Facing=0, .Index=1
 struct Monster
     bytes 1, X
     bytes 1, Y
-    bytes 1, Type      ; per-instance attribute (not the species)
-    bytes 1, Param
+    bytes 1, Type      ; two packed 3-bit behaviour params (each 0-4 in practice; bits
+                       ;   3 & 7 unused). Low 3 bits (& $07) -> entity+$21 ($ffd1), the
+                       ;   movement/speed selector (ent_vel_x_indexed: X-vel = tbl[$ffd1
+                       ;   & 7]). High 3 bits (& $70) -> entity+$20 ($ffd0) bits 4-6, a
+                       ;   second AI param read by the entity update.
+    bytes 1, Facing    ; initial facing -> entity+$06 ($ffb6 facing byte): Facing & 3 =
+                       ;   the 4-direction (dir 1 also sets the xflip bit), Facing >= 4
+                       ;   sets an extra flag (bit 2). Was "Param".
     bytes 1, Index     ; index into the floor's MonsterSprites (arr1)
 end_struct
 

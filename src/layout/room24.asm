@@ -36,10 +36,10 @@ Room24:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=2, .Y=3, .Type=$22, .Param=$00, .Index=0   ; JOKER
-    dstruct Monster, , .X=4, .Y=5, .Type=$22, .Param=$01, .Index=0   ; JOKER
-    dstruct Monster, , .X=2, .Y=7, .Type=$22, .Param=$00, .Index=0   ; JOKER
-    dstruct Monster, , .X=8, .Y=3, .Type=$22, .Param=$03, .Index=1   ; GHOST
+    dstruct Monster, , .X=2, .Y=3, .Type=$22, .Facing=$00, .Index=0   ; JOKER
+    dstruct Monster, , .X=4, .Y=5, .Type=$22, .Facing=$01, .Index=0   ; JOKER
+    dstruct Monster, , .X=2, .Y=7, .Type=$22, .Facing=$00, .Index=0   ; JOKER
+    dstruct Monster, , .X=8, .Y=3, .Type=$22, .Facing=$03, .Index=1   ; GHOST
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

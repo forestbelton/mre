@@ -36,12 +36,12 @@ Room22:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=7, .Y=5, .Type=$23, .Param=$01, .Index=0   ; PUNCHO
-    dstruct Monster, , .X=3, .Y=5, .Type=$24, .Param=$00, .Index=1   ; DINO
-    dstruct Monster, , .X=4, .Y=3, .Type=$23, .Param=$00, .Index=0   ; PUNCHO
+    dstruct Monster, , .X=7, .Y=5, .Type=$23, .Facing=$01, .Index=0   ; PUNCHO
+    dstruct Monster, , .X=3, .Y=5, .Type=$24, .Facing=$00, .Index=1   ; DINO
+    dstruct Monster, , .X=4, .Y=3, .Type=$23, .Facing=$00, .Index=0   ; PUNCHO
     EMPTY_MONSTER_SLOT
-    dstruct Monster, , .X=5, .Y=8, .Type=$24, .Param=$00, .Index=1   ; DINO
-    dstruct Monster, , .X=7, .Y=1, .Type=$23, .Param=$01, .Index=0   ; PUNCHO
+    dstruct Monster, , .X=5, .Y=8, .Type=$24, .Facing=$00, .Index=1   ; DINO
+    dstruct Monster, , .X=7, .Y=1, .Type=$23, .Facing=$01, .Index=0   ; PUNCHO
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

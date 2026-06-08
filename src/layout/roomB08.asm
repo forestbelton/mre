@@ -44,11 +44,11 @@ RoomB08:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=8, .Y=2, .Type=$24, .Param=$02, .Index=0   ; PSYLORA
-    dstruct Monster, , .X=12, .Y=1, .Type=$24, .Param=$05, .Index=0   ; PSYLORA
-    dstruct Monster, , .X=10, .Y=12, .Type=$44, .Param=$00, .Index=2   ; PLANT
-    dstruct Monster, , .X=4, .Y=12, .Type=$24, .Param=$02, .Index=1   ; GHOST
-    dstruct Monster, , .X=2, .Y=4, .Type=$24, .Param=$03, .Index=1   ; GHOST
+    dstruct Monster, , .X=8, .Y=2, .Type=$24, .Facing=$02, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=12, .Y=1, .Type=$24, .Facing=$05, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=10, .Y=12, .Type=$44, .Facing=$00, .Index=2   ; PLANT
+    dstruct Monster, , .X=4, .Y=12, .Type=$24, .Facing=$02, .Index=1   ; GHOST
+    dstruct Monster, , .X=2, .Y=4, .Type=$24, .Facing=$03, .Index=1   ; GHOST
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

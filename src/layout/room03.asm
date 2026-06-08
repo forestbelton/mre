@@ -36,9 +36,9 @@ Room03:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=2, .Y=4, .Type=$21, .Param=$02, .Index=0   ; GHOST
-    dstruct Monster, , .X=5, .Y=5, .Type=$21, .Param=$03, .Index=0   ; GHOST
-    dstruct Monster, , .X=7, .Y=4, .Type=$21, .Param=$02, .Index=0   ; GHOST
+    dstruct Monster, , .X=2, .Y=4, .Type=$21, .Facing=$02, .Index=0   ; GHOST
+    dstruct Monster, , .X=5, .Y=5, .Type=$21, .Facing=$03, .Index=0   ; GHOST
+    dstruct Monster, , .X=7, .Y=4, .Type=$21, .Facing=$02, .Index=0   ; GHOST
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

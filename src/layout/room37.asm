@@ -36,12 +36,12 @@ Room37:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Param=$02, .Index=0   ; GHOST
-    dstruct Monster, , .X=5, .Y=5, .Type=$22, .Param=$02, .Index=0   ; GHOST
-    dstruct Monster, , .X=3, .Y=8, .Type=$22, .Param=$02, .Index=0   ; GHOST
-    dstruct Monster, , .X=9, .Y=8, .Type=$22, .Param=$00, .Index=1   ; JELL
-    dstruct Monster, , .X=4, .Y=6, .Type=$22, .Param=$00, .Index=2   ; HENGER
-    dstruct Monster, , .X=6, .Y=3, .Type=$22, .Param=$00, .Index=2   ; HENGER
+    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Facing=$02, .Index=0   ; GHOST
+    dstruct Monster, , .X=5, .Y=5, .Type=$22, .Facing=$02, .Index=0   ; GHOST
+    dstruct Monster, , .X=3, .Y=8, .Type=$22, .Facing=$02, .Index=0   ; GHOST
+    dstruct Monster, , .X=9, .Y=8, .Type=$22, .Facing=$00, .Index=1   ; JELL
+    dstruct Monster, , .X=4, .Y=6, .Type=$22, .Facing=$00, .Index=2   ; HENGER
+    dstruct Monster, , .X=6, .Y=3, .Type=$22, .Facing=$00, .Index=2   ; HENGER
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

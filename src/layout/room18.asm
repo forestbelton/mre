@@ -36,10 +36,10 @@ Room18:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=8, .Y=3, .Type=$21, .Param=$01, .Index=0   ; DINO
-    dstruct Monster, , .X=2, .Y=3, .Type=$21, .Param=$00, .Index=0   ; DINO
-    dstruct Monster, , .X=5, .Y=3, .Type=$21, .Param=$07, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=6, .Y=1, .Type=$23, .Param=$00, .Index=2   ; JELL
+    dstruct Monster, , .X=8, .Y=3, .Type=$21, .Facing=$01, .Index=0   ; DINO
+    dstruct Monster, , .X=2, .Y=3, .Type=$21, .Facing=$00, .Index=0   ; DINO
+    dstruct Monster, , .X=5, .Y=3, .Type=$21, .Facing=$07, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=6, .Y=1, .Type=$23, .Facing=$00, .Index=2   ; JELL
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

@@ -37,7 +37,7 @@ RoomBonusMocchi:
 
     ; arr2: 9 monster slots
 .monsters
-    dstruct Monster, , .X=2, .Y=3, .Type=$22, .Param=$00, .Index=3
+    dstruct Monster, , .X=2, .Y=3, .Type=$22, .Facing=$00, .Index=3
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

@@ -44,7 +44,7 @@ Room38:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=15, .Y=2, .Type=$24, .Param=$01, .Index=0   ; JOKER
+    dstruct Monster, , .X=15, .Y=2, .Type=$24, .Facing=$01, .Index=0   ; JOKER
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

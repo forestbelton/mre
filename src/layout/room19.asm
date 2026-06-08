@@ -36,10 +36,10 @@ Room19:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=7, .Y=7, .Type=$21, .Param=$04, .Index=0   ; PSYLORA
-    dstruct Monster, , .X=2, .Y=7, .Type=$22, .Param=$02, .Index=0   ; PSYLORA
-    dstruct Monster, , .X=3, .Y=2, .Type=$21, .Param=$05, .Index=0   ; PSYLORA
-    dstruct Monster, , .X=8, .Y=2, .Type=$22, .Param=$03, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=7, .Y=7, .Type=$21, .Facing=$04, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=2, .Y=7, .Type=$22, .Facing=$02, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=3, .Y=2, .Type=$21, .Facing=$05, .Index=0   ; PSYLORA
+    dstruct Monster, , .X=8, .Y=2, .Type=$22, .Facing=$03, .Index=0   ; PSYLORA
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

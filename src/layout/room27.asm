@@ -36,8 +36,8 @@ Room27:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=4, .Y=3, .Type=$22, .Param=$00, .Index=0   ; FLAME_BLUE
-    dstruct Monster, , .X=6, .Y=3, .Type=$22, .Param=$00, .Index=0   ; FLAME_BLUE
+    dstruct Monster, , .X=4, .Y=3, .Type=$22, .Facing=$00, .Index=0   ; FLAME_BLUE
+    dstruct Monster, , .X=6, .Y=3, .Type=$22, .Facing=$00, .Index=0   ; FLAME_BLUE
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

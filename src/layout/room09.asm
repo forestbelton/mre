@@ -36,10 +36,10 @@ Room09:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=1, .Y=5, .Type=$21, .Param=$00, .Index=0   ; PLANT
-    dstruct Monster, , .X=9, .Y=2, .Type=$23, .Param=$00, .Index=0   ; PLANT
-    dstruct Monster, , .X=9, .Y=6, .Type=$20, .Param=$00, .Index=0   ; PLANT
-    dstruct Monster, , .X=1, .Y=3, .Type=$22, .Param=$00, .Index=0   ; PLANT
+    dstruct Monster, , .X=1, .Y=5, .Type=$21, .Facing=$00, .Index=0   ; PLANT
+    dstruct Monster, , .X=9, .Y=2, .Type=$23, .Facing=$00, .Index=0   ; PLANT
+    dstruct Monster, , .X=9, .Y=6, .Type=$20, .Facing=$00, .Index=0   ; PLANT
+    dstruct Monster, , .X=1, .Y=3, .Type=$22, .Facing=$00, .Index=0   ; PLANT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

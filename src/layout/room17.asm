@@ -36,12 +36,12 @@ Room17:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=6, .Y=6, .Type=$12, .Param=$00, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=7, .Y=2, .Type=$32, .Param=$00, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=3, .Y=1, .Type=$42, .Param=$01, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=3, .Y=4, .Type=$22, .Param=$01, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=3, .Y=7, .Type=$02, .Param=$01, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=4, .Y=5, .Type=$22, .Param=$00, .Index=1   ; FLAME_RED
+    dstruct Monster, , .X=6, .Y=6, .Type=$12, .Facing=$00, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=7, .Y=2, .Type=$32, .Facing=$00, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=3, .Y=1, .Type=$42, .Facing=$01, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=3, .Y=4, .Type=$22, .Facing=$01, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=3, .Y=7, .Type=$02, .Facing=$01, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=4, .Y=5, .Type=$22, .Facing=$00, .Index=1   ; FLAME_RED
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

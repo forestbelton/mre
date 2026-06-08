@@ -201,13 +201,26 @@ neighbours (`Func_01_5BA8`/`5BE2`).
 
 | +0 | +1 | +2 | +3 | +4 |
 |---|---|---|---|---|
-| col | row | type (`$cf81`) | param (`$cf82`) | gfxIndex (`$cf80`); `$FF` = empty slot |
+| col | row | **Type** (`$cf81`) | **Facing** (`$cf82`) | gfxIndex (`$cf80`); `$FF` = empty slot |
 
 Sprite pixel position is `col*16 − 8`, `row*16 − 8`. The displayed **species** is
 selected by **`arr1[gfxIndex]`** (the per-floor sprite/species table) — observed
 `$00` = Tacopi (Octopee), `$01` = Jell, `$03` = Dino, `$05` = Henger, `$06` = Joker,
-`$07` = Ghost, `$08` = Puncho, `$0a` = Dakkung (full list in `include/items.inc`). The `+2` "type" byte is *not* the species
-(a per-instance attribute: floor 1's Jell is `$22`, floor 2's Jell is `$21`).
+`$07` = Ghost, `$08` = Puncho, `$0a` = Dakkung (full list in `include/items.inc`).
+
+The `+2`/`+3` bytes are **per-instance behaviour**, not the species, distributed
+into the spawned entity (`SpawnFloorMonsters`):
+
+- **Type** (`$cf81`) — two packed 3-bit params (bits 3 & 7 unused; each 0–4 in the
+  shipped floors). Low 3 bits (`& $07`) → `entity+$21` (`$ffd1`) = the
+  **movement/speed selector** (entity scripts read X-velocity as `tbl[$ffd1 & 7]`
+  via `ent_vel_x_indexed`). High 3 bits (`& $70`) → `entity+$20` (`$ffd0`) bits 4–6
+  = a **second AI param** the entity update reads. (So floor 1's Jell `$22` = both
+  fields = 2; floor 2's Jell `$21` = speed 1.)
+- **Facing** (`$cf82`) — the monster's **initial facing** → `entity+$06` (`$ffb6`):
+  `Facing & 3` = the 4-direction (dir 1 also sets the xflip bit), `Facing ≥ 4` sets
+  an extra flag (bit 2). Mostly `0`.
+
 Items, by contrast, are baked into the piece grid, so a floor's dynamic content is
 piece-grid items + `arr2` monsters + `arr3` spawners.
 

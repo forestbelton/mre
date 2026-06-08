@@ -135,9 +135,9 @@ ParseFloorRecord:
 	ld a, [hl+]
 	ld [$c2e9], a          ; [3] pad (always $00)
 	ld a, [hl+]
-	ld [$c4cc], a          ; [4] param0 (undecoded)
+	ld [$c4cc], a          ; [4] tileset (0-5; tile gfx via Func_16_4016 -> VRAM $9000)
 	ld a, [hl+]
-	ld [$c4cb], a          ; [5] param1 (undecoded)
+	ld [$c4cb], a          ; [5] palette (0-6; BG palette via Func_10_40a4 -> wBgPalettes)
 	ld a, [hl+]
 	ld [wFloorHeight], a    ; [6] height
 	ld a, [hl+]
@@ -514,9 +514,9 @@ SpawnFloorMonsters:
 	and $f0
 	sub $08
 	ld d, a
-	ld a, [hl+]            ; [+2] type   -> cf81
+	ld a, [hl+]            ; [+2] Type (packed velocity+AI params) -> cf81
 	ld [$cf81], a
-	ld a, [hl+]            ; [+3] param  -> cf82
+	ld a, [hl+]            ; [+3] Facing (initial direction) -> cf82
 	ld [$cf82], a
 	ld a, [hl+]            ; [+4] gfxIndex -> cf80 ($FF = empty)
 	ld [$cf80], a
@@ -554,7 +554,9 @@ SpawnFloorMonsters:
 	jr nz, .slotLoop
 	ret
 
-; Func_01_40c6 -- entity+$20 <- (cf80 & 3) | (cf81 & $70). (Field meaning undecoded.)
+; Func_01_40c6 -- entity+$20 ($ffd0) <- (Index & 3) | (Type & $70): the sprite
+; variant (low 2 bits) packed with Type's high 3-bit field (a behaviour param the
+; entity update reads from $ffd0 bits 4-6).
 Func_01_40c6:
 	ld a, [$cf80]
 	and $03
@@ -569,7 +571,8 @@ Func_01_40c6:
 	pop hl
 	ret
 
-; Func_01_40da -- entity+$21 <- cf81 & 7.
+; Func_01_40da -- entity+$21 ($ffd1) <- Type & 7: the movement/speed selector
+; (entity scripts read X-velocity as tbl[$ffd1 & 7] via ent_vel_x_indexed).
 Func_01_40da:
 	ld a, [$cf81]
 	and $07
@@ -580,8 +583,9 @@ Func_01_40da:
 	pop hl
 	ret
 
-; Func_01_40e7 -- set entity+$06 facing/flag bits from the param byte (cf82):
-; bit 3 always set; bit 2 from cf82>=4; low 2 bits select a direction case.
+; Func_01_40e7 -- set entity+$06 ($ffb6 facing) from the Monster Facing byte (cf82):
+; bit 3 always set; bit 2 from Facing>=4; Facing & 3 selects the 4-direction (dir 1
+; also sets bit 7, the xflip).
 Func_01_40e7:
 	push hl
 	ld de, $0006

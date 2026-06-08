@@ -44,12 +44,12 @@ RoomB07:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=15, .Y=1, .Type=$22, .Param=$03, .Index=0   ; DUCKEN
-    dstruct Monster, , .X=2, .Y=5, .Type=$24, .Param=$03, .Index=1   ; GHOST
-    dstruct Monster, , .X=5, .Y=7, .Type=$24, .Param=$00, .Index=2   ; PSYLORA
-    dstruct Monster, , .X=7, .Y=5, .Type=$24, .Param=$04, .Index=2   ; PSYLORA
-    dstruct Monster, , .X=11, .Y=8, .Type=$24, .Param=$05, .Index=2   ; PSYLORA
-    dstruct Monster, , .X=7, .Y=11, .Type=$24, .Param=$03, .Index=2   ; PSYLORA
+    dstruct Monster, , .X=15, .Y=1, .Type=$22, .Facing=$03, .Index=0   ; DUCKEN
+    dstruct Monster, , .X=2, .Y=5, .Type=$24, .Facing=$03, .Index=1   ; GHOST
+    dstruct Monster, , .X=5, .Y=7, .Type=$24, .Facing=$00, .Index=2   ; PSYLORA
+    dstruct Monster, , .X=7, .Y=5, .Type=$24, .Facing=$04, .Index=2   ; PSYLORA
+    dstruct Monster, , .X=11, .Y=8, .Type=$24, .Facing=$05, .Index=2   ; PSYLORA
+    dstruct Monster, , .X=7, .Y=11, .Type=$24, .Facing=$03, .Index=2   ; PSYLORA
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT

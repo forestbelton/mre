@@ -36,14 +36,14 @@ RoomB04:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=5, .Y=2, .Type=$22, .Param=$00, .Index=0   ; PLANT
-    dstruct Monster, , .X=3, .Y=2, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=8, .Y=4, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=2, .Y=4, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=3, .Y=6, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=5, .Y=6, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
-    dstruct Monster, , .X=7, .Y=6, .Type=$22, .Param=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=5, .Y=2, .Type=$22, .Facing=$00, .Index=0   ; PLANT
+    dstruct Monster, , .X=3, .Y=2, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=7, .Y=2, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=8, .Y=4, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=2, .Y=4, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=3, .Y=6, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=5, .Y=6, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
+    dstruct Monster, , .X=7, .Y=6, .Type=$22, .Facing=$00, .Index=1   ; PSYLORA
     EMPTY_MONSTER_SLOT
     assert @ - .monsters == sizeof_Monster * 9
 

@@ -36,12 +36,12 @@ RoomB10:
 
     ; arr2: 9 monster slots (Monster: X,Y,Type,Param,Index)
 .monsters
-    dstruct Monster, , .X=2, .Y=1, .Type=$24, .Param=$03, .Index=0   ; GHOST
-    dstruct Monster, , .X=5, .Y=1, .Type=$24, .Param=$03, .Index=0   ; GHOST
-    dstruct Monster, , .X=8, .Y=1, .Type=$24, .Param=$03, .Index=0   ; GHOST
-    dstruct Monster, , .X=9, .Y=3, .Type=$24, .Param=$01, .Index=1   ; JOKER
-    dstruct Monster, , .X=1, .Y=5, .Type=$24, .Param=$00, .Index=1   ; JOKER
-    dstruct Monster, , .X=9, .Y=7, .Type=$24, .Param=$01, .Index=1   ; JOKER
+    dstruct Monster, , .X=2, .Y=1, .Type=$24, .Facing=$03, .Index=0   ; GHOST
+    dstruct Monster, , .X=5, .Y=1, .Type=$24, .Facing=$03, .Index=0   ; GHOST
+    dstruct Monster, , .X=8, .Y=1, .Type=$24, .Facing=$03, .Index=0   ; GHOST
+    dstruct Monster, , .X=9, .Y=3, .Type=$24, .Facing=$01, .Index=1   ; JOKER
+    dstruct Monster, , .X=1, .Y=5, .Type=$24, .Facing=$00, .Index=1   ; JOKER
+    dstruct Monster, , .X=9, .Y=7, .Type=$24, .Facing=$01, .Index=1   ; JOKER
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
     EMPTY_MONSTER_SLOT
