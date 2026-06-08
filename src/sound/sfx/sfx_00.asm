@@ -6,7 +6,7 @@ INCLUDE "sound.inc"
 SECTION "SFX - $00", ROMX
 
 ; ===== sound id $00 =====
-Snd_3f_4d00:
+Snd_SFX_Silence:
 	s_chan $ff, Snd_3f_4d0c
 	s_chan $ff, Snd_3f_4d0c
 	s_chan $ff, Snd_3f_4d0c

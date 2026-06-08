@@ -6,7 +6,7 @@ INCLUDE "sound.inc"
 SECTION "BGM - $2f", ROMX
 
 ; ===== sound id $2f =====
-Snd_3e_4d00:
+Snd_BGM_Town:
 	s_chan $f0, Snd_3e_4d0c
 	s_chan $f0, Snd_3e_4e83
 	s_chan $f0, Snd_3e_4f7b

@@ -8,16 +8,16 @@ SECTION "Sound bank 1", ROMX
 SOUND_DRIVER SOUND_BANK_1
 
 SOUND_TABLE
-	SOUND Snd_3e_4d00 ; id $2f
-    SOUND Snd_3e_516f ; id $30
-    SOUND Snd_3e_559d ; id $31
-    SOUND Snd_3e_570a ; id $32
-    SOUND Snd_3e_5a30 ; id $33
-    SOUND Snd_3e_5cb6 ; id $34
-    SOUND Snd_3e_5ef9 ; id $35
-    SOUND Snd_3e_62fa ; id $36
-    SOUND Snd_3e_646a ; id $37
-    SOUND Snd_3e_664d ; id $38
-    SOUND Snd_3e_6b85 ; id $39
-    SOUND Snd_3e_6f12 ; id $3a
+	SOUND Snd_BGM_Town ; id $2f
+    SOUND Snd_BGM_Bodka ; id $30
+    SOUND Snd_BGM_RoomTransition ; id $31
+    SOUND Snd_BGM_Pashute ; id $32
+    SOUND Snd_BGM_Verde ; id $33
+    SOUND Snd_BGM_Toamuna ; id $34
+    SOUND Snd_BGM_DiscRegen ; id $35
+    SOUND Snd_BGM_RivalEncounter ; id $36
+    SOUND Snd_BGM_Title ; id $37
+    SOUND Snd_BGM_Intro ; id $38
+    SOUND Snd_BGM_39 ; id $39
+    SOUND Snd_BGM_3a ; id $3a
 END_SOUND_TABLE

@@ -20,6 +20,7 @@ ENDM
 DEF SOUND_BANK_0 EQU $3f    ; primary: sound ids $00-$2e (SFX + BGM $28-$2e)
 DEF SOUND_BANK_1 EQU $3e    ; secondary: BGM ids $2f-$3a
 DEF SND_BASE EQU $4b00      ; table/descriptor offsets are relative to here
+DEF SND_DEFAULT_ENTRY EQU $0200  ; unused table slots -> the $4d00 default song
 
 ; --- note columns (note & $0f -> semitone); $07/$0f are rests. Cols 10/14 are
 ;     enharmonic duplicates of F/C, kept distinct so the encoding round-trips. ---
@@ -127,7 +128,7 @@ ENDM
 MACRO END_SOUND_TABLE
 	ASSERT _count <= $100
 	REPT $100 - _count
-        SOUND Snd_3e_4d00
+        dw SND_DEFAULT_ENTRY
 	ENDR
 	PURGE _count
 ENDM
