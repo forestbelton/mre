@@ -1,11 +1,11 @@
 ; TECMO logo renderer -- the "draw the TECMO logo and fade it" routine, the
 ; first screen drawn at boot (fades in, holds ~3s, fades out). Lifted out of
-; bank $30 in analyzed.asm so the logo's code lives with its data
+; the former analyzed.asm (bank $30) so the logo's code lives with its data
 ; (src/gfx/logo.asm). It is pure rendering: no state-machine logic. The intro
 ; dispatcher reaches it via the bank-0 handler IntroScene_TecmoLogo ($3580),
 ; which banks in $30, `call`s here, and advances the intro state -- see
-; RunIntroScene / IntroSceneTable. It calls shared engine routines
-; (CopyBytesBanked, etc.) defined in analyzed.asm, and references the logo's
+; RunIntroScene / IntroSceneTable. It calls shared home-bank routines
+; (BankVramCopy, BankMapCopyB, LoadPalettesBanked) defined in home.asm, and references the logo's
 ; tile/palette/map data (TecmoLogo*) carved into src/gfx/logo.asm.
 
 ; NB: Using BANK(TecmoLogoTiles) as the definition does not work as the bank is

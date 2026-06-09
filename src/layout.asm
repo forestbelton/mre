@@ -1093,7 +1093,8 @@ RemoveConditionalItemsPass:
 ; BCD table Data_01_51aa at $51aa), runs collection tracking (for the "collect N
 ; for a bonus" items), then tail-calls the item's effect handler via the pointer
 ; table Data_01_523a ($523a). Those data tables + the effect handlers ($5282+)
-; are not carved here yet -- they stay in analyzed.asm, referenced by address.
+; sit in the layout_pickup section below ($5007+), still raw bytes referenced
+; by address rather than labelled.
 ; See docs/floor_data.md "Item points + effect tables".
 ; =============================================================================
 

@@ -221,8 +221,17 @@ ld [$c29c],a; ld hl,<descriptor>; call $3942`.
 ### Where they live
 
 ~54 libraries / ~65 KB / ~400 screens across banks **`$0c`** (the editor's set,
-~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`. Mostly still raw `data` in
-`src/analyzed.asm`.
+~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`.
+
+**`analyzed.asm` retired (2026-06-09).** The old catch-all is fully drained:
+every screen/sprite data bank now lives in a named subsystem file (mostly under
+`src/gfx/screen/`), each carved byte-exact with a header documenting its traced
+consumer. The data is still mostly raw `db` (structuring into editable PNGs/grids
+is the remaining north-star) but it is no longer "unsorted." Screen banks landed
+as: `$20`→`town.asm`, `$21`→`room_done.asm`, `$22`→`tower.asm`, `$23`→
+`room_start.asm`, `$24`→`next_room.asm`, `$25`→`screen_25.asm`, `$26`→
+`tower_open.asm`, `$28`→`title.asm`, `$29`→`intro.asm`, `$2a`→`screen_2a.asm`,
+`$2b`→`screen_2b.asm`, `$33`→`tradehouse.asm` (Bodka), `$19`→`screen_19.asm`.
 
 **Bank `$15` done (structured ASM, 2026-06-08, commit `20e3bed`).** The 10
 level-editor descriptors (`$65ce-$74c6`: 1× 4×20 `EditorStatusBar`, 6× 14×20

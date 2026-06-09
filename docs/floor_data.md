@@ -190,7 +190,8 @@ readable database in **`src/item_data.asm`** ($00-$23, 36 entries each):
 - **`ItemEffectHandlers`** (`$523a`) — 2 bytes/id, LE pointer to the bank-`$01`
   effect handler. `$5282` is the generic points-only handler (gems/coins/peaches);
   special items (keys, bombs, tororon/hourglass time, dolls, disc stones) each have
-  their own handler at `$5282`+ (still in `analyzed.asm`).
+  their own handler at `$5282`+ (in `src/layout.asm`, the `layout_pickup`
+  section — raw bytes referenced by address, not yet labelled).
 
 Lower piece IDs index `FloorPieceDefs` (`$12FA`, 5-byte entries) and stamp a 2×2
 metatile `{T, T+8, T+1, T+9}` to the BG (`$00:$180B`); walls auto-tile from
