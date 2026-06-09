@@ -25,7 +25,7 @@ class RoomExit(AbstractRoomObject):
 
 class RoomItem(AbstractRoomObject):
     type: Literal["item"]
-    item: str
+    item: str | int  # enum case name, or a raw id for unnamed (`skip`) item ids
     hidden: NotRequired[bool]
 
 
@@ -77,6 +77,18 @@ class Room(TypedDict):
     monsters: list[RoomMonster]
     spawners: list[RoomSpawner]
     trailer: list[int]
+    # Boss floors (records 70-74). The boss is spawned separately, so the floor's
+    # species/monster/spawner tables are all unused ($ff); a boss record carves to
+    # header + grids + a 93-byte $ff tail, with no trailer. The records are packed
+    # front-to-front (placed contiguously by layout.link), each abutting the next
+    # -- a record's arr3 tail (its final 4 bytes) doubles as the next record's
+    # header, so it's omitted here and supplied by the abutting record.
+    boss: NotRequired[bool]
+
+
+# A boss record's tail: arr1(4) + arr2(45) + arr3 head(44), all $ff. arr3's last
+# 4 bytes are the next record's header and are intentionally omitted.
+BOSS_TAIL = 93
 
 
 class RoomValidationError(Exception):
@@ -95,6 +107,8 @@ def check_slots(entries: list, count: int, kind: str) -> None:
 
 
 def build_room(room: Room) -> str:
+    if room.get("boss"):
+        return build_boss_room(room)
     validate_room(room)
     label = re.sub(r"[^A-Za-z0-9_]", "", room["name"])
     collision_grid = build_collision_grid(room["collision"])
@@ -149,6 +163,51 @@ SECTION "{room['name']}", ROMX
 """.strip() + "\n"
 
 
+def build_boss_room(room: Room) -> str:
+    validate_geometry(room)
+    label = re.sub(r"[^A-Za-z0-9_]", "", room["name"])
+    collision_grid = build_collision_grid(room["collision"])
+    object_grid = build_object_grid(room["width"], room["height"], room["objects"])
+    return f"""
+INCLUDE "room.inc"
+
+SECTION "{room['name']}", ROMX
+
+; Boss floor record: the boss is spawned separately (Data_01_4335), so the
+; floor's species/monster/spawner tables are all unused ($ff). The records are
+; packed front-to-front (placed contiguously by layout.link), each abutting the
+; next -- a record's arr3 tail (its final 4 bytes) doubles as the next record's
+; header, so those 4 bytes are omitted here and supplied by the abutting record.
+; See docs/special_floor_records.md.
+{label}:
+    dstruct Header, , \\
+        .Id={to_hex(room['id'])}, \\
+        .SpawnX={room['spawn']['x']}, \\
+        .SpawnY={room['spawn']['y']}, \\
+        .Pad=$00, \\
+        .Tileset={room['tileset']}, \\
+        .Palette={room['palette']}, \\
+        .Height={room['height']}, \\
+        .Width={room['width']}
+    assert @ - {label} == sizeof_Header
+
+    ; Collision grid ({room['height']} rows x {room['width']} columns)
+.collision:
+{collision_grid}
+    assert @ - .collision == {room['height']} * {room['width']}
+
+    ; Object grid ({room['height']} rows x {room['width']} columns)
+.objects:
+{object_grid}
+    assert @ - .objects == {room['height']} * {room['width']}
+
+    ; Unused tables (arr1/arr2/arr3, all $ff); arr3's final 4 bytes are the next
+    ; record's header, provided by the abutting record.
+    ds {BOSS_TAIL}, INERT
+    assert @ - {label} == 8 + 2 * {room['height']} * {room['width']} + {BOSS_TAIL}
+""".strip() + "\n"
+
+
 def build_collision_grid(coll: list[str]) -> str:
     def build_row(row: str) -> str:
         return ", ".join(f"COLL_{cell}" for cell in row)
@@ -172,7 +231,11 @@ def build_object_grid(width: int, height: int, objects: list[RoomObject]) -> str
                 entry = "ITEM_FLAG"
                 if not found.get("hidden", False):
                     entry += " | ITEM_OPEN"
-                return entry + f" | ITEM_{found['item']}"
+                # `item` is an enum case name, or a raw id for the unnamed (`skip`)
+                # ids like the $21/$22 special-stage tokens.
+                item = found["item"]
+                base = f"ITEM_{item}" if isinstance(item, str) else to_hex(item)
+                return entry + f" | {base}"
             case "exit":
                 return "TILE_EXIT"
             case "tile":
@@ -246,7 +309,7 @@ def to_hex(x: int) -> str:
     return f"${x:02x}"
 
 
-def validate_room(room: Room):
+def validate_geometry(room: Room):
     if room["height"] <= 0 or room["height"] >= 15:
         raise RoomValidationError("room height must be between 1 and 14")
     if room["width"] <= 0 or room["width"] >= 18:
@@ -270,6 +333,10 @@ def validate_room(room: Room):
             raise RoomValidationError(
                 f"object {i} outside of room bounds: {obj['x']}, {obj['y']}"
             )
+
+
+def validate_room(room: Room):
+    validate_geometry(room)
     if len(room["species"]) != 4:
         raise RoomValidationError("must have exactly 4 species")
     check_slots(room["monsters"], 9, "monster")

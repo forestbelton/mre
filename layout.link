@@ -40,7 +40,12 @@ ROMX $0a
 ROMX $0b
     "Gali summon"
 ROMX $12
-    ORG $5906
+    ORG $5055
+    "BossSelketo"
+    "BossFerious"
+    "BossPunisher"
+    "BossDragon"
+    "BossZan"
     "RoomHare"
     "RoomGali"
     "RoomGolem"

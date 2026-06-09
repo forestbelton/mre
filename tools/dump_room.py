@@ -78,6 +78,39 @@ def decode_room(rec: bytes, name: str) -> dict:
     }
 
 
+def decode_boss_room(rec: bytes, name: str) -> dict:
+    """Decode a packed boss record (header + grids + 93-byte $ff tail, no trailer).
+
+    `rec` is the record's `front - 4` bytes; the omitted final 4 bytes are the
+    next record's header (supplied by the abutting record). See
+    build_room.build_boss_room. Placement is handled by layout.link.
+    """
+    rid, sx, sy, _pad, tileset, palette, height, width = rec[:8]
+    off = 8
+    coll = rec[off : off + height * width]
+    off += height * width
+    piece = rec[off : off + height * width]
+    off += height * width
+    tail = rec[off:]
+    assert tail == b"\xff" * 93, f"{name}: boss tail not all $ff ({len(tail)} bytes)"
+
+    collision = [
+        "".join(COLL[coll[y * width + x]] for x in range(width)) for y in range(height)
+    ]
+    return {
+        "id": rid,
+        "name": name,
+        "boss": True,
+        "spawn": {"x": sx, "y": sy},
+        "tileset": tileset,
+        "palette": palette,
+        "height": height,
+        "width": width,
+        "collision": collision,
+        "objects": decode_pieces(piece, width, height),
+    }
+
+
 def decode_pieces(piece: bytes, width: int, height: int) -> list[dict]:
     objects: list[dict] = []
     for y in range(height):
@@ -90,7 +123,10 @@ def decode_pieces(piece: bytes, width: int, height: int) -> list[dict]:
             if b == 0x40:
                 objects.append({**cell, "type": "exit"})
             elif b & 0x80:
-                obj = {**cell, "type": "item", "item": ITEMS[b & 0x3F]}
+                # Most item ids have an enum name; a few (e.g. $21/$22 special-stage
+                # tokens) are `skip`'d in include/room.inc -- emit those as a raw id.
+                idx = b & 0x3F
+                obj = {**cell, "type": "item", "item": ITEMS.get(idx, idx)}
                 if not (b & 0x40):
                     obj["hidden"] = True
                 objects.append(obj)

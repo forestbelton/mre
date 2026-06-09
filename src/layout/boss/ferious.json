@@ -1,0 +1,116 @@
+{
+    "id": 0,
+    "name": "BossFerious",
+    "boss": true,
+    "spawn": {
+        "x": 4,
+        "y": 8
+    },
+    "tileset": 8,
+    "palette": 9,
+    "height": 10,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFWWWWWWWWWFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFWWWWWWWWWFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 7,
+            "y": 3,
+            "type": "tile",
+            "value": 20
+        },
+        {
+            "x": 8,
+            "y": 3,
+            "type": "tile",
+            "value": 21
+        },
+        {
+            "x": 9,
+            "y": 3,
+            "type": "tile",
+            "value": 22
+        },
+        {
+            "x": 10,
+            "y": 3,
+            "type": "tile",
+            "value": 23
+        },
+        {
+            "x": 12,
+            "y": 3,
+            "type": "exit"
+        },
+        {
+            "x": 7,
+            "y": 4,
+            "type": "tile",
+            "value": 24
+        },
+        {
+            "x": 8,
+            "y": 4,
+            "type": "tile",
+            "value": 25
+        },
+        {
+            "x": 9,
+            "y": 4,
+            "type": "tile",
+            "value": 26
+        },
+        {
+            "x": 10,
+            "y": 4,
+            "type": "tile",
+            "value": 27
+        },
+        {
+            "x": 7,
+            "y": 5,
+            "type": "tile",
+            "value": 28
+        },
+        {
+            "x": 8,
+            "y": 5,
+            "type": "tile",
+            "value": 29
+        },
+        {
+            "x": 9,
+            "y": 5,
+            "type": "tile",
+            "value": 30
+        },
+        {
+            "x": 10,
+            "y": 5,
+            "type": "tile",
+            "value": 31
+        },
+        {
+            "x": 2,
+            "y": 6,
+            "type": "tile",
+            "value": 48
+        },
+        {
+            "x": 16,
+            "y": 6,
+            "type": "tile",
+            "value": 50
+        }
+    ]
+}

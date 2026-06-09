@@ -46,7 +46,7 @@ Records 78–81 are **not ROM data**: 78–80 point into SRAM at the three
 WRAM (`$c586`) — mode 5 builds its record there at runtime (the editor's "send a
 room" / link-cable path). Nothing to carve for those.
 
-## The boss-record overlap (why 70–74 aren't carved yet)
+## The boss-record overlap (and how 70–74 are carved)
 
 The boss records are **packed so that each record's runtime read overruns the
 next record's header by 4 bytes.** A record's *read* size is `105 + 2·H·W`, but
@@ -65,26 +65,25 @@ head at the same time (the last spawner slot's `Spawn3..End` == the next
 record's `Type/SpawnX/SpawnY/Pad`). It works at load time because each record is
 parsed independently; it's a deliberate space-saving trick.
 
-This means the five boss records **cannot** be five separate, fixed-address
-`SECTION`s — RGBDS rejects overlapping sections. The records before the chain
-(`77`→`76`→`70`) abut exactly (no overlap), and the bonus records 83–87 are
-gapped (581-byte stride, 325-byte data) and fully independent; only `82`'s header
-is shared with `74`'s tail.
+The five boss records can't be five *overlapping* fixed-address `SECTION`s, but
+the overlap is only the shared 4 bytes — so each record is carved emitting just
+its **`front − 4`** unique bytes (header + grids + the 93-byte `$ff` tail), with
+the trailing `arr3` slot dropped. That makes them **abut** instead of overlap,
+and the next record's `Header` supplies the shared 4 (the last boss, `74`/Zan,
+borrows them from `82`/Hare). Decisively: every boss record's `arr1`/`arr2`/`arr3`
+is all `$ff` (the boss is spawned separately from `Data_01_4335`; mode 2 never
+processes the floor's tables), so a boss record is purely **header + grids**.
 
-## When revisited
+## How they're carved
 
-Two workable shapes:
+- `src/layout/boss/{selketo,ferious,punisher,dragon,zan}.json` — one JSON each,
+  `"boss": true`, header + grids only (`tools/build_room.py` boss mode emits
+  `ds 93, INERT` for the unused tail and no trailer; `tools/dump_room.py
+  decode_boss_room` is the inverse).
+- `layout.link` places them as floating sections, contiguous from `ORG $5055`;
+  the five stride-sized records pack to exactly `$5906` (Hare's start).
 
-1. **One `room_boss.asm`, one `SECTION`** at `$12:$5055`, with a label per boss
-   (`RoomBossSelketo`…`RoomBossZan`). Each boss record emits only its *stride*
-   bytes (read size − 4); the final `arr3` spawner slot is emitted short (8 bytes
-   of raw `db`), and the next record's `Header` supplies the shared 4. The seam
-   gets a comment.
-2. **Whole boss block as raw `db`** with labels — simplest, least readable.
-
-The **bonus (82–87)** and **unused (76/77)** records have no such issue and can
-be carved as ordinary one-file rooms (`room_bonus_<breed>.asm`,
-`room_unused01/02.asm`) whenever — same `Header`/grid/`Monster`/`Spawner` format
-as `room01.asm`. (Record 82's header is physically the tail of record 74's read,
-but its *stored* bytes are record 82's own, so it carves cleanly; record 74's
-read just overruns 4 bytes into it.)
+The records before the chain (`77`→`76`→`70`) abut exactly, and the bonus records
+83–87 are gapped (581-byte stride, 325-byte data) and fully independent. The
+**bonus (82–87)** and **unused (76/77)** records carve as ordinary rooms
+(`bonus/<breed>.json`, `unused/room_unused01/02.asm`).
