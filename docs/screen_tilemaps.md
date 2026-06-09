@@ -221,8 +221,16 @@ ld [$c29c],a; ld hl,<descriptor>; call $3942`.
 ### Where they live
 
 ~54 libraries / ~65 KB / ~400 screens across banks **`$0c`** (the editor's set,
-~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`. Currently raw `data` in
+~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`. Mostly still raw `data` in
 `src/analyzed.asm`.
+
+**Bank `$15` done (structured ASM, 2026-06-08, commit `20e3bed`).** The 10
+level-editor descriptors (`$65ce-$74c6`: 1× 4×20 `EditorStatusBar`, 6× 14×20
+`EditorScreen0-5`, 3× 7×6 `EditorIcon0-2`) are carved from the `db` wall into the
+`db rows,cols / dw Attr / dw Idx` + labelled `…_Idx`/`…_Attr` form (still `db`
+maps, not PNG — no tileset/palette trace yet). `scratch/structure_editor_screens.py`
+(generate-from-ROM, self-verify bytes, splice). Same treatment fits `$2b`/`$0a`/
+`$0f`/`$23` next.
 
 ## What's already done
 
