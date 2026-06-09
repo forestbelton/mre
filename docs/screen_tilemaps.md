@@ -229,8 +229,17 @@ level-editor descriptors (`$65ce-$74c6`: 1× 4×20 `EditorStatusBar`, 6× 14×20
 `EditorScreen0-5`, 3× 7×6 `EditorIcon0-2`) are carved from the `db` wall into the
 `db rows,cols / dw Attr / dw Idx` + labelled `…_Idx`/`…_Attr` form (still `db`
 maps, not PNG — no tileset/palette trace yet). `scratch/structure_editor_screens.py`
-(generate-from-ROM, self-verify bytes, splice). Same treatment fits `$2b`/`$0a`/
-`$0f`/`$23` next.
+(generate-from-ROM, self-verify bytes, splice), then moved into their own file
+`src/editor_screens.asm` (bank-$15 half of the editor; logic stays in
+`editor.asm`, bank $12).
+
+**Bank `$2b` done (structured ASM, 2026-06-08, commit `20e9ed0`).** 26 descriptors
+(run `$72a2-$7daa`: 11× 2×17 + 15× 4×16) restructured into `Screen2b_00-25`
+(`scratch/structure_bank2b_screens.py`). Verified real (sane idx maps, uniform
+`$08` attr), drawn by the bank-$30 flow `Func_30_5cb9` via the raw-address table
+at `$30:$5fcb`. Names are **structural only** — the depicted content isn't pinned
+(the bank-$30 driver is still `Func_30_*`); IDing it would let them be renamed.
+Same treatment fits `$0a`/`$0f`/`$23` next.
 
 ## What's already done
 
