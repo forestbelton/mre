@@ -40,7 +40,7 @@ SRC_ASM    := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
 # generated .asm aren't tracked, so add them explicitly (derived from the JSON)
 # rather than relying on the find glob -- they may not exist yet on a fresh
 # checkout. $(sort) dedups against any already on disk.
-ROOM_JSON  := $(wildcard $(SRC_DIR)/layout/*.json)
+ROOM_JSON  := $(shell find $(SRC_DIR)/layout -name '*.json' 2>/dev/null)
 ROOM_ASM   := $(ROOM_JSON:.json=.asm)
 SRC_ASM    := $(sort $(SRC_ASM) $(ROOM_ASM))
 OBJ_DIR    := $(BUILD_DIR)/obj

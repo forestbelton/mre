@@ -6,8 +6,9 @@ build/
 # Floor records generated from JSON by tools/build_room.py (room_unused*.asm are
 # hand-written and stay tracked).
 /src/layout/room[0-9]*.asm
-/src/layout/roomB*.asm
-/src/layout/room_bonus_*.asm
+/src/layout/basement/*.asm
+/src/layout/bonus/*.asm
+/src/layout/boss/*.asm
 __pycache__/
 *.swp
 rom.gbc.sav.bak-*
