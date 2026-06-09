@@ -53,9 +53,8 @@ ROMX $12
     "RoomTiger"
     "RoomMocchi"
 ROMX $13
-    ORG $4449
-    "Alf/Nox script"
-    "Cox letter script"
+    "Cox script functions"
+    "Cox script"
 ROMX $18
     "Pashute script functions"
     "Pashute script"
