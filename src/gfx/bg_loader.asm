@@ -95,7 +95,7 @@ Func_10_40a4:
 	ret
 
 Data_10_40b7:
-	INCBIN "raw_gfx/Data_10_40b7.2bpp", 0, 4096
+	INCBIN "gfx/raw/Data_10_40b7.2bpp", 0, 4096
 
 Data_10_50b7:
 	db $00, $00, $60, $60, $78, $78, $7e, $7e, $7e, $7e, $78, $78, $60, $60, $00, $00
@@ -148,7 +148,7 @@ Data_10_50b7:
 	db $00, $00, $00, $00, $00, $00, $c0, $00, $c0, $00, $c0, $00, $f8, $00, $f8, $00
 
 Data_10_53b7:
-	INCBIN "raw_gfx/Data_10_53b7.2bpp", 0, 1280
+	INCBIN "gfx/raw/Data_10_53b7.2bpp", 0, 1280
 
 Data_10_58b7:
 	db $ff, $ff, $80, $ff, $80, $ff, $8e, $f9, $9f, $f0, $9f, $f0, $8e, $f9, $83, $fe

@@ -516,7 +516,7 @@ Data_3d_4065:
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_3d_5bcd:
-	INCBIN "raw_gfx/Data_3d_5bcd.2bpp", 0, 2288
+	INCBIN "gfx/raw/Data_3d_5bcd.2bpp", 0, 2288
 
 Data_3d_64bd:
 	db $02, $08, $00, $00, $04, $00, $00, $00, $02, $00, $00, $00, $10, $00, $20
@@ -528,7 +528,7 @@ Data_3d_67cf:
 	db $5d, $0d, $94, $52, $bd, $77, $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_3d_67ed:
-	INCBIN "raw_gfx/Data_3d_67ed.2bpp", 0, 2048
+	INCBIN "gfx/raw/Data_3d_67ed.2bpp", 0, 2048
 
 Data_3d_6fed:
 	db $00, $00, $49, $00, $71, $00, $b6, $1d, $00, $00, $72, $00, $df, $0c, $5f, $2e

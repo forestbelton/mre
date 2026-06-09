@@ -1247,7 +1247,7 @@ Func_34_406a:
 SECTION "analyzed_0d08a8", ROMX[$48a8], BANK[$34]
 
 Data_34_48a8:
-	INCBIN "raw_gfx/Data_34_48a8.2bpp", 0, 4096
+	INCBIN "gfx/raw/Data_34_48a8.2bpp", 0, 4096
 
 SECTION "analyzed_0d20ca", ROMX[$60ca], BANK[$34]
 

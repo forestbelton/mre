@@ -9,13 +9,13 @@
 SECTION "analyzed_0a8000", ROMX[$4000], BANK[$2a]
 
 Data_2a_4000:
-	INCBIN "raw_gfx/Data_2a_4000.2bpp", 0, 5120
+	INCBIN "gfx/raw/Data_2a_4000.2bpp", 0, 5120
 
 Data_2a_5400:
 	db $00, $00, $bd, $03, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_2a_5410:
-	INCBIN "raw_gfx/Data_2a_5410.2bpp", 0, 2048
+	INCBIN "gfx/raw/Data_2a_5410.2bpp", 0, 2048
 
 Data_2a_5c10:
 	db $00, $00, $ce, $39, $d6, $5a, $ff, $7f, $00, $00, $c0, $2c, $00, $00, $d6, $5a

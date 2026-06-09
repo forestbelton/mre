@@ -9,7 +9,7 @@
 SECTION "analyzed_0cc000", ROMX[$4000], BANK[$33]
 
 Data_33_4000:
-	INCBIN "raw_gfx/Data_33_4000.2bpp", 0, 12288
+	INCBIN "gfx/raw/Data_33_4000.2bpp", 0, 12288
 
 Data_33_7000:
 	db $82, $24, $d0, $39, $58, $46, $7d, $67, $82, $24, $24, $41, $65, $52, $19, $53

@@ -122,7 +122,7 @@ Func_02_4096:
 	ret
 
 Data_02_40b1:
-	INCBIN "raw_gfx/Data_02_40b1.2bpp", 0, 4096
+	INCBIN "gfx/raw/Data_02_40b1.2bpp", 0, 4096
 
 Data_02_50b1:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $12, $01, $63, $0c, $b5, $01, $3d, $3f

@@ -185,7 +185,7 @@ Data_11_4133:
 ; (#13 unused), Tiger, Mocchi, Hare, Gali, Golem, Suezo. The blob is split across
 ; the Data_11_* sheets below (analyzer fragmentation). See docs/gfx_loaders.md.
 FloorMonsterSprites:
-	INCBIN "raw_gfx/Data_11_415c.2bpp", 0, 2304
+	INCBIN "gfx/raw/Data_11_415c.2bpp", 0, 2304
 
 Data_11_4a5c:
 	db $00, $00, $00, $00, $18, $00, $30, $08, $61, $10, $c1, $20, $c3, $20, $c6, $31
@@ -238,7 +238,7 @@ Data_11_4a5c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_11_4d5c:
-	INCBIN "raw_gfx/Data_11_4d5c.2bpp", 0, 3072
+	INCBIN "gfx/raw/Data_11_4d5c.2bpp", 0, 3072
 
 Data_11_595c:
 	db $00, $00, $00, $00, $00, $00, $04, $00, $0c, $00, $0f, $00, $1f, $03, $1f, $04
@@ -291,7 +291,7 @@ Data_11_595c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_11_5c5c:
-	INCBIN "raw_gfx/Data_11_5c5c.2bpp", 0, 3072
+	INCBIN "gfx/raw/Data_11_5c5c.2bpp", 0, 3072
 
 Data_11_685c:
 	db $00, $00, $00, $00, $00, $00, $7f, $7f, $92, $92, $92, $92, $92, $92, $92, $92
@@ -308,7 +308,7 @@ Data_11_685c:
 SECTION "analyzed_046b5c", ROMX[$6b5c], BANK[$11]
 
 Data_11_6b5c:
-	INCBIN "raw_gfx/Data_11_6b5c.2bpp", 0, 768
+	INCBIN "gfx/raw/Data_11_6b5c.2bpp", 0, 768
 
 Data_11_6e5c:
 	db $00, $00, $00, $00, $07, $00, $0f, $03, $0f, $06, $0f, $06, $0f, $07, $0f, $07
@@ -409,7 +409,7 @@ Data_11_6e5c:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
 Data_11_745c:
-	INCBIN "raw_gfx/Data_11_745c.2bpp", 0, 2304
+	INCBIN "gfx/raw/Data_11_745c.2bpp", 0, 2304
 
 ; One OBJ palette (4 RGB555 colors, $08 bytes) per floor-monster species, indexed
 ; by LoadFloorMonsterSprite (FloorMonsterSpritePalettes + MONSTER*8).

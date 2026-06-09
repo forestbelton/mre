@@ -1488,7 +1488,7 @@ Data_0f_4ce8:
 SECTION "analyzed_03cd38", ROMX[$4d38], BANK[$0f]
 
 Data_0f_4d38:
-	INCBIN "raw_gfx/Data_0f_4d38.2bpp", 0, 1420
+	INCBIN "gfx/raw/Data_0f_4d38.2bpp", 0, 1420
 
 
 MonsterDetailBg0:  ; 17x20 detail-screen background, drawn to $9c20 by Func_0f_4565
@@ -1789,10 +1789,10 @@ Data_0f_5ace:
 	db $00, $00, $00, $00, $00, $00
 
 Data_0f_63ce:
-	INCBIN "raw_gfx/Data_0f_63ce.2bpp", 0, 1152
+	INCBIN "gfx/raw/Data_0f_63ce.2bpp", 0, 1152
 
 Data_0f_684e:
-	INCBIN "raw_gfx/Data_0f_684e.2bpp", 0, 1152
+	INCBIN "gfx/raw/Data_0f_684e.2bpp", 0, 1152
 
 Data_0f_6cce:
 	db $03, $03, $dd, $6c, $d4, $6c, $38, $40, $48, $39, $41, $49, $3a, $42, $4a, $08
@@ -2967,14 +2967,14 @@ Data_32_460b:
 SECTION "analyzed_0c8613", ROMX[$4613], BANK[$32]
 
 Data_32_4613:
-	INCBIN "raw_gfx/Data_32_4613.2bpp", 0, 736
+	INCBIN "gfx/raw/Data_32_4613.2bpp", 0, 736
 
 SECTION "analyzed_0c9613", ROMX[$5613], BANK[$32]
 
 ; Analyzer mis-split: this and Data_32_5dd3 are inside the single $32:$4613 ($1800)
 ; monster-detail tile blob that ShowMonsterDetailScreen uploads. See docs/gfx_loaders.md.
 Data_32_5613:
-	INCBIN "raw_gfx/Data_32_5613.2bpp", 0, 1392
+	INCBIN "gfx/raw/Data_32_5613.2bpp", 0, 1392
 
 Data_32_5b83:
 	db $c8, $f0, $0c, $f0, $82, $fc, $c1, $fe, $01, $fe, $7f, $80, $40, $80, $c0
@@ -2982,7 +2982,7 @@ Data_32_5b83:
 SECTION "analyzed_0c9dd3", ROMX[$5dd3], BANK[$32]
 
 Data_32_5dd3:
-	INCBIN "raw_gfx/Data_32_5dd3.2bpp", 0, 2112
+	INCBIN "gfx/raw/Data_32_5dd3.2bpp", 0, 2112
 
 Data_32_6613:
 	db $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c, $7c
@@ -3095,7 +3095,7 @@ Data_3b_4022:
 	db $03, $c9
 
 Data_3b_4034:
-	INCBIN "raw_gfx/Data_3b_4034.2bpp", 0, 5120
+	INCBIN "gfx/raw/Data_3b_4034.2bpp", 0, 5120
 
 Data_3b_5434:
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $fc, $ff, $ff, $fc

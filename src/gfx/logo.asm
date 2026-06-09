@@ -30,4 +30,4 @@ TecmoLogoAttrMap:
 	INCBIN "assets/logo/attrmap.bin"           ; 20x18 CGB BG attributes
 
 Data_27_5ade:
-	INCBIN "raw_gfx/Data_27_5ade.2bpp", 0, 5408
+	INCBIN "gfx/raw/Data_27_5ade.2bpp", 0, 5408

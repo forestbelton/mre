@@ -82,7 +82,7 @@ Data_1b_5c1d:
 SECTION "analyzed_06dc5d", ROMX[$5c5d], BANK[$1b]
 
 Data_1b_5c5d:
-	INCBIN "raw_gfx/Data_1b_5c5d.2bpp", 0, 1424
+	INCBIN "gfx/raw/Data_1b_5c5d.2bpp", 0, 1424
 
 Data_1b_61ed:
 	db $00, $10, $00, $78, $00, $f8, $00, $f0, $00, $c0
@@ -90,7 +90,7 @@ Data_1b_61ed:
 SECTION "analyzed_06e45d", ROMX[$645d], BANK[$1b]
 
 Data_1b_645d:
-	INCBIN "raw_gfx/Data_1b_645d.2bpp", 0, 3696
+	INCBIN "gfx/raw/Data_1b_645d.2bpp", 0, 3696
 
 Data_1b_72cd:
 	db $00, $00, $00, $00, $00, $00, $04, $04, $13, $13, $44, $44, $30, $30

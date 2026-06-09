@@ -15,7 +15,7 @@ Data_19_46ca:
 SECTION "analyzed_0646cb", ROMX[$46cb], BANK[$19]
 
 Data_19_46cb:
-	INCBIN "raw_gfx/Data_19_46cb.2bpp", 0, 8192
+	INCBIN "gfx/raw/Data_19_46cb.2bpp", 0, 8192
 
 Data_19_66cb:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00

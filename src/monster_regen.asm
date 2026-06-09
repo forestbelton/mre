@@ -480,7 +480,7 @@ Func_14_4363:
 	ret
 
 Data_14_436b:
-	INCBIN "raw_gfx/Data_14_436b.2bpp", 0, 7344
+	INCBIN "gfx/raw/Data_14_436b.2bpp", 0, 7344
 
 Data_14_601b:
 	db $80, $80, $81, $c1, $c0, $e0, $cf, $e0, $75, $73, $9a, $9a

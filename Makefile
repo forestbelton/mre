@@ -3,7 +3,7 @@
 # The source tree under src/ is the hand-maintained truth; the build just
 # assembles it. Editable graphics assets (assets/, laid out to mirror src/gfx)
 # are encoded to their ROM bytes from one PNG each by tools/pngasset.py (driven by
-# assets/assets.yaml), and raw_gfx/*.png are converted to 2bpp, both at build time.
+# assets/assets.yaml), and src/gfx/raw/*.png are converted to 2bpp, both at build time.
 #
 # Targets:
 #   verify   (default) — build the ROM and compare its sha256 to the known value
@@ -19,7 +19,10 @@ RGBASM   := rgbasm
 RGBLINK  := rgblink
 RGBGFX   := rgbgfx
 RGBFIX   := rgbfix
-GFX_DIR  := $(SRC_DIR)/raw_gfx
+# Raw extracted tile sheets (committed .2bpp). The original extraction tool is
+# gone, so these are tracked source until they are re-derived as editable PNGs;
+# any PNG dropped here is (re)converted to .2bpp at build time.
+GFX_DIR  := $(SRC_DIR)/gfx/raw
 
 FIXARGS := --validate \
 	--pad-value 0 \
@@ -47,7 +50,7 @@ OBJ_DIR    := $(BUILD_DIR)/obj
 OBJS       := $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(SRC_ASM))
 INCLUDES   := $(wildcard include/*.inc)
 ASSET_SRC  := $(shell find assets -type f 2>/dev/null)
-# raw_gfx is 1:1 PNG -> 2bpp (rebuilt per-PNG); the PNG-driven assets are gated by
+# src/gfx/raw is 1:1 PNG -> 2bpp (rebuilt per-PNG); the PNG-driven assets are gated by
 # one stamp so they only rebuild when an asset PNG, the YAML, or a build script
 # changes -- not on every .asm edit.
 GFX_PNG     := $(wildcard $(GFX_DIR)/*.png)
@@ -95,7 +98,7 @@ $(OUT): $(OBJS) $(LINKSCRIPT) | $(BUILD_DIR)
 	@echo "[FIX]  $@"
 	@$(RGBFIX) $(FIXARGS) $@
 
-# raw_gfx: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.
+# src/gfx/raw: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.
 # `-c embedded` maps PNG pixels back to 2bpp values by the embedded palette's
 # index order, so the round-trip is byte-exact (the asm INCBINs only the leading
 # bytes; rgbgfx zero-pads the last tile-row).

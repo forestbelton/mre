@@ -1,6 +1,5 @@
 rom.gbc
 *.sav
-src/raw_gfx/*.2bpp
 assets/**/preview.png
 build/
 # Floor records generated from JSON by tools/build_room.py (room_unused*.asm are

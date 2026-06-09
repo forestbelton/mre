@@ -855,7 +855,7 @@ Data_15_424e:
 	db $01, $fe, $7f, $7e, $bf, $be, $bf, $be, $bf, $be, $7f, $7e, $ff, $00, $00, $00
 
 Data_15_624e:
-	INCBIN "raw_gfx/Data_15_624e.2bpp", 0, 768
+	INCBIN "gfx/raw/Data_15_624e.2bpp", 0, 768
 
 Data_15_654e:
 	db $c8, $08, $6d, $1d, $32, $32, $f7, $4a, $40, $24, $e0, $40, $a0, $5d, $60, $7a
