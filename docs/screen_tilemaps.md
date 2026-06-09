@@ -239,7 +239,21 @@ maps, not PNG — no tileset/palette trace yet). `scratch/structure_editor_scree
 `$08` attr), drawn by the bank-$30 flow `Func_30_5cb9` via the raw-address table
 at `$30:$5fcb`. Names are **structural only** — the depicted content isn't pinned
 (the bank-$30 driver is still `Func_30_*`); IDing it would let them be renamed.
-Same treatment fits `$0a`/`$0f`/`$23` next.
+Same treatment fits `$0a`/`$23` next.
+
+**Bank `$0f` done (structured ASM, 2026-06-08, commits `f620ad1`+next).** Bank
+`$0f` is the already-carved `src/monster_detail.asm` (not in analyzed.asm). The 7
+per-monster 7×7 detail-screen backgrounds (run `$7511-$77e9`) are structured as
+`MonsterPortraitBg_<Monster>` with the `MonsterPortraitMetaRecords` bgmap column
+relinked to the labels (`scratch/structure_monster_screens.py`); the 3 17×20
+detail backgrounds (`$52c4`/`$5572`/`$5820`, drawn by `Func_0f_4565/45bd/45ab`)
+are `MonsterDetailBg0-2` (`scratch/structure_monster_bg.py`). `$52c4` started
+inside `Data_0f_4d38.2bpp` (a 2048 B VRAM tile load that over-ran into the screen
+data); the INCBIN + its `.2bpp` were shrunk to the real tile region (`$4d38-$52c4`
+= 1420 B) and the screen structured -- byte-identical, the VRAM copy still reads
+the same `$4d38-$5538` ROM bytes. **Lesson: a `db`/`INCBIN` boundary isn't always
+the tile/screen boundary** -- a wholesale VRAM tile-copy can over-run into
+adjacent screen descriptors.
 
 ## What's already done
 

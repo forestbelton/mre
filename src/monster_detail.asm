@@ -586,7 +586,7 @@ Func_0f_4565:
 	ld [$cf65], a
 	ld [$cf66], a
 	ld [$cf67], a
-	ld hl, $52c4
+	ld hl, MonsterDetailBg0
 	ld de, $9c20
 	call CopyBgMap
 	call Func_0f_46d6
@@ -614,12 +614,12 @@ Func_0f_45ab:
 	call Func_00_119a
 	or a
 	jr nz, Func_0f_45bd
-	ld hl, $5820
+	ld hl, MonsterDetailBg2
 	ld de, $9c20
 	call CopyBgMap
 	ret
 Func_0f_45bd:
-	ld hl, $5572
+	ld hl, MonsterDetailBg1
 	ld de, $9c20
 	call CopyBgMap
 	ret
@@ -1488,13 +1488,64 @@ Data_0f_4ce8:
 SECTION "analyzed_03cd38", ROMX[$4d38], BANK[$0f]
 
 Data_0f_4d38:
-	INCBIN "raw_gfx/Data_0f_4d38.2bpp", 0, 2048
+	INCBIN "raw_gfx/Data_0f_4d38.2bpp", 0, 1420
 
-Data_0f_5538:
+
+MonsterDetailBg0:  ; 17x20 detail-screen background, drawn to $9c20 by Func_0f_4565
+	db 17, 20
+	dw MonsterDetailBg0_Attr
+	dw MonsterDetailBg0_Idx
+MonsterDetailBg0_Idx:
+	db $dc, $dc, $dc, $dc, $dc, $fc, $d0, $d2, $d4, $d6, $d8, $da, $fc, $fc, $fc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $fc, $d1, $d3, $d5, $d7, $d9, $db
+	db $fc, $fc, $fc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $92, $82, $8e
+	db $91, $84, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $87, $88, $a7, $92, $82, $8e, $91, $84, $fc, $fc, $fc
+	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $88, $93, $84
+	db $8c, $fc, $86, $84, $93, $0b, $fc, $fc, $00, $00, $00, $76, $00, $00, $0a, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $fc, $0c, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $0e, $fc, $fc, $0d, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $0f, $fc, $fc, $0c, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $0e, $fc
+	db $fc, $0d, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $0f, $fc, $fc, $0c, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $0e, $fc, $fc, $0d, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $0f, $fc, $fc, $0c, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $0e, $fc
+	db $fc, $0d, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $0f, $fc
+MonsterDetailBg0_Attr:
+	db $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0b
 	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $06, $08, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0b, $0b, $06, $08, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $06, $08, $11, $14, $cc, $56, $78, $55
+	db $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $08, $00, $08, $08, $00, $00, $00, $00, $00, $00, $00, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $06, $08, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $06, $08, $08, $01, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $06, $08
+	db $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $06, $08, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $06, $08, $08, $01, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $06, $08, $08, $01, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $06, $08
+	db $08, $01, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $06, $08
+MonsterDetailBg1:  ; 17x20 detail-screen background, drawn to $9c20 by Func_0f_45bd
+	db 17, 20
+	dw MonsterDetailBg1_Attr
+	dw MonsterDetailBg1_Idx
+MonsterDetailBg1_Idx:
 	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $c8, $c9, $c9, $c9, $c9
 	db $c9, $c9, $c9, $ca, $dc, $dc, $dc, $fc, $fc, $dc, $dc, $dc, $dc, $dc, $dc, $cb
 	db $c7, $85, $91, $84, $84, $a4, $fc, $cc, $dc, $dc, $dc, $fc, $fc, $a4, $fc, $fc
@@ -1516,71 +1567,82 @@ Data_0f_5538:
 	db $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc
 	db $fc, $fc, $fc, $fc, $a4, $fc, $fc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc
 	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cd, $ce, $ce, $ce, $ce
-	db $ce, $ce, $ce, $cf, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $08, $08, $0b, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $08
-	db $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09
-	db $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b
-	db $09, $09, $09, $09, $09, $09, $09, $09, $0b, $00, $00, $0b, $0b, $0b, $0b, $08
-	db $08, $08, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $00, $00, $08
-	db $08, $08, $0b, $08, $08, $08, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09
-	db $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
-	db $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
-	db $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0a, $09, $09, $09
+	db $ce, $ce, $ce, $cf
+MonsterDetailBg1_Attr:
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $0b, $0b, $08, $08, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $08, $08, $08, $08, $08
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $00, $00, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $00, $00, $08, $08, $08, $0b, $08
+	db $08, $08, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
 	db $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b
-	db $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
-	db $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
-	db $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0b, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0b, $0a, $09, $09, $09
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09
+MonsterDetailBg2:  ; 17x20 detail-screen background, drawn to $9c20 by Func_0f_45ab
+	db 17, 20
+	dw MonsterDetailBg2_Attr
+	dw MonsterDetailBg2_Idx
+MonsterDetailBg2_Idx:
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $c8, $c9, $c9, $c9, $c9
+	db $c9, $c9, $c9, $ca, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cb
+	db $c7, $85, $91, $84, $84, $a4, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $fc, $fc, $fc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc
+	db $dc, $fc, $fc, $dc, $dc, $dc, $dc, $fc, $fc, $fc, $dc, $cb, $fc, $fc, $fc, $fc
+	db $fc, $fc, $fc, $cc, $dc, $fc, $fc, $a4, $fc, $fc, $dc, $fc, $fc, $fc, $dc, $cb
+	db $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $dc, $dc, $dc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc
+	db $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb
+	db $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
+	db $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc
+	db $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc
+	db $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc
+	db $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb
+	db $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
+	db $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc
+	db $fc, $fc, $fc, $fc, $a4, $fc, $fc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc
+	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cd, $ce, $ce, $ce, $ce
+	db $ce, $ce, $ce, $cf
+MonsterDetailBg2_Attr:
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
 	db $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $09, $09, $09, $09, $09, $09, $09, $09, $11, $14, $7a, $59, $26, $58, $dc, $dc
-	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $c8, $c9, $c9, $c9, $c9, $c9, $c9
-	db $c9, $ca, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cb, $c7, $85
-	db $91, $84, $84, $a4, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
-	db $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc
-	db $dc, $fc, $fc, $fc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc
-	db $fc, $dc, $dc, $dc, $dc, $fc, $fc, $fc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $cc, $dc, $fc, $fc, $a4, $fc, $fc, $dc, $fc, $fc, $fc, $dc, $cb, $c7, $fc
-	db $fc, $fc, $fc, $a4, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc
-	db $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $dc, $dc, $dc, $dc, $dc
-	db $dc, $dc, $dc, $dc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $dc
-	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb, $c7, $fc
-	db $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc
-	db $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $dc, $dc, $dc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc, $dc, $cb, $c7, $fc
-	db $fc, $fc, $fc, $a4, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $dc, $dc
-	db $dc, $cb, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $cc, $dc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $a4, $fc, $fc, $cb, $c7, $fc, $fc, $fc, $fc, $a4, $fc, $cc, $dc, $dc
-	db $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $dc, $cd, $ce, $ce, $ce, $ce, $ce, $ce
-	db $ce, $cf, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09
-	db $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b, $0a, $09, $09, $09, $09, $09
-	db $09, $09, $0b, $08, $08, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b, $09, $09
-	db $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $0b, $08, $08, $08
-	db $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09
-	db $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09
-	db $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b
-	db $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08
-	db $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08
-	db $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09
-	db $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09
-	db $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b
-	db $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08
-	db $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $0b, $0a, $09, $09, $09, $09, $09
-	db $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09
-	db $09, $09, $09, $09, $09, $09, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $08, $08, $08, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $08, $08, $0b, $0b, $0b, $0b, $08, $08, $08, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $0b, $08, $08, $08, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $0b, $0b, $0b
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b
+	db $0a, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08, $08, $08, $08, $08
+	db $0b, $0b, $0b, $0b, $09, $09, $09, $09, $09, $09, $09, $09, $0b, $08, $08, $08
+	db $08, $08, $08, $08, $08, $08, $08, $0b, $0a, $09, $09, $09, $09, $09, $09, $09
+	db $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $09, $09, $09, $09
+	db $09, $09, $09, $09
+Data_0f_5ace:
+	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $fc, $ff, $ff, $fc, $fc, $ff, $fc, $ff, $fc, $ff, $fc, $ff, $fc, $ff
 	db $fc, $ff, $ff, $fc, $fc, $ff, $ff, $fc, $ff, $fc, $ff, $ff, $ff, $ff, $ff, $ff
 	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
