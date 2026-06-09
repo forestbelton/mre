@@ -36,6 +36,13 @@ FIXARGS := --validate \
 # needed). Wildcards are evaluated at parse time, which is fine: these are all
 # committed source. find covers subdirs (src/scripts/, assets/<name>/).
 SRC_ASM    := $(shell find $(SRC_DIR) -name '*.asm' 2>/dev/null)
+# Floor records are generated from their JSON form by tools/build_room.py; the
+# generated .asm aren't tracked, so add them explicitly (derived from the JSON)
+# rather than relying on the find glob -- they may not exist yet on a fresh
+# checkout. $(sort) dedups against any already on disk.
+ROOM_JSON  := $(wildcard $(SRC_DIR)/layout/*.json)
+ROOM_ASM   := $(ROOM_JSON:.json=.asm)
+SRC_ASM    := $(sort $(SRC_ASM) $(ROOM_ASM))
 OBJ_DIR    := $(BUILD_DIR)/obj
 OBJS       := $(patsubst $(SRC_DIR)/%.asm,$(OBJ_DIR)/%.o,$(SRC_ASM))
 INCLUDES   := $(wildcard include/*.inc)
@@ -72,6 +79,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm $(INCLUDES) $(GFX_2BPP) $(ASSET_STAMP) | $(BUIL
 	@mkdir -p $(dir $@)
 	@echo "[ASM]  $<"
 	@$(RGBASM) -E -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $@ $<
+
+# Generated floor records: JSON -> .asm via tools/build_room.py.
+$(SRC_DIR)/layout/%.asm: $(SRC_DIR)/layout/%.json tools/build_room.py
+	@echo "[ROOM] $<"
+	@python3 tools/build_room.py $< -o $@
+
+# Keep the generated room .asm around (they're prerequisites, not throwaway
+# intermediates).
+.SECONDARY: $(ROOM_ASM)
 
 $(OUT): $(OBJS) $(LINKSCRIPT) | $(BUILD_DIR)
 	@echo "[LINK] $@"
