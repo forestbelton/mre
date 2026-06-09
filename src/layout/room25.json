@@ -1,0 +1,156 @@
+{
+    "id": 89,
+    "name": "Room25",
+    "spawn": {
+        "x": 8,
+        "y": 12
+    },
+    "tileset": 1,
+    "palette": 3,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BCFWCCWCCWCCWCFWB",
+        "BFFFFFFFFFFFFFFFB",
+        "BWCCWFCWCCWFCWCCB",
+        "BFFFFFFFFFFFFFFFB",
+        "BCCWCCWCFWCCWCCWB",
+        "BFFFFFFFFFFFFFFFB",
+        "BWCCWFCWCCWFCWCCB",
+        "BFFFFFFFFFFFFFFFB",
+        "BCFWCCWCCWCCWCFWB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 9,
+            "y": 2,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 15,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 2,
+            "y": 3,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        },
+        {
+            "x": 9,
+            "y": 5,
+            "type": "item",
+            "item": "COX_HAT"
+        },
+        {
+            "x": 9,
+            "y": 6,
+            "type": "exit"
+        },
+        {
+            "x": 9,
+            "y": 7,
+            "type": "item",
+            "item": "ORANGE_HOURGLASS"
+        },
+        {
+            "x": 2,
+            "y": 13,
+            "type": "item",
+            "item": "GOLD_NUGGET"
+        },
+        {
+            "x": 16,
+            "y": 13,
+            "type": "item",
+            "item": "GOLD_NUGGET"
+        }
+    ],
+    "species": [
+        "JOKER",
+        "TACOPI",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 1,
+            "y": 3,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 1,
+            "y": 7,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 15,
+            "y": 9,
+            "type": 34,
+            "facing": 1,
+            "index": 0
+        },
+        {
+            "x": 15,
+            "y": 5,
+            "type": 34,
+            "facing": 1,
+            "index": 0
+        },
+        {
+            "x": 1,
+            "y": 11,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 15,
+            "y": 1,
+            "type": 34,
+            "facing": 1,
+            "index": 0
+        }
+    ],
+    "spawners": [
+        {
+            "x": 14,
+            "y": 1,
+            "p0": 1,
+            "p1": 1,
+            "p2": 4,
+            "schedule": [
+                1
+            ]
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "p0": 1,
+            "p1": 0,
+            "p2": 4,
+            "schedule": [
+                1
+            ]
+        }
+    ],
+    "trailer": []
+}

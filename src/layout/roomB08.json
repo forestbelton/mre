@@ -1,0 +1,162 @@
+{
+    "id": 46,
+    "name": "RoomB8",
+    "spawn": {
+        "x": 1,
+        "y": 1
+    },
+    "tileset": 3,
+    "palette": 6,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFWWFFFFFCFFB",
+        "BWWFFWWWFFFFFWFFB",
+        "BWWFFWWWWWWCCWWFB",
+        "BWFFFWFFFFFFFWWFB",
+        "BWFFWWFFFFFFFWWFB",
+        "BWFFFWFFWWWFFWWFB",
+        "BWFFFWFFWWWFFWWFB",
+        "BWFFFWCFFFWFFWWFB",
+        "BWFFFWWWFFWFFWFFB",
+        "BWFFFCFFFFWFFCWFB",
+        "BWFFFWWWWWWWFCWFB",
+        "BWFFFWFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 6,
+            "y": 2,
+            "type": "exit"
+        },
+        {
+            "x": 15,
+            "y": 2,
+            "type": "item",
+            "item": "BOMB_SMALL",
+            "hidden": true
+        },
+        {
+            "x": 16,
+            "y": 2,
+            "type": "item",
+            "item": "BOMB_SMALL",
+            "hidden": true
+        },
+        {
+            "x": 15,
+            "y": 3,
+            "type": "item",
+            "item": "BOMB_SMALL",
+            "hidden": true
+        },
+        {
+            "x": 16,
+            "y": 3,
+            "type": "item",
+            "item": "BOMB_SMALL",
+            "hidden": true
+        },
+        {
+            "x": 4,
+            "y": 4,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 4,
+            "y": 6,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 4,
+            "y": 8,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 4,
+            "y": 10,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 15,
+            "y": 10,
+            "type": "item",
+            "item": "BLUE_HOURGLASS"
+        },
+        {
+            "x": 16,
+            "y": 11,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 4,
+            "y": 12,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 14,
+            "y": 12,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 7,
+            "y": 13,
+            "type": "item",
+            "item": "SILVER_PEACH"
+        }
+    ],
+    "species": [
+        "PSYLORA",
+        "GHOST",
+        "PLANT",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 8,
+            "y": 2,
+            "type": 36,
+            "facing": 2,
+            "index": 0
+        },
+        {
+            "x": 12,
+            "y": 1,
+            "type": 36,
+            "facing": 5,
+            "index": 0
+        },
+        {
+            "x": 10,
+            "y": 12,
+            "type": 68,
+            "facing": 0,
+            "index": 2
+        },
+        {
+            "x": 4,
+            "y": 12,
+            "type": 36,
+            "facing": 2,
+            "index": 1
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "type": 36,
+            "facing": 3,
+            "index": 1
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

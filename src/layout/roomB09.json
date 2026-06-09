@@ -1,0 +1,266 @@
+{
+    "id": 74,
+    "name": "RoomB9",
+    "spawn": {
+        "x": 5,
+        "y": 2
+    },
+    "tileset": 1,
+    "palette": 6,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFWFWFWWFWFFWFFB",
+        "BFFWFWFWFFFWFWFFB",
+        "BFFWFWFWFWFWFWFFB",
+        "BFFWFWFWFFFWFWFFB",
+        "BFFWFWFWWFWWFWFFB",
+        "BFFFFFFFFFFFFWFFB",
+        "BFFWCWCWFFWFWWFFB",
+        "BFFWFCFWFFWFWFFFB",
+        "BFFWCWCWFFWFFFFFB",
+        "BFFFFFFFFFWFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 7,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 8,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 9,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 10,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 11,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 12,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 13,
+            "y": 3,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 14,
+            "y": 3,
+            "type": "item",
+            "item": "ORANGE_HOURGLASS"
+        },
+        {
+            "x": 7,
+            "y": 4,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 10,
+            "y": 4,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 13,
+            "y": 4,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 7,
+            "y": 5,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 13,
+            "y": 5,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 7,
+            "y": 6,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 9,
+            "y": 6,
+            "type": "item",
+            "item": "WALKING_COIN"
+        },
+        {
+            "x": 11,
+            "y": 6,
+            "type": "item",
+            "item": "WALKING_COIN"
+        },
+        {
+            "x": 13,
+            "y": 6,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 7,
+            "y": 7,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 11,
+            "y": 7,
+            "type": "exit"
+        },
+        {
+            "x": 13,
+            "y": 7,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 7,
+            "y": 8,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 13,
+            "y": 8,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 7,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 8,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 10,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 11,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 12,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 13,
+            "y": 9,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 12,
+            "y": 10,
+            "type": "tile",
+            "value": 67
+        },
+        {
+            "x": 5,
+            "y": 11,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 7,
+            "y": 11,
+            "type": "item",
+            "item": "COX_HAT"
+        }
+    ],
+    "species": [
+        "FLAME_BLUE",
+        "PSYLORA",
+        "JELL",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 9,
+            "y": 6,
+            "type": 36,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 9,
+            "y": 4,
+            "type": 36,
+            "facing": 4,
+            "index": 1
+        },
+        {
+            "x": 6,
+            "y": 8,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 15,
+            "y": 12,
+            "type": 34,
+            "facing": 0,
+            "index": 2
+        },
+        {
+            "x": 4,
+            "y": 8,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

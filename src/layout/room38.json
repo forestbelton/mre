@@ -1,0 +1,131 @@
+{
+    "id": 30,
+    "name": "Room38",
+    "spawn": {
+        "x": 6,
+        "y": 12
+    },
+    "tileset": 1,
+    "palette": 4,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BWWWWFFFFFFFFFFFB",
+        "BFFFFFFWFFFFFFFFB",
+        "BFFWWCWWWFFFFFFFB",
+        "BFFFFFFCFFFFFFFFB",
+        "BWCWWFFWFFFFFFFFB",
+        "BFFFFFFWFFFFFFFFB",
+        "BFFFWCWWWWFFFCFFB",
+        "BFFFFFFWFFFFFFFFB",
+        "BWWWWFFWFFFFFFFFB",
+        "BFFFFFFWFFFFFFFCB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 2,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 4,
+            "y": 3,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 8,
+            "y": 7,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 9,
+            "y": 7,
+            "type": "item",
+            "item": "BLUE_DIAMOND"
+        },
+        {
+            "x": 10,
+            "y": 7,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 9,
+            "y": 8,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 10,
+            "y": 8,
+            "type": "item",
+            "item": "BLUE_DIAMOND"
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": "item",
+            "item": "BLUE_DIAMOND"
+        },
+        {
+            "x": 10,
+            "y": 9,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 14,
+            "y": 10,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 2,
+            "y": 13,
+            "type": "exit"
+        },
+        {
+            "x": 16,
+            "y": 13,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        }
+    ],
+    "species": [
+        "JOKER",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 15,
+            "y": 2,
+            "type": 36,
+            "facing": 1,
+            "index": 0
+        }
+    ],
+    "spawners": [
+        {
+            "x": 1,
+            "y": 1,
+            "p0": 1,
+            "p1": 2,
+            "p2": 4,
+            "schedule": [
+                2,
+                2,
+                2
+            ]
+        }
+    ],
+    "trailer": []
+}

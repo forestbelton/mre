@@ -1,0 +1,150 @@
+{
+    "id": 32,
+    "name": "Room39",
+    "spawn": {
+        "x": 13,
+        "y": 12
+    },
+    "tileset": 1,
+    "palette": 4,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFWCWB",
+        "BFFFFFFFFFWCWFFFB",
+        "BWCWFFFWCCFFFFFFB",
+        "BFFFWCWFFFFFFFFFB",
+        "BFFFFFFCCWFFFWCWB",
+        "BFFFFFFFFFWCWFFFB",
+        "BWCWFFFWCCFFFFFFB",
+        "BFFFWCWFFFFFFFFFB",
+        "BFFFFFFCCWFFFCFFB",
+        "BFFFFFFFFFCCCFWFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 3,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 14,
+            "y": 3,
+            "type": "exit"
+        },
+        {
+            "x": 16,
+            "y": 3,
+            "type": "item",
+            "item": "SILVER_MEDAL"
+        },
+        {
+            "x": 6,
+            "y": 4,
+            "type": "item",
+            "item": "GOLD_NUGGET"
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        },
+        {
+            "x": 15,
+            "y": 6,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 2,
+            "y": 7,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 12,
+            "y": 7,
+            "type": "item",
+            "item": "SILVER_NUGGET"
+        },
+        {
+            "x": 9,
+            "y": 8,
+            "type": "item",
+            "item": "ORANGE_HOURGLASS"
+        },
+        {
+            "x": 16,
+            "y": 9,
+            "type": "item",
+            "item": "BLUE_CRYSTAL"
+        },
+        {
+            "x": 3,
+            "y": 13,
+            "type": "item",
+            "item": "GOLD_KEY"
+        }
+    ],
+    "species": [
+        "PSYLORA",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 8,
+            "y": 6,
+            "type": 36,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 8,
+            "y": 8,
+            "type": 36,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 8,
+            "y": 10,
+            "type": 36,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 8,
+            "y": 12,
+            "type": 36,
+            "facing": 0,
+            "index": 0
+        }
+    ],
+    "spawners": [
+        {
+            "x": 2,
+            "y": 2,
+            "p0": 2,
+            "p1": 0,
+            "p2": 2,
+            "schedule": []
+        },
+        {
+            "x": 14,
+            "y": 5,
+            "p0": 2,
+            "p1": 0,
+            "p2": 2,
+            "schedule": []
+        }
+    ],
+    "trailer": []
+}

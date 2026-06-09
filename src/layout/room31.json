@@ -1,0 +1,174 @@
+{
+    "id": 34,
+    "name": "Room31",
+    "spawn": {
+        "x": 2,
+        "y": 6
+    },
+    "tileset": 2,
+    "palette": 4,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFWWWWWFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 5,
+            "y": 3,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 9,
+            "y": 3,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 14,
+            "y": 3,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 3,
+            "y": 5,
+            "type": "item",
+            "item": "BATTLE_CARD",
+            "hidden": true
+        },
+        {
+            "x": 6,
+            "y": 6,
+            "type": "item",
+            "item": "RED_DIAMOND",
+            "hidden": true
+        },
+        {
+            "x": 8,
+            "y": 6,
+            "type": "item",
+            "item": "GOLD_MEDAL",
+            "hidden": true
+        },
+        {
+            "x": 10,
+            "y": 6,
+            "type": "item",
+            "item": "GOLD_MEDAL",
+            "hidden": true
+        },
+        {
+            "x": 12,
+            "y": 6,
+            "type": "item",
+            "item": "RED_DIAMOND",
+            "hidden": true
+        },
+        {
+            "x": 4,
+            "y": 7,
+            "type": "item",
+            "item": "BOMB_LARGE",
+            "hidden": true
+        },
+        {
+            "x": 9,
+            "y": 7,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 15,
+            "y": 7,
+            "type": "exit"
+        },
+        {
+            "x": 9,
+            "y": 10,
+            "type": "item",
+            "item": "GOLD_NUGGET"
+        },
+        {
+            "x": 9,
+            "y": 12,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        }
+    ],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "JOKER",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 2,
+            "y": 12,
+            "type": 35,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 14,
+            "y": 12,
+            "type": 35,
+            "facing": 1,
+            "index": 1
+        },
+        {
+            "slot": 3,
+            "x": 15,
+            "y": 5,
+            "type": 36,
+            "facing": 0,
+            "index": 2
+        },
+        {
+            "slot": 4,
+            "x": 15,
+            "y": 7,
+            "type": 36,
+            "facing": 0,
+            "index": 2
+        }
+    ],
+    "spawners": [
+        {
+            "x": 13,
+            "y": 2,
+            "p0": 2,
+            "p1": 0,
+            "p2": 4,
+            "schedule": [
+                0
+            ]
+        },
+        {
+            "x": 4,
+            "y": 2,
+            "p0": 2,
+            "p1": 0,
+            "p2": 4,
+            "schedule": [
+                0
+            ]
+        }
+    ],
+    "trailer": []
+}

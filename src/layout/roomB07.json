@@ -1,0 +1,106 @@
+{
+    "id": 45,
+    "name": "RoomB7",
+    "spawn": {
+        "x": 15,
+        "y": 12
+    },
+    "tileset": 0,
+    "palette": 6,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFWWWWWWCWWWWFFB",
+        "BFWWFFFFFFFFFWFFB",
+        "BFFFFWFFFFFFFWFFB",
+        "BFFWFWFWFFFWFWFFB",
+        "BFFWFFFWFFFWFWFFB",
+        "BFFWFFFFFFFFFWFFB",
+        "BFFWWWWWWFWWFWFFB",
+        "BFFFFFFFFFFWFFFFB",
+        "BFFCFFFFWFFWCWWWB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 5,
+            "y": 2,
+            "type": "exit"
+        },
+        {
+            "x": 10,
+            "y": 6,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 5,
+            "y": 9,
+            "type": "item",
+            "item": "BLUE_HOURGLASS"
+        },
+        {
+            "x": 11,
+            "y": 12,
+            "type": "item",
+            "item": "COX_HAT",
+            "hidden": true
+        }
+    ],
+    "species": [
+        "DUCKEN",
+        "GHOST",
+        "PSYLORA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 15,
+            "y": 1,
+            "type": 34,
+            "facing": 3,
+            "index": 0
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "type": 36,
+            "facing": 3,
+            "index": 1
+        },
+        {
+            "x": 5,
+            "y": 7,
+            "type": 36,
+            "facing": 0,
+            "index": 2
+        },
+        {
+            "x": 7,
+            "y": 5,
+            "type": 36,
+            "facing": 4,
+            "index": 2
+        },
+        {
+            "x": 11,
+            "y": 8,
+            "type": 36,
+            "facing": 5,
+            "index": 2
+        },
+        {
+            "x": 7,
+            "y": 11,
+            "type": 36,
+            "facing": 3,
+            "index": 2
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

@@ -1,0 +1,167 @@
+{
+    "id": 35,
+    "name": "Room44",
+    "spawn": {
+        "x": 8,
+        "y": 12
+    },
+    "tileset": 0,
+    "palette": 0,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFWFFFFFFFB",
+        "BFWFCCWCWCWCCFWFB",
+        "BFCCWFFFWFFFWCCFB",
+        "BFWCCCWFWFWCCFWFB",
+        "BFCFWFCFWFCFWFCFB",
+        "BFWFCFWCFCWFCFWFB",
+        "BFCFWCCCWCCCWFCFB",
+        "BFWCFFWFFFWFFCWFB",
+        "BFCFWFCFWFCFWFCFB",
+        "BCWFCCWCCCWCCFWCB",
+        "BCCCWFFCWCFFWCCCB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 5,
+            "y": 2,
+            "type": "exit"
+        },
+        {
+            "x": 13,
+            "y": 2,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 15,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 8,
+            "y": 3,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 10,
+            "y": 3,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "type": "item",
+            "item": "RED_DIAMOND"
+        },
+        {
+            "x": 16,
+            "y": 5,
+            "type": "item",
+            "item": "RED_DIAMOND"
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        },
+        {
+            "x": 2,
+            "y": 11,
+            "type": "item",
+            "item": "SILVER_NUGGET"
+        },
+        {
+            "x": 9,
+            "y": 11,
+            "type": "item",
+            "item": "MONSTER_FLAME"
+        },
+        {
+            "x": 16,
+            "y": 11,
+            "type": "item",
+            "item": "SILVER_NUGGET"
+        }
+    ],
+    "species": [
+        "FLAME_BLUE",
+        "TACOPI",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 7,
+            "y": 9,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 13,
+            "y": 7,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 3,
+            "y": 7,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 8,
+            "y": 6,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        }
+    ],
+    "spawners": [
+        {
+            "x": 14,
+            "y": 1,
+            "p0": 3,
+            "p1": 1,
+            "p2": 4,
+            "schedule": [
+                1
+            ]
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "p0": 3,
+            "p1": 0,
+            "p2": 4,
+            "schedule": [
+                1
+            ]
+        }
+    ],
+    "trailer": []
+}

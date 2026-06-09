@@ -1,0 +1,102 @@
+{
+    "id": 98,
+    "name": "Room02",
+    "spawn": {
+        "x": 1,
+        "y": 12
+    },
+    "tileset": 1,
+    "palette": 1,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BWWWWWWWWWWFFFFFB",
+        "BWWWWWWWWWWWWFFFB",
+        "BWCFFFFFFWWWFFFFB",
+        "BFFFFWFFFFFCFFFFB",
+        "BFFFWWWFFFFWWFFFB",
+        "BWWWWWWWWWWWWWFFB",
+        "BWWWWWWWWWWWWFFWB",
+        "BWWFFFFCWWFFFFWWB",
+        "BWFFFFFFFFFFFFWWB",
+        "BFFFFCFFFFCWFFFWB",
+        "BFFFWWFFFCWWWFFFB",
+        "BFFWWWWFCWWWWWFCB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 12,
+            "y": 2,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 16,
+            "y": 2,
+            "type": "item",
+            "item": "RED_DIAMOND",
+            "hidden": true
+        },
+        {
+            "x": 3,
+            "y": 4,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 12,
+            "y": 5,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        },
+        {
+            "x": 2,
+            "y": 6,
+            "type": "exit"
+        },
+        {
+            "x": 8,
+            "y": 9,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 6,
+            "y": 11,
+            "type": "item",
+            "item": "SILVER_MEDAL"
+        },
+        {
+            "x": 16,
+            "y": 13,
+            "type": "item",
+            "item": "SILVER_NUGGET"
+        }
+    ],
+    "species": [
+        "DUCKEN",
+        "JELL",
+        "TACOPI",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 11,
+            "y": 9,
+            "type": 33,
+            "facing": 1,
+            "index": 1
+        },
+        {
+            "x": 8,
+            "y": 5,
+            "type": 33,
+            "facing": 0,
+            "index": 2
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

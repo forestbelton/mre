@@ -1,0 +1,158 @@
+{
+    "id": 60,
+    "name": "Room20",
+    "spawn": {
+        "x": 3,
+        "y": 1
+    },
+    "tileset": 1,
+    "palette": 2,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BWWWWWCCWWWWCWWWB",
+        "BFFFFCCCCCFFCFFFB",
+        "BFFFFWWWWWFFFFFFB",
+        "BFFFCFFFFFFFFFCCB",
+        "BFFCFFFFFFCFCCCCB",
+        "BFCFFFFFFFFWFFFFB",
+        "BFFFFFFFFFFWFFFFB",
+        "BFFFFFFFFFFWFFFFB",
+        "BCFCCCCFFFFWFFFFB",
+        "BFCFFFFCFWFWCCCCB",
+        "BFFFFFFFFFFWCCFCB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 2,
+            "type": "exit"
+        },
+        {
+            "x": 13,
+            "y": 3,
+            "type": "item",
+            "item": "RED_DIAMOND"
+        },
+        {
+            "x": 15,
+            "y": 6,
+            "type": "item",
+            "item": "BOMB_LARGE"
+        },
+        {
+            "x": 15,
+            "y": 7,
+            "type": "item",
+            "item": "BLUE_CRYSTAL",
+            "hidden": true
+        },
+        {
+            "x": 16,
+            "y": 12,
+            "type": "item",
+            "item": "COX_HAT"
+        },
+        {
+            "x": 3,
+            "y": 13,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 8,
+            "y": 13,
+            "type": "item",
+            "item": "HEAL_BADGE"
+        },
+        {
+            "x": 10,
+            "y": 13,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 13,
+            "y": 13,
+            "type": "item",
+            "item": "PLATINUM_RING",
+            "hidden": true
+        },
+        {
+            "x": 14,
+            "y": 13,
+            "type": "item",
+            "item": "ORANGE_HOURGLASS",
+            "hidden": true
+        },
+        {
+            "x": 15,
+            "y": 13,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 16,
+            "y": 13,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        }
+    ],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 15,
+            "y": 1,
+            "type": 34,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 10,
+            "y": 5,
+            "type": 34,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 12,
+            "y": 10,
+            "type": 34,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 1,
+            "y": 9,
+            "type": 34,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 6,
+            "y": 12,
+            "type": 34,
+            "facing": 0,
+            "index": 2
+        }
+    ],
+    "spawners": [
+        {
+            "x": 14,
+            "y": 12,
+            "p0": 2,
+            "p1": 0,
+            "p2": 2,
+            "schedule": []
+        }
+    ],
+    "trailer": []
+}

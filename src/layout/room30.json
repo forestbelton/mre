@@ -1,0 +1,110 @@
+{
+    "id": 28,
+    "name": "Room30",
+    "spawn": {
+        "x": 5,
+        "y": 12
+    },
+    "tileset": 3,
+    "palette": 3,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWFWFWCCWFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFWCCCCWCWFWCB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWFWCCWFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFWCCCCWFWCWCWFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWCWFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 2,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 7,
+            "y": 2,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 3,
+            "y": 5,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        },
+        {
+            "x": 3,
+            "y": 6,
+            "type": "exit"
+        },
+        {
+            "x": 14,
+            "y": 6,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 16,
+            "y": 6,
+            "type": "item",
+            "item": "HEAL_BADGE"
+        },
+        {
+            "x": 4,
+            "y": 12,
+            "type": "item",
+            "item": "SILVER_MEDAL"
+        },
+        {
+            "x": 11,
+            "y": 13,
+            "type": "item",
+            "item": "BLUE_CRYSTAL"
+        },
+        {
+            "x": 13,
+            "y": 13,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        },
+        {
+            "x": 15,
+            "y": 13,
+            "type": "item",
+            "item": "BLUE_CRYSTAL"
+        }
+    ],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [],
+    "spawners": [
+        {
+            "x": 6,
+            "y": 1,
+            "p0": 1,
+            "p1": 2,
+            "p2": 4,
+            "schedule": [
+                2,
+                2
+            ]
+        }
+    ],
+    "trailer": []
+}

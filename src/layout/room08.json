@@ -1,0 +1,114 @@
+{
+    "id": 55,
+    "name": "Room08",
+    "spawn": {
+        "x": 2,
+        "y": 9
+    },
+    "tileset": 1,
+    "palette": 1,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFWWFFFFFFFFFCCFB",
+        "BFFFWWFFFFFCCFFFB",
+        "BFFFFFWWFCCFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFCCCWWFFFFFB",
+        "BFFFCCCCCCCWWFFFB",
+        "BFCCFFFFFFFFFWWFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 3,
+            "y": 3,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 4,
+            "y": 3,
+            "type": "item",
+            "item": "BELL",
+            "hidden": true
+        },
+        {
+            "x": 5,
+            "y": 3,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 9,
+            "y": 4,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 15,
+            "y": 4,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 11,
+            "y": 7,
+            "type": "item",
+            "item": "BLUE_DIAMOND"
+        },
+        {
+            "x": 9,
+            "y": 9,
+            "type": "item",
+            "item": "RED_CRYSTAL"
+        },
+        {
+            "x": 11,
+            "y": 10,
+            "type": "item",
+            "item": "DUCK_DOLL"
+        },
+        {
+            "x": 15,
+            "y": 10,
+            "type": "exit"
+        }
+    ],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [],
+    "spawners": [
+        {
+            "x": 4,
+            "y": 2,
+            "p0": 1,
+            "p1": 0,
+            "p2": 3,
+            "schedule": [
+                0
+            ]
+        },
+        {
+            "x": 2,
+            "y": 2,
+            "p0": 1,
+            "p1": 0,
+            "p2": 3,
+            "schedule": [
+                0
+            ]
+        }
+    ],
+    "trailer": []
+}

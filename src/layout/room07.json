@@ -1,0 +1,109 @@
+{
+    "id": 54,
+    "name": "Room07",
+    "spawn": {
+        "x": 3,
+        "y": 8
+    },
+    "tileset": 0,
+    "palette": 1,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BWWWWWWWWWWWWWWWB",
+        "BWWWWWFFFFFWWWWWB",
+        "BWWWWCFFFFFCWWWWB",
+        "BWWWWCFFFFFCWWWWB",
+        "BWWWWWFFFFFWWWWWB",
+        "BWFFFWWWFCWWFFFWB",
+        "BWFFFCFFCFFCFFFWB",
+        "BWFFFWWWWWWWFFFWB",
+        "BWWWWWWFFFWWCWWWB",
+        "BWWWFFWFFFWFFWWWB",
+        "BWWWWFFFFFFFWWWWB",
+        "BWWWWWWWCWWWWWWWB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 9,
+            "y": 3,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 6,
+            "y": 5,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        },
+        {
+            "x": 12,
+            "y": 5,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        },
+        {
+            "x": 6,
+            "y": 8,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 12,
+            "y": 8,
+            "type": "item",
+            "item": "GUNPOWDER"
+        },
+        {
+            "x": 14,
+            "y": 8,
+            "type": "item",
+            "item": "GOLD_KEY"
+        },
+        {
+            "x": 5,
+            "y": 11,
+            "type": "item",
+            "item": "BELL",
+            "hidden": true
+        },
+        {
+            "x": 9,
+            "y": 11,
+            "type": "exit"
+        }
+    ],
+    "species": [
+        "DUCKEN",
+        "JELL",
+        "JOKER",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 8,
+            "y": 6,
+            "type": 34,
+            "facing": 0,
+            "index": 1
+        },
+        {
+            "x": 14,
+            "y": 8,
+            "type": 34,
+            "facing": 1,
+            "index": 0
+        },
+        {
+            "x": 5,
+            "y": 11,
+            "type": 33,
+            "facing": 0,
+            "index": 2
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

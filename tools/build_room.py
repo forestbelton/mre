@@ -29,10 +29,22 @@ class RoomItem(AbstractRoomObject):
     hidden: NotRequired[bool]
 
 
-RoomObject = RoomItem | RoomExit
+class RoomTile(AbstractRoomObject):
+    # A non-item room-piece tile (piece-grid byte with bit 7 clear), e.g. the
+    # $43 Devil's Seal obstacle. `value` is the raw piece byte.
+    type: Literal["tile"]
+    value: int
+
+
+RoomObject = RoomItem | RoomExit | RoomTile
+
+# Named non-item piece-grid tiles (bit 7 clear); others are emitted as raw hex.
+TILE_NAMES = {0x43: "TILE_OBSTACLE_BAT"}
 
 
 class RoomMonster(TypedDict):
+    slot: NotRequired[int]  # arr2 slot 0-8 (defaults to list order); preserves the
+                            # exact byte layout when empties are interspersed
     x: int
     y: int
     type: int           # packed behaviour: low 3 bits = speed, hi 3 bits (&$70) = AI param
@@ -41,6 +53,7 @@ class RoomMonster(TypedDict):
 
 
 class RoomSpawner(TypedDict):
+    slot: NotRequired[int]  # arr3 slot 0-3 (defaults to list order)
     x: int
     y: int
     p0: int             # spawn-timing params (packed, undecoded)
@@ -68,6 +81,17 @@ class Room(TypedDict):
 
 class RoomValidationError(Exception):
     pass
+
+
+def check_slots(entries: list, count: int, kind: str) -> None:
+    if len(entries) > count:
+        raise RoomValidationError(f"at most {count} {kind}s per room")
+    used = [e.get("slot", k) for k, e in enumerate(entries)]
+    for s in used:
+        if not 0 <= s < count:
+            raise RoomValidationError(f"{kind} slot {s} out of range 0-{count - 1}")
+    if len(set(used)) != len(used):
+        raise RoomValidationError(f"duplicate {kind} slot")
 
 
 def build_room(room: Room) -> str:
@@ -151,6 +175,8 @@ def build_object_grid(width: int, height: int, objects: list[RoomObject]) -> str
                 return entry + f" | ITEM_{found['item']}"
             case "exit":
                 return "TILE_EXIT"
+            case "tile":
+                return TILE_NAMES.get(found["value"], to_hex(found["value"]))
         raise RoomValidationError(f"unknown object type: {found['type']}")
 
     def build_row(y: int) -> str:
@@ -159,23 +185,35 @@ def build_object_grid(width: int, height: int, objects: list[RoomObject]) -> str
     return "\n".join(f"    db {build_row(y)}" for y in range(height))
 
 
+def place_by_slot(entries: list, count: int) -> list:
+    # Map entries into `count` fixed slots. An entry's slot is its "slot" field,
+    # or its list position when none is given (compact, for hand-written rooms).
+    slots: list = [None] * count
+    for k, e in enumerate(entries):
+        slots[e.get("slot", k)] = e
+    return slots
+
+
 def build_monster_table(monsters: list[RoomMonster], species: list[str]) -> str:
     lines: list[str] = []
-    for m in monsters:
-        comment = species[m["index"]]
+    for m in place_by_slot(monsters, 9):
+        if m is None:
+            lines.append("    EMPTY_MONSTER_SLOT")
+            continue
         lines.append(
             f"    dstruct Monster, , .X={m['x']}, .Y={m['y']}, "
             f".Type={to_hex(m['type'])}, .Facing={m['facing']}, .Index={m['index']}"
-            f"   ; {comment}"
+            f"   ; {species[m['index']]}"
         )
-    for _ in range(9 - len(monsters)):
-        lines.append("    EMPTY_MONSTER_SLOT")
     return "\n".join(lines)
 
 
 def build_spawner_table(spawners: list[RoomSpawner]) -> str:
     lines: list[str] = []
-    for s in spawners:
+    for s in place_by_slot(spawners, 4):
+        if s is None:
+            lines.append("    EMPTY_SPAWNER_SLOT")
+            continue
         steps = [
             str(s["schedule"][i]) if i < len(s["schedule"]) else "SPAWN_NONE"
             for i in range(6)
@@ -186,8 +224,6 @@ def build_spawner_table(spawners: list[RoomSpawner]) -> str:
             f".P0={to_hex(s['p0'])}, .P1={to_hex(s['p1'])}, .P2={to_hex(s['p2'])}, "
             f"{spawn_fields}, .End=INERT"
         )
-    for _ in range(4 - len(spawners)):
-        lines.append("    EMPTY_SPAWNER_SLOT")
     return "\n".join(lines)
 
 
@@ -236,15 +272,13 @@ def validate_room(room: Room):
             )
     if len(room["species"]) != 4:
         raise RoomValidationError("must have exactly 4 species")
-    if len(room["monsters"]) > 9:
-        raise RoomValidationError("at most 9 monsters per room")
+    check_slots(room["monsters"], 9, "monster")
     for i, m in enumerate(room["monsters"]):
         if not 0 <= m["index"] < 4:
             raise RoomValidationError(f"monster {i} index must be 0-3")
         if m["type"] & 0x88:
             raise RoomValidationError(f"monster {i} type uses reserved bits 3/7")
-    if len(room["spawners"]) > 4:
-        raise RoomValidationError("at most 4 spawners per room")
+    check_slots(room["spawners"], 4, "spawner")
     for i, s in enumerate(room["spawners"]):
         if len(s["schedule"]) > 6:
             raise RoomValidationError(f"spawner {i} schedule has at most 6 steps")

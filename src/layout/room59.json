@@ -1,0 +1,174 @@
+{
+    "id": 33,
+    "name": "Room59",
+    "spawn": {
+        "x": 8,
+        "y": 12
+    },
+    "tileset": 3,
+    "palette": 2,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BCWCWWWWWWWWWCCWB",
+        "BFFWFFFCFCFFFWFFB",
+        "BWCWCCWCWWWCWCCWB",
+        "BFFWFFFWFCFFFWFFB",
+        "BCCWWFCWFWCWCWCCB",
+        "BFFCFFCWFWCFFCFFB",
+        "BWCWCWCWFWCWCWCCB",
+        "BFFFFFFWFWFFFFFFB",
+        "BFCWWWCCCCCWWWCFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [
+        {
+            "x": 9,
+            "y": 3,
+            "type": "item",
+            "item": "CAKE",
+            "hidden": true
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "type": "item",
+            "item": "BELL"
+        },
+        {
+            "x": 6,
+            "y": 5,
+            "type": "item",
+            "item": "HEAL_BADGE"
+        },
+        {
+            "x": 9,
+            "y": 5,
+            "type": "item",
+            "item": "DISC_STONE_PIECE"
+        },
+        {
+            "x": 12,
+            "y": 5,
+            "type": "item",
+            "item": "BLUE_DIAMOND"
+        },
+        {
+            "x": 8,
+            "y": 6,
+            "type": "item",
+            "item": "BOMB_SMALL"
+        },
+        {
+            "x": 13,
+            "y": 7,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 6,
+            "y": 8,
+            "type": "tile",
+            "value": 66
+        },
+        {
+            "x": 9,
+            "y": 10,
+            "type": "exit"
+        },
+        {
+            "x": 2,
+            "y": 11,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 7,
+            "y": 11,
+            "type": "item",
+            "item": "BLUE_HOURGLASS"
+        },
+        {
+            "x": 16,
+            "y": 11,
+            "type": "item",
+            "item": "GOLD_MEDAL"
+        },
+        {
+            "x": 9,
+            "y": 12,
+            "type": "item",
+            "item": "GOLD_KEY"
+        }
+    ],
+    "species": [
+        "FLAME_BLUE",
+        "TACOPI",
+        "PSYLORA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 2,
+            "y": 8,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 14,
+            "y": 8,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 10,
+            "y": 6,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 6,
+            "y": 6,
+            "type": 34,
+            "facing": 0,
+            "index": 0
+        },
+        {
+            "x": 8,
+            "y": 6,
+            "type": 35,
+            "facing": 0,
+            "index": 2
+        }
+    ],
+    "spawners": [
+        {
+            "x": 5,
+            "y": 7,
+            "p0": 0,
+            "p1": 0,
+            "p2": 3,
+            "schedule": [
+                1
+            ]
+        },
+        {
+            "x": 12,
+            "y": 6,
+            "p0": 0,
+            "p1": 0,
+            "p2": 3,
+            "schedule": [
+                1
+            ]
+        }
+    ],
+    "trailer": []
+}
