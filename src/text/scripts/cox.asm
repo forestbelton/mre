@@ -908,14 +908,8 @@ Func_13_49ac:
 	cp $df
 	jr z, Func_13_49d0
 	jr Func_13_49d1
-
-SECTION "analyzed_04c9d0", ROMX[$49d0], BANK[$13]
-
 Func_13_49d0:
 	dec de
-
-SECTION "analyzed_04c9d1", ROMX[$49d1], BANK[$13]
-
 Func_13_49d1:
 	push hl
 	push de
@@ -924,6 +918,7 @@ Func_13_49d1:
 	inc de
 	pop hl
 	ret
+
 Func_13_49df:
 	ld a, $40
 	rst AddAToDE
