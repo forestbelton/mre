@@ -1447,7 +1447,10 @@ Data_12_4a61:
 Data_12_4a75:
 	db $58, $a2, $a7, $a4
 
-Func_12_4a79:
+; Write the active floor's edited record (wFloorSnapshot) into its SRAM slot
+; ($4a73 table) + checksum ($4a67 table), and store its height marker in
+; $c7f6+floor. Called from home.asm when committing a floor edit.
+SaveFloorToSram:
 	call Func_00_09f9
 	ld a, [wActiveFloor]
 	add a, a
@@ -1474,11 +1477,11 @@ Func_12_4a79:
 	rst AddAToHL
 	ld a, [wFloorHeight]
 	cp $0e
-	jr nz, Func_12_4ab5
+	jr nz, .notFullHeight
 	ld [hl], $00
 	ret
 
-Func_12_4ab5:
+.notFullHeight:
 	ld [hl], $01
 	ret
 Func_12_4ab8:
@@ -1534,7 +1537,10 @@ Func_12_4ab8:
 	ld [hl], $02
 	ret
 
-Func_12_4b13:
+; Restore the active floor's 6-byte room markers from the undo slot ($12db table)
+; back to the live slot ($4a6d table) and rewrite its checksum -- the inverse of
+; BackupFloorRoomMarkers.
+RestoreFloorRoomMarkers:
 	call Func_00_09f9
 	ld a, [wActiveFloor]
 	add a, a
@@ -1564,16 +1570,46 @@ Func_12_4b13:
 	call Func_00_09ff
 	ret
 
-Data_12_4b44:
-	db $cd, $f9, $09, $fa, $c0, $c2, $87, $47, $21, $6d, $4a, $c7, $2a, $56, $5f, $78
-	db $21, $db, $12, $c7, $2a, $66, $6f, $0e, $06, $cd, $0b, $03, $cd, $ff, $09, $c9
+; Back up the active floor's 6-byte room markers from the live slot ($4a6d table)
+; into the undo slot ($12db table); RestoreFloorRoomMarkers copies them back.
+; Called from home.asm before applying floor edits. (Was mis-disassembled as data.)
+BackupFloorRoomMarkers:
+	call Func_00_09f9
+	ld a, [wActiveFloor]
+	add a, a
+	ld b, a
+	ld hl, $4a6d
+	rst AddAToHL
+	ld a, [hl+]
+	ld d, [hl]
+	ld e, a
+	ld a, b
+	ld hl, $12db
+	rst AddAToHL
+	ld a, [hl+]
+	ld h, [hl]
+	ld l, a
+	ld c, $06
+	call CopyDEtoHL
+	call Func_00_09ff
+	ret
 
-Data_12_4b64:
-	db $56, $30, $33
+; =============================================================================
+; SRAM save/load. The save record lives at SRAM $a6ed: a 3-byte "V03" signature
+; followed by $0118 bytes of game state, with an XOR checksum (Func_00_12ee write
+; / Func_00_12e1 verify). SRAM is enabled/disabled around each access by the home
+; helpers Func_00_09f9 / Func_00_09ff. Per-floor editor data uses parallel pointer
+; tables ($4a61/$4a67/$4a6d/$4a73, plus the $12db undo slot).
+; =============================================================================
 
+SramSaveSignature:
+	db "V03"
+
+; Write the in-RAM game state (wSaveSignature, $0118 bytes) to SRAM with a fresh
+; "V03" header + checksum. Called by the save NPCs (toamuna/bodka scripts).
 SaveGameToSram:
 	call Func_00_09f9
-	ld de, $4b64
+	ld de, SramSaveSignature
 	ld hl, wSaveSignature
 	ld c, $03
 	call CopyDEtoHL
@@ -1586,17 +1622,18 @@ SaveGameToSram:
 	call Func_00_12ee
 	call Func_00_09ff
 	ret
-Func_12_4b8e:
+; If the SRAM save record's checksum is valid, copy it into wSaveSignature and
+; return 1; otherwise return 0. Called on boot / at the ranch (toamuna, screens).
+LoadGameFromSram:
 	call Func_00_09f9
 	ld hl, $a6ed
 	ld bc, $0118
 	call Func_00_12e1
-	jr z, Func_12_4ba1
-
-Data_12_4b9c:
-	db $cd, $ff, $09, $af, $c9
-
-Func_12_4ba1:
+	jr z, .loaded
+	call Func_00_09ff          ; bad checksum: disable SRAM, return 0
+	xor a
+	ret
+.loaded:
 	ld de, $a6ed
 	ld hl, wSaveSignature
 	ld bc, $0118
@@ -1604,61 +1641,65 @@ Func_12_4ba1:
 	call Func_00_09ff
 	ld a, $01
 	ret
-Func_12_4bb3:
+; Return 1 if a valid save exists (SRAM "V03" signature matches), else 0.
+HasSavedGame:
 	call Func_00_09f9
-	ld de, $4b64
+	ld de, SramSaveSignature
 	ld hl, $a6ed
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bd2
+	jr nz, .noSave
 	inc de
 	inc hl
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bd2
+	jr nz, .noSave
 	inc de
 	inc hl
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bd2
+	jr nz, .noSave
 	call Func_00_09ff
 	ld a, $01
 	ret
-Func_12_4bd2:
+.noSave:
 	call Func_00_09ff
 	xor a
 	ret
-Func_12_4bd7:
-	ld de, $4b64
+; Compare the 3-byte "V03" signature against [hl] (no SRAM enable). Returns 1 on
+; match, 0 otherwise. Helper used by the per-room load loop in LoadFloorEditsFromSram.
+CompareSaveSignature:
+	ld de, SramSaveSignature
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bed
+	jr nz, .noMatch
 	inc de
 	inc hl
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bed
+	jr nz, .noMatch
 	inc de
 	inc hl
 	ld a, [de]
 	cp [hl]
-	jr nz, Func_12_4bed
+	jr nz, .noMatch
 	ld a, $01
 	ret
-Func_12_4bed:
+.noMatch:
 	xor a
 	ret
-Func_12_4bef:
+; If the save record is valid, load the 5-byte high score ($a6f0) into wHiScore
+; and return 1, else return 0.
+LoadHiScoreFromSram:
 	call Func_00_09f9
 	ld hl, $a6ed
 	ld bc, $0118
 	call Func_00_12e1
-	jr z, Func_12_4c02
-
-Data_12_4bfd:
-	db $cd, $ff, $09, $af, $c9
-
-Func_12_4c02:
+	jr z, .valid
+	call Func_00_09ff          ; bad checksum: disable SRAM, return 0
+	xor a
+	ret
+.valid:
 	ld de, $a6f0
 	ld hl, wHiScore
 	ld c, $05
@@ -1666,7 +1707,10 @@ Func_12_4c02:
 	call Func_00_09ff
 	ld a, $01
 	ret
-Func_12_4c13:
+; Load all saved per-room floor edits from SRAM: for each room slot, verify its
+; "V03" signature + checksum and unpack the valid ones back into the editor's
+; floor tables. Called from scene.asm and link.asm.
+LoadFloorEditsFromSram:
 	call Func_00_09f9
 	xor a
 	ld [$d0e7], a
@@ -1678,7 +1722,7 @@ Func_12_4c1a:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_12_4bd7
+	call CompareSaveSignature
 	or a
 	jr z, Func_12_4c3e
 	ld a, [$d0e7]
@@ -1699,7 +1743,7 @@ Func_12_4c3e:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	ld de, $4b64
+	ld de, SramSaveSignature
 	ld c, $03
 	call CopyDEtoHL
 	ld a, [$d0e7]

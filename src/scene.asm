@@ -912,7 +912,7 @@ Func_05_463a:
 	ld [hl], a
 	ld a, $ff
 	ld [wDisplayMonster], a
-	FAR_CALL $12, Func_12_4c13
+	FAR_CALL $12, LoadFloorEditsFromSram
 	ret
 Func_05_4690:
 	xor a
@@ -1195,11 +1195,11 @@ Func_05_4835:
 	ld [$cfee], a
 	ret
 Func_05_4843:
-	FAR_CALL $12, Func_12_4bb3
+	FAR_CALL $12, HasSavedGame
 	ld [wScreenPhase], a
 	or a
 	jr z, Func_05_4865
-	FAR_CALL $12, Func_12_4bef
+	FAR_CALL $12, LoadHiScoreFromSram
 	or a
 	jr z, Func_05_485f
 	ld a, $01

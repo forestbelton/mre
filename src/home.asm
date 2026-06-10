@@ -4851,7 +4851,7 @@ Func_00_22fc:
 	ld a, [$c55f]
 	or a
 	jr nz, Func_00_2313
-	FAR_CALL $12, $4b44
+	FAR_CALL $12, BackupFloorRoomMarkers
 	ret
 Func_00_2313:
 	dec a
@@ -4974,7 +4974,7 @@ Func_00_23e8:
 	or a
 	jr nz, Func_00_2401
 	call PackFloorSnapshot
-	FAR_CALL $12, Func_12_4a79
+	FAR_CALL $12, SaveFloorToSram
 Func_00_2401:
 	call Func_00_0bdd
 	ld a, $15
@@ -4997,7 +4997,7 @@ Func_00_2420:
 	or a
 	jr nz, Func_00_2443
 	call PackFloorSnapshot
-	FAR_CALL $12, Func_12_4a79
+	FAR_CALL $12, SaveFloorToSram
 Func_00_2443:
 	or $01
 	ret
@@ -6905,10 +6905,10 @@ Func_00_31a4:
 	call Func_00_217d
 	or a
 	jr nz, Func_00_31ba
-	FAR_CALL $12, Func_12_4b13
+	FAR_CALL $12, RestoreFloorRoomMarkers
 	jr Func_00_31c2
 Func_00_31ba:
-	FAR_CALL $12, Data_12_4b44
+	FAR_CALL $12, BackupFloorRoomMarkers
 Func_00_31c2:
 	xor a
 	ret
@@ -7127,7 +7127,7 @@ Func_00_3318:
 	call PackFloorSnapshot
 	ld a, [$c55d]
 	ld [$c2c0], a
-	FAR_CALL $12, Func_12_4a79
+	FAR_CALL $12, SaveFloorToSram
 	FAR_CALL $15, Func_15_4147
 	jr Func_00_3305
 

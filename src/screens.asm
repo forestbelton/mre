@@ -2392,7 +2392,7 @@ Func_30_55a6:
 	ld a, [wScreenTimer]
 	and a
 	jr z, Func_30_555d
-	FAR_CALL $12, Func_12_4b8e
+	FAR_CALL $12, LoadGameFromSram
 	and a
 	jr nz, Func_30_555d
 

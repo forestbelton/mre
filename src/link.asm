@@ -719,7 +719,7 @@ Func_31_44fd:
 	bit 2, a
 	jr nz, Func_31_4526
 	call Func_31_446e
-	FAR_CALL $12, Func_12_4c13
+	FAR_CALL $12, LoadFloorEditsFromSram
 	call Func_31_456f
 Func_31_4526:
 	xor a

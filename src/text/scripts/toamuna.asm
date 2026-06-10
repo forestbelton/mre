@@ -22,7 +22,7 @@ INCLUDE "sound_ids.inc"
 SECTION "Toamuna script functions", ROMX
 
 Toamuna_LoadGame:
-	FAR_CALL $12, Func_12_4b8e
+	FAR_CALL $12, LoadGameFromSram
 	ld [wYNResult], a
 	ret
 Toamuna_SaveGame:
@@ -30,7 +30,7 @@ Toamuna_SaveGame:
 	ld [wYNResult], a
 	ret
 Toamuna_CheckSaveExists:
-	FAR_CALL $12, Func_12_4bb3
+	FAR_CALL $12, HasSavedGame
 	ld [wYNResult], a
 	ret
 	call Func_00_0822
