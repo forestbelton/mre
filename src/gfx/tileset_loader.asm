@@ -1,10 +1,10 @@
 ; Dungeon tileset loader (ROM bank $16).
 ;
-; Tileset selector (Func_16_4016) dispatching through the jump table at
-; Data_16_4000 to swap dungeon tilesets / UI tilemaps into VRAM, plus the
-; tileset graphics. Used by home/scene/monster_detail/layout.
+; LoadTileset swaps a floor's tile graphics into VRAM, chosen by the tileset id
+; in $c4cc (the floor record's [4] field; see layout.asm/ParseFloorRecord).
+; The TilesetSrcPtrs table maps id -> source tiles: ids 0-5 are full tilesets,
+; ids 6-10 are partial tile-chunk updates. Called from home/scene/monster_detail.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,29 +12,34 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_058000", ROMX[$4000], BANK[$16]
 
-Data_16_4000:
-	db $7f, $40, $7f, $48, $7f, $50, $7f, $58, $7f, $60, $7f, $68, $7f, $70, $7f, $71
-	db $7f, $72, $7f, $73, $7f, $74
+; Source-tile pointer per tileset id (the floor record's [4] field, in $c4cc).
+; ids 0-5 -> full tilesets in TilesetTiles; ids 6-10 -> partial-update chunks.
+TilesetSrcPtrs:
+	dw $407f, $487f, $507f, $587f, $607f, $687f   ; 0-5 full tilesets ($800 each)
+	dw $707f, $717f, $727f, $737f, $747f          ; 6-10 partial-update sets
 
-Func_16_4016:
+; Load the tileset selected by [$c4cc] into VRAM bank 1. ids 0-5 copy a full
+; $800-byte (64-tile) tileset to $9000; ids >= 6 take the .scatter path that
+; pokes eight 32-byte tile chunks into fixed VRAM slots (animated/UI tiles).
+LoadTileset:
 	ld a, $01
 	ld [rVBK], a
-	ld a, [$c4cc]
+	ld a, [$c4cc]              ; tileset id (floor record [4])
 	ld c, a
 	add a, a
-	ld hl, $4000
+	ld hl, TilesetSrcPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
-	ld l, a
+	ld l, a                    ; hl = TilesetSrcPtrs[id]
 	ld a, c
 	cp $06
-	jr nc, Func_16_4036
+	jr nc, .scatter
 	ld de, $9000
 	ld bc, $0800
 	call VramCopy16
 	ret
-Func_16_4036:
+.scatter:
 	ld de, $9000
 	ld bc, $0020
 	call VramCopy16
@@ -61,10 +66,14 @@ Func_16_4036:
 	call VramCopy16
 	ret
 
-Data_16_407f:
+; Full tileset graphics: ids 0-5 are 6 complete $800-byte (64-tile) tilesets,
+; ids 6-10 continue into TilesetTilesPartial as small partial-update tile chunks.
+TilesetTiles:
 	INCBIN "gfx/raw/Data_16_407f.2bpp", 0, 12800
 
-Data_16_727f:
+; Partial-update tile chunks for tileset ids 8-10 (TilesetSrcPtrs[8..10] point
+; here); the .scatter path pokes 32-byte pieces of these into fixed VRAM slots.
+TilesetTilesPartial:
 	db $03, $03, $07, $06, $07, $05, $06, $05, $07, $06, $03, $03, $00, $01, $01, $01
 	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $00, $01
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
@@ -114,7 +123,10 @@ Data_16_727f:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_16_757f:
+; Count-prefixed metasprite ($11 = 17 OAM records) drawn from this bank's tiles
+; by home Func_00_289d (sets wDrawBank=$16, DrawMetasprite at $1008). Depiction
+; not yet pinned in-game.
+TilesetMetasprite:
 	db $11, $08, $08, $00, $00, $08, $10, $08, $00, $f0, $10, $7c, $01, $f0, $30, $06
 	db $41, $f0, $30, $06, $41, $f0, $30, $06, $41, $f0, $00, $00, $00, $f0, $00, $00
 	db $00, $f0, $00, $00, $00, $f0, $00, $00, $00, $f0, $00, $00, $00, $f0, $00, $00

@@ -1310,7 +1310,7 @@ Func_0f_4b1d:
 	ret
 Func_0f_4b27:
 	FAR_CALL $10, Func_10_405f
-	FAR_CALL $16, Func_16_4016
+	FAR_CALL $16, LoadTileset
 	FAR_CALL $10, Func_10_4007
 	xor a
 	ldh [rVBK], a

@@ -3685,7 +3685,7 @@ Func_00_1bac:
 Func_00_1bb9:
 	ld a, [wMenuCursor]
 	ld [$c4cc], a
-	FAR_CALL $16, Func_16_4016
+	FAR_CALL $16, LoadTileset
 Func_00_1bc7:
 	call Func_00_2dbc
 	ld a, [wUiTimer]
@@ -5448,7 +5448,7 @@ Func_00_2893:
 Func_00_289d:
 	ld a, $16
 	ld [wDrawBank], a
-	ld hl, $757f
+	ld hl, TilesetMetasprite
 	ld bc, $1008
 	call DrawMetasprite
 	call HideUnusedOamSprites
@@ -6971,7 +6971,7 @@ Func_00_31fa:
 
 Func_00_320e:
 	call Func_00_083c
-	FAR_CALL $16, Func_16_4016
+	FAR_CALL $16, LoadTileset
 	FAR_CALL $10, Func_10_4018
 	FAR_CALL $10, Func_10_4070
 	xor a

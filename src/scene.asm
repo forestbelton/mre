@@ -1255,7 +1255,7 @@ Func_05_4884:
 Func_05_48a5:
 	FAR_CALL $10, Func_10_4018
 	FAR_CALL $02, Func_02_4000
-	FAR_CALL $16, Func_16_4016
+	FAR_CALL $16, LoadTileset
 	FAR_CALL $17, SpecialScene_LoadGraphics
 	call Func_05_48c9
 	ret

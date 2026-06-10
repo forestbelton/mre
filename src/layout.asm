@@ -135,7 +135,7 @@ ParseFloorRecord:
 	ld a, [hl+]
 	ld [$c2e9], a          ; [3] pad (always $00)
 	ld a, [hl+]
-	ld [$c4cc], a          ; [4] tileset (0-5; tile gfx via Func_16_4016 -> VRAM $9000)
+	ld [$c4cc], a          ; [4] tileset (0-5; tile gfx via LoadTileset -> VRAM $9000)
 	ld a, [hl+]
 	ld [$c4cb], a          ; [5] palette (0-6; BG palette via Func_10_40a4 -> wBgPalettes)
 	ld a, [hl+]
