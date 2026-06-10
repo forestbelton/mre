@@ -81,6 +81,9 @@ naji:
   png: portrait/naji/naji.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($7526-$762b): talking eyes-animation + smile expression, vest,
+  # collar -- the layered source (one PNG/block + sprites.yaml).
+  sprites: sprites/sprites.yaml
 
 pashute:
   mode: portrait

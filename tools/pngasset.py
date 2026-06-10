@@ -507,48 +507,87 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     def gen_meta(img, oy, ox, bank, pal_hint=None):
         px = img.load()
         W, H = img.size
+        cols = W // 8
         # the metasprite is a complete row-major grid of 8x16 cells; EVERY cell is a
         # record, including ones drawn with a blank (all-transparent) tile -- the
         # original tool padded the grid rather than pruning blank cells.
-        cells = []
+        cells = []                                              # (cr, cc, blk, opaque)
+        # tcand[i] = candidate even tiles for cell i, palette-independent (duplicate
+        # tiles share pixels): the union over every palette that reproduces the cell.
+        tcand: list = []
         for cr in range(0, H, 16):
             for cc in range(0, W, 8):
                 blk = [px[cc + c, cr + r] for r in range(16) for c in range(8)]
                 opaque = any(q[3] != 0 for q in blk)
-                cand = [p for p in range(len(POBJ))
-                        if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk)
-                        and objidx.get(tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk))] if opaque else []
-                cells.append((cr, cc, blk, opaque, cand))
-        fixed = [c[4][0] if c[3] and len(c[4]) == 1 else None for c in cells]
-        # ambiguous cells default to the metasprite's dominant palette, or pal_hint when
-        # the whole sprite is image-irreducible (e.g. a monochrome sprite that several
-        # OBJ palettes reproduce -- the manifest then pins the real one).
-        dom = Counter(p for p in fixed if p is not None).most_common(1)
-        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
-        # opaque cells: tile by pixel match (+2 even-tile run tiebreak). Blank cells:
-        # tile is not in the image, but the sheet allocates them in the same +2 run, so
-        # tile = (next opaque tile) - 2, chained backward (prev + 2 for trailing blanks).
-        tile: list = [None] * len(cells)
-        pal: list = [None] * len(cells)
-        last = None
-        for i, (cr, cc, blk, opaque, cand) in enumerate(cells):
-            if not opaque:
-                pal[i] = dom
+                cells.append((cr, cc, blk, opaque))
+                ts: set = set()
+                if opaque:
+                    for p in range(len(POBJ)):
+                        if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk):
+                            ts.update(objidx.get(
+                                tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk), ()))
+                tcand.append(sorted(t for t in ts if t < 256))  # OBJ tile index is a byte
+        # TILE: pin the unique-candidate cells. Tiles run +2 in record order along a
+        # "base diagonal" (byte = base0 + 2*i, base0 = the common (tile-2*i)); animated
+        # frames allocate a fresh CONTIGUOUS run for the changed cells, which can pixel-
+        # duplicate a base tile (image-irreducible). Resolve an ambiguous cell by an
+        # adjacent OFF-diagonal pinned neighbour (it belongs to that override run),
+        # else the base diagonal. Blank cells carry no pixels: tile = (next opaque) - 2.
+        pinned = [c[3] and len(tc) == 1 for c, tc in zip(cells, tcand)]
+        tile: list = [tcand[i][0] if pinned[i] else None for i in range(len(cells))]
+        bcnt = Counter((tile[i] - 2 * i) % 256 for i in range(len(cells)) if pinned[i])
+        base0 = bcnt.most_common(1)[0][0] if bcnt else 0
+        for i, (c, ts) in enumerate(zip(cells, tcand)):
+            if tile[i] is not None or not c[3]:
                 continue
-            p = fixed[i] if fixed[i] is not None else (dom if dom in cand else cand[0])
-            pal[i] = p
-            pat = tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk)
-            cs = objidx[pat]
-            tile[i] = next((t for t in cs if last is not None and t == last + 2), cs[0])
-            last = tile[i]
-        for i in range(len(cells) - 1, -1, -1):                 # blanks: next opaque - 2
+            anchored = [(tile[j] + (2 if j < i else -2)) % 256
+                        for j in (i - 1, i + 1)
+                        if 0 <= j < len(cells) and pinned[j] and tile[j] != (base0 + 2 * j) % 256]
+            be = (base0 + 2 * i) % 256
+            want = [a for a in anchored if a in ts] + ([be] if be in ts else []) + ts
+            tile[i] = want[0]
+        for i in range(len(cells) - 1, -1, -1):                 # blank cells: next opaque - 2
             if tile[i] is None and i + 1 < len(cells) and tile[i + 1] is not None:
                 tile[i] = (tile[i + 1] - 2) & 0xFF
         for i in range(len(cells)):                             # trailing blanks: prev + 2
             if tile[i] is None:
                 tile[i] = (tile[i - 1] + 2) & 0xFF if i else 0
+        # PALETTE per cell from the now-known tile: pin where the visible colours admit
+        # one palette, fill the rest row-uniform (palette is region-based and these
+        # sprites split by row), then 8-neighbour consensus, then pal_hint / dominant.
+        pcand = []
+        for (cr, cc, blk, opaque), t in zip(cells, tile):
+            pat = TPX[t & 0xFE] + TPX[(t & 0xFE) + 1]
+            pcand.append([p for p in range(len(POBJ))
+                          if all(q[3] == 0 or POBJ[p][pat[k]] == q[:3] for k, q in enumerate(blk))])
+        P: list = [c[0] if len(c) == 1 else None for c in pcand]
+        rows = H // 16
+        for ri in range(rows):                                  # row-uniform fill
+            row = [ri * cols + ci for ci in range(cols)]
+            seen = {P[i] for i in row if P[i] is not None}
+            if len(seen) == 1:
+                only = next(iter(seen))
+                for i in row:
+                    if P[i] is None and only in pcand[i]:
+                        P[i] = only
+        for _ in range(rows + cols):                            # 8-neighbour consensus
+            for i in range(len(cells)):
+                if P[i] is not None:
+                    continue
+                r0, c0 = i // cols, i % cols
+                nb = [P[(r0+dr)*cols + (c0+dc)]
+                      for dr in (-1, 0, 1) for dc in (-1, 0, 1)
+                      if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
+                      and P[(r0+dr)*cols + (c0+dc)] in pcand[i]]
+                if nb:
+                    P[i] = Counter(nb).most_common(1)[0][0]
+        dom = Counter(p for p in P if p is not None).most_common(1)
+        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
+        for i in range(len(cells)):
+            if P[i] is None:
+                P[i] = dom if dom in pcand[i] else (pcand[i][0] if pcand[i] else 0)
         out = bytearray([len(cells)])
-        for (cr, cc, blk, opaque, cand), t, p in zip(cells, tile, pal):
+        for (cr, cc, blk, opaque), t, p in zip(cells, tile, P):
             out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (bank << 3) | p))
         return bytes(out)
 
