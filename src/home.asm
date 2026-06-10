@@ -3479,7 +3479,7 @@ Func_00_19a3:
 	or a
 	jp nz, Func_00_1a66
 Func_00_19af:
-	FAR_CALL $12, Func_12_4296
+	FAR_CALL $12, OpenPieceSelectMenu
 	or a
 	jr nz, Func_00_19a3
 Func_00_19ba:

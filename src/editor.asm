@@ -401,12 +401,18 @@ FloorSelectInputLoop:
 	ld [wActiveFloor], a
 	xor a
 	ret
-Func_12_4296:
+; The editor's piece/option menu (entered after a room is chosen). The input loop
+; moves a cursor over the menu (wMenuId in $c55e), and A dispatches the selected
+; option, B exits: option 0 ConfirmPlayFloor, 1 ConfirmLoadFloor,
+; 2 ConfirmSaveFloor, 3 ConfirmResetFloor (purposes inferred from each handler's
+; wRoomType / SRAM actions). ReenterPieceSelect redraws + re-enters after a sub-
+; action. Called from home.asm.
+OpenPieceSelectMenu:
 	xor a
 	ld [$c55e], a
-Func_12_429a:
+ReenterPieceSelect:
 	FAR_CALL $15, Func_15_410f
-Func_12_42a2:
+PieceSelectInputLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyPressed]
@@ -414,96 +420,91 @@ Func_12_42a2:
 	ld a, [$c55e]
 	call Func_00_32ae
 	bit 4, b
-	jr z, Func_12_42c4
+	jr z, .toggleColAlt
 	cp $04
-	jr nc, Func_12_42a2
+	jr nc, PieceSelectInputLoop
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
-	jr Func_12_431d
-Func_12_42c4:
+	jr .apply
+.toggleColAlt:
 	bit 5, b
-	jr z, Func_12_42d7
+	jr z, .rowInc
 	cp $04
-	jr nc, Func_12_42a2
+	jr nc, PieceSelectInputLoop
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $01
-	jr Func_12_431d
-Func_12_42d7:
+	jr .apply
+.rowInc:
 	bit 7, b
-	jr z, Func_12_42ec
+	jr z, .rowDec
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	add a, $02
 	cp $06
-	jr c, Func_12_431d
-
-Data_12_42e8:
-	db $e6, $01, $18, $31
-
-Func_12_42ec:
+	jr c, .apply
+	and $01                    ; wrapped past 5 -> low bit
+	jr .apply
+.rowDec:
 	bit 6, b
-	jr z, Func_12_4301
+	jr z, .pressA
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	sub $02
 	cp $80
-	jr c, Func_12_431d
-
-Data_12_42fd:
-	db $e6, $05, $18, $1c
-
-Func_12_4301:
+	jr c, .apply
+	and $05                    ; wrapped below 0
+	jr .apply
+.pressA:
 	bit 0, b
-	jr z, Func_12_430e
+	jr z, .pressB
 	push af
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	jr Func_12_432a
-Func_12_430e:
+	jr .dispatch
+.pressB:
 	bit 1, b
-	jr z, Func_12_4324
-
-Data_12_4312:
-	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $3e, $04, $18, $0d
-
-Func_12_431d:
+	jr z, .cancel
+	push af
+	ld a, SOUND_SFX_Cancel
+	call PlaySound
+	pop af
+	ld a, $04
+	jr .dispatch            ; B = dispatch option 4 (exit)
+.apply:
 	ld c, a
 	call Func_12_43fe
-	jp Func_12_42a2
-Func_12_4324:
+	jp PieceSelectInputLoop
+.cancel:
 	call Func_00_3460
-	jp Func_12_42a2
-Func_12_432a:
+	jp PieceSelectInputLoop
+.dispatch:
 	cp $00
-	jr z, Func_12_433e
+	jr z, ConfirmPlayFloor
 	cp $01
-	jr z, Func_12_4368
+	jr z, ConfirmLoadFloor
 	cp $02
-	jr z, Func_12_437a
+	jr z, ConfirmSaveFloor
 	cp $03
-	jp z, Func_12_43dd
-	jp Func_12_43e3
-Func_12_433e:
+	jp z, ConfirmResetFloor
+	jp ExitPieceSelect
+ConfirmPlayFloor:
 	call Func_00_212c
 	ld a, [$c55f]
 	cp $02
-	jr c, Func_12_434b
-
-Data_12_4348:
-	db $c3, $9a, $42
-
-Func_12_434b:
+	jr c, .play
+	jp ReenterPieceSelect            ; invalid -> back to the menu
+.play:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
@@ -513,22 +514,22 @@ Func_12_434b:
 	xor a
 	ret
 
-Func_12_4368:
+ConfirmLoadFloor:
 	call Func_00_217d
 	or a
-	jp nz, Func_12_429a
+	jp nz, ReenterPieceSelect
 	FAR_CALL $12, Func_12_4ab8
-	jp Func_12_429a
-Func_12_437a:
+	jp ReenterPieceSelect
+ConfirmSaveFloor:
 	ld a, $04
 	ld [wRoomType], a
 	call Func_00_1298
 	call Func_00_2fa2
-	jr z, Func_12_4390
+	jr z, .launch
 	ld hl, $5230
 	call Func_00_3450
-	jp Func_12_42a2
-Func_12_4390:
+	jp PieceSelectInputLoop
+.launch:
 	ld a, $05
 	ld [wRoomType], a
 	FAR_CALL $05, Func_05_47c6
@@ -544,12 +545,12 @@ Func_12_4390:
 	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
 	pop af
-	jp Func_12_429a
+	jp ReenterPieceSelect
 
-Func_12_43dd:
+ConfirmResetFloor:
 	call Func_00_2223
-	jp Func_12_429a
-Func_12_43e3:
+	jp ReenterPieceSelect
+ExitPieceSelect:
 	ld a, $01
 	ret
 
