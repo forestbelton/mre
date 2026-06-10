@@ -1,10 +1,13 @@
 ; Background tile + palette loader (ROM bank $10).
 ;
-; Central BG/window tilemap VRAM loaders and the BG-palette selector
-; (Func_10_40a4 indexing Data_10_408c). Shared by home/scene/editor/
-; monster_detail/layout.
-; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
+; A set of small VRAM tile-copy routines (Func_10_4007/_4018/_4041/_405f/_4070),
+; each used by a particular screen, plus the floor BG-palette selector
+; LoadFloorBgPalette (indexes FloorBgPalettePtrs by the floor record's palette id
+; in $c4cb). Shared by home/scene/editor/monster_detail. The tile/palette source
+; blobs follow the code. Two leading routines (Func_10_4000/_403a) were originally
+; mis-disassembled as data and are restored to code here.
+; Carved out of analyzed.asm (byte-exact; section names unchanged). The individual
+; tile-copy routines keep raw names -- which screen each feeds isn't pinned yet.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,9 +15,15 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_040000", ROMX[$4000], BANK[$10]
 
-Data_10_4000:
-	db $cd, $18, $40, $cd, $3a, $40, $c9
+; Convenience entry: load the main BG tileset (Func_10_4018) then its palettes
+; (Func_10_403a). Was mis-disassembled as data (cd 18 40 / cd 3a 40 / c9); no
+; direct caller is disassembled (likely reached via a computed/banked pointer).
+Func_10_4000:
+	call Func_10_4018
+	call Func_10_403a
+	ret
 
+; Copy $400 bytes from $44b7 to VRAM window area $9400 (bank 0). From monster_detail.
 Func_10_4007:
 	xor a
 	ld [rVBK], a
@@ -23,6 +32,8 @@ Func_10_4007:
 	ld bc, $0400
 	call VramCopy16
 	ret
+; Copy the main BG tileset: $40b7 -> $9000 (VRAM bank 0) and $48b7 -> $8800
+; (VRAM bank 1), $800 bytes each. From scene/home room setup.
 Func_10_4018:
 	xor a
 	ld [rVBK], a
@@ -38,9 +49,15 @@ Func_10_4018:
 	call VramCopy16
 	ret
 
-Data_10_403a:
-	db $21, $b7, $60, $cd, $f2, $04, $c9
+; Load 8 BG palettes from $60b7. Was mis-disassembled as data
+; (21 b7 60 / cd f2 04 / c9). Called by Func_10_4000.
+Func_10_403a:
+	ld hl, $60b7
+	call LoadBgPalettes
+	ret
 
+; Copy $800 bytes from $50b7 to VRAM bank 0 $8000, then load 4 palettes from
+; $66f7 (via Func_00_0732) and refresh. From editor/home.
 Func_10_4041:
 	xor a
 	ld [rVBK], a
@@ -54,6 +71,7 @@ Func_10_4041:
 	call Func_00_0732
 	call Func_00_0786
 	ret
+; Copy $500 bytes from $53b7 to VRAM bank 0 $8300. From monster_detail.
 Func_10_405f:
 	xor a
 	ld [rVBK], a
@@ -62,6 +80,7 @@ Func_10_405f:
 	ld bc, $0500
 	call VramCopy16
 	ret
+; Copy $800 bytes from $58b7 to VRAM bank 0 $8800. From home.
 Func_10_4070:
 	xor a
 	ld [rVBK], a
@@ -70,6 +89,7 @@ Func_10_4070:
 	ld bc, $0800
 	call VramCopy16
 	ret
+; Load just the 4 palettes at $66f7 (no tiles). From home.
 Func_10_4081:
 	ld hl, $66f7
 	ld a, $00
@@ -77,18 +97,21 @@ Func_10_4081:
 	call Func_00_0732
 	ret
 
-Data_10_408c:
-	db $b7, $60, $37, $61, $b7, $61, $37, $62, $b7, $62, $37, $63, $b7, $63, $37, $64
-	db $b7, $64, $37, $65, $b7, $65, $37, $66
+; BG-palette pointer per floor palette id ([$c4cb], the floor record's [5] field).
+; Each entry points to a 7-palette block (loaded by LoadFloorBgPalette).
+FloorBgPalettePtrs:
+	dw $60b7, $6137, $61b7, $6237, $62b7, $6337
+	dw $63b7, $6437, $64b7, $6537, $65b7, $6637
 
-Func_10_40a4:
-	ld a, [$c4cb]
+; Select and load the floor's 7 BG palettes by id in $c4cb (floor record [5]).
+LoadFloorBgPalette:
+	ld a, [$c4cb]              ; palette id
 	add a, a
-	ld hl, $408c
+	ld hl, FloorBgPalettePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
-	ld l, a
+	ld l, a                    ; hl = FloorBgPalettePtrs[id]
 	ld a, $00
 	ld b, $07
 	call Func_00_0716

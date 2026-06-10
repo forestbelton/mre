@@ -3680,7 +3680,7 @@ Func_00_1b87:
 	xor a
 Func_00_1bac:
 	ld [$c4cb], a
-	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $10, LoadFloorBgPalette
 	jr Func_00_1bc7
 Func_00_1bb9:
 	ld a, [wMenuCursor]
@@ -6989,7 +6989,7 @@ Func_00_320e:
 	call Func_00_3340
 	call Func_00_1a6c
 	call Func_00_3089
-	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $10, LoadFloorBgPalette
 	FAR_CALL $10, Func_10_4081
 	FAR_CALL $11, LoadAllFloorMonsterPalettes
 	ret

@@ -1320,7 +1320,7 @@ Func_0f_4b27:
 	call VramCopy16
 	ret
 Func_0f_4b4f:
-	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $10, LoadFloorBgPalette
 	ld hl, $4ce8
 	ld a, $06
 	ld b, $01

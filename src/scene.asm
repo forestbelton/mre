@@ -1291,7 +1291,7 @@ Func_05_48f4:
 Func_05_48fc:
 	FAR_CALL $02, LoadEntityPalettes
 	call Func_05_4918
-	FAR_CALL $10, Func_10_40a4
+	FAR_CALL $10, LoadFloorBgPalette
 	FAR_CALL $17, SpecialScene_LoadTilemap
 	ret
 Func_05_4918:
