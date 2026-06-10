@@ -131,7 +131,9 @@ regenerates the whole region byte-exact (`--sprites`; patch tile indices follow 
 same column-major model, OBJ tiles matched 8×16 under the consensus palette). Block
 roles were traced from the bank-`$18` render functions (Pashute_RenderPortrait*).
 The trailing 64 bytes (`$5bdd-$5c1c`, intro-scene data) remain a `db`. This is the
-template for migrating the other portraits' overlay regions.
+template for migrating the other portraits' overlay regions — **pashute, kalum, naji,
+toamuna done; see [portrait_overlays.md](portrait_overlays.md)** for the full
+procedure, the structural heuristics, and how to edit pngasset/buildassets.
 
 ## Migrated: the TECMO logo (composite mode)
 
