@@ -81,6 +81,9 @@ tempest:
   png: portrait/tempest/tempest.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($7625-$76da): two-frame eyes/blink animation + three static
+  # overlay metasprites -- the layered source (one PNG/block + sprites.yaml).
+  sprites: sprites/sprites.yaml
 
 naji:
   mode: portrait

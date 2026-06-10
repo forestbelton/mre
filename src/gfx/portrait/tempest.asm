@@ -33,15 +33,8 @@ TempestPortraitAttrMap:
 	INCBIN "assets/tempest/attrmap.bin"
 
 Data_1e_7625:
-	db $02, $02, $2f, $76, $2b, $76, $ed, $f5, $ee, $f6, $0c, $0c, $0a, $0c, $0f, $00
-	db $00, $00, $08, $00, $08, $02, $08, $00, $10, $04, $08, $00, $18, $06, $08, $00
-	db $20, $08, $08, $10, $00, $0a, $08, $10, $08, $0c, $08, $10, $10, $0e, $08, $10
-	db $18, $10, $08, $10, $20, $12, $08, $20, $00, $14, $08, $20, $08, $16, $08, $20
-	db $10, $18, $08, $20, $18, $18, $08, $20, $20, $18, $08, $02, $02, $7a, $76, $76
-	db $76, $56, $5e, $57, $5f, $0a, $0a, $0a, $0a, $0f, $00, $00, $00, $08, $00, $08
-	db $02, $08, $00, $10, $26, $08, $00, $18, $28, $08, $00, $20, $08, $08, $10, $00
-	db $0a, $08, $10, $08, $0c, $08, $10, $10, $2a, $08, $10, $18, $2c, $08, $10, $20
-	db $12, $08, $20, $00, $14, $08, $20, $08, $16, $08, $20, $10, $18, $08, $20, $18
-	db $18, $08, $20, $20, $18, $08, $04, $00, $00, $1a, $09, $00, $08, $1c, $09, $10
-	db $00, $1e, $09, $10, $08, $18, $09, $02, $00, $00, $20, $09, $00, $08, $22, $09
-	db $01, $00, $00, $24, $0d
+	; Overlay region: two-frame eyes/blink animation (eyes_frame0/blink_frame0 ->
+	; eyes_frame1/blink_frame1) drawn over VRAM $98ad, plus three static overlay
+	; metasprites (hat, shoulder, dragon_eye). Layered PNG source in
+	; assets/portrait/tempest/sprites/ (see docs/portrait_overlays.md).
+	INCBIN "assets/tempest/sprites.bin"

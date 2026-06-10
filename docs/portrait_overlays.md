@@ -5,7 +5,7 @@ variants, shoulders, hair, etc. drawn on top of a portrait's base background) wa
 migrated from opaque `db` blobs into **editable, byte-exact layered source**, what
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
-Status (2026-06-10): **pashute, kalum, naji, toamuna, rafaga done**; tempest, bodka
+Status (2026-06-10): **pashute, kalum, naji, toamuna, rafaga, tempest done**; bodka
 (single-bank) and ferious, nada_intro, nada_scene2 (two-bank) remain. See
 [gfx_assets.md](gfx_assets.md) for the broader PNG-asset pipeline and the BG-map
 derivation (`derive_portrait_maps`, a separate single-PNG reference flow).
@@ -140,6 +140,16 @@ by adding metadata. In `gen_sprite_region`:
   Resolve an ambiguous cell by an **adjacent off-diagonal pinned neighbour** (the
   override run it belongs to) — `neighbour ∓ 2` — else the base diagonal. Run-length /
   nearest-pinned heuristics fail here because the base run is longer.
+- **Override run = a row-major rectangle, not a record-order run.** The changed cells
+  form a *rectangle* (e.g. a 2×2 eye block), and the tool reallocates it **row-major**
+  (`run_base + 2·rank`). Because the rectangle spans multiple grid rows, its lower rows
+  are **not record-adjacent** to a pinned cell (base-diagonal cells sit between them in
+  record order), so the `neighbour ∓ 2` rule above can't reach them — it would pick the
+  pixel-twin base tile (tempest's `blink_frame1`, recs 7–8). Fix (`gen_meta`): seed each
+  run from its pinned off-diagonal cell (top-left = lowest tile), **width-extend right by
+  candidate sets** (top-row cells may themselves be ambiguous, so don't require pinned),
+  then fill the rectangle's still-ambiguous cells by row-major rank. Stop a row once no
+  cell admits its run tile.
 - **Blank-padding tiles.** A transparent cell carries no pixels. First infer it from
   the run (`next-opaque − 2`, chained back; `prev + 2` for trailing blanks). Then
   **validate**: a transparent cell's tile must itself be a blank (all-colour-0) tile —

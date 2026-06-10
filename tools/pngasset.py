@@ -553,6 +553,46 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         tile: list = [tcand[i][0] if pinned[i] else None for i in range(len(cells))]
         bcnt = Counter((tile[i] - 2 * i) % 256 for i in range(len(cells)) if pinned[i])
         base0 = bcnt.most_common(1)[0][0] if bcnt else 0
+        # Override-run rectangles: an animation frame reallocates a contiguous rectangle
+        # of changed cells as one fresh +2 run, row-major over the rectangle. Because the
+        # rectangle spans multiple grid rows, its lower rows are NOT record-adjacent to a
+        # pinned off-diagonal cell, so the per-cell anchoring below can't reach them (it
+        # would pick the pixel-twin base-diagonal tile). Seed each run from its pinned
+        # off-diagonal cells (the top row), then fill the rectangle's still-ambiguous
+        # cells by row-major rank.
+        grows = H // 16
+        offdiag = sorted((i for i in range(len(cells))
+                          if pinned[i] and tile[i] != (base0 + 2 * i) % 256),
+                         key=lambda i: tile[i])
+        groups: list = []                                       # consecutive +2 tile runs
+        for i in offdiag:
+            if groups and tile[i] == (tile[groups[-1][-1]] + 2) % 256:
+                groups[-1].append(i)
+            else:
+                groups.append([i])
+        for grp in groups:
+            start = min(grp, key=lambda g: tile[g])          # lowest tile = rectangle top-left
+            rtop, c0, run_base = start // cols, start % cols, tile[start]
+            width = 1                                         # extend right while the next cell
+            while c0 + width < cols:                          # admits the next +2 run tile (the
+                i = rtop * cols + (c0 + width)                # top-row cells may be ambiguous, so
+                val = (run_base + 2 * width) % 256            # use candidates, not pinned status)
+                if val in tcand[i] and tile[i] in (None, val):
+                    width += 1
+                else:
+                    break
+            for rr in range(rtop, grows):                     # fill the rectangle row-major +2
+                progressed = False
+                for k in range(width):
+                    i = rr * cols + (c0 + k)
+                    val = (run_base + 2 * ((rr - rtop) * width + k)) % 256
+                    if tile[i] is None and val in tcand[i]:
+                        tile[i] = val
+                        progressed = True
+                    elif tile[i] == val:
+                        progressed = True
+                if not progressed:
+                    break
         for i, (c, ts) in enumerate(zip(cells, tcand)):
             if tile[i] is not None or not c[3]:
                 continue
