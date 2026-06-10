@@ -1278,7 +1278,7 @@ Func_05_48e2:
 	ld b, a
 	push bc
 	push de
-	FAR_CALL $11, Func_11_4081
+	FAR_CALL $11, LoadFloorMonsterSpriteToSlot
 	pop de
 	pop bc
 Func_05_48f4:
@@ -1301,7 +1301,7 @@ Func_05_4918:
 	FAR_CALL $3d, Func_3d_4051
 	ret
 Func_05_4928:
-	FAR_CALL $11, Func_11_40b1
+	FAR_CALL $11, LoadFloorMonsterSlotPalettes
 	ret
 Func_05_4931:
 	ld a, [wRoomType]

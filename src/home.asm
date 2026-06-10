@@ -3510,7 +3510,7 @@ Func_00_1a1e:
 	call ResetScrollState
 	call LoadFloorByMode
 	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, Func_11_4000
+	FAR_CALL $11, LoadAllFloorMonsterSprites
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 	push af
@@ -6991,7 +6991,7 @@ Func_00_320e:
 	call Func_00_3089
 	FAR_CALL $10, Func_10_40a4
 	FAR_CALL $10, Func_10_4081
-	FAR_CALL $11, Func_11_4031
+	FAR_CALL $11, LoadAllFloorMonsterPalettes
 	ret
 Func_00_3268:
 	ld a, [wMenuItemPtr]

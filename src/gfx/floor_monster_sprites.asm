@@ -1,10 +1,16 @@
 ; Floor-monster sprite loader (ROM bank $11).
 ;
-; Loads the four visible floor-monster sprites + their OBJ palettes
-; (Func_11_4000, LoadFloorMonsterSprite) plus the sprite tile/palette
-; assets at $6b5c+. Used by home/editor/scene.
+; Renders the four monsters visible on a dungeon floor. Their MONSTER species ids
+; live in the 4-byte array at $c4cd-$c4d0 ($c4cc holds the tileset id; see
+; tileset_loader.asm). Two code paths draw the same roster:
+;   - home/editor menu path: LoadAllFloorMonsterSprites (tiles+palettes) and
+;     LoadAllFloorMonsterPalettes (palettes only), placing each slot via
+;     wMenuCursor; the per-monster worker is LoadFloorMonsterSprite.
+;   - dungeon-scene path (scene.asm): LoadFloorMonsterSpriteToSlot /
+;     LoadFloorMonsterSlotPalettes, using the SlotVramBank/SlotDest/
+;     SpeciesSrcPtrs/SpeciesPalettePtrs index tables below.
+; Sprite tiles + palettes are the assets in the second half of the bank.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,32 +18,39 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_044000", ROMX[$4000], BANK[$11]
 
-Func_11_4000:
+; Load all four floor monsters (tiles + OBJ palette) for the menu/editor view,
+; reading each slot's species id from $c4cd-$c4d0. wMenuCursor is reused as the
+; 1-based slot index that LoadFloorMonsterSprite renders into.
+LoadAllFloorMonsterSprites:
 	ld a, $01
 	ld [wMenuCursor], a
-	ld a, [$c4cd]
+	ld a, [$c4cd]              ; slot 1 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $02
 	ld [wMenuCursor], a
-	ld a, [$c4ce]
+	ld a, [$c4ce]              ; slot 2 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $03
 	ld [wMenuCursor], a
-	ld a, [$c4cf]
+	ld a, [$c4cf]              ; slot 3 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $04
 	ld [wMenuCursor], a
-	ld a, [$c4d0]
+	ld a, [$c4d0]              ; slot 4 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ret
-Func_11_4031:
+
+; Reload only the four floor-monster OBJ palettes (no tiles) into OBJ slots 4-7,
+; e.g. after another screen clobbered them. C = OBJ slot offset (0-3); hl walks
+; the species array $c4cd-$c4d0.
+LoadAllFloorMonsterPalettes:
 	ld c, $00
 	ld hl, $c4cd
-Func_11_4036:
+.loop:
 	push hl
 	push bc
 	ld a, [hl]
@@ -55,7 +68,7 @@ Func_11_4036:
 	inc c
 	ld a, $04
 	cp c
-	jr nz, Func_11_4036
+	jr nz, .loop
 	ret
 ; Upload floor-monster species C's sprite (32 tiles, 4x8 column-major from
 ; FloorMonsterSprites + C*$300) to VRAM bank 1 and load its OBJ palette from
@@ -89,9 +102,14 @@ LoadFloorMonsterSprite:
 	call LoadObjPalette
 	call Func_00_0786
 	ret
-Func_11_4081:
+
+; Dungeon-scene path: upload one monster's sprite tiles. B = MONSTER species
+; (source = SpeciesSrcPtrs[B], $300 bytes), C = on-screen slot 0-3 (target VRAM
+; bank = SlotVramBank[C], destination = SlotDest[C]). Called per non-empty slot
+; from scene.asm while composing the floor view.
+LoadFloorMonsterSpriteToSlot:
 	push bc
-	ld hl, $40ef
+	ld hl, SpeciesSrcPtrs
 	ld c, b
 	ld b, $00
 	sla c
@@ -103,13 +121,13 @@ Func_11_4081:
 	pop bc
 	ld b, $00
 	push hl
-	ld hl, $40e3
+	ld hl, SlotVramBank
 	add hl, bc
 	ld a, [hl]
 	ld [rVBK], a
 	pop hl
 	push hl
-	ld hl, $40e7
+	ld hl, SlotDest
 	sla c
 	rl b
 	add hl, bc
@@ -120,30 +138,34 @@ Func_11_4081:
 	ld bc, $0300
 	call VramCopy16
 	ret
-Func_11_40b1:
+
+; Dungeon-scene path: load the floor-monster OBJ palettes into slots 4-7, skipping
+; empty ($ff) entries in $c4cd-$c4d0. Per-slot palette is fetched through
+; SpeciesPalettePtrs (.loadOne). Called from scene.asm.
+LoadFloorMonsterSlotPalettes:
 	ld de, $c4cd
 	ld c, $00
-Func_11_40b6:
+.loop:
 	ld a, [de]
 	cp $ff
-	jr z, Func_11_40c4
+	jr z, .next
 	ld a, [de]
 	ld b, a
 	push bc
 	push de
-	call Func_11_40cc
+	call .loadOne
 	pop de
 	pop bc
-Func_11_40c4:
+.next:
 	inc de
 	inc c
 	ld a, c
 	cp $04
-	jr nz, Func_11_40b6
+	jr nz, .loop
 	ret
-Func_11_40cc:
+.loadOne:
 	push bc
-	ld hl, $4117
+	ld hl, SpeciesPalettePtrs
 	ld c, b
 	ld b, $00
 	sla c
@@ -158,26 +180,28 @@ Func_11_40cc:
 	call LoadObjPalette
 	ret
 
-Data_11_40e3:
-	db $01, $01, $01, $00, $00, $80, $00, $83, $80, $8b, $00, $8d, $5c, $41, $5c, $44
-	db $5c, $47, $5c, $4a, $5c, $4d, $5c, $50, $5c, $53, $5c, $56, $5c, $59, $5c, $5c
-	db $5c, $5f, $5c, $62, $5c, $65
-
-Data_11_4109:
-	db $5c, $68
-
-Data_11_410b:
-	db $5c, $6b, $5c, $6e, $5c, $71, $5c, $74, $5c, $77, $5c, $7a, $5c, $7d, $64, $7d
-	db $6c, $7d, $74, $7d, $7c, $7d, $84, $7d, $8c, $7d, $94, $7d, $9c, $7d, $a4, $7d
-	db $ac, $7d, $b4, $7d, $bc, $7d
-
-Data_11_4131:
-	db $c4, $7d
-
-Data_11_4133:
-	db $cc, $7d, $d4, $7d, $dc, $7d, $e4, $7d, $ec, $7d, $f4, $7d, $07, $08, $08, $0c
-	db $01, $08, $88, $0e, $01, $08, $90, $0e, $21, $00, $8c, $06, $01, $58, $8c, $06
-	db $41, $f0, $80, $00, $21, $f0, $98, $00, $01
+; --- Floor-monster sprite/palette index tables ($40e3-$415b) ---
+; Parallel tables read by the loaders above. There are four on-screen "slots"
+; (0-3) and 20 MONSTER species. Each slot has a fixed VRAM bank + destination;
+; each species has a source-tile pointer and an OBJ-palette pointer.
+SlotVramBank:                              ; [slot] -> VRAM bank (0/1)
+	db $01, $01, $01, $00
+SlotDest:                                  ; [slot] -> VRAM destination address
+	dw $8000, $8300, $8b80, $8d00
+SpeciesSrcPtrs:                            ; [species] -> FloorMonsterSprites + species*$300
+	dw $415c, $445c, $475c, $4a5c, $4d5c, $505c, $535c, $565c
+	dw $595c, $5c5c, $5f5c, $625c, $655c, $685c, $6b5c, $6e5c
+	dw $715c, $745c, $775c, $7a5c
+SpeciesPalettePtrs:                        ; [species] -> FloorMonsterSpritePalettes + species*8
+	dw $7d5c, $7d64, $7d6c, $7d74, $7d7c, $7d84, $7d8c, $7d94
+	dw $7d9c, $7da4, $7dac, $7db4, $7dbc, $7dc4, $7dcc, $7dd4
+	dw $7ddc, $7de4, $7dec, $7df4
+; Count-prefixed OAM record list (1 count byte + 7x[Yoff,Xoff,tile,attr]) -- the
+; on-screen layout of a floor monster's sprite. Consumer not yet pinned.
+FloorMonsterMetasprite:
+	db $07
+	db $08, $08, $0c, $01, $08, $88, $0e, $01, $08, $90, $0e, $21, $00, $8c, $06, $01
+	db $58, $8c, $06, $41, $f0, $80, $00, $21, $f0, $98, $00, $01
 
 ; Floor-monster sprite tiles, $300 bytes (32 used) per MONSTER species, indexed by
 ; LoadFloorMonsterSprite. 20 species ($415c..$7d5b): Tacopi, Jell, Naga, Dino,
@@ -411,22 +435,27 @@ Data_11_6e5c:
 Data_11_745c:
 	INCBIN "gfx/raw/Data_11_745c.2bpp", 0, 2304
 
-; One OBJ palette (4 RGB555 colors, $08 bytes) per floor-monster species, indexed
-; by LoadFloorMonsterSprite (FloorMonsterSpritePalettes + MONSTER*8).
+; One OBJ palette (4 RGB555 colours, 8 bytes) per floor-monster species (20),
+; indexed by LoadFloorMonsterSprite / SpeciesPalettePtrs (base + MONSTER*8).
 FloorMonsterSpritePalettes:
-	db $00, $24, $34, $01, $bc, $01, $df, $7b, $00, $00, $00, $49, $46, $52, $1b, $24
-	db $ef, $3d, $4a, $40, $12, $6c, $9a, $76, $12, $01, $40, $01, $e0, $01, $3f, $4b
-	db $00, $00, $e5, $11, $7a, $01, $5e, $17, $00, $00, $6d, $19, $3b, $3f, $7a, $01
-	db $00, $00, $29, $25, $31, $46, $19, $00, $00, $00, $2c, $39, $7a, $01, $7e, $4f
-	db $00, $00, $47, $1e, $dd, $09, $9f, $1f, $00, $00, $60, $2d, $46, $52, $5e, $17
-	db $00, $00, $4a, $29, $5e, $17, $de, $7b, $00, $00, $a2, $69, $1e, $05, $de, $7b
-	db $00, $00, $a2, $69, $1e, $05, $de, $7b
-
-Data_11_7dc4:
-	db $12, $01, $08, $21, $31, $46, $5a, $6b
-
-Data_11_7dcc:
-	db $b0, $14, $c0, $40, $4f, $5e, $de, $7b, $88, $49, $80, $01, $74, $49, $5d, $5e
-	db $e0, $01, $c9, $08, $f2, $01, $7d, $5b, $c0, $6d, $4a, $29, $d9, $16, $bd, $77
-	db $88, $49, $08, $21, $73, $4e, $f7, $5e, $60, $01, $8b, $10, $b9, $02, $de, $7b
+	db $00, $24, $34, $01, $bc, $01, $df, $7b   ;  0 Tacopi
+	db $00, $00, $00, $49, $46, $52, $1b, $24   ;  1 Jell
+	db $ef, $3d, $4a, $40, $12, $6c, $9a, $76   ;  2 Naga
+	db $12, $01, $40, $01, $e0, $01, $3f, $4b   ;  3 Dino
+	db $00, $00, $e5, $11, $7a, $01, $5e, $17   ;  4 Plant
+	db $00, $00, $6d, $19, $3b, $3f, $7a, $01   ;  5 Henger
+	db $00, $00, $29, $25, $31, $46, $19, $00   ;  6 Joker
+	db $00, $00, $2c, $39, $7a, $01, $7e, $4f   ;  7 Ghost
+	db $00, $00, $47, $1e, $dd, $09, $9f, $1f   ;  8 Puncho
+	db $00, $00, $60, $2d, $46, $52, $5e, $17   ;  9 Psylora
+	db $00, $00, $4a, $29, $5e, $17, $de, $7b   ; 10 Ducken
+	db $00, $00, $a2, $69, $1e, $05, $de, $7b   ; 11 FlameRed
+	db $00, $00, $a2, $69, $1e, $05, $de, $7b   ; 12 FlameBlue
+	db $12, $01, $08, $21, $31, $46, $5a, $6b   ; 13 (#13 unused)
+	db $b0, $14, $c0, $40, $4f, $5e, $de, $7b   ; 14 Tiger
+	db $88, $49, $80, $01, $74, $49, $5d, $5e   ; 15 Mocchi
+	db $e0, $01, $c9, $08, $f2, $01, $7d, $5b   ; 16 Hare
+	db $c0, $6d, $4a, $29, $d9, $16, $bd, $77   ; 17 Gali
+	db $88, $49, $08, $21, $73, $4e, $f7, $5e   ; 18 Golem
+	db $60, $01, $8b, $10, $b9, $02, $de, $7b   ; 19 Suezo
 

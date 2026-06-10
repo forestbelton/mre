@@ -498,7 +498,7 @@ Func_12_434b:
 	ld [wRoomType], a
 	call LoadFloorByMode
 	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, Func_11_4000
+	FAR_CALL $11, LoadAllFloorMonsterSprites
 	call Func_00_2df6
 	xor a
 	ret
@@ -527,7 +527,7 @@ Func_12_4390:
 	call ResetScrollState
 	call LoadFloorByMode
 	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, Func_11_4000
+	FAR_CALL $11, LoadAllFloorMonsterSprites
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 	push af
