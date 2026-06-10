@@ -1,11 +1,11 @@
 ; Dungeon-floor tile loader (ROM bank $3d).
 ;
-; Func_3d_4000 reads the active floor index, indexes three pointer tables
-; ($406f/$4079/$4083) for the floor's tile graphics + map data and copies
-; them into VRAM; Data_3d_67cf+ are the per-floor palette tables. Invoked
-; from scene.asm (Func_05_48c9) when wRoomType selects a dungeon room.
+; Graphics for the 5 special dungeon-floor "rooms" (wRoomType == dungeon).
+; LoadDungeonFloorTiles copies the active floor's up-to-3 tile regions into VRAM;
+; LoadDungeonFloorPalette loads its 4 palettes. Both index the per-floor pointer
+; tables (DungeonFloor*Ptrs) by (wActiveFloor-1)*2 into the data blob that follows.
+; Invoked from scene.asm (Func_05_48c9 / Func_05_4918).
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -13,43 +13,48 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0f4000", ROMX[$4000], BANK[$3d]
 
-Func_3d_4000:
+; Copy the active dungeon floor's tile regions into VRAM. Each region's source is
+; DungeonFloorTilePtrsN[floor-1]; a null pointer skips that region.
+;   region 1: $800 bytes -> VRAM bank 1 $8000
+;   region 2: $400 bytes -> VRAM bank 1 $8b80
+;   region 3: $300 bytes -> VRAM bank 0 $8d00
+LoadDungeonFloorTiles:
 	ld a, $01
 	ld [rVBK], a
 	ld a, [wActiveFloor]
 	dec a
 	add a, a
-	ld hl, $406f
+	ld hl, DungeonFloorTilePtrs1
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	or h
-	jr z, Func_3d_401d
+	jr z, .region2
 	ld de, $8000
 	ld bc, $0800
 	call VramCopy16
-Func_3d_401d:
+.region2:
 	ld a, [wActiveFloor]
 	dec a
 	add a, a
-	ld hl, $4079
+	ld hl, DungeonFloorTilePtrs2
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	or h
-	jr z, Func_3d_4035
+	jr z, .region3
 	ld de, $8b80
 	ld bc, $0400
 	call VramCopy16
-Func_3d_4035:
+.region3:
 	xor a
 	ld [rVBK], a
 	ld a, [wActiveFloor]
 	dec a
 	add a, a
-	ld hl, $4083
+	ld hl, DungeonFloorTilePtrs3
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -60,11 +65,14 @@ Func_3d_4035:
 	ld bc, $0300
 	call VramCopy16
 	ret
-Func_3d_4051:
+
+; Load the active dungeon floor's 4 BG palettes from DungeonFloorPalettePtrs[floor-1]
+; into palette slots 4-7.
+LoadDungeonFloorPalette:
 	ld a, [wActiveFloor]
 	dec a
 	add a, a
-	ld hl, $4065
+	ld hl, DungeonFloorPalettePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -74,10 +82,20 @@ Func_3d_4051:
 	call Func_00_0732
 	ret
 
-Data_3d_4065:
-	db $8d, $4c, $ad, $5b, $cd, $67, $ed, $6f, $0d, $7f, $8d, $40, $ad, $4c, $cd, $5b
-	db $ed, $67, $0d, $70, $8d, $48, $ad, $54, $cd, $63, $00, $00, $0d, $78, $00, $00
-	db $ad, $58, $00, $00, $00, $00, $0d, $7c, $00, $00, $80, $00, $40, $80, $a0, $c0
+; Four pointer tables indexed by (wActiveFloor-1)*2 -- one entry per dungeon-floor
+; graphics set (5 sets). A null ($0000) entry means that region is skipped.
+DungeonFloorPalettePtrs:                       ; -> palette block (LoadDungeonFloorPalette)
+	dw $4c8d, $5bad, $67cd, $6fed, $7f0d
+DungeonFloorTilePtrs1:                          ; -> region 1 tiles ($800 -> VRAM bank1 $8000)
+	dw $408d, $4cad, $5bcd, $67ed, $700d
+DungeonFloorTilePtrs2:                          ; -> region 2 tiles ($400 -> VRAM bank1 $8b80)
+	dw $488d, $54ad, $63cd, $0000, $780d
+DungeonFloorTilePtrs3:                          ; -> region 3 tiles ($300 -> VRAM bank0 $8d00)
+	dw $0000, $58ad, $0000, $0000, $7c0d
+
+; Interleaved tile + palette data for the 5 sets (addressed by the tables above).
+DungeonFloorTiles:
+	db $00, $00, $80, $00, $40, $80, $a0, $c0
 	db $d0, $e0, $58, $e0, $2c, $f0, $37, $f8, $67, $f8, $d7, $b8, $97, $f8, $ae, $f1
 	db $5e, $e9, $bd, $da, $7f, $b0, $fd, $02, $7f, $80, $37, $c8, $ef, $10, $a7, $40
 	db $03, $00, $02, $01, $00, $03, $01, $03, $00, $00, $00, $00, $00, $00, $00, $00

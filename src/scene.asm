@@ -1263,7 +1263,7 @@ Func_05_48c9:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_48d9
-	FAR_CALL $3d, Func_3d_4000
+	FAR_CALL $3d, LoadDungeonFloorTiles
 	ret
 Func_05_48d9:
 	call Func_05_48dd
@@ -1298,7 +1298,7 @@ Func_05_4918:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_4928
-	FAR_CALL $3d, Func_3d_4051
+	FAR_CALL $3d, LoadDungeonFloorPalette
 	ret
 Func_05_4928:
 	FAR_CALL $11, LoadFloorMonsterSlotPalettes
