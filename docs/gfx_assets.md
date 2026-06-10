@@ -112,6 +112,27 @@ out of `analyzed.asm` into each portrait asset (`<Name>PortraitPaletteBg` /
 colour. nada_scene2 reuses nada_intro's `$1c:$7000` palette, so it is colourised
 for editing but owns no palette bytes. See docs/palettes.md for the located map.
 
+**Derived maps (pashute):** rather than commit pashute's opaque `tilemap.bin`/
+`attrmap.bin`, the BG layer is committed as a *rendered reference image*
+(`reference.png`) and the build re-derives both maps from it byte-exact
+(`--reference --rows --cols --bank`). The tilemap is positional (column-major
+within bands, `$8800`-signed) and inferred from the unambiguous cells; the attrmap
+palette is recovered per cell and spread by 8-neighbour consensus. See
+`derive_portrait_maps` in tools/pngasset.py.
+
+**Layered overlay region (pashute):** the data immediately after pashute's attrmap
+(`$5a3e-$5bdc`) is the portrait's animation overlay — eyes blink frames plus
+shoulders/collar and sad/shocked faces — a run of two block kinds: BG **patch**
+descriptors (`CopyBgMap` sub-tilemaps, `BankMapCopyA` → `$9885`) and OBJ
+**metasprite** lists (`DrawMetasprite`). Rather than a `db` blob, this is committed
+as *layered source*: one PNG per block under `assets/portrait/pashute/sprites/` plus
+`sprites.yaml` (ordered blocks, roles, and metasprite placement origin). The build
+regenerates the whole region byte-exact (`--sprites`; patch tile indices follow the
+same column-major model, OBJ tiles matched 8×16 under the consensus palette). Block
+roles were traced from the bank-`$18` render functions (Pashute_RenderPortrait*).
+The trailing 64 bytes (`$5bdd-$5c1c`, intro-scene data) remain a `db`. This is the
+template for migrating the other portraits' overlay regions.
+
 ## Migrated: the TECMO logo (composite mode)
 
 `assets/logo/logo.png` (160×144 indexed) is the only committed source; the build

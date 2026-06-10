@@ -414,6 +414,121 @@ def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides
     return bytes(tmap), amap
 
 
+def gen_sprite_region(manifest_path, tiles, palbg, palobj):
+    """Regenerate a portrait's metasprite/patch data region byte-exact from its
+    layered source: a manifest (ordered blocks + roles) plus one PNG per block.
+
+    Two block kinds, the two halves of a portrait's animation overlay:
+      * patch -- a CopyBgMap sub-tilemap (BG layer): [rows][cols][attr_ptr][idx_ptr]
+        + idx map + attr map. The idx is positional (column-major, byte = base+8*col
+        +row, $8800-signed); duplicate-tile ambiguity is resolved by that model and
+        the palette by dominant consensus. Pointers are absolute, computed from the
+        block's laid-out address (idx_ptr = addr+6, attr_ptr = addr+6+rows*cols),
+        so `base` in the manifest must match the asm SECTION address.
+      * meta  -- a DrawMetasprite OAM list (OBJ layer): [count] + [Yoff,Xoff,tile,
+        attr]*count, 8x16. The PNG carries the bitmap; its placement origin (oy,ox,
+        possibly negative) is manifest metadata. Tile picked under the consensus
+        palette with the +2 even-tile run tiebreak.
+    See docs/gfx_assets.md and project_png_asset_pipeline (memory)."""
+    from collections import Counter
+
+    import yaml
+    from PIL import Image
+
+    def palcols(pal):
+        return [[rgb555_to_888(pal[p * 8 + ci * 2] | (pal[p * 8 + ci * 2 + 1] << 8))
+                 for ci in range(4)] for p in range(len(pal) // 8)]
+
+    PBG, POBJ = palcols(palbg), palcols(palobj)
+    NT = len(tiles) // 16
+    TPX = [tile_to_indices(tiles[i * 16:i * 16 + 16]) for i in range(NT)]
+    # BG: signed tilemap-byte lookup (b -> tiles[b] for b>=128 else tiles[b+256])
+    bgidx: dict = {}
+    for ti in range(128, NT):
+        bgidx.setdefault(tuple(TPX[ti]), []).append(ti & 0xFF)
+    # OBJ: 8x16 (top tile T even + T+1) -> list of even tile T
+    objidx: dict = {}
+    for T in range(0, NT, 2):
+        objidx.setdefault(tuple(TPX[T & 0xFE] + TPX[(T & 0xFE) + 1]), []).append(T)
+
+    def gen_patch(img, addr, bank):
+        px = img.load()
+        cols, rows = img.size[0] // 8, img.size[1] // 8
+        grid = [(r, c) for r in range(rows) for c in range(cols)]
+        bytecand = []
+        for (r, c) in grid:
+            blk = [px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)]
+            cand = [p for p in range(len(PBG)) if all(q in PBG[p] for q in blk)
+                    and bgidx.get(tuple(PBG[p].index(q) for q in blk))]
+            p = cand[0] if cand else 0
+            bytecand.append((cand, p, blk))
+        fixed = [c[0] if len(c) == 1 else None for c, _, _ in bytecand]
+        dom = Counter(p for p in fixed if p is not None).most_common(1)
+        dom = dom[0][0] if dom else 0
+        idx, attr = bytearray(), bytearray()
+        pals, bs_all = [], []
+        for i, (cand, _, blk) in enumerate(bytecand):
+            p = fixed[i] if fixed[i] is not None else (dom if dom in cand else cand[0])
+            pals.append(p)
+            bs_all.append(bgidx[tuple(PBG[p].index(q) for q in blk)])
+        # column-major base inferred from unambiguous cells: byte = base+8*col+row
+        bcnt = Counter((bs[0] - 8 * c - r) % 256
+                       for bs, (r, c) in zip(bs_all, grid) if len(bs) == 1)
+        base = bcnt.most_common(1)[0][0] if bcnt else None
+        for (bs, (r, c)) in zip(bs_all, grid):
+            want = (base + 8 * c + r) % 256 if base is not None else None
+            idx.append(want if want in bs else bs[0])
+        for p in pals:
+            attr.append((bank << 3) | p)
+        ip = (addr + 6) & 0xFFFF
+        ap = (addr + 6 + rows * cols) & 0xFFFF
+        return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + bytes(attr)
+
+    def gen_meta(img, oy, ox, bank):
+        px = img.load()
+        W, H = img.size
+        cells = []
+        for cr in range(0, H, 16):
+            for cc in range(0, W, 8):
+                blk = [px[cc + c, cr + r] for r in range(16) for c in range(8)]
+                if all(q[3] == 0 for q in blk):
+                    continue
+                cand = [p for p in range(len(POBJ))
+                        if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk)
+                        and objidx.get(tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk))]
+                cells.append((cr, cc, blk, cand))
+        fixed = [c[3][0] if len(c[3]) == 1 else None for c in cells]
+        dom = Counter(p for p in fixed if p is not None).most_common(1)
+        dom = dom[0][0] if dom else 0
+        out = bytearray([len(cells)])
+        last = None
+        for i, (cr, cc, blk, cand) in enumerate(cells):
+            p = fixed[i] if fixed[i] is not None else (dom if dom in cand else cand[0])
+            pat = tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk)
+            cs = objidx[pat]
+            pick = next((t for t in cs if last is not None and t == last + 2), cs[0])
+            last = pick
+            out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, pick, (bank << 3) | p))
+        return bytes(out)
+
+    man = yaml.safe_load(Path(manifest_path).read_text())
+    base = man["base"] if isinstance(man["base"], int) else int(str(man["base"]), 0)
+    d = Path(manifest_path).parent
+    out = bytearray()
+    addr = base
+    for blk in man["blocks"]:
+        bank = blk.get("bank", 1)
+        if blk["kind"] == "patch":
+            img = Image.open(d / blk["png"]).convert("RGB")
+            data = gen_patch(img, addr, bank)
+        else:
+            img = Image.open(d / blk["png"]).convert("RGBA")
+            data = gen_meta(img, blk["oy"], blk["ox"], bank)
+        out += data
+        addr += len(data)
+    return bytes(out)
+
+
 def cmd_portrait(args: argparse.Namespace) -> int:
     """Single- or two-VRAM-bank portrait from one tile-sheet PNG. The PNG holds the
     bank-1 (main) tiles, optionally followed by the bank-0 tiles; splits into
@@ -455,6 +570,12 @@ def cmd_portrait(args: argparse.Namespace) -> int:
             ("tilemap", (d / "tilemap.bin").read_bytes()),
             ("attrmap", (d / "attrmap.bin").read_bytes()),
         ]
+    if getattr(args, "sprites", None):
+        # regenerate the metasprite/patch data region from the layered source manifest
+        palobj = next(data for name, data in comps if name == "palette_obj")
+        comps.append(("sprites", gen_sprite_region(d / args.sprites, comps[0][1],
+                                                    next(x for n, x in comps if n == "palette_bg"),
+                                                    palobj)))
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for name, data in comps:
@@ -503,6 +624,9 @@ def main() -> int:
     pt.add_argument("--bank", type=int, default=1, help="VRAM bank for attr bit 3 (single-bank)")
     pt.add_argument("--pal-overrides", default="",
                     help="image-irreducible palette ties: 'r,c,p;r,c,p'")
+    pt.add_argument("--sprites", default=None,
+                    help="metasprite/patch manifest (next to --png); regenerates the "
+                         "OBJ/BG overlay data region into sprites.bin")
     pt.set_defaults(fn=cmd_portrait)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")

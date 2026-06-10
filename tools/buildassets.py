@@ -60,6 +60,8 @@ def build_png_asset(name: str, spec: dict) -> None:
                     "--rows", str(spec["rows"]), "--cols", str(spec["cols"]),
                     "--bank", str(spec.get("bank", 1)),
                     "--pal-overrides", str(spec.get("pal_overrides", ""))]
+        if "sprites" in spec:                          # regenerate the OBJ/BG overlay region
+            cmd += ["--sprites", str(spec["sprites"])]
     else:
         raise SystemExit(f"asset {name!r}: unknown mode {mode!r}")
     print(f"[{name}] {mode} -> {out.relative_to(ROOT)}")

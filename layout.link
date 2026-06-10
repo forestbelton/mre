@@ -70,6 +70,8 @@ ROMX $19
 ROMX $1a
     "Toamuna graphics"
     "Naji graphics"
+ROMX $1b
+    "Pashute graphics"
 ROMX $1c
     "Nada graphics"
 ROMX $1d

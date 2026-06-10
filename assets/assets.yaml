@@ -91,6 +91,9 @@ pashute:
   rows: 11
   cols: 20
   bank: 1
+  # Metasprite/patch overlay region ($5a3e-$5bdc): eyes blink-animation frames,
+  # shoulders, collar, sad/shocked faces -- layered source (one PNG/block + sprites.yaml).
+  sprites: sprites/sprites.yaml
 
 bodka:
   mode: portrait
