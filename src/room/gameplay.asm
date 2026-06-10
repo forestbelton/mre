@@ -2753,7 +2753,7 @@ Func_01_5c6e:
 	ld a, $04
 Func_01_5c70:
 	ld [$d60e], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ret
 Func_01_5c7c:
 	ld a, [wActiveFloor]
@@ -2824,7 +2824,7 @@ Func_01_5ce2:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ld a, $00
 	call Func_00_1164
 	ret
@@ -2838,7 +2838,7 @@ Func_01_5cff:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ld a, $02
 	call Func_00_1164
 	ret
@@ -2852,7 +2852,7 @@ Func_01_5d1d:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ld a, $04
 	call Func_00_1164
 	ret
@@ -2866,7 +2866,7 @@ Func_01_5d3b:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ld a, $06
 	call Func_00_1164
 	ret
@@ -2880,7 +2880,7 @@ Func_01_5d59:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, Func_1f_4109
+	FAR_CALL $1f, StartTowerBossEncounter
 	ld a, $08
 	call Func_00_1164
 	ret

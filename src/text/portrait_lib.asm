@@ -1,10 +1,13 @@
 ; NPC portrait display library (ROM bank $1f).
 ;
-; Portrait palette-swap / fade routines (Func_1f_4008/_403a/_4062,
-; Script_FadeOutPortrait) and frame-sync helpers (ScriptWaitForBgSwap/
-; ScriptWaitForObjSwap) used by the NPC dialogue scripts in text/scripts/,
-; plus the tower boss-encounter dispatcher (Func_1f_4109, called from
-; room/gameplay.asm) and Nada final-boss portrait setup (Func_1f_500e/_50a1).
+; Portrait palette transitions used by the NPC dialogue scripts in text/scripts/:
+; ShowPortraitTransition (reveal on entering dialogue), HidePortraitWhite /
+; Script_FadeOutPortrait (dismiss), all driven by RunPortraitPaletteSwap (a 32-
+; frame flicker between the live palettes and a $ff/$00 fill, through the
+; $c181/$c1c1 display-palette buffers). Plus ScriptWaitForBgSwap/ScriptWaitForObjSwap
+; frame helpers, the tower boss-encounter dispatcher StartTowerBossEncounter
+; (called from room/gameplay.asm), and the Nada final-boss portrait renderer
+; (NadaPortraitInit / NadaPortraitRender).
 ; Carved out of analyzed.asm (byte-exact; section names unchanged). The menu
 ; UI for bank $1f lives separately in text/npc_menus.asm.
 
@@ -17,23 +20,26 @@ SECTION "analyzed_07c000", ROMX[$4000], BANK[$1f]
 Data_1f_4000:
 	db $44, $18, $44, $18, $44, $18, $44, $18
 
-Func_1f_4008:
+; Reveal a portrait: move the just-loaded live palettes into the display buffers
+; ($c181/$c1c1), blank the live palettes to white ($ff), then run the swap flicker.
+; Called by the boss/NPC scripts right before entering their dialogue.
+ShowPortraitTransition:
 	ld hl, wBgPalettes
 	ld de, $c181
-	call Func_1f_402d
+	call MovePalettesFillFF
 	ld hl, wObjPalettes
 	ld de, $c1c1
-	call Func_1f_402d
+	call MovePalettesFillFF
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
-	jp Func_1f_40bb
-Func_1f_402d:
+	jp RunPortraitPaletteSwap
+MovePalettesFillFF:
 	ld c, $40
-Func_1f_402f:
+.loop:
 	ld a, [hl]
 	ld [de], a
 	ld a, $ff
@@ -41,46 +47,46 @@ Func_1f_402f:
 	inc hl
 	inc de
 	dec c
-	jr nz, Func_1f_402f
+	jr nz, .loop
 	ret
-Func_1f_403a:
+HidePortraitWhite:
 	ld hl, $c181
-	call Func_1f_4059
+	call FillPalettesFF
 	ld hl, $c1c1
-	call Func_1f_4059
+	call FillPalettesFF
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
-	jp Func_1f_40bb
-Func_1f_4059:
+	jp RunPortraitPaletteSwap
+FillPalettesFF:
 	ld c, $40
 	ld a, $ff
-Func_1f_405d:
+.loop:
 	ld [hl+], a
 	dec c
-	jr nz, Func_1f_405d
+	jr nz, .loop
 	ret
 
-Func_1f_4062:
+ShowPortraitTransitionBlack:
 	ld hl, wBgPalettes
 	ld de, $c181
-	call Func_1f_4087
+	call MovePalettesFill00
 	ld hl, wObjPalettes
 	ld de, $c1c1
-	call Func_1f_4087
+	call MovePalettesFill00
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
-	jp Func_1f_40bb
-Func_1f_4087:
+	jp RunPortraitPaletteSwap
+MovePalettesFill00:
 	ld c, $40
-Func_1f_4089:
+.loop:
 	ld a, [hl]
 	ld [de], a
 	ld a, $00
@@ -88,32 +94,32 @@ Func_1f_4089:
 	inc hl
 	inc de
 	dec c
-	jr nz, Func_1f_4089
+	jr nz, .loop
 	ret
 
 Script_FadeOutPortrait:
 	ld hl, $c181
-	call Func_1f_40b3
+	call FillPalettes00
 	ld hl, $c1c1
-	call Func_1f_40b3
+	call FillPalettes00
 	ld a, $20
 	ld [$c281], a
 	ld [$c282], a
 	ld a, $09
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
-	jp Func_1f_40bb
-Func_1f_40b3:
+	jp RunPortraitPaletteSwap
+FillPalettes00:
 	ld c, $40
 	xor a
-Func_1f_40b6:
+.loop:
 	ld [hl+], a
 	dec c
-	jr nz, Func_1f_40b6
+	jr nz, .loop
 	ret
-Func_1f_40bb:
+RunPortraitPaletteSwap:
 	ld c, $20
-Func_1f_40bd:
+.loop:
 	push bc
 	ld a, $09
 	ld [hBgPaletteDirty], a
@@ -125,7 +131,7 @@ Func_1f_40bd:
 	call WaitForNextFrame
 	pop bc
 	dec c
-	jr nz, Func_1f_40bd
+	jr nz, .loop
 	ret
 
 ScriptWaitForBgSwap:
@@ -159,21 +165,24 @@ ScriptWaitForObjSwap:
 	jr nz, .loop
 	ret
 
-Func_1f_4109:
+; Dispatch the tower boss encounter for the current floor (1-5 ->
+; Kalum/Mistral/Rafaga/Tempest/Nada): run the character's StartEncounter, silence
+; the BGM, then return to the town-building flow. Called from room/gameplay.asm.
+StartTowerBossEncounter:
 	ld a, [wActiveFloor]
 	cp $01
-	jr z, Func_1f_4121
+	jr z, .kalum
 	cp $02
-	jr z, Func_1f_4133
+	jr z, .mistral
 	cp $03
-	jr z, Func_1f_4145
+	jr z, .rafaga
 	cp $04
-	jr z, Func_1f_4157
+	jr z, .tempest
 	cp $05
-	jr z, Func_1f_4169
+	jr z, .nada
 	ret
 
-Func_1f_4121:
+.kalum:
 	FAR_CALL $1f, Kalum_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
@@ -181,7 +190,7 @@ Func_1f_4121:
 	pop af
 	jp LeaveTownBuilding
 
-Func_1f_4133:
+.mistral:
 	FAR_CALL $1f, Mistral_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
@@ -189,21 +198,21 @@ Func_1f_4133:
 	pop af
 	jp LeaveTownBuilding
 
-Func_1f_4145:
+.rafaga:
 	FAR_CALL $1f, Rafaga_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
-Func_1f_4157:
+.tempest:
 	FAR_CALL $1f, Tempest_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
-Func_1f_4169:
+.nada:
 	FAR_CALL $1f, Func_1f_4d8c
 	push af
 	ld a, SOUND_BGM_Silence
@@ -213,7 +222,11 @@ Func_1f_4169:
 
 SECTION "analyzed_07d00e", ROMX[$500e], BANK[$1f]
 
-Func_1f_500e:
+; Nada final-boss portrait renderer: a series of ret-terminated frame routines,
+; each loading a tilemap (BankMapCopyA) + drawing a metasprite. The active frame is
+; selected by the portrait engine via wRendererAddr (set by NadaPortraitInit /
+; nada.asm), so the later blocks are entered by address, not fall-through.
+NadaPortraitRender:
 	ld hl, $723e
 	ld a, $1c
 	ld de, $98c9
@@ -270,7 +283,7 @@ Func_1f_500e:
 	ld bc, $4860
 	call DrawMetasprite
 	ret
-Func_1f_50a1:
+NadaPortraitInit:
 	ld a, $a1
 	ld [wRendererAddr], a
 	ld a, $50

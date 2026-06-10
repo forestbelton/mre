@@ -88,7 +88,7 @@ Nada_ShowScene:
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
 	pop af
-	call Func_1f_4008
+	call ShowPortraitTransition
 	ret
 Nada_ShowSnapReaction:
 	call Func_1f_4d66
@@ -151,7 +151,7 @@ Nada_ShowRageScene:
 	ld a, $1f
 	ld de, $9800
 	call BankMapCopyA
-	call Func_1f_50a1
+	call NadaPortraitInit
 	call HideUnusedOamSprites
 	ld a, $1c
 	ld hl, $7000

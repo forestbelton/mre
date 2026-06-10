@@ -138,7 +138,7 @@ Rafaga_StartEncounter:
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
 	pop af
-	call Func_1f_4008
+	call ShowPortraitTransition
 	ld hl, RafagaScript
 	jp ScriptDispatcherEnterAfterCall
 Rafaga_ShowMonsterPortrait:

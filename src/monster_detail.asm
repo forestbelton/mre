@@ -2274,7 +2274,7 @@ Func_32_4155:
 	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_32_4155
-	FAR_CALL $1f, Func_1f_403a
+	FAR_CALL $1f, HidePortraitWhite
 	pop af
 	ld [wDisplayMonster], a
 	ret

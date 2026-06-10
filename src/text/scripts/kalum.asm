@@ -47,7 +47,7 @@ Kalum_StartEncounter:
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
 	pop af
-	call Func_1f_4008
+	call ShowPortraitTransition
 	ld hl, KalumScript
 	jp ScriptDispatcherEnterAfterCall
 
