@@ -55,6 +55,11 @@ def build_png_asset(name: str, spec: dict) -> None:
             cmd += ["--palettes-bg", str(spec["palettes_bg"])]
         if "palettes_obj" in spec:
             cmd += ["--palettes-obj", str(spec["palettes_obj"])]
+        if "reference" in spec:                       # derive maps from a reference PNG
+            cmd += ["--reference", str(spec["reference"]),
+                    "--rows", str(spec["rows"]), "--cols", str(spec["cols"]),
+                    "--bank", str(spec.get("bank", 1)),
+                    "--pal-overrides", str(spec.get("pal_overrides", ""))]
     else:
         raise SystemExit(f"asset {name!r}: unknown mode {mode!r}")
     print(f"[{name}] {mode} -> {out.relative_to(ROOT)}")

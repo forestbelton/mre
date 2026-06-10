@@ -85,6 +85,12 @@ pashute:
   png: portrait/pashute/pashute.png
   palettes_bg: 6
   palettes_obj: 6
+  # Maps derived from the rendered BG reference image (no committed tilemap/attrmap).
+  reference: reference.png
+  rows: 11
+  cols: 20
+  bank: 1
+  pal_overrides: "5,4,1;6,4,1;7,4,1;7,9,4"   # image-irreducible palette ties
 
 bodka:
   mode: portrait

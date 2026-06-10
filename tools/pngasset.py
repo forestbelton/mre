@@ -272,6 +272,145 @@ def cmd_screen(args: argparse.Namespace) -> int:
     return 0
 
 
+def parse_overrides(s: str):
+    """'r,c,p;r,c,p' -> [(row,col,palette), ...] (image-irreducible palette ties)."""
+    out = []
+    for tok in (s or "").split(";"):
+        tok = tok.strip()
+        if tok:
+            r, c, p = tok.split(",")
+            out.append((int(r), int(c), int(p)))
+    return out
+
+
+def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides):
+    """Re-derive (tilemap, attrmap) for a single-VRAM-bank, no-flip portrait from
+    its rendered reference PNG + the tile sheet + BG palettes -- byte-exact, so the
+    opaque tilemap.bin/attrmap.bin no longer need to be committed.
+
+    tilemap: the original tool linearised the cells into the sheet column-major
+    within horizontal bands, addressed $8800-signed (tilemap byte b -> tiles[b] for
+    b>=128, tiles[b+256] otherwise). So the tilemap is positional; we infer the
+    layout model from the unambiguous cells -- band split (where contiguity breaks),
+    a learned top-band linear base(c)=(A+B*c)%256, and bottom-band column runs pinned
+    by the bijection (each sheet tile used once) + the +8 column stride.
+    attrmap: bank bit | per-cell BG palette. The palette is region-based, recovered
+    by matching the now-known exact tile's colours and spreading by neighbour
+    consensus; the few image-irreducible ties come from pal_overrides."""
+    from PIL import Image
+    from collections import Counter
+
+    NT, NPAL = len(tiles) // 16, len(palbg) // 8
+    rpx = Image.open(ref_path).convert("RGB").load()
+
+    def palcol(p):
+        cs = []
+        for ci in range(4):
+            o = p * 8 + ci * 2
+            w = palbg[o] | (palbg[o + 1] << 8)
+            cs.append(rgb555_to_888(w))
+        return cs
+
+    PAL = [palcol(p) for p in range(NPAL)]
+    TILEPAT = [tile_to_indices(tiles[i * 16:i * 16 + 16]) for i in range(NT)]
+
+    def block(cell):
+        r0, c0 = (cell // cols) * 8, (cell % cols) * 8
+        return [rpx[c0 + x, r0 + y] for y in range(8) for x in range(8)]
+
+    BLOCK = [block(i) for i in range(rows * cols)]
+
+    # --- tilemap: candidate sheet-bytes per cell (signed addressing) ---
+    rgbidx: dict = {}
+    for ti in range(128, NT):
+        b = ti & 0xFF
+        for p in range(NPAL):
+            rgbidx.setdefault(tuple(PAL[p][v] for v in TILEPAT[ti]), set()).add(b)
+    CAND = [rgbidx.get(tuple(BLOCK[i]), set()) for i in range(rows * cols)]
+
+    def band_base(c, lo, hi):
+        sets = [{(v - (r - lo)) % 256 for v in CAND[r * cols + c]} for r in range(lo, hi)]
+        return set.intersection(*sets) if all(sets) else set()
+
+    breaks: Counter = Counter()
+    for c in range(cols):
+        for r in range(1, rows):
+            a, b = CAND[(r - 1) * cols + c], CAND[r * cols + c]
+            if len(a) == 1 and len(b) == 1 and next(iter(b)) != (next(iter(a)) + 1) % 256:
+                breaks[r] += 1
+    K = breaks.most_common(1)[0][0] if breaks else rows
+    known = {c: next(iter(band_base(c, 0, K))) for c in range(cols) if len(band_base(c, 0, K)) == 1}
+    csk = sorted(known)
+    B = ((known[csk[1]] - known[csk[0]]) * pow(csk[1] - csk[0], -1, 256)) % 256
+    A = (known[csk[0]] - B * csk[0]) % 256
+    topbase = [(A + B * c) % 256 for c in range(cols)]
+    used = {(topbase[c] + r) % 256 for c in range(cols) for r in range(K)}
+    botbase: dict = {c: None for c in range(cols)}
+
+    def fits(c, base):
+        return all((base + (r - K)) % 256 not in used for r in range(K, rows))
+
+    def claim(c, base):
+        botbase[c] = base
+        used.update((base + (r - K)) % 256 for r in range(K, rows))
+
+    for _ in range(cols):                                   # pass 1: unique runs
+        prog = False
+        for c in sorted((c for c in range(cols) if botbase[c] is None),
+                        key=lambda c: len([b for b in band_base(c, K, rows) if fits(c, b)])):
+            opts = [b for b in band_base(c, K, rows) if fits(c, b)]
+            if len(opts) == 1:
+                claim(c, opts[0]); prog = True
+        if not prog:
+            break
+    for _ in range(cols):                                   # pass 2: +8 column stride
+        prog = False
+        for c in range(cols):
+            if botbase[c] is not None:
+                continue
+            opts = [b for b in band_base(c, K, rows) if fits(c, b)]
+            pref = None
+            if c > 0 and botbase[c - 1] is not None and (botbase[c - 1] + 8) % 256 in opts:
+                pref = (botbase[c - 1] + 8) % 256
+            elif c < cols - 1 and botbase[c + 1] is not None and (botbase[c + 1] - 8) % 256 in opts:
+                pref = (botbase[c + 1] - 8) % 256
+            elif len(opts) == 1:
+                pref = opts[0]
+            if pref is not None:
+                claim(c, pref); prog = True
+        if not prog:
+            break
+    tmap = bytearray(rows * cols)
+    for c in range(cols):
+        for r in range(rows):
+            tmap[r * cols + c] = (topbase[c] + r) % 256 if r < K else (botbase[c] + (r - K)) % 256
+
+    # --- attrmap: bank bit | per-cell BG palette ---
+    P: list = [None] * (rows * cols)
+    pcand: list = [None] * (rows * cols)
+    for cell in range(rows * cols):
+        b = tmap[cell]
+        pat = TILEPAT[b if b >= 128 else b + 256]
+        pcand[cell] = [p for p in range(NPAL) if all(PAL[p][pat[i]] == BLOCK[cell][i] for i in range(64))]
+        if len(pcand[cell]) == 1:
+            P[cell] = pcand[cell][0]
+    for _ in range(rows + cols):                            # spread by neighbour consensus
+        for cell in range(rows * cols):
+            if P[cell] is not None:
+                continue
+            nb = [P[cell + d] for d in (-cols, cols, -1, 1)
+                  if 0 <= cell + d < rows * cols and P[cell + d] in pcand[cell]]
+            if nb:
+                P[cell] = Counter(nb).most_common(1)[0][0]
+    for cell in range(rows * cols):
+        if P[cell] is None:
+            P[cell] = pcand[cell][0] if pcand[cell] else 0
+    for (r, c, p) in pal_overrides:
+        P[r * cols + c] = p
+    amap = bytes((bank << 3) | P[cell] for cell in range(rows * cols))
+    return bytes(tmap), amap
+
+
 def cmd_portrait(args: argparse.Namespace) -> int:
     """Single- or two-VRAM-bank portrait from one tile-sheet PNG. The PNG holds the
     bank-1 (main) tiles, optionally followed by the bank-0 tiles; splits into
@@ -300,10 +439,19 @@ def cmd_portrait(args: argparse.Namespace) -> int:
             comps.append(("palette_bg", pack(0, args.palettes_bg)))
         if args.palettes_obj:                                     # OBJ palettes follow them
             comps.append(("palette_obj", pack(args.palettes_bg * 4, args.palettes_obj)))
-    comps += [
-        ("tilemap", (d / "tilemap.bin").read_bytes()),
-        ("attrmap", (d / "attrmap.bin").read_bytes()),
-    ]
+    if getattr(args, "reference", None):
+        # derive the maps from the rendered reference image (BG layer) instead of
+        # committing tilemap.bin/attrmap.bin. Needs the bank-1 tiles + BG palettes.
+        palbg = next(data for name, data in comps if name == "palette_bg")
+        tmap, amap = derive_portrait_maps(
+            d / args.reference, comps[0][1], palbg, args.rows, args.cols,
+            args.bank, parse_overrides(args.pal_overrides))
+        comps += [("tilemap", tmap), ("attrmap", amap)]
+    else:
+        comps += [
+            ("tilemap", (d / "tilemap.bin").read_bytes()),
+            ("attrmap", (d / "attrmap.bin").read_bytes()),
+        ]
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for name, data in comps:
@@ -344,6 +492,14 @@ def main() -> int:
     pt.add_argument("--palettes-bg", type=int, default=0,
                     help="BG palettes in the PNG table (0 = grayscale, no palette.bin)")
     pt.add_argument("--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones")
+    pt.add_argument("--reference", default=None,
+                    help="rendered reference PNG (next to --png); derive the maps from it "
+                         "instead of committing tilemap.bin/attrmap.bin")
+    pt.add_argument("--rows", type=int, default=0, help="map rows (with --reference)")
+    pt.add_argument("--cols", type=int, default=0, help="map cols (with --reference)")
+    pt.add_argument("--bank", type=int, default=1, help="VRAM bank for attr bit 3 (single-bank)")
+    pt.add_argument("--pal-overrides", default="",
+                    help="image-irreducible palette ties: 'r,c,p;r,c,p'")
     pt.set_defaults(fn=cmd_portrait)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")
