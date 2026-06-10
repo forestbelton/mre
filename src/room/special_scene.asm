@@ -121,7 +121,7 @@ SpecialScene_SelectIndex:
 	jr nz, Func_17_40c3
 	ld a, c
 	dec a
-	ld [$c55c], a
+	ld [wSpecialScene], a
 	ret
 Func_17_40c3:
 	ld hl, $4000
@@ -147,11 +147,11 @@ Func_17_40d5:
 	jr Func_17_40c6
 Func_17_40dd:
 	ld a, $ff
-	ld [$c55c], a
+	ld [wSpecialScene], a
 	ret
 Func_17_40e3:
 	ld a, [hl+]
-	ld [$c55c], a
+	ld [wSpecialScene], a
 	ld a, [hl+]
 Func_17_40e8:
 	ld c, a
@@ -204,12 +204,12 @@ Func_17_4113:
 	jr nz, Func_17_40e8
 	ret
 SpecialScene_LoadGraphics:
-	ld a, [$c55c]
+	ld a, [wSpecialScene]
 	cp $ff
 	ret z
 	cp $05
 	jr c, LoadFontTiles
-	FAR_CALL $38, Func_38_4000
+	FAR_CALL $38, LoadRoomMural
 	ret
 ; Upload a 64-tile font page from $17:$6118 (+ $400*[$c55c]) to VRAM $9400.
 ; The font sheet there is Data_17_6918 (ABC.../abc.../0-9). See docs/gfx_loaders.md.
@@ -218,7 +218,7 @@ LoadFontTiles:
 	ldh [rVBK], a
 	ld bc, $0400
 	ld hl, $6118
-	ld a, [$c55c]
+	ld a, [wSpecialScene]
 	rlca
 	rlca
 	add a, h
@@ -232,7 +232,7 @@ Data_17_414c:
 	db $70, $75, $78, $75, $80, $75, $88, $75, $90, $75, $98, $75, $a0, $75, $a8, $75
 
 SpecialScene_LoadTilemap:
-	ld a, [$c55c]
+	ld a, [wSpecialScene]
 	cp $ff
 	ret z
 	ld c, a

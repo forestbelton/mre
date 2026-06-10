@@ -143,6 +143,12 @@ wSpawnCellX::       ds 1    ; $C52E: pickup/effect spawn target cell X
 wSpawnCellY::       ds 1    ; $C52F: pickup/effect spawn target cell Y
 
 
+SECTION "wram_special_scene", WRAM0[$C55C]
+wSpecialScene::     ds 1    ; $C55C: special-scene index for the current floor
+                            ;   ($ff = none); picks the mural/font page in room/
+                            ;   special_scene.asm (LoadRoomMural, bank $38)
+
+
 SECTION "wram_menu", WRAM0[$C561]
 ; List/grid menu + cursor state, shared by the in-game menus and the level
 ; editor's room menus, run by the wUiState loop. A menu definition is picked by

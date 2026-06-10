@@ -1,10 +1,9 @@
 ; Room-background mural tiles (ROM bank $38).
 ;
-; Func_38_4000 pages a 1KB mural-tile bank (indexed by [$c55c]) from
-; Data_38_401a into VRAM -- the decoration tiles that show behind floor
-; walls. Loaded by room/special_scene.asm per scene.
+; LoadRoomMural pages a 1KB mural-tile page into VRAM $9400 -- the decoration
+; tiles that show behind floor walls. The page is RoomMuralTiles + (wSpecialScene
+; - 5) * $400. Loaded by room/special_scene.asm per scene.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,12 +11,14 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0e0000", ROMX[$4000], BANK[$38]
 
-Func_38_4000:
+; Copy the wSpecialScene-th 1KB mural tile page (pages start at index 5) into
+; VRAM bank 0 $9400.
+LoadRoomMural:
 	xor a
 	ld [rVBK], a
 	ld bc, $0400
-	ld hl, $401a
-	ld a, [$c55c]
+	ld hl, RoomMuralTiles
+	ld a, [wSpecialScene]
 	sub $05
 	rlca
 	rlca
@@ -27,7 +28,7 @@ Func_38_4000:
 	call VramCopy16
 	ret
 
-Data_38_401a:
+RoomMuralTiles:
 	db $ff, $00, $01, $00, $01, $00, $01, $00, $ff, $00, $1f, $00, $18, $07, $18, $07
 	db $f8, $07, $f8, $07, $80, $7f, $80, $7f, $81, $7e, $10, $00, $10, $00, $10, $00
 	db $ff, $00, $ff, $00, $c0, $3f, $c0, $3f, $c0, $3f, $10, $00, $10, $00, $10, $00
