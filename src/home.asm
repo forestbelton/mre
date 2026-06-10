@@ -459,8 +459,8 @@ VramCopy16:
 ; FillVram performs a VRAM-safe fill with a given byte.
 ;
 ; hl	Target address
+; bc	Number of bytes
 ; d		Byte to fill
-; bc	Number of bytes to copy
 FillVram:
 	call WaitForHBlank
 	REPT 2
@@ -478,13 +478,19 @@ FillVram:
 	or c
 	jr nz, FillVram
 	ret
-Func_00_03bc:
+
+; FillRam performs a fill with a given byte.
+;
+; hl	Target address
+; bc	Number of bytes
+; d		Byte to fill
+FillRam:
 	ld a, d
 	ld [hl+], a
 	dec bc
 	ld a, b
 	or c
-	jr nz, Func_00_03bc
+	jr nz, FillRam
 	ret
 
 Func_00_03c4:

@@ -122,7 +122,7 @@ Func_14_40fb:
 	ld hl, $d0eb
 	ld bc, $0008
 	ld d, $ff
-	call Func_00_03bc
+	call FillRam
 	xor a
 	ld [wUiTimer], a
 Func_14_411e:

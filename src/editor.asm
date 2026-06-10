@@ -1501,7 +1501,7 @@ Func_12_4ab8:
 	call CopyDEtoHL
 	ld d, $ff
 	ld bc, $0008
-	call Func_00_03bc
+	call FillRam
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a67
@@ -1720,7 +1720,7 @@ Func_12_4c3e:
 	call CopyDEtoHL
 	ld d, $ff
 	ld bc, $0008
-	call Func_00_03bc
+	call FillRam
 	ld a, [$d0e7]
 	add a, a
 	ld hl, $4a67

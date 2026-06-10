@@ -443,7 +443,7 @@ ClearFloorSpriteRam:
 	ld hl, $c7f9
 	ld bc, $0498
 	ld d, $00
-	call Func_00_03bc
+	call FillRam
 	ret
 
 ; SpawnPlayerEntity ($4019) -- allocate the player sprite at the floor's spawn
