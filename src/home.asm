@@ -42,7 +42,9 @@ DerefHL:
 
 SECTION "RST_20", ROM0[$20]
 
-; CheckCGB sets Z if the system is a Game Boy Color.
+; CheckCGB tests wIsCgb: returns NZ (Z clear) on a Game Boy Color, Z set
+; otherwise -- wIsCgb is 1 on CGB, so `and a` leaves a non-zero result there.
+; (Callers branch `jr nz` for the CGB path, `jr z` for the DMG path.)
 CheckCgb:
 	ld a, [wIsCgb]
 	and a
@@ -188,6 +190,7 @@ SetIsCgb:
 	ld [wIsCgb], a
 	call Func_00_0a04
 	jp Func_00_04cc
+
 Func_00_01f9:
 	ldh a, [hJoyHeld]
 	cp $0f
