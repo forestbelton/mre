@@ -50,7 +50,7 @@ Func_00_16ad:
 	push af
 	ld a, $12
 	ld [$2fff], a          ; map bank $12 into $4000-$7fff
-	call Func_12_4094
+	call DrawFloorFrame
 	call $41a9             ; Func_12_41a9 (no curated label)
 	pop af
 	ld [$2fff], a          ; restore previous bank

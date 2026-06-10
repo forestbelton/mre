@@ -7,14 +7,14 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_048000", ROMX[$4000], BANK[$12]
 
-Func_12_4000:
+ProcessFloorCellMarkers:
 	ld e, [hl]
 	ld a, $ee
 	rst AddAToHL
 	ld a, [hl]
 	ld d, a
 	cp $40
-	jr nz, Func_12_4014
+	jr nz, .notExit
 	ld a, b
 	ld [wSpawnCellY], a
 	ld a, c
@@ -22,43 +22,43 @@ Func_12_4000:
 	ld a, d
 	ret
 
-Func_12_4014:
+.notExit:
 	cp $c0
-	jr z, Func_12_401e
+	jr z, .storeMonster
 	cp $80
-	jr z, Func_12_401e
-	jr Func_12_4026
-Func_12_401e:
+	jr z, .storeMonster
+	jr .return
+.storeMonster:
 	ld a, b
 	ld [$c531], a
 	ld a, c
 	ld [$c530], a
-Func_12_4026:
+.return:
 	ld a, e
 	cp $00
 	ret nz
 	ld a, d
 	ret
 
-Func_12_402c:
+DrawFloorPieces:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
 	rst AddAToHL
-Func_12_4035:
+.next:
 	xor a
 	cp c
-	jr z, Func_12_4042
+	jr z, .advance
 	ld a, [wFloorWidth]
 	dec a
 	cp c
-	jr z, Func_12_4046
-	jr Func_12_4057
-Func_12_4042:
+	jr z, .wrapRow
+	jr .cell
+.advance:
 	inc c
 	inc hl
-	jr Func_12_4057
-Func_12_4046:
+	jr .cell
+.wrapRow:
 	ld c, $00
 	inc b
 	ld a, [wFloorRowStride]
@@ -67,32 +67,32 @@ Func_12_4046:
 	ld a, [wFloorHeight]
 	dec a
 	cp b
-	jr z, Func_12_406e
-	jr Func_12_4035
-Func_12_4057:
+	jr z, .done
+	jr .next
+.cell:
 	push bc
 	push hl
 	ld a, [hl]
 	or a
-	jr nz, Func_12_4068
+	jr nz, .skip
 	ld a, $ee
 	rst AddAToHL
 	ld a, [hl]
 	bit 7, a
-	jr z, Func_12_4068
+	jr z, .skip
 	call DrawFloorPiece
-Func_12_4068:
+.skip:
 	pop hl
 	pop bc
 	inc c
 	inc hl
-	jr Func_12_4035
-Func_12_406e:
+	jr .next
+.done:
 	ret
 
-Func_12_406f:
+UploadBonusRoomTilemaps:
 	call WaitForHBlank
-	ld hl, $66a4
+	ld hl, Data_12_66a4
 	ld de, $9820
 	call CopyBgMap
 	call WaitForHBlank
@@ -105,17 +105,17 @@ Func_12_406f:
 	call CopyBgMap
 	ret
 
-Func_12_4094:
+DrawFloorFrame:
 	ld a, [wRoomType]
 	cp $02
-	jr nz, Func_12_40a6
+	jr nz, DrawFloorBorderTiles
 	ld a, [wActiveFloor]
 	cp $05
-	jr nz, Func_12_40a6
-	call Func_12_406f
+	jr nz, DrawFloorBorderTiles
+	call UploadBonusRoomTilemaps
 	ret
 
-Func_12_40a6:
+DrawFloorBorderTiles:
 	xor a
 	ldh [rVBK], a
 	ld a, [wFloorHeight]
@@ -125,14 +125,14 @@ Func_12_40a6:
 	ld e, a
 	ld [$d0e7], a
 	ld hl, $9801
-Func_12_40b6:
+.left:
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
-	jr z, Func_12_40ec
+	jr z, .topInit
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
@@ -145,27 +145,27 @@ Func_12_40b6:
 	ld d, $04
 	call FillVram
 	dec e
-	jr z, Func_12_40ec
+	jr z, .topInit
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
 	ld d, $05
 	call FillVram
 	dec e
-	jr Func_12_40b6
-Func_12_40ec:
+	jr .left
+.topInit:
 	ld a, [wFloorWidth]
 	dec a
 	add a, a
 	dec a
 	ld e, a
 	ld [$d0e8], a
-Func_12_40f6:
+.top:
 	ld bc, $0001
 	ld d, $0a
 	call FillVram
 	dec e
-	jr z, Func_12_4120
+	jr z, .rightInit
 	ld bc, $0001
 	ld d, $0b
 	call FillVram
@@ -174,13 +174,13 @@ Func_12_40f6:
 	ld d, $0c
 	call FillVram
 	dec e
-	jr z, Func_12_4120
+	jr z, .rightInit
 	ld bc, $0001
 	ld d, $0d
 	call FillVram
 	dec e
-	jr Func_12_40f6
-Func_12_4120:
+	jr .top
+.rightInit:
 	ld a, [$d0e7]
 	dec a
 	ld e, a
@@ -190,7 +190,7 @@ Func_12_4120:
 	dec a
 	ld hl, $9801
 	rst AddAToHL
-Func_12_412f:
+.right:
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
@@ -203,7 +203,7 @@ Func_12_412f:
 	ld d, $03
 	call FillVram
 	dec e
-	jr z, Func_12_4163
+	jr z, .vbank1
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
@@ -216,29 +216,29 @@ Func_12_412f:
 	ld d, $05
 	call FillVram
 	dec e
-	jr nz, Func_12_412f
-Func_12_4163:
+	jr nz, .right
+.vbank1:
 	ld a, $01
 	ldh [rVBK], a
 	ld a, [$d0e7]
 	ld e, a
 	ld hl, $9801
-Func_12_416e:
+.vb1a:
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
-	jr nz, Func_12_416e
+	jr nz, .vb1a
 	ld a, [$d0e8]
 	ld e, a
-Func_12_4180:
+.vb1b:
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
-	jr nz, Func_12_4180
+	jr nz, .vb1b
 	ld a, [$d0e7]
 	dec a
 	ld e, a
@@ -248,33 +248,38 @@ Func_12_4180:
 	dec a
 	ld hl, $9801
 	rst AddAToHL
-Func_12_419a:
+.vb1c:
 	ld a, $1f
 	rst AddAToHL
 	ld bc, $0001
 	ld d, $02
 	call FillVram
 	dec e
-	jr nz, Func_12_419a
+	jr nz, .vb1c
 	ret
+
+; Redraw the whole floor grid (used on floor load): walk every cell, run
+; ProcessFloorCellMarkers to record exit/monster spawn positions, then stamp each
+; piece via DrawFloorPiece. Entry $41a9; called from layout.asm (Func_00_16ad).
+RedrawFloorWithSpawns:
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
 	rst AddAToHL
-Func_12_41b2:
+.next:
 	xor a
 	cp c
-	jr z, Func_12_41bf
+	jr z, .advance
 	ld a, [wFloorWidth]
 	dec a
 	cp c
-	jr z, Func_12_41c3
-	jr Func_12_41d4
-Func_12_41bf:
+	jr z, .wrapRow
+	jr .cell
+.advance:
 	inc c
 	inc hl
-	jr Func_12_41d4
-Func_12_41c3:
+	jr .cell
+.wrapRow:
 	ld c, $00
 	inc b
 	ld a, [wFloorRowStride]
@@ -283,23 +288,23 @@ Func_12_41c3:
 	ld a, [wFloorHeight]
 	dec a
 	cp b
-	jr z, Func_12_41e8
-	jr Func_12_41b2
-Func_12_41d4:
+	jr z, .done
+	jr .next
+.cell:
 	push bc
 	push hl
-	call Func_12_4000
+	call ProcessFloorCellMarkers
 	bit 7, a
-	jr z, Func_12_41df
+	jr z, .draw
 	ld a, $00
-Func_12_41df:
+.draw:
 	call DrawFloorPiece
 	pop hl
 	pop bc
 	inc c
 	inc hl
-	jr Func_12_41b2
-Func_12_41e8:
+	jr .next
+.done:
 	ret
 Func_12_41e9:
 	FAR_CALL $15, Func_15_4015

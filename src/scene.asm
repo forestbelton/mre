@@ -739,7 +739,7 @@ SceneFinish:
 	call Func_00_0bdd
 	call Func_00_083c
 	call Func_00_16ad
-	FAR_CALL $12, Func_12_402c
+	FAR_CALL $12, DrawFloorPieces
 	FAR_CALL $01, Func_01_75ad
 	call Func_05_48a5
 	ld a, $07

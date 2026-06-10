@@ -2315,7 +2315,7 @@ Func_01_5993:
 	cp $20
 	ret nz
 Func_01_599b:
-	FAR_CALL $12, Func_12_402c
+	FAR_CALL $12, DrawFloorPieces
 	call Func_01_449d
 	call Func_01_4aa1
 	xor a
