@@ -24,22 +24,22 @@ SECTION "analyzed_044000", ROMX[$4000], BANK[$11]
 LoadAllFloorMonsterSprites:
 	ld a, $01
 	ld [wMenuCursor], a
-	ld a, [$c4cd]              ; slot 1 species
+	ld a, [wFloorMonsterSpecies]              ; slot 1 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $02
 	ld [wMenuCursor], a
-	ld a, [$c4ce]              ; slot 2 species
+	ld a, [wFloorMonsterSpecies+1]              ; slot 2 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $03
 	ld [wMenuCursor], a
-	ld a, [$c4cf]              ; slot 3 species
+	ld a, [wFloorMonsterSpecies+2]              ; slot 3 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ld a, $04
 	ld [wMenuCursor], a
-	ld a, [$c4d0]              ; slot 4 species
+	ld a, [wFloorMonsterSpecies+3]              ; slot 4 species
 	ld c, a
 	call LoadFloorMonsterSprite
 	ret
@@ -49,7 +49,7 @@ LoadAllFloorMonsterSprites:
 ; the species array $c4cd-$c4d0.
 LoadAllFloorMonsterPalettes:
 	ld c, $00
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 .loop:
 	push hl
 	push bc
@@ -143,7 +143,7 @@ LoadFloorMonsterSpriteToSlot:
 ; empty ($ff) entries in $c4cd-$c4d0. Per-slot palette is fetched through
 ; SpeciesPalettePtrs (.loadOne). Called from scene.asm.
 LoadFloorMonsterSlotPalettes:
-	ld de, $c4cd
+	ld de, wFloorMonsterSpecies
 	ld c, $00
 .loop:
 	ld a, [de]

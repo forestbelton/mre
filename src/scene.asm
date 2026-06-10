@@ -1269,7 +1269,7 @@ Func_05_48d9:
 	call Func_05_48dd
 	ret
 Func_05_48dd:
-	ld de, $c4cd
+	ld de, wFloorMonsterSpecies
 	ld c, $00
 Func_05_48e2:
 	ld a, [de]

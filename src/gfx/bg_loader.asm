@@ -105,7 +105,7 @@ FloorBgPalettePtrs:
 
 ; Select and load the floor's 7 BG palettes by id in $c4cb (floor record [5]).
 LoadFloorBgPalette:
-	ld a, [$c4cb]              ; palette id
+	ld a, [wFloorPalette]              ; palette id
 	add a, a
 	ld hl, FloorBgPalettePtrs
 	rst AddAToHL

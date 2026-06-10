@@ -3623,7 +3623,7 @@ Func_03_5840:
 	push de
 	push hl
 	push af
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	add a, l
 	ld l, a
 	ld a, h

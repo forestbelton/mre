@@ -130,6 +130,12 @@ wFloorRowStride::   ds 1    ; $C2EE: $11 - width (grid rows are 17 cells apart)
 wFloorCollision::   ds 238  ; $C2EF: 17x14 collision/attribute grid
 wFloorGrid::        ds 238  ; $C3DD: 17x14 piece-ID grid (the floor layout; rendered
                             ;   via DrawFloorPiece + FloorPieceDefs at $12FA)
+; Remaining floor-record fields (parsed by ParseFloorRecord, $00:$16ED):
+wFloorPalette::        ds 1   ; $C4CB: BG palette id (record [5]; -> LoadFloorBgPalette, bank $10)
+wFloorTileset::        ds 1   ; $C4CC: tileset id (record [4]; -> LoadTileset, bank $16)
+wFloorMonsterSpecies:: ds 4   ; $C4CD: 4 visible floor-monster MONSTER species (record arr1)
+wFloorMonsterTable::   ds 45  ; $C4D1: per-floor monster table (record arr2; 9 x 5)
+wFloorSpawnerTable::   ds 48  ; $C4FE: per-floor spawner table (record arr3; 4 x 12)
 
 
 SECTION "wram_spawn_cell", WRAM0[$C52E]

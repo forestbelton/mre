@@ -24,7 +24,7 @@ TilesetSrcPtrs:
 LoadTileset:
 	ld a, $01
 	ld [rVBK], a
-	ld a, [$c4cc]              ; tileset id (floor record [4])
+	ld a, [wFloorTileset]              ; tileset id (floor record [4])
 	ld c, a
 	add a, a
 	ld hl, TilesetSrcPtrs

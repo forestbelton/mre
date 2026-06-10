@@ -1202,7 +1202,7 @@ Func_12_48ea:
 	add a, $32
 	ld b, a
 	ld c, $00
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 Func_12_48f4:
 	ld a, [hl+]
 	cp d

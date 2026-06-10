@@ -3577,7 +3577,7 @@ Func_00_1ada:
 	ld a, [$c2ea]
 	ld [wEditCursorX], a
 	FAR_CALL $12, Func_12_46d0
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 	ld c, $00
 Func_00_1afc:
 	ld a, [hl+]
@@ -3673,18 +3673,18 @@ Func_00_1b87:
 	ld a, [wMenuItemValue]
 	cp $fd
 	jr nz, Func_00_1bb9
-	ld a, [$c4cb]
+	ld a, [wFloorPalette]
 	inc a
 	cp $07
 	jr nz, Func_00_1bac
 	xor a
 Func_00_1bac:
-	ld [$c4cb], a
+	ld [wFloorPalette], a
 	FAR_CALL $10, LoadFloorBgPalette
 	jr Func_00_1bc7
 Func_00_1bb9:
 	ld a, [wMenuCursor]
-	ld [$c4cc], a
+	ld [wFloorTileset], a
 	FAR_CALL $16, LoadTileset
 Func_00_1bc7:
 	call Func_00_2dbc
@@ -3895,7 +3895,7 @@ Func_00_1d17:
 	jr nz, Func_00_1d40
 
 Data_00_1d2e:
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	ld a, [hl]
 	dec a
@@ -3907,7 +3907,7 @@ Data_00_1d2e:
 	jr $1d57	; WARN: jr target $1d57 outside decoded range $1d2e-$1d3f — wrong --addr? (jr needs the real base address)
 
 Func_00_1d40:
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	call Func_00_1e34
 	jp z, Func_00_1de5
@@ -3943,7 +3943,7 @@ Func_00_1d69:
 	jr nz, Func_00_1d92
 
 Data_00_1d80:
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	ld a, [hl]
 	inc a
@@ -3955,7 +3955,7 @@ Data_00_1d80:
 	jr $1da7	; WARN: jr target $1da7 outside decoded range $1d80-$1d91 — wrong --addr? (jr needs the real base address)
 
 Func_00_1d92:
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	call Func_00_1e34
 	jr z, Func_00_1de5
@@ -4041,7 +4041,7 @@ Func_00_1e34:
 	push hl
 	ld d, [hl]
 	ld c, $04
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 Func_00_1e3b:
 	ld a, $05
 	rst AddAToHL
@@ -4069,16 +4069,16 @@ Func_00_1e4f:
 Func_00_1e58:
 	ld [hl], a
 	ld [wMenuItemValue], a
-	ld a, [$c4cd]
+	ld a, [wFloorMonsterSpecies]
 	ld d, a
-	ld a, [$c4ce]
+	ld a, [wFloorMonsterSpecies+1]
 	cp d
 	ret z
-	ld a, [$c4cf]
+	ld a, [wFloorMonsterSpecies+2]
 	cp d
 	ret z
 	ld d, a
-	ld a, [$c4ce]
+	ld a, [wFloorMonsterSpecies+1]
 	cp d
 	ret z
 	ld a, [hl]
@@ -4225,7 +4225,7 @@ Func_00_1f48:
 	jr nz, Func_00_1f55
 
 Data_00_1f50:
-	ld a, [$c4cc]
+	ld a, [wFloorTileset]
 	inc a
 	ld h, a
 
@@ -4355,7 +4355,7 @@ Func_00_1ff4:
 	ld a, [wMenuCursor]
 	dec a
 	ld b, a
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 	ld c, $00
 Func_00_1ffe:
 	inc hl
@@ -4487,7 +4487,7 @@ Data_00_2094:
 	ld c, $03
 	call Func_00_20d1
 	ld a, e
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	ld a, [hl]
 	add a, a
@@ -5069,7 +5069,7 @@ Data_00_2495:
 
 Func_00_25a4:
 	ld c, $09
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 Func_00_25a9:
 	inc hl
 	inc hl
@@ -5077,7 +5077,7 @@ Func_00_25a9:
 	push hl
 	inc hl
 	ld a, [hl]
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	ld a, [hl]
 	ld hl, $2494
@@ -5348,7 +5348,7 @@ Func_00_27e1:
 	ld [$c7d1], a
 	ld e, a
 	ld d, $00
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
 	add a, a
@@ -5781,7 +5781,7 @@ Func_00_2b07:
 	cp c
 	ret
 Func_00_2b0d:
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
 	ld a, [hl]
 	cp $03
@@ -5824,7 +5824,7 @@ Func_00_2b2a:
 	call Func_00_20f0
 	ret
 Func_00_2b4d:
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
 	add a, a
@@ -5844,7 +5844,7 @@ Func_00_2b67:
 	ld [wGridCol], a
 	ret
 Func_00_2b6b:
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
 	add a, a
@@ -5864,7 +5864,7 @@ Func_00_2b87:
 	ld [hl], a
 	ret
 Func_00_2b89:
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
 	add a, a
@@ -5899,7 +5899,7 @@ Func_00_2bb4:
 Func_00_2bb8:
 	ld d, $00
 	ld c, $09
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 Func_00_2bbf:
 	ld a, [hl]
 	cp $ff
@@ -5911,7 +5911,7 @@ Func_00_2bc5:
 	dec c
 	jr nz, Func_00_2bbf
 	ld c, $04
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 Func_00_2bd0:
 	ld a, [hl+]
 	cp $ff
@@ -6039,7 +6039,7 @@ Func_00_2c85:
 	ld a, [$c7d2]
 	cp $06
 	jr z, Func_00_2ce1
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 	ld a, [$c7cc]
 	ld c, a
 	add a, a
@@ -6095,7 +6095,7 @@ Func_00_2cd5:
 	ld [hl], a
 	ret
 Func_00_2ce1:
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
 	add a, a
@@ -6196,7 +6196,7 @@ Func_00_2d77:
 	ret
 
 Func_00_2d88:
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 	ld a, [wEditCursorX]
 	ld d, a
 	ld a, [wEditCursorY]
@@ -6286,7 +6286,7 @@ Func_00_2df6:
 	ld [$c531], a
 	ld b, $00
 	ld c, $09
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 Func_00_2e1a:
 	ld a, [hl+]
 	cp $ff
@@ -6301,7 +6301,7 @@ Func_00_2e20:
 	ld [$c56e], a
 	ld b, $00
 	ld c, $04
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 Func_00_2e31:
 	ld a, [hl+]
 	cp $ff
@@ -6408,7 +6408,7 @@ Func_00_2eb7:
 	jr nz, Func_00_2efa
 
 Func_00_2ebb:
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld d, $04
 	ld a, [wEditCursorY]
 	ld b, a
@@ -6492,7 +6492,7 @@ Func_00_2f2b:
 Func_00_2f38:
 	cp $42
 	jr nz, Func_00_2f64
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	ld d, $04
 Func_00_2f41:
 	ld a, [hl]
@@ -6607,9 +6607,9 @@ PackFloorSnapshot:
 	ld [hl+], a
 	ld a, [$c2e9]
 	ld [hl+], a
-	ld a, [$c4cc]
+	ld a, [wFloorTileset]
 	ld [hl+], a
-	ld a, [$c4cb]
+	ld a, [wFloorPalette]
 	ld [hl+], a
 	ld a, [wFloorHeight]
 	ld [hl+], a
@@ -6642,13 +6642,13 @@ PackFloorSnapshot:
 	dec b
 	jr nz, .copyPieces
 	ld c, $04
-	ld de, $c4cd
+	ld de, wFloorMonsterSpecies
 	call CopyDEtoHL
 	ld c, $2d
-	ld de, $c4d1
+	ld de, wFloorMonsterTable
 	call CopyDEtoHL
 	ld c, $30
-	ld de, $c4fe
+	ld de, wFloorSpawnerTable
 	call CopyDEtoHL
 	ret
 
@@ -6741,7 +6741,7 @@ Func_00_30b3:
 	cp $00
 	jr z, Func_00_30cb
 	dec a
-	ld de, $c4cd
+	ld de, wFloorMonsterSpecies
 	rst AddAToDE
 	ld a, [de]
 	inc a

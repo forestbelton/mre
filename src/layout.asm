@@ -135,9 +135,9 @@ ParseFloorRecord:
 	ld a, [hl+]
 	ld [$c2e9], a          ; [3] pad (always $00)
 	ld a, [hl+]
-	ld [$c4cc], a          ; [4] tileset (0-5; tile gfx via LoadTileset -> VRAM $9000)
+	ld [wFloorTileset], a          ; [4] tileset (0-5; tile gfx via LoadTileset -> VRAM $9000)
 	ld a, [hl+]
-	ld [$c4cb], a          ; [5] palette (0-6; BG palette via LoadFloorBgPalette -> wBgPalettes)
+	ld [wFloorPalette], a          ; [5] palette (0-6; BG palette via LoadFloorBgPalette -> wBgPalettes)
 	ld a, [hl+]
 	ld [wFloorHeight], a    ; [6] height
 	ld a, [hl+]
@@ -174,13 +174,13 @@ ParseFloorRecord:
 	jr nz, .copyPieces
 
 	ld c, $04              ; arr1: 4-byte sprite/species table
-	ld hl, $c4cd
+	ld hl, wFloorMonsterSpecies
 	call CopyDEtoHL
 	ld c, $2d              ; arr2: 45-byte monster table (9 x 5)
-	ld hl, $c4d1
+	ld hl, wFloorMonsterTable
 	call CopyDEtoHL
 	ld c, $30             ; arr3: 48-byte spawner table (4 x 12; see ProcessFloorSpawners)
-	ld hl, $c4fe
+	ld hl, wFloorSpawnerTable
 	call CopyDEtoHL
 
 	ld a, $05
@@ -500,7 +500,7 @@ SpawnFloorMonstersOrBonus:
 ; See docs/floor_data.md "Monster table".
 ; -----------------------------------------------------------------------------
 SpawnFloorMonsters:
-	ld hl, $c4d1           ; arr2 monster table
+	ld hl, wFloorMonsterTable           ; arr2 monster table
 	ld c, $09              ; 9 slots
 .slotLoop:
 	push bc
@@ -525,7 +525,7 @@ SpawnFloorMonsters:
 	push hl
 	ld c, a
 	ld b, $00
-	ld hl, $c4cd           ; arr1 sprite/species table
+	ld hl, wFloorMonsterSpecies           ; arr1 sprite/species table
 	add hl, bc
 	ld a, [hl]             ; species id = arr1[gfxIndex]
 	add a, $30
@@ -746,7 +746,7 @@ ProcessFloorSpawners:
 	ld a, [wRoomType]
 	cp $02
 	ret z                  ; mode 2 has no arr3 spawners
-	ld hl, $c4fe           ; arr3 spawner table
+	ld hl, wFloorSpawnerTable           ; arr3 spawner table
 	ld c, $04              ; 4 slots
 .slotLoop:
 	push bc
