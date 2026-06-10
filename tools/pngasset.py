@@ -394,12 +394,15 @@ def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides
         pcand[cell] = [p for p in range(NPAL) if all(PAL[p][pat[i]] == BLOCK[cell][i] for i in range(64))]
         if len(pcand[cell]) == 1:
             P[cell] = pcand[cell][0]
-    for _ in range(rows + cols):                            # spread by neighbour consensus
+    for _ in range(rows + cols):                            # spread by 8-neighbour consensus
         for cell in range(rows * cols):
             if P[cell] is not None:
                 continue
-            nb = [P[cell + d] for d in (-cols, cols, -1, 1)
-                  if 0 <= cell + d < rows * cols and P[cell + d] in pcand[cell]]
+            r0, c0 = cell // cols, cell % cols
+            nb = [P[(r0+dr)*cols + (c0+dc)]
+                  for dr in (-1, 0, 1) for dc in (-1, 0, 1)
+                  if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
+                  and P[(r0+dr)*cols + (c0+dc)] in pcand[cell]]
             if nb:
                 P[cell] = Counter(nb).most_common(1)[0][0]
     for cell in range(rows * cols):
