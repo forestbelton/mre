@@ -1,10 +1,14 @@
-; Scene entity sprite/tile loader (ROM bank $02).
+; Entity sprite loader / refresher (ROM bank $02).
 ;
-; Copies entity tile graphics (Data_02_40b1) to VRAM and iterates floor
-; entity slots through the home entity loaders (Func_00_0c84/_0c45).
-; Referenced by scene.asm and room/gameplay.asm.
+; LoadEntityTiles/LoadEntityPalettes set up the shared entity tile sheet + CGB
+; palettes (called once when a room is built, from scene.asm). RefreshEntitySprites
+; runs every frame (from room/gameplay.asm): it walks the WRAM entity-record arrays
+; ($cc94, $cd74, $ce54 / wMonsterMeta1Ptr; 8-byte records) and (re)spawns each
+; live entity's metasprite via the home entity loaders Func_00_0c84/_0c45. The
+; large data blob from EntityPalettes onward is the entity metasprite/OAM frame
+; data (count-prefixed 4-byte [type,Yoff,tile,Xoff] records), pointed at by the
+; records' embedded pointers.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,77 +16,91 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_008000", ROMX[$4000], BANK[$02]
 
-Func_02_4000:
+; Upload the shared entity tile sheet ($1000 bytes) to VRAM bank 0 $8000.
+LoadEntityTiles:
 	xor a
 	ldh [rVBK], a
-	ld hl, Data_02_40b1
+	ld hl, EntityTiles
 	ld de, $8000
 	ld bc, $1000
 	call VramCopy16
 	ret
 
-Func_02_4010:
+; Load the entity CGB palettes: BG palette 7 from EntityPalettes, then 8 more
+; palettes from EntityPalettes+8 via the home palette loader.
+LoadEntityPalettes:
 	ld a, $07
-	ld hl, Data_02_50e9
+	ld hl, EntityPalettes
 	call LoadBgPalette
 	ld a, $00
 	ld b, $08
-	ld hl, $50f1
+	ld hl, EntityPalettes + 8
 	call Func_00_0732
 	ret
 
-Func_02_4023:
+; Per-frame entity refresh: re-spawn every live entity's sprite. The single record
+; at $cc94 is always scanned; the two 28-entry arrays ($cd74, $ce54) are scanned
+; forward on even frames and backward (the $ce54 / wMonsterMeta1Ptr pair) on odd
+; frames, alternating draw order each frame to balance OAM priority / flicker.
+RefreshEntitySprites:
 	ld hl, $cc94
 	ld c, $01
-	call Func_02_4058
-	ld a, [$c2e7]
+	call EntityScanForward
+	ld a, [$c2e7]              ; frame-parity counter
 	inc a
 	ld [$c2e7], a
 	and $01
-	jr nz, Func_02_4047
+	jr nz, .oddFrame
 	ld hl, $cd74
 	ld c, $1c
-	call Func_02_4058
+	call EntityScanForward
 	ld hl, $ce54
 	ld c, $1c
-	call Func_02_4058
+	call EntityScanForward
 	ret
-Func_02_4047:
+.oddFrame:
 	ld hl, $ce54
 	ld c, $1c
-	call Func_02_4065
+	call EntityScanBackward
 	ld hl, wMonsterMeta1Ptr
 	ld c, $1c
-	call Func_02_4065
+	call EntityScanBackward
 	ret
 
-Func_02_4058:
+; Walk C entity records forward (8 bytes each); spawn the sprite for each whose
+; first byte is non-zero (occupied slot).
+EntityScanForward:
 	ld a, [hl]
 	or a
-	call nz, Func_02_4071
+	call nz, SpawnEntitySprite
 	ld de, $0008
 	add hl, de
 	dec c
-	jr nz, Func_02_4058
+	jr nz, EntityScanForward
 	ret
 
-Func_02_4065:
+; As EntityScanForward but walks backward (hl -= 8 each step).
+EntityScanBackward:
 	ld a, $08
 	rst SubAFromHL
 	ld a, [hl]
 	or a
-	call nz, Func_02_4071
+	call nz, SpawnEntitySprite
 	dec c
-	jr nz, Func_02_4065
+	jr nz, EntityScanBackward
 	ret
 
-Func_02_4071:
+; Spawn one entity's metasprite from its 8-byte record at hl. The high nibble of
+; record byte 1 selects the format: non-zero -> full record (metasprite ptr in
+; wSpawnPtr + de/bc params) drawn via Func_00_0c84; zero -> .variant (shorter
+; record) drawn via Func_00_0c45.
+SpawnEntitySprite:
 	push hl
 	push bc
 	inc hl
 	ld a, [hl+]
 	and $f0
-	jr z, Func_02_4096
+	jr z, .variant
 	ld a, [hl+]
 	ld [wSpawnPtr+1], a
 	ld a, [hl+]
@@ -102,7 +120,7 @@ Func_02_4071:
 	pop bc
 	pop hl
 	ret
-Func_02_4096:
+.variant:
 	ld a, [hl+]
 	ld [wSpawnPtr+1], a
 	ld a, [hl+]
@@ -121,16 +139,18 @@ Func_02_4096:
 	pop hl
 	ret
 
-Data_02_40b1:
+EntityTiles:
 	INCBIN "gfx/raw/Data_02_40b1.2bpp", 0, 4096
 
+; 7 CGB palettes (8 bytes each, RGB555) immediately preceding EntityPalettes --
+; likely the matching OBJ palette set; loader not pinned in this file.
 Data_02_50b1:
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $12, $01, $63, $0c, $b5, $01, $3d, $3f
 	db $12, $01, $63, $0c, $ce, $39, $5a, $6b, $12, $01, $63, $0c, $26, $12, $9f, $2f
 	db $12, $01, $63, $0c, $ff, $00, $9f, $63, $12, $01, $63, $0c, $60, $7d, $9f, $63
 	db $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_02_50e9:
+EntityPalettes:
 	db $00, $00, $9f, $22, $3d, $15, $de, $7b, $00, $00, $5f, $4b, $b5, $01, $e0, $2c
 	db $00, $00, $ef, $71, $00, $68, $de, $7b, $00, $00, $1b, $24, $9f, $66, $3f, $4b
 	db $00, $00, $5f, $2e, $df, $0c, $de, $7b, $00, $00, $a3, $09, $59, $01, $3d, $13

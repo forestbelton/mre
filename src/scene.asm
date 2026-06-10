@@ -1254,7 +1254,7 @@ Func_05_4884:
 	ret
 Func_05_48a5:
 	FAR_CALL $10, Func_10_4018
-	FAR_CALL $02, Func_02_4000
+	FAR_CALL $02, LoadEntityTiles
 	FAR_CALL $16, LoadTileset
 	FAR_CALL $17, SpecialScene_LoadGraphics
 	call Func_05_48c9
@@ -1289,7 +1289,7 @@ Func_05_48f4:
 	jr nz, Func_05_48e2
 	ret
 Func_05_48fc:
-	FAR_CALL $02, Func_02_4010
+	FAR_CALL $02, LoadEntityPalettes
 	call Func_05_4918
 	FAR_CALL $10, Func_10_40a4
 	FAR_CALL $17, SpecialScene_LoadTilemap

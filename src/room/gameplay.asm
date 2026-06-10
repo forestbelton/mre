@@ -142,7 +142,7 @@ Func_01_444a:
 Func_01_4458:
 	call Func_01_4dd9
 	FAR_CALL $04, EntityAnim_ResetState
-	FAR_CALL $02, Func_02_4023
+	FAR_CALL $02, RefreshEntitySprites
 Func_01_446b:
 	FAR_CALL $0f, Func_0f_4000
 	call Func_01_75f6
