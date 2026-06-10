@@ -306,93 +306,98 @@ RedrawFloorWithSpawns:
 	jr .next
 .done:
 	ret
-Func_12_41e9:
+; The level editor's room-select screen: choose which editable room to arrange.
+; OpenFloorSelectScreen draws it (bank $15) and runs the input loop, which reads
+; the d-pad to move the selection in $c55d (inc / dec-with-wrap / toggle the $04
+; column bit), plays cursor blips, and on A confirms while B picks option 4
+; (exit). Confirming stores wActiveFloor and returns 1 (>= 4) or 0. From home.asm.
+OpenFloorSelectScreen:
 	FAR_CALL $15, Func_15_4015
-	call Func_12_41f5
+	call FloorSelectInputLoop
 	ret
-Func_12_41f5:
+FloorSelectInputLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyPressed]
 	ld b, a
 	ld a, [$c55d]
 	bit 4, b
-	jr z, Func_12_4218
+	jr z, .decSel
 	cp $04
-	jr nc, Func_12_41f5
+	jr nc, FloorSelectInputLoop
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	inc a
 	cp $03
-	jr nz, Func_12_4271
-
-Data_12_4215:
-	db $af, $18, $59
-
-Func_12_4218:
+	jr nz, .apply
+	xor a                      ; wrapped past 3 -> 0
+	jr .apply
+.decSel:
 	bit 5, b
-	jr z, Func_12_4230
+	jr z, .toggleColA
 	cp $04
-	jr nc, Func_12_41f5
+	jr nc, FloorSelectInputLoop
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	dec a
 	cp $80
-	jr c, Func_12_4271
-
-Data_12_422c:
-	db $3e, $02, $18, $41
-
-Func_12_4230:
+	jr c, .apply
+	ld a, $02                  ; wrapped below 0 -> 2
+	jr .apply
+.toggleColA:
 	bit 7, b
-	jr z, Func_12_423f
+	jr z, .toggleColB
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	xor $04
-	jr Func_12_4271
-Func_12_423f:
+	jr .apply
+.toggleColB:
 	bit 6, b
-	jr z, Func_12_424e
-
-Data_12_4243:
-	db $f5, $3e, $04, $cd, $85, $0a, $f1, $ee, $04, $18, $23
-
-Func_12_424e:
+	jr z, .pressA
+	push af
+	ld a, SOUND_SFX_Cursor
+	call PlaySound
+	pop af
+	xor $04
+	jr .apply
+.pressA:
 	bit 0, b
-	jr z, Func_12_425b
+	jr z, .pressB
 	push af
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	jr Func_12_4287
-Func_12_425b:
+	jr .confirm
+.pressB:
 	ld a, [$cfbe]
 	or a
-	jr nz, Func_12_41f5
+	jr nz, FloorSelectInputLoop
 	bit 1, b
-	jp z, Func_12_41f5
-
-Data_12_4266:
-	db $f5, $3e, $0e, $cd, $85, $0a, $f1, $3e, $04, $18, $16
-
-Func_12_4271:
+	jp z, FloorSelectInputLoop
+	push af
+	ld a, SOUND_SFX_Cancel
+	call PlaySound
+	pop af
+	ld a, $04
+	jr .confirm            ; B = select option 4 (exit)
+.apply:
 	ld [$c55d], a
 	FAR_CALL $15, Func_15_408a
 	FAR_CALL $15, Func_15_41cf
-	jp Func_12_41f5
-Func_12_4287:
+	jp FloorSelectInputLoop
+.confirm:
 	cp $04
-	jr c, Func_12_4291
+	jr c, .confirmZero
 	ld [wActiveFloor], a
 	ld a, $01
 	ret
-Func_12_4291:
+.confirmZero:
 	ld [wActiveFloor], a
 	xor a
 	ret

@@ -214,16 +214,16 @@ Func_00_01f9:
 	ld bc, $0010
 	call FillVram
 	rst CheckCgb
-	jr z, Func_00_023c
+	jr z, .dmg
 	ld a, $01
 	ldh [rVBK], a
-	ld hl, $9800
+	ld hl, TILEMAP0
 	ld bc, $0240
 	call FillVram
 	ld a, $00
 	ldh [rVBK], a
-Func_00_023c:
-	ld hl, $9800
+.dmg:
+	ld hl, TILEMAP0
 	ld bc, $0240
 	call FillVram
 	ld a, $81
@@ -3432,7 +3432,7 @@ OpenRoomSelectMenu:
 	FAR_CALL $15, Func_15_4134
 	FAR_CALL $15, Func_15_4015
 Func_00_1919:
-	FAR_CALL $12, Func_12_41f5
+	FAR_CALL $12, FloorSelectInputLoop
 	or a
 	ret nz
 	ld a, $04
@@ -3450,7 +3450,7 @@ SetupExchangeRoomSelect:
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 	FAR_CALL $15, Func_15_4015
-	FAR_CALL $12, Func_12_41f5
+	FAR_CALL $12, FloorSelectInputLoop
 	or a
 	ret
 EnterSelectedRoom:
@@ -3475,7 +3475,7 @@ OpenRoomArrangeMenu:
 	FAR_CALL $15, Func_15_41fe
 	FAR_CALL $15, Func_15_4134
 Func_00_19a3:
-	FAR_CALL $12, Func_12_41e9
+	FAR_CALL $12, OpenFloorSelectScreen
 	or a
 	jp nz, Func_00_1a66
 Func_00_19af:
