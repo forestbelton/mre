@@ -5,9 +5,12 @@ variants, shoulders, hair, etc. drawn on top of a portrait's base background) wa
 migrated from opaque `db` blobs into **editable, byte-exact layered source**, what
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
-Status (2026-06-10): **all 7 single-bank portraits done** (pashute, kalum, naji,
-toamuna, rafaga, tempest, bodka); the two-bank ferious, nada_intro, nada_scene2 remain.
-See
+Status (2026-06-10): **all 8 single-bank portraits done** (pashute, kalum, naji,
+toamuna, rafaga, tempest, bodka, **verde**); the two-bank ferious, nada_intro,
+nada_scene2 remain. Verde was a from-scratch migration (it lived raw in pashute.asm,
+never carved): tiles + two palette sets (portrait + intro, the 2nd via a `palettes2`
+PNG) + maps + the overlay; see `src/gfx/portrait/verde.asm` and
+`scratch/bootstrap_verde.py`. See
 [gfx_assets.md](gfx_assets.md) for the broader PNG-asset pipeline and the BG-map
 derivation (`derive_portrait_maps`, a separate single-PNG reference flow).
 
@@ -134,6 +137,13 @@ by adding metadata. In `gen_sprite_region`:
   ROM uses 2) can't be recovered from pixels — `gen_patch` takes an optional `pal`
   manifest field (same idea as the OBJ `pal` hint), and the extractor emits it when >1
   BG palette reproduces every cell.
+- **Image-irreducible tile → `idx` hint.** Some patches mix tiles *reused* from the BG
+  (stride-8, from the main sheet) with *freshly-allocated* runs, and a cell can pixel-
+  duplicate a non-local tile the column-major model can't predict (Verde's blinking-eye
+  frames: a "closed eye" cell matches both the open-eye BG tile and a fresh tile). When
+  that happens `gen_patch` takes an optional per-cell `idx: {cell: byte}` map; the
+  extractor auto-emits it (a closure pass: regenerate, diff each patch's idx vs ROM, pin
+  the few wrong cells). Verde needed 4.
 
 ### OBJ metasprites (`gen_meta`)
 - **Complete grid.** A metasprite is a full row-major grid of 8×16 cells; *every* cell

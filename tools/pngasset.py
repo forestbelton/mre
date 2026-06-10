@@ -455,7 +455,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
                        if not any(TPX[T]) and not any(TPX[T + 1]))
 
-    def gen_patch(img, addr, bank, pal_hint=None):
+    def gen_patch(img, addr, bank, pal_hint=None, idx_over=None):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
@@ -491,6 +491,11 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
             rb = [pin[r * cols + cc] for cc in range(cols) if pin[r * cols + cc] is not None]
             inrange = [b for b in bs if rb and min(rb) <= b <= max(rb)]
             idx.append(inrange[0] if inrange else (bs[0] if bs else 0))
+        # image-irreducible tile: a cell whose pixels match several sheet tiles where the
+        # tool reused a non-local duplicate the column-major model can't predict (e.g.
+        # Verde's blinking-eye frames) is pinned per-cell via the manifest `idx` map.
+        for cell, b in (idx_over or {}).items():
+            idx[int(cell)] = b
         # PALETTE per cell from the now-known tile, spread by 8-neighbour consensus
         # (matching derive_portrait_maps); dominant fallback for any leftover.
         pcand = []
@@ -668,7 +673,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         bank = blk.get("bank", 1)
         if blk["kind"] == "patch":
             img = Image.open(d / blk["png"]).convert("RGB")
-            data = gen_patch(img, addr, bank, blk.get("pal"))
+            data = gen_patch(img, addr, bank, blk.get("pal"), blk.get("idx"))
         else:
             img = Image.open(d / blk["png"]).convert("RGBA")
             data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank, blk.get("pal"))
@@ -724,6 +729,20 @@ def cmd_portrait(args: argparse.Namespace) -> int:
         comps.append(("sprites", gen_sprite_region(d / args.sprites, comps[0][1],
                                                     next(x for n, x in comps if n == "palette_bg"),
                                                     palobj)))
+    if getattr(args, "palettes2_png", None):
+        # a second palette set (e.g. an alternate scene) carried by its own indexed PNG:
+        # BG palettes lead its colour table, OBJ palettes follow (same as the sheet).
+        _w2, _h2, _px2, colors2 = read_indexed_png(d / args.palettes2_png)
+
+        def pack2(first: int, n: int) -> bytes:
+            out = bytearray()
+            for i in range(first, first + n * 4):
+                word = rgb888_to_555(*colors2[i])
+                out += bytes((word & 0xFF, (word >> 8) & 0xFF))
+            return bytes(out)
+
+        comps.append(("palette_bg2", pack2(0, args.palettes_bg)))
+        comps.append(("palette_obj2", pack2(args.palettes_bg * 4, args.palettes_obj)))
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     for name, data in comps:
@@ -775,6 +794,10 @@ def main() -> int:
     pt.add_argument("--sprites", default=None,
                     help="metasprite/patch manifest (next to --png); regenerates the "
                          "OBJ/BG overlay data region into sprites.bin")
+    pt.add_argument("--palettes2-png", default=None,
+                    help="second indexed PNG (next to --png) whose colour table holds a "
+                         "second BG+OBJ palette set (e.g. an alternate scene); split into "
+                         "palette_bg2.bin / palette_obj2.bin")
     pt.set_defaults(fn=cmd_portrait)
 
     e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")

@@ -62,6 +62,8 @@ def build_png_asset(name: str, spec: dict) -> None:
                     "--pal-overrides", str(spec.get("pal_overrides", ""))]
         if "sprites" in spec:                          # regenerate the OBJ/BG overlay region
             cmd += ["--sprites", str(spec["sprites"])]
+        if "palettes2" in spec:                        # a second BG+OBJ palette set (alt scene)
+            cmd += ["--palettes2-png", str(spec["palettes2"])]
     else:
         raise SystemExit(f"asset {name!r}: unknown mode {mode!r}")
     print(f"[{name}] {mode} -> {out.relative_to(ROOT)}")

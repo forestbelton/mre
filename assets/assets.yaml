@@ -119,6 +119,18 @@ bodka:
   # palette is image-irreducible, pinned by `pal:` in the manifest.
   sprites: sprites/sprites.yaml
 
+verde:
+  mode: portrait
+  png: portrait/verde/verde.png
+  palettes_bg: 6
+  palettes_obj: 6
+  # Overlay region ($769b-$788e): 3-frame talking-eye animation + 2 static metasprites
+  # + base patch + calm/surprised expressions (one PNG/block + sprites.yaml). Some eye
+  # patches reuse non-local duplicate tiles, pinned per-cell by `idx:` in the manifest.
+  sprites: sprites/sprites.yaml
+  # second palette set: the intro-scene BG+OBJ palettes ($788e/$78ce).
+  palettes2: intro_pals.png
+
 ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
   mode: portrait
   png: portrait/ferious/ferious.png
