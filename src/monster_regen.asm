@@ -1,10 +1,13 @@
 ; Monster-regeneration display sequence (ROM bank $14).
 ;
-; ShowRegeneratedMonster + helpers: the scripted animation that reveals a
-; monster regenerated from a disc at Pashute's shrine (BGM, VRAM/tilemap
-; load, metasprite draw, palette FX). Triggered from text/scripts/pashute.asm.
+; ShowRegeneratedMonster: the scripted animation that reveals a monster
+; regenerated from a disc at Pashute's shrine (plays BGM, loads tiles/tilemap/
+; palettes, draws the monster metasprite, runs a sparkle/glitch reveal FX, waits
+; for input). Triggered from text/scripts/pashute.asm; keyed by wActiveMonster
+; (7 friendly monsters) via the MonsterRegen* tables below.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
-; Purpose inferred from the code/callers -- labels keep their raw names.
+; NOTE: the per-frame FX state machine's internal branch/loop targets are still
+; raw Func_14_* labels -- a dedicated pass could localize them.
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
@@ -12,12 +15,19 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_050000", ROMX[$4000], BANK[$14]
 
-Data_14_4000:
-	db $02, $00, $3c, $73, $6a, $71, $26, $50, $02, $00, $ab, $15, $3e, $5e, $f5, $38
-	db $02, $00, $5c, $63, $f7, $1d, $f0, $08, $02, $00, $de, $63, $9d, $1e, $50, $25
-	db $02, $00, $de, $77, $55, $4a, $29, $45, $02, $00, $de, $7b, $3e, $27, $54, $19
-	db $02, $00, $3f, $2f, $ba, $01, $55, $10, $4d, $3d, $3d, $3d, $3d, $3e, $3d, $a4
-	db $68, $c5, $68, $f6, $68, $27, $69, $58, $69, $89, $69, $ba, $69
+; Per-monster regen tables, indexed by wActiveMonster (7 friendly monsters).
+MonsterRegenBgPalettes:                     ; one 8-byte BG palette per monster (-> slot 7)
+	db $02, $00, $3c, $73, $6a, $71, $26, $50   ; 0
+	db $02, $00, $ab, $15, $3e, $5e, $f5, $38   ; 1
+	db $02, $00, $5c, $63, $f7, $1d, $f0, $08   ; 2
+	db $02, $00, $de, $63, $9d, $1e, $50, $25   ; 3
+	db $02, $00, $de, $77, $55, $4a, $29, $45   ; 4
+	db $02, $00, $de, $7b, $3e, $27, $54, $19   ; 5
+	db $02, $00, $3f, $2f, $ba, $01, $55, $10   ; 6
+MonsterRegenBaseTile:                       ; base OAM tile per monster (read by SetMonsterOamTiles)
+	db $4d, $3d, $3d, $3d, $3d, $3e, $3d
+MonsterRegenSpritePtrs:                     ; metasprite pointer per monster (-> $68xx data)
+	dw $68a4, $68c5, $68f6, $6927, $6958, $6989, $69ba
 
 ShowRegeneratedMonster:
 	push af
@@ -28,7 +38,7 @@ ShowRegeneratedMonster:
 	xor a
 	ldh [rVBK], a
 	ld bc, $1800
-	ld hl, $436b
+	ld hl, Data_14_436b
 	ld de, $8000
 	call VramCopy16
 	ld a, $01
@@ -46,7 +56,7 @@ ShowRegeneratedMonster:
 	call DrawMetasprite
 	ld a, [wActiveMonster]
 	add a, a
-	ld hl, $403f
+	ld hl, MonsterRegenSpritePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -56,11 +66,11 @@ ShowRegeneratedMonster:
 	call HideUnusedOamSprites
 	call Func_14_42d7
 	call Func_14_4319
-	ld hl, $636b
+	ld hl, Data_14_636b
 	call LoadBgPalettes
 	ld hl, $63ab
 	call LoadObjPalettes
-	ld hl, $4000
+	ld hl, MonsterRegenBgPalettes
 	ld a, [wActiveMonster]
 	swap a
 	rrca
@@ -82,7 +92,7 @@ Func_14_40c5:
 	call ReadJoypad
 	ldh a, [hJoyPressed]
 	bit 1, a
-	jp nz, Func_14_417b
+	jp nz, PlayPashuteBgm
 	ld d, $06
 	ld hl, $c003
 Func_14_40ec:
@@ -120,7 +130,7 @@ Func_14_411e:
 	call ReadJoypad
 	ldh a, [hJoyPressed]
 	bit 1, a
-	jr nz, Func_14_417b
+	jr nz, PlayPashuteBgm
 	call Func_14_41b3
 	ld a, [wUiTimer]
 	inc a
@@ -148,16 +158,16 @@ Func_14_4158:
 	pop de
 	ldh a, [hJoyPressed]
 	bit 1, a
-	jr nz, Func_14_417b
+	jr nz, PlayPashuteBgm
 	dec d
 	jr nz, Func_14_4158
 	ld hl, $63eb
 	ld de, $9800
 	call CopyBgMap
-	call Func_14_4329
+	call SetMonsterOamTiles
 	call Func_00_0794
-	call Func_14_4351
-Func_14_417b:
+	call WaitForRegenConfirm
+PlayPashuteBgm:
 	push af
 	ld a, SOUND_BGM_Pashute
 	call PlaySoundTracked
@@ -433,10 +443,10 @@ Func_14_4320:
 	dec c
 	jr nz, Func_14_4320
 	ret
-Func_14_4329:
+SetMonsterOamTiles:
 	ld a, [wActiveMonster]
 	ld d, a
-	ld hl, $4038
+	ld hl, MonsterRegenBaseTile
 	rst AddAToHL
 	ld b, [hl]
 	ld hl, $c050
@@ -463,7 +473,7 @@ Func_14_4348:
 	dec c
 	jr nz, Func_14_4337
 	ret
-Func_14_4351:
+WaitForRegenConfirm:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyPressed]
@@ -471,7 +481,7 @@ Func_14_4351:
 	jr nz, Func_14_4363
 	bit 0, a
 	jr nz, Func_14_4363
-	jr Func_14_4351
+	jr WaitForRegenConfirm
 Func_14_4363:
 	push af
 	ld a, SOUND_SFX_Confirm
