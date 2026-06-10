@@ -55,6 +55,8 @@ kalum:
   png: portrait/kalum/kalum.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($5a3e-$5b18): eyes blink-animation frames + shoulder/collar + Selketo eye.
+  sprites: sprites/sprites.yaml
 
 toamuna:
   mode: portrait

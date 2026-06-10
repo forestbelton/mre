@@ -455,60 +455,101 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
-        bytecand = []
-        for (r, c) in grid:
-            blk = [px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)]
-            cand = [p for p in range(len(PBG)) if all(q in PBG[p] for q in blk)
-                    and bgidx.get(tuple(PBG[p].index(q) for q in blk))]
-            p = cand[0] if cand else 0
-            bytecand.append((cand, p, blk))
-        fixed = [c[0] if len(c) == 1 else None for c, _, _ in bytecand]
-        dom = Counter(p for p in fixed if p is not None).most_common(1)
-        dom = dom[0][0] if dom else 0
-        idx, attr = bytearray(), bytearray()
-        pals, bs_all = [], []
-        for i, (cand, _, blk) in enumerate(bytecand):
-            p = fixed[i] if fixed[i] is not None else (dom if dom in cand else cand[0])
-            pals.append(p)
-            bs_all.append(bgidx[tuple(PBG[p].index(q) for q in blk)])
-        # column-major base inferred from unambiguous cells: byte = base+8*col+row
+        blks = [[px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)] for (r, c) in grid]
+        # TILE first (positional, palette-independent): a cell's byte candidates are the
+        # sheet bytes that reproduce its pixels under ANY BG palette; the byte is then
+        # fixed by the column-major model (byte = base + 8*col + row), base inferred from
+        # the unambiguous cells. Decoupling tile from palette avoids a wrong palette vote
+        # forcing a wrong (duplicate) tile.
+        bcand = []
+        for blk in blks:
+            s: set = set()
+            for p in range(len(PBG)):
+                if all(q in PBG[p] for q in blk):
+                    s.update(bgidx.get(tuple(PBG[p].index(q) for q in blk), ()))
+            bcand.append(sorted(s))
         bcnt = Counter((bs[0] - 8 * c - r) % 256
-                       for bs, (r, c) in zip(bs_all, grid) if len(bs) == 1)
+                       for bs, (r, c) in zip(bcand, grid) if len(bs) == 1)
         base = bcnt.most_common(1)[0][0] if bcnt else None
-        for (bs, (r, c)) in zip(bs_all, grid):
+        idx = []
+        for bs, (r, c) in zip(bcand, grid):
             want = (base + 8 * c + r) % 256 if base is not None else None
-            idx.append(want if want in bs else bs[0])
-        for p in pals:
-            attr.append((bank << 3) | p)
+            idx.append(want if want in bs else (bs[0] if bs else 0))
+        # PALETTE per cell from the now-known tile, spread by 8-neighbour consensus
+        # (matching derive_portrait_maps); dominant fallback for any leftover.
+        pcand = []
+        for b, blk in zip(idx, blks):
+            pat = TPX[b if b >= 128 else b + 256]
+            pcand.append([p for p in range(len(PBG))
+                          if all(PBG[p][pat[i]] == blk[i] for i in range(64))])
+        P: list = [c[0] if len(c) == 1 else None for c in pcand]
+        for _ in range(rows + cols):
+            for cell in range(rows * cols):
+                if P[cell] is not None:
+                    continue
+                r0, c0 = cell // cols, cell % cols
+                nb = [P[(r0+dr)*cols + (c0+dc)]
+                      for dr in (-1, 0, 1) for dc in (-1, 0, 1)
+                      if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
+                      and P[(r0+dr)*cols + (c0+dc)] in pcand[cell]]
+                if nb:
+                    P[cell] = Counter(nb).most_common(1)[0][0]
+        dom = Counter(p for p in P if p is not None).most_common(1)
+        dom = dom[0][0] if dom else 0
+        for cell in range(rows * cols):
+            if P[cell] is None:
+                P[cell] = dom if dom in pcand[cell] else (pcand[cell][0] if pcand[cell] else 0)
+        attr = bytes((bank << 3) | P[cell] for cell in range(rows * cols))
         ip = (addr + 6) & 0xFFFF
         ap = (addr + 6 + rows * cols) & 0xFFFF
-        return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + bytes(attr)
+        return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + attr
 
-    def gen_meta(img, oy, ox, bank):
+    def gen_meta(img, oy, ox, bank, pal_hint=None):
         px = img.load()
         W, H = img.size
+        # the metasprite is a complete row-major grid of 8x16 cells; EVERY cell is a
+        # record, including ones drawn with a blank (all-transparent) tile -- the
+        # original tool padded the grid rather than pruning blank cells.
         cells = []
         for cr in range(0, H, 16):
             for cc in range(0, W, 8):
                 blk = [px[cc + c, cr + r] for r in range(16) for c in range(8)]
-                if all(q[3] == 0 for q in blk):
-                    continue
+                opaque = any(q[3] != 0 for q in blk)
                 cand = [p for p in range(len(POBJ))
                         if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk)
-                        and objidx.get(tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk))]
-                cells.append((cr, cc, blk, cand))
-        fixed = [c[3][0] if len(c[3]) == 1 else None for c in cells]
+                        and objidx.get(tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk))] if opaque else []
+                cells.append((cr, cc, blk, opaque, cand))
+        fixed = [c[4][0] if c[3] and len(c[4]) == 1 else None for c in cells]
+        # ambiguous cells default to the metasprite's dominant palette, or pal_hint when
+        # the whole sprite is image-irreducible (e.g. a monochrome sprite that several
+        # OBJ palettes reproduce -- the manifest then pins the real one).
         dom = Counter(p for p in fixed if p is not None).most_common(1)
-        dom = dom[0][0] if dom else 0
-        out = bytearray([len(cells)])
+        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
+        # opaque cells: tile by pixel match (+2 even-tile run tiebreak). Blank cells:
+        # tile is not in the image, but the sheet allocates them in the same +2 run, so
+        # tile = (next opaque tile) - 2, chained backward (prev + 2 for trailing blanks).
+        tile: list = [None] * len(cells)
+        pal: list = [None] * len(cells)
         last = None
-        for i, (cr, cc, blk, cand) in enumerate(cells):
+        for i, (cr, cc, blk, opaque, cand) in enumerate(cells):
+            if not opaque:
+                pal[i] = dom
+                continue
             p = fixed[i] if fixed[i] is not None else (dom if dom in cand else cand[0])
+            pal[i] = p
             pat = tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk)
             cs = objidx[pat]
-            pick = next((t for t in cs if last is not None and t == last + 2), cs[0])
-            last = pick
-            out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, pick, (bank << 3) | p))
+            tile[i] = next((t for t in cs if last is not None and t == last + 2), cs[0])
+            last = tile[i]
+        for i in range(len(cells) - 1, -1, -1):                 # blanks: next opaque - 2
+            if tile[i] is None and i + 1 < len(cells) and tile[i + 1] is not None:
+                tile[i] = (tile[i + 1] - 2) & 0xFF
+        for i in range(len(cells)):                             # trailing blanks: prev + 2
+            if tile[i] is None:
+                tile[i] = (tile[i - 1] + 2) & 0xFF if i else 0
+        out = bytearray([len(cells)])
+        for (cr, cc, blk, opaque, cand), t, p in zip(cells, tile, pal):
+            out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (bank << 3) | p))
         return bytes(out)
 
     man = yaml.safe_load(Path(manifest_path).read_text())
@@ -523,7 +564,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
             data = gen_patch(img, addr, bank)
         else:
             img = Image.open(d / blk["png"]).convert("RGBA")
-            data = gen_meta(img, blk["oy"], blk["ox"], bank)
+            data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank, blk.get("pal"))
         out += data
         addr += len(data)
     return bytes(out)

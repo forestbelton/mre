@@ -10,39 +10,27 @@ blocks:
 - role: blink_frame0
   kind: meta
   png: blink_frame0.png
-  oy: 0
-  ox: 0
 - role: eyes_frame1
   kind: patch
   png: eyes_frame1.png
 - role: blink_frame1
   kind: meta
   png: blink_frame1.png
-  oy: 0
-  ox: 0
 - role: eyes_frame2
   kind: patch
   png: eyes_frame2.png
 - role: blink_frame2
   kind: meta
   png: blink_frame2.png
-  oy: 0
-  ox: 0
 - role: shoulder_left
   kind: meta
   png: shoulder_left.png
-  oy: 0
-  ox: 0
 - role: shoulder_right
   kind: meta
   png: shoulder_right.png
-  oy: 0
-  ox: 0
 - role: collar
   kind: meta
   png: collar.png
-  oy: 0
-  ox: 0
 - role: neutral_face
   kind: patch
   png: neutral_face.png
@@ -52,18 +40,12 @@ blocks:
 - role: sad_overlay
   kind: meta
   png: sad_overlay.png
-  oy: 0
-  ox: 0
 - role: shocked_face
   kind: patch
   png: shocked_face.png
 - role: shocked_overlay
   kind: meta
   png: shocked_overlay.png
-  oy: 0
-  ox: 0
 - role: shocked_overlay2
   kind: meta
   png: shocked_overlay2.png
-  oy: 0
-  ox: 0
