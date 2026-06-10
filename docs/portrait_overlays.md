@@ -5,8 +5,9 @@ variants, shoulders, hair, etc. drawn on top of a portrait's base background) wa
 migrated from opaque `db` blobs into **editable, byte-exact layered source**, what
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
-Status (2026-06-10): **pashute, kalum, naji, toamuna, rafaga, tempest done**; bodka
-(single-bank) and ferious, nada_intro, nada_scene2 (two-bank) remain. See
+Status (2026-06-10): **all 7 single-bank portraits done** (pashute, kalum, naji,
+toamuna, rafaga, tempest, bodka); the two-bank ferious, nada_intro, nada_scene2 remain.
+See
 [gfx_assets.md](gfx_assets.md) for the broader PNG-asset pipeline and the BG-map
 derivation (`derive_portrait_maps`, a separate single-PNG reference flow).
 
@@ -68,10 +69,11 @@ metadata the image genuinely can't carry:
 - `kind`, `role`, block order — structural.
 - `oy`/`ox` — a metasprite's placement origin (the min Yoff/Xoff). All-zero for every
   portrait so far, so omitted.
-- `pal` — an OBJ palette that several palettes reproduce identically (a monochrome
-  sprite). Across all four portraits this was needed **once** (kalum's all-red Selketo
-  eye: red lives in OBJ pal 0 and 5). The extractor emits it only when >1 palette
-  reproduces every sprite colour.
+- `pal` — a palette that several palettes reproduce identically (a monochrome sprite or
+  a near-blank patch). Rare: an OBJ `pal` was needed once (kalum's all-red Selketo eye:
+  red lives in OBJ pal 0 and 5) and a BG `pal` once (bodka's near-blank `eyes_frame2`,
+  reproduced by BG pals 0/1/2). The extractor emits it (for `meta` or `patch`) only when
+  >1 palette reproduces every colour.
 
 Everything else — tile indices (including `$8800`-signed BG bytes, duplicate tiles,
 blank-padding tiles, freshly-allocated animation runs) and per-cell palettes — is
@@ -127,6 +129,11 @@ by adding metadata. In `gen_sprite_region`:
   byte.
 - **Palette** by 8-neighbour consensus over the pinned cells (region-based), dominant
   fallback.
+- **Image-irreducible BG palette → `pal` hint.** An isolated patch with no pinned cell
+  to vote (e.g. bodka's near-blank `eyes_frame2`, where BG pals 0/1/2 all render it; the
+  ROM uses 2) can't be recovered from pixels — `gen_patch` takes an optional `pal`
+  manifest field (same idea as the OBJ `pal` hint), and the extractor emits it when >1
+  BG palette reproduces every cell.
 
 ### OBJ metasprites (`gen_meta`)
 - **Complete grid.** A metasprite is a full row-major grid of 8×16 cells; *every* cell

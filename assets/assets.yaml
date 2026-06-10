@@ -114,6 +114,10 @@ bodka:
   png: portrait/bodka/bodka.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($5a3e-$5b59): 3-frame talking-eye animation + chest + smile
+  # expression -- the layered source (one PNG/block + sprites.yaml). eyes_frame2's BG
+  # palette is image-irreducible, pinned by `pal:` in the manifest.
+  sprites: sprites/sprites.yaml
 
 ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
   mode: portrait

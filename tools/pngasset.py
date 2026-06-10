@@ -455,7 +455,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
                        if not any(TPX[T]) and not any(TPX[T + 1]))
 
-    def gen_patch(img, addr, bank):
+    def gen_patch(img, addr, bank, pal_hint=None):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
@@ -511,7 +511,10 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
                 if nb:
                     P[cell] = Counter(nb).most_common(1)[0][0]
         dom = Counter(p for p in P if p is not None).most_common(1)
-        dom = dom[0][0] if dom else 0
+        # image-irreducible cells (several palettes reproduce them): pal_hint forces the
+        # tool's choice -- needed for an isolated patch with no pinned cell to vote (e.g.
+        # bodka's near-blank eyes_frame2, where pals 0/1/2 all render it).
+        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
         for cell in range(rows * cols):
             if P[cell] is None:
                 P[cell] = dom if dom in pcand[cell] else (pcand[cell][0] if pcand[cell] else 0)
@@ -665,7 +668,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         bank = blk.get("bank", 1)
         if blk["kind"] == "patch":
             img = Image.open(d / blk["png"]).convert("RGB")
-            data = gen_patch(img, addr, bank)
+            data = gen_patch(img, addr, bank, blk.get("pal"))
         else:
             img = Image.open(d / blk["png"]).convert("RGBA")
             data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank, blk.get("pal"))
