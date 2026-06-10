@@ -72,6 +72,9 @@ rafaga:
   png: portrait/rafaga/rafaga.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($7557-$75ec): two-frame eyes/blink animation + three static
+  # overlay metasprites -- the layered source (one PNG/block + sprites.yaml).
+  sprites: sprites/sprites.yaml
 
 tempest:
   mode: portrait

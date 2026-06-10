@@ -5,7 +5,7 @@ variants, shoulders, hair, etc. drawn on top of a portrait's base background) wa
 migrated from opaque `db` blobs into **editable, byte-exact layered source**, what
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
-Status (2026-06-10): **pashute, kalum, naji, toamuna done**; rafaga, tempest, bodka
+Status (2026-06-10): **pashute, kalum, naji, toamuna, rafaga done**; tempest, bodka
 (single-bank) and ferious, nada_intro, nada_scene2 (two-bank) remain. See
 [gfx_assets.md](gfx_assets.md) for the broader PNG-asset pipeline and the BG-map
 derivation (`derive_portrait_maps`, a separate single-PNG reference flow).
