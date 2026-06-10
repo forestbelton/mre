@@ -1611,5 +1611,5 @@ Data_34_70a8:
 	db $01, $fe, $73, $00, $ff
 
 ; ($35:$6000 BG + $35:$6040 OBJ palettes carved into src/gfx/portrait/ferious.asm
-; as FeriousPortraitPaletteBg / FeriousPortraitPaletteObj.)
+; as MistralPortraitPaletteBg / MistralPortraitPaletteObj.)
 

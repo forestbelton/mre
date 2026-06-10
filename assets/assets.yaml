@@ -131,9 +131,9 @@ verde:
   # second palette set: the intro-scene BG+OBJ palettes ($788e/$78ce).
   palettes2: intro_pals.png
 
-ferious:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles
-  mode: portrait
-  png: portrait/ferious/ferious.png
+mistral:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles (the girl
+  mode: portrait             # in the red hood; the bg silhouette is her monster Ferious)
+  png: portrait/mistral/mistral.png
   tiles0: 128
   palettes_bg: 6
   palettes_obj: 6
