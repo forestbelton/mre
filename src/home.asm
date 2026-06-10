@@ -87,7 +87,7 @@ Func_00_0153:
 	call SetIsCgb
 	xor a
 	ld [$c285], a
-	call Func_00_01ca
+	call InitOamCopy
 	call Func_00_018f
 	call ResetSoundEngine
 	call HideAllSprites
@@ -154,10 +154,11 @@ Func_00_01c6:
 Func_00_01c9:
 	reti
 
-Func_00_01ca:
-	ld c, $80
+; InitOamCopy copies the OAM DMA routine into HRAM.
+InitOamCopy:
+	ld c, LOW(hOamCopy)
 	ld b, $0a
-	ld hl, $01d8
+	ld hl, OamCopy
 .loop:
 	ld a, [hl+]
 	ldh [c], a
@@ -166,7 +167,8 @@ Func_00_01ca:
 	jr nz, .loop
 	ret
 
-Data_00_01d8:
+; OamCopy performs a DMA copy from $c000-$c09f into OAM.
+OamCopy:
 	ld a, $c0
 	ldh [rDMA], a
 	ld a, $40

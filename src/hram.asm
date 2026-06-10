@@ -1,6 +1,9 @@
 IF !DEF(HRAM_INC)
 DEF HRAM_INC EQU 1
 
+SECTION "HRAM DMA", HRAM[$ff80]
+hOamCopy:: ds 10 ; $ff80  Code for OAM DMA routine
+
 ; Joypad state, refreshed once per frame by ReadJoypad ($00:$0252). `hJoyHeld` is
 ; the raw down-state; `hJoyPressed` is the rising edge ((prev^cur)&cur); `hJoyRepeat`
 ; is the menu auto-repeat pulse -- on a fresh press it mirrors the press, then with

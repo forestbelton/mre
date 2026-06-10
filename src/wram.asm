@@ -15,6 +15,9 @@
 ; See docs/text_engine.md for the script-engine variables ($D5FE,
 ; $D5FF, $D600, $D60D, $D614-$D622, $CFF0, $CFF2).
 
+SECTION "wram_oam", WRAM0[$C000]
+wOam:: ds $100 ; $C000: Shadow OAM copied via DMA
+
 ; CGB palette shadow buffers, flushed to the hardware palette registers in VBlank
 ; (FlushBgPalettes / FlushObjPalettes, gated by hBgPaletteDirty / hObjPaletteDirty).
 ; 8 palettes each, 4 little-endian RGB555 colors per palette. See docs/palettes.md.
