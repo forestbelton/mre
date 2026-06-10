@@ -450,6 +450,10 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     objidx: dict = {}
     for T in range(0, NT, 2):
         objidx.setdefault(tuple(TPX[T & 0xFE] + TPX[(T & 0xFE) + 1]), []).append(T)
+    # blank (all-colour-0) OBJ tiles, byte-indexable -- a transparent grid cell must
+    # use one of these, and the tool reuses the lowest when padding the grid.
+    blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
+                       if not any(TPX[T]) and not any(TPX[T + 1]))
 
     def gen_patch(img, addr, bank):
         px = img.load()
@@ -468,13 +472,25 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
                 if all(q in PBG[p] for q in blk):
                     s.update(bgidx.get(tuple(PBG[p].index(q) for q in blk), ()))
             bcand.append(sorted(s))
-        bcnt = Counter((bs[0] - 8 * c - r) % 256
-                       for bs, (r, c) in zip(bcand, grid) if len(bs) == 1)
+        pin = [bs[0] if len(bs) == 1 else None for bs in bcand]
+        bcnt = Counter((pin[i] - 8 * c - r) % 256
+                       for i, (r, c) in enumerate(grid) if pin[i] is not None)
         base = bcnt.most_common(1)[0][0] if bcnt else None
         idx = []
-        for bs, (r, c) in zip(bcand, grid):
+        for i, (bs, (r, c)) in enumerate(zip(bcand, grid)):
+            if pin[i] is not None:
+                idx.append(pin[i])
+                continue
             want = (base + 8 * c + r) % 256 if base is not None else None
-            idx.append(want if want in bs else (bs[0] if bs else 0))
+            if want in bs:
+                idx.append(want)
+                continue
+            # the column-major base doesn't reach this duplicate cell -- it belongs to a
+            # freshly-allocated band; prefer a candidate within the byte range its row's
+            # pinned cells span (that band) over the lowest sheet byte.
+            rb = [pin[r * cols + cc] for cc in range(cols) if pin[r * cols + cc] is not None]
+            inrange = [b for b in bs if rb and min(rb) <= b <= max(rb)]
+            idx.append(inrange[0] if inrange else (bs[0] if bs else 0))
         # PALETTE per cell from the now-known tile, spread by 8-neighbour consensus
         # (matching derive_portrait_maps); dominant fallback for any leftover.
         pcand = []
@@ -552,6 +568,15 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         for i in range(len(cells)):                             # trailing blanks: prev + 2
             if tile[i] is None:
                 tile[i] = (tile[i - 1] + 2) & 0xFF if i else 0
+        # a transparent cell's tile must itself be blank; where the run lands on an
+        # OPAQUE tile the tool instead reused a shared blank tile (the lowest one it had
+        # allocated, else the lowest in the sheet).
+        bset = set(blank_obj)
+        used = [tile[i] for i, c in enumerate(cells) if not c[3] and tile[i] in bset]
+        share = Counter(used).most_common(1)[0][0] if used else (blank_obj[0] if blank_obj else 0)
+        for i, c in enumerate(cells):
+            if not c[3] and tile[i] not in bset:
+                tile[i] = share
         # PALETTE per cell from the now-known tile: pin where the visible colours admit
         # one palette, fill the rest row-uniform (palette is region-based and these
         # sprites split by row), then 8-neighbour consensus, then pal_hint / dominant.

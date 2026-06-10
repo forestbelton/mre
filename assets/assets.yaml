@@ -63,6 +63,9 @@ toamuna:
   png: portrait/toamuna/toamuna.png
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($5a3e-$5ae7): two static expressions (default + alt), each a
+  # hair metasprite + a face patch -- the layered source (one PNG/block + sprites.yaml).
+  sprites: sprites/sprites.yaml
 
 rafaga:
   mode: portrait
