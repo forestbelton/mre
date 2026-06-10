@@ -414,7 +414,7 @@ def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides
     return bytes(tmap), amap
 
 
-def gen_sprite_region(manifest_path, tiles, palbg, palobj):
+def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
     """Regenerate a portrait's metasprite/patch data region byte-exact from its
     layered source: a manifest (ordered blocks + roles) plus one PNG per block.
 
@@ -446,6 +446,13 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     bgidx: dict = {}
     for ti in range(128, NT):
         bgidx.setdefault(tuple(TPX[ti]), []).append(ti & 0xFF)
+    # two-bank portraits: a patch cell with attr bit 3 = 0 reads the bank-0 sheet
+    # (tiles2, loaded at VRAM $9000), addressed byte b (<128) -> tiles2[b].
+    NT2 = len(tiles2) // 16 if tiles2 else 0
+    TPX2 = [tile_to_indices(tiles2[i * 16:i * 16 + 16]) for i in range(NT2)]
+    bgidx0: dict = {}
+    for ti in range(NT2):
+        bgidx0.setdefault(tuple(TPX2[ti]), []).append(ti)
     # OBJ: 8x16 (top tile T even + T+1) -> list of even tile T
     objidx: dict = {}
     for T in range(0, NT, 2):
@@ -455,40 +462,55 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
     blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
                        if not any(TPX[T]) and not any(TPX[T + 1]))
 
-    def gen_patch(img, addr, bank, pal_hint=None, idx_over=None):
+    def gen_patch(img, addr, bank, pal_hint=None, idx_over=None, bank0=None, pal_over=None):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
         blks = [[px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)] for (r, c) in grid]
+        # two-bank patches: a per-cell bank (attr bit 3). bank0 (committed metadata, the
+        # monster-body region) reads tiles2; the rest read the bank-1 sheet. Single-bank
+        # patches leave bank0 empty -> every cell uses `bank` (the block default).
+        bset = set(bank0 or [])
+        cbank = [0 if i in bset else bank for i in range(len(grid))]
         # TILE first (positional, palette-independent): a cell's byte candidates are the
-        # sheet bytes that reproduce its pixels under ANY BG palette; the byte is then
-        # fixed by the column-major model (byte = base + 8*col + row), base inferred from
-        # the unambiguous cells. Decoupling tile from palette avoids a wrong palette vote
-        # forcing a wrong (duplicate) tile.
-        bcand = []
-        for blk in blks:
+        # sheet bytes (in its bank) that reproduce its pixels under ANY BG palette; the
+        # byte is then fixed positionally -- bank-1 cells by column-major (byte = base +
+        # 8*col + row), bank-0 cells by their contiguous column-major allocation in tiles2
+        # (byte = base0 + rank, rank = the cell's index among bank-0 cells, column-major).
+        def cand(i, blk):
+            tbl = bgidx if cbank[i] else bgidx0
             s: set = set()
             for p in range(len(PBG)):
                 if all(q in PBG[p] for q in blk):
-                    s.update(bgidx.get(tuple(PBG[p].index(q) for q in blk), ()))
-            bcand.append(sorted(s))
+                    s.update(tbl.get(tuple(PBG[p].index(q) for q in blk), ()))
+            return sorted(s)
+
+        bcand = [cand(i, blk) for i, blk in enumerate(blks)]
         pin = [bs[0] if len(bs) == 1 else None for bs in bcand]
         bcnt = Counter((pin[i] - 8 * c - r) % 256
-                       for i, (r, c) in enumerate(grid) if pin[i] is not None)
+                       for i, (r, c) in enumerate(grid) if pin[i] is not None and cbank[i])
         base = bcnt.most_common(1)[0][0] if bcnt else None
+        order0 = [r * cols + c for c in range(cols) for r in range(rows) if r * cols + c in bset]
+        rank0 = {cell: k for k, cell in enumerate(order0)}
+        b0cnt = Counter((pin[i] - rank0[i]) % 256 for i in bset if pin[i] is not None)
+        base0 = b0cnt.most_common(1)[0][0] if b0cnt else None
         idx = []
         for i, (bs, (r, c)) in enumerate(zip(bcand, grid)):
             if pin[i] is not None:
                 idx.append(pin[i])
                 continue
-            want = (base + 8 * c + r) % 256 if base is not None else None
+            if cbank[i] == 0:
+                want = (base0 + rank0[i]) % 256 if base0 is not None else None
+            else:
+                want = (base + 8 * c + r) % 256 if base is not None else None
             if want in bs:
                 idx.append(want)
                 continue
-            # the column-major base doesn't reach this duplicate cell -- it belongs to a
+            # the positional model doesn't reach this duplicate cell -- it belongs to a
             # freshly-allocated band; prefer a candidate within the byte range its row's
-            # pinned cells span (that band) over the lowest sheet byte.
-            rb = [pin[r * cols + cc] for cc in range(cols) if pin[r * cols + cc] is not None]
+            # same-bank pinned cells span (that band) over the lowest sheet byte.
+            rb = [pin[r * cols + cc] for cc in range(cols)
+                  if pin[r * cols + cc] is not None and cbank[r * cols + cc] == cbank[i]]
             inrange = [b for b in bs if rb and min(rb) <= b <= max(rb)]
             idx.append(inrange[0] if inrange else (bs[0] if bs else 0))
         # image-irreducible tile: a cell whose pixels match several sheet tiles where the
@@ -496,13 +518,13 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         # Verde's blinking-eye frames) is pinned per-cell via the manifest `idx` map.
         for cell, b in (idx_over or {}).items():
             idx[int(cell)] = b
-        # PALETTE per cell from the now-known tile, spread by 8-neighbour consensus
-        # (matching derive_portrait_maps); dominant fallback for any leftover.
+        # PALETTE per cell from the now-known tile (in its bank), spread by 8-neighbour
+        # consensus (matching derive_portrait_maps); dominant fallback for any leftover.
         pcand = []
-        for b, blk in zip(idx, blks):
-            pat = TPX[b if b >= 128 else b + 256]
+        for i, (b, blk) in enumerate(zip(idx, blks)):
+            pat = TPX[b if b >= 128 else b + 256] if cbank[i] else TPX2[b]
             pcand.append([p for p in range(len(PBG))
-                          if all(PBG[p][pat[i]] == blk[i] for i in range(64))])
+                          if all(PBG[p][pat[k]] == blk[k] for k in range(64))])
         P: list = [c[0] if len(c) == 1 else None for c in pcand]
         for _ in range(rows + cols):
             for cell in range(rows * cols):
@@ -523,12 +545,16 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         for cell in range(rows * cols):
             if P[cell] is None:
                 P[cell] = dom if dom in pcand[cell] else (pcand[cell][0] if pcand[cell] else 0)
-        attr = bytes((bank << 3) | P[cell] for cell in range(rows * cols))
+        # image-irreducible per-cell palette (a big multi-palette patch's blank/shared
+        # cells reproduce under several palettes): pinned via the manifest `pal_cells` map.
+        for cell, p in (pal_over or {}).items():
+            P[int(cell)] = p
+        attr = bytes((cbank[cell] << 3) | P[cell] for cell in range(rows * cols))
         ip = (addr + 6) & 0xFFFF
         ap = (addr + 6 + rows * cols) & 0xFFFF
         return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + attr
 
-    def gen_meta(img, oy, ox, bank, pal_hint=None):
+    def gen_meta(img, oy, ox, bank, pal_hint=None, idx_over=None, pal_over=None):
         px = img.load()
         W, H = img.size
         cols = W // 8
@@ -625,6 +651,10 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         for i, c in enumerate(cells):
             if not c[3] and tile[i] not in bset:
                 tile[i] = share
+        # image-irreducible metasprite tile (a fresh run the +2/override model mispredicts,
+        # e.g. Mistral's wing run): pinned per-record via the manifest `idx` map.
+        for rec, tval in (idx_over or {}).items():
+            tile[int(rec)] = tval
         # PALETTE per cell from the now-known tile: pin where the visible colours admit
         # one palette, fill the rest row-uniform (palette is region-based and these
         # sprites split by row), then 8-neighbour consensus, then pal_hint / dominant.
@@ -659,6 +689,10 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         for i in range(len(cells)):
             if P[i] is None:
                 P[i] = dom if dom in pcand[i] else (pcand[i][0] if pcand[i] else 0)
+        # image-irreducible per-record palette (several palettes reproduce the record):
+        # pinned via the manifest `pal_cells` map.
+        for rec, p in (pal_over or {}).items():
+            P[int(rec)] = p
         out = bytearray([len(cells)])
         for (cr, cc, blk, opaque), t, p in zip(cells, tile, P):
             out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (bank << 3) | p))
@@ -673,10 +707,12 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj):
         bank = blk.get("bank", 1)
         if blk["kind"] == "patch":
             img = Image.open(d / blk["png"]).convert("RGB")
-            data = gen_patch(img, addr, bank, blk.get("pal"), blk.get("idx"))
+            data = gen_patch(img, addr, bank, blk.get("pal"), blk.get("idx"),
+                             blk.get("bank0"), blk.get("pal_cells"))
         else:
             img = Image.open(d / blk["png"]).convert("RGBA")
-            data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank, blk.get("pal"))
+            data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank,
+                            blk.get("pal"), blk.get("idx"), blk.get("pal_cells"))
         out += data
         addr += len(data)
     return bytes(out)
@@ -726,9 +762,10 @@ def cmd_portrait(args: argparse.Namespace) -> int:
     if getattr(args, "sprites", None):
         # regenerate the metasprite/patch data region from the layered source manifest
         palobj = next(data for name, data in comps if name == "palette_obj")
+        tiles2 = next((data for name, data in comps if name == "tiles2"), None)
         comps.append(("sprites", gen_sprite_region(d / args.sprites, comps[0][1],
                                                     next(x for n, x in comps if n == "palette_bg"),
-                                                    palobj)))
+                                                    palobj, tiles2)))
     if getattr(args, "palettes2_png", None):
         # a second palette set (e.g. an alternate scene) carried by its own indexed PNG:
         # BG palettes lead its colour table, OBJ palettes follow (same as the sheet).

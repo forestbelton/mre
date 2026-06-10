@@ -6,11 +6,13 @@ migrated from opaque `db` blobs into **editable, byte-exact layered source**, wh
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
 Status (2026-06-10): **all 8 single-bank portraits done** (pashute, kalum, naji,
-toamuna, rafaga, tempest, bodka, **verde**); the two-bank ferious, nada_intro,
-nada_scene2 remain. Verde was a from-scratch migration (it lived raw in pashute.asm,
-never carved): tiles + two palette sets (portrait + intro, the 2nd via a `palettes2`
-PNG) + maps + the overlay; see `src/gfx/portrait/verde.asm` and
-`scratch/bootstrap_verde.py`. See
+toamuna, rafaga, tempest, bodka, **verde**) plus the first two-bank one, **mistral**
+(was mislabelled "ferious" -- the portrait is Mistral, Ferious is her bg-silhouette
+monster). nada_intro, nada_scene2 (two-bank) remain. Verde was a from-scratch migration
+(it lived raw in pashute.asm, never carved): tiles + two palette sets (portrait + intro,
+the 2nd via a `palettes2` PNG) + maps + the overlay; see `src/gfx/portrait/verde.asm`
+and `scratch/bootstrap_verde.py`. Mistral's overlay is two-bank (a patch whose cells
+split between the bank-1 sheet and `tiles2`); see §4. See
 [gfx_assets.md](gfx_assets.md) for the broader PNG-asset pipeline and the BG-map
 derivation (`derive_portrait_maps`, a separate single-PNG reference flow).
 
@@ -144,6 +146,26 @@ by adding metadata. In `gen_sprite_region`:
   that happens `gen_patch` takes an optional per-cell `idx: {cell: byte}` map; the
   extractor auto-emits it (a closure pass: regenerate, diff each patch's idx vs ROM, pin
   the few wrong cells). Verde needed 4.
+
+### Two-bank patches (mistral)
+A two-VRAM-bank portrait loads a second 128-tile sheet to bank 0 (`tiles2`, VRAM
+`$9000`); a BG cell's **attr bit 3** selects the bank. Mistral's `body_frame1` patch
+splits between banks (the bank-0 cells are a contiguous region). `gen_sprite_region`
+takes `tiles2`; `gen_patch` reads a committed **`bank0: [cell indices]`** map (the bank
+assignment is real per-cell data — 51/72 of mistral's cells are pixel-unambiguous, the
+rest blank-ish twins), and derives the bank-0 bytes from their **contiguous column-major
+allocation in `tiles2`** (`byte = base0 + rank`, rank = the cell's index among bank-0
+cells, column-major) — so no per-byte overrides for the bank itself.
+
+### The override closure (auto-pinning the irreducible residue)
+Big multi-palette patches and fresh metasprite runs leave a handful of genuinely
+image-irreducible cells (a blank cell reproduces under several palettes; a wing tile
+pixel-duplicates another). The extractor's **closure pass** regenerates, diffs against
+the ROM, and auto-emits the minimal pins: patch `idx` (tile) / `pal_cells` (per-cell
+palette), and meta `idx` (record tile) / `pal_cells` (record palette). `gen_patch`/
+`gen_meta` apply them last. This is bounded but can be sizeable — mistral's two big 8×9
+multi-palette body patches needed **59 pins**. The PNGs stay the real editable source;
+the pins just record the tool's arbitrary choice for cells the pixels can't determine.
 
 ### OBJ metasprites (`gen_meta`)
 - **Complete grid.** A metasprite is a full row-major grid of 8×16 cells; *every* cell

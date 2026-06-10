@@ -137,6 +137,12 @@ mistral:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles (th
   tiles0: 128
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($623e-$6536): Mistral's 3-frame body/face animation -- a big two-bank
+  # body patch + face/hat/tassels metasprites per frame -- plus her collar and the
+  # ferious_eye glow on the bg monster silhouette (Ferious is BG tilemap, not overlay).
+  # frame1's body patch mixes tile banks (bank0 map); multi-palette patches/runs pin
+  # image-irreducible cells via idx/pal_cells.
+  sprites: sprites/sprites.yaml
 
 nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   mode: portrait
