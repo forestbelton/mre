@@ -177,8 +177,8 @@ KalumScript:
     SCRIPT_NEWLINE
     db "Selketo!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=Kalum_ShowMonsterPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Kalum_ShowMonsterPortrait2, .Bank=$1f
+    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait
+    SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait2
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
 .KalumVictory:

@@ -228,7 +228,7 @@ VerdeEntry:
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$04, .Target=VerdeGreetCleared
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$03, .Target=VerdeGreetSeen
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$01, .Target=VerdeGreet
-    SCRIPT_FAR_CALL .Addr=Verde_BuildIntroScene, .Bank=$18
+    SCRIPT_FAR_CALL Verde_BuildIntroScene
     SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
     db "Oh?"
     SCRIPT_NEWLINE
@@ -338,7 +338,7 @@ VerdeEntry:
     SCRIPT_END
 
 VerdeGreet:
-    SCRIPT_FAR_CALL .Addr=Verde_BuildPortraitScene, .Bank=$18
+    SCRIPT_FAR_CALL Verde_BuildPortraitScene
     SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, VerdeGreetA, VerdeGreetB, VerdeGreetC, VerdeGreetD
 
@@ -371,7 +371,7 @@ VerdeGreetD:
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetSeen:
-    SCRIPT_FAR_CALL .Addr=Verde_BuildPortraitScene, .Bank=$18
+    SCRIPT_FAR_CALL Verde_BuildPortraitScene
     SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
     db "You're here."
     SCRIPT_NEWLINE
@@ -409,7 +409,7 @@ VerdeGreetSeen:
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetCleared:
-    SCRIPT_FAR_CALL .Addr=Verde_BuildPortraitScene, .Bank=$18
+    SCRIPT_FAR_CALL Verde_BuildPortraitScene
     SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
     db "Oh!"
     SCRIPT_NEWLINE
@@ -447,8 +447,8 @@ VerdeMenu:
     db "What can I"
     SCRIPT_WAIT
     db "do for you?"
-    SCRIPT_FAR_CALL .Addr=Verde_ShowMainMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Verde_LoadBgMap, .Bank=$18
+    SCRIPT_FAR_CALL Verde_ShowMainMenu
+    SCRIPT_FAR_CALL Verde_LoadBgMap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, VerdeRaise, VerdeRelease, VerdeSwitch, VerdeExplain, VerdeLeave
 
@@ -458,7 +458,7 @@ VerdeMenuLoop:
     SCRIPT_NEWLINE
     db "something else?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_JUMP_TABLE wYNResult, VerdeMenu, VerdeLeave
 
 VerdeRaise:
@@ -507,7 +507,7 @@ VerdeRelease:
     SCRIPT_NEWLINE
     db "Your monster is?"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=CountCheckedInMonsters, .Bank=$18
+    SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$00, .Target=VerdeReleaseYes
     SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
     db "Oh yes,"
@@ -534,8 +534,8 @@ VerdeReleasePick:
     db "So, which one"
     SCRIPT_NEWLINE
     db "are you taking?"
-    SCRIPT_FAR_CALL .Addr=Verde_ShowReleaseMonsterSelect, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Verde_LoadBgMap, .Bank=$18
+    SCRIPT_FAR_CALL Verde_ShowReleaseMonsterSelect
+    SCRIPT_FAR_CALL Verde_LoadBgMap
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=VerdeMenuLoop
 
@@ -548,11 +548,11 @@ VerdeReleaseThis:
     SCRIPT_NEWLINE
     db "of it, okay?"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeSwitch:
-    SCRIPT_FAR_CALL .Addr=CountCheckedInMonsters, .Bank=$18
+    SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=VerdeSwitchDone
     SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
     db "OK! Switch of"
@@ -562,8 +562,8 @@ VerdeSwitch:
     db "Okay, choose the"
     SCRIPT_NEWLINE
     db "next monster"
-    SCRIPT_FAR_CALL .Addr=Verde_ShowReleaseMonsterSelect, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Verde_LoadBgMap, .Bank=$18
+    SCRIPT_FAR_CALL Verde_ShowReleaseMonsterSelect
+    SCRIPT_FAR_CALL Verde_LoadBgMap
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=VerdeMenuLoop
     SCRIPT_GOTO .Target=VerdeReleaseThis

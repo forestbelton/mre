@@ -34,7 +34,7 @@ struct ScriptWrite      ; WRITE_WRAM
     words 1, Addr
     bytes 1, Value
 end_struct
-struct ScriptCall       ; FAR_CALL / RENDERER  ({addr, bank})
+struct ScriptCall       ; RENDERER  ({addr, bank})
     words 1, Addr
     bytes 1, Bank
 end_struct
@@ -87,10 +87,12 @@ MACRO SCRIPT_GOTO
     dstruct ScriptTarget, , \#
 ENDM
 
-; SCRIPT_FAR_CALL .Addr, .Bank : far Z80 call (4 bytes — $07 lo hi bank)
+; SCRIPT_FAR_CALL <Addr> : far Z80 call to a label; its bank is derived with BANK().
+; (4 bytes — $07 lo hi bank)
 MACRO SCRIPT_FAR_CALL
     db $07
-    dstruct ScriptCall, , \#
+    dw \1
+    db BANK(\1)
 ENDM
 
 ; SCRIPT_JUMP_TABLE <wram_addr>, <t1>, <t2>, ... : dispatcher (3 + 2N bytes)

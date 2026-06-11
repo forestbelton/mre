@@ -323,7 +323,7 @@ PashuteScript:
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$03, .Target=PashuteGreetProgress
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$02, .Target=PashuteGreetReturning
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$01, .Target=PashuteGreetingCycle
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadIntroScene, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_LoadIntroScene
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "Waaaaaaaa!"
     SCRIPT_NEWLINE
@@ -474,7 +474,7 @@ PashuteScript:
     SCRIPT_END
 
 PashuteGreetingCycle:
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, PashuteGreeting1, PashuteGreeting2, PashuteGreeting3, PashuteGreeting4
 
@@ -511,7 +511,7 @@ PashuteGreeting4:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreetReturning:
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Oh, yes. I heard"
     SCRIPT_NEWLINE
@@ -545,7 +545,7 @@ PashuteGreetReturning:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreetProgress:
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
     db "Oh! Well,"
     SCRIPT_WAIT
@@ -592,7 +592,7 @@ PashuteGreetProgress:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGameDone:
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Hello! How are"
     SCRIPT_NEWLINE
@@ -628,8 +628,8 @@ PashuteMenu:
     db "How can I"
     SCRIPT_NEWLINE
     db "help you?"
-    SCRIPT_FAR_CALL .Addr=Pashute_ShowMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_ShowMenu
+    SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, PashuteStone, PashuteAsk, PashuteLeave
 
@@ -639,7 +639,7 @@ PashuteContinue:
     SCRIPT_NEWLINE
     db "else you need?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_JUMP_TABLE wYNResult, PashuteMenu, PashuteNoContinue
 
 PashuteNoContinue:
@@ -673,7 +673,7 @@ PashuteStone:
     SCRIPT_NEWLINE
     db "replaced, okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteStoneCheck
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
     db "Until recently,"
@@ -727,8 +727,8 @@ PashuteStoneReady:
     SCRIPT_NEWLINE
     db "to regenerate."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowMonsterDiscStoneSelect, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
+    SCRIPT_FAR_CALL ShowMonsterDiscStoneSelect
+    SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=PashuteContinue
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
@@ -736,15 +736,15 @@ PashuteStoneReady:
     SCRIPT_NEWLINE
     db "process."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=ShowRegeneratedMonster, .Bank=$14
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL ShowRegeneratedMonster
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenSetup
-    SCRIPT_FAR_CALL .Addr=Pashute_ResetRosterKeepNew, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_ResetRosterKeepNew
     SCRIPT_GOTO .Target=PashuteRegenPick
 
 PashuteRegenSetup:
-    SCRIPT_FAR_CALL .Addr=Pashute_AddFiveMonsterUses, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_AddFiveMonsterUses
 
 PashuteRegenPick:
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
@@ -756,9 +756,9 @@ PashuteRegenPick:
     SCRIPT_NEWLINE
     db "the new monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=ShowMonsterDetailScreen, .Bank=$32
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineScene, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL ShowMonsterDetailScreen
+    SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_JUMP_TABLE $cfbb, \
         PashuteTiger, \
         PashuteMocchi, \
@@ -835,7 +835,7 @@ PashutePhenix:
 
 PashuteRegenConfirm:
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteRegenTake
-    SCRIPT_FAR_CALL .Addr=Pashute_IsReplacingActiveMonster, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_IsReplacingActiveMonster
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
@@ -852,7 +852,7 @@ PashuteRegenConfirm:
     SCRIPT_INDEXED_STR .Addr=$cfbb
     db "."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow:
@@ -865,18 +865,18 @@ PashuteRegenDoNow:
     SCRIPT_NEWLINE
     db "monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenTake:
-    SCRIPT_FAR_CALL .Addr=Pashute_GetActiveMonsterUses, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_GetActiveMonsterUses
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=PashuteRegenNow
     SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
     db "Will you take"
     SCRIPT_NEWLINE
     db "the newborn now?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=PashuteRegenPlace
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow2
     db "Then let's put"
@@ -888,7 +888,7 @@ PashuteRegenTake:
     SCRIPT_NEWLINE
     db "Checkroom."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow2:
@@ -901,7 +901,7 @@ PashuteRegenDoNow2:
     SCRIPT_NEWLINE
     db "monster."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_SetReplaceTargetActive, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenPlace:
@@ -918,7 +918,7 @@ PashuteRegenPlace:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenNow:
-    SCRIPT_FAR_CALL .Addr=Pashute_IsReplacingActiveMonster, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_IsReplacingActiveMonster
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenNow2
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
@@ -926,7 +926,7 @@ PashuteRegenNow:
     SCRIPT_NEWLINE
     db "Checkroom has"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Pashute_GetMonsterUsesDecimal, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_GetMonsterUsesDecimal
     SCRIPT_DECIMAL .Addr=wYNResult
     db " times of"
     SCRIPT_NEWLINE
@@ -941,7 +941,7 @@ PashuteRegenNow2:
     db "you carry"
     SCRIPT_WAIT
     db "has "
-    SCRIPT_FAR_CALL .Addr=Pashute_GetMonsterUsesDecimal, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_GetMonsterUsesDecimal
     SCRIPT_DECIMAL .Addr=wYNResult
     db " times of"
     SCRIPT_NEWLINE
@@ -966,8 +966,8 @@ PashuteAsk:
     db "What shall"
     SCRIPT_NEWLINE
     db "I explain?"
-    SCRIPT_FAR_CALL .Addr=Pashute_ShowExplainSubMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Pashute_LoadShrineTilemap, .Bank=$18
+    SCRIPT_FAR_CALL Pashute_ShowExplainSubMenu
+    SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, PashuteAskShrineStone, PashuteAskMonster
     db "'J"

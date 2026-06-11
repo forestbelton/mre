@@ -1,7 +1,7 @@
 ; NPC dialogue menus (bank $1f).
 ;
 ; The script-driven choice / shop menus that the NPC scripts invoke via
-; SCRIPT_FAR_CALL ..., .Bank=$1f. Each Show*Menu routine draws a small BG/text
+; SCRIPT_FAR_CALL. Each Show*Menu routine draws a small BG/text
 ; window (CopyBgMap + DispatchTextRenderer), runs a menu loop (WaitForNextFrame +
 ; ReadJoypad + cursor navigation via MoveMenuCursor), and returns the chosen
 ; option in a result var (e.g. wMainMenuResult / wYNResult). Entry points are

@@ -272,15 +272,15 @@ ToamunaMenu:
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
-    SCRIPT_FAR_CALL .Addr=Toamuna_CheckSaveExists, .Bank=$19
+    SCRIPT_FAR_CALL Toamuna_CheckSaveExists
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=.afterPrompt
-    SCRIPT_FAR_CALL .Addr=Toamuna_ShowMenu1, .Bank=$1f
+    SCRIPT_FAR_CALL Toamuna_ShowMenu1
     SCRIPT_GOTO .Target=ToamunaPostAction
 .afterPrompt:
-    SCRIPT_FAR_CALL .Addr=Toamuna_ShowMenu2, .Bank=$1f
+    SCRIPT_FAR_CALL Toamuna_ShowMenu2
 
 ToamunaPostAction:
-    SCRIPT_FAR_CALL .Addr=Toamuna_LoadPortraitTilemap, .Bank=$19
+    SCRIPT_FAR_CALL Toamuna_LoadPortraitTilemap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, ToamunaSign, ToamunaConfirm, ToamunaExit
 ToamunaPostActionBody:
@@ -289,7 +289,7 @@ ToamunaPostActionBody:
     SCRIPT_NEWLINE
     db "something else?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_JUMP_TABLE wYNResult, ToamunaMenu, ToamunaExit
 
 ToamunaSign:
@@ -302,7 +302,7 @@ ToamunaSign:
     SCRIPT_NEWLINE
     db "Okay. It's ready"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Toamuna_CheckSaveExists, .Bank=$19
+    SCRIPT_FAR_CALL Toamuna_CheckSaveExists
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=.signSavePrompt
     db "Current data"
     SCRIPT_NEWLINE
@@ -315,14 +315,14 @@ ToamunaSign:
     db "saved data?"
     SCRIPT_YN_CUE
 .signReplaceFlow:
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=ToamunaMenu
     db "Do not remove"
     SCRIPT_NEWLINE
     db "Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL .Addr=Toamuna_SaveGame, .Bank=$19
+    SCRIPT_FAR_CALL Toamuna_SaveGame
     db "Finished signing"
     SCRIPT_NEWLINE
     db "the guest book!"
@@ -343,14 +343,14 @@ ToamunaConfirm:
     SCRIPT_NEWLINE
     db "will be loaded."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=ToamunaMenu
     db "Do not remove"
     SCRIPT_NEWLINE
     db "Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL .Addr=Toamuna_LoadGame, .Bank=$19
+    SCRIPT_FAR_CALL Toamuna_LoadGame
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$01, .Target=.confirmDoneFlow
     db "Done checking"
     SCRIPT_NEWLINE

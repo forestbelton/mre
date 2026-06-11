@@ -39,8 +39,8 @@ TempestScript:
     SCRIPT_NEWLINE
     db "help me again."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=Tempest_ShowMonsterPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Tempest_ShowMonsterPortrait2, .Bank=$1f
+    SCRIPT_FAR_CALL Tempest_ShowMonsterPortrait
+    SCRIPT_FAR_CALL Tempest_ShowMonsterPortrait2
     SCRIPT_REPEAT_CHAR .Count=30
     SCRIPT_ANCHOR
     db "Young one."

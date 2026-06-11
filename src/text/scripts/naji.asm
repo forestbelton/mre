@@ -165,19 +165,19 @@ NajiMenu:
     db "plans this time?"
     SCRIPT_IF_EQ .Addr=wNajiMenuShown, .Value=$01, .Target=.checkAsk
     SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderClimb
-    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu2, .Bank=$1f
+    SCRIPT_FAR_CALL Naji_ShowMenu2
     SCRIPT_GOTO .Target=.menuFinalize
 .renderClimb:
-    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu3a, .Bank=$1f
+    SCRIPT_FAR_CALL Naji_ShowMenu3a
     SCRIPT_GOTO .Target=.menuFinalize
 .checkAsk:
     SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderLeave
-    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu3b, .Bank=$1f
+    SCRIPT_FAR_CALL Naji_ShowMenu3b
     SCRIPT_GOTO .Target=.menuFinalize
 .renderLeave:
-    SCRIPT_FAR_CALL .Addr=Naji_ShowMenu4, .Bank=$1f
+    SCRIPT_FAR_CALL Naji_ShowMenu4
 .menuFinalize:
-    SCRIPT_FAR_CALL .Addr=Naji_LoadPortraitTilemap, .Bank=$18
+    SCRIPT_FAR_CALL Naji_LoadPortraitTilemap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
@@ -192,10 +192,10 @@ NajiRestart:
     SCRIPT_NEWLINE
     db "start there?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Naji_ResumeTowerClimb, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL Naji_ResumeTowerClimb
     SCRIPT_END
 
 NajiClimb:
@@ -208,10 +208,10 @@ NajiClimb:
     SCRIPT_NEWLINE
     db "are you ready?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Naji_StartTowerClimb, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL Naji_StartTowerClimb
     SCRIPT_END
 
 NajiAskMenu:
@@ -219,8 +219,8 @@ NajiAskMenu:
     db "What do you"
     SCRIPT_NEWLINE
     db "want to know?"
-    SCRIPT_FAR_CALL .Addr=Naji_ShowSubMenu2, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Naji_LoadPortraitTilemap, .Bank=$18
+    SCRIPT_FAR_CALL Naji_ShowSubMenu2
+    SCRIPT_FAR_CALL Naji_LoadPortraitTilemap
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, NajiAskTower, NajiAskItem, NajiAskStop
 
@@ -244,8 +244,8 @@ NajiTowerLong:
     db "Don't misjudge."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wTowerExplained, .Value=$01
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Naji_StartTowerFromBottom, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL Naji_StartTowerFromBottom
     SCRIPT_END
 
 NajiTowerShort:
@@ -262,10 +262,10 @@ NajiTowerShort:
     SCRIPT_NEWLINE
     db "show you the way"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=NajiMenu
-    SCRIPT_FAR_CALL .Addr=Script_FadeOutPortrait, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Naji_StartTowerFromBottom, .Bank=$18
+    SCRIPT_FAR_CALL Script_FadeOutPortrait
+    SCRIPT_FAR_CALL Naji_StartTowerFromBottom
     SCRIPT_END
 
 NajiAskTower:
