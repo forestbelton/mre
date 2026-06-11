@@ -38,12 +38,12 @@ Toamuna_CheckSaveExists:
 	ld a, BANK(ToamunaPortraitPaletteBg)
 	ld hl, ToamunaPortraitPaletteBg
 	ld de, wBgPalettes
-	ld bc, $0030
+	ld bc, ToamunaPortraitPaletteBgEnd - ToamunaPortraitPaletteBg
 	call BankCopy
 	ld a, BANK(ToamunaPortraitPaletteObj)
 	ld hl, ToamunaPortraitPaletteObj
 	ld de, wObjPalettes
-	ld bc, $0030
+	ld bc, ToamunaPortraitPaletteObjEnd - ToamunaPortraitPaletteObj
 	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
@@ -71,11 +71,7 @@ Toamuna_RenderPortrait:
 	ld [wRendererAddr+1], a
 	ld a, BANK(Toamuna_RenderPortrait)
 	ld [wRendererBank], a
-	ld a, BANK(Toamuna_hair)
-	ld [wDrawBank], a
-	ld hl, Toamuna_hair
-	ld bc, $2828
-	call DrawMetasprite
+    DRAW_METASPRITE Toamuna_hair, $28, $28
 	ld hl, Toamuna_face
 	ld a, BANK(Toamuna_face)
 	ld de, TILEMAP0_X4_Y6
@@ -89,11 +85,7 @@ Toamuna_RenderPortraitAlt:
 	ld [wRendererAddr+1], a
 	ld a, BANK(Toamuna_RenderPortraitAlt)
 	ld [wRendererBank], a
-	ld a, BANK(Toamuna_alt_hair)
-	ld [wDrawBank], a
-	ld hl, Toamuna_alt_hair
-	ld bc, $2828
-	call DrawMetasprite
+    DRAW_METASPRITE Toamuna_alt_hair, $28, $28
 	ld hl, Toamuna_alt_face
 	ld a, BANK(Toamuna_alt_face)
 	ld de, TILEMAP0_X4_Y6

@@ -1,7 +1,8 @@
-INCLUDE "hardware.inc"
-
 IF !DEF(UTIL_INC)
 DEF UTIL_INC EQU 1
+
+INCLUDE "hardware.inc"
+INCLUDE "structs.inc"
 
 DEF CUR_BANK_TAG EQU $7fff
 
@@ -11,6 +12,18 @@ MACRO FAR_CALL
     ld a, BANK(\1)
     ld hl, \1
     call CallBankedHL
+ENDM
+
+; Draw a metasprite using DrawMetasprite
+; \1	Address of metasprite
+; \2	X offset
+; \3	Y offset
+MACRO DRAW_METASPRITE
+	ld a, BANK(\1)
+	ld [wDrawBank], a
+	ld hl, \1
+	ld bc, (\2 << 8) | \3
+	call DrawMetasprite
 ENDM
 
 ; A {bank, addr LE16} far-pointer record for a banked dispatch table (the consumer
@@ -61,6 +74,17 @@ MACRO ASSET
 \1End:
 
 	; DEF LEN__\1 EQU (\1End - \1)
+ENDM
+
+struct MapAsset
+	bytes 1, Height
+	bytes 1, Width
+	words 1, Attrs
+	words 1, Indexes
+end_struct
+
+MACRO MAP_ASSET
+	dstruct MapAsset, \#
 ENDM
 
 DEF TILEDATA0 EQU $8000

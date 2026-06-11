@@ -20,8 +20,8 @@
 ; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 ; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ; SOFTWARE.
-
-
+IF !DEF(STRUCTS_INC)
+DEF STRUCTS_INC EQU 1
 
 def STRUCTS_VERSION equs "4.1.0"
 MACRO structs_assert
@@ -381,3 +381,5 @@ MACRO dstructs ; nb_structs, struct_type[, instance_name]
 		fail "Expected 2 or 3 args to `dstructs`, but got {d:_NARG}"
 	ENDC
 ENDM
+
+ENDC
