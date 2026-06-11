@@ -97,7 +97,36 @@ call DrawMetasprite
 `$762e` starts with the record count, then `count` × `[Yoff, Xoff, tile, attr]`. Each
 record lands at `($13 + Yoff + [$ffa8], $60 + Xoff + [$ffa9])`.
 
+## Structured source (`include/metasprite.inc`)
+
+Many metasprite lists are still raw `db` blobs, often several packed back-to-back so code
+reaches the later ones with raw addresses (`ld hl, $7397`) that can't be made into labels
+without splitting the blob. `include/metasprite.inc` turns a list into structured,
+labelled source:
+
+```asm
+INCLUDE "metasprite.inc"
+
+metasprite CursorSprite        ; CursorSprite: = the count byte; CursorSprite.objs: = first record
+    obj  $00, $38, $00, $00
+    obj  $00, $60, $00, $20    ; X-flipped (attr bit 5)
+.row1:                         ; an ordinary local label -> CursorSprite.row1, a mid-list target
+    obj  $10, $38, $02, $00
+    obj  $10, $60, $02, $20
+end_metasprite CursorSprite    ; CursorSprite.end:
+```
+
+- The **count byte is auto-derived** from the record block (`(.end - .objs) / sizeof_MetaspriteObj`),
+  so it can never disagree with the records.
+- `obj Yoff, Xoff, Tile, Attr` is one record; `struct MetaspriteObj` gives the field
+  names / `sizeof`.
+- Because the data is now in code, **a raw `ld hl, $xxxx` into the middle of a packed blob
+  becomes a label** — split the blob at the boundary and add a `metasprite Name` (or a
+  `.local` label) there, then symbolise the reference. This is the main payoff: the
+  hidden references between code and sprite data become visible.
+
 ## See also
 - [portrait_overlays.md](portrait_overlays.md) — the editable-PNG asset model for these
-  lists (the `meta` block kind) and the `gen_meta` heuristics.
+  lists (the `meta` block kind) and the `gen_meta` heuristics. (Asset-managed overlays
+  stay as `INCBIN`; the macros are for the raw-`db` lists embedded in code.)
 - `tools/pngasset.py` `gen_meta` / `scratch/extract_sprites.py` — regenerate / carve.
