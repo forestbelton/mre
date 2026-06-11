@@ -97,6 +97,8 @@ $(OUT): $(OBJS) $(LINKSCRIPT) | $(BUILD_DIR)
 	@$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -n $@.sym -o $@ $(OBJS)
 	@echo "[FIX]  $@"
 	@$(RGBFIX) $(FIXARGS) $@
+	@echo "[MAP]  docs/bankmap.md"
+	@$(PYTHON) tools/bankmap.py
 
 # src/gfx/raw: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.
 # `-c embedded` maps PNG pixels back to 2bpp values by the embedded palette's
