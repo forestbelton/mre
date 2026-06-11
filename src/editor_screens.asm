@@ -206,7 +206,7 @@ Func_15_410f:
 	call Func_00_0786
 	ld a, [$c55e]
 	ld c, a
-	FAR_CALL $12, Func_12_43fe
+	FAR_CALL Func_12_43fe
 	ret
 Func_15_4134:
 	ld hl, EditorStatusBar

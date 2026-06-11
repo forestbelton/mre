@@ -4,11 +4,10 @@ DEF UTIL_INC EQU 1
 DEF CUR_BANK_TAG EQU $7fff
 
 ; Perform a call to another bank using CallBankedHL
-; \1 Bank
-; \2 Address
+; \1 Address
 MACRO FAR_CALL
-    ld a, \1
-    ld hl, \2
+    ld a, BANK(\1)
+    ld hl, \1
     call CallBankedHL
 ENDM
 

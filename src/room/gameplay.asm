@@ -81,28 +81,28 @@ Data_01_4335:
 	db $00, $00, $55, $80, $47, $22, $00, $05, $00
 
 Func_01_439e:
-	FAR_CALL $05, Func_05_46f0
+	FAR_CALL Func_05_46f0
 	call Func_01_5cbe
 	call Func_01_49cb
 	call Func_00_083c
-	FAR_CALL $05, Func_05_4884
+	FAR_CALL Func_05_4884
 	call LoadFloorByMode
-	FAR_CALL $17, SpecialScene_SelectIndex
+	FAR_CALL SpecialScene_SelectIndex
 	call FloorPostLoadCleanup
-	FAR_CALL $05, Func_05_4931
+	FAR_CALL Func_05_4931
 	xor a
 	call Func_01_5bd8
 	call Func_01_75ad
 	call SpawnFloorEntities
 	call Func_01_4a71
-	FAR_CALL $05, Func_05_48a5
-	FAR_CALL $03, UpdateEntities
+	FAR_CALL Func_05_48a5
+	FAR_CALL UpdateEntities
 	call Func_01_4c57
 	ld a, [$c289]
 	ldh [rSCY], a
 	ld a, [$c28a]
 	ldh [rSCX], a
-	FAR_CALL $05, Func_05_48fc
+	FAR_CALL Func_05_48fc
 	call Func_00_0786
 	xor a
 	ldh [hJoyHeld], a
@@ -121,7 +121,7 @@ Func_01_4412:
 	jr nz, Func_01_444a
 	call Func_01_5866
 	call Func_01_4bae
-	FAR_CALL $03, UpdateEntities
+	FAR_CALL UpdateEntities
 	ld a, [$c2db]
 	cp $04
 	jr z, Func_01_446b
@@ -141,10 +141,10 @@ Func_01_444a:
 	jr nz, Func_01_446b
 Func_01_4458:
 	call Func_01_4dd9
-	FAR_CALL $04, EntityAnim_ResetState
-	FAR_CALL $02, RefreshEntitySprites
+	FAR_CALL EntityAnim_ResetState
+	FAR_CALL RefreshEntitySprites
 Func_01_446b:
-	FAR_CALL $0f, Func_0f_4000
+	FAR_CALL Func_0f_4000
 	call Func_01_75f6
 	call Func_01_775b
 	call HideUnusedOamSprites
@@ -157,7 +157,7 @@ Func_01_447f:
 	call WaitForNextFrame
 	call ResetScrollState
 	call Func_01_459a
-	FAR_CALL $05, Func_05_473d
+	FAR_CALL Func_05_473d
 	ret
 Func_01_449d:
 	ld a, [$c2e6]
@@ -335,7 +335,7 @@ Func_01_45ad:
 	ld a, [wTransitionState]
 	cp $01
 	jr nz, Func_01_45d2
-	FAR_CALL $05, Func_05_481d
+	FAR_CALL Func_05_481d
 	call Func_01_4b7c
 	call Func_01_45d6
 	ld a, SCENE_ROOM_CLEAR
@@ -441,7 +441,7 @@ Func_01_4679:
 	call Func_01_4987
 	ld a, $01
 	ld [wC2D7], a
-	FAR_CALL $18, Func_18_6b71
+	FAR_CALL Func_18_6b71
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
@@ -510,8 +510,8 @@ Func_01_470d:
 	call Func_00_119a
 	or a
 	jr nz, Func_01_473a
-	FAR_CALL $13, Func_13_4000
-	FAR_CALL $18, Func_18_6b65
+	FAR_CALL Func_13_4000
+	FAR_CALL Func_18_6b65
 	ld a, $0e
 	call Func_00_1164
 	ld a, $03
@@ -521,20 +521,20 @@ Func_01_470d:
 	ret
 
 Func_01_473a:
-	FAR_CALL $18, Func_18_6b71
+	FAR_CALL Func_18_6b71
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
 
 Func_01_4748:
-	FAR_CALL $05, Func_05_4800
+	FAR_CALL Func_05_4800
 	call Func_00_1219
 	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_4759:
 	call Func_01_5d77
-	FAR_CALL $05, Func_05_4800
+	FAR_CALL Func_05_4800
 	call Func_00_1219
 	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
@@ -2315,7 +2315,7 @@ Func_01_5993:
 	cp $20
 	ret nz
 Func_01_599b:
-	FAR_CALL $12, DrawFloorPieces
+	FAR_CALL DrawFloorPieces
 	call Func_01_449d
 	call Func_01_4aa1
 	xor a
@@ -2426,12 +2426,12 @@ Func_01_5a5f:
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
-	FAR_CALL $05, SceneInit
+	FAR_CALL SceneInit
 	ld a, $01
 	ld [$c2dd], a
 	ret
 Func_01_5a7a:
-	FAR_CALL $05, SceneRunFrame
+	FAR_CALL SceneRunFrame
 	bit 7, a
 	ret z
 	call Func_01_5a90
@@ -2753,7 +2753,7 @@ Func_01_5c6e:
 	ld a, $04
 Func_01_5c70:
 	ld [$d60e], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ret
 Func_01_5c7c:
 	ld a, [wActiveFloor]
@@ -2824,7 +2824,7 @@ Func_01_5ce2:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ld a, $00
 	call Func_00_1164
 	ret
@@ -2838,7 +2838,7 @@ Func_01_5cff:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ld a, $02
 	call Func_00_1164
 	ret
@@ -2852,7 +2852,7 @@ Func_01_5d1d:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ld a, $04
 	call Func_00_1164
 	ret
@@ -2866,7 +2866,7 @@ Func_01_5d3b:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ld a, $06
 	call Func_00_1164
 	ret
@@ -2880,7 +2880,7 @@ Func_01_5d59:
 	ld [$d60e], a
 	xor a
 	ld [wBossState], a
-	FAR_CALL $1f, StartTowerBossEncounter
+	FAR_CALL StartTowerBossEncounter
 	ld a, $08
 	call Func_00_1164
 	ret
@@ -2899,7 +2899,7 @@ Func_01_5d84:
 	call Func_00_119a
 	or a
 	ret nz
-	FAR_CALL $18, Pashute_StartTownScript
+	FAR_CALL Pashute_StartTownScript
 	ld a, $0c
 	call Func_00_1164
 	ret
@@ -2909,7 +2909,7 @@ Func_01_5d99:
 	call Func_00_119a
 	or a
 	ret nz
-	FAR_CALL $18, Func_18_533c
+	FAR_CALL Func_18_533c
 	ld a, $0d
 	call Func_00_1164
 	ret
@@ -2939,7 +2939,7 @@ Player_SummonMonster:
 	ld a, [wDisplayMonster]
 	ld [wSceneState], a
 	ld c, $04
-	FAR_CALL $01, StartRoomAnimation
+	FAR_CALL StartRoomAnimation
 	pop de
 	xor a
 	ld [$c2ab], a
@@ -4483,7 +4483,7 @@ Func_01_686f:
 	ld a, [hl]
 	sub $40
 	ld c, a
-	FAR_CALL $0f, Func_0f_488d
+	FAR_CALL Func_0f_488d
 	pop hl
 	push hl
 	ld de, $000c
@@ -4591,7 +4591,7 @@ Func_01_68f5:
 	jr nz, Func_01_6944
 Func_01_693a:
 	push hl
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 Func_01_6944:
 	ld a, $01
@@ -4622,7 +4622,7 @@ Func_01_6949:
 	jr nz, Func_01_697a
 Func_01_6970:
 	push hl
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 Func_01_697a:
 	ld a, $01
@@ -4653,7 +4653,7 @@ Func_01_697f:
 	jr nz, Func_01_69b0
 Func_01_69a6:
 	push hl
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 Func_01_69b0:
 	ld a, $01
@@ -4688,7 +4688,7 @@ Func_01_69b5:
 	jr nz, Func_01_69eb
 Func_01_69e1:
 	push hl
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 Func_01_69eb:
 	ld a, $01
@@ -5102,7 +5102,7 @@ Func_01_6c41:
 	swap a
 	and $0f
 	ld b, a
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 	pop bc
 	ret
@@ -5122,7 +5122,7 @@ Func_01_6c68:
 	swap a
 	and $0f
 	ld b, a
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop hl
 	pop bc
 	ret
@@ -6323,11 +6323,11 @@ Func_01_7435:
 	and $0f
 	ld b, a
 	push bc
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop bc
 	inc c
 	push bc
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop bc
 	ldh a, [hEntityX]
 	ld c, a
@@ -6350,11 +6350,11 @@ Func_01_7435:
 	and $0f
 	ld b, a
 	push bc
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop bc
 	inc c
 	push bc
-	FAR_CALL $03, BreakTileAtCell
+	FAR_CALL BreakTileAtCell
 	pop bc
 	ret
 Func_01_7499:
@@ -6390,35 +6390,35 @@ Func_01_7499:
 Func_01_74c4:
 	push de
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop de
 	ret
 Func_01_74dd:
 	push de
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, b
 	ld b, a
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $0f
 	add a, b
 	ld b, a
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop de
 	ret
 Func_01_7512:
@@ -6449,18 +6449,18 @@ Func_01_752d:
 Func_01_7534:
 	push de
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ld a, $10
 	add a, c
 	ld c, a
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop de
 	ret
 Func_01_755b:
@@ -6492,12 +6492,12 @@ Func_01_7578:
 	add a, c
 	ld c, a
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ldh a, [hEntityX]
 	ld c, a
 	push bc
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop bc
 	ldh a, [hEntityX]
 	ld c, a
@@ -6508,7 +6508,7 @@ Func_01_7578:
 	add a, c
 	dec a
 	ld c, a
-	FAR_CALL $03, BreakTileAtPixel
+	FAR_CALL BreakTileAtPixel
 	pop de
 	ret
 Func_01_75ad:
@@ -7136,7 +7136,7 @@ Func_01_7b24:
 	ld [$cf69], a
 	ld a, [hl]
 	ld [$cf6a], a
-	FAR_CALL $04, Func_04_4100
+	FAR_CALL Func_04_4100
 	pop hl
 	ret
 

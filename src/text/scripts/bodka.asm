@@ -29,7 +29,7 @@ Func_18_5dfa:
 
 Bodka_BuildStudioScene:
 	call Func_00_0822
-	ld a, $c7
+	ld a, LCDC_ON | LCDC_WIN_9C00 | LCDC_OBJ_16 | LCDC_OBJ_ON | LCDC_PRIO_ON
 	ld [rLCDC], a
 	call HideAllSprites
 	call Func_00_3965
@@ -64,7 +64,7 @@ Bodka_BuildStudioScene:
 	ret
 
 Bodka_BuildTowerScene:
-	FAR_CALL BANK(Func_1f_4d66), Func_1f_4d66
+	FAR_CALL Func_1f_4d66
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
@@ -347,7 +347,10 @@ TradehouseMenu:
     SCRIPT_FAR_CALL Tradehouse_ShowMenu
     SCRIPT_FAR_CALL Tradehouse_LoadBgMap
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, TradehouseEnter, TradehouseSave, BodkaGreet
+    SCRIPT_JUMP_TABLE wMainMenuResult, \
+        TradehouseEnter, \
+        TradehouseSave, \
+        BodkaGreet
 
 TradehouseEnter:
     db "OK. Let's enter\r"
@@ -374,7 +377,11 @@ TradehouseSave:
     SCRIPT_WRITE_WRAM .Addr=$d5c2, .Value=$00
     SCRIPT_FAR_CALL LinkExchangeConnect
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveConfirm, TradehouseSaveNoFriend, TradehouseSaveNotReady, TradehouseSaveProcess
+    SCRIPT_JUMP_TABLE $d5c2, \
+        TradehouseSaveConfirm, \
+        TradehouseSaveNoFriend, \
+        TradehouseSaveNotReady, \
+        TradehouseSaveProcess
 
 TradehouseSaveNoFriend:
     db "Your friend does\r"
@@ -457,7 +464,11 @@ TradehouseSaving:
     SCRIPT_FAR_CALL LinkExchangeTransfer
     SCRIPT_FAR_CALL Tradehouse_BuildScene
     SCRIPT_FAR_CALL LinkClampResultCode
-    SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveOk, TradehouseSaveErr, TradehouseSaveProcess2, TradehouseSaveProcess2
+    SCRIPT_JUMP_TABLE $d5c2, \
+        TradehouseSaveOk, \
+        TradehouseSaveErr, \
+        TradehouseSaveProcess2, \
+        TradehouseSaveProcess2
 
 TradehouseSaveOk:
     db "Yes!\r"
@@ -493,7 +504,11 @@ BodkaStudioGreet:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
     SCRIPT_CYCLE .Count=4
-    SCRIPT_JUMP_TABLE wCycleCounter, BodkaGreetA, BodkaGreetB, BodkaGreetC, BodkaGreetD
+    SCRIPT_JUMP_TABLE wCycleCounter, \
+        BodkaGreetA, \
+        BodkaGreetB, \
+        BodkaGreetC, \
+        BodkaGreetD,
 
 BodkaGreetA:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
@@ -530,7 +545,12 @@ BodkaMenu:
     SCRIPT_FAR_CALL Bodka_ShowMenu
     SCRIPT_FAR_CALL Bodka_LoadStudioBgMap
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, BodkaLeave, BodkaEnter, BodkaItems, BodkaSave, BodkaExit
+    SCRIPT_JUMP_TABLE wMainMenuResult, \
+        BodkaLeave, \
+        BodkaEnter, \
+        BodkaItems, \
+        BodkaSave, \
+        BodkaExit,
 
 BodkaLeave:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
@@ -575,7 +595,10 @@ BodkaItems:
     SCRIPT_FAR_CALL Bodka_ShowItemsSubMenu
     SCRIPT_FAR_CALL Bodka_LoadStudioBgMap
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wSubMenuCursor, BodkaItemDisc, BodkaItemLink, BodkaItemStop
+    SCRIPT_JUMP_TABLE wSubMenuCursor, \
+        BodkaItemDisc, \
+        BodkaItemLink, \
+        BodkaItemStop,
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSave:
@@ -585,7 +608,11 @@ BodkaSave:
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL LinkExchangeConnect
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE $d5c2, BodkaSaveConfirm, BodkaSaveNoOpp, BodkaSaveNotReady, BodkaSaveProcess
+    SCRIPT_JUMP_TABLE $d5c2, \
+        BodkaSaveConfirm, \
+        BodkaSaveNoOpp, \
+        BodkaSaveNotReady, \
+        BodkaSaveProcess,
 
 BodkaSaveNoOpp:
     SCRIPT_RENDERER Bodka_RenderPortrait
@@ -685,7 +712,11 @@ BodkaSaving:
     SCRIPT_FAR_CALL LinkExchangeTransfer
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
     SCRIPT_FAR_CALL LinkClampResultCode
-    SCRIPT_JUMP_TABLE $d5c2, BodkaSaveOk, BodkaSaveErr, BodkaSaveProcess2, BodkaSaveProcess2
+    SCRIPT_JUMP_TABLE $d5c2, \
+        BodkaSaveOk, \
+        BodkaSaveErr, \
+        BodkaSaveProcess2, \
+        BodkaSaveProcess2 \
 
 BodkaSaveOk:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt

@@ -834,7 +834,7 @@ Func_13_4982:
 	ld [$d617], a
 	push hl
 	push de
-	FAR_CALL $00, PrintCharacterAtCursor
+	FAR_CALL PrintCharacterAtCursor
 	pop de
 	pop hl
 	inc de
@@ -875,7 +875,7 @@ Func_13_49d0:
 Func_13_49d1:
 	push hl
 	push de
-	FAR_CALL $00, PrintCharacterAtCursor
+	FAR_CALL PrintCharacterAtCursor
 	pop de
 	inc de
 	pop hl

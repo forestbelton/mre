@@ -118,12 +118,12 @@ Func_03_4071:
 	bit 5, a
 	jr z, Func_03_407f
 Func_03_4077:
-	FAR_CALL $01, Func_01_6d48
+	FAR_CALL Func_01_6d48
 Func_03_407f:
 	ldh a, [hEntityUpdate2]
 	or a
 	jr z, Func_03_408c
-	FAR_CALL $04, EntityAnim_Run
+	FAR_CALL EntityAnim_Run
 Func_03_408c:
 	ldh a, [hEntityPtrLo]
 	ld l, a
@@ -297,7 +297,7 @@ EntityOp_Gfx:
 	ld a, [de]
 	ld b, a
 	push de
-	FAR_CALL $04, EntityAnim_SetAnimation
+	FAR_CALL EntityAnim_SetAnimation
 	pop de
 	inc de
 	jp RunEntityScript
@@ -901,7 +901,7 @@ Func_03_45a0:
 	ld b, $00
 	push de
 	push hl
-	FAR_CALL $01, Func_01_7b24
+	FAR_CALL Func_01_7b24
 	pop hl
 	pop de
 	ld a, [$cf65]
@@ -924,7 +924,7 @@ Func_03_45a0:
 	pop hl
 	push de
 	push hl
-	FAR_CALL $04, Func_04_4344
+	FAR_CALL Func_04_4344
 	pop hl
 	pop de
 	push hl
@@ -1899,7 +1899,7 @@ Func_03_4c37:
 	ret
 Func_03_4c39:
 	push de
-	FAR_CALL $01, Func_01_4ce1
+	FAR_CALL Func_01_4ce1
 	pop de
 	push af
 	ld a, SOUND_SFX_Cursor
@@ -1909,7 +1909,7 @@ Func_03_4c39:
 	ret
 Func_03_4c4c:
 	push de
-	FAR_CALL $01, Func_01_4cfe
+	FAR_CALL Func_01_4cfe
 	pop de
 	push af
 	ld a, SOUND_SFX_Cursor
@@ -3113,7 +3113,7 @@ SpawnFloorFlameOrFX:
 	ld a, [wActiveFloor]
 	cp $05
 	jr z, Func_03_5518
-	FAR_CALL $01, Func_01_4d0d
+	FAR_CALL Func_01_4d0d
 	ret
 Func_03_5518:
 	ld a, [$c530]
@@ -3562,7 +3562,7 @@ Func_03_57da:
 	ldh a, [hEntityFacing]
 	ld c, a
 	push de
-	FAR_CALL $01, Func_01_42b3
+	FAR_CALL Func_01_42b3
 	pop de
 	ld a, c
 	ldh [hEntityVelYLo], a
@@ -7325,7 +7325,7 @@ Func_03_6ee6:
 	ld a, $01
 	ldh [hEntityResult], a
 	push de
-	FAR_CALL $01, Func_01_4cae
+	FAR_CALL Func_01_4cae
 	pop de
 	ret
 

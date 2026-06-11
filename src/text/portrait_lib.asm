@@ -183,7 +183,7 @@ StartTowerBossEncounter:
 	ret
 
 .kalum:
-	FAR_CALL $1f, Kalum_StartEncounter
+	FAR_CALL Kalum_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
@@ -191,7 +191,7 @@ StartTowerBossEncounter:
 	jp LeaveTownBuilding
 
 .mistral:
-	FAR_CALL $1f, Mistral_StartEncounter
+	FAR_CALL Mistral_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
@@ -199,21 +199,21 @@ StartTowerBossEncounter:
 	jp LeaveTownBuilding
 
 .rafaga:
-	FAR_CALL $1f, Rafaga_StartEncounter
+	FAR_CALL Rafaga_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
 .tempest:
-	FAR_CALL $1f, Tempest_StartEncounter
+	FAR_CALL Tempest_StartEncounter
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
 	jp LeaveTownBuilding
 .nada:
-	FAR_CALL $1f, Func_1f_4d8c
+	FAR_CALL Func_1f_4d8c
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked

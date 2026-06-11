@@ -442,7 +442,7 @@ Func_30_42d5:
 	jr nz, Func_30_42e9
 	ld a, $03
 	ld [wScreenAnim2], a
-	FAR_CALL $20, Func_20_796d
+	FAR_CALL Func_20_796d
 	ret
 Func_30_42e9:
 	ld a, $00
@@ -473,7 +473,7 @@ Data_30_4315:
 	db $fa, $f6, $d0, $e6, $03, $20, $09, $fa, $f8, $d0, $3d, $ea, $f8, $d0, $18, $00
 
 Func_30_4325:
-	FAR_CALL $20, Func_20_796d
+	FAR_CALL Func_20_796d
 	ret
 
 Data_30_432e:
@@ -1817,7 +1817,7 @@ DrawRoomClearScreen:
 	ld hl, $7080
 	ld de, $9800
 	call BankMapCopyB
-	FAR_CALL $21, Func_21_7409
+	FAR_CALL Func_21_7409
 	xor a
 	ld b, $08
 	ld c, $21
@@ -1848,8 +1848,8 @@ Func_30_50d7:
 	ld a, [wScreenPhase]
 	cp $04
 	jr nc, Func_30_512e
-	FAR_CALL $21, Func_21_73e4
-	FAR_CALL $21, Func_21_73ac
+	FAR_CALL Func_21_73e4
+	FAR_CALL Func_21_73ac
 	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5121
@@ -1877,12 +1877,12 @@ Func_30_512e:
 	cp $00
 	jr nz, Func_30_514b
 Func_30_5142:
-	FAR_CALL $01, Func_01_4654
+	FAR_CALL Func_01_4654
 	ret
 Func_30_514b:
 	ld a, $04
 	ld [wC2D7], a
-	FAR_CALL $18, Func_18_6b71
+	FAR_CALL Func_18_6b71
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
@@ -2293,7 +2293,7 @@ Func_30_54b8:
 	ld [wScreenTimer], a
 	ld [wScreenFrame], a
 	ld [wScreenAnim], a
-	FAR_CALL $05, Func_05_4843
+	FAR_CALL Func_05_4843
 	ld [wScreenPhase], a
 	cp $01
 	jr nz, DrawTitleScreen
@@ -2392,7 +2392,7 @@ Func_30_55a6:
 	ld a, [wScreenTimer]
 	and a
 	jr z, Func_30_555d
-	FAR_CALL $12, LoadGameFromSram
+	FAR_CALL LoadGameFromSram
 	and a
 	jr nz, Func_30_555d
 

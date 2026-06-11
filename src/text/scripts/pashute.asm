@@ -189,7 +189,7 @@ Pashute_LoadIntroScene:
 	ld a, SOUND_BGM_Pashute
 	call PlaySoundTracked
 	pop af
-	FAR_CALL $1f, ShowPortraitTransition
+	FAR_CALL ShowPortraitTransition
 	ret
 Pashute_LoadShrineTilemap:
 	ld hl, $5880

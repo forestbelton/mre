@@ -21,7 +21,7 @@ Func_0f_4000:
 	ld a, [wPlayerStatus]
 	bit 0, a
 	ret nz
-	FAR_CALL $01, Func_01_4c4d
+	FAR_CALL Func_01_4c4d
 	push af
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
@@ -60,12 +60,12 @@ Func_0f_4054:
 	jp z, Func_0f_40f9
 	cp $03
 	jr z, Func_0f_4086
-	FAR_CALL $01, Func_01_4e09
+	FAR_CALL Func_01_4e09
 	ld a, $11
 	ld [$c2d8], a
 	xor a
 	ld [$c2d9], a
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4eb8
 	ld a, $02
 	ld [$c2ac], a
 	ret
@@ -90,7 +90,7 @@ Func_0f_4097:
 	pop af
 	ld a, $01
 	ld [$c2da], a
-	FAR_CALL $01, Func_01_4e8c
+	FAR_CALL Func_01_4e8c
 	ret
 
 Func_0f_40b2:
@@ -103,11 +103,11 @@ Func_0f_40b2:
 	pop af
 	xor a
 	ld [$c2da], a
-	FAR_CALL $01, Func_01_4e8c
+	FAR_CALL Func_01_4e8c
 	ret
 Func_0f_40cb:
-	FAR_CALL $01, Func_01_4e09
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4e09
+	FAR_CALL Func_01_4eb8
 	push af
 	ld a, SOUND_SFX_Cancel
 	call PlaySound
@@ -150,11 +150,11 @@ Func_0f_4125:
 	pop af
 	xor a
 	ld [$c2da], a
-	FAR_CALL $01, Func_01_4e8c
+	FAR_CALL Func_01_4e8c
 	ret
 Func_0f_413e:
-	FAR_CALL $01, Func_01_4e09
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4e09
+	FAR_CALL Func_01_4eb8
 	push af
 	ld a, SOUND_SFX_Cancel
 	call PlaySound
@@ -192,7 +192,7 @@ Func_0f_416c:
 	ret z
 	inc a
 	ld [$c2d9], a
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4eb8
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
@@ -204,7 +204,7 @@ Func_0f_41a3:
 	ret z
 	inc a
 	ld [$c2d9], a
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4eb8
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
@@ -216,7 +216,7 @@ Func_0f_41bd:
 	ret z
 	dec a
 	ld [$c2d9], a
-	FAR_CALL $01, Func_01_4eb8
+	FAR_CALL Func_01_4eb8
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
@@ -236,10 +236,10 @@ Func_0f_41d6:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	FAR_CALL $01, Func_01_4e55
+	FAR_CALL Func_01_4e55
 	ld a, $01
 	ld [$c2da], a
-	FAR_CALL $01, Func_01_4e8c
+	FAR_CALL Func_01_4e8c
 	ret
 Func_0f_4206:
 	call Func_0f_42a2
@@ -279,14 +279,14 @@ Func_0f_4243:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	FAR_CALL $01, Func_01_4e55
+	FAR_CALL Func_01_4e55
 	ld a, $01
 	ld [$c2da], a
-	FAR_CALL $01, Func_01_4e8c
+	FAR_CALL Func_01_4e8c
 	ret
 Func_0f_4265:
 	call Func_0f_42a2
-	FAR_CALL $01, Func_01_4b0e
+	FAR_CALL Func_01_4b0e
 	ld a, $02
 	ld [wTransitionState], a
 	ld a, $01
@@ -298,7 +298,7 @@ Func_0f_427b:
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
 	pop af
-	FAR_CALL $03, RequestFloorExit
+	FAR_CALL RequestFloorExit
 	ld a, $01
 	ld [wLives], a
 	ld a, $02
@@ -317,7 +317,7 @@ Func_0f_42a2:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	FAR_CALL $01, Func_01_449d
+	FAR_CALL Func_01_449d
 	ret
 Func_0f_42bb:
 	ld a, [$c2d8]
@@ -395,7 +395,7 @@ Func_0f_433a:
 	call Func_0f_44d5
 	call Func_00_0bdd
 	call Func_0f_450d
-	FAR_CALL $3b, Func_3b_4000
+	FAR_CALL Func_3b_4000
 	call LoadDiscStoneDisplay
 	call LoadMonsterPortrait
 	call Func_0f_4565
@@ -575,8 +575,8 @@ Func_0f_4543:
 	call Func_0f_44d5
 	call Func_00_0bdd
 	call Func_0f_450d
-	FAR_CALL $05, Func_05_48a5
-	FAR_CALL $05, Func_05_48fc
+	FAR_CALL Func_05_48a5
+	FAR_CALL Func_05_48fc
 	call Func_00_0786
 	ld a, $01
 	ld [$c2ac], a
@@ -1273,7 +1273,7 @@ Func_0f_4ac6:
 	jr z, Func_0f_4ad9
 	cp $02
 	jr z, Func_0f_4ad9
-	FAR_CALL $12, Func_12_484e
+	FAR_CALL Func_12_484e
 Func_0f_4ad9:
 	ldh a, [hJoyPressed]
 	bit 1, a
@@ -1294,7 +1294,7 @@ Func_0f_4aef:
 	call Func_0f_4b4f
 	ret
 Func_0f_4b02:
-	FAR_CALL $12, Func_12_47e5
+	FAR_CALL Func_12_47e5
 	ld hl, $5138
 	ld de, $9de3
 	call CopyBgMap
@@ -1309,9 +1309,9 @@ Func_0f_4b1d:
 	call CopyBgMap
 	ret
 Func_0f_4b27:
-	FAR_CALL $10, Func_10_405f
-	FAR_CALL $16, LoadTileset
-	FAR_CALL $10, Func_10_4007
+	FAR_CALL Func_10_405f
+	FAR_CALL LoadTileset
+	FAR_CALL Func_10_4007
 	xor a
 	ldh [rVBK], a
 	ld hl, $4d38
@@ -1320,7 +1320,7 @@ Func_0f_4b27:
 	call VramCopy16
 	ret
 Func_0f_4b4f:
-	FAR_CALL $10, LoadFloorBgPalette
+	FAR_CALL LoadFloorBgPalette
 	ld hl, $4ce8
 	ld a, $06
 	ld b, $01
@@ -2246,7 +2246,7 @@ ShowMonsterDetailScreen:
 	ld de, $99a1
 	call BankMapCopyA
 	call Func_32_4034
-	FAR_CALL $0f, LoadMonsterPortrait
+	FAR_CALL LoadMonsterPortrait
 	call DrawMonsterDetailBgMap
 	call DrawMonsterDetailSprites
 	call Func_32_4205
@@ -2274,7 +2274,7 @@ Func_32_4155:
 	ld a, [hJoyPressed]
 	bit 0, a
 	jr z, Func_32_4155
-	FAR_CALL $1f, HidePortraitWhite
+	FAR_CALL HidePortraitWhite
 	pop af
 	ld [wDisplayMonster], a
 	ret

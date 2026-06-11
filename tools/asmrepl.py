@@ -50,6 +50,7 @@ back-reference: every occurrence must capture the same text -- so `ld a, %X` /
 `ld b, %X` matches only when both operands are identical. Names must start with a
 letter/underscore (a literal `%10101010` binary in a pattern stays literal).
 """
+
 import glob as _glob
 import os
 import re
@@ -96,7 +97,7 @@ def _compile_line(canon_pat):
         if _WILDCARD.fullmatch(part):
             name = part[1:]
             if name in seen:
-                rx += rf"(?P={name})"                 # back-reference to earlier capture
+                rx += rf"(?P={name})"  # back-reference to earlier capture
             else:
                 seen.add(name)
                 names.append(name)
@@ -121,7 +122,7 @@ def _match_window(window, pat_lines):
         if not m:
             return None
         for k, v in m.groupdict().items():
-            if k in caps and caps[k] != v:   # same %NAME must capture the same text
+            if k in caps and caps[k] != v:  # same %NAME must capture the same text
                 return None
             caps[k] = v
     return caps
@@ -160,8 +161,9 @@ def _apply_rule(lines, pat_lines, repl_lines, rule_idx):
             caps = _match_window(window, pat_lines)
             if caps is not None:
                 repl = _render(repl_lines, _instr_indent(window), caps)
-                changes.append(Change(None, i + 1, rule_idx, "\n".join(window),
-                                      "\n".join(repl)))
+                changes.append(
+                    Change(None, i + 1, rule_idx, "\n".join(window), "\n".join(repl))
+                )
                 out.extend(repl)
                 i += n
                 continue
@@ -170,8 +172,15 @@ def _apply_rule(lines, pat_lines, repl_lines, rule_idx):
     return out, changes
 
 
-def asm_replace(file_glob, rules, *, root=".", dry_run=False,
-                require_match=True, verbose=True):
+def asm_replace(
+    file_glob: str,
+    rules: list[tuple[str, str]],
+    *,
+    root: str = ".",
+    dry_run: bool = False,
+    require_match: bool = True,
+    verbose: bool = True,
+) -> None:
     """Apply (pattern, replacement) rules to every file matching `file_glob`.
 
     file_glob : glob string, e.g. "src/**/*.asm" (recursive ** supported).
@@ -182,7 +191,7 @@ def asm_replace(file_glob, rules, *, root=".", dry_run=False,
     compiled = [_compile_rule(p, r) for p, r in rules]
     files = sorted(_glob.glob(os.path.join(root, file_glob), recursive=True))
 
-    all_changes, pending = [], {}          # path -> new text (computed, unwritten)
+    all_changes, pending = [], {}  # path -> new text (computed, unwritten)
     rule_hits = [0] * len(rules)
     for path in files:
         text = open(path).read()
@@ -201,9 +210,11 @@ def asm_replace(file_glob, rules, *, root=".", dry_run=False,
     misses = [i for i, h in enumerate(rule_hits) if h == 0]
     if misses and require_match:
         raise ValueError(
-            "no match for rule(s) " + ", ".join(map(str, misses))
+            "no match for rule(s) "
+            + ", ".join(map(str, misses))
             + " (set require_match=False to allow). First pattern of a missed "
-            "rule:\n" + "\n".join(_block(rules[misses[0]][0])))
+            "rule:\n" + "\n".join(_block(rules[misses[0]][0]))
+        )
 
     if verbose:
         for i, h in enumerate(rule_hits):
@@ -226,5 +237,7 @@ def asm_replace(file_glob, rules, *, root=".", dry_run=False,
 
 if __name__ == "__main__":
     print(__doc__)
-    print("This is a library: `from tools.asmrepl import asm_replace`. "
-          "Run your edits from a small scratch script.")
+    print(
+        "This is a library: `from tools.asmrepl import asm_replace`. "
+        "Run your edits from a small scratch script."
+    )

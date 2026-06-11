@@ -29,12 +29,12 @@ SECTION "layout_code", ROM0[$166f]
 ; See docs/floor_data.md "Conditional-appearance gate".
 ; -----------------------------------------------------------------------------
 FloorPostLoadCleanup:
-	FAR_CALL $01, RemoveKeyPass              ; pass 1: strip gold KEY when wProgressFlags bit 1 set
-	FAR_CALL $01, RemoveSilverKeyGate        ; pass 2: strip SILVER_KEY unless progress allows
-	FAR_CALL $01, RemoveConditionalItemsPass ; pass 3: conditional-item gate (Data_01_5162)
-	FAR_CALL $05, Func_05_496b
-	FAR_CALL $05, Func_05_49c8
-	FAR_CALL $05, Func_05_499d
+	FAR_CALL RemoveKeyPass              ; pass 1: strip gold KEY when wProgressFlags bit 1 set
+	FAR_CALL RemoveSilverKeyGate        ; pass 2: strip SILVER_KEY unless progress allows
+	FAR_CALL RemoveConditionalItemsPass ; pass 3: conditional-item gate (Data_01_5162)
+	FAR_CALL Func_05_496b
+	FAR_CALL Func_05_49c8
+	FAR_CALL Func_05_499d
 	ld a, $ff              ; clear a pair of entity slots ($FF = empty)
 	ld [$c530], a
 	ld [$c531], a
@@ -1240,7 +1240,7 @@ RefreshScoreDisplay:
 	ld a, [wRoomType]
 	cp $05
 	jr z, .done
-	FAR_CALL $05, Func_05_46ba
+	FAR_CALL Func_05_46ba
 .done:
 	pop bc
 	pop af

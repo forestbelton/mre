@@ -2119,7 +2119,7 @@ Func_00_0f41:
 	ld a, SCENE_LOGO
 	ld [wGameScene], a
 	call ResetScrollState
-	FAR_CALL $05, Func_05_463a
+	FAR_CALL Func_05_463a
 RunIntroScene:
 	ld hl, $0f6e
 	push hl
@@ -3438,11 +3438,11 @@ OpenRoomSelectMenu:
 	ld [$c55d], a
 	ld a, $00
 	ld [$cfbe], a
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
-	FAR_CALL $15, Func_15_4015
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
+	FAR_CALL Func_15_4015
 Func_00_1919:
-	FAR_CALL $12, FloorSelectInputLoop
+	FAR_CALL FloorSelectInputLoop
 	or a
 	ret nz
 	ld a, $04
@@ -3457,19 +3457,19 @@ Func_00_1919:
 SetupExchangeRoomSelect:
 	ld a, $00
 	ld [$c55d], a
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
-	FAR_CALL $15, Func_15_4015
-	FAR_CALL $12, FloorSelectInputLoop
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
+	FAR_CALL Func_15_4015
+	FAR_CALL FloorSelectInputLoop
 	or a
 	ret
 EnterSelectedRoom:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
-	FAR_CALL $05, Func_05_47c6
-	FAR_CALL $00, Func_00_3508
-	FAR_CALL $01, Func_01_439e
+	FAR_CALL Func_05_47c6
+	FAR_CALL Func_00_3508
+	FAR_CALL Func_01_439e
 	call ResetScrollState
 	ret
 
@@ -3482,14 +3482,14 @@ OpenRoomArrangeMenu:
 	ld [$c55d], a
 	ld a, $00
 	ld [$cfbe], a
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 Func_00_19a3:
-	FAR_CALL $12, OpenFloorSelectScreen
+	FAR_CALL OpenFloorSelectScreen
 	or a
 	jp nz, Func_00_1a66
 Func_00_19af:
-	FAR_CALL $12, OpenPieceSelectMenu
+	FAR_CALL OpenPieceSelectMenu
 	or a
 	jr nz, Func_00_19a3
 Func_00_19ba:
@@ -3509,31 +3509,31 @@ Func_00_19ba:
 Func_00_19d6:
 	call Func_00_320e
 	call Func_00_1b87
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 	jr Func_00_19ba
 Func_00_19ee:
 	call Func_00_320e
 	call Func_00_1b29
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 	jr Func_00_19ba
 Func_00_1a06:
 	call Func_00_320e
 	call Func_00_1b58
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 	jr Func_00_19ba
 Func_00_1a1e:
-	FAR_CALL $05, Func_05_47c6
-	FAR_CALL $00, Func_00_3508
-	FAR_CALL $01, Func_01_439e
+	FAR_CALL Func_05_47c6
+	FAR_CALL Func_00_3508
+	FAR_CALL Func_01_439e
 	call ResetScrollState
 	call LoadFloorByMode
-	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, LoadAllFloorMonsterSprites
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_10_4041
+	FAR_CALL LoadAllFloorMonsterSprites
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 	push af
 	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
@@ -3544,7 +3544,7 @@ Func_00_1a66:
 	ld [wGameScene], a
 	ret
 Func_00_1a6c:
-	FAR_CALL $12, Func_12_4798
+	FAR_CALL Func_12_4798
 	ld a, [wMenuId]
 	ld hl, $1873
 	rst AddAToHL
@@ -3597,7 +3597,7 @@ Func_00_1ada:
 	ld [wEditCursorY], a
 	ld a, [$c2ea]
 	ld [wEditCursorX], a
-	FAR_CALL $12, Func_12_46d0
+	FAR_CALL Func_12_46d0
 	ld hl, wFloorMonsterTable
 	ld c, $00
 Func_00_1afc:
@@ -3701,12 +3701,12 @@ Func_00_1b87:
 	xor a
 Func_00_1bac:
 	ld [wFloorPalette], a
-	FAR_CALL $10, LoadFloorBgPalette
+	FAR_CALL LoadFloorBgPalette
 	jr Func_00_1bc7
 Func_00_1bb9:
 	ld a, [wMenuCursor]
 	ld [wFloorTileset], a
-	FAR_CALL $16, LoadTileset
+	FAR_CALL LoadTileset
 Func_00_1bc7:
 	call Func_00_2dbc
 	ld a, [wUiTimer]
@@ -3945,7 +3945,7 @@ Func_00_1d52:
 	call Func_00_1e58
 	jr z, Func_00_1d4a
 	ld c, a
-	FAR_CALL $11, LoadFloorMonsterSprite
+	FAR_CALL LoadFloorMonsterSprite
 	call Func_00_1ff4
 	call Func_00_30b3
 	jp Func_00_1de5
@@ -3990,7 +3990,7 @@ Func_00_1da2:
 	call Func_00_1e58
 	jr z, Func_00_1d9b
 	ld c, a
-	FAR_CALL $11, LoadFloorMonsterSprite
+	FAR_CALL LoadFloorMonsterSprite
 	call Func_00_1ff4
 	call Func_00_30b3
 	jr Func_00_1de5
@@ -4212,11 +4212,11 @@ Func_00_1f07:
 	ld a, [wMenuId]
 	cp $03
 	jr z, Func_00_1f1e
-	FAR_CALL $12, Func_12_4519
+	FAR_CALL Func_12_4519
 	jr Func_00_1f34
 
 Func_00_1f1e:
-	FAR_CALL $12, Data_12_4695
+	FAR_CALL Data_12_4695
 	call Func_00_25a4
 	jr Func_00_1f34
 
@@ -4636,7 +4636,7 @@ Func_00_2140:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	FAR_CALL $15, Func_15_4147
+	FAR_CALL Func_15_4147
 	ld hl, $4978
 	call Func_00_33fb
 	xor a
@@ -4662,7 +4662,7 @@ Func_00_217d:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	FAR_CALL $15, Func_15_4147
+	FAR_CALL Func_15_4147
 	ld a, [$c55f]
 	call Func_00_3049
 Func_00_21a5:
@@ -4756,11 +4756,11 @@ Func_00_2223:
 	call CopyBgMap
 	pop af
 	ld [$2fff], a
-	FAR_CALL $15, Func_15_4147
+	FAR_CALL Func_15_4147
 	ld a, $01
 	ld [$c560], a
 	ld b, a
-	FAR_CALL $12, Func_12_4441
+	FAR_CALL Func_12_4441
 Func_00_2253:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -4866,7 +4866,7 @@ Func_00_22fc:
 	ld a, [$c55f]
 	or a
 	jr nz, Func_00_2313
-	FAR_CALL $12, BackupFloorRoomMarkers
+	FAR_CALL BackupFloorRoomMarkers
 	ret
 Func_00_2313:
 	dec a
@@ -4875,7 +4875,7 @@ Func_00_2313:
 Func_00_2319:
 	ld b, a
 Func_00_231a:
-	FAR_CALL $12, Func_12_4441
+	FAR_CALL Func_12_4441
 	jp Func_00_2253
 Func_00_2325:
 	xor a
@@ -4889,8 +4889,8 @@ Func_00_2325:
 	call CopyBgMap
 	ld a, [wMenuId]
 	ld b, a
-	FAR_CALL $12, Func_12_44d6
-	FAR_CALL $15, Func_15_4241
+	FAR_CALL Func_12_44d6
+	FAR_CALL Func_15_4241
 Func_00_2351:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -4960,7 +4960,7 @@ Data_00_23a6:
 
 Func_00_23b5:
 	ld b, a
-	FAR_CALL $12, Func_12_44cf
+	FAR_CALL Func_12_44cf
 Func_00_23be:
 	call Func_00_3460
 	jr Func_00_2351
@@ -4984,12 +4984,12 @@ Func_00_23d8:
 	xor a
 	ret
 Func_00_23e8:
-	FAR_CALL $15, Func_15_41b8
+	FAR_CALL Func_15_41b8
 	call Func_00_217d
 	or a
 	jr nz, Func_00_2401
 	call PackFloorSnapshot
-	FAR_CALL $12, SaveFloorToSram
+	FAR_CALL SaveFloorToSram
 Func_00_2401:
 	call Func_00_0bdd
 	ld a, $15
@@ -4999,20 +4999,20 @@ Func_00_2401:
 	call CopyBgMap
 	ld a, [wMenuId]
 	ld b, a
-	FAR_CALL $12, Func_12_44d6
+	FAR_CALL Func_12_44d6
 	xor a
 	ret
 Func_00_2420:
 	ld hl, $4bb8
 	call Func_00_33fb
-	FAR_CALL $15, Func_15_41b8
+	FAR_CALL Func_15_41b8
 	call Func_00_217d
 	cp $02
 	jr nc, Func_00_2401
 	or a
 	jr nz, Func_00_2443
 	call PackFloorSnapshot
-	FAR_CALL $12, SaveFloorToSram
+	FAR_CALL SaveFloorToSram
 Func_00_2443:
 	or $01
 	ret
@@ -6920,10 +6920,10 @@ Func_00_31a4:
 	call Func_00_217d
 	or a
 	jr nz, Func_00_31ba
-	FAR_CALL $12, RestoreFloorRoomMarkers
+	FAR_CALL RestoreFloorRoomMarkers
 	jr Func_00_31c2
 Func_00_31ba:
-	FAR_CALL $12, BackupFloorRoomMarkers
+	FAR_CALL BackupFloorRoomMarkers
 Func_00_31c2:
 	xor a
 	ret
@@ -6992,9 +6992,9 @@ Func_00_31fa:
 
 Func_00_320e:
 	call Func_00_083c
-	FAR_CALL $16, LoadTileset
-	FAR_CALL $10, Func_10_4018
-	FAR_CALL $10, Func_10_4070
+	FAR_CALL LoadTileset
+	FAR_CALL Func_10_4018
+	FAR_CALL Func_10_4070
 	xor a
 	ldh [rVBK], a
 	ld hl, $99c0
@@ -7010,9 +7010,9 @@ Func_00_320e:
 	call Func_00_3340
 	call Func_00_1a6c
 	call Func_00_3089
-	FAR_CALL $10, LoadFloorBgPalette
-	FAR_CALL $10, Func_10_4081
-	FAR_CALL $11, LoadAllFloorMonsterPalettes
+	FAR_CALL LoadFloorBgPalette
+	FAR_CALL Func_10_4081
+	FAR_CALL LoadAllFloorMonsterPalettes
 	ret
 Func_00_3268:
 	ld a, [wMenuItemPtr]
@@ -7142,8 +7142,8 @@ Func_00_3318:
 	call PackFloorSnapshot
 	ld a, [$c55d]
 	ld [$c2c0], a
-	FAR_CALL $12, SaveFloorToSram
-	FAR_CALL $15, Func_15_4147
+	FAR_CALL SaveFloorToSram
+	FAR_CALL Func_15_4147
 	jr Func_00_3305
 
 Func_00_3340:
@@ -7377,7 +7377,7 @@ Func_00_34bc:
 	ld a, [wGameSceneArg]
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
-	FAR_CALL $00, Func_00_1219
+	FAR_CALL Func_00_1219
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_Town
@@ -7442,7 +7442,7 @@ Func_00_3508:
 	ld a, $30
 	ld [$2fff], a
 	call DrawRoomClearScreen
-	FAR_CALL $05, Func_05_46ba
+	FAR_CALL Func_05_46ba
 	ret
 	push af
 	ld a, SOUND_BGM_Silence
@@ -7456,7 +7456,7 @@ Func_00_3508:
 	ld [$2fff], a
 	call DrawTowerOpenScreen
 Func_00_3572:
-	FAR_CALL $18, Func_18_6b71
+	FAR_CALL Func_18_6b71
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
@@ -8165,7 +8165,7 @@ BankMapCopyA:
 	ret
 
 LeaveTownBuilding:
-	FAR_CALL $1f, Script_FadeOutPortrait
+	FAR_CALL Script_FadeOutPortrait
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret

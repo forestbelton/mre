@@ -335,7 +335,7 @@ Func_18_6b71:
 	call Naji_BuildPortraitScene
 	ld hl, NajiEncounterScript
 	call ScriptDispatcherEnterAfterCall
-	FAR_CALL $1f, Script_FadeOutPortrait
+	FAR_CALL Script_FadeOutPortrait
 	ret
 
 	call Naji_BuildPortraitScene
@@ -347,16 +347,16 @@ Func_18_6b71:
 	ret
 
 Naji_StartTowerClimb:
-	FAR_CALL $05, Func_05_4785
-	FAR_CALL $00, Func_00_34e3
+	FAR_CALL Func_05_4785
+	FAR_CALL Func_00_34e3
 	ret
 Naji_ResumeTowerClimb:
-	FAR_CALL $05, Func_05_479d
-	FAR_CALL $00, Func_00_34e3
+	FAR_CALL Func_05_479d
+	FAR_CALL Func_00_34e3
 	ret
 Naji_StartTowerFromBottom:
-	FAR_CALL $05, Func_05_47b2
-	FAR_CALL $00, Func_00_34e3
+	FAR_CALL Func_05_47b2
+	FAR_CALL Func_00_34e3
 	ret
 
 Naji_BuildPortraitScene:

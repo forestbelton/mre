@@ -209,7 +209,7 @@ SpecialScene_LoadGraphics:
 	ret z
 	cp $05
 	jr c, LoadFontTiles
-	FAR_CALL $38, LoadRoomMural
+	FAR_CALL LoadRoomMural
 	ret
 ; Upload a 64-tile font page from $17:$6118 (+ $400*[$c55c]) to VRAM $9400.
 ; The font sheet there is Data_17_6918 (ABC.../abc.../0-9). See docs/gfx_loaders.md.

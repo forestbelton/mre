@@ -719,7 +719,7 @@ Func_31_44fd:
 	bit 2, a
 	jr nz, Func_31_4526
 	call Func_31_446e
-	FAR_CALL $12, LoadFloorEditsFromSram
+	FAR_CALL LoadFloorEditsFromSram
 	call Func_31_456f
 Func_31_4526:
 	xor a
@@ -739,11 +739,11 @@ Func_31_452e:
 Func_31_4542:
 	call Func_31_4644
 	call Func_31_4697
-	FAR_CALL $34, Func_34_4034
+	FAR_CALL Func_34_4034
 	call Func_31_462b
 	call HideUnusedOamSprites
 	ld b, $00
-	FAR_CALL $34, Data_34_4000
+	FAR_CALL Data_34_4000
 	call WaitForNextFrame
 	ld a, [$d5c7]
 	inc a
@@ -762,7 +762,7 @@ Func_31_457e:
 	call Func_31_46e0
 	call HideUnusedOamSprites
 	ld b, $01
-	FAR_CALL $34, Data_34_4000
+	FAR_CALL Data_34_4000
 	call WaitForNextFrame
 	ld a, [$d5c7]
 	inc a
@@ -1090,7 +1090,7 @@ Func_31_47aa:
 	res 7, a
 	res 5, a
 	ldh [rLCDC], a
-	FAR_CALL $34, Func_34_406a
+	FAR_CALL Func_34_406a
 	ld c, $03
 	ld hl, $d5eb
 Func_31_47bf:

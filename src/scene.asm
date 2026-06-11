@@ -739,8 +739,8 @@ SceneFinish:
 	call Func_00_0bdd
 	call Func_00_083c
 	call Func_00_16ad
-	FAR_CALL $12, DrawFloorPieces
-	FAR_CALL $01, Func_01_75ad
+	FAR_CALL DrawFloorPieces
+	FAR_CALL Func_01_75ad
 	call Func_05_48a5
 	ld a, $07
 	ldh [rWX], a
@@ -877,7 +877,7 @@ SceneSprScriptTable:    ; $462a: VM2 (sprite track) script roots
 	dw Scene4_VM2, Scene5_VM2, Scene6_VM2, Scene7_VM2
 
 Func_05_463a:
-	FAR_CALL $00, Func_00_39ad
+	FAR_CALL Func_00_39ad
 	call Func_05_4690
 	call Func_05_4699
 	ld a, $01
@@ -912,7 +912,7 @@ Func_05_463a:
 	ld [hl], a
 	ld a, $ff
 	ld [wDisplayMonster], a
-	FAR_CALL $12, LoadFloorEditsFromSram
+	FAR_CALL LoadFloorEditsFromSram
 	ret
 Func_05_4690:
 	xor a
@@ -1195,11 +1195,11 @@ Func_05_4835:
 	ld [$cfee], a
 	ret
 Func_05_4843:
-	FAR_CALL $12, HasSavedGame
+	FAR_CALL HasSavedGame
 	ld [wScreenPhase], a
 	or a
 	jr z, Func_05_4865
-	FAR_CALL $12, LoadHiScoreFromSram
+	FAR_CALL LoadHiScoreFromSram
 	or a
 	jr z, Func_05_485f
 	ld a, $01
@@ -1253,17 +1253,17 @@ Func_05_4884:
 	ldh [rVBK], a
 	ret
 Func_05_48a5:
-	FAR_CALL $10, Func_10_4018
-	FAR_CALL $02, LoadEntityTiles
-	FAR_CALL $16, LoadTileset
-	FAR_CALL $17, SpecialScene_LoadGraphics
+	FAR_CALL Func_10_4018
+	FAR_CALL LoadEntityTiles
+	FAR_CALL LoadTileset
+	FAR_CALL SpecialScene_LoadGraphics
 	call Func_05_48c9
 	ret
 Func_05_48c9:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_48d9
-	FAR_CALL $3d, LoadDungeonFloorTiles
+	FAR_CALL LoadDungeonFloorTiles
 	ret
 Func_05_48d9:
 	call Func_05_48dd
@@ -1278,7 +1278,7 @@ Func_05_48e2:
 	ld b, a
 	push bc
 	push de
-	FAR_CALL $11, LoadFloorMonsterSpriteToSlot
+	FAR_CALL LoadFloorMonsterSpriteToSlot
 	pop de
 	pop bc
 Func_05_48f4:
@@ -1289,19 +1289,19 @@ Func_05_48f4:
 	jr nz, Func_05_48e2
 	ret
 Func_05_48fc:
-	FAR_CALL $02, LoadEntityPalettes
+	FAR_CALL LoadEntityPalettes
 	call Func_05_4918
-	FAR_CALL $10, LoadFloorBgPalette
-	FAR_CALL $17, SpecialScene_LoadTilemap
+	FAR_CALL LoadFloorBgPalette
+	FAR_CALL SpecialScene_LoadTilemap
 	ret
 Func_05_4918:
 	ld a, [wRoomType]
 	cp $02
 	jr nz, Func_05_4928
-	FAR_CALL $3d, LoadDungeonFloorPalette
+	FAR_CALL LoadDungeonFloorPalette
 	ret
 Func_05_4928:
-	FAR_CALL $11, LoadFloorMonsterSlotPalettes
+	FAR_CALL LoadFloorMonsterSlotPalettes
 	ret
 Func_05_4931:
 	ld a, [wRoomType]

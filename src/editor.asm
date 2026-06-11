@@ -312,7 +312,7 @@ RedrawFloorWithSpawns:
 ; column bit), plays cursor blips, and on A confirms while B picks option 4
 ; (exit). Confirming stores wActiveFloor and returns 1 (>= 4) or 0. From home.asm.
 OpenFloorSelectScreen:
-	FAR_CALL $15, Func_15_4015
+	FAR_CALL Func_15_4015
 	call FloorSelectInputLoop
 	ret
 FloorSelectInputLoop:
@@ -388,8 +388,8 @@ FloorSelectInputLoop:
 	jr .confirm            ; B = select option 4 (exit)
 .apply:
 	ld [$c55d], a
-	FAR_CALL $15, Func_15_408a
-	FAR_CALL $15, Func_15_41cf
+	FAR_CALL Func_15_408a
+	FAR_CALL Func_15_41cf
 	jp FloorSelectInputLoop
 .confirm:
 	cp $04
@@ -411,7 +411,7 @@ OpenPieceSelectMenu:
 	xor a
 	ld [$c55e], a
 ReenterPieceSelect:
-	FAR_CALL $15, Func_15_410f
+	FAR_CALL Func_15_410f
 PieceSelectInputLoop:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -508,8 +508,8 @@ ConfirmPlayFloor:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
-	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, LoadAllFloorMonsterSprites
+	FAR_CALL Func_10_4041
+	FAR_CALL LoadAllFloorMonsterSprites
 	call Func_00_2df6
 	xor a
 	ret
@@ -518,7 +518,7 @@ ConfirmLoadFloor:
 	call Func_00_217d
 	or a
 	jp nz, ReenterPieceSelect
-	FAR_CALL $12, Func_12_4ab8
+	FAR_CALL Func_12_4ab8
 	jp ReenterPieceSelect
 ConfirmSaveFloor:
 	ld a, $04
@@ -532,15 +532,15 @@ ConfirmSaveFloor:
 .launch:
 	ld a, $05
 	ld [wRoomType], a
-	FAR_CALL $05, Func_05_47c6
-	FAR_CALL $00, Func_00_3508
-	FAR_CALL $01, Func_01_439e
+	FAR_CALL Func_05_47c6
+	FAR_CALL Func_00_3508
+	FAR_CALL Func_01_439e
 	call ResetScrollState
 	call LoadFloorByMode
-	FAR_CALL $10, Func_10_4041
-	FAR_CALL $11, LoadAllFloorMonsterSprites
-	FAR_CALL $15, Func_15_41fe
-	FAR_CALL $15, Func_15_4134
+	FAR_CALL Func_10_4041
+	FAR_CALL LoadAllFloorMonsterSprites
+	FAR_CALL Func_15_41fe
+	FAR_CALL Func_15_4134
 	push af
 	ld a, SOUND_BGM_Bodka
 	call PlaySoundTracked
@@ -629,7 +629,7 @@ Func_12_4426:
 	ret
 Func_12_4441:
 	push bc
-	FAR_CALL $15, Func_15_4147
+	FAR_CALL Func_15_4147
 	ld a, $01
 	ldh [rVBK], a
 	ld a, [$c55f]

@@ -533,7 +533,7 @@ ItemEffect_RedDiscStone:  ; RED_DISC_STONE: completed disc stone -> Phoenix; SFX
 	ld hl, wProgressFlags
 	set 7, [hl]
 	ld c, $06
-	FAR_CALL $0f, $488d
+	FAR_CALL Func_0f_488d
 	ld a, $01
 	ld [wTransitionState], a
 	ret
