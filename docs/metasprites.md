@@ -118,8 +118,9 @@ end_metasprite CursorSprite    ; CursorSprite.end:
 
 - The **count byte is auto-derived** from the record block (`(.end - .objs) / sizeof_MetaspriteObj`),
   so it can never disagree with the records.
-- `obj Yoff, Xoff, Tile, Attr` is one record; `struct MetaspriteObj` gives the field
-  names / `sizeof`.
+- `obj` is one record (`struct MetaspriteObj`). It takes positional args **or**
+  `.Name=value` named init (rgbds-structs `dstruct`), so either of these works:
+  `obj $f8, $f8, $80, $00` / `obj .Y=$f8, .X=$f8, .Tile=$80, .Attr=$00`.
 - Because the data is now in code, **a raw `ld hl, $xxxx` into the middle of a packed blob
   becomes a label** — split the blob at the boundary and add a `metasprite Name` (or a
   `.local` label) there, then symbolise the reference. This is the main payoff: the

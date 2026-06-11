@@ -36,9 +36,11 @@ MACRO metasprite ; <Name>
 \1.objs::
 ENDM
 
-; One record: obj Yoff, Xoff, Tile, Attr
+; One record. Positional or `.Name=value` named init (rgbds-structs `dstruct`):
+;     obj $f8, $f8, $80, $00
+;     obj .X=$f8, .Y=$f8, .Tile=$80, .Attr=$00
 MACRO obj
-    db \1, \2, \3, \4
+    dstruct MetaspriteObj, , \#
 ENDM
 
 ; Close a metasprite list (marks the end used by the count).
