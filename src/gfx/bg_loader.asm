@@ -100,8 +100,8 @@ Func_10_4081:
 ; BG-palette pointer per floor palette id ([$c4cb], the floor record's [5] field).
 ; Each entry points to a 7-palette block (loaded by LoadFloorBgPalette).
 FloorBgPalettePtrs:
-	dw $60b7, $6137, $61b7, $6237, $62b7, $6337
-	dw $63b7, $6437, $64b7, $6537, $65b7, $6637
+	dw Data_10_60b7, Data_10_6137, Data_10_61b7, Data_10_6237, Data_10_62b7, Data_10_6337
+	dw Data_10_63b7, Data_10_6437, Data_10_64b7, Data_10_6537, Data_10_65b7, Data_10_6637
 
 ; Select and load the floor's 7 BG palettes by id in $c4cb (floor record [5]).
 LoadFloorBgPalette:
@@ -302,6 +302,8 @@ Data_10_58b7:
 	db $ff, $00, $01, $00, $7f, $00, $7f, $00, $ff, $00, $10, $00, $f7, $00, $f7, $00
 	db $55, $00, $aa, $00, $01, $00, $02, $00, $01, $00, $02, $00, $01, $00, $02, $00
 	db $01, $00, $02, $00, $01, $00, $02, $00, $01, $00, $02, $00, $55, $00, $aa, $00
+
+Data_10_60b7:                              ; first floor-palette block (FloorBgPalettePtrs[0])
 	db $ff, $7f, $94, $52, $4a, $29, $00, $00, $4a, $29, $63, $0c, $b5, $01, $3d, $3f
 	db $4a, $29, $63, $0c, $ce, $39, $5a, $6b, $4a, $29, $63, $0c, $26, $12, $9f, $2f
 	db $4a, $29, $63, $0c, $ff, $00, $9f, $63, $4a, $29, $63, $0c, $60, $7d, $9f, $63
