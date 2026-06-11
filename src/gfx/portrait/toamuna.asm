@@ -9,11 +9,11 @@
 ; descriptor references the two maps by *label* (dw), so the region is internally
 ; relocatable. The 6 BG + 6 OBJ palettes (loaded by Toamuna_CheckSaveExists from
 ; $1a:$5800/$5840) are carved here from the PNG's colour table.
+INCLUDE "util.inc"
 
 SECTION "Toamuna graphics", ROMX
 
-ToamunaPortraitTiles:
-	INCBIN "assets/toamuna/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+ASSET ToamunaPortraitTiles, "assets/toamuna/tiles.bin" ; 384 tiles -> VRAM bank 1 $8000
 
 ToamunaPortraitPaletteBg:
 	INCBIN "assets/toamuna/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)

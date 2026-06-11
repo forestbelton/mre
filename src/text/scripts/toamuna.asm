@@ -25,10 +25,12 @@ Toamuna_LoadGame:
 	FAR_CALL LoadGameFromSram
 	ld [wYNResult], a
 	ret
+
 Toamuna_SaveGame:
 	FAR_CALL SaveGameToSram
 	ld [wYNResult], a
 	ret
+
 Toamuna_CheckSaveExists:
 	FAR_CALL HasSavedGame
 	ld [wYNResult], a
@@ -38,21 +40,21 @@ Toamuna_CheckSaveExists:
 	call Func_00_3971
 	ld a, $01
 	ld [rVBK], a
-	ld a, $1a
-	ld hl, $4000
+	ld a, BANK(ToamunaPortraitTiles)
+	ld hl, ToamunaPortraitTiles
 	ld de, $8000
-	ld bc, $1800
+	ld bc, ToamunaPortraitTilesEnd - ToamunaPortraitTiles
 	call BankVramCopy
 	call Toamuna_LoadPortraitTilemap
 	call Toamuna_RenderPortrait
 	call HideUnusedOamSprites
-	ld a, $1a
-	ld hl, $5800
+	ld a, BANK(ToamunaPortraitPaletteBg)
+	ld hl, ToamunaPortraitPaletteBg
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, $1a
-	ld hl, $5840
+	ld a, BANK(ToamunaPortraitPaletteObj)
+	ld hl, ToamunaPortraitPaletteObj
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -67,17 +69,19 @@ Toamuna_CheckSaveExists:
 	ld hl, ToamunaScript
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
+
 Toamuna_LoadPortraitTilemap:
-	ld hl, $5880
-	ld a, $1a
-	ld de, $9800
+	ld hl, ToamunaPortraitMapDesc
+	ld a, BANK(ToamunaPortraitMapDesc)
+	ld de, TILEMAP0
 	call BankMapCopyA
 	ret
+
 Toamuna_RenderPortrait:
 	ld a, $8b
 	ld [wRendererAddr], a
 	ld a, $40
-	ld [$d61f], a
+	ld [wRendererAddr+1], a
 	ld a, $19
 	ld [wRendererBank], a
 	ld a, $1a
@@ -85,16 +89,17 @@ Toamuna_RenderPortrait:
 	ld hl, $5a56
 	ld bc, $2828
 	call DrawMetasprite
-	ld hl, $5a3e
-	ld a, $1a
+	ld hl, Data_1a_5a3e
+	ld a, BANK(Data_1a_5a3e)
 	ld de, $98c4
 	call BankMapCopyA
 	ret
+
 Toamuna_RenderPortraitAlt:
 	ld a, $b4
 	ld [wRendererAddr], a
 	ld a, $40
-	ld [$d61f], a
+	ld [wRendererAddr+1], a
 	ld a, $19
 	ld [wRendererBank], a
 	ld a, $1a
@@ -188,7 +193,11 @@ ToamunaScript:
 
 ToamunaCycler:
     SCRIPT_CYCLE .Count=4
-    SCRIPT_JUMP_TABLE wCycleCounter, .cycle0, .cycle1, .cycle2, .cycle3
+    SCRIPT_JUMP_TABLE wCycleCounter, \
+        .cycle0, \
+        .cycle1, \
+        .cycle2, \
+        .cycle3
 .cycle0:
     SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Welcome, stay as\r"
@@ -254,7 +263,10 @@ ToamunaMenu:
 ToamunaPostAction:
     SCRIPT_FAR_CALL Toamuna_LoadPortraitTilemap
     SCRIPT_ANCHOR
-    SCRIPT_JUMP_TABLE wMainMenuResult, ToamunaSign, ToamunaConfirm, ToamunaExit
+    SCRIPT_JUMP_TABLE wMainMenuResult, \
+        ToamunaSign, \
+        ToamunaConfirm, \
+        ToamunaExit
 ToamunaPostActionBody:
     SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Need to do\r"
