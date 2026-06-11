@@ -216,3 +216,12 @@ scene7:                       # capture animation (shared wSceneState=7; 26 pale
   png: scene/scene7/tiles.png
   tiles: 384
   palettes: 26
+
+# Room screen (bank $25): two room-type tile variants + their tilemaps/palettes. The
+# editable tiles.png stacks tileset A ($4000) over tileset B ($5800) with the 32 palettes
+# (2 sets of 8 BG + 8 OBJ) embedded; the two CopyBgMap tilemaps stay structured in the asm.
+room_screen:
+  mode: scene
+  png: screen/room_screen/tiles.png
+  tiles: 384
+  palettes: 32
