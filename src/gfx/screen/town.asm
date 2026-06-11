@@ -6,14 +6,12 @@
 ; maps by *label* (dw), so the region could relocate cleanly (see docs/philosophy.md).
 ; This is the first bank-$30 screen migrated off the inline-`db` extract dump onto
 ; the PNG-driven pipeline -- the two-bank + colour exemplar. See docs/gfx_assets.md.
+INCLUDE "util.inc"
 
 SECTION "Town screen graphics", ROMX
 
-TownTilesBank0:
-	INCBIN "assets/town/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
-
-TownTilesBank1:
-	INCBIN "assets/town/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
+ASSET TownTilesBank0, "assets/town/tiles_bank0.bin" ; 384 tiles -> VRAM bank 0 $8000
+ASSET TownTilesBank1, "assets/town/tiles_bank1.bin" ; 384 tiles -> VRAM bank 1 $8000
 
 TownPalettes:
 	INCBIN "assets/town/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
