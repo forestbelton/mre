@@ -1589,6 +1589,20 @@ Func_00_0c04:
 	ldh [hOamCursor], a
 	ret
 
+; Stamp a metasprite (a hardware-OBJ group) into the OAM shadow buffer at $c000,
+; appending after whatever is already there (HideAllSprites resets the cursor;
+; HideUnusedOamSprites clears the tail). The list is a 1-byte count followed by that many
+; 4-byte {Yoff, Xoff, tile, attr} records -- see docs/metasprites.md.
+;   hl = pointer to the metasprite list, in bank `wDrawBank` (paged in via $2fff,
+;        restored on return); hl is left just past the list.
+;   b  = base Y position \  the anchor the per-record offsets are added to
+;   c  = base X position /
+; Each record writes one OAM entry:
+;     Y    = Yoff + b + hSpriteOriginY   (all 8-bit, wrapping)
+;     X    = Xoff + c + hSpriteOriginX   (hSpriteOriginY/X is a global {Y,X} bias)
+;     tile = tile, attr = attr           (copied as-is)
+; hOamCursor (low byte of the next free $c0xx slot) advances 4 per record, so successive
+; calls stack OBJs into the same frame.
 DrawMetasprite:
 	ld a, [CUR_BANK_TAG]
 	push af
