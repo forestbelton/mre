@@ -118,89 +118,69 @@ ToamunaScript:
     SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$02, .Target=ToamunaPashute
     SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$01, .Target=ToamunaCycler
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "I haven't had a"
-    SCRIPT_NEWLINE
+    db "I haven't had a\r"
     db "guest in so long."
     SCRIPT_WAIT
-    db "The guard house"
-    SCRIPT_NEWLINE
+    db "The guard house\r"
     db "has been ours."
     SCRIPT_WAIT
-    db "I am Toamuna,"
-    SCRIPT_NEWLINE
+    db "I am Toamuna,\r"
     db "the guardian."
     SCRIPT_WAIT
-    db "Did you come to"
-    SCRIPT_NEWLINE
+    db "Did you come to\r"
     db "climb the tower?"
     SCRIPT_WAIT
-    db "Well, this tower"
-    SCRIPT_NEWLINE
+    db "Well, this tower\r"
     db "is famous."
     SCRIPT_WAIT
-    db "Until recently,"
-    SCRIPT_NEWLINE
+    db "Until recently,\r"
     db "it was busy here"
     SCRIPT_WAIT
-    db "Adventurers like"
-    SCRIPT_NEWLINE
+    db "Adventurers like\r"
     db "you came from"
     SCRIPT_WAIT
-    db "around the world"
-    SCRIPT_NEWLINE
+    db "around the world\r"
     db "seeking a legend"
     SCRIPT_WAIT
     SCRIPT_RENDERER Toamuna_RenderPortraitAlt
     db "A few years ago,"
     SCRIPT_WAIT
-    db "a priest named"
-    SCRIPT_NEWLINE
+    db "a priest named\r"
     db "Nada came here,"
     SCRIPT_WAIT
-    db "and this tower"
-    SCRIPT_NEWLINE
+    db "and this tower\r"
     db "became full of"
     SCRIPT_WAIT
-    db "Baddies. So no"
-    SCRIPT_NEWLINE
+    db "Baddies. So no\r"
     db "one visits now."
     SCRIPT_WAIT
-    db "People from the"
-    SCRIPT_NEWLINE
+    db "People from the\r"
     db "town went in to"
     SCRIPT_WAIT
-    db "protect it, but"
-    SCRIPT_NEWLINE
+    db "protect it, but\r"
     db "never came out."
     SCRIPT_WAIT
-    db "You don't seem"
-    SCRIPT_NEWLINE
+    db "You don't seem\r"
     db "strong, but"
     SCRIPT_WAIT
-    db "if you still"
-    SCRIPT_NEWLINE
+    db "if you still\r"
     db "want to go,"
     SCRIPT_WAIT
-    db "You feel free"
-    SCRIPT_NEWLINE
+    db "You feel free\r"
     db "to do so."
     SCRIPT_WAIT
     db "Please help us!"
     SCRIPT_WAIT
-    db "Sorry. No use"
-    SCRIPT_NEWLINE
+    db "Sorry. No use\r"
     db "being depressed."
     SCRIPT_WAIT
-    db "If you go to the"
-    SCRIPT_NEWLINE
+    db "If you go to the\r"
     db "tower entrance,"
     SCRIPT_WAIT
-    db "my son Naji will"
-    SCRIPT_NEWLINE
+    db "my son Naji will\r"
     db "be there."
     SCRIPT_WAIT
-    db "He should"
-    SCRIPT_NEWLINE
+    db "He should\r"
     db "help you out."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
@@ -211,8 +191,7 @@ ToamunaCycler:
     SCRIPT_JUMP_TABLE wCycleCounter, .cycle0, .cycle1, .cycle2, .cycle3
 .cycle0:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Welcome, stay as"
-    SCRIPT_NEWLINE
+    db "Welcome, stay as\r"
     db "long as you like"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
@@ -223,23 +202,20 @@ ToamunaCycler:
     SCRIPT_GOTO .Target=ToamunaMenu
 .cycle2:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Welcome back."
-    SCRIPT_NEWLINE
+    db "Welcome back.\r"
     db "Go and rest."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
 .cycle3:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Welcome back."
-    SCRIPT_NEWLINE
+    db "Welcome back.\r"
     db "Long day?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaPashute:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Pashute is back."
-    SCRIPT_NEWLINE
+    db "Pashute is back.\r"
     db "Thanks a lot."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
@@ -247,8 +223,7 @@ ToamunaPashute:
 
 ToamunaVerde:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Verde returned."
-    SCRIPT_NEWLINE
+    db "Verde returned.\r"
     db "Great! Thank you"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
@@ -256,12 +231,10 @@ ToamunaVerde:
 
 ToamunaAllBack:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Everyone's back,"
-    SCRIPT_NEWLINE
+    db "Everyone's back,\r"
     db "thanks to you."
     SCRIPT_WAIT
-    db "I'm so happy,"
-    SCRIPT_NEWLINE
+    db "I'm so happy,\r"
     db "I'm speechless."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
@@ -269,8 +242,7 @@ ToamunaAllBack:
 
 ToamunaMenu:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "What do you"
-    SCRIPT_NEWLINE
+    db "What do you\r"
     db "want to do?"
     SCRIPT_FAR_CALL Toamuna_CheckSaveExists
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=.afterPrompt
@@ -285,8 +257,7 @@ ToamunaPostAction:
     SCRIPT_JUMP_TABLE wMainMenuResult, ToamunaSign, ToamunaConfirm, ToamunaExit
 ToamunaPostActionBody:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Need to do"
-    SCRIPT_NEWLINE
+    db "Need to do\r"
     db "something else?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -294,79 +265,66 @@ ToamunaPostActionBody:
 
 ToamunaSign:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Want to sign the"
-    SCRIPT_NEWLINE
+    db "Want to sign the\r"
     db "guest book?"
     SCRIPT_WAIT
-    db "... ... ... ..."
-    SCRIPT_NEWLINE
+    db "... ... ... ...\r"
     db "Okay. It's ready"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Toamuna_CheckSaveExists
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=.signSavePrompt
-    db "Current data"
-    SCRIPT_NEWLINE
+    db "Current data\r"
     db "will be saved."
     SCRIPT_YN_CUE
     SCRIPT_GOTO .Target=.signReplaceFlow
 .signSavePrompt:
-    db "Replace previous"
-    SCRIPT_NEWLINE
+    db "Replace previous\r"
     db "saved data?"
     SCRIPT_YN_CUE
 .signReplaceFlow:
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=ToamunaMenu
-    db "Do not remove"
-    SCRIPT_NEWLINE
+    db "Do not remove\r"
     db "Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL Toamuna_SaveGame
-    db "Finished signing"
-    SCRIPT_NEWLINE
+    db "Finished signing\r"
     db "the guest book!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaPostActionBody
 
 ToamunaConfirm:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Want to check"
-    SCRIPT_NEWLINE
+    db "Want to check\r"
     db "the guest book?"
     SCRIPT_WAIT
-    db "... ... ... ..."
-    SCRIPT_NEWLINE
+    db "... ... ... ...\r"
     db "Okay. It's ready"
     SCRIPT_WAIT
-    db "Previous data"
-    SCRIPT_NEWLINE
+    db "Previous data\r"
     db "will be loaded."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=ToamunaMenu
-    db "Do not remove"
-    SCRIPT_NEWLINE
+    db "Do not remove\r"
     db "Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL Toamuna_LoadGame
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$01, .Target=.confirmDoneFlow
-    db "Done checking"
-    SCRIPT_NEWLINE
+    db "Done checking\r"
     db "the guest book!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaPostActionBody
 .confirmDoneFlow:
-    db "Did not accept?"
-    SCRIPT_NEWLINE
+    db "Did not accept?\r"
     db "Try it again!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaPostActionBody
 
 ToamunaExit:
     SCRIPT_RENDERER Toamuna_RenderPortrait
-    db "Okay."
-    SCRIPT_NEWLINE
+    db "Okay.\r"
     db "Be careful."
     SCRIPT_WAIT

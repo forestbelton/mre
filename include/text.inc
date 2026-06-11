@@ -58,10 +58,6 @@ MACRO SCRIPT_WAIT
     db $04      ; wait for A — end of message
 ENDM
 
-MACRO SCRIPT_NEWLINE
-    db $0D      ; in-message newline
-ENDM
-
 MACRO SCRIPT_END
     db $FF      ; end of script — dispatcher returns
 ENDM

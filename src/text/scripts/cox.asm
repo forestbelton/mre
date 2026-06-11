@@ -624,102 +624,82 @@ SECTION "Cox script", ROMX
 CoxScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9c22, .Width=$10, .Height=$04
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
-    db "Wow, you were"
-    SCRIPT_NEWLINE
+    db "Wow, you were\r"
     db "cool back then."
     SCRIPT_WAIT
-    db "You don't look"
-    SCRIPT_NEWLINE
+    db "You don't look\r"
     db "so cool now."
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
-    db "Ugh..."
-    SCRIPT_NEWLINE
+    db "Ugh...\r"
     db "That's harsh."
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
-    db "Cool! I want"
-    SCRIPT_NEWLINE
+    db "Cool! I want\r"
     db "adventure like"
     SCRIPT_WAIT
-    db "that! Is that"
-    SCRIPT_NEWLINE
+    db "that! Is that\r"
     db "tower there now?"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Of course, Alf."
     SCRIPT_WAIT
-    db "You should go"
-    SCRIPT_NEWLINE
+    db "You should go\r"
     db "there someday."
     SCRIPT_WAIT
-    db "You'd have"
-    SCRIPT_NEWLINE
+    db "You'd have\r"
     db "a great time."
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
-    db "Hmmm..."
-    SCRIPT_NEWLINE
+    db "Hmmm...\r"
     db "After I grow up?"
     SCRIPT_WAIT
-    db "Oh no! I want"
-    SCRIPT_NEWLINE
+    db "Oh no! I want\r"
     db "to go there now!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
-    db "Whoa whoa whoa!"
-    SCRIPT_NEWLINE
+    db "Whoa whoa whoa!\r"
     db "It's dangerous."
     SCRIPT_WAIT
-    db "What happens if"
-    SCRIPT_NEWLINE
+    db "What happens if\r"
     db "you get lost?"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Gimme a break!"
     SCRIPT_WAIT
-    db "You're the"
-    SCRIPT_NEWLINE
+    db "You're the\r"
     db "one who's lost!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
-    db "Ugh..."
-    SCRIPT_NEWLINE
+    db "Ugh...\r"
     db "Alf..."
     SCRIPT_WAIT
     db "You're harsh..."
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
-    db "Will you take me"
-    SCRIPT_NEWLINE
+    db "Will you take me\r"
     db "when I'm grown?"
     SCRIPT_WAIT
     db "A promise 'tween"
     SCRIPT_WAIT
-    db "men, okay? I'll"
-    SCRIPT_NEWLINE
+    db "men, okay? I'll\r"
     db "wait till then!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
-    db "Okay."
-    SCRIPT_NEWLINE
+    db "Okay.\r"
     db "I promise."
     SCRIPT_WAIT
-    db "It's a promise"
-    SCRIPT_NEWLINE
+    db "It's a promise\r"
     db "between men!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
-    db "Okay! Now I'll"
-    SCRIPT_NEWLINE
+    db "Okay! Now I'll\r"
     db "practice and"
     SCRIPT_WAIT
-    db "become a"
-    SCRIPT_NEWLINE
+    db "become a\r"
     db "Battle Card"
     SCRIPT_WAIT
-    db "Master! I'll"
-    SCRIPT_NEWLINE
+    db "Master! I'll\r"
     db "see you later!"
     SCRIPT_WAIT
     SCRIPT_END
@@ -727,18 +707,15 @@ CoxScript:
 ; $46d5 — Cox reminiscing solo after the flashback ("Whew! I forgot...").
 CoxReminisceScript:
     SCRIPT_RENDERER Cox_RenderPortrait_Reminiscing
-    db "Whew! I forgot"
-    SCRIPT_NEWLINE
+    db "Whew! I forgot\r"
     db "just how much"
     SCRIPT_WAIT
-    db "fun it was then."
-    SCRIPT_NEWLINE
+    db "fun it was then.\r"
     db "Ah, memories!"
     SCRIPT_WAIT
     db "Thanks, Alf."
     SCRIPT_WAIT
-    db "I wonder how"
-    SCRIPT_NEWLINE
+    db "I wonder how\r"
     db "everyone is."
     SCRIPT_WAIT
     SCRIPT_END
@@ -748,22 +725,18 @@ CoxGoSeeFriendsScript:
     SCRIPT_RENDERER Cox_RenderPortrait_GoSeeFriends
     db "I know!"
     SCRIPT_WAIT
-    db "I'll go see"
-    SCRIPT_NEWLINE
+    db "I'll go see\r"
     db "old friends!"
     SCRIPT_WAIT
-    db "I have to"
-    SCRIPT_NEWLINE
+    db "I have to\r"
     db "refresh myself"
     SCRIPT_WAIT
     db "for Alf, anyway."
     SCRIPT_WAIT
-    db "He'll get"
-    SCRIPT_NEWLINE
+    db "He'll get\r"
     db "mad if I don't"
     SCRIPT_WAIT
-    db "know my way."
-    SCRIPT_NEWLINE
+    db "know my way.\r"
     db "Okay, off I go!"
     SCRIPT_WAIT
     SCRIPT_END
@@ -771,37 +744,26 @@ CoxGoSeeFriendsScript:
 ; $47c3 — Cox remembers to leave a note ("Wait, I forgot").
 CoxNoteScript:
     SCRIPT_RENDERER Cox_RenderPortrait_Note
-    db "Wait, I forgot."
-    SCRIPT_NEWLINE
+    db "Wait, I forgot.\r"
     db "Withouta note,"
     SCRIPT_WAIT
-    db "Nox will get"
-    SCRIPT_NEWLINE
+    db "Nox will get\r"
     db "mad again."
     SCRIPT_WAIT
     SCRIPT_END
 
 LetterFromCox:
-    db "Hello. I'm off "
-    SCRIPT_NEWLINE
-    db "to the ruins."
-    SCRIPT_NEWLINE
-    db "I'm going to "
-    SCRIPT_NEWLINE
-    db "Mt. Sekitoba."
-    SCRIPT_NEWLINE
-    db "If I'm not back"
-    SCRIPT_NEWLINE
+    db "Hello. I'm off \r"
+    db "to the ruins.\r"
+    db "I'm going to \r"
+    db "Mt. Sekitoba.\r"
+    db "If I'm not back\r"
     db "in 2 weeks, "
     SCRIPT_WAIT
-    db "come and look "
-    SCRIPT_NEWLINE
-    db "for me,okay? "
-    SCRIPT_NEWLINE
-    db " "
-    SCRIPT_NEWLINE
-    db " "
-    SCRIPT_NEWLINE
+    db "come and look \r"
+    db "for me,okay? \r"
+    db " \r"
+    db " \r"
     db "         Cox"
     SCRIPT_END
 

@@ -324,17 +324,14 @@ TradehouseEntry:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=TradehouseReady
     SCRIPT_FAR_CALL Tradehouse_BuildScene
-    db "Nobody seems"
-    SCRIPT_NEWLINE
+    db "Nobody seems\r"
     db "to be here."
     SCRIPT_WAIT
-    db "Oh!"
-    SCRIPT_NEWLINE
+    db "Oh!\r"
     db "There's a note!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Tradehouse_BuildNoteScene
-    db "Link function"
-    SCRIPT_NEWLINE
+    db "Link function\r"
     db "seems usable."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wTradehouseState, .Value=$01
@@ -345,8 +342,7 @@ TradehouseReady:
     SCRIPT_FAR_CALL Tradehouse_BuildScene
 
 TradehouseMenu:
-    db "What would you"
-    SCRIPT_NEWLINE
+    db "What would you\r"
     db "like to play?"
     SCRIPT_FAR_CALL Tradehouse_ShowMenu
     SCRIPT_FAR_CALL Tradehouse_LoadBgMap
@@ -354,8 +350,7 @@ TradehouseMenu:
     SCRIPT_JUMP_TABLE wMainMenuResult, TradehouseEnter, TradehouseSave, BodkaGreet
 
 TradehouseEnter:
-    db "OK. Let's enter"
-    SCRIPT_NEWLINE
+    db "OK. Let's enter\r"
     db "the room, then."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL OpenRoomSelectMenu
@@ -367,15 +362,13 @@ TradehouseEnter:
     SCRIPT_FAR_CALL Tradehouse_BuildScene
 
 TradehouseEnterDone:
-    db "Done. OK, let's"
-    SCRIPT_NEWLINE
+    db "Done. OK, let's\r"
     db "leave the room."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSave:
-    db "Okay. Let me try"
-    SCRIPT_NEWLINE
+    db "Okay. Let me try\r"
     db "the exchange."
     SCRIPT_YN_CUE
     SCRIPT_WRITE_WRAM .Addr=$d5c2, .Value=$00
@@ -384,97 +377,81 @@ TradehouseSave:
     SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveConfirm, TradehouseSaveNoFriend, TradehouseSaveNotReady, TradehouseSaveProcess
 
 TradehouseSaveNoFriend:
-    db "Your friend does"
-    SCRIPT_NEWLINE
+    db "Your friend does\r"
     db "not seem ready."
     SCRIPT_WAIT
-    db "Try when you're"
-    SCRIPT_NEWLINE
+    db "Try when you're\r"
     db "both ready."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaveNotReady:
-    db "You don't seem"
-    SCRIPT_NEWLINE
+    db "You don't seem\r"
     db "ready yet."
     SCRIPT_WAIT
-    db "Connect the"
-    SCRIPT_NEWLINE
+    db "Connect the\r"
     db "Link Cable!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaveProcess:
-    db "Process"
-    SCRIPT_NEWLINE
+    db "Process\r"
     db "cancelled."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaveConfirm:
-    db "But before that,"
-    SCRIPT_NEWLINE
+    db "But before that,\r"
     db "current status"
     SCRIPT_WAIT
-    db "must be saved."
-    SCRIPT_NEWLINE
+    db "must be saved.\r"
     db "Okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=TradehouseSaving
     db "Hmmm..."
     SCRIPT_WAIT
-    db "Let's not do it"
-    SCRIPT_NEWLINE
+    db "Let's not do it\r"
     db "this time."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaving:
-    db "Now saving."
-    SCRIPT_NEWLINE
+    db "Now saving.\r"
     db "Leave Game Pak."
     SCRIPT_WAIT
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL SaveGameToSram
-    db "We're ready! Now"
-    SCRIPT_NEWLINE
+    db "We're ready! Now\r"
     db "start exchange!"
     SCRIPT_WAIT
     db "Okay, then..."
     SCRIPT_WAIT
-    db "Let's choose a"
-    SCRIPT_NEWLINE
+    db "Let's choose a\r"
     db "room to exchange"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
     SCRIPT_FAR_CALL SetupExchangeRoomSelect
     SCRIPT_FAR_CALL LinkStoreSendRoom
     SCRIPT_FAR_CALL Tradehouse_BuildScene
-    db "Next, choose a"
-    SCRIPT_NEWLINE
+    db "Next, choose a\r"
     db "room to receive."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
     SCRIPT_FAR_CALL SetupExchangeRoomSelect
     SCRIPT_FAR_CALL LinkStoreRecvRoom
     SCRIPT_FAR_CALL Tradehouse_BuildScene
-    db "You're both OK?"
-    SCRIPT_NEWLINE
+    db "You're both OK?\r"
     db "Let's start!"
     SCRIPT_WAIT
-    db "Leave Link Cable"
-    SCRIPT_NEWLINE
+    db "Leave Link Cable\r"
     db "and Game Pak."
     SCRIPT_WAIT
-    db "Your friend is"
-    SCRIPT_NEWLINE
+    db "Your friend is\r"
     db "getting ready."
     SCRIPT_WAIT
-    db "Let's wait for"
-    SCRIPT_NEWLINE
+    db "Let's wait for\r"
     db "a little while."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL LinkExchangeTransfer
@@ -483,19 +460,16 @@ TradehouseSaving:
     SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveOk, TradehouseSaveErr, TradehouseSaveProcess2, TradehouseSaveProcess2
 
 TradehouseSaveOk:
-    db "Yes!"
-    SCRIPT_NEWLINE
+    db "Yes!\r"
     db "We did it!"
     SCRIPT_WAIT
-    db "The exchange was"
-    SCRIPT_NEWLINE
+    db "The exchange was\r"
     db "a success!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaveErr:
-    db "Uh-oh. Something"
-    SCRIPT_NEWLINE
+    db "Uh-oh. Something\r"
     db "went wrong."
     SCRIPT_WAIT
     db "Let's try again."
@@ -503,15 +477,13 @@ TradehouseSaveErr:
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseSaveProcess2:
-    db "Process"
-    SCRIPT_NEWLINE
+    db "Process\r"
     db "cancelled."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=TradehouseMenu
 
 BodkaGreet:
-    db "I should stop"
-    SCRIPT_NEWLINE
+    db "I should stop\r"
     db "for now."
     SCRIPT_WAIT
     SCRIPT_END
@@ -525,40 +497,35 @@ BodkaStudioGreet:
 
 BodkaGreetA:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Hey!"
-    SCRIPT_NEWLINE
+    db "Hey!\r"
     db "How's it going?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetB:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Hey! Howdy?"
-    SCRIPT_NEWLINE
+    db "Hey! Howdy?\r"
     db "Have some fun!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetC:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Oh! You again!"
-    SCRIPT_NEWLINE
+    db "Oh! You again!\r"
     db "Take your time!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetD:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Wow!"
-    SCRIPT_NEWLINE
+    db "Wow!\r"
     db "Doing your best?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaMenu:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "What do you"
-    SCRIPT_NEWLINE
+    db "What do you\r"
     db "want to do?"
     SCRIPT_FAR_CALL Bodka_ShowMenu
     SCRIPT_FAR_CALL Bodka_LoadStudioBgMap
@@ -567,23 +534,20 @@ BodkaMenu:
 
 BodkaLeave:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Leave it to me!"
-    SCRIPT_NEWLINE
+    db "Leave it to me!\r"
     db "I got it ready."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL OpenRoomArrangeMenu
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Oh, you're done?"
-    SCRIPT_NEWLINE
+    db "Oh, you're done?\r"
     db "Great job!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaEnter:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Want to try a"
-    SCRIPT_NEWLINE
+    db "Want to try a\r"
     db "room. Good luck!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL OpenRoomSelectMenu
@@ -592,8 +556,7 @@ BodkaEnter:
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=BodkaEnterNo
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=BodkaEnterNo
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Okay! Now enter"
-    SCRIPT_NEWLINE
+    db "Okay! Now enter\r"
     db "the room!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL EnterSelectedRoom
@@ -607,8 +570,7 @@ BodkaEnterNo:
 
 BodkaItems:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Now,"
-    SCRIPT_NEWLINE
+    db "Now,\r"
     db "let me explain."
     SCRIPT_FAR_CALL Bodka_ShowItemsSubMenu
     SCRIPT_FAR_CALL Bodka_LoadStudioBgMap
@@ -618,8 +580,7 @@ BodkaItems:
 
 BodkaSave:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Well then,"
-    SCRIPT_NEWLINE
+    db "Well then,\r"
     db "let's exchange!"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL LinkExchangeConnect
@@ -628,40 +589,34 @@ BodkaSave:
 
 BodkaSaveNoOpp:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Opponent not"
-    SCRIPT_NEWLINE
+    db "Opponent not\r"
     db "ready yet."
     SCRIPT_WAIT
-    db "Call again"
-    SCRIPT_NEWLINE
+    db "Call again\r"
     db "when ready."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveNotReady:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "You don't look"
-    SCRIPT_NEWLINE
+    db "You don't look\r"
     db "ready yet."
     SCRIPT_WAIT
-    db "Connect the"
-    SCRIPT_NEWLINE
+    db "Connect the\r"
     db "Link Cable."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveProcess:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Process"
-    SCRIPT_NEWLINE
+    db "Process\r"
     db "cancelled."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveConfirm:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "First, I'll save"
-    SCRIPT_NEWLINE
+    db "First, I'll save\r"
     db "current status."
     SCRIPT_WAIT
     db "Okay?"
@@ -669,43 +624,36 @@ BodkaSaveConfirm:
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=BodkaSaving
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "I see. How"
-    SCRIPT_NEWLINE
+    db "I see. How\r"
     db "disappointing."
     SCRIPT_WAIT
-    db "Tell me again,"
-    SCRIPT_NEWLINE
+    db "Tell me again,\r"
     db "if you like."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaving:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Okay. Looks like"
-    SCRIPT_NEWLINE
+    db "Okay. Looks like\r"
     db "you're ready."
     SCRIPT_WAIT
-    db "Well."
-    SCRIPT_NEWLINE
+    db "Well.\r"
     db "Wait a second."
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "I'm saving now."
-    SCRIPT_NEWLINE
+    db "I'm saving now.\r"
     db "Leave Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL SaveGameToSram
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Sorry you waited"
-    SCRIPT_NEWLINE
+    db "Sorry you waited\r"
     db "Let's exchange."
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortrait
     db "Okay, now choose"
     SCRIPT_WAIT
-    db "the room you"
-    SCRIPT_NEWLINE
+    db "the room you\r"
     db "want to exchange"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
@@ -713,8 +661,7 @@ BodkaSaving:
     SCRIPT_FAR_CALL LinkStoreSendRoom
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Now, choose a"
-    SCRIPT_NEWLINE
+    db "Now, choose a\r"
     db "room to receive."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
@@ -722,21 +669,17 @@ BodkaSaving:
     SCRIPT_FAR_CALL LinkStoreRecvRoom
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Are you both OK?"
-    SCRIPT_NEWLINE
+    db "Are you both OK?\r"
     db "Let's get going."
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Leave Link Cable"
-    SCRIPT_NEWLINE
+    db "Leave Link Cable\r"
     db "and Game Pak."
     SCRIPT_WAIT
-    db "Your friend is"
-    SCRIPT_NEWLINE
+    db "Your friend is\r"
     db "getting ready."
     SCRIPT_WAIT
-    db "Please wait"
-    SCRIPT_NEWLINE
+    db "Please wait\r"
     db "a second."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL LinkExchangeTransfer
@@ -746,104 +689,85 @@ BodkaSaving:
 
 BodkaSaveOk:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Whoa! Looks like"
-    SCRIPT_NEWLINE
+    db "Whoa! Looks like\r"
     db "it was a success"
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Exchange done."
     SCRIPT_WAIT
-    db "Call if you need"
-    SCRIPT_NEWLINE
+    db "Call if you need\r"
     db "anything else."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveErr:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Hmmm. Looks"
-    SCRIPT_NEWLINE
+    db "Hmmm. Looks\r"
     db "like we failed."
     SCRIPT_WAIT
-    db "Can you try"
-    SCRIPT_NEWLINE
+    db "Can you try\r"
     db "it again?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveProcess2:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Process"
-    SCRIPT_NEWLINE
+    db "Process\r"
     db "cancelled."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaExit:
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Okay! Please"
-    SCRIPT_NEWLINE
+    db "Okay! Please\r"
     db "come again!"
     SCRIPT_WAIT
     SCRIPT_END
 
 BodkaItemDisc:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "You can make 3"
-    SCRIPT_NEWLINE
+    db "You can make 3\r"
     db "rooms. Choose a"
     SCRIPT_WAIT
-    db "large or small"
-    SCRIPT_NEWLINE
+    db "large or small\r"
     db "sized room."
     SCRIPT_WAIT
-    db "Place monsters"
-    SCRIPT_NEWLINE
+    db "Place monsters\r"
     db "and items where"
     SCRIPT_WAIT
-    db "you wish. Don't"
-    SCRIPT_NEWLINE
+    db "you wish. Don't\r"
     db "forget the door"
     SCRIPT_WAIT
-    db "and key. You can"
-    SCRIPT_NEWLINE
+    db "and key. You can\r"
     db "place 3 types"
     SCRIPT_WAIT
-    db "and up to 9"
-    SCRIPT_NEWLINE
+    db "and up to 9\r"
     db "monsters in all."
     SCRIPT_WAIT
-    db "That's all."
-    SCRIPT_NEWLINE
+    db "That's all.\r"
     db "Have fun!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaItems
 
 BodkaItemLink:
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Link Exchange,"
-    SCRIPT_NEWLINE
+    db "Link Exchange,\r"
     db "right?"
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "This lets you"
-    SCRIPT_NEWLINE
+    db "This lets you\r"
     db "exchange"
     SCRIPT_WAIT
-    db "rooms created"
-    SCRIPT_NEWLINE
+    db "rooms created\r"
     db "with your pals."
     SCRIPT_WAIT
-    db "A cool feature"
-    SCRIPT_NEWLINE
+    db "A cool feature\r"
     db "only found here."
     SCRIPT_WAIT
-    db "Create fun or"
-    SCRIPT_NEWLINE
+    db "Create fun or\r"
     db "difficult rooms"
     SCRIPT_WAIT
-    db "and attack them"
-    SCRIPT_NEWLINE
+    db "and attack them\r"
     db "with your pals!"
     SCRIPT_WAIT
     db "That's fun."

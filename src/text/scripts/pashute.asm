@@ -325,145 +325,111 @@ PashuteScript:
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$01, .Target=PashuteGreetingCycle
     SCRIPT_FAR_CALL Pashute_LoadIntroScene
     SCRIPT_RENDERER Pashute_RenderPortraitPanic
-    db "Waaaaaaaa!"
-    SCRIPT_NEWLINE
+    db "Waaaaaaaa!\r"
     db "They found me!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "But it doesn't"
-    SCRIPT_NEWLINE
+    db "But it doesn't\r"
     db "scare me!"
     SCRIPT_WAIT
-    db "I'm Pashute, a"
-    SCRIPT_NEWLINE
+    db "I'm Pashute, a\r"
     db "priest here!"
     SCRIPT_WAIT
-    db "I will not run,"
-    SCRIPT_NEWLINE
+    db "I will not run,\r"
     db "or hide!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitShocked
-    db "... ... ... ..."
-    SCRIPT_NEWLINE
+    db "... ... ... ...\r"
     db "Huh? ... ... ..."
     SCRIPT_WAIT
-    db "Aren't you going"
-    SCRIPT_NEWLINE
+    db "Aren't you going\r"
     db "to attack me?"
     SCRIPT_WAIT
-    db "Like BOOM! or"
-    SCRIPT_NEWLINE
+    db "Like BOOM! or\r"
     db "Aaaargh! or huh?"
     SCRIPT_WAIT
-    db "... ... What?"
-    SCRIPT_NEWLINE
+    db "... ... What?\r"
     db "Came to help?"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "I see. I guess"
-    SCRIPT_NEWLINE
+    db "I see. I guess\r"
     db "I took it wrong."
     SCRIPT_WAIT
-    db "You don't look"
-    SCRIPT_NEWLINE
+    db "You don't look\r"
     db "bad, anyway."
     SCRIPT_WAIT
-    db "Going to ask me"
-    SCRIPT_NEWLINE
+    db "Going to ask me\r"
     db "to support?"
     SCRIPT_WAIT
-    db "Woo hooo!"
-    SCRIPT_NEWLINE
+    db "Woo hooo!\r"
     db "I mean. AHEM!"
     SCRIPT_WAIT
-    db "I don't like to"
-    SCRIPT_NEWLINE
+    db "I don't like to\r"
     db "fight bat..."
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitPanic
-    db "I'm not a weak"
-    SCRIPT_NEWLINE
+    db "I'm not a weak\r"
     db "baby or anything"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "....AHEM!"
-    SCRIPT_NEWLINE
+    db "....AHEM!\r"
     db "Anyways."
     SCRIPT_WAIT
-    db "I'll go"
-    SCRIPT_NEWLINE
+    db "I'll go\r"
     db "down now"
     SCRIPT_WAIT
-    db "to revive"
-    SCRIPT_NEWLINE
+    db "to revive\r"
     db "the shrine."
     SCRIPT_WAIT
-    db "When you collect"
-    SCRIPT_NEWLINE
+    db "When you collect\r"
     db "enough saucer"
     SCRIPT_WAIT
-    db "stone fragments"
-    SCRIPT_NEWLINE
+    db "stone fragments\r"
     db "to make a saucer"
     SCRIPT_WAIT
-    db "stone, you can"
-    SCRIPT_NEWLINE
+    db "stone, you can\r"
     db "seal certain"
     SCRIPT_WAIT
-    db "monsters. After,"
-    SCRIPT_NEWLINE
+    db "monsters. After,\r"
     db "you seal them,"
     SCRIPT_WAIT
-    db "bring one saucer"
-    SCRIPT_NEWLINE
+    db "bring one saucer\r"
     db "stone to the"
     SCRIPT_WAIT
-    db "shrine and I'll"
-    SCRIPT_NEWLINE
+    db "shrine and I'll\r"
     db "regenerate them."
     SCRIPT_WAIT
-    db "Then they will"
-    SCRIPT_NEWLINE
+    db "Then they will\r"
     db "undoubtedly"
     SCRIPT_WAIT
-    db "help you."
-    SCRIPT_NEWLINE
+    db "help you.\r"
     db "Easy to seal"
     SCRIPT_WAIT
-    db "monsters! Just"
-    SCRIPT_NEWLINE
+    db "monsters! Just\r"
     db "touch an"
     SCRIPT_WAIT
-    db "unconscious one"
-    SCRIPT_NEWLINE
+    db "unconscious one\r"
     db "after completing"
     SCRIPT_WAIT
-    db "a saucer stone."
-    SCRIPT_NEWLINE
+    db "a saucer stone.\r"
     db "I don't know"
     SCRIPT_WAIT
-    db "which monster"
-    SCRIPT_NEWLINE
+    db "which monster\r"
     db "you can seal, or"
     SCRIPT_WAIT
-    db "where they are."
-    SCRIPT_NEWLINE
+    db "where they are.\r"
     db "Observe the"
     SCRIPT_WAIT
-    db "monster well,"
-    SCRIPT_NEWLINE
+    db "monster well,\r"
     db "then challenge"
     SCRIPT_WAIT
-    db "them. They are"
-    SCRIPT_NEWLINE
+    db "them. They are\r"
     db "knocked out when"
     SCRIPT_WAIT
-    db "defeated."
-    SCRIPT_NEWLINE
+    db "defeated.\r"
     db "That's the key."
     SCRIPT_WAIT
-    db "I will go back."
-    SCRIPT_NEWLINE
+    db "I will go back.\r"
     db "I await the day"
     SCRIPT_WAIT
     db "we meet again!"
@@ -480,32 +446,28 @@ PashuteGreetingCycle:
 
 PashuteGreeting1:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Welcome to the"
-    SCRIPT_NEWLINE
+    db "Welcome to the\r"
     db "Monster Shrine."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting2:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Hello!"
-    SCRIPT_NEWLINE
+    db "Hello!\r"
     db "Welcome!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting3:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Welcome to the"
-    SCRIPT_NEWLINE
+    db "Welcome to the\r"
     db "Monster Shrine."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting4:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Well, well"
-    SCRIPT_NEWLINE
+    db "Well, well\r"
     db "Good to see you."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteMenu
@@ -513,32 +475,25 @@ PashuteGreeting4:
 PashuteGreetReturning:
     SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Oh, yes. I heard"
-    SCRIPT_NEWLINE
+    db "Oh, yes. I heard\r"
     db "that there's a"
     SCRIPT_WAIT
-    db "new building"
-    SCRIPT_NEWLINE
+    db "new building\r"
     db "near here. That"
     SCRIPT_WAIT
-    db "is the Monster"
-    SCRIPT_NEWLINE
+    db "is the Monster\r"
     db "Checkroom. Have"
     SCRIPT_WAIT
-    db "you been there?"
-    SCRIPT_NEWLINE
+    db "you been there?\r"
     db "They check your"
     SCRIPT_WAIT
-    db "monsters for you"
-    SCRIPT_NEWLINE
+    db "monsters for you\r"
     db "Monster"
     SCRIPT_WAIT
-    db "handling should"
-    SCRIPT_NEWLINE
+    db "handling should\r"
     db "be a lot easier"
     SCRIPT_WAIT
-    db "now. You should"
-    SCRIPT_NEWLINE
+    db "now. You should\r"
     db "go sometime!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
@@ -550,40 +505,31 @@ PashuteGreetProgress:
     db "Oh! Well,"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Thank you"
-    SCRIPT_NEWLINE
+    db "Thank you\r"
     db "for helping us."
     SCRIPT_WAIT
-    db "We were lucky"
-    SCRIPT_NEWLINE
+    db "We were lucky\r"
     db "you were around."
     SCRIPT_WAIT
-    db "I'm happy. I"
-    SCRIPT_NEWLINE
+    db "I'm happy. I\r"
     db "can help you out"
     SCRIPT_WAIT
-    db "Oh, I heard"
-    SCRIPT_NEWLINE
+    db "Oh, I heard\r"
     db "they've built"
     SCRIPT_WAIT
-    db "another building"
-    SCRIPT_NEWLINE
+    db "another building\r"
     db "near here. That"
     SCRIPT_WAIT
-    db "is the Stage"
-    SCRIPT_NEWLINE
+    db "is the Stage\r"
     db "Studio. You been"
     SCRIPT_WAIT
-    db "there? You can"
-    SCRIPT_NEWLINE
+    db "there? You can\r"
     db "make your own"
     SCRIPT_WAIT
-    db "stages, then"
-    SCRIPT_NEWLINE
+    db "stages, then\r"
     db "share them with"
     SCRIPT_WAIT
-    db "your pals using"
-    SCRIPT_NEWLINE
+    db "your pals using\r"
     db "Link Cables."
     SCRIPT_WAIT
     db "Visit there."
@@ -594,28 +540,22 @@ PashuteGreetProgress:
 PashuteGameDone:
     SCRIPT_FAR_CALL Pashute_LoadShrineScene
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Hello! How are"
-    SCRIPT_NEWLINE
+    db "Hello! How are\r"
     db "doing? I heard"
     SCRIPT_WAIT
-    db "that you cleared"
-    SCRIPT_NEWLINE
+    db "that you cleared\r"
     db "all the stages."
     SCRIPT_WAIT
-    db "Your abilities"
-    SCRIPT_NEWLINE
+    db "Your abilities\r"
     db "never cease to"
     SCRIPT_WAIT
-    db "amaze me, but"
-    SCRIPT_NEWLINE
+    db "amaze me, but\r"
     db "there are many"
     SCRIPT_WAIT
-    db "other ways to"
-    SCRIPT_NEWLINE
+    db "other ways to\r"
     db "enjoy this tower"
     SCRIPT_WAIT
-    db "Play, play,"
-    SCRIPT_NEWLINE
+    db "Play, play,\r"
     db "and play more!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
@@ -625,8 +565,7 @@ PashuteMenu:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Well, then."
     SCRIPT_WAIT
-    db "How can I"
-    SCRIPT_NEWLINE
+    db "How can I\r"
     db "help you?"
     SCRIPT_FAR_CALL Pashute_ShowMenu
     SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
@@ -635,8 +574,7 @@ PashuteMenu:
 
 PashuteContinue:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Anything"
-    SCRIPT_NEWLINE
+    db "Anything\r"
     db "else you need?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -646,31 +584,26 @@ PashuteNoContinue:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "I see."
     SCRIPT_WAIT
-    db "Well, I await"
-    SCRIPT_NEWLINE
+    db "Well, I await\r"
     db "your return."
     SCRIPT_WAIT
     SCRIPT_END
 
 PashuteStone:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Regenerating a"
-    SCRIPT_NEWLINE
+    db "Regenerating a\r"
     db "saucer stone?"
     SCRIPT_WAIT
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteStoneCheck
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteStoneCheck
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "If the new"
-    SCRIPT_NEWLINE
+    db "If the new\r"
     db "monster differs"
     SCRIPT_WAIT
-    db "from the current"
-    SCRIPT_NEWLINE
+    db "from the current\r"
     db "one, the loaded"
     SCRIPT_WAIT
-    db "one will be"
-    SCRIPT_NEWLINE
+    db "one will be\r"
     db "replaced, okay?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -678,16 +611,13 @@ PashuteStone:
     SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "Until recently,"
     SCRIPT_WAIT
-    db "there was a"
-    SCRIPT_NEWLINE
+    db "there was a\r"
     db "place to check"
     SCRIPT_WAIT
-    db "your monster."
-    SCRIPT_NEWLINE
+    db "your monster.\r"
     db "Too bad it's"
     SCRIPT_WAIT
-    db "gone. Please"
-    SCRIPT_NEWLINE
+    db "gone. Please\r"
     db "come again."
     SCRIPT_WAIT
     SCRIPT_END
@@ -703,28 +633,23 @@ PashuteStoneCheck:
     SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "But you"
     SCRIPT_WAIT
-    db "don't have any"
-    SCRIPT_NEWLINE
+    db "don't have any\r"
     db "saucer stones to"
     SCRIPT_WAIT
-    db "regenerate. Come"
-    SCRIPT_NEWLINE
+    db "regenerate. Come\r"
     db "after you seal"
     SCRIPT_WAIT
-    db "a monster in a"
-    SCRIPT_NEWLINE
+    db "a monster in a\r"
     db "saucer stone."
     SCRIPT_WAIT
     SCRIPT_END
 
 PashuteStoneReady:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Then..."
-    SCRIPT_NEWLINE
+    db "Then...\r"
     db "please choose"
     SCRIPT_WAIT
-    db "saucer stone"
-    SCRIPT_NEWLINE
+    db "saucer stone\r"
     db "to regenerate."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowMonsterDiscStoneSelect
@@ -732,8 +657,7 @@ PashuteStoneReady:
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=PashuteContinue
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Starting the"
-    SCRIPT_NEWLINE
+    db "Starting the\r"
     db "process."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Script_FadeOutPortrait
@@ -748,12 +672,10 @@ PashuteRegenSetup:
 
 PashuteRegenPick:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Regeneration"
-    SCRIPT_NEWLINE
+    db "Regeneration\r"
     db "is complete."
     SCRIPT_WAIT
-    db "Let's look at"
-    SCRIPT_NEWLINE
+    db "Let's look at\r"
     db "the new monster."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Script_FadeOutPortrait
@@ -770,66 +692,57 @@ PashuteRegenPick:
 
 PashuteTiger:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "This is Tiger,"
-    SCRIPT_NEWLINE
+    db "This is Tiger,\r"
     db "a cool monster."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteMocchi:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "This is Mocchi,"
-    SCRIPT_NEWLINE
+    db "This is Mocchi,\r"
     db "a cute monster."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteHare:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "This is Hare,"
-    SCRIPT_NEWLINE
+    db "This is Hare,\r"
     db "a fast monster."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGali:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "It's Gali, a"
-    SCRIPT_NEWLINE
+    db "It's Gali, a\r"
     db "mystery monster."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGolem:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "It's Golem, a"
-    SCRIPT_NEWLINE
+    db "It's Golem, a\r"
     db "powerful monster"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteSuezo:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "This is Suezo,"
-    SCRIPT_NEWLINE
+    db "This is Suezo,\r"
     db "a funny monster"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashutePhenix:
     SCRIPT_RENDERER Pashute_RenderPortraitShocked
-    db "Whoa! Th...this!"
-    SCRIPT_NEWLINE
+    db "Whoa! Th...this!\r"
     db "No way!...Dang!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db " . . Ahem . . ."
-    SCRIPT_NEWLINE
+    db " . . Ahem . . .\r"
     db "Sorry about that"
     SCRIPT_WAIT
     SCRIPT_RENDERER Pashute_RenderPortraitShocked
-    db "This is Phenix!"
-    SCRIPT_NEWLINE
+    db "This is Phenix!\r"
     db "A wonder monster"
     SCRIPT_WAIT
 
@@ -839,16 +752,14 @@ PashuteRegenConfirm:
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Then I will"
-    SCRIPT_NEWLINE
+    db "Then I will\r"
     db "replace "
     SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     db "."
     SCRIPT_WAIT
     db "You now have"
     SCRIPT_WAIT
-    db "the newborn"
-    SCRIPT_NEWLINE
+    db "the newborn\r"
     SCRIPT_INDEXED_STR .Addr=$cfbb
     db "."
     SCRIPT_WAIT
@@ -857,12 +768,10 @@ PashuteRegenConfirm:
 
 PashuteRegenDoNow:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Now I will"
-    SCRIPT_NEWLINE
+    db "Now I will\r"
     db "give you"
     SCRIPT_WAIT
-    db "the newborn"
-    SCRIPT_NEWLINE
+    db "the newborn\r"
     db "monster."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
@@ -872,20 +781,17 @@ PashuteRegenTake:
     SCRIPT_FAR_CALL Pashute_GetActiveMonsterUses
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=PashuteRegenNow
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Will you take"
-    SCRIPT_NEWLINE
+    db "Will you take\r"
     db "the newborn now?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=PashuteRegenPlace
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow2
-    db "Then let's put"
-    SCRIPT_NEWLINE
+    db "Then let's put\r"
     db "this "
     SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     SCRIPT_WAIT
-    db "in the Monster"
-    SCRIPT_NEWLINE
+    db "in the Monster\r"
     db "Checkroom."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
@@ -893,12 +799,10 @@ PashuteRegenTake:
 
 PashuteRegenDoNow2:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Now I will"
-    SCRIPT_NEWLINE
+    db "Now I will\r"
     db "give you"
     SCRIPT_WAIT
-    db "the newborn"
-    SCRIPT_NEWLINE
+    db "the newborn\r"
     db "monster."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
@@ -906,13 +810,11 @@ PashuteRegenDoNow2:
 
 PashuteRegenPlace:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Then let's put"
-    SCRIPT_NEWLINE
+    db "Then let's put\r"
     db "this "
     SCRIPT_INDEXED_STR .Addr=$cfbb
     SCRIPT_WAIT
-    db "in the Monster"
-    SCRIPT_NEWLINE
+    db "in the Monster\r"
     db "Checkroom."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenDone
@@ -922,14 +824,12 @@ PashuteRegenNow:
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenNow2
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
-    db " in the"
-    SCRIPT_NEWLINE
+    db " in the\r"
     db "Checkroom has"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Pashute_GetMonsterUsesDecimal
     SCRIPT_DECIMAL .Addr=wYNResult
-    db " times of"
-    SCRIPT_NEWLINE
+    db " times of\r"
     db "usable moves."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenDone
@@ -937,34 +837,30 @@ PashuteRegenNow:
 PashuteRegenNow2:
     db "Now "
     SCRIPT_INDEXED_STR .Addr=$cfbb
-    SCRIPT_NEWLINE
+    db "\r"
     db "you carry"
     SCRIPT_WAIT
     db "has "
     SCRIPT_FAR_CALL Pashute_GetMonsterUsesDecimal
     SCRIPT_DECIMAL .Addr=wYNResult
-    db " times of"
-    SCRIPT_NEWLINE
+    db " times of\r"
     db "usable moves."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDone:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "We are all done."
-    SCRIPT_NEWLINE
+    db "We are all done.\r"
     db "Please take"
     SCRIPT_WAIT
-    db "good care of"
-    SCRIPT_NEWLINE
+    db "good care of\r"
     db "the monsters."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteContinue
 
 PashuteAsk:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "What shall"
-    SCRIPT_NEWLINE
+    db "What shall\r"
     db "I explain?"
     SCRIPT_FAR_CALL Pashute_ShowExplainSubMenu
     SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
@@ -974,100 +870,78 @@ PashuteAsk:
 
 PashuteLeave:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Come back again."
-    SCRIPT_NEWLINE
+    db "Come back again.\r"
     db "I'll be waiting."
     SCRIPT_WAIT
     SCRIPT_END
 
 PashuteAskShrineStone:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Hello."
-    SCRIPT_NEWLINE
+    db "Hello.\r"
     db "This Shrine"
     SCRIPT_WAIT
-    db "regenerates"
-    SCRIPT_NEWLINE
+    db "regenerates\r"
     db "monsters from"
     SCRIPT_WAIT
-    db "saucer stones."
-    SCRIPT_NEWLINE
+    db "saucer stones.\r"
     db "Find the hidden"
     SCRIPT_WAIT
-    db "fragments in the"
-    SCRIPT_NEWLINE
+    db "fragments in the\r"
     db "tower and when"
     SCRIPT_WAIT
-    db "you collect 4,"
-    SCRIPT_NEWLINE
+    db "you collect 4,\r"
     db "bring them here."
     SCRIPT_WAIT
-    db "A saucer stone"
-    SCRIPT_NEWLINE
+    db "A saucer stone\r"
     db "will be made."
     SCRIPT_WAIT
-    db "Seal monsters in"
-    SCRIPT_NEWLINE
+    db "Seal monsters in\r"
     db "the stone to"
     SCRIPT_WAIT
-    db "regenerate them."
-    SCRIPT_NEWLINE
+    db "regenerate them.\r"
     db "Okay?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=PashuteAsk
 
 PashuteAskMonster:
     SCRIPT_RENDERER Pashute_RenderPortraitNeutral
-    db "Let me explain"
-    SCRIPT_NEWLINE
+    db "Let me explain\r"
     db "about monsters."
     SCRIPT_WAIT
-    db "Good monsters"
-    SCRIPT_NEWLINE
+    db "Good monsters\r"
     db "lived as"
     SCRIPT_WAIT
-    db "guardians of"
-    SCRIPT_NEWLINE
+    db "guardians of\r"
     db "the legendary"
     SCRIPT_WAIT
-    db "power before"
-    SCRIPT_NEWLINE
+    db "power before\r"
     db "Nada's invasion."
     SCRIPT_WAIT
-    db "Now there are"
-    SCRIPT_NEWLINE
+    db "Now there are\r"
     db "Bad monsters"
     SCRIPT_WAIT
-    db "living in the"
-    SCRIPT_NEWLINE
+    db "living in the\r"
     db "tower. They have"
     SCRIPT_WAIT
-    db "been regenerated"
-    SCRIPT_NEWLINE
+    db "been regenerated\r"
     db "by Nada. Some of"
     SCRIPT_WAIT
-    db "them can be good"
-    SCRIPT_NEWLINE
+    db "them can be good\r"
     db "again by sealing"
     SCRIPT_WAIT
-    db "them in the"
-    SCRIPT_NEWLINE
+    db "them in the\r"
     db "saucer stones."
     SCRIPT_WAIT
-    db "Knock them out"
-    SCRIPT_NEWLINE
+    db "Knock them out\r"
     db "and seal them"
     SCRIPT_WAIT
-    db "when they are"
-    SCRIPT_NEWLINE
+    db "when they are\r"
     db "unconscious."
     SCRIPT_WAIT
-    db "Think right."
-    SCRIPT_NEWLINE
+    db "Think right.\r"
     db "Take your chance"
     SCRIPT_WAIT
-    db "with care, and"
-    SCRIPT_NEWLINE
+    db "with care, and\r"
     db "you will gain"
     SCRIPT_WAIT
     db "reliable allies!"

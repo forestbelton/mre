@@ -23,20 +23,16 @@ TempestScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.TempestVictory
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.TempestDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    db "You've defeated"
-    SCRIPT_NEWLINE
+    db "You've defeated\r"
     db "them and you"
     SCRIPT_WAIT
-    db "still rebel"
-    SCRIPT_NEWLINE
+    db "still rebel\r"
     db "against Nada."
     SCRIPT_WAIT
-    db "I, Tempest,"
-    SCRIPT_NEWLINE
+    db "I, Tempest,\r"
     db "must fight now."
     SCRIPT_WAIT
-    db "Dragon,"
-    SCRIPT_NEWLINE
+    db "Dragon,\r"
     db "help me again."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL Tempest_ShowMonsterPortrait
@@ -45,34 +41,27 @@ TempestScript:
     SCRIPT_ANCHOR
     db "Young one."
     SCRIPT_WAIT
-    db "Don't be easy on"
-    SCRIPT_NEWLINE
+    db "Don't be easy on\r"
     db "me because"
     SCRIPT_WAIT
-    db "I'm old."
-    SCRIPT_NEWLINE
+    db "I'm old.\r"
     db "Let's fight."
     SCRIPT_WAIT
     SCRIPT_END
 .TempestVictory:
-    db "You are strong,"
-    SCRIPT_NEWLINE
+    db "You are strong,\r"
     db "A good fight."
     SCRIPT_WAIT
-    db "It feels good"
-    SCRIPT_NEWLINE
+    db "It feels good\r"
     db "to be defeated."
     SCRIPT_WAIT
-    db "Time for Dragon"
-    SCRIPT_NEWLINE
+    db "Time for Dragon\r"
     db "and me to retire"
     SCRIPT_WAIT
-    db "Hm. All right."
-    SCRIPT_NEWLINE
+    db "Hm. All right.\r"
     db "Go, young one."
     SCRIPT_WAIT
-    db "Nada is stronger"
-    SCRIPT_NEWLINE
+    db "Nada is stronger\r"
     db "than me."
     SCRIPT_WAIT
     db "Good luck."
@@ -85,16 +74,13 @@ TempestScript:
     SCRIPT_WAIT
     db "Come back again."
     SCRIPT_WAIT
-    db "Acquire the"
-    SCRIPT_NEWLINE
+    db "Acquire the\r"
     db "strength I will"
     SCRIPT_WAIT
-    db "acknowledge."
-    SCRIPT_NEWLINE
+    db "acknowledge.\r"
     db "It'll be fun."
     SCRIPT_WAIT
-    db "My Dragon and I"
-    SCRIPT_NEWLINE
+    db "My Dragon and I\r"
     db "will wait here."
     SCRIPT_WAIT
     SCRIPT_END

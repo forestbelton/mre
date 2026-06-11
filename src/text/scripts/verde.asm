@@ -230,104 +230,81 @@ VerdeEntry:
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$01, .Target=VerdeGreet
     SCRIPT_FAR_CALL Verde_BuildIntroScene
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Oh?"
-    SCRIPT_NEWLINE
+    db "Oh?\r"
     db "Never seen you."
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortraitSurprised
-    db "What?"
-    SCRIPT_NEWLINE
+    db "What?\r"
     db "Came to help?"
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Hmm... I see."
-    SCRIPT_NEWLINE
+    db "Hmm... I see.\r"
     db "Naji did, huh?"
     SCRIPT_WAIT
-    db "Now, I get it."
-    SCRIPT_NEWLINE
+    db "Now, I get it.\r"
     db "You surprised me"
     SCRIPT_WAIT
-    db "I am Verde, a"
-    SCRIPT_NEWLINE
+    db "I am Verde, a\r"
     db "monster breeder"
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortraitCalm
-    db "I am the owner"
-    SCRIPT_NEWLINE
+    db "I am the owner\r"
     db "of the checkroom"
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "I'm here just"
-    SCRIPT_NEWLINE
+    db "I'm here just\r"
     db "like the others"
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortraitCalm
-    db "Made it up here"
-    SCRIPT_NEWLINE
+    db "Made it up here\r"
     db "with my energy"
     SCRIPT_WAIT
-    db "it gets harder"
-    SCRIPT_NEWLINE
+    db "it gets harder\r"
     db "as I climb up."
     SCRIPT_WAIT
-    db "If this goes on"
-    SCRIPT_NEWLINE
+    db "If this goes on\r"
     db "to the top,"
     SCRIPT_WAIT
-    db "I'd be too tired"
-    SCRIPT_NEWLINE
+    db "I'd be too tired\r"
     db "for anything."
     SCRIPT_WAIT
-    db "So I thought"
-    SCRIPT_NEWLINE
+    db "So I thought\r"
     db "of what to do."
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "You're amazing,"
-    SCRIPT_NEWLINE
+    db "You're amazing,\r"
     db "here in a flash."
     SCRIPT_WAIT
-    db "No wonder Naji"
-    SCRIPT_NEWLINE
+    db "No wonder Naji\r"
     db "trusts you."
     SCRIPT_WAIT
-    db "So, I say, let's"
-    SCRIPT_NEWLINE
+    db "So, I say, let's\r"
     db "help each other"
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortraitCalm
-    db "from here on."
-    SCRIPT_NEWLINE
+    db "from here on.\r"
     db "But I'd be"
     SCRIPT_WAIT
-    db "more trouble"
-    SCRIPT_NEWLINE
+    db "more trouble\r"
     db "than help."
     SCRIPT_WAIT
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Instead, I'll be"
-    SCRIPT_NEWLINE
+    db "Instead, I'll be\r"
     db "a supporter."
     SCRIPT_WAIT
-    db "I'll be cheering"
-    SCRIPT_NEWLINE
+    db "I'll be cheering\r"
     db "you on!"
     SCRIPT_WAIT
-    db "When you decide"
-    SCRIPT_NEWLINE
+    db "When you decide\r"
     db "to come down,"
     SCRIPT_WAIT
-    db "come to the"
-    SCRIPT_NEWLINE
+    db "come to the\r"
     db "checkroom."
     SCRIPT_WAIT
-    db "I'm sure I can"
-    SCRIPT_NEWLINE
+    db "I'm sure I can\r"
     db "help you then."
     SCRIPT_WAIT
-    db "Well then,"
-    SCRIPT_NEWLINE
+    db "Well then,\r"
     db "Good luck!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e1, .Value=$01
@@ -344,8 +321,7 @@ VerdeGreet:
 
 VerdeGreetA:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Oh, hi!"
-    SCRIPT_NEWLINE
+    db "Oh, hi!\r"
     db "How's it going?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenu
@@ -358,8 +334,7 @@ VerdeGreetB:
 
 VerdeGreetC:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Welcome!"
-    SCRIPT_NEWLINE
+    db "Welcome!\r"
     db "I'm glad"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenu
@@ -373,36 +348,29 @@ VerdeGreetD:
 VerdeGreetSeen:
     SCRIPT_FAR_CALL Verde_BuildPortraitScene
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "You're here."
-    SCRIPT_NEWLINE
+    db "You're here.\r"
     db "I thank you."
     SCRIPT_WAIT
-    db "Thanks for"
-    SCRIPT_NEWLINE
+    db "Thanks for\r"
     db "helping us!"
     SCRIPT_WAIT
-    db "This place is"
-    SCRIPT_NEWLINE
+    db "This place is\r"
     db "getting busy!"
     SCRIPT_WAIT
-    db "Oh, by the way,"
-    SCRIPT_NEWLINE
+    db "Oh, by the way,\r"
     db "I hear that, the"
     SCRIPT_WAIT
-    db "Stage Studio"
-    SCRIPT_NEWLINE
+    db "Stage Studio\r"
     db "behind the tower"
     SCRIPT_WAIT
     db "is open again."
     SCRIPT_WAIT
-    db "You can link or"
-    SCRIPT_NEWLINE
+    db "You can link or\r"
     db "exchange with"
     SCRIPT_WAIT
     db "your pals there."
     SCRIPT_WAIT
-    db "It'll be fun."
-    SCRIPT_NEWLINE
+    db "It'll be fun.\r"
     db "Go try it out!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
@@ -411,30 +379,24 @@ VerdeGreetSeen:
 VerdeGreetCleared:
     SCRIPT_FAR_CALL Verde_BuildPortraitScene
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Oh!"
-    SCRIPT_NEWLINE
+    db "Oh!\r"
     db "You're here!"
     SCRIPT_WAIT
-    db "Naji told me"
-    SCRIPT_NEWLINE
+    db "Naji told me\r"
     db "everything."
     SCRIPT_WAIT
-    db "I'm excited"
-    SCRIPT_NEWLINE
+    db "I'm excited\r"
     db "to take care of"
     SCRIPT_WAIT
     db "Phenix!"
     SCRIPT_WAIT
-    db "I'm excited"
-    SCRIPT_NEWLINE
+    db "I'm excited\r"
     db "as a breeder."
     SCRIPT_WAIT
-    db "I'll take good"
-    SCRIPT_NEWLINE
+    db "I'll take good\r"
     db "care of them,"
     SCRIPT_WAIT
-    db "so bring"
-    SCRIPT_NEWLINE
+    db "so bring\r"
     db "more of them."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
@@ -442,8 +404,7 @@ VerdeGreetCleared:
 
 VerdeMenu:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Let's see."
-    SCRIPT_NEWLINE
+    db "Let's see.\r"
     db "What can I"
     SCRIPT_WAIT
     db "do for you?"
@@ -454,8 +415,7 @@ VerdeMenu:
 
 VerdeMenuLoop:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "Do you want"
-    SCRIPT_NEWLINE
+    db "Do you want\r"
     db "something else?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -463,8 +423,7 @@ VerdeMenuLoop:
 
 VerdeRaise:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "OK!"
-    SCRIPT_NEWLINE
+    db "OK!\r"
     db "I'll take care"
     SCRIPT_WAIT
     db "of it!"
@@ -473,45 +432,38 @@ VerdeRaise:
     SCRIPT_RENDERER Verde_RenderPortrait
     db "OK! It's "
     SCRIPT_INDEXED_STR .Addr=wDisplayMonster
-    db "."
-    SCRIPT_NEWLINE
+    db ".\r"
     db "I got it."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wDisplayMonster, .Value=$ff
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeRaiseFull:
-    db "Hm? Looks like"
-    SCRIPT_NEWLINE
+    db "Hm? Looks like\r"
     db "no monsters here"
     SCRIPT_WAIT
-    db "You have to"
-    SCRIPT_NEWLINE
+    db "You have to\r"
     db "have a monster,"
     SCRIPT_WAIT
-    db "to leave at"
-    SCRIPT_NEWLINE
+    db "to leave at\r"
     db "the checkroom."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeRelease:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "OK!"
-    SCRIPT_NEWLINE
+    db "OK!\r"
     db "You'll take"
     SCRIPT_WAIT
     db "a monster!"
     SCRIPT_WAIT
-    db "Wait a minute."
-    SCRIPT_NEWLINE
+    db "Wait a minute.\r"
     db "Your monster is?"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$00, .Target=VerdeReleaseYes
     SCRIPT_RENDERER Verde_RenderPortraitCalm
-    db "Oh yes,"
-    SCRIPT_NEWLINE
+    db "Oh yes,\r"
     db "I have it here."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenuLoop
@@ -520,19 +472,16 @@ VerdeReleaseYes:
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$01, .Target=VerdeReleasePick
     db "Yes! It's "
     SCRIPT_INDEXED_STR .Addr=$cfbb
-    db "."
-    SCRIPT_NEWLINE
+    db ".\r"
     db "I have it here."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeReleaseThis
 
 VerdeReleasePick:
-    db "Oh yes,"
-    SCRIPT_NEWLINE
+    db "Oh yes,\r"
     db "I have it here."
     SCRIPT_WAIT
-    db "So, which one"
-    SCRIPT_NEWLINE
+    db "So, which one\r"
     db "are you taking?"
     SCRIPT_FAR_CALL Verde_ShowReleaseMonsterSelect
     SCRIPT_FAR_CALL Verde_LoadBgMap
@@ -540,12 +489,10 @@ VerdeReleasePick:
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=VerdeMenuLoop
 
 VerdeReleaseThis:
-    db "This one, right?"
-    SCRIPT_NEWLINE
+    db "This one, right?\r"
     db "It's healthy!"
     SCRIPT_WAIT
-    db "Take good care"
-    SCRIPT_NEWLINE
+    db "Take good care\r"
     db "of it, okay?"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Pashute_SetReplaceTargetActive
@@ -555,12 +502,10 @@ VerdeSwitch:
     SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=VerdeSwitchDone
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "OK! Switch of"
-    SCRIPT_NEWLINE
+    db "OK! Switch of\r"
     db "monsters, right?"
     SCRIPT_WAIT
-    db "Okay, choose the"
-    SCRIPT_NEWLINE
+    db "Okay, choose the\r"
     db "next monster"
     SCRIPT_FAR_CALL Verde_ShowReleaseMonsterSelect
     SCRIPT_FAR_CALL Verde_LoadBgMap
@@ -570,16 +515,13 @@ VerdeSwitch:
 
 VerdeSwitchDone:
     SCRIPT_RENDERER Verde_RenderPortraitCalm
-    db "Well."
-    SCRIPT_NEWLINE
+    db "Well.\r"
     db "What?"
     SCRIPT_WAIT
-    db "I can't exchange"
-    SCRIPT_NEWLINE
+    db "I can't exchange\r"
     db "monsters if you"
     SCRIPT_WAIT
-    db "don't have one"
-    SCRIPT_NEWLINE
+    db "don't have one\r"
     db "checked in."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenuLoop
@@ -588,50 +530,41 @@ VerdeExplain:
     SCRIPT_RENDERER Verde_RenderPortrait
     db "Let me explain."
     SCRIPT_WAIT
-    db "This checkroom"
-    SCRIPT_NEWLINE
+    db "This checkroom\r"
     db "is a great place"
     SCRIPT_WAIT
-    db "to hold monsters"
-    SCRIPT_NEWLINE
+    db "to hold monsters\r"
     db "regenerated from"
     SCRIPT_WAIT
     db "a saucer stone!"
     SCRIPT_WAIT
-    db "If you want to"
-    SCRIPT_NEWLINE
+    db "If you want to\r"
     db "carry more than"
     SCRIPT_WAIT
-    db "one monster,"
-    SCRIPT_NEWLINE
+    db "one monster,\r"
     db "this will help"
     SCRIPT_WAIT
     db "you a lot!"
     SCRIPT_WAIT
-    db "I'll keep"
-    SCRIPT_NEWLINE
+    db "I'll keep\r"
     db "the monsters"
     SCRIPT_WAIT
-    db "in good shape"
-    SCRIPT_NEWLINE
+    db "in good shape\r"
     db "because I'm a"
     SCRIPT_WAIT
     db "top breeder!"
     SCRIPT_WAIT
-    db "That's all."
-    SCRIPT_NEWLINE
+    db "That's all.\r"
     db "It's simple."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeLeave:
     SCRIPT_RENDERER Verde_RenderPortrait
-    db "OK!"
-    SCRIPT_NEWLINE
+    db "OK!\r"
     db "That's it."
     SCRIPT_WAIT
-    db "I'll take care"
-    SCRIPT_NEWLINE
+    db "I'll take care\r"
     db "of the monsters."
     SCRIPT_WAIT
     db "Good luck!"

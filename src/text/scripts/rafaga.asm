@@ -22,36 +22,28 @@ RafagaScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.RafagaVictory
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.RafagaDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    db "Hello. You're"
-    SCRIPT_NEWLINE
+    db "Hello. You're\r"
     db "finally here."
     SCRIPT_WAIT
-    db "I am Rafaga."
-    SCRIPT_NEWLINE
+    db "I am Rafaga.\r"
     db "Nada's servant."
     SCRIPT_WAIT
-    db "I'm surprised"
-    SCRIPT_NEWLINE
+    db "I'm surprised\r"
     db "you made it here"
     SCRIPT_WAIT
-    db "You beat Kalum"
-    SCRIPT_NEWLINE
+    db "You beat Kalum\r"
     db "and Mistral."
     SCRIPT_WAIT
-    db "I must ask you"
-    SCRIPT_NEWLINE
+    db "I must ask you\r"
     db "to leave here or"
     SCRIPT_WAIT
-    db "Nada will be"
-    SCRIPT_NEWLINE
+    db "Nada will be\r"
     db "mad at me."
     SCRIPT_WAIT
-    db "So I'm going to"
-    SCRIPT_NEWLINE
+    db "So I'm going to\r"
     db "be serious now."
     SCRIPT_WAIT
-    db "Wake up Punisher"
-    SCRIPT_NEWLINE
+    db "Wake up Punisher\r"
     db "Time to fight."
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL Rafaga_ShowMonsterPortrait
@@ -59,46 +51,36 @@ RafagaScript:
     SCRIPT_REPEAT_CHAR .Count=90
     SCRIPT_END
 .RafagaVictory:
-    db "This is bad."
-    SCRIPT_NEWLINE
+    db "This is bad.\r"
     db "I've lost, too."
     SCRIPT_WAIT
-    db "Frankly,"
-    SCRIPT_NEWLINE
+    db "Frankly,\r"
     db "I am shocked."
     SCRIPT_WAIT
-    db "Punisher, Nada"
-    SCRIPT_NEWLINE
+    db "Punisher, Nada\r"
     db "had given to me."
     SCRIPT_WAIT
-    db "I must report it"
-    SCRIPT_NEWLINE
+    db "I must report it\r"
     db "Nada will be mad"
     SCRIPT_WAIT
-    db "You will regret"
-    SCRIPT_NEWLINE
+    db "You will regret\r"
     db "this defeat."
     SCRIPT_WAIT
     SCRIPT_END
 .RafagaDefeat:
-    db "Whew."
-    SCRIPT_NEWLINE
+    db "Whew.\r"
     db "I guess"
     SCRIPT_WAIT
-    db "Nada won't"
-    SCRIPT_NEWLINE
+    db "Nada won't\r"
     db "be mad at me."
     SCRIPT_WAIT
-    db "Let this be a"
-    SCRIPT_NEWLINE
+    db "Let this be a\r"
     db "lesson to you."
     SCRIPT_WAIT
-    db "Don't think of"
-    SCRIPT_NEWLINE
+    db "Don't think of\r"
     db "any thing stupid"
     SCRIPT_WAIT
-    db "Now, please."
-    SCRIPT_NEWLINE
+    db "Now, please.\r"
     db "Quietly leave."
     SCRIPT_WAIT
     SCRIPT_END

@@ -310,52 +310,40 @@ NadaScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL Nada_ShowScene
     SCRIPT_RENDERER Nada_RenderPortrait
-    db "Wow. It took you"
-    SCRIPT_NEWLINE
+    db "Wow. It took you\r"
     db "a while. I heard"
     SCRIPT_WAIT
-    db "about you from"
-    SCRIPT_NEWLINE
+    db "about you from\r"
     db "Rafaga. He never"
     SCRIPT_WAIT
-    db "thought you'd"
-    SCRIPT_NEWLINE
+    db "thought you'd\r"
     db "make it up here."
     SCRIPT_WAIT
-    db "Those kids are"
-    SCRIPT_NEWLINE
+    db "Those kids are\r"
     db "useless. One"
     SCRIPT_WAIT
-    db "adventurer"
-    SCRIPT_NEWLINE
+    db "adventurer\r"
     db "makes no"
     SCRIPT_WAIT
-    db "difference. I'll"
-    SCRIPT_NEWLINE
+    db "difference. I'll\r"
     db "ask this old man"
     SCRIPT_WAIT
-    db "where the mythic"
-    SCRIPT_NEWLINE
+    db "where the mythic\r"
     db "monster is."
     SCRIPT_WAIT
-    db "I'll take care"
-    SCRIPT_NEWLINE
+    db "I'll take care\r"
     db "of you later."
     SCRIPT_WAIT
-    db "Can you hush and"
-    SCRIPT_NEWLINE
+    db "Can you hush and\r"
     db "wait a sec?"
     SCRIPT_WAIT
-    db "... ... ... ..."
-    SCRIPT_NEWLINE
+    db "... ... ... ...\r"
     db "Now, old man."
     SCRIPT_WAIT
-    db "Where is the"
-    SCRIPT_NEWLINE
+    db "Where is the\r"
     db "mythic monster?"
     SCRIPT_WAIT
-    db "You built this,"
-    SCRIPT_NEWLINE
+    db "You built this,\r"
     db "you should know."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
@@ -366,82 +354,65 @@ NadaScript:
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Nada_ShowSnapReaction
     SCRIPT_RENDERER Nada_RenderPortraitAngry
-    db "!!"
-    SCRIPT_NEWLINE
+    db "!!\r"
     db "SNAP!"
     SCRIPT_WRITE_WRAM .Addr=$d611, .Value=$01
     SCRIPT_WAIT
-    db "You hear that?!"
-    SCRIPT_NEWLINE
+    db "You hear that?!\r"
     db "I just snapped!"
     SCRIPT_WAIT
-    db "Tell me and I'll"
-    SCRIPT_NEWLINE
+    db "Tell me and I'll\r"
     db "spare your life!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "Heh! I don't"
-    SCRIPT_NEWLINE
+    db "Heh! I don't\r"
     db "think so."
     SCRIPT_WAIT
-    db "I'm dead whether"
-    SCRIPT_NEWLINE
+    db "I'm dead whether\r"
     db "or not I tell."
     SCRIPT_WAIT
-    db "Your lies don't"
-    SCRIPT_NEWLINE
+    db "Your lies don't\r"
     db "fool me."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Nada_ShowSnapReaction
     SCRIPT_RENDERER Nada_RenderPortraitAngry
-    db "!!"
-    SCRIPT_NEWLINE
+    db "!!\r"
     db "SNAP, SNAP!"
     SCRIPT_WAIT
-    db "Can't you hear"
-    SCRIPT_NEWLINE
+    db "Can't you hear\r"
     db "me snapping?"
     SCRIPT_WAIT
-    db "Don't make me"
-    SCRIPT_NEWLINE
+    db "Don't make me\r"
     db "any angrier!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "Sorry, but this"
-    SCRIPT_NEWLINE
+    db "Sorry, but this\r"
     db "is how it goes."
     SCRIPT_WAIT
-    db "Better get out!"
-    SCRIPT_NEWLINE
+    db "Better get out!\r"
     db "The place will"
     SCRIPT_WAIT
     db "be gone soon."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Nada_ShowRageScene
-    db "!!!"
-    SCRIPT_NEWLINE
+    db "!!!\r"
     db "SNAAAAAAAP!"
     SCRIPT_WAIT
-    db "Fine!"
-    SCRIPT_NEWLINE
+    db "Fine!\r"
     db "Be that way!"
     SCRIPT_WAIT
-    db "I'll let you"
-    SCRIPT_NEWLINE
+    db "I'll let you\r"
     db "keep the legend."
     SCRIPT_WAIT
-    db "I'll destroy"
-    SCRIPT_NEWLINE
+    db "I'll destroy\r"
     db "the legend!"
     SCRIPT_WAIT
-    db "Everything will"
-    SCRIPT_NEWLINE
+    db "Everything will\r"
     db "be gone!"
     SCRIPT_WAIT
-    db "You first! Let's"
-    SCRIPT_NEWLINE
+    db "You first! Let's\r"
     db "see what you got"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL Nada_ShowMonsterPortrait
@@ -453,118 +424,91 @@ NadaScript:
     SCRIPT_RENDERER Nada_RenderPortraitAngry
     db "Unbelievable."
     SCRIPT_WAIT
-    db "If I only had"
-    SCRIPT_NEWLINE
+    db "If I only had\r"
     db "the great power."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "I didn't think"
-    SCRIPT_NEWLINE
+    db "I didn't think\r"
     db "that this day"
     SCRIPT_WAIT
     db "would ever come."
     SCRIPT_WAIT
-    db "I had given up"
-    SCRIPT_NEWLINE
+    db "I had given up\r"
     db "a long time ago."
     SCRIPT_WAIT
-    db "Thank you! Thank"
-    SCRIPT_NEWLINE
+    db "Thank you! Thank\r"
     db "you very much!"
     SCRIPT_WAIT
-    db "This room is the"
-    SCRIPT_NEWLINE
+    db "This room is the\r"
     db "highest in the"
     SCRIPT_WAIT
-    db "tower. Many"
-    SCRIPT_NEWLINE
+    db "tower. Many\r"
     db "people came here"
     SCRIPT_WAIT
-    db "to get the"
-    SCRIPT_NEWLINE
+    db "to get the\r"
     db "legendary power."
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortrait
-    db "But just because"
-    SCRIPT_NEWLINE
+    db "But just because\r"
     db "you got here"
     SCRIPT_WAIT
-    db "doesn't mean"
-    SCRIPT_NEWLINE
+    db "doesn't mean\r"
     db "that you'll get"
     SCRIPT_WAIT
-    db "the power. There"
-    SCRIPT_NEWLINE
+    db "the power. There\r"
     db "is a secret that"
     SCRIPT_WAIT
-    db "Nada couldn't"
-    SCRIPT_NEWLINE
+    db "Nada couldn't\r"
     db "even solve. The"
     SCRIPT_WAIT
-    db "only hint I can"
-    SCRIPT_NEWLINE
+    db "only hint I can\r"
     db "give is that"
     SCRIPT_WAIT
     SCRIPT_RENDERER Bodka_RenderPortraitAlt
-    db "silver key you"
-    SCRIPT_NEWLINE
+    db "silver key you\r"
     db "picked up. That"
     SCRIPT_WAIT
-    db "key is my token"
-    SCRIPT_NEWLINE
+    db "key is my token\r"
     db "of thanks."
     SCRIPT_WAIT
-    db "You can get to"
-    SCRIPT_NEWLINE
+    db "You can get to\r"
     db "the basement"
     SCRIPT_WAIT
-    db "using this key."
-    SCRIPT_NEWLINE
+    db "using this key.\r"
     db "There is more"
     SCRIPT_WAIT
-    db "than one"
-    SCRIPT_NEWLINE
+    db "than one\r"
     db "basement room."
     SCRIPT_WAIT
-    db "But more than"
-    SCRIPT_NEWLINE
+    db "But more than\r"
     db "one key too."
     SCRIPT_WAIT
-    db "Search the tower"
-    SCRIPT_NEWLINE
+    db "Search the tower\r"
     db "to find more."
     SCRIPT_WAIT
-    db "I can't tell"
-    SCRIPT_NEWLINE
+    db "I can't tell\r"
     db "you any more."
     SCRIPT_WAIT
-    db "But it'll be fun"
-    SCRIPT_NEWLINE
+    db "But it'll be fun\r"
     db "to see how far"
     SCRIPT_WAIT
-    db "you can go. Now,"
-    SCRIPT_NEWLINE
+    db "you can go. Now,\r"
     db "I'm going back"
     SCRIPT_WAIT
-    db "to join everyone"
-    SCRIPT_NEWLINE
+    db "to join everyone\r"
     db "else. This is a"
     SCRIPT_WAIT
-    db "happy day. We're"
-    SCRIPT_NEWLINE
+    db "happy day. We're\r"
     db "going to"
     SCRIPT_WAIT
-    db "celebrate! By"
-    SCRIPT_NEWLINE
+    db "celebrate! By\r"
     db "the way, I'm"
     SCRIPT_WAIT
-    db "Bodka. I operate"
-    SCRIPT_NEWLINE
+    db "Bodka. I operate\r"
     db "the studio"
     SCRIPT_WAIT
-    db "downstairs. Come"
-    SCRIPT_NEWLINE
+    db "downstairs. Come\r"
     db "if you have the"
     SCRIPT_WAIT
     db "time. See ya!"
@@ -577,17 +521,14 @@ NadaScript:
 .NadaDefeat:
     SCRIPT_FAR_CALL Nada_ShowScene
     SCRIPT_RENDERER Nada_RenderPortraitAngry
-    db "No one beats me"
-    SCRIPT_NEWLINE
+    db "No one beats me\r"
     db "when I'm serious"
     SCRIPT_WAIT
-    db "You'll regret"
-    SCRIPT_NEWLINE
+    db "You'll regret\r"
     db "fighting me!"
     SCRIPT_WAIT
     SCRIPT_RENDERER Nada_RenderPortrait
-    db "After this, I'll"
-    SCRIPT_NEWLINE
+    db "After this, I'll\r"
     db "destroy the land"
     SCRIPT_WAIT
     SCRIPT_END

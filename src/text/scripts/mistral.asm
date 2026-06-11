@@ -22,22 +22,18 @@ MistralScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.MistralVictory
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.MistralDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    db "Oh?"
-    SCRIPT_NEWLINE
+    db "Oh?\r"
     db "I haven't had a"
     SCRIPT_WAIT
     db "guest in a while"
     SCRIPT_WAIT
-    db "That means"
-    SCRIPT_NEWLINE
+    db "That means\r"
     db "Kalum lost."
     SCRIPT_WAIT
-    db "I guess you're"
-    SCRIPT_NEWLINE
+    db "I guess you're\r"
     db "pretty good."
     SCRIPT_WAIT
-    db "Ferious isn't"
-    SCRIPT_NEWLINE
+    db "Ferious isn't\r"
     db "easy to defeat!"
     SCRIPT_WAIT
     db "Ferious! Come!"
@@ -49,44 +45,35 @@ MistralScript:
 .MistralVictory:
     db "I... lost?"
     SCRIPT_WAIT
-    db "Don't boast"
-    SCRIPT_NEWLINE
+    db "Don't boast\r"
     db "so soon!"
     SCRIPT_WAIT
-    db "You didn't beat"
-    SCRIPT_NEWLINE
+    db "You didn't beat\r"
     db "anybody else yet"
     SCRIPT_WAIT
-    db "Now,"
-    SCRIPT_NEWLINE
+    db "Now,\r"
     db "you can go!"
     SCRIPT_WAIT
-    db "I'll let you"
-    SCRIPT_NEWLINE
+    db "I'll let you\r"
     db "pass this time."
     SCRIPT_WAIT
     SCRIPT_END
 .MistralDefeat:
     db "Hmph!"
     SCRIPT_WAIT
-    db "After all,"
-    SCRIPT_NEWLINE
+    db "After all,\r"
     db "I'm stronger."
     SCRIPT_WAIT
-    db "Well, later on"
-    SCRIPT_NEWLINE
+    db "Well, later on\r"
     db "I have to give"
     SCRIPT_WAIT
-    db "Kalum a tip"
-    SCRIPT_NEWLINE
+    db "Kalum a tip\r"
     db "on fighting."
     SCRIPT_WAIT
-    db "I'll fight you"
-    SCRIPT_NEWLINE
+    db "I'll fight you\r"
     db "again any time"
     SCRIPT_WAIT
-    db "if you could"
-    SCRIPT_NEWLINE
+    db "if you could\r"
     db "come here again."
     SCRIPT_WAIT
     SCRIPT_END

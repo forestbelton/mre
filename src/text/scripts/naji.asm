@@ -42,54 +42,42 @@ NajiScript:
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$02, .Target=NajiProgress
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$01, .Target=NajiCycler
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Did you come to"
-    SCRIPT_NEWLINE
+    db "Did you come to\r"
     db "climb the tower?"
     SCRIPT_WAIT
-    db "I'm Naji. The"
-    SCRIPT_NEWLINE
+    db "I'm Naji. The\r"
     db "guard here. But"
     SCRIPT_WAIT
-    db "I'm on vacation"
-    SCRIPT_NEWLINE
+    db "I'm on vacation\r"
     db "right now. It's"
     SCRIPT_WAIT
-    db "useless to guard"
-    SCRIPT_NEWLINE
+    db "useless to guard\r"
     db "a place no one"
     SCRIPT_WAIT
     db "dares to come."
     SCRIPT_WAIT
-    db "Village people"
-    SCRIPT_NEWLINE
+    db "Village people\r"
     db "tried to rid the"
     SCRIPT_WAIT
-    db "problem, but no"
-    SCRIPT_NEWLINE
+    db "problem, but no\r"
     db "one has returned"
     SCRIPT_WAIT
-    db "Since one can't"
-    SCRIPT_NEWLINE
+    db "Since one can't\r"
     db "do much, I've"
     SCRIPT_WAIT
-    db "stayed behind to"
-    SCRIPT_NEWLINE
+    db "stayed behind to\r"
     db "the brave young"
     SCRIPT_WAIT
-    db "like you. But I"
-    SCRIPT_NEWLINE
+    db "like you. But I\r"
     db "have no strength"
     SCRIPT_WAIT
-    db "left to fight"
-    SCRIPT_NEWLINE
+    db "left to fight\r"
     db "Nada. You have"
     SCRIPT_WAIT
-    db "wits and courage"
-    SCRIPT_NEWLINE
+    db "wits and courage\r"
     db "to fight Nada."
     SCRIPT_WAIT
-    db "Help us? I am"
-    SCRIPT_NEWLINE
+    db "Help us? I am\r"
     db "the best guide."
     SCRIPT_WAIT
     db "Please help!"
@@ -103,56 +91,47 @@ NajiCycler:
 
 .greet0:
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Oh, you're here."
-    SCRIPT_NEWLINE
+    db "Oh, you're here.\r"
     db "Good luck."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet1:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "It's you. Good"
-    SCRIPT_NEWLINE
+    db "It's you. Good\r"
     db "luck, my friend."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet2:
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "It's you. We're"
-    SCRIPT_NEWLINE
+    db "It's you. We're\r"
     db "counting on you."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet3:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Hey. It's you!"
-    SCRIPT_NEWLINE
+    db "Hey. It's you!\r"
     db "Take it easy!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiMenu
 
 NajiProgress:
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Oh, it's you"
-    SCRIPT_NEWLINE
+    db "Oh, it's you\r"
     db "again. You made"
     SCRIPT_WAIT
-    db "it half-way up."
-    SCRIPT_NEWLINE
+    db "it half-way up.\r"
     db "I wasn't wrong"
     SCRIPT_WAIT
-    db "in counting on"
-    SCRIPT_NEWLINE
+    db "in counting on\r"
     db "you. Some of our"
     SCRIPT_WAIT
-    db "villagers got"
-    SCRIPT_NEWLINE
+    db "villagers got\r"
     db "back, but don't"
     SCRIPT_WAIT
-    db "get careless."
-    SCRIPT_NEWLINE
+    db "get careless.\r"
     db "It gets harder."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$01
@@ -160,8 +139,7 @@ NajiProgress:
 
 NajiMenu:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "What are your"
-    SCRIPT_NEWLINE
+    db "What are your\r"
     db "plans this time?"
     SCRIPT_IF_EQ .Addr=wNajiMenuShown, .Value=$01, .Target=.checkAsk
     SCRIPT_IF_NEQ .Addr=wCFF0, .Value=$00, .Target=.renderClimb
@@ -183,13 +161,11 @@ NajiMenu:
 
 NajiRestart:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "You've climbed"
-    SCRIPT_NEWLINE
+    db "You've climbed\r"
     db "till Level "
     SCRIPT_DECIMAL .Addr=wCurrentFloor
     SCRIPT_WAIT
-    db "Want to"
-    SCRIPT_NEWLINE
+    db "Want to\r"
     db "start there?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -200,12 +176,10 @@ NajiRestart:
 
 NajiClimb:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "I understand."
-    SCRIPT_NEWLINE
+    db "I understand.\r"
     db "I'll open the"
     SCRIPT_WAIT
-    db "door. But,"
-    SCRIPT_NEWLINE
+    db "door. But,\r"
     db "are you ready?"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -216,8 +190,7 @@ NajiClimb:
 
 NajiAskMenu:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "What do you"
-    SCRIPT_NEWLINE
+    db "What do you\r"
     db "want to know?"
     SCRIPT_FAR_CALL Naji_ShowSubMenu2
     SCRIPT_FAR_CALL Naji_LoadPortraitTilemap
@@ -233,12 +206,10 @@ NajiLeave:
 NajiTowerLong:
     SCRIPT_IF_EQ .Addr=wTowerExplained, .Value=$01, .Target=NajiTowerShort
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "10 underground"
-    SCRIPT_NEWLINE
+    db "10 underground\r"
     db "levels here. The"
     SCRIPT_WAIT
-    db "true legend must"
-    SCRIPT_NEWLINE
+    db "true legend must\r"
     db "be hidden here."
     SCRIPT_WAIT
     db "Don't misjudge."
@@ -250,16 +221,13 @@ NajiTowerLong:
 
 NajiTowerShort:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "You again! Going"
-    SCRIPT_NEWLINE
+    db "You again! Going\r"
     db "to try again?"
     SCRIPT_WAIT
-    db "Persistence is"
-    SCRIPT_NEWLINE
+    db "Persistence is\r"
     db "the shortcut to"
     SCRIPT_WAIT
-    db "the legend. I'll"
-    SCRIPT_NEWLINE
+    db "the legend. I'll\r"
     db "show you the way"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
@@ -270,108 +238,83 @@ NajiTowerShort:
 
 NajiAskTower:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Find the golden"
-    SCRIPT_NEWLINE
+    db "Find the golden\r"
     db "key in each"
     SCRIPT_WAIT
-    db "room. It will"
-    SCRIPT_NEWLINE
+    db "room. It will\r"
     db "open the door,"
     SCRIPT_WAIT
-    db "and you can exit"
-    SCRIPT_NEWLINE
+    db "and you can exit\r"
     db "from that room."
     SCRIPT_WAIT
-    db "Flying lights"
-    SCRIPT_NEWLINE
+    db "Flying lights\r"
     db "are hints of"
     SCRIPT_WAIT
-    db "where the key"
-    SCRIPT_NEWLINE
+    db "where the key\r"
     db "and door hides."
     SCRIPT_WAIT
-    db "Let me explain"
-    SCRIPT_NEWLINE
+    db "Let me explain\r"
     db "about Life."
     SCRIPT_WAIT
-    db "You start with"
-    SCRIPT_NEWLINE
+    db "You start with\r"
     db "three lives."
     SCRIPT_WAIT
-    db "If you lose all"
-    SCRIPT_NEWLINE
+    db "If you lose all\r"
     db "lives or leave"
     SCRIPT_WAIT
-    db "the tower,"
-    SCRIPT_NEWLINE
+    db "the tower,\r"
     db "you will lose"
     SCRIPT_WAIT
-    db "all effects of"
-    SCRIPT_NEWLINE
+    db "all effects of\r"
     db "items."
     SCRIPT_WAIT
-    db "But don't worry."
-    SCRIPT_NEWLINE
+    db "But don't worry.\r"
     db "You won't lose"
     SCRIPT_WAIT
-    db "your Holy items."
-    SCRIPT_NEWLINE
+    db "your Holy items.\r"
     db "That's all I"
     SCRIPT_WAIT
-    db "know."
-    SCRIPT_NEWLINE
+    db "know.\r"
     db "Good luck!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiAskMenu
 
 NajiAskItem:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Let me explain."
-    SCRIPT_NEWLINE
+    db "Let me explain.\r"
     db "There are over"
     SCRIPT_WAIT
-    db "300 items hidden"
-    SCRIPT_NEWLINE
+    db "300 items hidden\r"
     db "in this tower."
     SCRIPT_WAIT
-    db "They're hard to"
-    SCRIPT_NEWLINE
+    db "They're hard to\r"
     db "find, but try"
     SCRIPT_WAIT
-    db "making boxes and"
-    SCRIPT_NEWLINE
+    db "making boxes and\r"
     db "just break them."
     SCRIPT_WAIT
-    db "The most"
-    SCRIPT_NEWLINE
+    db "The most\r"
     db "important item"
     SCRIPT_WAIT
-    db "is a saucer"
-    SCRIPT_NEWLINE
+    db "is a saucer\r"
     db "stone fragment."
     SCRIPT_WAIT
-    db "4 fragments"
-    SCRIPT_NEWLINE
+    db "4 fragments\r"
     db "will make one"
     SCRIPT_WAIT
-    db "saucer stone."
-    SCRIPT_NEWLINE
+    db "saucer stone.\r"
     db "You can seal a"
     SCRIPT_WAIT
-    db "good monster"
-    SCRIPT_NEWLINE
+    db "good monster\r"
     db "inside it."
     SCRIPT_WAIT
-    db "I'm sorry, but"
-    SCRIPT_NEWLINE
+    db "I'm sorry, but\r"
     db "this is all I"
     SCRIPT_WAIT
-    db "know. The priest"
-    SCRIPT_NEWLINE
+    db "know. The priest\r"
     db "in the tower"
     SCRIPT_WAIT
-    db "will tell you"
-    SCRIPT_NEWLINE
+    db "will tell you\r"
     db "more. Bye!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=NajiAskMenu
@@ -543,18 +486,16 @@ NajiEncounterScript:
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$00, .Target=.thrownOutTried
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$01, .Target=.firstClearThanks
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "You got out safe."
-    SCRIPT_NEWLINE
+    db "You got out safe.\r"
     db "Good to see you."
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "I'll make sure"
-    SCRIPT_NEWLINE
+    db "I'll make sure\r"
     db "you will start"
     SCRIPT_WAIT
     db "Level "
     SCRIPT_DECIMAL .Addr=$cff2
-    SCRIPT_NEWLINE
+    db "\r"
     db "next time."
     SCRIPT_WAIT
     db "Get some rest."
@@ -563,45 +504,36 @@ NajiEncounterScript:
 .firstClearThanks:
     SCRIPT_IF_NEQ .Addr=$d0e5, .Value=$00, .Target=.climbedAgain
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Good to see you."
-    SCRIPT_NEWLINE
+    db "Good to see you.\r"
     db "You finally did"
     SCRIPT_WAIT
-    db "it. Thanks! All"
-    SCRIPT_NEWLINE
+    db "it. Thanks! All\r"
     db "that's left is"
     SCRIPT_WAIT
-    db "the complete"
-    SCRIPT_NEWLINE
+    db "the complete\r"
     db "conquer of this"
     SCRIPT_WAIT
-    db "tower. There are"
-    SCRIPT_NEWLINE
+    db "tower. There are\r"
     db "more things"
     SCRIPT_WAIT
-    db "hiding in this"
-    SCRIPT_NEWLINE
+    db "hiding in this\r"
     db "tower. Be"
     SCRIPT_WAIT
-    db "careful. I'll"
-    SCRIPT_NEWLINE
+    db "careful. I'll\r"
     db "help you out."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e5, .Value=$01
     SCRIPT_END
 .climbedAgain:
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "You climbed to"
-    SCRIPT_NEWLINE
+    db "You climbed to\r"
     db "the top again."
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "If you feel you"
-    SCRIPT_NEWLINE
+    db "If you feel you\r"
     db "haven't finished"
     SCRIPT_WAIT
-    db "rest at the"
-    SCRIPT_NEWLINE
+    db "rest at the\r"
     db "cabin and return"
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitAlt
@@ -610,26 +542,22 @@ NajiEncounterScript:
     SCRIPT_END
 .thrownOutTried:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Looks like you"
-    SCRIPT_NEWLINE
+    db "Looks like you\r"
     db "were thrown out."
     SCRIPT_WAIT
-    db "It's okay since"
-    SCRIPT_NEWLINE
+    db "It's okay since\r"
     db "you tried!"
     SCRIPT_WAIT
-    db "Don't be hard"
-    SCRIPT_NEWLINE
+    db "Don't be hard\r"
     db "on yourself."
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "I'll make sure"
-    SCRIPT_NEWLINE
+    db "I'll make sure\r"
     db "you will get"
     SCRIPT_WAIT
     db "Level "
     SCRIPT_DECIMAL .Addr=$cff2
-    SCRIPT_NEWLINE
+    db "\r"
     db "next time."
     SCRIPT_WAIT
     SCRIPT_END
@@ -638,93 +566,75 @@ NajiEncounterScript:
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$03, .Target=.basementOpened
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$02, .Target=.needSilverKey
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "You made it out!"
-    SCRIPT_NEWLINE
+    db "You made it out!\r"
     db "Glad you're safe"
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "To move forward"
-    SCRIPT_NEWLINE
+    db "To move forward\r"
     db "and gain success"
     SCRIPT_WAIT
-    db "plan a strategy."
-    SCRIPT_NEWLINE
+    db "plan a strategy.\r"
     db "Good luck."
     SCRIPT_WAIT
     SCRIPT_END
 .basementOpened:
     SCRIPT_IF_NEQ .Addr=$d0e6, .Value=$00, .Target=.backSafely
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Oh, you're here."
-    SCRIPT_NEWLINE
+    db "Oh, you're here.\r"
     db "I didn't think"
     SCRIPT_WAIT
-    db "you'd open all"
-    SCRIPT_NEWLINE
+    db "you'd open all\r"
     db "the basement"
     SCRIPT_WAIT
-    db "rooms. Great!"
-    SCRIPT_NEWLINE
+    db "rooms. Great!\r"
     db "Go ahead and"
     SCRIPT_WAIT
-    db "explore as you"
-    SCRIPT_NEWLINE
+    db "explore as you\r"
     db "please."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e6, .Value=$01
     SCRIPT_END
 .backSafely:
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Good. You made"
-    SCRIPT_NEWLINE
+    db "Good. You made\r"
     db "it back safely."
     SCRIPT_WAIT
-    db "You're getting"
-    SCRIPT_NEWLINE
+    db "You're getting\r"
     db "used to it here."
     SCRIPT_WAIT
-    db "Rest first and"
-    SCRIPT_NEWLINE
+    db "Rest first and\r"
     db "come back."
     SCRIPT_WAIT
     SCRIPT_END
 .thrownOutHard:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Looks like you"
-    SCRIPT_NEWLINE
+    db "Looks like you\r"
     db "were thrown out."
     SCRIPT_WAIT
-    db "Bad happens when"
-    SCRIPT_NEWLINE
+    db "Bad happens when\r"
     db "you try too hard"
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "Be careful, and"
-    SCRIPT_NEWLINE
+    db "Be careful, and\r"
     db "good luck."
     SCRIPT_WAIT
     SCRIPT_END
 .needSilverKey:
     SCRIPT_RENDERER Naji_RenderPortraitTalking
-    db "Good work, but"
-    SCRIPT_NEWLINE
+    db "Good work, but\r"
     db "you can't go any"
     SCRIPT_WAIT
-    db "further. To"
-    SCRIPT_NEWLINE
+    db "further. To\r"
     db "move on, you"
     SCRIPT_WAIT
-    db "need another"
-    SCRIPT_NEWLINE
+    db "need another\r"
     db "silver key. One"
     SCRIPT_WAIT
-    db "still exists"
-    SCRIPT_NEWLINE
+    db "still exists\r"
     db "in the tower."
     SCRIPT_WAIT
     SCRIPT_RENDERER Naji_RenderPortraitAlt
-    db "You can do it!"
-    SCRIPT_NEWLINE
+    db "You can do it!\r"
     db "Don't give up!"
     SCRIPT_WAIT
     SCRIPT_END

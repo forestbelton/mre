@@ -157,24 +157,19 @@ KalumScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.KalumDefeat
     ; Default greeting (first visit) — was the mislabeled start at $42bd:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    db "Wow! I can't"
-    SCRIPT_NEWLINE
+    db "Wow! I can't\r"
     db "believe people"
     SCRIPT_WAIT
-    db "still climb up"
-    SCRIPT_NEWLINE
+    db "still climb up\r"
     db "here."
     SCRIPT_WAIT
-    db "I've been bored"
-    SCRIPT_NEWLINE
+    db "I've been bored\r"
     db "lately."
     SCRIPT_WAIT
-    db "It's time to"
-    SCRIPT_NEWLINE
+    db "It's time to\r"
     db "have some fun!"
     SCRIPT_WAIT
-    db "Let's go,"
-    SCRIPT_NEWLINE
+    db "Let's go,\r"
     db "Selketo!"
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL Kalum_ShowMonsterPortrait
@@ -184,34 +179,27 @@ KalumScript:
 .KalumVictory:
     db "Unbelievable..."
     SCRIPT_WAIT
-    db "My Selketo"
-    SCRIPT_NEWLINE
+    db "My Selketo\r"
     db "lost..."
     SCRIPT_WAIT
-    db "Heh! Even if you"
-    SCRIPT_NEWLINE
+    db "Heh! Even if you\r"
     db "beat me..."
     SCRIPT_WAIT
-    db "Stronger guys"
-    SCRIPT_NEWLINE
+    db "Stronger guys\r"
     db "are up here!"
     SCRIPT_WAIT
     SCRIPT_END
 .KalumDefeat:
-    db "Hm. Im sorry"
-    SCRIPT_NEWLINE
+    db "Hm. Im sorry\r"
     db "to say, but..."
     SCRIPT_WAIT
-    db "At your level,"
-    SCRIPT_NEWLINE
+    db "At your level,\r"
     db "it's the same"
     SCRIPT_WAIT
-    db "regardless of"
-    SCRIPT_NEWLINE
+    db "regardless of\r"
     db "your attempts."
     SCRIPT_WAIT
-    db "Don't like it"
-    SCRIPT_NEWLINE
+    db "Don't like it\r"
     db "Practice harder!"
     SCRIPT_WAIT
     SCRIPT_END
