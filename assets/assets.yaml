@@ -13,6 +13,9 @@
 #                       (both banks stacked + 16 palettes embedded). Opt: tiles.
 #   mode: portrait   -- grayscale character portrait; one tile-sheet PNG (bank-1
 #                       tiles first, then any bank-0 tiles). Opts: tiles1, tiles0.
+#   mode: scene      -- summon-animation tiles; one combined two-bank tile-sheet PNG
+#                       (palettes embedded). Splits tiles/palette; passes descriptors.bin
+#                       + metasprites.bin (the BG-frame/OBJ data) through. Opts: tiles, palettes.
 
 logo:
   mode: composite
@@ -162,3 +165,54 @@ nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
 nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 tiles
   mode: portrait
   png: portrait/nada_scene2/nada_scene2.png
+
+# --- Summon-animation scenes (bank-$05 scene VM). Editable two-bank tile sheet + palette
+# from one indexed PNG; each scene's BG descriptor frames + metasprite lists stay as data
+# (their composed-frame layout doesn't reverse cleanly -- ~700 ambiguous cells/scene).
+tiger:                        # summon scene 0 (descriptors live in bank $05/scene.asm)
+  mode: scene
+  png: scene/tiger/tiles.png
+  tiles: 384
+  palettes: 16
+
+mocchi:                       # summon scene 1 (43 palettes -- base 16 + animation frames)
+  mode: scene
+  png: scene/mocchi/tiles.png
+  tiles: 384
+  palettes: 43
+
+hare:                         # summon scene 2
+  mode: scene
+  png: scene/hare/tiles.png
+  tiles: 384
+  palettes: 16
+
+gali:                         # summon scene 3 (descriptors shared in bank $0c/summon_maps)
+  mode: scene
+  png: scene/gali/tiles.png
+  tiles: 384
+  palettes: 16
+
+golem:                        # summon scene 4: 384+384 tiles, 16 palettes (8 BG + 8 OBJ)
+  mode: scene
+  png: scene/golem/tiles.png
+  tiles: 384
+  palettes: 16
+
+suezo:                        # summon scene 5 (20 palettes)
+  mode: scene
+  png: scene/suezo/tiles.png
+  tiles: 384
+  palettes: 20
+
+phenix:                       # summon scene 6 (descriptors+metasprites shared in bank $0c)
+  mode: scene
+  png: scene/phenix/tiles.png
+  tiles: 384
+  palettes: 18
+
+scene7:                       # capture animation (shared wSceneState=7; 26 palettes)
+  mode: scene
+  png: scene/scene7/tiles.png
+  tiles: 384
+  palettes: 26

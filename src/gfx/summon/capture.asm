@@ -4,16 +4,18 @@
 ; scene (hardcoded, not one of the per-monster reveal scenes 0-6).
 ; Palette, tileset, CopyBgMap descriptor frames, and metasprite defs.
 ; See docs/screen_tilemaps.md.
-; Blobs in assets/scene/<monster>/ (INCBIN); no db. Pad* = $00 padding.
+; The tile sheet + palette are the editable source assets/scene/<name>/tiles.png
+; (both banks stacked, palettes embedded); tools/pngasset.py (mode: scene) splits
+; them and passes the committed descriptor/metasprite data through to build/assets/<name>/.
 
 SECTION "scene_scene7", ROMX[$4000], BANK[$0e]
 
 Scene7Tiles:
-	INCBIN "assets/scene/scene7/tiles_bank0.2bpp"
-	INCBIN "assets/scene/scene7/tiles_bank1.2bpp"
+	INCBIN "assets/scene7/tiles_bank0.2bpp"
+	INCBIN "assets/scene7/tiles_bank1.2bpp"
 Scene7Palettes:
-	INCBIN "assets/scene/scene7/palette.bin"
+	INCBIN "assets/scene7/palette.bin"
 Scene7Maps:
-	INCBIN "assets/scene/scene7/descriptors.bin"
+	INCBIN "assets/scene7/descriptors.bin"
 Scene7Sprites:
-	INCBIN "assets/scene/scene7/metasprites.bin"
+	INCBIN "assets/scene7/metasprites.bin"

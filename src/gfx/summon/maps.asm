@@ -4,8 +4,8 @@
 SECTION "scene_maps", ROMX[$4000], BANK[$0c]
 
 GaliMaps:
-	INCBIN "assets/scene/gali/descriptors.bin"
+	INCBIN "assets/gali/descriptors.bin"
 PhenixMaps:
-	INCBIN "assets/scene/phenix/descriptors.bin"
+	INCBIN "assets/phenix/descriptors.bin"
 PhenixSprites:
-	INCBIN "assets/scene/phenix/metasprites.bin"
+	INCBIN "assets/phenix/metasprites.bin"

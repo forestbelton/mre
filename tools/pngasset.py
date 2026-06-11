@@ -272,6 +272,38 @@ def cmd_screen(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_scene(args: argparse.Namespace) -> int:
+    """Summon-animation scene tiles from ONE indexed tile-sheet PNG -- the same stacked
+    two-bank sheet as `screen` (top `--tiles` -> VRAM bank 0, bottom -> bank 1; the PNG
+    palette table holds the scene's `--palettes` CGB palettes; pixel = palette*4 + 2bpp
+    value). Splits into tiles_bank0/1.2bpp + palette.bin and passes the committed
+    descriptors.bin / metasprites.bin (next to the PNG; the BG-frame tilemaps + OBJ lists,
+    which the bank-$05 scene VM drives) through to build/. Only the tile art + palette are
+    editable here; the frame layout stays as data. See docs/screen_tilemaps.md."""
+    png = Path(args.png)
+    d = png.parent
+    tiles = sheet_png_to_tiles(png, args.tiles * 2)            # both banks, stacked
+    _w, _h, _px, colors = read_indexed_png(png)
+    pal = bytearray()
+    for i in range(args.palettes * 4):                        # N palettes * 4 colors
+        word = rgb888_to_555(*colors[i])
+        pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    comps = [
+        ("tiles_bank0.2bpp", b"".join(tiles[: args.tiles])),
+        ("tiles_bank1.2bpp", b"".join(tiles[args.tiles:])),
+        ("palette.bin", bytes(pal)),
+    ]
+    for fn in ("descriptors.bin", "metasprites.bin"):         # passthrough committed data
+        if (d / fn).exists():
+            comps.append((fn, (d / fn).read_bytes()))
+    for name, data in comps:
+        (out / name).write_bytes(data)
+        print(f"  {name}: {len(data)} bytes")
+    return 0
+
+
 def parse_overrides(s: str):
     """'r,c,p;r,c,p' -> [(row,col,palette), ...] (image-irreducible palette ties)."""
     out = []
@@ -829,6 +861,18 @@ def main() -> int:
     sc.add_argument("--tiles", type=int, default=384, help="tiles per bank")
     sc.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
     sc.set_defaults(fn=cmd_screen)
+
+    scn = sub.add_parser(
+        "scene", help="summon-animation tiles: one tile-sheet PNG -> tiles/palette .bin "
+                      "(+ descriptors/metasprites passthrough)"
+    )
+    scn.add_argument("--png", required=True,
+                     help="combined indexed sheet (both banks stacked, palettes embedded); "
+                          "descriptors.bin/metasprites.bin live next to it")
+    scn.add_argument("--out-dir", required=True)
+    scn.add_argument("--tiles", type=int, default=384, help="tiles per bank")
+    scn.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
+    scn.set_defaults(fn=cmd_scene)
 
     pt = sub.add_parser(
         "portrait", help="grayscale portrait: one tile-sheet PNG -> tiles(.bin)(+tiles2.bin)"

@@ -72,8 +72,17 @@ town:
 `mode: composite` opts: `sheet_rows`, `pad_before [byte, n]`, `colors`.
 `mode: screen` opts: `tiles` (per bank, default 384).
 `mode: portrait` opts: `tiles1` (bank 1, default 384), `tiles0` (bank 0, default 0
-= single-bank). All 18 assets now live in this file — the logo (composite), the 7
-two-bank colour screens, and the 10 portraits.
+= single-bank).
+`mode: scene` opts: `tiles` (per bank, default 384), `palettes` (in the PNG table,
+default 16). Like `screen` (one stacked two-bank sheet PNG, palettes embedded) but for
+the bank-$05 summon-animation scenes: it splits tiles/palette and passes the committed
+`descriptors.bin` + `metasprites.bin` (the BG-frame tilemaps + OBJ lists the scene VM
+drives) through to `build/`. Only the tile art + palette are editable; the frame layout
+stays as data — the composed BG frames don't reverse cleanly (~72% of cells are
+image-irreducible: multi-palette near-black art + flips + duplicate tiles, no positional
+allocation model to lean on — see the golem derisk, scratch/scene_derive_test.py).
+All 26 assets now live in this file — the logo (composite), the 7 two-bank colour
+screens, the 10 portraits, and the 8 summon scenes (scene).
 
 ## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
 
