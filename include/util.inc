@@ -12,6 +12,20 @@ MACRO FAR_CALL
     call CallBankedHL
 ENDM
 
+; A {bank, addr LE16} far-pointer record for a banked dispatch table (the consumer
+; reads the bank into the bank-select register, then jp/call the address). The bank
+; is derived from the target via BANK(); the optional offset addresses a point inside
+; the target (a mid-routine resume entry).
+; \1 Target label   \2 (optional) byte offset into Target
+MACRO farptr
+    db BANK(\1)
+IF _NARG > 1
+    dw \1 + (\2)
+ELSE
+    dw \1
+ENDC
+ENDM
+
 ; Encode a 4-byte BCD value.
 ; \1	value to encode
 MACRO BCD4

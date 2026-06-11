@@ -2139,18 +2139,28 @@ RunIntroScene:
 	ret
 
 IntroSceneTable:
-	db $00, $a9, $35, $00, $80, $35, $00, $91, $35
+	farptr IntroScene_TecmoLogo, 41
+	farptr IntroScene_TecmoLogo
+	farptr IntroScene_TecmoLogo, 17
 
 SECTION "analyzed_000f7d", ROM0[$0f7d]
 
 Data_00_0f7d:
-	db $00, $a3, $34, $18, $83, $6b, $18, $fa, $5d, $18, $97, $40, $19, $24, $40, $18
-	db $3c, $53
+	farptr Func_00_3492, 17
+	farptr Func_18_6b71, 18
+	farptr Func_18_5dfa
+	farptr Pashute_StartTownScript
+	farptr Toamuna_CheckSaveExists, 12
+	farptr Func_18_533c
 
 SECTION "analyzed_000fa1", ROM0[$0fa1]
 
 Data_00_0fa1:
-	db $00, $26, $35, $00, $08, $35, $01, $9e, $43, $00, $45, $35, $00, $59, $35
+	farptr Func_00_3508, 30
+	farptr Func_00_3508
+	farptr Func_01_439e
+	farptr Func_00_3508, 61
+	farptr Func_00_3508, 81
 
 Func_00_0fb0:
 	push bc
