@@ -37,4 +37,15 @@ MACRO BCD1
 	DB ((\1 / 10) << 4) | (\1 % 10)
 ENDM
 
+; Include a binary asset and add a label for length computation.
+; \1	Name of asset
+; \2	Path to asset
+MACRO ASSET
+\1:
+	INCBIN \2
+\1End:
+
+	; DEF LEN__\1 EQU (\1End - \1)
+ENDM
+
 ENDC

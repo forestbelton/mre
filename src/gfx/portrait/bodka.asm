@@ -7,11 +7,11 @@
 ; Assembled from assets/portrait/bodka/ by tools/pngasset.py (Makefile, output
 ; under build/assets/). The 6 BG + 6 OBJ palettes (loaded by Bodka_BuildStudioScene
 ; from $1e:$5800/$5840) are carved here from the PNG's colour table.
+INCLUDE "util.inc"
 
 SECTION "Bodka graphics", ROMX
 
-BodkaPortraitTiles:
-	INCBIN "assets/bodka/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+ASSET BodkaPortraitTiles, "assets/bodka/tiles.bin" ; 384 tiles -> VRAM bank 1 $8000
 
 BodkaPortraitPaletteBg:
 	INCBIN "assets/bodka/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)

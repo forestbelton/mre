@@ -11,10 +11,12 @@ LinkClampResultCode:
 	ret c
 	ld a, $03
 	ret
+
 LinkStoreSendRoom:
 	ld a, [wActiveFloor]
 	ld [$d5f9], a
 	ret
+
 LinkStoreRecvRoom:
 	ld a, [wActiveFloor]
 	ld [$d5fa], a
@@ -24,6 +26,7 @@ Func_18_5dfa:
 	ld hl, BodkaScript
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
+
 Bodka_BuildStudioScene:
 	call Func_00_0822
 	ld a, $c7
@@ -32,21 +35,21 @@ Bodka_BuildStudioScene:
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
-	ld a, $1e
-	ld hl, $4000
+	ld a, BANK(BodkaPortraitTiles)
+	ld hl, BodkaPortraitTiles
 	ld de, $8000
-	ld bc, $1800
+	ld bc, BodkaPortraitTilesEnd - BodkaPortraitTiles
 	call BankVramCopy
 	call Bodka_LoadStudioBgMap
 	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
-	ld a, $1e
-	ld hl, $5800
+	ld a, BANK(BodkaPortraitPaletteBg)
+	ld hl, BodkaPortraitPaletteBg
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, $1e
-	ld hl, $5840
+	ld a, BANK(BodkaPortraitPaletteObj)
+	ld hl, BodkaPortraitPaletteObj
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -59,22 +62,23 @@ Bodka_BuildStudioScene:
 	call PlaySoundTracked
 	pop af
 	ret
+
 Bodka_BuildTowerScene:
-	FAR_CALL $1f, Func_1f_4d66
+	FAR_CALL BANK(Func_1f_4d66), Func_1f_4d66
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
-	ld a, $1e
-	ld hl, $4000
+	ld a, BANK(BodkaPortraitTiles)
+	ld hl, BodkaPortraitTiles
 	ld de, $8000
-	ld bc, $1800
+	ld bc, BodkaPortraitTilesEnd - BodkaPortraitTiles
 	call BankVramCopy
 	call Bodka_LoadStudioBgMap
-	ld hl, $5bd9
-	ld a, $1e
+	ld hl, Data_1e_5bd9
+	ld a, BANK(Data_1e_5bd9)
 	ld de, $9845
 	call BankMapCopyA
 	call Bodka_RenderPortrait
@@ -84,8 +88,8 @@ Bodka_BuildTowerScene:
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, $1e
-	ld hl, $5b99
+	ld a, BANK(Data_1e_5b99)
+	ld hl, Data_1e_5b99
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -94,12 +98,14 @@ Bodka_BuildTowerScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
+
 Bodka_LoadStudioBgMap:
-	ld hl, $5880
-	ld a, $1e
-	ld de, $9800
+	ld hl, BodkaPortraitMapDesc
+	ld a, BANK(BodkaPortraitMapDesc)
+	ld de, TILEMAP0
 	call BankMapCopyA
 	ret
+
 Bodka_RenderPortrait:
 	ld a, $c8
 	ld [wRendererAddr], a
@@ -125,7 +131,7 @@ Bodka_RenderPortrait:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, $5a3e
+	ld hl, Data_1e_5a3e
 	ld a, $1e
 	ld de, $98a6
 	call BankMapCopyA
@@ -151,6 +157,7 @@ Bodka_RenderPortrait:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
+
 Bodka_RenderPortraitAlt:
 	ld a, $3c
 	ld [wRendererAddr], a
@@ -171,6 +178,7 @@ Bodka_RenderPortraitAlt:
 	ld bc, $2833
 	call DrawMetasprite
 	ret
+
 Tradehouse_BuildScene:
 	call Func_00_0822
 Tradehouse_BuildSceneNoInit:
@@ -180,21 +188,21 @@ Tradehouse_BuildSceneNoInit:
 	call Func_00_3965
 	ld a, $01
 	ld [rVBK], a
-	ld a, $33
-	ld hl, $4000
+	ld a, BANK(Data_33_4000)
+	ld hl, Data_33_4000
 	ld de, $8000
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadBgMap
 	call Tradehouse_AnimateNoteScene
 	call HideUnusedOamSprites
-	ld a, $33
-	ld hl, $7000
+	ld a, BANK(Data_33_7000)
+	ld hl, Data_33_7000
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, $33
-	ld hl, $7040
+	ld a, BANK(Data_33_7040)
+	ld hl, Data_33_7040
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -203,12 +211,14 @@ Tradehouse_BuildSceneNoInit:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
+
 Tradehouse_LoadBgMap:
-	ld hl, $7080
-	ld a, $33
-	ld de, $9800
+	ld hl, Data_33_7080
+	ld a, BANK(Data_33_7080)
+	ld de, TILEMAP0
 	call BankMapCopyA
 	ret
+
 Tradehouse_BuildNoteScene:
 	ld a, $c7
 	ld [rLCDC], a
@@ -222,13 +232,13 @@ Tradehouse_BuildNoteScene:
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadNoteBgMap
-	ld a, $33
-	ld hl, $7000
+	ld a, BANK(Data_33_7000)
+	ld hl, Data_33_7000
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, $33
-	ld hl, $7040
+	ld a, BANK(Data_33_7040)
+	ld hl, Data_33_7040
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -237,12 +247,14 @@ Tradehouse_BuildNoteScene:
 	ld [hObjPaletteDirty], a
 	call WaitForNextFrame
 	ret
+
 Tradehouse_LoadNoteBgMap:
 	ld hl, $723e
 	ld a, $33
 	ld de, $9800
 	call BankMapCopyA
 	ret
+
 Tradehouse_AnimateNoteScene:
 	ld a, $1f
 	ld [wRendererAddr], a
@@ -311,7 +323,7 @@ BodkaScript:
 TradehouseEntry:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_IF_EQ .Addr=wTradehouseState, .Value=$01, .Target=TradehouseReady
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
     db "Nobody seems"
     SCRIPT_NEWLINE
     db "to be here."
@@ -320,24 +332,24 @@ TradehouseEntry:
     SCRIPT_NEWLINE
     db "There's a note!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildNoteScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildNoteScene, .Bank=BANK(Tradehouse_BuildNoteScene)
     db "Link function"
     SCRIPT_NEWLINE
     db "seems usable."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wTradehouseState, .Value=$01
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildSceneNoInit, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildSceneNoInit, .Bank=BANK(Tradehouse_BuildSceneNoInit)
     SCRIPT_GOTO .Target=TradehouseMenu
 
 TradehouseReady:
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
 
 TradehouseMenu:
     db "What would you"
     SCRIPT_NEWLINE
     db "like to play?"
-    SCRIPT_FAR_CALL .Addr=Tradehouse_ShowMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Tradehouse_LoadBgMap, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Tradehouse_ShowMenu, .Bank=BANK(Tradehouse_ShowMenu)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_LoadBgMap, .Bank=BANK(Tradehouse_LoadBgMap)
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, TradehouseEnter, TradehouseSave, BodkaGreet
 
@@ -346,13 +358,13 @@ TradehouseEnter:
     SCRIPT_NEWLINE
     db "the room, then."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=BANK(OpenRoomSelectMenu)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=TradehouseEnterDone
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=TradehouseEnterDone
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=TradehouseEnterDone
-    SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=BANK(EnterSelectedRoom)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
 
 TradehouseEnterDone:
     db "Done. OK, let's"
@@ -367,7 +379,7 @@ TradehouseSave:
     db "the exchange."
     SCRIPT_YN_CUE
     SCRIPT_WRITE_WRAM .Addr=$d5c2, .Value=$00
-    SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=$31
+    SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=BANK(LinkExchangeConnect)
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveConfirm, TradehouseSaveNoFriend, TradehouseSaveNotReady, TradehouseSaveProcess
 
@@ -409,7 +421,7 @@ TradehouseSaveConfirm:
     SCRIPT_NEWLINE
     db "Okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=BANK(ShowYesNoMenu)
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=TradehouseSaving
     db "Hmmm..."
     SCRIPT_WAIT
@@ -426,7 +438,7 @@ TradehouseSaving:
     SCRIPT_WAIT
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL .Addr=SaveGameToSram, .Bank=$12
+    SCRIPT_FAR_CALL .Addr=SaveGameToSram, .Bank=BANK(SaveGameToSram)
     db "We're ready! Now"
     SCRIPT_NEWLINE
     db "start exchange!"
@@ -438,17 +450,17 @@ TradehouseSaving:
     db "room to exchange"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
-    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=LinkStoreSendRoom, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=BANK(SetupExchangeRoomSelect)
+    SCRIPT_FAR_CALL .Addr=LinkStoreSendRoom, .Bank=BANK(LinkStoreSendRoom)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
     db "Next, choose a"
     SCRIPT_NEWLINE
     db "room to receive."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
-    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=LinkStoreRecvRoom, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=BANK(SetupExchangeRoomSelect)
+    SCRIPT_FAR_CALL .Addr=LinkStoreRecvRoom, .Bank=BANK(LinkStoreRecvRoom)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
     db "You're both OK?"
     SCRIPT_NEWLINE
     db "Let's start!"
@@ -465,9 +477,9 @@ TradehouseSaving:
     SCRIPT_NEWLINE
     db "a little while."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=$31
-    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=BANK(LinkExchangeTransfer)
+    SCRIPT_FAR_CALL .Addr=Tradehouse_BuildScene, .Bank=BANK(Tradehouse_BuildScene)
+    SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=BANK(LinkClampResultCode)
     SCRIPT_JUMP_TABLE $d5c2, TradehouseSaveOk, TradehouseSaveErr, TradehouseSaveProcess2, TradehouseSaveProcess2
 
 TradehouseSaveOk:
@@ -507,7 +519,7 @@ BodkaGreet:
 ; Studio-host greeting ($6483) — target of the BodkaScript studio-flag branch.
 BodkaStudioGreet:
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
     SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, BodkaGreetA, BodkaGreetB, BodkaGreetC, BodkaGreetD
 
@@ -548,8 +560,8 @@ BodkaMenu:
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
-    SCRIPT_FAR_CALL .Addr=Bodka_ShowMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_ShowMenu, .Bank=BANK(Bodka_ShowMenu)
+    SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=BANK(Bodka_LoadStudioBgMap)
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, BodkaLeave, BodkaEnter, BodkaItems, BodkaSave, BodkaExit
 
@@ -559,8 +571,8 @@ BodkaLeave:
     SCRIPT_NEWLINE
     db "I got it ready."
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=OpenRoomArrangeMenu, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=OpenRoomArrangeMenu, .Bank=BANK(OpenRoomArrangeMenu)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Oh, you're done?"
     SCRIPT_NEWLINE
@@ -574,8 +586,8 @@ BodkaEnter:
     SCRIPT_NEWLINE
     db "room. Good luck!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=OpenRoomSelectMenu, .Bank=BANK(OpenRoomSelectMenu)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=BodkaEnterNo
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=BodkaEnterNo
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=BodkaEnterNo
@@ -584,8 +596,8 @@ BodkaEnter:
     SCRIPT_NEWLINE
     db "the room!"
     SCRIPT_WAIT
-    SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=EnterSelectedRoom, .Bank=BANK(EnterSelectedRoom)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
 
 BodkaEnterNo:
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
@@ -598,8 +610,8 @@ BodkaItems:
     db "Now,"
     SCRIPT_NEWLINE
     db "let me explain."
-    SCRIPT_FAR_CALL .Addr=Bodka_ShowItemsSubMenu, .Bank=$1f
-    SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=Bodka_ShowItemsSubMenu, .Bank=BANK(Bodka_ShowItemsSubMenu)
+    SCRIPT_FAR_CALL .Addr=Bodka_LoadStudioBgMap, .Bank=BANK(Bodka_LoadStudioBgMap)
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wSubMenuCursor, BodkaItemDisc, BodkaItemLink, BodkaItemStop
     SCRIPT_GOTO .Target=BodkaMenu
@@ -610,7 +622,7 @@ BodkaSave:
     SCRIPT_NEWLINE
     db "let's exchange!"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=$31
+    SCRIPT_FAR_CALL .Addr=LinkExchangeConnect, .Bank=BANK(LinkExchangeConnect)
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE $d5c2, BodkaSaveConfirm, BodkaSaveNoOpp, BodkaSaveNotReady, BodkaSaveProcess
 
@@ -654,7 +666,7 @@ BodkaSaveConfirm:
     SCRIPT_WAIT
     db "Okay?"
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=$1f
+    SCRIPT_FAR_CALL .Addr=ShowYesNoMenu, .Bank=BANK(ShowYesNoMenu)
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=BodkaSaving
     SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
     db "I see. How"
@@ -683,7 +695,7 @@ BodkaSaving:
     db "Leave Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
-    SCRIPT_FAR_CALL .Addr=SaveGameToSram, .Bank=$12
+    SCRIPT_FAR_CALL .Addr=SaveGameToSram, .Bank=BANK(SaveGameToSram)
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Sorry you waited"
     SCRIPT_NEWLINE
@@ -697,18 +709,18 @@ BodkaSaving:
     db "want to exchange"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$02
-    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=LinkStoreSendRoom, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=BANK(SetupExchangeRoomSelect)
+    SCRIPT_FAR_CALL .Addr=LinkStoreSendRoom, .Bank=BANK(LinkStoreSendRoom)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Now, choose a"
     SCRIPT_NEWLINE
     db "room to receive."
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$cfbe, .Value=$01
-    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=$00
-    SCRIPT_FAR_CALL .Addr=LinkStoreRecvRoom, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=SetupExchangeRoomSelect, .Bank=BANK(SetupExchangeRoomSelect)
+    SCRIPT_FAR_CALL .Addr=LinkStoreRecvRoom, .Bank=BANK(LinkStoreRecvRoom)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
     SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
     db "Are you both OK?"
     SCRIPT_NEWLINE
@@ -727,9 +739,9 @@ BodkaSaving:
     SCRIPT_NEWLINE
     db "a second."
     SCRIPT_YN_CUE
-    SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=$31
-    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=$18
-    SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=$18
+    SCRIPT_FAR_CALL .Addr=LinkExchangeTransfer, .Bank=BANK(LinkExchangeTransfer)
+    SCRIPT_FAR_CALL .Addr=Bodka_BuildStudioScene, .Bank=BANK(Bodka_BuildStudioScene)
+    SCRIPT_FAR_CALL .Addr=LinkClampResultCode, .Bank=BANK(LinkClampResultCode)
     SCRIPT_JUMP_TABLE $d5c2, BodkaSaveOk, BodkaSaveErr, BodkaSaveProcess2, BodkaSaveProcess2
 
 BodkaSaveOk:
