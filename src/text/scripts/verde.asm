@@ -229,17 +229,17 @@ VerdeEntry:
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$03, .Target=VerdeGreetSeen
     SCRIPT_IF_EQ .Addr=wVerdeState, .Value=$01, .Target=VerdeGreet
     SCRIPT_FAR_CALL Verde_BuildIntroScene
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Oh?"
     SCRIPT_NEWLINE
     db "Never seen you."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitSurprised, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitSurprised
     db "What?"
     SCRIPT_NEWLINE
     db "Came to help?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Hmm... I see."
     SCRIPT_NEWLINE
     db "Naji did, huh?"
@@ -252,17 +252,17 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "monster breeder"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitCalm
     db "I am the owner"
     SCRIPT_NEWLINE
     db "of the checkroom"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "I'm here just"
     SCRIPT_NEWLINE
     db "like the others"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitCalm
     db "Made it up here"
     SCRIPT_NEWLINE
     db "with my energy"
@@ -283,7 +283,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "of what to do."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "You're amazing,"
     SCRIPT_NEWLINE
     db "here in a flash."
@@ -296,7 +296,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "help each other"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitCalm
     db "from here on."
     SCRIPT_NEWLINE
     db "But I'd be"
@@ -305,7 +305,7 @@ VerdeEntry:
     SCRIPT_NEWLINE
     db "than help."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Instead, I'll be"
     SCRIPT_NEWLINE
     db "a supporter."
@@ -343,7 +343,7 @@ VerdeGreet:
     SCRIPT_JUMP_TABLE wCycleCounter, VerdeGreetA, VerdeGreetB, VerdeGreetC, VerdeGreetD
 
 VerdeGreetA:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Oh, hi!"
     SCRIPT_NEWLINE
     db "How's it going?"
@@ -351,13 +351,13 @@ VerdeGreetA:
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetB:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Hello!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetC:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Welcome!"
     SCRIPT_NEWLINE
     db "I'm glad"
@@ -365,14 +365,14 @@ VerdeGreetC:
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetD:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Welcome!"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeGreetSeen:
     SCRIPT_FAR_CALL Verde_BuildPortraitScene
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "You're here."
     SCRIPT_NEWLINE
     db "I thank you."
@@ -410,7 +410,7 @@ VerdeGreetSeen:
 
 VerdeGreetCleared:
     SCRIPT_FAR_CALL Verde_BuildPortraitScene
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Oh!"
     SCRIPT_NEWLINE
     db "You're here!"
@@ -441,7 +441,7 @@ VerdeGreetCleared:
     SCRIPT_GOTO .Target=VerdeMenu
 
 VerdeMenu:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Let's see."
     SCRIPT_NEWLINE
     db "What can I"
@@ -453,7 +453,7 @@ VerdeMenu:
     SCRIPT_JUMP_TABLE wMainMenuResult, VerdeRaise, VerdeRelease, VerdeSwitch, VerdeExplain, VerdeLeave
 
 VerdeMenuLoop:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Do you want"
     SCRIPT_NEWLINE
     db "something else?"
@@ -462,7 +462,7 @@ VerdeMenuLoop:
     SCRIPT_JUMP_TABLE wYNResult, VerdeMenu, VerdeLeave
 
 VerdeRaise:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "OK!"
     SCRIPT_NEWLINE
     db "I'll take care"
@@ -470,7 +470,7 @@ VerdeRaise:
     db "of it!"
     SCRIPT_WAIT
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=VerdeRaiseFull
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "OK! It's "
     SCRIPT_INDEXED_STR .Addr=wDisplayMonster
     db "."
@@ -496,7 +496,7 @@ VerdeRaiseFull:
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeRelease:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "OK!"
     SCRIPT_NEWLINE
     db "You'll take"
@@ -509,7 +509,7 @@ VerdeRelease:
     SCRIPT_WAIT
     SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$00, .Target=VerdeReleaseYes
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitCalm
     db "Oh yes,"
     SCRIPT_NEWLINE
     db "I have it here."
@@ -554,7 +554,7 @@ VerdeReleaseThis:
 VerdeSwitch:
     SCRIPT_FAR_CALL CountCheckedInMonsters
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$01, .Target=VerdeSwitchDone
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "OK! Switch of"
     SCRIPT_NEWLINE
     db "monsters, right?"
@@ -569,7 +569,7 @@ VerdeSwitch:
     SCRIPT_GOTO .Target=VerdeReleaseThis
 
 VerdeSwitchDone:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortraitCalm, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortraitCalm
     db "Well."
     SCRIPT_NEWLINE
     db "What?"
@@ -585,7 +585,7 @@ VerdeSwitchDone:
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeExplain:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "Let me explain."
     SCRIPT_WAIT
     db "This checkroom"
@@ -625,7 +625,7 @@ VerdeExplain:
     SCRIPT_GOTO .Target=VerdeMenuLoop
 
 VerdeLeave:
-    SCRIPT_RENDERER .Addr=Verde_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Verde_RenderPortrait
     db "OK!"
     SCRIPT_NEWLINE
     db "That's it."

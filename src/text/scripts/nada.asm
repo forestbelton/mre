@@ -309,7 +309,7 @@ NadaScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.NadaDefeat
     SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
     SCRIPT_FAR_CALL Nada_ShowScene
-    SCRIPT_RENDERER .Addr=Nada_RenderPortrait, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortrait
     db "Wow. It took you"
     SCRIPT_NEWLINE
     db "a while. I heard"
@@ -359,13 +359,13 @@ NadaScript:
     db "you should know."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Hm, I don't know"
     SCRIPT_WAIT
     db "Ask the tower."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Nada_ShowSnapReaction
-    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortraitAngry
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP!"
@@ -380,7 +380,7 @@ NadaScript:
     db "spare your life!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Heh! I don't"
     SCRIPT_NEWLINE
     db "think so."
@@ -394,7 +394,7 @@ NadaScript:
     db "fool me."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Nada_ShowSnapReaction
-    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortraitAngry
     db "!!"
     SCRIPT_NEWLINE
     db "SNAP, SNAP!"
@@ -408,7 +408,7 @@ NadaScript:
     db "any angrier!"
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Sorry, but this"
     SCRIPT_NEWLINE
     db "is how it goes."
@@ -450,7 +450,7 @@ NadaScript:
     SCRIPT_END
 .NadaVictory:
     SCRIPT_FAR_CALL Nada_ShowScene
-    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortraitAngry
     db "Unbelievable."
     SCRIPT_WAIT
     db "If I only had"
@@ -458,7 +458,7 @@ NadaScript:
     db "the great power."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL Bodka_BuildTowerScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "I didn't think"
     SCRIPT_NEWLINE
     db "that this day"
@@ -485,7 +485,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "legendary power."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "But just because"
     SCRIPT_NEWLINE
     db "you got here"
@@ -506,7 +506,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "give is that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "silver key you"
     SCRIPT_NEWLINE
     db "picked up. That"
@@ -576,7 +576,7 @@ NadaScript:
     SCRIPT_END
 .NadaDefeat:
     SCRIPT_FAR_CALL Nada_ShowScene
-    SCRIPT_RENDERER .Addr=Nada_RenderPortraitAngry, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortraitAngry
     db "No one beats me"
     SCRIPT_NEWLINE
     db "when I'm serious"
@@ -585,7 +585,7 @@ NadaScript:
     SCRIPT_NEWLINE
     db "fighting me!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Nada_RenderPortrait, .Bank=$1f
+    SCRIPT_RENDERER Nada_RenderPortrait
     db "After this, I'll"
     SCRIPT_NEWLINE
     db "destroy the land"

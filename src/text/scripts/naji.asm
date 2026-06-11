@@ -41,7 +41,7 @@ NajiScript:
     SCRIPT_IF_EQ .Addr=wC2D7, .Value=$01, .Target=NajiCycler
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$02, .Target=NajiProgress
     SCRIPT_IF_EQ .Addr=wNajiState, .Value=$01, .Target=NajiCycler
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Did you come to"
     SCRIPT_NEWLINE
     db "climb the tower?"
@@ -102,7 +102,7 @@ NajiCycler:
     SCRIPT_JUMP_TABLE wCycleCounter, .greet0, .greet1, .greet2, .greet3
 
 .greet0:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Oh, you're here."
     SCRIPT_NEWLINE
     db "Good luck."
@@ -110,7 +110,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet1:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "It's you. Good"
     SCRIPT_NEWLINE
     db "luck, my friend."
@@ -118,7 +118,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet2:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "It's you. We're"
     SCRIPT_NEWLINE
     db "counting on you."
@@ -126,7 +126,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 .greet3:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Hey. It's you!"
     SCRIPT_NEWLINE
     db "Take it easy!"
@@ -134,7 +134,7 @@ NajiCycler:
     SCRIPT_GOTO .Target=NajiMenu
 
 NajiProgress:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Oh, it's you"
     SCRIPT_NEWLINE
     db "again. You made"
@@ -159,7 +159,7 @@ NajiProgress:
     SCRIPT_GOTO .Target=NajiMenu
 
 NajiMenu:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "What are your"
     SCRIPT_NEWLINE
     db "plans this time?"
@@ -182,7 +182,7 @@ NajiMenu:
     SCRIPT_JUMP_TABLE wMainMenuResult, NajiRestart, NajiClimb, NajiTowerLong, NajiAskMenu, NajiLeave
 
 NajiRestart:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "You've climbed"
     SCRIPT_NEWLINE
     db "till Level "
@@ -199,7 +199,7 @@ NajiRestart:
     SCRIPT_END
 
 NajiClimb:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "I understand."
     SCRIPT_NEWLINE
     db "I'll open the"
@@ -215,7 +215,7 @@ NajiClimb:
     SCRIPT_END
 
 NajiAskMenu:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "What do you"
     SCRIPT_NEWLINE
     db "want to know?"
@@ -225,14 +225,14 @@ NajiAskMenu:
     SCRIPT_JUMP_TABLE wSubMenuCursor, NajiAskTower, NajiAskItem, NajiAskStop
 
 NajiLeave:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "See you later."
     SCRIPT_WAIT
     SCRIPT_END
 
 NajiTowerLong:
     SCRIPT_IF_EQ .Addr=wTowerExplained, .Value=$01, .Target=NajiTowerShort
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "10 underground"
     SCRIPT_NEWLINE
     db "levels here. The"
@@ -249,7 +249,7 @@ NajiTowerLong:
     SCRIPT_END
 
 NajiTowerShort:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "You again! Going"
     SCRIPT_NEWLINE
     db "to try again?"
@@ -269,7 +269,7 @@ NajiTowerShort:
     SCRIPT_END
 
 NajiAskTower:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Find the golden"
     SCRIPT_NEWLINE
     db "key in each"
@@ -325,7 +325,7 @@ NajiAskTower:
     SCRIPT_GOTO .Target=NajiAskMenu
 
 NajiAskItem:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Let me explain."
     SCRIPT_NEWLINE
     db "There are over"
@@ -542,12 +542,12 @@ NajiEncounterScript:
     SCRIPT_IF_EQ .Addr=$c2c1, .Value=$01, .Target=.clearedRun
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$00, .Target=.thrownOutTried
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$01, .Target=.firstClearThanks
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "You got out safe."
     SCRIPT_NEWLINE
     db "Good to see you."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "I'll make sure"
     SCRIPT_NEWLINE
     db "you will start"
@@ -562,7 +562,7 @@ NajiEncounterScript:
     SCRIPT_END
 .firstClearThanks:
     SCRIPT_IF_NEQ .Addr=$d0e5, .Value=$00, .Target=.climbedAgain
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Good to see you."
     SCRIPT_NEWLINE
     db "You finally did"
@@ -590,12 +590,12 @@ NajiEncounterScript:
     SCRIPT_WRITE_WRAM .Addr=$d0e5, .Value=$01
     SCRIPT_END
 .climbedAgain:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "You climbed to"
     SCRIPT_NEWLINE
     db "the top again."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "If you feel you"
     SCRIPT_NEWLINE
     db "haven't finished"
@@ -604,12 +604,12 @@ NajiEncounterScript:
     SCRIPT_NEWLINE
     db "cabin and return"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "I'll be waiting."
     SCRIPT_WAIT
     SCRIPT_END
 .thrownOutTried:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Looks like you"
     SCRIPT_NEWLINE
     db "were thrown out."
@@ -622,7 +622,7 @@ NajiEncounterScript:
     SCRIPT_NEWLINE
     db "on yourself."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "I'll make sure"
     SCRIPT_NEWLINE
     db "you will get"
@@ -637,12 +637,12 @@ NajiEncounterScript:
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$00, .Target=.thrownOutHard
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$03, .Target=.basementOpened
     SCRIPT_IF_EQ .Addr=$c2d7, .Value=$02, .Target=.needSilverKey
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "You made it out!"
     SCRIPT_NEWLINE
     db "Glad you're safe"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "To move forward"
     SCRIPT_NEWLINE
     db "and gain success"
@@ -654,7 +654,7 @@ NajiEncounterScript:
     SCRIPT_END
 .basementOpened:
     SCRIPT_IF_NEQ .Addr=$d0e6, .Value=$00, .Target=.backSafely
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Oh, you're here."
     SCRIPT_NEWLINE
     db "I didn't think"
@@ -674,7 +674,7 @@ NajiEncounterScript:
     SCRIPT_WRITE_WRAM .Addr=$d0e6, .Value=$01
     SCRIPT_END
 .backSafely:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Good. You made"
     SCRIPT_NEWLINE
     db "it back safely."
@@ -689,7 +689,7 @@ NajiEncounterScript:
     SCRIPT_WAIT
     SCRIPT_END
 .thrownOutHard:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Looks like you"
     SCRIPT_NEWLINE
     db "were thrown out."
@@ -698,14 +698,14 @@ NajiEncounterScript:
     SCRIPT_NEWLINE
     db "you try too hard"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "Be careful, and"
     SCRIPT_NEWLINE
     db "good luck."
     SCRIPT_WAIT
     SCRIPT_END
 .needSilverKey:
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitTalking, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitTalking
     db "Good work, but"
     SCRIPT_NEWLINE
     db "you can't go any"
@@ -722,7 +722,7 @@ NajiEncounterScript:
     SCRIPT_NEWLINE
     db "in the tower."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Naji_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Naji_RenderPortraitAlt
     db "You can do it!"
     SCRIPT_NEWLINE
     db "Don't give up!"

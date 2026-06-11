@@ -623,7 +623,7 @@ SECTION "Cox script", ROMX
 
 CoxScript:
     SCRIPT_OPEN_TEXTBOX .Pos=$9c22, .Width=$10, .Height=$04
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Wow, you were"
     SCRIPT_NEWLINE
     db "cool back then."
@@ -632,12 +632,12 @@ CoxScript:
     SCRIPT_NEWLINE
     db "so cool now."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_CoxSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Ugh..."
     SCRIPT_NEWLINE
     db "That's harsh."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Cool! I want"
     SCRIPT_NEWLINE
     db "adventure like"
@@ -646,7 +646,7 @@ CoxScript:
     SCRIPT_NEWLINE
     db "tower there now?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_CoxSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Of course, Alf."
     SCRIPT_WAIT
     db "You should go"
@@ -657,7 +657,7 @@ CoxScript:
     SCRIPT_NEWLINE
     db "a great time."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Hmmm..."
     SCRIPT_NEWLINE
     db "After I grow up?"
@@ -666,7 +666,7 @@ CoxScript:
     SCRIPT_NEWLINE
     db "to go there now!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_CoxSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Whoa whoa whoa!"
     SCRIPT_NEWLINE
     db "It's dangerous."
@@ -675,21 +675,21 @@ CoxScript:
     SCRIPT_NEWLINE
     db "you get lost?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Gimme a break!"
     SCRIPT_WAIT
     db "You're the"
     SCRIPT_NEWLINE
     db "one who's lost!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_CoxSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Ugh..."
     SCRIPT_NEWLINE
     db "Alf..."
     SCRIPT_WAIT
     db "You're harsh..."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Will you take me"
     SCRIPT_NEWLINE
     db "when I'm grown?"
@@ -700,7 +700,7 @@ CoxScript:
     SCRIPT_NEWLINE
     db "wait till then!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_CoxSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_CoxSpeaking
     db "Okay."
     SCRIPT_NEWLINE
     db "I promise."
@@ -709,7 +709,7 @@ CoxScript:
     SCRIPT_NEWLINE
     db "between men!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_AlfSpeaking, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Okay! Now I'll"
     SCRIPT_NEWLINE
     db "practice and"
@@ -726,7 +726,7 @@ CoxScript:
 
 ; $46d5 — Cox reminiscing solo after the flashback ("Whew! I forgot...").
 CoxReminisceScript:
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_Reminiscing, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_Reminiscing
     db "Whew! I forgot"
     SCRIPT_NEWLINE
     db "just how much"
@@ -745,7 +745,7 @@ CoxReminisceScript:
 
 ; $473d — Cox decides to go see old friends.
 CoxGoSeeFriendsScript:
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_GoSeeFriends, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_GoSeeFriends
     db "I know!"
     SCRIPT_WAIT
     db "I'll go see"
@@ -770,7 +770,7 @@ CoxGoSeeFriendsScript:
 
 ; $47c3 — Cox remembers to leave a note ("Wait, I forgot").
 CoxNoteScript:
-    SCRIPT_RENDERER .Addr=Cox_RenderPortrait_Note, .Bank=$13
+    SCRIPT_RENDERER Cox_RenderPortrait_Note
     db "Wait, I forgot."
     SCRIPT_NEWLINE
     db "Withouta note,"

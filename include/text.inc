@@ -34,10 +34,6 @@ struct ScriptWrite      ; WRITE_WRAM
     words 1, Addr
     bytes 1, Value
 end_struct
-struct ScriptCall       ; RENDERER  ({addr, bank})
-    words 1, Addr
-    bytes 1, Bank
-end_struct
 struct ScriptTarget     ; GOTO
     words 1, Target
 end_struct
@@ -132,11 +128,12 @@ MACRO SCRIPT_CYCLE
     dstruct ScriptCount, , \#
 ENDM
 
-; SCRIPT_RENDERER .Addr, .Bank : set text-renderer to {bank,addr}, stored at
-; $D61E/$D61F/$D620. Following text bytes use this renderer. (4 bytes)
+; SCRIPT_RENDERER <Addr> : set text-renderer to a label (bank derived via BANK()),
+; stored at $D61E/$D61F/$D620. Following text bytes use this renderer. (4 bytes)
 MACRO SCRIPT_RENDERER
     db $0E
-    dstruct ScriptCall, , \#
+    dw \1
+    db BANK(\1)
 ENDM
 
 ; SCRIPT_DECIMAL .Addr : print [addr] as a 1- or 2-digit decimal (3 bytes — $0F lo hi)

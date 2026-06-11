@@ -117,7 +117,7 @@ ToamunaScript:
     SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$03, .Target=ToamunaVerde
     SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$02, .Target=ToamunaPashute
     SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$01, .Target=ToamunaCycler
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "I haven't had a"
     SCRIPT_NEWLINE
     db "guest in so long."
@@ -150,7 +150,7 @@ ToamunaScript:
     SCRIPT_NEWLINE
     db "seeking a legend"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortraitAlt, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortraitAlt
     db "A few years ago,"
     SCRIPT_WAIT
     db "a priest named"
@@ -210,26 +210,26 @@ ToamunaCycler:
     SCRIPT_CYCLE .Count=4
     SCRIPT_JUMP_TABLE wCycleCounter, .cycle0, .cycle1, .cycle2, .cycle3
 .cycle0:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Welcome, stay as"
     SCRIPT_NEWLINE
     db "long as you like"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
 .cycle1:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Welcome."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
 .cycle2:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Welcome back."
     SCRIPT_NEWLINE
     db "Go and rest."
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=ToamunaMenu
 .cycle3:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Welcome back."
     SCRIPT_NEWLINE
     db "Long day?"
@@ -237,7 +237,7 @@ ToamunaCycler:
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaPashute:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Pashute is back."
     SCRIPT_NEWLINE
     db "Thanks a lot."
@@ -246,7 +246,7 @@ ToamunaPashute:
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaVerde:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Verde returned."
     SCRIPT_NEWLINE
     db "Great! Thank you"
@@ -255,7 +255,7 @@ ToamunaVerde:
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaAllBack:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Everyone's back,"
     SCRIPT_NEWLINE
     db "thanks to you."
@@ -268,7 +268,7 @@ ToamunaAllBack:
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaMenu:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
@@ -284,7 +284,7 @@ ToamunaPostAction:
     SCRIPT_ANCHOR
     SCRIPT_JUMP_TABLE wMainMenuResult, ToamunaSign, ToamunaConfirm, ToamunaExit
 ToamunaPostActionBody:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Need to do"
     SCRIPT_NEWLINE
     db "something else?"
@@ -293,7 +293,7 @@ ToamunaPostActionBody:
     SCRIPT_JUMP_TABLE wYNResult, ToamunaMenu, ToamunaExit
 
 ToamunaSign:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Want to sign the"
     SCRIPT_NEWLINE
     db "guest book?"
@@ -330,7 +330,7 @@ ToamunaSign:
     SCRIPT_GOTO .Target=ToamunaPostActionBody
 
 ToamunaConfirm:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Want to check"
     SCRIPT_NEWLINE
     db "the guest book?"
@@ -365,7 +365,7 @@ ToamunaConfirm:
     SCRIPT_GOTO .Target=ToamunaPostActionBody
 
 ToamunaExit:
-    SCRIPT_RENDERER .Addr=Toamuna_RenderPortrait, .Bank=$19
+    SCRIPT_RENDERER Toamuna_RenderPortrait
     db "Okay."
     SCRIPT_NEWLINE
     db "Be careful."

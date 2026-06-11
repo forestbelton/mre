@@ -324,12 +324,12 @@ PashuteScript:
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$02, .Target=PashuteGreetReturning
     SCRIPT_IF_EQ .Addr=wPashuteState, .Value=$01, .Target=PashuteGreetingCycle
     SCRIPT_FAR_CALL Pashute_LoadIntroScene
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "Waaaaaaaa!"
     SCRIPT_NEWLINE
     db "They found me!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "But it doesn't"
     SCRIPT_NEWLINE
     db "scare me!"
@@ -342,7 +342,7 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "or hide!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitShocked
     db "... ... ... ..."
     SCRIPT_NEWLINE
     db "Huh? ... ... ..."
@@ -359,7 +359,7 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "Came to help?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "I see. I guess"
     SCRIPT_NEWLINE
     db "I took it wrong."
@@ -380,12 +380,12 @@ PashuteScript:
     SCRIPT_NEWLINE
     db "fight bat..."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "I'm not a weak"
     SCRIPT_NEWLINE
     db "baby or anything"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "....AHEM!"
     SCRIPT_NEWLINE
     db "Anyways."
@@ -479,7 +479,7 @@ PashuteGreetingCycle:
     SCRIPT_JUMP_TABLE wCycleCounter, PashuteGreeting1, PashuteGreeting2, PashuteGreeting3, PashuteGreeting4
 
 PashuteGreeting1:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Welcome to the"
     SCRIPT_NEWLINE
     db "Monster Shrine."
@@ -487,7 +487,7 @@ PashuteGreeting1:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting2:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Hello!"
     SCRIPT_NEWLINE
     db "Welcome!"
@@ -495,7 +495,7 @@ PashuteGreeting2:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting3:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Welcome to the"
     SCRIPT_NEWLINE
     db "Monster Shrine."
@@ -503,7 +503,7 @@ PashuteGreeting3:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteGreeting4:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Well, well"
     SCRIPT_NEWLINE
     db "Good to see you."
@@ -512,7 +512,7 @@ PashuteGreeting4:
 
 PashuteGreetReturning:
     SCRIPT_FAR_CALL Pashute_LoadShrineScene
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Oh, yes. I heard"
     SCRIPT_NEWLINE
     db "that there's a"
@@ -546,10 +546,10 @@ PashuteGreetReturning:
 
 PashuteGreetProgress:
     SCRIPT_FAR_CALL Pashute_LoadShrineScene
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitShocked
     db "Oh! Well,"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Thank you"
     SCRIPT_NEWLINE
     db "for helping us."
@@ -593,7 +593,7 @@ PashuteGreetProgress:
 
 PashuteGameDone:
     SCRIPT_FAR_CALL Pashute_LoadShrineScene
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Hello! How are"
     SCRIPT_NEWLINE
     db "doing? I heard"
@@ -622,7 +622,7 @@ PashuteGameDone:
     SCRIPT_GOTO .Target=PashuteMenu
 
 PashuteMenu:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Well, then."
     SCRIPT_WAIT
     db "How can I"
@@ -634,7 +634,7 @@ PashuteMenu:
     SCRIPT_JUMP_TABLE wMainMenuResult, PashuteStone, PashuteAsk, PashuteLeave
 
 PashuteContinue:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Anything"
     SCRIPT_NEWLINE
     db "else you need?"
@@ -643,7 +643,7 @@ PashuteContinue:
     SCRIPT_JUMP_TABLE wYNResult, PashuteMenu, PashuteNoContinue
 
 PashuteNoContinue:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "I see."
     SCRIPT_WAIT
     db "Well, I await"
@@ -653,14 +653,14 @@ PashuteNoContinue:
     SCRIPT_END
 
 PashuteStone:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Regenerating a"
     SCRIPT_NEWLINE
     db "saucer stone?"
     SCRIPT_WAIT
     SCRIPT_IF_EQ .Addr=$d0e1, .Value=$01, .Target=PashuteStoneCheck
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteStoneCheck
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "If the new"
     SCRIPT_NEWLINE
     db "monster differs"
@@ -675,7 +675,7 @@ PashuteStone:
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteStoneCheck
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "Until recently,"
     SCRIPT_WAIT
     db "there was a"
@@ -700,7 +700,7 @@ PashuteStoneCheck:
     SCRIPT_IF_NEQ .Addr=$cfde, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfdf, .Value=$00, .Target=PashuteStoneReady
     SCRIPT_IF_NEQ .Addr=$cfe0, .Value=$00, .Target=PashuteStoneReady
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitPanic, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitPanic
     db "But you"
     SCRIPT_WAIT
     db "don't have any"
@@ -718,7 +718,7 @@ PashuteStoneCheck:
     SCRIPT_END
 
 PashuteStoneReady:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Then..."
     SCRIPT_NEWLINE
     db "please choose"
@@ -731,7 +731,7 @@ PashuteStoneReady:
     SCRIPT_FAR_CALL Pashute_LoadShrineTilemap
     SCRIPT_ANCHOR
     SCRIPT_IF_EQ .Addr=$cfbb, .Value=$07, .Target=PashuteContinue
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Starting the"
     SCRIPT_NEWLINE
     db "process."
@@ -747,7 +747,7 @@ PashuteRegenSetup:
     SCRIPT_FAR_CALL Pashute_AddFiveMonsterUses
 
 PashuteRegenPick:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Regeneration"
     SCRIPT_NEWLINE
     db "is complete."
@@ -769,7 +769,7 @@ PashuteRegenPick:
         PashutePhenix
 
 PashuteTiger:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "This is Tiger,"
     SCRIPT_NEWLINE
     db "a cool monster."
@@ -777,7 +777,7 @@ PashuteTiger:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteMocchi:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "This is Mocchi,"
     SCRIPT_NEWLINE
     db "a cute monster."
@@ -785,7 +785,7 @@ PashuteMocchi:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteHare:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "This is Hare,"
     SCRIPT_NEWLINE
     db "a fast monster."
@@ -793,7 +793,7 @@ PashuteHare:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGali:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "It's Gali, a"
     SCRIPT_NEWLINE
     db "mystery monster."
@@ -801,7 +801,7 @@ PashuteGali:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteGolem:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "It's Golem, a"
     SCRIPT_NEWLINE
     db "powerful monster"
@@ -809,7 +809,7 @@ PashuteGolem:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashuteSuezo:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "This is Suezo,"
     SCRIPT_NEWLINE
     db "a funny monster"
@@ -817,17 +817,17 @@ PashuteSuezo:
     SCRIPT_GOTO .Target=PashuteRegenConfirm
 
 PashutePhenix:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitShocked
     db "Whoa! Th...this!"
     SCRIPT_NEWLINE
     db "No way!...Dang!"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db " . . Ahem . . ."
     SCRIPT_NEWLINE
     db "Sorry about that"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitShocked, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitShocked
     db "This is Phenix!"
     SCRIPT_NEWLINE
     db "A wonder monster"
@@ -838,7 +838,7 @@ PashuteRegenConfirm:
     SCRIPT_FAR_CALL Pashute_IsReplacingActiveMonster
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=PashuteRegenDoNow
     SCRIPT_IF_EQ .Addr=wDisplayMonster, .Value=$ff, .Target=PashuteRegenDoNow
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Then I will"
     SCRIPT_NEWLINE
     db "replace "
@@ -856,7 +856,7 @@ PashuteRegenConfirm:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Now I will"
     SCRIPT_NEWLINE
     db "give you"
@@ -871,7 +871,7 @@ PashuteRegenDoNow:
 PashuteRegenTake:
     SCRIPT_FAR_CALL Pashute_GetActiveMonsterUses
     SCRIPT_IF_NEQ .Addr=wYNResult, .Value=$05, .Target=PashuteRegenNow
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Will you take"
     SCRIPT_NEWLINE
     db "the newborn now?"
@@ -892,7 +892,7 @@ PashuteRegenTake:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDoNow2:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Now I will"
     SCRIPT_NEWLINE
     db "give you"
@@ -905,7 +905,7 @@ PashuteRegenDoNow2:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenPlace:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Then let's put"
     SCRIPT_NEWLINE
     db "this "
@@ -950,7 +950,7 @@ PashuteRegenNow2:
     SCRIPT_GOTO .Target=PashuteRegenDone
 
 PashuteRegenDone:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "We are all done."
     SCRIPT_NEWLINE
     db "Please take"
@@ -962,7 +962,7 @@ PashuteRegenDone:
     SCRIPT_GOTO .Target=PashuteContinue
 
 PashuteAsk:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "What shall"
     SCRIPT_NEWLINE
     db "I explain?"
@@ -973,7 +973,7 @@ PashuteAsk:
     db "'J"
 
 PashuteLeave:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Come back again."
     SCRIPT_NEWLINE
     db "I'll be waiting."
@@ -981,7 +981,7 @@ PashuteLeave:
     SCRIPT_END
 
 PashuteAskShrineStone:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Hello."
     SCRIPT_NEWLINE
     db "This Shrine"
@@ -1017,7 +1017,7 @@ PashuteAskShrineStone:
     SCRIPT_GOTO .Target=PashuteAsk
 
 PashuteAskMonster:
-    SCRIPT_RENDERER .Addr=Pashute_RenderPortraitNeutral, .Bank=$18
+    SCRIPT_RENDERER Pashute_RenderPortraitNeutral
     db "Let me explain"
     SCRIPT_NEWLINE
     db "about monsters."

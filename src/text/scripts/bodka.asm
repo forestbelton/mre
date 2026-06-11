@@ -524,7 +524,7 @@ BodkaStudioGreet:
     SCRIPT_JUMP_TABLE wCycleCounter, BodkaGreetA, BodkaGreetB, BodkaGreetC, BodkaGreetD
 
 BodkaGreetA:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Hey!"
     SCRIPT_NEWLINE
     db "How's it going?"
@@ -532,7 +532,7 @@ BodkaGreetA:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetB:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Hey! Howdy?"
     SCRIPT_NEWLINE
     db "Have some fun!"
@@ -540,7 +540,7 @@ BodkaGreetB:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetC:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Oh! You again!"
     SCRIPT_NEWLINE
     db "Take your time!"
@@ -548,7 +548,7 @@ BodkaGreetC:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaGreetD:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Wow!"
     SCRIPT_NEWLINE
     db "Doing your best?"
@@ -556,7 +556,7 @@ BodkaGreetD:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaMenu:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "What do you"
     SCRIPT_NEWLINE
     db "want to do?"
@@ -566,14 +566,14 @@ BodkaMenu:
     SCRIPT_JUMP_TABLE wMainMenuResult, BodkaLeave, BodkaEnter, BodkaItems, BodkaSave, BodkaExit
 
 BodkaLeave:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Leave it to me!"
     SCRIPT_NEWLINE
     db "I got it ready."
     SCRIPT_WAIT
     SCRIPT_FAR_CALL OpenRoomArrangeMenu
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Oh, you're done?"
     SCRIPT_NEWLINE
     db "Great job!"
@@ -581,7 +581,7 @@ BodkaLeave:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaEnter:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Want to try a"
     SCRIPT_NEWLINE
     db "room. Good luck!"
@@ -591,7 +591,7 @@ BodkaEnter:
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$04, .Target=BodkaEnterNo
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$05, .Target=BodkaEnterNo
     SCRIPT_IF_EQ .Addr=wActiveFloor, .Value=$06, .Target=BodkaEnterNo
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Okay! Now enter"
     SCRIPT_NEWLINE
     db "the room!"
@@ -600,13 +600,13 @@ BodkaEnter:
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
 
 BodkaEnterNo:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Not today, huh?"
     SCRIPT_WAIT
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaItems:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Now,"
     SCRIPT_NEWLINE
     db "let me explain."
@@ -617,7 +617,7 @@ BodkaItems:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSave:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Well then,"
     SCRIPT_NEWLINE
     db "let's exchange!"
@@ -627,7 +627,7 @@ BodkaSave:
     SCRIPT_JUMP_TABLE $d5c2, BodkaSaveConfirm, BodkaSaveNoOpp, BodkaSaveNotReady, BodkaSaveProcess
 
 BodkaSaveNoOpp:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Opponent not"
     SCRIPT_NEWLINE
     db "ready yet."
@@ -639,7 +639,7 @@ BodkaSaveNoOpp:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveNotReady:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "You don't look"
     SCRIPT_NEWLINE
     db "ready yet."
@@ -651,7 +651,7 @@ BodkaSaveNotReady:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveProcess:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
@@ -659,7 +659,7 @@ BodkaSaveProcess:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveConfirm:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "First, I'll save"
     SCRIPT_NEWLINE
     db "current status."
@@ -668,7 +668,7 @@ BodkaSaveConfirm:
     SCRIPT_YN_CUE
     SCRIPT_FAR_CALL ShowYesNoMenu
     SCRIPT_IF_EQ .Addr=wYNResult, .Value=$00, .Target=BodkaSaving
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "I see. How"
     SCRIPT_NEWLINE
     db "disappointing."
@@ -680,7 +680,7 @@ BodkaSaveConfirm:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaving:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Okay. Looks like"
     SCRIPT_NEWLINE
     db "you're ready."
@@ -689,19 +689,19 @@ BodkaSaving:
     SCRIPT_NEWLINE
     db "Wait a second."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "I'm saving now."
     SCRIPT_NEWLINE
     db "Leave Game Pak."
     SCRIPT_REPEAT_CHAR .Count=120
     SCRIPT_ANCHOR
     SCRIPT_FAR_CALL SaveGameToSram
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Sorry you waited"
     SCRIPT_NEWLINE
     db "Let's exchange."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Okay, now choose"
     SCRIPT_WAIT
     db "the room you"
@@ -712,7 +712,7 @@ BodkaSaving:
     SCRIPT_FAR_CALL SetupExchangeRoomSelect
     SCRIPT_FAR_CALL LinkStoreSendRoom
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Now, choose a"
     SCRIPT_NEWLINE
     db "room to receive."
@@ -721,12 +721,12 @@ BodkaSaving:
     SCRIPT_FAR_CALL SetupExchangeRoomSelect
     SCRIPT_FAR_CALL LinkStoreRecvRoom
     SCRIPT_FAR_CALL Bodka_BuildStudioScene
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Are you both OK?"
     SCRIPT_NEWLINE
     db "Let's get going."
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Leave Link Cable"
     SCRIPT_NEWLINE
     db "and Game Pak."
@@ -745,12 +745,12 @@ BodkaSaving:
     SCRIPT_JUMP_TABLE $d5c2, BodkaSaveOk, BodkaSaveErr, BodkaSaveProcess2, BodkaSaveProcess2
 
 BodkaSaveOk:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Whoa! Looks like"
     SCRIPT_NEWLINE
     db "it was a success"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Exchange done."
     SCRIPT_WAIT
     db "Call if you need"
@@ -760,7 +760,7 @@ BodkaSaveOk:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveErr:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Hmmm. Looks"
     SCRIPT_NEWLINE
     db "like we failed."
@@ -772,7 +772,7 @@ BodkaSaveErr:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaSaveProcess2:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Process"
     SCRIPT_NEWLINE
     db "cancelled."
@@ -780,7 +780,7 @@ BodkaSaveProcess2:
     SCRIPT_GOTO .Target=BodkaMenu
 
 BodkaExit:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "Okay! Please"
     SCRIPT_NEWLINE
     db "come again!"
@@ -788,7 +788,7 @@ BodkaExit:
     SCRIPT_END
 
 BodkaItemDisc:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "You can make 3"
     SCRIPT_NEWLINE
     db "rooms. Choose a"
@@ -820,12 +820,12 @@ BodkaItemDisc:
     SCRIPT_GOTO .Target=BodkaItems
 
 BodkaItemLink:
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortrait, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortrait
     db "Link Exchange,"
     SCRIPT_NEWLINE
     db "right?"
     SCRIPT_WAIT
-    SCRIPT_RENDERER .Addr=Bodka_RenderPortraitAlt, .Bank=$18
+    SCRIPT_RENDERER Bodka_RenderPortraitAlt
     db "This lets you"
     SCRIPT_NEWLINE
     db "exchange"
