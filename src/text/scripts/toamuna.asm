@@ -86,11 +86,11 @@ Toamuna_RenderPortrait:
 	ld [wRendererBank], a
 	ld a, $1a
 	ld [wDrawBank], a
-	ld hl, $5a56
+	ld hl, Toamuna_hair
 	ld bc, $2828
 	call DrawMetasprite
-	ld hl, Data_1a_5a3e
-	ld a, BANK(Data_1a_5a3e)
+	ld hl, Toamuna_face
+	ld a, BANK(Toamuna_face)
 	ld de, $98c4
 	call BankMapCopyA
 	ret
@@ -104,11 +104,11 @@ Toamuna_RenderPortraitAlt:
 	ld [wRendererBank], a
 	ld a, $1a
 	ld [wDrawBank], a
-	ld hl, $5aab
+	ld hl, Toamuna_alt_hair
 	ld bc, $2828
 	call DrawMetasprite
-	ld hl, $5a93
-	ld a, $1a
+	ld hl, Toamuna_alt_face
+	ld a, BANK(Toamuna_alt_face)
 	ld de, $98c4
 	call BankMapCopyA
 	ret

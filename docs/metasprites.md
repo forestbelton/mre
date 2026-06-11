@@ -126,8 +126,18 @@ end_metasprite CursorSprite    ; CursorSprite.end:
   `.local` label) there, then symbolise the reference. This is the main payoff: the
   hidden references between code and sprite data become visible.
 
+### Asset-pipeline overlays (`pngasset.py`)
+
+Portrait/scene overlay regions are generated from layered PNGs, normally INCBIN'd as a
+`sprites.bin` blob. Add `prefix: <Name>` to the region's `sprites.yaml` and
+`gen_sprite_region_asm` instead emits a structured **`sprites.asm`** — one label per block
+(`<Name>_<role>`), `metasprite`/`obj` for meta blocks and a CopyBgMap descriptor struct
+for patches. The host `src/gfx/.../<name>.asm` then `INCLUDE`s it (inside the overlay
+SECTION) rather than `INCBIN`-ing the blob, so the render code can reference blocks by
+label (`ld hl, Toamuna_hair`) instead of raw address. Byte-identical to the `.bin`; the
+patch pointers become `dw`-relative (relocatable). See `tools/pngasset.py`.
+
 ## See also
 - [portrait_overlays.md](portrait_overlays.md) — the editable-PNG asset model for these
-  lists (the `meta` block kind) and the `gen_meta` heuristics. (Asset-managed overlays
-  stay as `INCBIN`; the macros are for the raw-`db` lists embedded in code.)
+  lists (the `meta` block kind) and the `gen_meta` heuristics.
 - `tools/pngasset.py` `gen_meta` / `scratch/extract_sprites.py` — regenerate / carve.
