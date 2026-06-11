@@ -2,13 +2,12 @@
 ; assets/title/title_screen.png by tools/pngasset.py (screen mode, via assets.yaml): both
 ; VRAM banks stacked + the 16 CGB palettes embedded. The map descriptor references
 ; the maps by label (dw). See docs/gfx_assets.md.
+INCLUDE "util.inc"
 
 SECTION "TitleTiles bank0", ROMX[$4000], BANK[$28]
-TitleTilesBank0:
-	INCBIN "assets/title/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
-TitleTilesBank1:
-	INCBIN "assets/title/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
+ASSET TitleTilesBank0, "assets/title/tiles_bank0.bin"  ; 384 tiles -> VRAM bank 0 $8000
+ASSET TitleTilesBank1, "assets/title/tiles_bank1.bin"  ; 384 tiles -> VRAM bank 1 $8000
 
 TitlePalettes:
 	INCBIN "assets/title/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
@@ -26,15 +25,37 @@ TitleAttrMap:
 
 SECTION "analyzed_0a3356", ROMX[$7356], BANK[$28]
 
-Data_28_7356:
-	db $02, $08, $6c, $73, $5c, $73, $a8, $b0, $f8, $b8, $c0, $c8, $d0, $d8, $a9, $b1
-	db $f8, $b9, $c1, $c9, $d1, $d9, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07
-	db $07, $07, $07, $07, $07, $07, $02, $08, $92, $73, $82, $73, $e0, $e8, $f0, $f8
-	db $e2, $ea, $f2, $fa, $e1, $e9, $f1, $f9, $e3, $eb, $f3, $fb, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $02, $09, $ba, $73
-	db $a8, $73, $e4, $ec, $f4, $fc, $f8, $e6, $ee, $f6, $fe, $e5, $ed, $f5, $fd, $f9
-	db $e7, $ef, $f7, $ff, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00
+; Three small CopyBgMap descriptors (title-screen patches), each copied to VRAM by
+; BankMapCopyB. Structured like TitleMapDesc: db rows, cols : dw attr : dw idx, with the
+; idx/attr maps inline (idx at +6, attr after it).
+Data_28_7356:                              ; CopyBgMap 2x8 patch -> $9986 (DrawTitleScreen)
+	db 2, 8
+	dw .attr
+	dw .idx
+.idx:
+	db $a8, $b0, $f8, $b8, $c0, $c8, $d0, $d8, $a9, $b1, $f8, $b9, $c1, $c9, $d1, $d9
+.attr:
+	db $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07
+
+Data_28_737c:                              ; CopyBgMap 2x8 patch -> $9966 (Func_30_5571)
+	db 2, 8
+	dw .attr
+	dw .idx
+.idx:
+	db $e0, $e8, $f0, $f8, $e2, $ea, $f2, $fa, $e1, $e9, $f1, $f9, $e3, $eb, $f3, $fb
+.attr:
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+
+Data_28_73a2:                              ; CopyBgMap 2x9 patch -> $99a6 (Func_30_5571)
+	db 2, 9
+	dw .attr
+	dw .idx
+.idx:
+	db $e4, $ec, $f4, $fc, $f8, $e6, $ee, $f6, $fe, $e5, $ed, $f5, $fd, $f9, $e7, $ef
+	db $f7, $ff
+.attr:
+	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+	db $00, $00
 
 Data_28_73cc:
 	db $03, $12, $08, $74, $d2, $73, $3a, $42, $4a, $52, $5a, $62, $6a, $72, $7a, $3d
