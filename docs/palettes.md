@@ -42,6 +42,26 @@ portrait palettes — `Func_32_41c1` copies straight into `$c121`/`$c149`).
 (`r | g<<5 | b<<10`, 5 bits/channel). Same packing as `tools/pngasset.py`
 already reads for the logo.
 
+### 6-of-8: why `$30` is loaded from a `$40` region
+
+The CGB has **8 BG + 8 OBJ** hardware palette slots = `$40` bytes per set, and the ROM
+lays each set out on a `$40` boundary (BG at `base`, OBJ at `base+$40`). But most
+screens/portraits only define **6** palettes, so the upload copies only **`$30`** (6
+palettes) into the WRAM shadow — leaving a `$10` gap (the 2 unused slots) between the
+loaded BG palettes and the next set. So a "palette" that looks `$40` on disk but loads
+`$30` is normal: it's 6 used + 2 spare slots.
+
+That trailing `$10` is **not always zero** — don't blindly drop it. Surveyed across the
+portraits + scene palette sets:
+- 7 sets (toamuna, kalum, naji, rafaga, tempest, bodka, verde ×2) have the 2 spare slots
+  as `$00` → carved as **`DS $10`** (the `.bin` holds only the 6 real palettes).
+- 4 sets (pashute, mistral, nada, the bank-`$33` tradehouse scene) have **real non-zero
+  palette data** in those slots → kept as a `db` blob (`Data_<bank>_<addr>`), never
+  loaded but byte-real.
+
+So when carving a palette region, copy the loaded `$30` into the `.bin` and check the
+trailing `$10` in the ROM: `DS $10` if zero, an explicit `db` blob if not.
+
 ## Why this helps the whole project
 
 All of the editable graphics assets now carry real colour; nothing is left
