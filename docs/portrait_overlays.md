@@ -34,7 +34,8 @@ kinds, interleaved in whatever order the render functions reference them:
   (absolute pointers — so the region's load address matters; see `base` below).
 - **meta** — a `DrawMetasprite` OAM list (OBJ layer): `[count]` +
   `[Yoff,Xoff,tile,attr]*count`, in 8×16 OBJ mode (tiles even, step 2). The render
-  code passes a base `bc` position; the stored offsets are relative to it.
+  code passes a base `bc` position; the stored offsets are relative to it. Full format +
+  the `DrawMetasprite` contract: [metasprites.md](metasprites.md).
 
 The render functions live in `src/text/scripts/<name>.asm` (`<Name>_RenderPortrait*`,
 far-called at bank `$18`/`$19`). Read them to learn the **order and role** of every
