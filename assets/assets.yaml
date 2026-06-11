@@ -150,6 +150,12 @@ nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   tiles0: 384
   palettes_bg: 6
   palettes_obj: 6
+  # Overlay region ($723e-$7755, shared by nada_intro + nada_scene2): Nada's 7-frame snap
+  # animation (snap_body two-bank 5x9 patch + snap_hand metasprite each, intro-only) plus
+  # her talking-mouth/face frames, the angry/rage expression, and the monster_eye glow.
+  # Some metasprite records draw from the bank-0 sheet (per-record bank0 map, like the
+  # patches); the busy two-bank snap_body patches pin image-irreducible cells via idx/pal_cells.
+  sprites: sprites/sprites.yaml
 
 # nada_scene2 reuses nada_intro's $1c:$7000 palette (and bank-0 sheet); its PNG is
 # colourised for editing but it owns no palette bytes to carve.

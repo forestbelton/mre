@@ -457,10 +457,18 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
     objidx: dict = {}
     for T in range(0, NT, 2):
         objidx.setdefault(tuple(TPX[T & 0xFE] + TPX[(T & 0xFE) + 1]), []).append(T)
+    # two-bank portraits also draw OBJ records from the bank-0 sheet (tiles2): a
+    # metasprite record with attr bit 3 = 0 reads tiles2 -- same per-record `bank0` map
+    # as patches. Build the bank-0 OBJ lookup / blank set in parallel.
+    objidx2: dict = {}
+    for T in range(0, NT2, 2):
+        objidx2.setdefault(tuple(TPX2[T & 0xFE] + TPX2[(T & 0xFE) + 1]), []).append(T)
     # blank (all-colour-0) OBJ tiles, byte-indexable -- a transparent grid cell must
     # use one of these, and the tool reuses the lowest when padding the grid.
     blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
                        if not any(TPX[T]) and not any(TPX[T + 1]))
+    blank_obj2 = sorted(T for T in range(0, min(256, NT2 - 1), 2)
+                        if not any(TPX2[T]) and not any(TPX2[T + 1]))
 
     def gen_patch(img, addr, bank, pal_hint=None, idx_over=None, bank0=None, pal_over=None):
         px = img.load()
@@ -554,10 +562,18 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         ap = (addr + 6 + rows * cols) & 0xFFFF
         return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + attr
 
-    def gen_meta(img, oy, ox, bank, pal_hint=None, idx_over=None, pal_over=None):
+    def gen_meta(img, oy, ox, bank, pal_hint=None, idx_over=None, pal_over=None,
+                 bank0=None):
         px = img.load()
         W, H = img.size
         cols = W // 8
+        # two-bank portraits: per-record bank (attr bit 3). bank0 (committed metadata)
+        # records read tiles2 / objidx2; the rest read the bank-1 sheet. Single-bank
+        # metasprites leave bank0 empty -> every record uses `bank` (the block default).
+        b0set = set(bank0 or [])
+        OBJI = lambda i: objidx2 if i in b0set else objidx
+        TP = lambda i: TPX2 if i in b0set else TPX
+        BLNK = lambda i: blank_obj2 if i in b0set else blank_obj
         # the metasprite is a complete row-major grid of 8x16 cells; EVERY cell is a
         # record, including ones drawn with a blank (all-transparent) tile -- the
         # original tool padded the grid rather than pruning blank cells.
@@ -567,6 +583,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         tcand: list = []
         for cr in range(0, H, 16):
             for cc in range(0, W, 8):
+                ci = len(cells)
                 blk = [px[cc + c, cr + r] for r in range(16) for c in range(8)]
                 opaque = any(q[3] != 0 for q in blk)
                 cells.append((cr, cc, blk, opaque))
@@ -574,7 +591,7 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
                 if opaque:
                     for p in range(len(POBJ)):
                         if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk):
-                            ts.update(objidx.get(
+                            ts.update(OBJI(ci).get(
                                 tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk), ()))
                 tcand.append(sorted(t for t in ts if t < 256))  # OBJ tile index is a byte
         # TILE: pin the unique-candidate cells. Tiles run +2 in record order along a
@@ -635,7 +652,8 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
                         if 0 <= j < len(cells) and pinned[j] and tile[j] != (base0 + 2 * j) % 256]
             be = (base0 + 2 * i) % 256
             want = [a for a in anchored if a in ts] + ([be] if be in ts else []) + ts
-            tile[i] = want[0]
+            tile[i] = want[0] if want else None   # image-irreducible (e.g. an opaque
+            # colour collapses to the transparent index); left for the `idx` closure pin.
         for i in range(len(cells) - 1, -1, -1):                 # blank cells: next opaque - 2
             if tile[i] is None and i + 1 < len(cells) and tile[i + 1] is not None:
                 tile[i] = (tile[i + 1] - 2) & 0xFF
@@ -645,12 +663,14 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         # a transparent cell's tile must itself be blank; where the run lands on an
         # OPAQUE tile the tool instead reused a shared blank tile (the lowest one it had
         # allocated, else the lowest in the sheet).
-        bset = set(blank_obj)
-        used = [tile[i] for i, c in enumerate(cells) if not c[3] and tile[i] in bset]
-        share = Counter(used).most_common(1)[0][0] if used else (blank_obj[0] if blank_obj else 0)
+        used = [tile[i] for i, c in enumerate(cells)
+                if not c[3] and tile[i] is not None and tile[i] in BLNK(i)]
         for i, c in enumerate(cells):
-            if not c[3] and tile[i] not in bset:
-                tile[i] = share
+            if not c[3] and (tile[i] is None or tile[i] not in BLNK(i)):
+                bl = BLNK(i)
+                same = [t for t in used if t in bl]
+                tile[i] = (Counter(same).most_common(1)[0][0] if same
+                           else (bl[0] if bl else 0))
         # image-irreducible metasprite tile (a fresh run the +2/override model mispredicts,
         # e.g. Mistral's wing run): pinned per-record via the manifest `idx` map.
         for rec, tval in (idx_over or {}).items():
@@ -659,8 +679,8 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         # one palette, fill the rest row-uniform (palette is region-based and these
         # sprites split by row), then 8-neighbour consensus, then pal_hint / dominant.
         pcand = []
-        for (cr, cc, blk, opaque), t in zip(cells, tile):
-            pat = TPX[t & 0xFE] + TPX[(t & 0xFE) + 1]
+        for i, ((cr, cc, blk, opaque), t) in enumerate(zip(cells, tile)):
+            pat = TP(i)[t & 0xFE] + TP(i)[(t & 0xFE) + 1]
             pcand.append([p for p in range(len(POBJ))
                           if all(q[3] == 0 or POBJ[p][pat[k]] == q[:3] for k, q in enumerate(blk))])
         P: list = [c[0] if len(c) == 1 else None for c in pcand]
@@ -694,8 +714,9 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         for rec, p in (pal_over or {}).items():
             P[int(rec)] = p
         out = bytearray([len(cells)])
-        for (cr, cc, blk, opaque), t, p in zip(cells, tile, P):
-            out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (bank << 3) | p))
+        for i, ((cr, cc, blk, opaque), t, p) in enumerate(zip(cells, tile, P)):
+            b = 0 if i in b0set else bank
+            out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (b << 3) | p))
         return bytes(out)
 
     man = yaml.safe_load(Path(manifest_path).read_text())
@@ -712,7 +733,8 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         else:
             img = Image.open(d / blk["png"]).convert("RGBA")
             data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank,
-                            blk.get("pal"), blk.get("idx"), blk.get("pal_cells"))
+                            blk.get("pal"), blk.get("idx"), blk.get("pal_cells"),
+                            blk.get("bank0"))
         out += data
         addr += len(data)
     return bytes(out)

@@ -5,10 +5,14 @@ variants, shoulders, hair, etc. drawn on top of a portrait's base background) wa
 migrated from opaque `db` blobs into **editable, byte-exact layered source**, what
 the heuristics are and why, and how to extend the tools for the remaining portraits.
 
-Status (2026-06-10): **all 8 single-bank portraits done** (pashute, kalum, naji,
-toamuna, rafaga, tempest, bodka, **verde**) plus the first two-bank one, **mistral**
-(was mislabelled "ferious" -- the portrait is Mistral, Ferious is her bg-silhouette
-monster). nada_intro, nada_scene2 (two-bank) remain. Verde was a from-scratch migration
+Status (2026-06-10): **all portraits done.** 8 single-bank (pashute, kalum, naji,
+toamuna, rafaga, tempest, bodka, **verde**) plus two-bank **mistral** (was mislabelled
+"ferious" -- the portrait is Mistral, Ferious is her bg-silhouette monster) and
+**nada_intro** (see §4 for nada's new cases: bank-0 OBJ metasprites + a shared,
+intro-sheet-authored overlay). nada_scene2 reuses nada_intro's overlay region wholesale
+(the rage scene's `NadaPortraitInit` draws the same bank-$1c blocks), so it owns no
+sprites of its own -- one `sprites.yaml`, under nada_intro, covers both scenes.
+Verde was a from-scratch migration
 (it lived raw in pashute.asm, never carved): tiles + two palette sets (portrait + intro,
 the 2nd via a `palettes2` PNG) + maps + the overlay; see `src/gfx/portrait/verde.asm`
 and `scratch/bootstrap_verde.py`. Mistral's overlay is two-bank (a patch whose cells
@@ -156,6 +160,21 @@ assignment is real per-cell data — 51/72 of mistral's cells are pixel-unambigu
 rest blank-ish twins), and derives the bank-0 bytes from their **contiguous column-major
 allocation in `tiles2`** (`byte = base0 + rank`, rank = the cell's index among bank-0
 cells, column-major) — so no per-byte overrides for the bank itself.
+
+### Two-bank metasprites (nada)
+The same **`bank0: [record indices]`** map applies to OBJ blocks: a metasprite record's
+attr bit 3 can select the bank-0 sheet too. `gen_meta` takes the map, looks candidates up
+in `objidx2`/`TPX2`/`blank_obj2` (the tiles2 versions) for those records, and emits the
+bit. nada's `face_angry` mixes 15 bank-1 + 6 bank-0 records; `monster_eye` is a single
+bank-0 record. One genuinely image-irreducible case forced a `gen_meta` guard: an opaque
+pixel whose colour collapses onto the transparent palette index (nada's red `monster_eye`
+under OBJ pal 5, where colours 0/2/3 are all black) has **no** candidate tile under the
+pixels — `want` is empty, so leave the tile `None` and let the `idx` closure pin it
+(don't crash). Also: nada's overlay is **shared by both scenes but authored against the
+intro sheet** — the 7-frame snap body patch's tile indices only resolve to a body over
+nada_intro's bank-1 sheet; in the rage scene those indices index nada_scene2's distinct
+sheet, so the snap animation is an intro-only element (rage draws Nada's body from its BG
+tilemap). This matters when *rendering* for an eyeball check, never for byte-exactness.
 
 ### The override closure (auto-pinning the irreducible residue)
 Big multi-palette patches and fresh metasprite runs leave a handful of genuinely
