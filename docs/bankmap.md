@@ -8,10 +8,10 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 
 ```
 ROM0: 15700 bytes used / 684 free
-ROMX: 743243 bytes used / 288949 free in 63 banks
+ROMX: 749020 bytes used / 283172 free in 63 banks
 WRAM0: 1762 bytes used / 2334 free
 WRAMX: 47 bytes used / 4049 free in 1 bank
-HRAM: 71 bytes used / 56 free
+HRAM: 75 bytes used / 52 free
 ```
 
 ## Banks at a glance
@@ -55,7 +55,7 @@ HRAM: 71 bytes used / 56 free
 | $22 | ROMX | 13787 | 2597 | 2 | 1 | tower.asm |
 | $23 | ROMX | 15288 | 1096 | 2 | 1 | room_start.asm |
 | $24 | ROMX | 9714 | 6670 | 2 | 2 | next_room.asm |
-| $25 | ROMX | 10606 | 5778 | 3 | 3 | screen_25.asm |
+| $25 | ROMX | 16383 | 1 | 1 | 0 | screen_25.asm |
 | $26 | ROMX | 14010 | 2374 | 2 | 1 | tower_open.asm |
 | $27 | ROMX | 12286 | 4098 | 1 | 0 | logo.asm |
 | $28 | ROMX | 13647 | 2737 | 2 | 1 | title.asm |
@@ -79,7 +79,7 @@ HRAM: 71 bytes used / 56 free
 | $3f | ROMX | 16383 | 1 | 48 | 0 | bgm_2e.asm, bank0.asm, bgm_2b.asm, bgm_29.asm, bgm_2d.asm, bgm_2c.asm, bgm_2a.asm, sfx_11.asm, sfx_12.asm, sfx_17.asm, sfx_1b.asm, sfx_0a.asm, sfx_0c.asm, sfx_15.asm, sfx_26.asm, sfx_1a.asm, sfx_09.asm, sfx_08.asm, sfx_16.asm, sfx_1c.asm, sfx_14.asm, sfx_18.asm, sfx_06.asm, sfx_07.asm, sfx_19.asm, sfx_24.asm, sfx_25.asm, sfx_05.asm, sfx_13.asm, sfx_20.asm, sfx_23.asm, sfx_21.asm, sfx_1e.asm, sfx_22.asm, sfx_01.asm, sfx_0d.asm, sfx_0e.asm, sfx_02.asm, sfx_1f.asm, sfx_0b.asm, sfx_04.asm, sfx_03.asm, sfx_10.asm, sfx_0f.asm, bgm_28.asm, sfx_00.asm, sfx_1d.asm, sfx_27.asm |
 | WRAM0#0 | WRAM0 | 1757 | — | 16 | 0 | wram.asm |
 | WRAMX#1 | WRAMX | 43 | — | 6 | 0 | wram.asm |
-| HRAM#0 | HRAM | 71 | — | 4 | 0 | hram.asm |
+| HRAM#0 | HRAM | 74 | — | 5 | 0 | hram.asm |
 
 ## Sections by bank
 
@@ -793,13 +793,11 @@ HRAM: 71 bytes used / 56 free
 | $4000-$597b | 6524 | next_room.asm | analyzed_090000 |
 | $597f-$65f4 | 3190 | next_room.asm | analyzed_09197f |
 
-### $25 — ROMX (3 sections, 3 analyzed)
+### $25 — ROMX (1 sections, 0 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$58fe | 6399 | screen_25.asm | analyzed_094000 |
-| $6000-$657f | 1408 | screen_25.asm | analyzed_096000 |
-| $6801-$72ef | 2799 | screen_25.asm | analyzed_096801 |
+| $4000-$7ffe | 16383 | screen_25.asm | Room screen graphics |
 
 ### $26 — ROMX (2 sections, 1 analyzed)
 
@@ -1183,12 +1181,13 @@ HRAM: 71 bytes used / 56 free
 | $d5fb-$d5ff | 5 | wram.asm | wram_menu_results |
 | $d614-$d622 | 15 | wram.asm | wram_text_engine |
 
-### HRAM#0 — HRAM (4 sections, 0 analyzed)
+### HRAM#0 — HRAM (5 sections, 0 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
 | $ff80-$ff89 | 10 | hram.asm | HRAM DMA |
 | $ff8b-$ff8e | 4 | hram.asm | HRAM joypad |
 | $ffa1-$ffa2 | 2 | hram.asm | HRAM palette flags |
+| $ffa7-$ffa9 | 3 | hram.asm | HRAM sprite OAM |
 | $ffb0-$ffe6 | 55 | hram.asm | HRAM entity shadow |
 
