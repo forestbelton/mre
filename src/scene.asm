@@ -21,14 +21,14 @@ SceneInit:
 	ld [$cf52], a
 	ld [$cf64], a
 	call Func_00_083c
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	ld [$cf6d], a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	ld [$cf6e], a
 	ld a, $10
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, $08
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	call Func_00_0bdd
 	ld hl, $9800
 	ld bc, $0400
@@ -752,9 +752,9 @@ SceneFinish:
 	ld a, [$c28a]
 	ldh [rSCX], a
 	ld a, [$cf6d]
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, [$cf6e]
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	call Func_05_48fc
 	call Func_00_0786
 	ret

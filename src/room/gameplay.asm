@@ -950,9 +950,9 @@ Func_01_49e0:
 	ld [$c289], a
 	ld [$c28a], a
 	ld a, $08
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	ld a, $10
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, $07
 	ldh [rWX], a
 	xor a
@@ -1296,7 +1296,7 @@ Func_01_4c7a:
 	ld [$c289], a
 	cpl
 	add a, $11
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 Func_01_4c82:
 	ld a, [$c55a]
 	ld d, a
@@ -1324,7 +1324,7 @@ Func_01_4ca5:
 	ld [$c28a], a
 	cpl
 	add a, $09
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 Func_01_4cad:
 	ret
 Func_01_4cae:
@@ -1548,7 +1548,7 @@ Func_01_4dd9:
 	ld [$c289], a
 	cpl
 	add a, $11
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ret
 
 Data_01_4e01:

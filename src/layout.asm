@@ -402,8 +402,8 @@ ResetScrollState:
 	xor a
 	ld [$c289], a
 	ld [$c28a], a
-	ldh [$ffa8], a
-	ldh [$ffa9], a
+	ldh [hSpriteOriginY], a
+	ldh [hSpriteOriginX], a
 	ldh [rSCX], a
 	ldh [rSCY], a
 	ret

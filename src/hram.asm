@@ -15,6 +15,11 @@ hJoyPressed::     ds 1  ; $ff8c  buttons newly pressed this frame (rising edge)
 hJoyRepeat::      ds 1  ; $ff8d  press + auto-repeat pulse (for menu navigation; 0 between repeats)
 hJoyRepeatTimer:: ds 1  ; $ff8e  auto-repeat countdown ($1e initial delay, $05 repeat rate)
 
+; Metasprite draw scratch: DrawMetasprite holds its base-X (the bc X) here across the
+; per-record loop while bc is reused. See docs/metasprites.md.
+SECTION "HRAM metasprite scratch", HRAM[$ff9b]
+hMetaspriteBaseX:: ds 1  ; $ff9b  DrawMetasprite base-X, held across the record loop
+
 ; CGB palette upload state, one per layer (see docs/palettes.md). $FF = clean;
 ; any other value = dirty -> FlushDirtyPalettes streams the WRAM shadow buffer
 ; (wBgPalettes / wObjPalettes) to the hardware palette in VBlank and marks it
@@ -22,6 +27,16 @@ hJoyRepeatTimer:: ds 1  ; $ff8e  auto-repeat countdown ($1e initial delay, $05 r
 SECTION "HRAM palette flags", HRAM[$ffa1]
 hBgPaletteDirty:: ds 1
 hObjPaletteDirty:: ds 1
+
+; Sprite / OAM drawing (DrawMetasprite, src/home.asm; see docs/metasprites.md). The OAM
+; shadow buffer is $c000-$c09f; hOamCursor is the low byte of the next free slot --
+; DrawMetasprite appends 4 bytes per OBJ and advances it, HideAllSprites /
+; HideUnusedOamSprites reset it to 0. hSpriteOriginY/X is a global {Y,X} offset added to
+; every metasprite record (the per-call base position comes in bc).
+SECTION "HRAM sprite OAM", HRAM[$ffa7]
+hOamCursor::     ds 1  ; $ffa7  OAM-shadow write cursor (low byte of $c0xx; next free OBJ slot)
+hSpriteOriginY:: ds 1  ; $ffa8  global Y offset added to every metasprite OBJ
+hSpriteOriginX:: ds 1  ; $ffa9  global X offset added to every metasprite OBJ
 
 ; --- Current-entity working shadow (the room/entity engine) ------------------
 ; RunEntity ($03:$4037) copies the active 42-byte entity record into this block

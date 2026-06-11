@@ -254,9 +254,9 @@ Func_0f_420f:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	ld [$cf6d], a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	ld [$cf6e], a
 	ret
 Func_0f_4229:
@@ -267,9 +267,9 @@ Func_0f_4229:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	ld [$cf6d], a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	ld [$cf6e], a
 	ret
 Func_0f_4243:
@@ -387,9 +387,9 @@ Func_0f_4329:
 	call Func_0f_4543
 	call Func_0f_42a2
 	ld a, [$cf6d]
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, [$cf6e]
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	ret
 Func_0f_433a:
 	call Func_0f_44d5
@@ -1281,9 +1281,9 @@ Func_0f_4ad9:
 	call Func_0f_4543
 	call Func_0f_42a2
 	ld a, [$cf6d]
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, [$cf6e]
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	ret
 Func_0f_4aef:
 	call Func_0f_44d5

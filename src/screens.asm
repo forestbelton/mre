@@ -33,17 +33,17 @@ DrawTownScreen:
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
-	ld a, $20
-	ld hl, $4000
+	ld a, BANK(TownTilesBank0)
+	ld hl, TownTilesBank0
 	ld de, $8000
-	ld bc, $1800
+	ld bc, TownTilesBank0End - TownTilesBank0
 	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
-	ld a, $20
-	ld hl, $5800
+	ld a, BANK(TownTilesBank1)
+	ld hl, TownTilesBank1
 	ld de, $8000
-	ld bc, $1800
+	ld bc, TownTilesBank1End - TownTilesBank1
 	call BankVramCopy
 	ld c, $00
 	ld a, [$d0fb]
@@ -70,9 +70,9 @@ Func_30_405a:
 	inc c
 	jp Func_30_405a
 Func_30_4077:
-	ld a, $20
+	ld a, BANK(Data_20_7356)
 	ld [wDrawBank], a
-	ld hl, $7356
+	ld hl, Data_20_7356
 	ld b, $10
 	ld c, $08
 	call DrawMetasprite
@@ -161,9 +161,9 @@ Func_30_4129:
 	ld a, [wScreenFrame]
 	inc a
 	ld [wScreenFrame], a
-	ld a, $20
+	ld a, BANK(Data_20_7356)
 	ld [wDrawBank], a
-	ld hl, $7356
+	ld hl, Data_20_7356
 	ld b, $10
 	ld c, $08
 	call DrawMetasprite
@@ -412,9 +412,9 @@ Data_30_4298:
 	db $f5, $78, $ea, $00, $c1, $f1, $c7, $df, $43, $4a, $cd, $09, $0c, $c9
 
 Func_30_42a6:
-	ld hl, $792f
-	ld de, $9c00
-	ld b, $20
+	ld hl, Data_20_792f
+	ld de, TILEMAP1
+	ld b, BANK(Data_20_792f)
 	ld a, $04
 	call Func_00_35d4
 	ldh a, [rLCDC]
@@ -425,17 +425,20 @@ Func_30_42a6:
 	ld a, $70
 	ldh [rWY], a
 	ret
+
 Func_30_42c2:
 	ldh a, [rLCDC]
 	and $df
 	ldh [rLCDC], a
 	ret
+
 Func_30_42c9:
-	ld hl, $792f
+	ld hl, Data_20_792f
 	ld de, $9c23
-	ld b, $20
+	ld b, BANK(Data_20_792f)
 	call Func_00_35d4
 	ret
+
 Func_30_42d5:
 	ld a, [wScreenInput]
 	and a
@@ -444,10 +447,12 @@ Func_30_42d5:
 	ld [wScreenAnim2], a
 	FAR_CALL Func_20_796d
 	ret
+
 Func_30_42e9:
 	ld a, $00
 	ld [wScreenAnim2], a
 	ret
+
 Func_30_42ef:
 	ld a, [wScreenInput]
 	and a
@@ -507,6 +512,7 @@ Func_30_4355:
 	call Func_30_4387
 Func_30_436b:
 	ret
+
 Func_30_436c:
 	ld a, [wScreenInput]
 	and a
@@ -522,6 +528,7 @@ Func_30_437c:
 Func_30_4383:
 	call Func_30_4387
 	ret
+
 Func_30_4387:
 	ld a, [wScreenAnim]
 	add a, a
@@ -1184,10 +1191,10 @@ Func_30_48c9:
 	jr z, Func_30_4911
 	ld a, $01
 	ldh [rVBK], a
-	ld a, $25
-	ld hl, $4000
+	ld a, BANK(Data_25_4000)
+	ld hl, Data_25_4000
 	ld de, $8000
-	ld bc, $1800
+	ld bc, Data_25_4000End - Data_25_4000
 	call BankVramCopy
 	ld b, $25
 	ld hl, $7100
@@ -1199,10 +1206,10 @@ Func_30_48c9:
 Func_30_4911:
 	ld a, $01
 	ldh [rVBK], a
-	ld a, $25
-	ld hl, $5800
+	ld a, BANK(Data_25_5800)
+	ld hl, Data_25_5800
 	ld de, $8000
-	ld bc, $1800
+	ld bc, Data_25_5800End - Data_25_5800
 	call BankVramCopy
 	ld b, $25
 	ld hl, $71f8
@@ -1373,12 +1380,14 @@ Func_30_4a6c:
 	call Func_30_4a75
 Func_30_4a74:
 	ret
+
 Func_30_4a75:
 	ld b, $24
 	ld hl, $65d9
 	ld de, $9c67
 	call Func_00_35d4
 	ret
+
 Func_30_4a81:
 	ld b, $24
 	ld hl, $65d9
@@ -2285,7 +2294,7 @@ Func_30_547f:
 	call $02e6
 	jp $54b2
 
-Func_30_54b8:
+LoadTitleScreen:
 	xor a
 	ld [wFadeLevel], a
 	ld [$d0ff], a
@@ -2303,31 +2312,31 @@ DrawTitleScreen:
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
-	ld a, $28
-	ld hl, $4000
+	ld a, BANK(TitleTilesBank0)
+	ld hl, TitleTilesBank0
 	ld de, $8000
-	ld bc, $1800
+	ld bc, TitleTilesBank0End - TitleTilesBank0
 	call BankVramCopy
 	ld a, $01
 	ldh [rVBK], a
-	ld a, $28
-	ld hl, $5800
+	ld a, BANK(TitleTilesBank1)
+	ld hl, TitleTilesBank1
 	ld de, $8000
-	ld bc, $1800
+	ld bc, TitleTilesBank1End - TitleTilesBank1
 	call BankVramCopy
-	ld b, $28
-	ld hl, $7080
-	ld de, $9800
+	ld b, BANK(TitleMapDesc)
+	ld hl, TitleMapDesc
+	ld de, TILEMAP0
 	call BankMapCopyB
-	ld b, $28
-	ld hl, $7356
+	ld b, BANK(Data_28_7356)
+	ld hl, Data_28_7356
 	ld de, $9986
 	call BankMapCopyB
 	call Func_30_5698
 	call Func_30_565c
 	call Func_00_0822
-	ld b, $28
-	ld de, $7000
+	ld b, BANK(TitlePalettes)
+	ld de, TitlePalettes
 	call LoadPalettesBanked
 	call Func_00_0794
 Func_30_552f:
@@ -2340,10 +2349,7 @@ Func_30_552f:
 	jr z, Func_30_559d
 	cp $02
 	jr z, Func_30_55a6
-
-Data_30_5544:
-	db $c3, $ca, $55
-
+	jp $55ca
 Func_30_5547:
 	call Func_30_565c
 	ld a, [wFadeLevel]
@@ -2368,16 +2374,16 @@ Func_30_5571:
 	ldh a, [hJoyRepeat]
 	cp $00
 	jr z, Func_30_5547
-	ld b, $28
-	ld hl, $737c
+	ld b, BANK(Data_28_737c)
+	ld hl, Data_28_737c
 	ld de, $9966
 	call BankMapCopyB
 	call Func_30_56d3
 	ld a, [wScreenPhase]
 	and a
 	jr z, Func_30_5596
-	ld b, $28
-	ld hl, $73a2
+	ld b, BANK(Data_28_73a2)
+	ld hl, Data_28_73a2
 	ld de, $99a6
 	call BankMapCopyB
 Func_30_5596:
@@ -2637,9 +2643,9 @@ Func_30_5816:
 	ld [$cf64], a
 	call Func_00_0822
 	ld a, $10
-	ldh [$ffa8], a
+	ldh [hSpriteOriginY], a
 	ld a, $08
-	ldh [$ffa9], a
+	ldh [hSpriteOriginX], a
 	call Func_00_0bdd
 	ld hl, $9800
 	ld bc, $0400

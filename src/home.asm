@@ -1539,14 +1539,14 @@ Func_00_0bb4:
 	ret
 
 Func_00_0bc9:
-	ld hl, $ffa8
+	ld hl, hSpriteOriginY
 	ld a, b
 	ld [hl+], a
 	ld [hl], c
 	ret
 
 Data_00_0bd0:
-	ld hl, $ffa8
+	ld hl, hSpriteOriginY
 	ld a, [hl+]
 	ld c, [hl]
 	ld b, a
@@ -1568,9 +1568,9 @@ Func_00_0be6:
 	dec c
 	jr nz, Func_00_0be6
 	ld a, $00
-	ldh [$ffa7], a
+	ldh [hOamCursor], a
 HideUnusedOamSprites:
-	ldh a, [$ffa7]
+	ldh a, [hOamCursor]
 	cp $a0
 	jr nc, Func_00_0c04
 	ld l, a
@@ -1586,7 +1586,7 @@ Func_00_0bfa:
 	jr c, Func_00_0bfa
 Func_00_0c04:
 	ld a, $00
-	ldh [$ffa7], a
+	ldh [hOamCursor], a
 	ret
 DrawMetasprite:
 	ld a, [CUR_BANK_TAG]
@@ -1594,9 +1594,9 @@ DrawMetasprite:
 	ld a, [wDrawBank]
 	ld [$2fff], a
 	ld a, c
-	ldh [$ff9b], a
+	ldh [hMetaspriteBaseX], a
 	ld d, $c0
-	ldh a, [$ffa7]
+	ldh a, [hOamCursor]
 	ld e, a
 	ld a, [hl+]
 	and a
@@ -1607,14 +1607,14 @@ Func_00_0c20:
 	ld a, [hl+]
 	add a, b
 	ld b, a
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	add a, b
 	ld [de], a
 	inc e
-	ldh a, [$ff9b]
+	ldh a, [hMetaspriteBaseX]
 	add a, [hl]
 	ld b, a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	add a, b
 	ld [de], a
 	inc hl
@@ -1629,16 +1629,16 @@ Func_00_0c20:
 	dec c
 	jr nz, Func_00_0c20
 	ld a, e
-	ldh [$ffa7], a
+	ldh [hOamCursor], a
 Func_00_0c40:
 	pop af
 	ld [$2fff], a
 	ret
 Func_00_0c45:
 	ld a, c
-	ldh [$ff9b], a
+	ldh [hMetaspriteBaseX], a
 	ld d, $c0
-	ldh a, [$ffa7]
+	ldh a, [hOamCursor]
 	ld e, a
 	ld a, [hl+]
 	and a
@@ -1649,14 +1649,14 @@ Func_00_0c51:
 	ld a, [hl+]
 	add a, b
 	ld b, a
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	add a, b
 	ld [de], a
 	inc e
-	ldh a, [$ff9b]
+	ldh a, [hMetaspriteBaseX]
 	add a, [hl]
 	ld b, a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	add a, b
 	ld [de], a
 	inc hl
@@ -1671,7 +1671,7 @@ Func_00_0c51:
 	dec c
 	jr nz, Func_00_0c51
 	ld a, e
-	ldh [$ffa7], a
+	ldh [hOamCursor], a
 	ret
 
 Data_00_0c72:
@@ -1686,7 +1686,7 @@ Data_00_0c72:
 
 Func_00_0c84:
 	ld a, c
-	ldh [$ff9b], a
+	ldh [hMetaspriteBaseX], a
 	push hl
 	ld hl, $0ce4
 	ld a, e
@@ -1717,7 +1717,7 @@ Func_00_0ca0:
 Func_00_0cae:
 	ldh [$ff9d], a
 	ld d, $c0
-	ldh a, [$ffa7]
+	ldh a, [hOamCursor]
 	ld e, a
 	ld a, [hl+]
 	and a
@@ -1728,14 +1728,14 @@ Func_00_0cb9:
 	ld a, [hl+]
 	add a, b
 	ld b, a
-	ldh a, [$ffa8]
+	ldh a, [hSpriteOriginY]
 	add a, b
 	ld [de], a
 	inc e
-	ldh a, [$ff9b]
+	ldh a, [hMetaspriteBaseX]
 	add a, [hl]
 	ld b, a
-	ldh a, [$ffa9]
+	ldh a, [hSpriteOriginX]
 	add a, b
 	ld [de], a
 	inc hl
@@ -1757,7 +1757,7 @@ Func_00_0cb9:
 	dec c
 	jr nz, Func_00_0cb9
 	ld a, e
-	ldh [$ffa7], a
+	ldh [hOamCursor], a
 	ret
 
 Data_00_0ce4:
@@ -2139,9 +2139,9 @@ RunIntroScene:
 	ret
 
 IntroSceneTable:
-	farptr IntroScene_TecmoLogo, 41
+	farptr IntroScene_LoadTitle
 	farptr IntroScene_TecmoLogo
-	farptr IntroScene_TecmoLogo, 17
+	farptr IntroScene_Cutscene
 
 SECTION "analyzed_000f7d", ROM0[$0f7d]
 
@@ -7348,6 +7348,7 @@ Func_00_347e:
 	ld [$c7de], a
 	call Func_00_3386
 	ret
+
 Func_00_3492:
 	ld a, $ff
 	ld [$c7de], a
@@ -7387,6 +7388,7 @@ Func_00_34bc:
 	ld [$2fff], a
 	call DrawTownScreen
 	ret
+
 Func_00_34e3:
 	call ResetScrollState
 	push af
@@ -7460,6 +7462,7 @@ Func_00_3572:
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
+
 IntroScene_TecmoLogo:
 	call ResetScrollState
 	ld a, $30
@@ -7468,6 +7471,8 @@ IntroScene_TecmoLogo:
 	ld a, SCENE_INTRO
 	ld [wGameScene], a
 	ret
+
+IntroScene_Cutscene:
 	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
@@ -7479,14 +7484,16 @@ IntroScene_TecmoLogo:
 	call PlaySoundTracked
 	pop af
 	ret
+
+IntroScene_LoadTitle:
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_Title
 	call PlaySoundTracked
 	pop af
-	ld a, $30
+	ld a, BANK(LoadTitleScreen)
 	ld [$2fff], a
-	call Func_30_54b8
+	call LoadTitleScreen
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
