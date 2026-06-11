@@ -16,11 +16,10 @@
 ; tools/script_disasm.py — hand-curate freely; the extractor's
 ; append-only rule on non-auto-managed files preserves your edits.
 
+INCLUDE "game.inc"
 INCLUDE "hardware.inc"
-
-INCLUDE "text.inc"
 INCLUDE "sound_ids.inc"
-
+INCLUDE "text.inc"
 
 SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]
 
@@ -514,7 +513,7 @@ NadaScript:
     db "time. See ya!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=wNajiMenuShown, .Value=$01
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$04
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_EVERYONE
     SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$03
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$03
     SCRIPT_END

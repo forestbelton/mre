@@ -1588,6 +1588,7 @@ Func_00_0c04:
 	ld a, $00
 	ldh [hOamCursor], a
 	ret
+
 DrawMetasprite:
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -8213,7 +8214,7 @@ Func_00_39ad:
 	ld a, $00
 	ld [$d60e], a
 	ld [wBossState], a
-	ld hl, wRanchProgress
+	ld hl, wToamunaState
 	ld c, $0b
 	xor a
 .loop:

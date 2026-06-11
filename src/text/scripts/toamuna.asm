@@ -1,19 +1,6 @@
-; Toamuna (ranch guardian, mother of Naji) full script.
-;
-; Carved out of analyzed.asm via map.json; see docs/text_engine.md for
-; the bytecode reference. Entry points (linear bytecode order):
-;
-;   $40DD  ToamunaScript       textbox setup + state cascade (on D0DC)
-;   $4381  ToamunaCycler       cyclic round-robin of 4 default greetings
-;   $4408  ToamunaPashute      'Pashute is back. Thanks a lot.' branch
-;   $4432  ToamunaVerde        'Verde returned. Great! Thank you' branch
-;   $445E  ToamunaAllBack      'Everyone's back...' branch (everyone returned)
-;   $44A7  ToamunaMenu         'What do you want to do?' + 3-way dispatch
-;   $44D7  ToamunaPostAction   'Need to do something else?' Y/N loop
-;   $450F  ToamunaSign         Sign branch (save flow)
-;   $45E3  ToamunaConfirm      Confirm branch (load flow)
-;   $46B4  ToamunaExit         Exit branch ('Be careful.')
+; Toamuna script functions + bytecode
 
+INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
@@ -42,7 +29,7 @@ Toamuna_CheckSaveExists:
 	ld [rVBK], a
 	ld a, BANK(ToamunaPortraitTiles)
 	ld hl, ToamunaPortraitTiles
-	ld de, $8000
+	ld de, TILEDATA0
 	ld bc, ToamunaPortraitTilesEnd - ToamunaPortraitTiles
 	call BankVramCopy
 	call Toamuna_LoadPortraitTilemap
@@ -78,38 +65,38 @@ Toamuna_LoadPortraitTilemap:
 	ret
 
 Toamuna_RenderPortrait:
-	ld a, $8b
+	ld a, LOW(Toamuna_RenderPortrait)
 	ld [wRendererAddr], a
-	ld a, $40
+	ld a, HIGH(Toamuna_RenderPortrait)
 	ld [wRendererAddr+1], a
-	ld a, $19
+	ld a, BANK(Toamuna_RenderPortrait)
 	ld [wRendererBank], a
-	ld a, $1a
+	ld a, BANK(Toamuna_hair)
 	ld [wDrawBank], a
 	ld hl, Toamuna_hair
 	ld bc, $2828
 	call DrawMetasprite
 	ld hl, Toamuna_face
 	ld a, BANK(Toamuna_face)
-	ld de, $98c4
+	ld de, TILEMAP0_X4_Y6
 	call BankMapCopyA
 	ret
 
 Toamuna_RenderPortraitAlt:
-	ld a, $b4
+	ld a, LOW(Toamuna_RenderPortraitAlt)
 	ld [wRendererAddr], a
-	ld a, $40
+	ld a, HIGH(Toamuna_RenderPortraitAlt)
 	ld [wRendererAddr+1], a
-	ld a, $19
+	ld a, BANK(Toamuna_RenderPortraitAlt)
 	ld [wRendererBank], a
-	ld a, $1a
+	ld a, BANK(Toamuna_alt_hair)
 	ld [wDrawBank], a
 	ld hl, Toamuna_alt_hair
 	ld bc, $2828
 	call DrawMetasprite
 	ld hl, Toamuna_alt_face
 	ld a, BANK(Toamuna_alt_face)
-	ld de, $98c4
+	ld de, TILEMAP0_X4_Y6
 	call BankMapCopyA
 	ret
 
@@ -117,11 +104,21 @@ SECTION "Toamuna script", ROMX
 
 
 ToamunaScript:
-    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
-    SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$04, .Target=ToamunaAllBack
-    SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$03, .Target=ToamunaVerde
-    SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$02, .Target=ToamunaPashute
-    SCRIPT_IF_EQ .Addr=wRanchProgress, .Value=$01, .Target=ToamunaCycler
+    SCRIPT_OPEN_TEXTBOX .Pos=TILEMAP0_X2_Y12, .Width=$10, .Height=$04
+    SCRIPT_IF_EQ .Addr=wToamunaState, \
+        .Value=TOAMUNA_STATE_EVERYONE, \
+        .Target=ToamunaAllBack
+    SCRIPT_IF_EQ .Addr=wToamunaState, \
+        .Value=TOAMUNA_STATE_VERDE, \
+        .Target=ToamunaVerde
+    SCRIPT_IF_EQ \
+        .Addr=wToamunaState, \
+        .Value=TOAMUNA_STATE_PASHUTE, \
+        .Target=ToamunaPashute
+    SCRIPT_IF_EQ \
+        .Addr=wToamunaState, \
+        .Value=TOAMUNA_STATE_GREETING, \
+        .Target=ToamunaCycler
     SCRIPT_RENDERER Toamuna_RenderPortrait
     db "I haven't had a\r"
     db "guest in so long."
@@ -188,7 +185,7 @@ ToamunaScript:
     db "He should\r"
     db "help you out."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_GREETING
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaCycler:
@@ -227,7 +224,7 @@ ToamunaPashute:
     db "Pashute is back.\r"
     db "Thanks a lot."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_GREETING
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaVerde:
@@ -235,7 +232,7 @@ ToamunaVerde:
     db "Verde returned.\r"
     db "Great! Thank you"
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_GREETING
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaAllBack:
@@ -246,7 +243,7 @@ ToamunaAllBack:
     db "I'm so happy,\r"
     db "I'm speechless."
     SCRIPT_WAIT
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$01
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_GREETING
     SCRIPT_GOTO .Target=ToamunaMenu
 
 ToamunaMenu:

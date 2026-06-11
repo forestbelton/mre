@@ -286,7 +286,7 @@ wItemsSeen::        ds 4    ; $CFF4: item-encyclopedia "seen" bitfield (up to 32
 
 SECTION "wram_npc_state", WRAMX[$D0DC], BANK[1]
 
-wRanchProgress::    ds 1    ; $D0DC: Toamuna's cascade — 0/1/2/3/4 = first/cyclic/Pashute/Verde/AllBack
+wToamunaState::     ds 1    ; $D0DC: Toamuna's cascade — 0/1/2/3/4 = first/cyclic/Pashute/Verde/AllBack
 wNajiState::        ds 1    ; $D0DD: 0/1/2/4 = first / greeted / progress / end-game
 wPashuteState::     ds 1    ; $D0DE: Pashute's NPC cascade (0/2/3/4, mirrors the other NPC states)
 wTowerExplained::   ds 1    ; $D0DF: set by NajiAskTower (Tower-explanation given)

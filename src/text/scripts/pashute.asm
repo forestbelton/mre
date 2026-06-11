@@ -7,6 +7,7 @@
 ;
 ; Carved out of analyzed.asm via map.json; see docs/text_engine.md.
 
+INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
@@ -435,7 +436,7 @@ PashuteScript:
     db "we meet again!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e0, .Value=$01
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$02
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_PASHUTE
     SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$01
     SCRIPT_END
 

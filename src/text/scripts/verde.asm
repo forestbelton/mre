@@ -15,6 +15,7 @@
 ;
 ; See docs/text_engine.md for the bytecode reference.
 
+INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
 INCLUDE "sound_ids.inc"
@@ -308,7 +309,7 @@ VerdeEntry:
     db "Good luck!"
     SCRIPT_WAIT
     SCRIPT_WRITE_WRAM .Addr=$d0e1, .Value=$01
-    SCRIPT_WRITE_WRAM .Addr=wRanchProgress, .Value=$03
+    SCRIPT_WRITE_WRAM .Addr=wToamunaState, .Value=TOAMUNA_STATE_VERDE
     SCRIPT_WRITE_WRAM .Addr=wNajiState, .Value=$02
     SCRIPT_WRITE_WRAM .Addr=wPashuteState, .Value=$02
     SCRIPT_WRITE_WRAM .Addr=wVerdeState, .Value=$01
