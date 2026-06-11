@@ -220,11 +220,11 @@ Nada_RenderPortraitAngry:
 	ld [wRendererBank], a
 	ld a, $1c
 	ld [wDrawBank], a
-	ld hl, $76ea
+	ld hl, Nada_mouth_angry
 	ld a, $1c
 	ld de, $986c
 	call BankMapCopyA
-	ld hl, $76fc
+	ld hl, Nada_face_angry
 	ld bc, $1360
 	call DrawMetasprite
 	call Func_1f_4fb2
@@ -243,29 +243,29 @@ Nada_AnimatePortrait:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, $75b5
+	ld hl, Nada_mouth_frame0
 	ld a, $1c
 	ld de, $986c
 	call BankMapCopyA
-	ld hl, $75c7
+	ld hl, Nada_face_frame0
 	ld bc, $1360
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $761c
+	ld hl, Nada_mouth_frame1
 	ld a, $1c
 	ld de, $986c
 	call BankMapCopyA
-	ld hl, $762e
+	ld hl, Nada_face_frame1
 	ld bc, $1360
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $7683
+	ld hl, Nada_mouth_frame2
 	ld a, $1c
 	ld de, $986c
 	call BankMapCopyA
-	ld hl, $7695
+	ld hl, Nada_face_frame2
 	ld bc, $1360
 	call DrawMetasprite
 	ret

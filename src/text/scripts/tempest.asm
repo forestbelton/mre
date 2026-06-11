@@ -159,13 +159,13 @@ Tempest_AnimateMonsterPortrait:
 	ld [wRendererBank], a
 	ld a, $1e
 	ld [wDrawBank], a
-	ld hl, $76bb
+	ld hl, Tempest_hat
 	ld bc, $2060
 	call DrawMetasprite
-	ld hl, $76cc
+	ld hl, Tempest_shoulder
 	ld bc, $5052
 	call DrawMetasprite
-	ld hl, $76d5
+	ld hl, Tempest_dragon_eye
 	ld bc, $183b
 	call DrawMetasprite
 	ld hl, $d610
@@ -179,20 +179,20 @@ Tempest_AnimateMonsterPortrait:
 	jr z, .frame1
 	cp $02
 	jr z, .frame1
-	ld hl, $7625
+	ld hl, Tempest_eyes_frame0
 	ld a, $1e
 	ld de, $98ad
 	call BankMapCopyA
-	ld hl, $7633
+	ld hl, Tempest_blink_frame0
 	ld bc, $3560
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $7670
+	ld hl, Tempest_eyes_frame1
 	ld a, $1e
 	ld de, $98ad
 	call BankMapCopyA
-	ld hl, $767e
+	ld hl, Tempest_blink_frame1
 	ld bc, $3560
 	call DrawMetasprite
 	ret

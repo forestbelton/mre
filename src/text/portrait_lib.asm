@@ -227,59 +227,59 @@ SECTION "analyzed_07d00e", ROMX[$500e], BANK[$1f]
 ; selected by the portrait engine via wRendererAddr (set by NadaPortraitInit /
 ; nada.asm), so the later blocks are entered by address, not fall-through.
 NadaPortraitRender:
-	ld hl, $723e
+	ld hl, Nada_snap_body0
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $729e
+	ld hl, Nada_snap_hand0
 	ld bc, $4858
 	call DrawMetasprite
 	ret
-	ld hl, $72c7
+	ld hl, Nada_snap_body1
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $7327
+	ld hl, Nada_snap_hand1
 	ld bc, $485b
 	call DrawMetasprite
 	ret
-	ld hl, $7348
+	ld hl, Nada_snap_body2
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $73a8
+	ld hl, Nada_snap_hand2
 	ld bc, $4550
 	call DrawMetasprite
 	ret
-	ld hl, $73d9
+	ld hl, Nada_snap_body3
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $7439
+	ld hl, Nada_snap_hand3
 	ld bc, $4851
 	call DrawMetasprite
 	ret
-	ld hl, $7462
+	ld hl, Nada_snap_body4
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $74c2
+	ld hl, Nada_snap_hand4
 	ld bc, $4860
 	call DrawMetasprite
 	ret
-	ld hl, $74d3
+	ld hl, Nada_snap_body5
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $7533
+	ld hl, Nada_snap_hand5
 	ld bc, $4860
 	call DrawMetasprite
 	ret
-	ld hl, $7544
+	ld hl, Nada_snap_body6
 	ld a, $1c
 	ld de, $98c9
 	call BankMapCopyA
-	ld hl, $75a4
+	ld hl, Nada_snap_hand6
 	ld bc, $4860
 	call DrawMetasprite
 	ret
@@ -292,15 +292,15 @@ NadaPortraitInit:
 	ld [wRendererBank], a
 	ld a, $1c
 	ld [wDrawBank], a
-	ld hl, $76ea
+	ld hl, Nada_mouth_angry
 	ld a, $1c
 	ld de, $986c
 	call BankMapCopyA
-	ld hl, $76fc
+	ld hl, Nada_face_angry
 	ld bc, $1360
 	call DrawMetasprite
 	call Func_1f_4fb2
-	ld hl, $7751
+	ld hl, Nada_monster_eye
 	ld bc, $3020
 	call DrawMetasprite
 	ret

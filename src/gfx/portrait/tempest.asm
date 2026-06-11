@@ -32,9 +32,8 @@ TempestPortraitIndexMap:
 TempestPortraitAttrMap:
 	INCBIN "assets/tempest/attrmap.bin"
 
-Data_1e_7625:
 	; Overlay region: two-frame eyes/blink animation (eyes_frame0/blink_frame0 ->
 	; eyes_frame1/blink_frame1) drawn over VRAM $98ad, plus three static overlay
 	; metasprites (hat, shoulder, dragon_eye). Layered PNG source in
 	; assets/portrait/tempest/sprites/ (see docs/portrait_overlays.md).
-	INCBIN "assets/tempest/sprites.bin"
+	INCLUDE "assets/tempest/sprites.asm"

@@ -34,13 +34,12 @@ BodkaPortraitIndexMap:
 BodkaPortraitAttrMap:
 	INCBIN "assets/bodka/attrmap.bin"  ; 20x11 CGB BG attributes
 
-Data_1e_5a3e:
 	; Overlay region ($5a3e-$5b59): 3-frame talking-eye animation
 	; (eyes_frame0/face_frame0 .. frame2) drawn over VRAM $98a6, the 16-sprite chest,
 	; and a smile expression (eyes_smile/face_smile) -- the layered PNG source in
 	; assets/portrait/bodka/sprites/ (see docs/portrait_overlays.md). eyes_frame2 is a
 	; near-blank patch whose BG palette is image-irreducible (pinned via sprites.yaml).
-	INCBIN "assets/bodka/sprites.bin"
+	INCLUDE "assets/bodka/sprites.asm"
 
 	; $5b59: studio-scene BG palettes (6 x RGB555 LE), loaded by Bodka_BuildStudioScene.
 	db $44, $18, $69, $20, $d6, $1d, $ed, $2c, $44, $18, $69, $20, $14, $3a, $ed, $2c

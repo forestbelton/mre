@@ -159,10 +159,10 @@ Mistral_AnimateMonsterPortrait:
 	ld [wRendererBank], a
 	ld a, $35
 	ld [wDrawBank], a
-	ld hl, $6508
+	ld hl, Mistral_collar
 	ld bc, $5068
 	call DrawMetasprite
-	ld hl, $6531
+	ld hl, Mistral_ferious_eye
 	ld bc, $1039
 	call DrawMetasprite
 .waitScanline:
@@ -186,56 +186,56 @@ Mistral_AnimateMonsterPortrait:
 	cp $03
 	jr z, .frame1
 .frame0:
-	ld hl, $623e
+	ld hl, Mistral_body_frame0
 	ld a, $35
 	ld de, $984b
 	call BankMapCopyA
-	ld hl, $62d4
+	ld hl, Mistral_left_tassels0
 	ld bc, $405a
 	call DrawMetasprite
-	ld hl, $62e5
+	ld hl, Mistral_right_tassels0
 	ld bc, $3890
 	call DrawMetasprite
-	ld hl, $62f6
+	ld hl, Mistral_mistral_face0
 	ld bc, $2068
 	call DrawMetasprite
-	ld hl, $6327
+	ld hl, Mistral_hat0
 	ld bc, $2088
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $6334
+	ld hl, Mistral_body_frame1
 	ld a, $35
 	ld de, $984b
 	call BankMapCopyA
-	ld hl, $63ca
+	ld hl, Mistral_left_tassels1
 	ld bc, $4060
 	call DrawMetasprite
-	ld hl, $63db
+	ld hl, Mistral_right_tassels1
 	ld bc, $3898
 	call DrawMetasprite
-	ld hl, $63e4
+	ld hl, Mistral_mistral_face1
 	ld bc, $2068
 	call DrawMetasprite
-	ld hl, $6415
+	ld hl, Mistral_hat1
 	ld bc, $2088
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $6422
+	ld hl, Mistral_body_frame2
 	ld a, $35
 	ld de, $984b
 	call BankMapCopyA
-	ld hl, $64b8
+	ld hl, Mistral_left_tassels2
 	ld bc, $4063
 	call DrawMetasprite
-	ld hl, $64c1
+	ld hl, Mistral_right_tassels2
 	ld bc, $409a
 	call DrawMetasprite
-	ld hl, $64ca
+	ld hl, Mistral_mistral_face2
 	ld bc, $2068
 	call DrawMetasprite
-	ld hl, $64fb
+	ld hl, Mistral_hat2
 	ld bc, $2088
 	call DrawMetasprite
 	ret

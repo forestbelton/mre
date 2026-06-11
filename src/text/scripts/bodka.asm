@@ -115,7 +115,7 @@ Bodka_RenderPortrait:
 	ld [wRendererBank], a
 	ld a, $1e
 	ld [wDrawBank], a
-	ld hl, $5add
+	ld hl, Bodka_chest
 	ld bc, $482b
 	call DrawMetasprite
 	ld hl, $d610
@@ -131,29 +131,29 @@ Bodka_RenderPortrait:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, Data_1e_5a3e
+	ld hl, Bodka_eyes_frame0
 	ld a, $1e
 	ld de, $98a6
 	call BankMapCopyA
-	ld hl, $5a4a
+	ld hl, Bodka_face_frame0
 	ld bc, $2833
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $5a73
+	ld hl, Bodka_eyes_frame1
 	ld a, $1e
 	ld de, $98a6
 	call BankMapCopyA
-	ld hl, $5a7f
+	ld hl, Bodka_face_frame1
 	ld bc, $2833
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $5aa8
+	ld hl, Bodka_eyes_frame2
 	ld a, $1e
 	ld de, $98a6
 	call BankMapCopyA
-	ld hl, $5ab4
+	ld hl, Bodka_face_frame2
 	ld bc, $2833
 	call DrawMetasprite
 	ret
@@ -167,14 +167,14 @@ Bodka_RenderPortraitAlt:
 	ld [wRendererBank], a
 	ld a, $1e
 	ld [wDrawBank], a
-	ld hl, $5add
+	ld hl, Bodka_chest
 	ld bc, $482b
 	call DrawMetasprite
-	ld hl, $5b1e
+	ld hl, Bodka_eyes_smile
 	ld a, $1e
 	ld de, $98a6
 	call BankMapCopyA
-	ld hl, $5b30
+	ld hl, Bodka_face_smile
 	ld bc, $2833
 	call DrawMetasprite
 	ret

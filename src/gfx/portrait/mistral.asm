@@ -45,11 +45,10 @@ MistralPortraitAttrMap:
 
 SECTION "analyzed_0d623e", ROMX[$623e], BANK[$35]
 
-Data_35_623e:
 	; Overlay region ($623e-$6536): Mistral's animated portrait -- a 3-frame body/face
 	; animation (body_frame0/mistral_face0/hat0/left_tassels0/right_tassels0 .. frame2)
 	; over VRAM $984b, plus her collar and the ferious_eye glow on the background monster
 	; silhouette (Ferious himself is BG tilemap, not overlay). frame1's body patch mixes
 	; tile banks. Layered PNG source in assets/portrait/mistral/sprites/
 	; (see docs/portrait_overlays.md).
-	INCBIN "assets/mistral/sprites.bin"
+	INCLUDE "assets/mistral/sprites.asm"

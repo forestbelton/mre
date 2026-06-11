@@ -50,8 +50,7 @@ NadaIntroAttrMap:
 ; dispatch drives it), her talking mouth/face (mouth_frame0..2 + face_frame0..2), and the
 ; angry/rage expression (mouth_angry/face_angry + the monster_eye red glow NadaPortraitInit
 ; draws). Layered PNG source in assets/portrait/nada_intro/sprites/ (docs/portrait_overlays.md).
-Data_1c_723e:
-	INCBIN "assets/nada_intro/sprites.bin"
+	INCLUDE "assets/nada_intro/sprites.asm"   ; Nada_<role> blocks
 
 ; --- Second pose (shown by Func_1f_4e65 -- Nada with a summoned monster) -----
 ; Shares the bank-0 sheet above (NadaIntroTilesBank0); owns only the bank-1

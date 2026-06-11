@@ -3,6 +3,7 @@
 # tools/pngasset.py (gen_sprite_region). 'base' must equal the asm SECTION
 # address (patch pointers are absolute).
 base: '0x769b'
+prefix: Verde        # emit structured sprites.asm (Verde_<role> labels)
 blocks:
 - role: eyes_frame0
   kind: patch

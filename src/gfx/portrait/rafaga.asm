@@ -32,9 +32,8 @@ RafagaPortraitIndexMap:
 RafagaPortraitAttrMap:
 	INCBIN "assets/rafaga/attrmap.bin"
 
-Data_1d_7557:
 	; Overlay region: two-frame eyes/blink animation (eyes_frame0/blink_frame0 ->
 	; eyes_frame1/blink_frame1) drawn over VRAM $98ad, plus three static overlay
 	; metasprites (collar, shoulder, punisher_eyes). Layered PNG source in
 	; assets/portrait/rafaga/sprites/ (see docs/portrait_overlays.md).
-	INCBIN "assets/rafaga/sprites.bin"
+	INCLUDE "assets/rafaga/sprites.asm"

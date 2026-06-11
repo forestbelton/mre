@@ -407,17 +407,17 @@ Naji_RenderPortraitTalking:
 	ld [wRendererBank], a
 	ld a, $1a
 	ld [wDrawBank], a
-	ld hl, $75d3
+	ld hl, Naji_talk_face
 	ld a, $1a
 	ld de, $9886
 	call BankMapCopyA
-	ld hl, $7590
+	ld hl, Naji_collar
 	ld bc, $3e3c
 	call DrawMetasprite
-	ld hl, $75a1
+	ld hl, Naji_vest_left
 	ld bc, $4828
 	call DrawMetasprite
-	ld hl, $75ba
+	ld hl, Naji_vest_right
 	ld bc, $484c
 	call DrawMetasprite
 	ld hl, $d610
@@ -431,20 +431,20 @@ Naji_RenderPortraitTalking:
 	jr z, .frame1
 	cp $02
 	jr z, .frame1
-	ld hl, $7526
+	ld hl, Naji_eyes_frame0
 	ld a, $1a
 	ld de, $9886
 	call BankMapCopyA
-	ld hl, $7532
+	ld hl, Naji_face_shadow0
 	ld bc, $1e34
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $755b
+	ld hl, Naji_eyes_frame1
 	ld a, $1a
 	ld de, $9886
 	call BankMapCopyA
-	ld hl, $7567
+	ld hl, Naji_face_shadow1
 	ld bc, $1e34
 	call DrawMetasprite
 	ret
@@ -457,20 +457,20 @@ Naji_RenderPortraitAlt:
 	ld [wRendererBank], a
 	ld a, $1a
 	ld [wDrawBank], a
-	ld hl, $75eb
+	ld hl, Naji_smile_face
 	ld a, $1a
 	ld de, $9886
 	call BankMapCopyA
-	ld hl, $7603
+	ld hl, Naji_smile_shadow
 	ld bc, $1e34
 	call DrawMetasprite
-	ld hl, $7590
+	ld hl, Naji_collar
 	ld bc, $3e3c
 	call DrawMetasprite
-	ld hl, $75a1
+	ld hl, Naji_vest_left
 	ld bc, $4828
 	call DrawMetasprite
-	ld hl, $75ba
+	ld hl, Naji_vest_right
 	ld bc, $484c
 	call DrawMetasprite
 	ret

@@ -159,13 +159,13 @@ Rafaga_AnimateMonsterPortrait:
 	ld [wRendererBank], a
 	ld a, $1d
 	ld [wDrawBank], a
-	ld hl, $75c5
+	ld hl, Rafaga_collar
 	ld bc, $4848
 	call DrawMetasprite
-	ld hl, $75de
+	ld hl, Rafaga_shoulder
 	ld bc, $5872
 	call DrawMetasprite
-	ld hl, $75e7
+	ld hl, Rafaga_punisher_eyes
 	ld bc, $1933
 	call DrawMetasprite
 	ld hl, $d610
@@ -179,20 +179,20 @@ Rafaga_AnimateMonsterPortrait:
 	jr z, .frame1
 	cp $02
 	jr z, .frame1
-	ld hl, $7557
+	ld hl, Rafaga_eyes_frame0
 	ld a, $1d
 	ld de, $98ad
 	call BankMapCopyA
-	ld hl, $7565
+	ld hl, Rafaga_blink_frame0
 	ld bc, $3860
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $758e
+	ld hl, Rafaga_eyes_frame1
 	ld a, $1d
 	ld de, $98ad
 	call BankMapCopyA
-	ld hl, $759c
+	ld hl, Rafaga_blink_frame1
 	ld bc, $3860
 	call DrawMetasprite
 	ret

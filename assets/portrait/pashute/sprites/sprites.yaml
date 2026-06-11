@@ -3,6 +3,7 @@
 # byte-exact by tools/pngasset.py (gen_sprite_region). 'base' must equal
 # the asm SECTION address (patch pointers are absolute).
 base: '0x5a3e'
+prefix: Pashute        # emit structured sprites.asm (Pashute_<role> labels)
 blocks:
 - role: eyes_frame0
   kind: patch

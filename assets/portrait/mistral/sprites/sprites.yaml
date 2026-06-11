@@ -3,6 +3,7 @@
 # tools/pngasset.py (gen_sprite_region). 'base' must equal the asm SECTION
 # address (patch pointers are absolute).
 base: '0x623e'
+prefix: Mistral        # emit structured sprites.asm (Mistral_<role> labels)
 blocks:
 - role: body_frame0
   kind: patch

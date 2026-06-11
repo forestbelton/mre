@@ -206,16 +206,16 @@ Pashute_RenderPortraitNeutral:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $5afb
+	ld hl, Pashute_shoulder_left
 	ld bc, $5018
 	call DrawMetasprite
-	ld hl, $5b0c
+	ld hl, Pashute_shoulder_right
 	ld bc, $5058
 	call DrawMetasprite
-	ld hl, $5b1d
+	ld hl, Pashute_collar
 	ld bc, $482f
 	call DrawMetasprite
-	ld hl, $5b3e
+	ld hl, Pashute_neutral_face
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
@@ -232,29 +232,29 @@ Pashute_RenderPortraitNeutral:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, $5a3e
+	ld hl, Pashute_eyes_frame0
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
-	ld hl, $5a54
+	ld hl, Pashute_blink_frame0
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $5a7d
+	ld hl, Pashute_eyes_frame1
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
-	ld hl, $5a93
+	ld hl, Pashute_blink_frame1
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $5abc
+	ld hl, Pashute_eyes_frame2
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
-	ld hl, $5ad2
+	ld hl, Pashute_blink_frame2
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
@@ -267,20 +267,20 @@ Pashute_RenderPortraitPanic:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $5afb
+	ld hl, Pashute_shoulder_left
 	ld bc, $5018
 	call DrawMetasprite
-	ld hl, $5b0c
+	ld hl, Pashute_shoulder_right
 	ld bc, $5058
 	call DrawMetasprite
-	ld hl, $5b1d
+	ld hl, Pashute_collar
 	ld bc, $482f
 	call DrawMetasprite
-	ld hl, $5b56
+	ld hl, Pashute_sad_face
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
-	ld hl, $5b6e
+	ld hl, Pashute_sad_overlay
 	ld bc, $1d28
 	call DrawMetasprite
 	ret
@@ -293,23 +293,23 @@ Pashute_RenderPortraitShocked:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $5afb
+	ld hl, Pashute_shoulder_left
 	ld bc, $5018
 	call DrawMetasprite
-	ld hl, $5b0c
+	ld hl, Pashute_shoulder_right
 	ld bc, $5058
 	call DrawMetasprite
-	ld hl, $5b1d
+	ld hl, Pashute_collar
 	ld bc, $482f
 	call DrawMetasprite
-	ld hl, $5b97
+	ld hl, Pashute_shocked_face
 	ld a, $1b
 	ld de, $9885
 	call BankMapCopyA
-	ld hl, $5baf
+	ld hl, Pashute_shocked_overlay
 	ld bc, $1d28
 	call DrawMetasprite
-	ld hl, $5bd8
+	ld hl, Pashute_shocked_overlay2
 	ld bc, $3d3a
 	call DrawMetasprite
 	ret

@@ -125,13 +125,13 @@ Verde_RenderPortrait:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $777c
+	ld hl, Verde_face
 	ld bc, $4435
 	call DrawMetasprite
-	ld hl, $7789
+	ld hl, Verde_overalls
 	ld bc, $502c
 	call DrawMetasprite
-	ld hl, $77b2
+	ld hl, Verde_base_patch
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
@@ -148,29 +148,29 @@ Verde_RenderPortrait:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, $769b
+	ld hl, Verde_eyes_frame0
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
-	ld hl, $76a9
+	ld hl, Verde_head_frame0
 	ld bc, $142d
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $76e6
+	ld hl, Verde_eyes_frame1
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
-	ld hl, $76f4
+	ld hl, Verde_head_frame1
 	ld bc, $142d
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $7731
+	ld hl, Verde_eyes_frame2
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
-	ld hl, $773f
+	ld hl, Verde_head_frame2
 	ld bc, $142d
 	call DrawMetasprite
 	ret
@@ -183,17 +183,17 @@ Verde_RenderPortraitSurprised:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $7789
+	ld hl, Verde_overalls
 	ld bc, $502c
 	call DrawMetasprite
-	ld hl, $782c
+	ld hl, Verde_eyes_surprised
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
-	ld hl, $7881
+	ld hl, Verde_face_surprised
 	ld bc, $4435
 	call DrawMetasprite
-	ld hl, $7844
+	ld hl, Verde_head_surprised
 	ld bc, $142d
 	call DrawMetasprite
 	ret
@@ -206,17 +206,17 @@ Verde_RenderPortraitCalm:
 	ld [wRendererBank], a
 	ld a, $1b
 	ld [wDrawBank], a
-	ld hl, $7789
+	ld hl, Verde_overalls
 	ld bc, $502c
 	call DrawMetasprite
-	ld hl, $77ca
+	ld hl, Verde_eyes_sad
 	ld a, $1b
 	ld de, $98a5
 	call BankMapCopyA
-	ld hl, $781f
+	ld hl, Verde_face_sad
 	ld bc, $4435
 	call DrawMetasprite
-	ld hl, $77e2
+	ld hl, Verde_head_sad
 	ld bc, $142d
 	call DrawMetasprite
 	ret

@@ -104,10 +104,10 @@ Kalum_AnimateMonsterPortrait:
 	ld [wRendererBank], a
 	ld a, $1d
 	ld [wDrawBank], a
-	ld hl, $5b07
+	ld hl, Kalum_shoulder_collar
 	ld bc, $5070
 	call DrawMetasprite
-	ld hl, $5b10
+	ld hl, Kalum_selketo_eye
 	ld bc, $2058
 	call DrawMetasprite
 	ld hl, $d610
@@ -123,29 +123,29 @@ Kalum_AnimateMonsterPortrait:
 	jr z, .frame2
 	cp $03
 	jr z, .frame1
-	ld hl, $5a3e
+	ld hl, Kalum_eyes_frame0
 	ld a, $1d
 	ld de, $988d
 	call BankMapCopyA
-	ld hl, $5a50
+	ld hl, Kalum_blink_frame0
 	ld bc, $2068
 	call DrawMetasprite
 	ret
 .frame1:
-	ld hl, $5a81
+	ld hl, Kalum_eyes_frame1
 	ld a, $1d
 	ld de, $988d
 	call BankMapCopyA
-	ld hl, $5a93
+	ld hl, Kalum_blink_frame1
 	ld bc, $2068
 	call DrawMetasprite
 	ret
 .frame2:
-	ld hl, $5ac4
+	ld hl, Kalum_eyes_frame2
 	ld a, $1d
 	ld de, $988d
 	call BankMapCopyA
-	ld hl, $5ad6
+	ld hl, Kalum_blink_frame2
 	ld bc, $2068
 	call DrawMetasprite
 	ret

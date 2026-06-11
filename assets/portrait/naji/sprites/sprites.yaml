@@ -3,6 +3,7 @@
 # tools/pngasset.py (gen_sprite_region). 'base' must equal the asm SECTION
 # address (patch pointers are absolute).
 base: '0x7526'
+prefix: Naji        # emit structured sprites.asm (Naji_<role> labels)
 blocks:
 - role: eyes_frame0
   kind: patch

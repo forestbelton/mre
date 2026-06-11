@@ -3,6 +3,7 @@
 # tools/pngasset.py (gen_sprite_region). 'base' must equal the asm SECTION
 # address (patch pointers are absolute).
 base: '0x5a3e'
+prefix: Bodka        # emit structured sprites.asm (Bodka_<role> labels)
 blocks:
 - role: eyes_frame0
   kind: patch

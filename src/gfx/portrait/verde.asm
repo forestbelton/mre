@@ -40,7 +40,7 @@ VerdePortraitOverlay:                            ; $769b
 	; .. frame2) drawn over VRAM $98a5, the face + overalls metasprites, a base patch,
 	; and sad/surprised expressions (eyes/head/face each) -- the layered PNG source in
 	; assets/portrait/verde/sprites/ (see docs/portrait_overlays.md).
-	INCBIN "assets/verde/sprites.bin"
+	INCLUDE "assets/verde/sprites.asm"
 
 VerdeIntroPaletteBg:                             ; $788e, intro-scene BG palettes
 	INCBIN "assets/verde/palette_bg2.bin"
