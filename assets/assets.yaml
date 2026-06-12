@@ -208,9 +208,10 @@ nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 ti
 # from one indexed PNG; the BG animation frames are Tiled maps (frames.tmx, a layer
 # pair per frame -- flip through them by toggling layer visibility); the metasprite
 # defs are labelled records in src/gfx/summon/*.asm.
-tiger:                        # summon scene 0 (descriptors live in bank $05/scene.asm)
+tiger:                        # summon scene 0
   mode: scene
   png: summon/tiger.png
+  frames: tiger.tmx
   tiles: 384
   palettes: 16
 
@@ -256,10 +257,10 @@ phenix:                       # summon scene 6 (descriptors+metasprites shared i
   tiles: 384
   palettes: 18
 
-scene7:                       # capture animation (shared wSceneState=7; 26 palettes)
+capture:                      # disc-stone capture animation (wSceneState=7; 26 palettes)
   mode: scene
-  png: summon/scene7.png
-  frames: scene7.tmx
+  png: summon/capture.png
+  frames: capture.tmx
   tiles: 384
   palettes: 26
 
@@ -280,6 +281,7 @@ room_screen:
 cox_flashback:
   mode: scene
   png: cox/cox.png
+  frames: cox.tmx
   tiles: 128
   palettes: 16
 

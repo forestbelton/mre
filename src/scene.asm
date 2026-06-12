@@ -857,10 +857,10 @@ SceneLoadPalettes:
 ; SceneSetupTracks (script roots), SceneLoadTiles (BG tiles), SceneLoadPalettes (palettes). ---
 ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (SceneLoadPalettes -> LoadBgPalettes/LoadObjPalettes)
 	dw TigerPalettes, MocchiPalettes, HarePalettes, GaliPalettes
-	dw GolemPalettes, SuezoPalettes, PhenixPalettes, Scene7Palettes
+	dw GolemPalettes, SuezoPalettes, PhenixPalettes, CapturePalettes
 SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; SceneLoadTiles/CopyTilesToBothVramBanks loads $1800 to bank0 then the next $1800 to bank1
 	dw TigerTiles, MocchiTiles, HareTiles, GaliTiles
-	dw GolemTiles, SuezoTiles, PhenixTiles, Scene7Tiles
+	dw GolemTiles, SuezoTiles, PhenixTiles, CaptureTiles
 SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
@@ -871,10 +871,10 @@ SceneDrawBank:          ; $4612: per-scene metasprite bank -> wDrawBank (Func_05
 	db $08, $09, $07, $0b, $06, $0a, $0c, $0e
 SceneBgScriptTable:     ; $461a: VM1 (BG track) script roots, by wSceneState
 	dw Scene0_VM1, Scene1_VM1, Scene2_VM1, Scene3_VM1
-	dw Scene4_VM1, Scene5_VM1, Scene6_VM1, Scene7_VM1
+	dw Scene4_VM1, Scene5_VM1, Scene6_VM1, Capture_VM1
 SceneSprScriptTable:    ; $462a: VM2 (sprite track) script roots
 	dw Scene0_VM2, Scene1_VM2, Scene2_VM2, Scene3_VM2
-	dw Scene4_VM2, Scene5_VM2, Scene6_VM2, Scene7_VM2
+	dw Scene4_VM2, Scene5_VM2, Scene6_VM2, Capture_VM2
 
 Func_05_463a:
 	FAR_CALL ClearBossState
@@ -1504,37 +1504,37 @@ FloorRoomSetters:
 Data_05_4a5f:
 Scene0_VM1:
 	SCENE_BG_DRAW   $70, $0060, $0000
-	SCENE_BG_DRAW   $03, $0060, $59b2
-	SCENE_BG_DRAW   $03, $0060, $5b98
-	SCENE_BG_DRAW   $03, $0060, $5d7e
-	SCENE_BG_DRAW   $03, $0060, $5f64
-	SCENE_BG_DRAW   $04, $0060, $614a
-	SCENE_BG_DRAW   $0a, $0060, $6330
-	SCENE_BG_DRAW   $08, $0060, $6516
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
-	SCENE_BG_DRAW   $05, $0060, $66fc
-	SCENE_BG_DRAW   $05, $0060, $68e2
-	SCENE_BG_DRAW   $05, $0060, $6ac8
+	SCENE_BG_DRAW   $03, $0060, TigerFrame00
+	SCENE_BG_DRAW   $03, $0060, TigerFrame01
+	SCENE_BG_DRAW   $03, $0060, TigerFrame02
+	SCENE_BG_DRAW   $03, $0060, TigerFrame03
+	SCENE_BG_DRAW   $04, $0060, TigerFrame04
+	SCENE_BG_DRAW   $0a, $0060, TigerFrame05
+	SCENE_BG_DRAW   $08, $0060, TigerFrame06
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
+	SCENE_BG_DRAW   $05, $0060, TigerFrame07
+	SCENE_BG_DRAW   $05, $0060, TigerFrame08
+	SCENE_BG_DRAW   $05, $0060, TigerFrame09
 	SCENE_BG_END
 Scene0_VM2:
 	SCENE_SPR_SHOW  $18, $30, $28, $4b47
@@ -2106,9 +2106,9 @@ Data_05_5588:
 	SCENE_SPRITE_LIST PhenixSprite11
 	SCENE_SPRITE_LIST PhenixSprite12
 	SCENE_SPRITE_LIST PhenixSprite13
-Scene7_VM1:
-	SCENE_BG_DRAW   $02, $0188, Scene7Frame00
-	SCENE_BG_DRAW   $1e, $0188, Scene7Frame00
+Capture_VM1:
+	SCENE_BG_DRAW   $02, $0188, CaptureFrame00
+	SCENE_BG_DRAW   $1e, $0188, CaptureFrame00
 	SCENE_BG_DRAW   $38, $0000, $0000
 	SCENE_BG_DRAW   $08, $0000, $0000
 	SCENE_BG_DRAW   $06, $0000, $0000
@@ -2180,8 +2180,8 @@ Scene7_VM1:
 	SCENE_BG_DRAW   $07, $0000, $0000
 	SCENE_BG_DRAW   $07, $0000, $0000
 	SCENE_BG_DRAW   $01, $0000, $0000
-	SCENE_BG_DRAW   $04, $00a6, Scene7Frame01
-	SCENE_BG_DRAW   $04, $00a6, Scene7Frame01
+	SCENE_BG_DRAW   $04, $00a6, CaptureFrame01
+	SCENE_BG_DRAW   $04, $00a6, CaptureFrame01
 	SCENE_BG_ROW    $08, $70b0, $02, $01
 	SCENE_BG_ROW    $08, $70b8, $02, $01
 	SCENE_BG_ROW    $08, $70c0, $02, $01
@@ -2189,7 +2189,7 @@ Scene7_VM1:
 	SCENE_BG_SOUND  $0d
 	SCENE_BG_ROW    $48, $7080, $02, $01
 	SCENE_BG_END
-Scene7_VM2:
+Capture_VM2:
 	SCENE_SPR_SOUND $06
 	SCENE_SPR_SHOW  $20, $00, $00, $0000
 	SCENE_SPR_SOUND $0f
@@ -2282,379 +2282,102 @@ SECTION "analyzed_01596e", ROMX[$596e], BANK[$05]
 
 Data_05_596e:
 	db $6c, $71, $00, $00
-	SCENE_SPRITE_LIST Scene7Sprite01
-	SCENE_SPRITE_LIST Scene7Sprite02
-	SCENE_SPRITE_LIST Scene7Sprite03
-	SCENE_SPRITE_LIST Scene7Sprite04
-	SCENE_SPRITE_LIST Scene7Sprite05
-	SCENE_SPRITE_LIST Scene7Sprite06
-	SCENE_SPRITE_LIST Scene7Sprite07
-	SCENE_SPRITE_LIST Scene7Sprite08
-	SCENE_SPRITE_LIST Scene7Sprite09
-	SCENE_SPRITE_LIST Scene7Sprite10
-	SCENE_SPRITE_LIST Scene7Sprite11
-	SCENE_SPRITE_LIST Scene7Sprite12
-	SCENE_SPRITE_LIST Scene7Sprite13
-	SCENE_SPRITE_LIST Scene7Sprite14
-	SCENE_SPRITE_LIST Scene7Sprite15
-	SCENE_SPRITE_LIST Scene7Sprite16
-	db $0c, $14
-
-Data_05_59b4:
-	db $a8, $5a, $b8, $59
-
-Data_05_59b8:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ac, $b4, $bc, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $bd, $b5, $ad, $ad, $b5, $bd, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $bc, $b4, $ac, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $01, $01, $01, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $61, $61, $61, $01, $01, $01, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $61, $61, $61, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0c, $14
-
-Data_05_5b9a:
-	db $8e, $5c, $9e, $5b
-
-Data_05_5b9e:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $86, $8e, $96, $9e, $a6, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $a7, $9f, $97, $8f, $87, $87, $8f, $97, $9f, $a7, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $a6, $9e, $96, $8e, $86, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $01, $01, $01, $01, $01, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $61, $61, $61, $61, $61, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0c, $14
-
-Data_05_5d80:
-	db $74, $5e, $84, $5d
-
-Data_05_5d84:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $84, $8c, $94, $9c, $a4, $ac, $b4, $bc, $ff, $ff, $ff, $ff
-	db $bd, $b5, $ad, $a5, $9d, $95, $8d, $85, $ff, $8d, $95, $9d, $a5, $ad, $b5, $bd
-	db $ff, $ff, $ff, $ff, $bc, $b4, $ac, $a4, $9c, $94, $8c, $84, $85, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $01, $01, $01, $01, $01, $01, $01, $01, $09, $09, $09, $09
-	db $61, $61, $61, $61, $61, $61, $61, $61, $49, $01, $01, $01, $01, $01, $01, $01
-	db $09, $09, $09, $09, $61, $61, $61, $61, $61, $61, $61, $61, $41, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0c, $14
-
-Data_05_5f66:
-	db $5a, $60, $6a, $5f
-
-Data_05_5f6a:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $6b, $6f, $73, $76, $72, $6e, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $80, $88, $90, $98, $a0, $a8, $b0, $6c, $70, $74, $75, $71
-	db $6d, $b1, $a9, $a1, $99, $91, $89, $81, $81, $89, $91, $99, $a1, $a9, $b1, $6d
-	db $71, $75, $74, $70, $6c, $b0, $a8, $a0, $98, $90, $88, $80, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $6e, $72, $76, $73, $6f, $6b, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69, $69, $09, $09, $09
-	db $09, $09, $09, $09, $01, $01, $01, $01, $01, $01, $01, $09, $09, $09, $69, $69
-	db $69, $61, $61, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $01, $01, $09
-	db $09, $09, $69, $69, $69, $61, $61, $61, $61, $61, $61, $61, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0c, $14
-
-Data_05_614c:
-	db $40, $62, $50, $61
-
-Data_05_6150:
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $be, $c4, $ca, $cf, $c9, $c3, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $ae, $bf, $c5, $cb, $ce, $c8, $c2, $b7, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $a6, $9e, $96, $8e, $86, $af, $c0, $c6, $cc, $cd, $c7
-	db $c1, $b6, $86, $8e, $96, $9e, $a6, $fc, $fc, $a7, $9f, $97, $8f, $87, $b6, $c1
-	db $c7, $cd, $cc, $c6, $c0, $af, $87, $8f, $97, $9f, $a7, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $b7, $c2, $c8, $ce, $cb, $c5, $bf, $ae, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $c3, $c9, $cf, $ca, $c4, $be, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $01, $01, $01, $61, $61, $61, $68, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $01, $01, $01, $01, $61, $61, $61, $61, $08, $08
-	db $08, $08, $08, $08, $08, $21, $21, $21, $21, $21, $01, $01, $01, $01, $61, $61
-	db $61, $61, $01, $01, $01, $01, $01, $08, $08, $21, $21, $21, $21, $21, $01, $01
-	db $01, $01, $61, $61, $61, $61, $01, $01, $01, $01, $01, $08, $08, $08, $08, $08
-	db $08, $08, $01, $01, $01, $01, $61, $61, $61, $61, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $01, $01, $01, $61, $61, $61, $68, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $0c, $14
-
-Data_05_6332:
-	db $26, $64, $36, $63
-
-Data_05_6336:
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $d0, $d8, $e0
-	db $e8, $f0, $f7, $ef, $e7, $df, $d7, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $d1, $d9, $e1, $e9, $f1, $f6, $ee, $e6, $de, $d6, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $d2, $da, $e2, $ea, $f2, $f5, $ed, $e5, $dd, $d5, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $bc, $b4, $d3, $db, $e3, $eb, $f3, $f4, $ec
-	db $e4, $dc, $d4, $b5, $bd, $fc, $fc, $fc, $fc, $fc, $fc, $bd, $b5, $d4, $dc, $e4
-	db $ec, $f4, $f3, $eb, $e3, $db, $d3, $b4, $bc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $d5, $dd, $e5, $ed, $f5, $f2, $ea, $e2, $da, $d2, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $d6, $de, $e6, $ee, $f6, $f1, $e9, $e1, $d9, $d1, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $d7, $df, $e7, $ef, $f7, $f0, $e8
-	db $e0, $d8, $d0, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $01, $01, $01
-	db $01, $01, $61, $61, $61, $61, $61, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $08
-	db $08, $08, $08, $08, $08, $08, $08, $21, $21, $01, $01, $01, $01, $01, $61, $61
-	db $61, $61, $61, $41, $41, $08, $08, $08, $08, $08, $08, $21, $21, $01, $01, $01
-	db $01, $01, $61, $61, $61, $61, $61, $41, $41, $08, $08, $08, $08, $08, $08, $08
-	db $08, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $01, $01, $01, $01, $01, $61, $61
-	db $61, $61, $61, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $0c, $14
-
-Data_05_6518:
-	db $0c, $66, $1c, $65
-
-Data_05_651c:
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $c3, $c9, $cf, $ca, $c4, $be, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $b7, $c2, $c8, $ce, $cb, $c5, $bf, $ae, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $a6, $fc, $fc, $fc, $a6, $b6, $c1, $c7, $cd, $cc, $c6
-	db $c0, $af, $a7, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $a7, $af, $c0
-	db $c6, $cc, $cd, $c7, $c1, $b6, $a6, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $ae, $bf, $c5, $cb, $ce, $c8, $c2, $b7, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $be, $c4, $ca, $cf, $c9, $c3, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $48, $41, $41, $41, $21, $21, $21, $28, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $41, $41, $41, $41, $21, $21, $21, $21, $08, $08
-	db $08, $08, $08, $08, $08, $21, $08, $08, $08, $21, $41, $41, $41, $41, $21, $21
-	db $21, $21, $41, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $21, $41, $41
-	db $41, $41, $21, $21, $21, $21, $41, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $41, $41, $41, $41, $21, $21, $21, $21, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $48, $41, $41, $41, $21, $21, $21, $28, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $0c, $14
-
-Data_05_66fe:
-	db $f2, $67, $02, $67
-
-Data_05_6702:
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $00, $08, $12, $1a, $24, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $31, $2b, $23, $19, $11, $01, $09, $13, $1b, $25, $32, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $40, $39, $30, $2a, $22, $18, $10, $02, $0a, $14, $1c
-	db $26, $33, $3a, $fc, $46, $4c, $51, $4b, $45, $3f, $38, $2f, $29, $21, $0f, $07
-	db $03, $0b, $15, $1d, $27, $34, $3b, $41, $47, $4d, $50, $4a, $44, $3e, $37, $2e
-	db $28, $20, $0e, $06, $04, $0c, $16, $1e, $2c, $35, $3c, $42, $48, $4e, $4f, $49
-	db $43, $3d, $36, $2d, $1f, $17, $0d, $05, $05, $0d, $17, $1f, $2d, $36, $3d, $43
-	db $49, $4f, $4e, $48, $42, $3c, $35, $2c, $1e, $16, $0c, $04, $06, $0e, $20, $28
-	db $2e, $37, $3e, $44, $4a, $50, $4d, $47, $41, $3b, $34, $27, $1d, $15, $0b, $03
-	db $07, $0f, $21, $29, $2f, $38, $3f, $45, $4b, $51, $4c, $46, $fc, $3a, $33, $26
-	db $1c, $14, $0a, $02, $10, $18, $22, $2a, $30, $39, $40, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $32, $25, $1b, $13, $09, $01, $11, $19, $23, $2b, $31, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $24, $1a, $12, $08, $00, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $01, $01, $01, $01, $01, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $01, $08, $08
-	db $08, $08, $08, $08, $08, $61, $61, $61, $61, $61, $61, $61, $01, $01, $01, $01
-	db $01, $01, $01, $08, $01, $01, $61, $61, $61, $61, $61, $61, $61, $61, $61, $61
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $61
-	db $61, $61, $61, $61, $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $61, $61
-	db $61, $61, $61, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $01, $01, $01
-	db $01, $01, $61, $61, $61, $61, $61, $61, $61, $61, $61, $61, $01, $01, $01, $01
-	db $01, $01, $01, $01, $01, $01, $61, $61, $61, $61, $61, $61, $61, $61, $61, $61
-	db $01, $01, $01, $01, $01, $01, $01, $01, $01, $01, $61, $61, $08, $61, $61, $61
-	db $61, $61, $61, $61, $01, $01, $01, $01, $01, $01, $01, $08, $08, $08, $08, $08
-	db $08, $08, $61, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $61, $61, $61, $61, $61, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $0c, $14
-
-Data_05_68e4:
-	db $d8, $69, $e8, $68
-
-Data_05_68e8:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $52, $5c, $65, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $5b, $53, $5d, $66, $6e, $76, $7e, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $05, $7d, $75, $6d, $64, $5a, $54, $5e, $67, $6f
-	db $77, $7f, $06, $0c, $12, $18, $1d, $17, $11, $0b, $04, $7c, $74, $6c, $63, $59
-	db $55, $5f, $68, $70, $78, $00, $07, $0d, $13, $19, $1c, $16, $10, $0a, $03, $7b
-	db $73, $6b, $62, $58, $56, $60, $69, $71, $79, $01, $08, $0e, $14, $1a, $1b, $15
-	db $0f, $09, $02, $7a, $72, $6a, $61, $57, $57, $61, $6a, $72, $7a, $02, $09, $0f
-	db $15, $1b, $1a, $14, $0e, $08, $01, $79, $71, $69, $60, $56, $58, $62, $6b, $73
-	db $7b, $03, $0a, $10, $16, $1c, $19, $13, $0d, $07, $00, $78, $70, $68, $5f, $55
-	db $59, $63, $6c, $74, $7c, $04, $0b, $11, $17, $1d, $18, $12, $0c, $06, $7f, $77
-	db $6f, $67, $5e, $54, $5a, $64, $6d, $75, $7d, $05, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $7e, $76, $6e, $66, $5d, $53, $5b, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $65, $5c, $52, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $01, $01, $01, $09, $09, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $69, $69, $69, $69, $69, $61, $01, $01, $01, $01, $01, $01, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $61, $61, $61, $61, $61, $01, $01, $01, $01
-	db $01, $01, $09, $09, $09, $09, $69, $69, $69, $69, $69, $61, $61, $61, $61, $61
-	db $01, $01, $01, $01, $01, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $61
-	db $61, $61, $61, $61, $01, $01, $01, $01, $01, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $69, $61, $61, $61, $61, $61, $01, $01, $01, $01, $01, $09, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $61, $61, $61, $61, $61, $01, $01, $01, $01
-	db $01, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $61, $61, $61, $61, $61
-	db $01, $01, $01, $01, $01, $09, $09, $09, $09, $09, $69, $69, $69, $69, $61, $61
-	db $61, $61, $61, $61, $01, $01, $01, $01, $01, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $61, $61, $61, $61, $61, $61, $01, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $69, $69, $61, $61, $61, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $0c, $14
-
-Data_05_6aca:
-	db $be, $6b, $ce, $6a
-
-Data_05_6ace:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $1e, $27, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $42, $39, $30, $ff, $1f, $28, $31, $3a, $ff, $4a, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $58, $51, $49, $41, $38, $2f, $26, $20, $29, $32, $3b
-	db $43, $4b, $52, $59, $5f, $65, $6a, $64, $5e, $57, $50, $48, $40, $37, $2e, $25
-	db $21, $2a, $33, $3c, $44, $4c, $53, $5a, $60, $66, $69, $63, $5d, $56, $4f, $47
-	db $3f, $36, $2d, $24, $22, $2b, $34, $3d, $45, $4d, $54, $5b, $61, $67, $68, $62
-	db $5c, $55, $4e, $46, $3e, $35, $2c, $23, $23, $2c, $35, $3e, $46, $4e, $55, $5c
-	db $62, $68, $67, $61, $5b, $54, $4d, $45, $3d, $34, $2b, $22, $24, $2d, $36, $3f
-	db $47, $4f, $56, $5d, $63, $69, $66, $60, $5a, $53, $4c, $44, $3c, $33, $2a, $21
-	db $25, $2e, $37, $40, $48, $50, $57, $5e, $64, $6a, $65, $5f, $59, $52, $4b, $43
-	db $3b, $32, $29, $20, $26, $2f, $38, $41, $49, $51, $58, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $4a, $ff, $3a, $31, $28, $1f, $ff, $30, $39, $42, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $27, $1e, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $69, $69, $69, $69, $69
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $69
-	db $69, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $69, $69, $69, $69, $69
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69, $69, $69, $69, $69
-	db $69, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $69, $69
-	db $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09, $09, $09, $09, $09
-	db $09, $09, $69, $69, $69, $69, $69, $69, $69, $69, $69, $69, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09
+	SCENE_SPRITE_LIST CaptureSprite01
+	SCENE_SPRITE_LIST CaptureSprite02
+	SCENE_SPRITE_LIST CaptureSprite03
+	SCENE_SPRITE_LIST CaptureSprite04
+	SCENE_SPRITE_LIST CaptureSprite05
+	SCENE_SPRITE_LIST CaptureSprite06
+	SCENE_SPRITE_LIST CaptureSprite07
+	SCENE_SPRITE_LIST CaptureSprite08
+	SCENE_SPRITE_LIST CaptureSprite09
+	SCENE_SPRITE_LIST CaptureSprite10
+	SCENE_SPRITE_LIST CaptureSprite11
+	SCENE_SPRITE_LIST CaptureSprite12
+	SCENE_SPRITE_LIST CaptureSprite13
+	SCENE_SPRITE_LIST CaptureSprite14
+	SCENE_SPRITE_LIST CaptureSprite15
+	SCENE_SPRITE_LIST CaptureSprite16
+; Tiger summon-animation BG frames (CopyBgMap descriptors; scene 0 draws
+; them by label) -- maps compiled from assets/summon/tiger.tmx, one Tiled
+; layer pair per frame, like the other scenes.
+TigerFrame00:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame00_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame00_attr.bin"
+TigerFrame01:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame01_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame01_attr.bin"
+TigerFrame02:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame02_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame02_attr.bin"
+TigerFrame03:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame03_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame03_attr.bin"
+TigerFrame04:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame04_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame04_attr.bin"
+TigerFrame05:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame05_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame05_attr.bin"
+TigerFrame06:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame06_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame06_attr.bin"
+TigerFrame07:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame07_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame07_attr.bin"
+TigerFrame08:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame08_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame08_attr.bin"
+TigerFrame09:
+	db 12, 20
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/summon/tiger/frame09_idx.bin"
+.attr:
+	INCBIN "assets/summon/tiger/frame09_attr.bin"

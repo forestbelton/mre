@@ -222,10 +222,16 @@ def tmx_frames_to_maps(tmx_path):
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheet_first = pal_first = None
+    tsprops = []          # (firstgid, tilecount, bank, base) for property-tagged tilesets
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
         if n == 8:
             pal_first = int(ts.get("firstgid"))
+            continue
+        props = {p.get("name"): int(p.get("value"))
+                 for p in ts.findall("properties/property")}
+        if props:
+            tsprops.append((int(ts.get("firstgid")), n, props["bank"], props["base"]))
         elif sheet_first is None:
             sheet_first = int(ts.get("firstgid"))
     layers = {}
@@ -251,8 +257,14 @@ def tmx_frames_to_maps(tmx_path):
                     raise SystemExit(f"{tmx_path}:{name}: hole at ({r},{c}) -- "
                                      "frames must fill their top-left rectangle")
                 xf, yf = bool(g & HFLIP), bool(g & VFLIP)
-                i = (g & GIDMASK) - sheet_first
-                bank, vt = divmod(i, 384)
+                raw = g & GIDMASK
+                for first, n, bank, base in tsprops:
+                    if first <= raw < first + n:   # property-tagged tileset
+                        vt = base + (raw - first)
+                        break
+                else:
+                    i = raw - sheet_first
+                    bank, vt = divmod(i, 384)
                 if not 128 <= vt < 384:
                     raise SystemExit(f"{tmx_path}:{name}: cell ({r},{c}) -> VRAM "
                                      f"tile {vt} (not addressable in $8800 mode)")

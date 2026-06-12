@@ -597,7 +597,7 @@ HRAM: 75 bytes used / 52 free
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$7410 | 13329 | capture.asm | scene_scene7 |
+| $4000-$7410 | 13329 | capture.asm | scene_capture |
 
 ### $0f — ROMX (4 sections, 4 analyzed)
 

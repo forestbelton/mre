@@ -995,67 +995,9 @@ CoxHouseMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $a8, $a8, $a8, $aa, $a8, $a8, $a8, $a8, $a8, $a8
-	db $a8, $a8, $ac, $b0, $ac, $b0, $ff, $ff, $ff, $ff, $fc, $fc, $a9, $aa, $a9, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $ad, $b1, $ad, $b1, $ff, $ff, $ff, $ff, $fc, $fc
-	db $fc, $ab, $fc, $fc, $b6, $b8, $be, $be, $c2, $ba, $ae, $b2, $ae, $b2, $ff, $ff
-	db $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b7, $b9, $bf, $bf, $c3, $bb, $af, $b3
-	db $af, $b3, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b7, $b9, $c0, $c1
-	db $c4, $bb, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5
-	db $bc, $bd, $bd, $bd, $bd, $bc, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff
-	db $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $ba, $cd
-	db $c5, $c7, $cd, $ba, $b4, $b5, $b4, $b5, $ba, $cd, $c9, $cb, $cd, $ba, $ff, $ff
-	db $ff, $ff, $bb, $fc, $c6, $c8, $fc, $bb, $b4, $b5, $b4, $b5, $bb, $fc, $ca, $cc
-	db $fc, $bb, $ff, $ff, $ff, $ff, $bb, $fc, $fc, $fc, $fc, $bb, $b4, $b5, $b4, $b5
-	db $bb, $fc, $fc, $fc, $fc, $bb, $ff, $ff, $ff, $ff, $bc, $bd, $bd, $bd, $bd, $bc
-	db $b4, $b5, $b4, $b5, $bc, $bd, $bd, $bd, $bd, $bc, $ff, $ff, $ff, $ff, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff
-	db $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff, $ff, $ff, $b4, $b5
-	db $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $ff, $ff
-	db $ff, $ff, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5, $b4, $b5
-	db $b4, $b5, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $b4, $b5
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $b4, $b5, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+	INCBIN "assets/cox/house_idx.bin"
 .attr:
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b, $0b
-	db $0b, $0b, $0d, $0d, $0d, $0d, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $2b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0d, $0d, $0d, $0d, $08, $08, $08, $08, $0b, $0b
-	db $0b, $0b, $0b, $0b, $0b, $0b, $0c, $2c, $0c, $2b, $0d, $0d, $0d, $0d, $08, $08
-	db $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0b, $0b, $0c, $2c, $0c, $2b, $0d, $0d
-	db $0d, $0d, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0b, $0b, $0c, $0c
-	db $0c, $2b, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0b, $0b, $0b, $0b, $0b, $2b, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $08, $08
-	db $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0b, $09
-	db $09, $09, $09, $2b, $0a, $0a, $0a, $0a, $0b, $09, $09, $09, $09, $2b, $08, $08
-	db $08, $08, $0b, $09, $09, $09, $09, $2b, $0a, $0a, $0a, $0a, $0b, $09, $09, $09
-	db $09, $2b, $08, $08, $08, $08, $0b, $09, $09, $09, $09, $2b, $0a, $0a, $0a, $0a
-	db $0b, $09, $09, $09, $09, $2b, $08, $08, $08, $08, $0b, $0b, $0b, $0b, $0b, $2b
-	db $0a, $0a, $0a, $0a, $0b, $0b, $0b, $0b, $0b, $2b, $08, $08, $08, $08, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $08, $08
-	db $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $08, $08, $08, $08, $0a, $0a
-	db $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $08, $08
-	db $08, $08, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a, $0a
-	db $0a, $0a, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $0a, $0a
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $0a, $0a, $08, $08, $08, $08, $08, $08, $08, $08, $09, $09, $09, $09
-	db $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $09, $08, $08
+	INCBIN "assets/cox/house_attr.bin"
 
 ; CopyBgMap 18x20 -> $9800: the "SOLOMON C59" computer monitor; LetterFromCox
 ; is typed onto its black screen by Cox_ShowLetterOnMonitor.
@@ -1064,53 +1006,9 @@ CoxMonitorMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce
-	db $ce, $ce, $ce, $ce, $d2, $d3, $d4, $d5, $d6, $fd, $fd, $fd, $fd, $fd, $fd, $fd
-	db $fd, $fd, $fd, $fd, $d7, $d8, $fd, $fd, $fd, $cf, $d1, $d1, $d1, $d1, $d1, $d1
-	db $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $cf, $fd, $fd, $d0, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd
-	db $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd
-	db $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd
-	db $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $d0, $ff, $ff, $ff, $ff, $ff, $ff
-	db $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $d0, $fd, $fd, $cf, $d1, $d1
-	db $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $d1, $cf, $fd
-	db $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd, $fd
-	db $fd, $fd, $fd, $fd, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce, $ce
-	db $ce, $ce, $ce, $ce, $ce, $d9, $ce, $ce
+	INCBIN "assets/cox/monitor_idx.bin"
 .attr:
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $2c, $0c, $0c, $4c, $4c, $4c
-	db $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $6c, $0c
-	db $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c, $0c
-	db $0c, $0c, $0c, $0c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c, $4c
-	db $4c, $4c, $4c, $4c, $4c, $0c, $4c, $4c
+	INCBIN "assets/cox/monitor_attr.bin"
 
 ; CopyBgMap 6x20 -> $9c00: the flashback textbox window frame (also drawn by
 ; DrawTextWindow in text/engine.asm when the alt-window flag [$d61a] is set).
@@ -1119,23 +1017,9 @@ CoxTextWindowMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $a0, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2
-	db $a2, $a2, $a2, $a0, $a1, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $a1, $a1, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $a1, $a1, $fc, $fc, $fc
-	db $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $a1
-	db $a1, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc, $fc
-	db $fc, $fc, $fc, $a1, $a0, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a2
-	db $a2, $a2, $a2, $a2, $a2, $a2, $a2, $a0
+	INCBIN "assets/cox/window_idx.bin"
 .attr:
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $28, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $28, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28, $08, $08, $08, $08
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $28
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
-	db $08, $08, $08, $28, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48, $48
-	db $48, $48, $48, $48, $48, $48, $48, $68
+	INCBIN "assets/cox/window_attr.bin"
 
 ; CopyBgMap 4x4 -> $9900: speaker face bubble, Cox (explorer hat).
 CoxFaceMap:
@@ -1143,9 +1027,9 @@ CoxFaceMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $80, $88, $90, $98, $81, $89, $91, $99, $82, $8a, $92, $9a, $83, $8b, $93, $9b
+	INCBIN "assets/cox/face_cox_idx.bin"
 .attr:
-	db $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08, $08
+	INCBIN "assets/cox/face_cox_attr.bin"
 
 ; CopyBgMap 4x4 -> $9900: speaker face bubble, Alf (blue hood).
 AlfFaceMap:
@@ -1153,9 +1037,9 @@ AlfFaceMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $84, $8c, $94, $9c, $85, $8d, $95, $9d, $86, $8e, $96, $9e, $87, $8f, $97, $9f
+	INCBIN "assets/cox/face_alf_idx.bin"
 .attr:
-	db $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e, $0e
+	INCBIN "assets/cox/face_alf_attr.bin"
 
 ; CopyBgMap 4x4 -> $9900: erases the face bubble (restores the wall/floor cells).
 CoxFaceClearMap:
@@ -1163,9 +1047,9 @@ CoxFaceClearMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $ff, $ff, $b4, $b5, $ff, $ff, $b4, $b5, $ff, $ff, $b4, $b5, $ff, $ff, $ba, $cd
+	INCBIN "assets/cox/face_clear_idx.bin"
 .attr:
-	db $0f, $0f, $0a, $0a, $0f, $0f, $0a, $0a, $0f, $0f, $0a, $0a, $0f, $0f, $0b, $09
+	INCBIN "assets/cox/face_clear_attr.bin"
 
 ; CopyBgMap 3x6 -> $9907: the closing "Fin" card.
 CoxFinMap:
@@ -1173,11 +1057,9 @@ CoxFinMap:
 	dw .attr
 	dw .idx
 .idx:
-	db $da, $dd, $e0, $e3, $e6, $e9, $db, $de, $e1, $e4, $e7, $ea, $dc, $df, $e2, $e5
-	db $e8, $eb
+	INCBIN "assets/cox/fin_idx.bin"
 .attr:
-	db $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f, $0f
-	db $0f, $0f
+	INCBIN "assets/cox/fin_attr.bin"
 
 ; 16x16 character frames for DrawMetasprite: db count, then {Yoff, Xoff, tile,
 ; attr} per 8x16 OBJ. OBJ palette (attr low bits) 0 = Cox, 1 = Alf, 2 = the
