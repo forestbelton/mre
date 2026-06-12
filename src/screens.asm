@@ -1891,7 +1891,7 @@ Func_30_5142:
 Func_30_514b:
 	ld a, $04
 	ld [wC2D7], a
-	FAR_CALL Func_18_6b71
+	FAR_CALL Naji_RunEncounter
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret

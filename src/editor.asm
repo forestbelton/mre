@@ -532,7 +532,7 @@ ConfirmSaveFloor:
 .launch:
 	ld a, $05
 	ld [wRoomType], a
-	FAR_CALL Func_05_47c6
+	FAR_CALL SetupNewRun
 	FAR_CALL Func_00_3508
 	FAR_CALL Func_01_439e
 	call ResetScrollState

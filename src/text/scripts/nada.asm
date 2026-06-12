@@ -48,7 +48,7 @@ FillPaletteBlock:
 	dec c
 	jr nz, .loop
 	ret
-Func_1f_4d8c:
+Nada_StartScript:
 	ld a, $00
 	ld [$d611], a
 	ld hl, NadaScript
@@ -212,7 +212,7 @@ Nada_RenderPortrait:
 	ld a, $1c
 	ld [wDrawBank], a
 	call Nada_AnimatePortrait
-	call Func_1f_4fb2
+	call Nada_StepScene
 	ret
 Nada_RenderPortraitAngry:
 	ld a, $2f
@@ -230,7 +230,7 @@ Nada_RenderPortraitAngry:
 	ld hl, Nada_face_angry
 	ld bc, $1360
 	call DrawMetasprite
-	call Func_1f_4fb2
+	call Nada_StepScene
 	ret
 Nada_AnimatePortrait:
 	ld hl, $d610
@@ -272,7 +272,7 @@ Nada_AnimatePortrait:
 	ld bc, $1360
 	call DrawMetasprite
 	ret
-Func_1f_4fb2:
+Nada_StepScene:
 	ld hl, $d611
 	ld a, [hl]
 	or a
@@ -287,7 +287,7 @@ Func_1f_4fb2:
 	jr c, .dispatch
 	ld a, $1a
 .dispatch:
-	ld hl, $4fd6
+	ld hl, NadaSceneTable
 	sla a
 	add a, l
 	ld l, a
@@ -299,7 +299,7 @@ Func_1f_4fb2:
 	ld l, a
 	jp hl
 
-Data_1f_4fd6:
+NadaSceneTable:
 	db $0e, $50, $0e, $50, $0e, $50, $23, $50, $23, $50, $23, $50, $38, $50, $38, $50
 	db $38, $50, $4d, $50, $4d, $50, $4d, $50, $62, $50, $62, $50, $62, $50, $77, $50
 	db $77, $50, $77, $50, $8c, $50, $8c, $50, $8c, $50, $77, $50, $77, $50, $77, $50

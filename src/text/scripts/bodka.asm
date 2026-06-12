@@ -22,7 +22,7 @@ LinkStoreRecvRoom:
 	ld [$d5fa], a
 	ret
 
-Func_18_5dfa:
+Bodka_StartDialogue:
 	ld hl, BodkaScript
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
@@ -309,7 +309,7 @@ Tradehouse_AnimateNoteScene:
 
 SECTION "Bodka script", ROMX
 
-; Top-level Bodka script entry ($608c), reached from Func_18_5dfa. Dispatch on
+; Top-level Bodka script entry ($608c), reached from Bodka_StartDialogue. Dispatch on
 ; the studio-mode flag: when [$d0e2]==1 Bodka is the post-game studio host
 ; (BodkaStudioGreet); otherwise fall through to the tradehouse scene. The
 ; leading IF_EQ was previously misfiled as Data_18_608c at the tail of the

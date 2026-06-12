@@ -1094,9 +1094,15 @@ Func_05_473d:
 	ld a, [hl+]
 	ld [$cfe8], a
 	ret
-Func_05_4785:
+; Tower-climb entry setups. Each resets the action-game run state (ResetRunState)
+; with A -> $c2aa, then configures the starting room/floor:
+;   SetupTowerClimb            new climb: floor 1, room type 0, mark progress flag
+;   SetupTowerClimbResume      restore room type/floor from the saved slot ($cff1/wCFF0)
+;   SetupTowerClimbFromBottom  floor 1, room type 1
+; (all three are entered via Naji's tower-entrance handlers.)
+SetupTowerClimb:
 	ld a, $01
-	call Func_05_47d4
+	call ResetRunState
 	ld a, $01
 	ld [$c2ab], a
 	ld a, $00
@@ -1105,9 +1111,9 @@ Func_05_4785:
 	ld [wActiveFloor], a
 	call Func_00_1219
 	ret
-Func_05_479d:
+SetupTowerClimbResume:
 	xor a
-	call Func_05_47d4
+	call ResetRunState
 	xor a
 	ld [$c2ab], a
 	ld a, [$cff1]
@@ -1115,9 +1121,9 @@ Func_05_479d:
 	ld a, [wCFF0]
 	ld [wActiveFloor], a
 	ret
-Func_05_47b2:
+SetupTowerClimbFromBottom:
 	xor a
-	call Func_05_47d4
+	call ResetRunState
 	ld a, $01
 	ld [$c2ab], a
 	ld a, $01
@@ -1125,14 +1131,18 @@ Func_05_47b2:
 	ld a, $01
 	ld [wActiveFloor], a
 	ret
-Func_05_47c6:
+; Generic fresh-run setup (no floor preset; caller sets it). Used by the level
+; editor's test-play and the new-game paths in the home bank.
+SetupNewRun:
 	ld a, $01
-	call Func_05_47d4
+	call ResetRunState
 	ld a, $01
 	ld [$c2ab], a
 	call Func_00_1219
 	ret
-Func_05_47d4:
+; Reset the action-game run state: A -> $c2aa, then 3 lives, bomb capacity 3,
+; $50 crystals, and clear score/bomb/battle-card state.
+ResetRunState:
 	ld [$c2aa], a
 	ld a, $03
 	ld [wLives], a

@@ -41,7 +41,7 @@ CountCheckedInMonsters:
 	ld a, b
 	ld [wYNResult], a
 	ret
-Func_18_533c:
+Verde_StartDialogue:
 	ld hl, VerdeEntry
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding

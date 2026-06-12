@@ -213,7 +213,7 @@ StartTowerBossEncounter:
 	pop af
 	jp LeaveTownBuilding
 .nada:
-	FAR_CALL Func_1f_4d8c
+	FAR_CALL Nada_StartScript
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked
@@ -299,7 +299,7 @@ NadaPortraitInit:
 	ld hl, Nada_face_angry
 	ld bc, $1360
 	call DrawMetasprite
-	call Func_1f_4fb2
+	call Nada_StepScene
 	ld hl, Nada_monster_eye
 	ld bc, $3020
 	call DrawMetasprite

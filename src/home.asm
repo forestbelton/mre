@@ -2166,11 +2166,11 @@ SECTION "analyzed_000f7d", ROM0[$0f7d]
 
 Data_00_0f7d:
 	farptr Func_00_3492, 17
-	farptr Func_18_6b71, 18
-	farptr Func_18_5dfa
+	farptr Naji_RunEncounter, 18
+	farptr Bodka_StartDialogue
 	farptr Pashute_StartTownScript
 	farptr Toamuna_StartScript
-	farptr Func_18_533c
+	farptr Verde_StartDialogue
 
 SECTION "analyzed_000fa1", ROM0[$0fa1]
 
@@ -3486,7 +3486,7 @@ EnterSelectedRoom:
 	ld a, $05
 	ld [wRoomType], a
 	call LoadFloorByMode
-	FAR_CALL Func_05_47c6
+	FAR_CALL SetupNewRun
 	FAR_CALL Func_00_3508
 	FAR_CALL Func_01_439e
 	call ResetScrollState
@@ -3544,7 +3544,7 @@ Func_00_1a06:
 	FAR_CALL Func_15_4134
 	jr Func_00_19ba
 Func_00_1a1e:
-	FAR_CALL Func_05_47c6
+	FAR_CALL SetupNewRun
 	FAR_CALL Func_00_3508
 	FAR_CALL Func_01_439e
 	call ResetScrollState
@@ -7408,7 +7408,7 @@ Func_00_34bc:
 	call DrawTownScreen
 	ret
 
-Func_00_34e3:
+EnterTowerEntrance:
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_Silence
@@ -7477,7 +7477,7 @@ Func_00_3508:
 	ld [$2fff], a
 	call DrawTowerOpenScreen
 Func_00_3572:
-	FAR_CALL Func_18_6b71
+	FAR_CALL Naji_RunEncounter
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret

@@ -441,7 +441,7 @@ Func_01_4679:
 	call Func_01_4987
 	ld a, $01
 	ld [wC2D7], a
-	FAR_CALL Func_18_6b71
+	FAR_CALL Naji_RunEncounter
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
@@ -511,7 +511,7 @@ Func_01_470d:
 	or a
 	jr nz, Func_01_473a
 	FAR_CALL Func_13_4000
-	FAR_CALL Func_18_6b65
+	FAR_CALL SetTrioNpcState
 	ld a, $0e
 	call Func_00_1164
 	ld a, $03
@@ -521,7 +521,7 @@ Func_01_470d:
 	ret
 
 Func_01_473a:
-	FAR_CALL Func_18_6b71
+	FAR_CALL Naji_RunEncounter
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
@@ -2909,7 +2909,7 @@ Func_01_5d99:
 	call Func_00_119a
 	or a
 	ret nz
-	FAR_CALL Func_18_533c
+	FAR_CALL Verde_StartDialogue
 	ld a, $0d
 	call Func_00_1164
 	ret

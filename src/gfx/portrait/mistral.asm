@@ -1,6 +1,6 @@
 ; Mistral's encounter portrait (shown during her dialogue; she's the girl in the red
 ; hood, with her summoned monster Ferious -- "Ferious! Come!" -- drawn as the
-; silhouette behind her). A two-VRAM-bank CGB portrait: the loader (Func_1f_4416)
+; silhouette behind her). A two-VRAM-bank CGB portrait: the loader (Mistral_StartEncounter)
 ; copies these 384 tiles to VRAM bank 1 $8000 and the 128 bank-0 tiles to VRAM bank 0
 ; $9000; the attr map's bit 3 selects the tile bank per cell. Located by following
 ; Mistral's script far-calls (tools/find_portraits.py).

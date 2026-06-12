@@ -10,7 +10,7 @@
 ; $1c:$7000/$7040) are carved into the intro scene below; the second pose reuses
 ; them, so its PNG is colourised but owns no palette bytes.
 
-; --- Intro scene (shown by Func_1f_4d97 early in her script) ---------------
+; --- Intro scene (shown by Nada_ShowScene early in her script) ---------------
 ; Bank 0 sheet $1c:$4000, bank 1 sheet $1c:$5800.
 
 SECTION "Nada graphics", ROMX
@@ -46,13 +46,13 @@ NadaIntroAttrMap:
 
 ; Overlay region ($723e-$7755), shared by both scenes: Nada's 7-frame snap animation
 ; (snap_body0..6 two-bank 5x9 patch + snap_hand0..6 metasprite each, intro-only -- the
-; body patch is authored against the intro sheet; the bank-$1f Func_1f_4fb2 ping-pong
+; body patch is authored against the intro sheet; the bank-$1f Nada_StepScene ping-pong
 ; dispatch drives it), her talking mouth/face (mouth_frame0..2 + face_frame0..2), and the
 ; angry/rage expression (mouth_angry/face_angry + the monster_eye red glow NadaPortraitInit
 ; draws). Layered PNG source in assets/portrait/nada_intro/sprites/ (docs/portrait_overlays.md).
 	INCLUDE "assets/nada_intro/sprites.asm"   ; Nada_<role> blocks
 
-; --- Second pose (shown by Func_1f_4e65 -- Nada with a summoned monster) -----
+; --- Second pose (shown by Nada_ShowRageScene -- Nada with a summoned monster) -----
 ; Shares the bank-0 sheet above (NadaIntroTilesBank0); owns only the bank-1
 ; sheet $1f:$6607 plus its descriptor/maps. Editable bank-0 tiles live in
 ; assets/nada_intro/.

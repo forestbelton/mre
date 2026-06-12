@@ -324,14 +324,16 @@ NajiAskStop:
 
 SECTION "Naji script functions", ROMX
 
-Func_18_6b65:
+; Set the three tower-trio NPCs (Naji, Pashute, Verde) to state $04 together.
+; Called once from gameplay; the exact meaning of state $04 is not yet pinned.
+SetTrioNpcState:
 	ld a, $04
 	ld [wNajiState], a
 	ld [wPashuteState], a
 	ld [wVerdeState], a
 	ret
 
-Func_18_6b71:
+Naji_RunEncounter:
 	call Naji_BuildPortraitScene
 	ld hl, NajiEncounterScript
 	call ScriptDispatcherEnterAfterCall
@@ -347,16 +349,16 @@ Func_18_6b71:
 	ret
 
 Naji_StartTowerClimb:
-	FAR_CALL Func_05_4785
-	FAR_CALL Func_00_34e3
+	FAR_CALL SetupTowerClimb
+	FAR_CALL EnterTowerEntrance
 	ret
 Naji_ResumeTowerClimb:
-	FAR_CALL Func_05_479d
-	FAR_CALL Func_00_34e3
+	FAR_CALL SetupTowerClimbResume
+	FAR_CALL EnterTowerEntrance
 	ret
 Naji_StartTowerFromBottom:
-	FAR_CALL Func_05_47b2
-	FAR_CALL Func_00_34e3
+	FAR_CALL SetupTowerClimbFromBottom
+	FAR_CALL EnterTowerEntrance
 	ret
 
 Naji_BuildPortraitScene:
@@ -475,7 +477,7 @@ Naji_RenderPortraitAlt:
 	call DrawMetasprite
 	ret
 
-; --- Naji's encounter dialogue (entered at $6ce3 via Func_18_6b71) ---
+; --- Naji's encounter dialogue (entered at $6ce3 via Naji_RunEncounter) ---
 ; State-dependent greeting tree, dispatched on the tower-run flags $c2c1 /
 ; $c2d7 and the one-time-message flags $d0e5 / $d0e6 (set with WRITE_WRAM
 ; after first showing); $cff2 holds the level number printed by SCRIPT_DECIMAL.
