@@ -165,6 +165,30 @@ the component kinds above. `buildassets.py` stays the single build entry.
 4. **New carves land in the new model** — screen_2a, screen_2b, screen_19,
    tradehouse, next_room, the $0c editor library: sheet PNG + authored maps,
    no new bins. (screen_25 = room_screen is already half-migrated.)
+   **PARTIAL 2026-06-12:**
+   - **tradehouse DONE** — family G! Both 11x20 maps are the standard
+     portrait layout; two derived portrait-style screens
+     (assets/screen/tradehouse_{studio,note}), raw 2bpp deleted, bodka.asm
+     refs labelled.
+   - **screen_19 → textui DONE** — it's the shared dialogue-box UI. New
+     `mode: maplib` (generalized `tmx_to_maps`: tiles-per-bank/banks/base
+     params, `vram1` placeholder tileset + `priority` layer support) for
+     library banks; 512-tile alternate-set sheet + textui.tmx; raw 2bpp
+     deleted; home/engine/cox refs labelled.
+   - **next_room (bank $24) scoped, not migrated**: tiles $4000 (384 →
+     VRAM bank 0), palettes $5800, window panel desc $5880 (7x11 → $9c00,
+     uses **priority bits**), then NINE 18x9 floor-group strips chained
+     $597f..$6519 (step $14a; their bank-1 cells reference tiles loaded by
+     another subsystem → needs the `vram1` placeholder tileset, already
+     implemented), metasprite lists, and small digit/label tables
+     $65bf-$65f3 consumed by screens.asm via Func_00_35d4/35f9. The strip
+     consumers are reached through further indirection (Func_30_4f10 →
+     Func_30_58d7?) — trace before restructuring. ~10 TMX maps once done.
+   - **screen_2b deferred**: descriptors structured (Screen2b_00-25) but
+     the BG tile source is unidentified (the $30:$5cb9 flow loads only
+     $0800 of OBJ tiles); trace the BG tileset before a maplib conversion.
+   - **screen_2a deferred**: multi-tileset grab-bag + in-room sprites; no
+     descriptors of its own found yet — needs inventory first.
 5. **Scene frames + metasprites** — descriptors → map source; metasprites →
    asm records.
 6. **Endgame derisk (optional)** — generate portrait sheets from
