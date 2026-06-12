@@ -269,3 +269,15 @@ tradehouse_note:
   mode: portrait
   png: screen/tradehouse_note/tradehouse_note.png
   layout: standard
+
+# Text-window UI (bank $19, src/gfx/screen/textui.asm): the dialogue box-frame
+# tiles (main + alt set, alternates -> VRAM bank 0 $8800) + 16 palettes + the
+# 7x20 box-frame arrangement as a Tiled map.
+textui:
+  mode: maplib
+  png: screen/textui/textui.png
+  tiles: 512
+  banks: 1
+  base: 128
+  palettes: 16
+  maps: [textui.tmx]

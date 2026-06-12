@@ -442,8 +442,8 @@ DrawTextWindow:
 	or a
 	jr nz, .altWindow
 	push hl
-	ld hl, $674b
-	ld a, $19
+	ld hl, TextUiBoxMap
+	ld a, BANK(TextUiBoxMap)
 	ld de, $9960
 	call BankMapCopyA
 	pop hl

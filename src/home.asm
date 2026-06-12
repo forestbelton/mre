@@ -8206,24 +8206,24 @@ LeaveTownBuilding:
 LoadTextUiAlt:
 	ld a, $00
 	ldh [rVBK], a
-	ld a, $19
-	ld hl, $56cb
+	ld a, BANK(TextUiTilesAlt)
+	ld hl, TextUiTilesAlt
 	jp LoadTextUiTiles
 LoadTextUi:
 	ld a, $00
 	ldh [rVBK], a
-	ld a, $19
-	ld hl, $46cb
+	ld a, BANK(TextUiTiles)
+	ld hl, TextUiTiles
 LoadTextUiTiles:
 	ld de, $8800
 	ld bc, $1000
 	call BankVramCopy
-	ld hl, $674b
-	ld a, $19
+	ld hl, TextUiBoxMap
+	ld a, BANK(TextUiBoxMap)
 	ld de, $9960
 	call BankMapCopyA
-	ld a, $19
-	ld hl, $66cb
+	ld a, BANK(TextUiPalettes)
+	ld hl, TextUiPalettes
 	ld de, wBgPalettes
 	ld bc, $0080
 	call BankCopy

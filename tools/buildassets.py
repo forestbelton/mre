@@ -47,6 +47,13 @@ def build_png_asset(name: str, spec: dict) -> None:
             cmd += ["--tiles", str(spec["tiles"])]
         if "map" in spec:                             # Tiled .tmx arrangement source
             cmd += ["--map", str(spec["map"])]
+    elif mode == "maplib":
+        cmd = [pngasset, "maplib", "--png", str(png), "--out-dir", str(out),
+               "--tiles", str(spec["tiles"]),
+               "--banks", str(spec.get("banks", 1)),
+               "--base", str(spec.get("base", 0)),
+               "--palettes", str(spec.get("palettes", 0)),
+               "--maps", ",".join(spec.get("maps", []))]
     elif mode == "scene":
         cmd = [pngasset, "scene", "--png", str(png), "--out-dir", str(out)]
         if "tiles" in spec:

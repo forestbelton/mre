@@ -27,7 +27,7 @@
 ; Graphics: the 256-tile sheet (OBJ character frames + the scene's BG-bank-1
 ; tiles) and its palettes are the PNG asset assets/cox/tiles.png; the CopyBgMap
 ; tilemaps and DrawMetasprite frames are structured at the end of this file.
-; BG cells with attr bit 3 clear use the shared bank-$19 tileset (Data_19_46cb).
+; BG cells with attr bit 3 clear use the shared bank-$19 tileset (TextUiTiles).
 ;
 ; See docs/text_engine.md for the bytecode reference.
 
@@ -103,8 +103,8 @@ Cox_LoadFlashbackScene:
 	ld [$d61f], a
 	ld a, $00
 	ldh [rVBK], a
-	ld a, BANK(Data_19_46cb)
-	ld hl, Data_19_46cb
+	ld a, BANK(TextUiTiles)
+	ld hl, TextUiTiles
 	ld de, $8800
 	ld bc, $1000
 	call BankVramCopy
@@ -989,7 +989,7 @@ CoxFlashbackObjPals:
 ; CopyBgMap 24 rows x 20 cols -> $9800: Cox's house interior (desk with the
 ; computer, bookshelves, two beds). 24 rows -- six below the visible screen --
 ; because the staff roll wrap-scrolls SCY over it. Cells with attr bit 3 clear
-; take their tiles from the shared bank-$19 tileset (Data_19_46cb).
+; take their tiles from the shared bank-$19 tileset (TextUiTiles).
 CoxHouseMap:
 	db 24, 20
 	dw .attr
