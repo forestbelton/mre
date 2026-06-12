@@ -9,8 +9,9 @@
 ; append-only rule on non-auto-managed files preserves your edits.
 
 INCLUDE "hardware.inc"
-INCLUDE "text.inc"
 INCLUDE "sound_ids.inc"
+INCLUDE "text.inc"
+INCLUDE "util.inc"
 
 SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
 
@@ -20,26 +21,26 @@ Kalum_StartEncounter:
 	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
-	ld a, $1d
+	ld a, BANK(KalumPortraitTiles)
 	ld hl, KalumPortraitTiles
-	ld de, $8000
-	ld bc, $1800
+	ld de, TILEDATA0
+	ld bc, KalumPortraitTilesEnd - KalumPortraitTiles
 	call BankVramCopy
 	ld hl, KalumPortraitMapDesc
-	ld a, $1d
+	ld a, BANK(KalumPortraitMapDesc)
 	ld de, TILEMAP0
 	call BankMapCopyA
 	call Kalum_AnimateMonsterPortrait
 	call HideUnusedOamSprites
-	ld a, $1d
+	ld a, BANK(KalumPortraitPaletteBg)
 	ld hl, KalumPortraitPaletteBg
 	ld de, wBgPalettes
-	ld bc, $0030
+	ld bc, KalumPortraitPaletteBgEnd - KalumPortraitPaletteBg
 	call BankCopy
-	ld a, $1d
+	ld a, BANK(KalumPortraitPaletteObj)
 	ld hl, KalumPortraitPaletteObj
 	ld de, wObjPalettes
-	ld bc, $0030
+	ld bc, KalumPortraitPaletteObjEnd - KalumPortraitPaletteObj
 	call BankCopy
 	call LoadPortraitBackdropBg
 	call LoadPortraitBackdropObj
@@ -80,19 +81,19 @@ Kalum_ShowMonsterPortrait2:
 	jp ScriptWaitForObjSwap
 
 Kalum_LoadMonsterTiles:
-	ld a, $1d
+	ld a, BANK(KalumPortraitPaletteBg)
 	ld hl, KalumPortraitPaletteBg
 	ld de, $c181
-	ld bc, $0030
+	ld bc, KalumPortraitPaletteBgEnd - KalumPortraitPaletteBg
 	call BankCopy
 	ld de, $c131
 	ld hl, $c1b1
 	ld c, $10
 	call CopyDEtoHL
-	ld a, $1d
+	ld a, BANK(KalumPortraitPaletteObj)
 	ld hl, KalumPortraitPaletteObj
 	ld de, $c1c1
-	ld bc, $0030
+	ld bc, KalumPortraitPaletteObjEnd - KalumPortraitPaletteObj
 	call BankCopy
 	ld de, $c171
 	ld hl, $c1f1
@@ -101,13 +102,13 @@ Kalum_LoadMonsterTiles:
 	ret
 
 Kalum_AnimateMonsterPortrait:
-	ld a, $34
+	ld a, LOW(Kalum_AnimateMonsterPortrait)
 	ld [wRendererAddr], a
-	ld a, $42
+	ld a, HIGH(Kalum_AnimateMonsterPortrait)
 	ld [$d61f], a
-	ld a, $1f
+	ld a, BANK(Kalum_AnimateMonsterPortrait)
 	ld [wRendererBank], a
-	ld a, $1d
+	ld a, BANK(Kalum_shoulder_collar)
 	ld [wDrawBank], a
 	ld hl, Kalum_shoulder_collar
 	ld bc, $5070
@@ -129,8 +130,8 @@ Kalum_AnimateMonsterPortrait:
 	cp $03
 	jr z, .frame1
 	ld hl, Kalum_eyes_frame0
-	ld a, $1d
-	ld de, $988d
+	ld a, BANK(Kalum_eyes_frame0)
+	ld de, TILEMAP0_X13_Y4
 	call BankMapCopyA
 	ld hl, Kalum_blink_frame0
 	ld bc, $2068
@@ -138,8 +139,8 @@ Kalum_AnimateMonsterPortrait:
 	ret
 .frame1:
 	ld hl, Kalum_eyes_frame1
-	ld a, $1d
-	ld de, $988d
+	ld a, BANK(Kalum_eyes_frame1)
+	ld de, TILEMAP0_X13_Y4
 	call BankMapCopyA
 	ld hl, Kalum_blink_frame1
 	ld bc, $2068
@@ -147,8 +148,8 @@ Kalum_AnimateMonsterPortrait:
 	ret
 .frame2:
 	ld hl, Kalum_eyes_frame2
-	ld a, $1d
-	ld de, $988d
+	ld a, BANK(Kalum_eyes_frame2)
+	ld de, TILEMAP0_X13_Y4
 	call BankMapCopyA
 	ld hl, Kalum_blink_frame2
 	ld bc, $2068
@@ -161,7 +162,7 @@ KalumScript:
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$01, .Target=.KalumVictory
     SCRIPT_IF_EQ .Addr=wBossState, .Value=$02, .Target=.KalumDefeat
     ; Default greeting (first visit) — was the mislabeled start at $42bd:
-    SCRIPT_OPEN_TEXTBOX .Pos=$9982, .Width=$10, .Height=$04
+    SCRIPT_OPEN_TEXTBOX .Pos=TILEMAP0_X2_Y12, .Width=$10, .Height=$04
     db "Wow! I can't\r"
     db "believe people"
     SCRIPT_WAIT

@@ -9,19 +9,16 @@
 ; region is internally relocatable (docs/philosophy.md). The 6 BG + 6 OBJ palettes
 ; (loaded by Kalum_StartEncounter from $1d:$5800/$5840) are carved here from the
 ; PNG's colour table, so the portrait carries its real colour.
+INCLUDE "util.inc"
 
 SECTION "Kalum graphics", ROMX
 
-KalumPortraitTiles:
-	INCBIN "assets/kalum/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
-
-KalumPortraitPaletteBg:
-	INCBIN "assets/kalum/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
+ASSET KalumPortraitTiles, "assets/kalum/tiles.bin"    ; 384 tiles -> VRAM bank 1 $8000
+ASSET KalumPortraitPaletteBg, "assets/kalum/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
 DS $10, 0
 
-KalumPortraitPaletteObj:
-	INCBIN "assets/kalum/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
+ASSET KalumPortraitPaletteObj, "assets/kalum/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
 DS $10, 0
 
