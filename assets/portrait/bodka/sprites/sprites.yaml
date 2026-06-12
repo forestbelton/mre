@@ -20,7 +20,6 @@ blocks:
 - role: eyes_frame2
   kind: patch
   png: eyes_frame2.png
-  pal: 2
 - role: face_frame2
   kind: meta
   png: face_frame2.png

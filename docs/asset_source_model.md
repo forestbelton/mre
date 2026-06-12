@@ -130,6 +130,11 @@ the component kinds above. `buildassets.py` stays the single build entry.
 1. **Indexed cels** — recolour the overlay cel PNGs RGB(A)→indexed (mechanical,
    scripted); teach `gen_patch`/`gen_meta` to read palette from the index.
    Kills the 28 palette pins. No format/schema change yet.
+   **DONE 2026-06-12** (`scratch/reindex_cels.py` + the pngasset rewrite): all
+   10 portraits byte-exact with the palette-inference code deleted; pins now
+   18 `idx` + 13 `bank0` in 3 manifests (8 of 10 are pin-free). A removability
+   sweep (`scratch/sweep_pins.py`) confirmed every surviving `idx` pin is a
+   genuine pixel-twin, not an inference artifact.
 2. **Portrait maps derived** — generalize `derive_portrait_maps` to the indexed
    reference (no inference left: palette explicit, tilemap positional);
    per-portrait composed `portrait.png` replaces `tilemap.bin`/`attrmap.bin`.

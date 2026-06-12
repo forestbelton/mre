@@ -446,32 +446,29 @@ def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides
     return bytes(tmap), amap
 
 
-def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
+def gen_sprite_region(manifest_path, tiles, tiles2=None):
     """Regenerate a portrait's metasprite/patch data region byte-exact from its
-    layered source: a manifest (ordered blocks + roles) plus one PNG per block.
+    layered source: a manifest (ordered blocks + roles) plus one INDEXED PNG per
+    block (pixel = display_palette*4 + 2bpp value, so each cell/record's palette
+    is explicit in the image -- nothing is inferred from colours).
 
     Two block kinds, the two halves of a portrait's animation overlay:
       * patch -- a CopyBgMap sub-tilemap (BG layer): [rows][cols][attr_ptr][idx_ptr]
         + idx map + attr map. The idx is positional (column-major, byte = base+8*col
-        +row, $8800-signed); duplicate-tile ambiguity is resolved by that model and
-        the palette by dominant consensus. Pointers are absolute, computed from the
-        block's laid-out address (idx_ptr = addr+6, attr_ptr = addr+6+rows*cols),
-        so `base` in the manifest must match the asm SECTION address.
+        +row, $8800-signed); duplicate-tile ambiguity is resolved by that model.
+        Pointers are absolute, computed from the block's laid-out address
+        (idx_ptr = addr+6, attr_ptr = addr+6+rows*cols), so `base` in the manifest
+        must match the asm SECTION address.
       * meta  -- a DrawMetasprite OAM list (OBJ layer): [count] + [Yoff,Xoff,tile,
         attr]*count, 8x16. The PNG carries the bitmap; its placement origin (oy,ox,
-        possibly negative) is manifest metadata. Tile picked under the consensus
-        palette with the +2 even-tile run tiebreak.
-    See docs/gfx_assets.md and project_png_asset_pipeline (memory)."""
+        possibly negative) is manifest metadata. Tile picked with the +2 even-tile
+        run model.
+    See docs/gfx_assets.md, docs/asset_source_model.md and portrait_overlays.md."""
     from collections import Counter
 
     import yaml
     from PIL import Image
 
-    def palcols(pal):
-        return [[rgb555_to_888(pal[p * 8 + ci * 2] | (pal[p * 8 + ci * 2 + 1] << 8))
-                 for ci in range(4)] for p in range(len(pal) // 8)]
-
-    PBG, POBJ = palcols(palbg), palcols(palobj)
     NT = len(tiles) // 16
     TPX = [tile_to_indices(tiles[i * 16:i * 16 + 16]) for i in range(NT)]
     # BG: signed tilemap-byte lookup (b -> tiles[b] for b>=128 else tiles[b+256])
@@ -502,30 +499,36 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
     blank_obj2 = sorted(T for T in range(0, min(256, NT2 - 1), 2)
                         if not any(TPX2[T]) and not any(TPX2[T + 1]))
 
-    def gen_patch(img, addr, bank, pal_hint=None, idx_over=None, bank0=None, pal_over=None):
+    def cell_pal(blk, what):
+        ps = {q // 4 for q in blk}
+        if len(ps) != 1:
+            raise SystemExit(f"{what}: cell mixes display palettes {sorted(ps)} "
+                             "(indexed cel pixels must be palette*4 + value)")
+        return ps.pop()
+
+    def gen_patch(img, addr, bank, idx_over=None, bank0=None):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
         blks = [[px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)] for (r, c) in grid]
+        vals = [tuple(q % 4 for q in blk) for blk in blks]
+        # PALETTE is explicit in the indexed source (pixel // 4), per cell.
+        P = [cell_pal(blk, "patch") for blk in blks]
         # two-bank patches: a per-cell bank (attr bit 3). bank0 (committed metadata, the
         # monster-body region) reads tiles2; the rest read the bank-1 sheet. Single-bank
         # patches leave bank0 empty -> every cell uses `bank` (the block default).
         bset = set(bank0 or [])
         cbank = [0 if i in bset else bank for i in range(len(grid))]
-        # TILE first (positional, palette-independent): a cell's byte candidates are the
-        # sheet bytes (in its bank) that reproduce its pixels under ANY BG palette; the
-        # byte is then fixed positionally -- bank-1 cells by column-major (byte = base +
-        # 8*col + row), bank-0 cells by their contiguous column-major allocation in tiles2
+        # TILE (positional): a cell's byte candidates are the sheet bytes (in its bank)
+        # whose tile VALUES equal the cell's -- exact, no palette dimension; the byte is
+        # then fixed positionally -- bank-1 cells by column-major (byte = base + 8*col
+        # + row), bank-0 cells by their contiguous column-major allocation in tiles2
         # (byte = base0 + rank, rank = the cell's index among bank-0 cells, column-major).
-        def cand(i, blk):
+        def cand(i):
             tbl = bgidx if cbank[i] else bgidx0
-            s: set = set()
-            for p in range(len(PBG)):
-                if all(q in PBG[p] for q in blk):
-                    s.update(tbl.get(tuple(PBG[p].index(q) for q in blk), ()))
-            return sorted(s)
+            return sorted(tbl.get(vals[i], ()))
 
-        bcand = [cand(i, blk) for i, blk in enumerate(blks)]
+        bcand = [cand(i) for i in range(len(grid))]
         pin = [bs[0] if len(bs) == 1 else None for bs in bcand]
         bcnt = Counter((pin[i] - 8 * c - r) % 256
                        for i, (r, c) in enumerate(grid) if pin[i] is not None and cbank[i])
@@ -558,44 +561,12 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         # Verde's blinking-eye frames) is pinned per-cell via the manifest `idx` map.
         for cell, b in (idx_over or {}).items():
             idx[int(cell)] = b
-        # PALETTE per cell from the now-known tile (in its bank), spread by 8-neighbour
-        # consensus (matching derive_portrait_maps); dominant fallback for any leftover.
-        pcand = []
-        for i, (b, blk) in enumerate(zip(idx, blks)):
-            pat = TPX[b if b >= 128 else b + 256] if cbank[i] else TPX2[b]
-            pcand.append([p for p in range(len(PBG))
-                          if all(PBG[p][pat[k]] == blk[k] for k in range(64))])
-        P: list = [c[0] if len(c) == 1 else None for c in pcand]
-        for _ in range(rows + cols):
-            for cell in range(rows * cols):
-                if P[cell] is not None:
-                    continue
-                r0, c0 = cell // cols, cell % cols
-                nb = [P[(r0+dr)*cols + (c0+dc)]
-                      for dr in (-1, 0, 1) for dc in (-1, 0, 1)
-                      if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
-                      and P[(r0+dr)*cols + (c0+dc)] in pcand[cell]]
-                if nb:
-                    P[cell] = Counter(nb).most_common(1)[0][0]
-        dom = Counter(p for p in P if p is not None).most_common(1)
-        # image-irreducible cells (several palettes reproduce them): pal_hint forces the
-        # tool's choice -- needed for an isolated patch with no pinned cell to vote (e.g.
-        # bodka's near-blank eyes_frame2, where pals 0/1/2 all render it).
-        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
-        for cell in range(rows * cols):
-            if P[cell] is None:
-                P[cell] = dom if dom in pcand[cell] else (pcand[cell][0] if pcand[cell] else 0)
-        # image-irreducible per-cell palette (a big multi-palette patch's blank/shared
-        # cells reproduce under several palettes): pinned via the manifest `pal_cells` map.
-        for cell, p in (pal_over or {}).items():
-            P[int(cell)] = p
         attr = bytes((cbank[cell] << 3) | P[cell] for cell in range(rows * cols))
         ip = (addr + 6) & 0xFFFF
         ap = (addr + 6 + rows * cols) & 0xFFFF
         return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + attr
 
-    def gen_meta(img, oy, ox, bank, pal_hint=None, idx_over=None, pal_over=None,
-                 bank0=None):
+    def gen_meta(img, oy, ox, bank, idx_over=None, bank0=None):
         px = img.load()
         W, H = img.size
         cols = W // 8
@@ -604,27 +575,22 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         # metasprites leave bank0 empty -> every record uses `bank` (the block default).
         b0set = set(bank0 or [])
         OBJI = lambda i: objidx2 if i in b0set else objidx
-        TP = lambda i: TPX2 if i in b0set else TPX
         BLNK = lambda i: blank_obj2 if i in b0set else blank_obj
         # the metasprite is a complete row-major grid of 8x16 cells; EVERY cell is a
         # record, including ones drawn with a blank (all-transparent) tile -- the
         # original tool padded the grid rather than pruning blank cells.
-        cells = []                                              # (cr, cc, blk, opaque)
-        # tcand[i] = candidate even tiles for cell i, palette-independent (duplicate
-        # tiles share pixels): the union over every palette that reproduces the cell.
-        tcand: list = []
+        cells = []                                              # (cr, cc, vals, opaque)
+        tcand: list = []         # candidate even tiles per cell: exact VALUE match
+        P: list = []             # record palette, explicit in the indexed source
         for cr in range(0, H, 16):
             for cc in range(0, W, 8):
                 ci = len(cells)
                 blk = [px[cc + c, cr + r] for r in range(16) for c in range(8)]
-                opaque = any(q[3] != 0 for q in blk)
-                cells.append((cr, cc, blk, opaque))
-                ts: set = set()
-                if opaque:
-                    for p in range(len(POBJ)):
-                        if all(q[3] == 0 or q[:3] in POBJ[p] for q in blk):
-                            ts.update(OBJI(ci).get(
-                                tuple(0 if q[3] == 0 else POBJ[p].index(q[:3]) for q in blk), ()))
+                v = tuple(q % 4 for q in blk)
+                opaque = any(v)
+                P.append(cell_pal(blk, "meta"))
+                cells.append((cr, cc, v, opaque))
+                ts = set(OBJI(ci).get(v, ())) if opaque else set()
                 tcand.append(sorted(t for t in ts if t < 256))  # OBJ tile index is a byte
         # TILE: pin the unique-candidate cells. Tiles run +2 in record order along a
         # "base diagonal" (byte = base0 + 2*i, base0 = the common (tile-2*i)); animated
@@ -684,8 +650,8 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
                         if 0 <= j < len(cells) and pinned[j] and tile[j] != (base0 + 2 * j) % 256]
             be = (base0 + 2 * i) % 256
             want = [a for a in anchored if a in ts] + ([be] if be in ts else []) + ts
-            tile[i] = want[0] if want else None   # image-irreducible (e.g. an opaque
-            # colour collapses to the transparent index); left for the `idx` closure pin.
+            tile[i] = want[0] if want else None   # no sheet tile carries these values
+            # (a hand-edited cel); left for the `idx` closure pin.
         for i in range(len(cells) - 1, -1, -1):                 # blank cells: next opaque - 2
             if tile[i] is None and i + 1 < len(cells) and tile[i + 1] is not None:
                 tile[i] = (tile[i + 1] - 2) & 0xFF
@@ -707,46 +673,8 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
         # e.g. Mistral's wing run): pinned per-record via the manifest `idx` map.
         for rec, tval in (idx_over or {}).items():
             tile[int(rec)] = tval
-        # PALETTE per cell from the now-known tile: pin where the visible colours admit
-        # one palette, fill the rest row-uniform (palette is region-based and these
-        # sprites split by row), then 8-neighbour consensus, then pal_hint / dominant.
-        pcand = []
-        for i, ((cr, cc, blk, opaque), t) in enumerate(zip(cells, tile)):
-            pat = TP(i)[t & 0xFE] + TP(i)[(t & 0xFE) + 1]
-            pcand.append([p for p in range(len(POBJ))
-                          if all(q[3] == 0 or POBJ[p][pat[k]] == q[:3] for k, q in enumerate(blk))])
-        P: list = [c[0] if len(c) == 1 else None for c in pcand]
-        rows = H // 16
-        for ri in range(rows):                                  # row-uniform fill
-            row = [ri * cols + ci for ci in range(cols)]
-            seen = {P[i] for i in row if P[i] is not None}
-            if len(seen) == 1:
-                only = next(iter(seen))
-                for i in row:
-                    if P[i] is None and only in pcand[i]:
-                        P[i] = only
-        for _ in range(rows + cols):                            # 8-neighbour consensus
-            for i in range(len(cells)):
-                if P[i] is not None:
-                    continue
-                r0, c0 = i // cols, i % cols
-                nb = [P[(r0+dr)*cols + (c0+dc)]
-                      for dr in (-1, 0, 1) for dc in (-1, 0, 1)
-                      if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
-                      and P[(r0+dr)*cols + (c0+dc)] in pcand[i]]
-                if nb:
-                    P[i] = Counter(nb).most_common(1)[0][0]
-        dom = Counter(p for p in P if p is not None).most_common(1)
-        dom = pal_hint if pal_hint is not None else (dom[0][0] if dom else 0)
-        for i in range(len(cells)):
-            if P[i] is None:
-                P[i] = dom if dom in pcand[i] else (pcand[i][0] if pcand[i] else 0)
-        # image-irreducible per-record palette (several palettes reproduce the record):
-        # pinned via the manifest `pal_cells` map.
-        for rec, p in (pal_over or {}).items():
-            P[int(rec)] = p
         out = bytearray([len(cells)])
-        for i, ((cr, cc, blk, opaque), t, p) in enumerate(zip(cells, tile, P)):
+        for i, ((cr, cc, v, opaque), t, p) in enumerate(zip(cells, tile, P)):
             b = 0 if i in b0set else bank
             out += bytes(((oy + cr) & 0xFF, (ox + cc) & 0xFF, t, (b << 3) | p))
         return bytes(out)
@@ -758,21 +686,21 @@ def gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2=None):
     addr = base
     for blk in man["blocks"]:
         bank = blk.get("bank", 1)
+        img = Image.open(d / blk["png"])
+        if img.mode != "P":
+            raise SystemExit(f"{blk['png']}: cel PNGs must be indexed "
+                             "(pixel = display_palette*4 + 2bpp value)")
         if blk["kind"] == "patch":
-            img = Image.open(d / blk["png"]).convert("RGB")
-            data = gen_patch(img, addr, bank, blk.get("pal"), blk.get("idx"),
-                             blk.get("bank0"), blk.get("pal_cells"))
+            data = gen_patch(img, addr, bank, blk.get("idx"), blk.get("bank0"))
         else:
-            img = Image.open(d / blk["png"]).convert("RGBA")
             data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank,
-                            blk.get("pal"), blk.get("idx"), blk.get("pal_cells"),
-                            blk.get("bank0"))
+                            blk.get("idx"), blk.get("bank0"))
         out += data
         addr += len(data)
     return bytes(out)
 
 
-def gen_sprite_region_asm(manifest_path, tiles, palbg, palobj, tiles2=None):
+def gen_sprite_region_asm(manifest_path, tiles, tiles2=None):
     """The same region as gen_sprite_region, emitted as structured .asm: one label per
     block (`<prefix>_<role>`), `metasprite`/`obj` for OBJ lists and a CopyBgMap descriptor
     struct for patches, so code can reference the blocks by label instead of raw address.
@@ -782,7 +710,7 @@ def gen_sprite_region_asm(manifest_path, tiles, palbg, palobj, tiles2=None):
     import yaml
     man = yaml.safe_load(Path(manifest_path).read_text())
     prefix = man["prefix"]
-    data = gen_sprite_region(manifest_path, tiles, palbg, palobj, tiles2)
+    data = gen_sprite_region(manifest_path, tiles, tiles2)
     out = ["; Generated by tools/pngasset.py from the layered PNG source -- do not edit.",
            '; (INCLUDEd into the overlay SECTION; see docs/metasprites.md / portrait_overlays.md.)',
            'INCLUDE "metasprite.inc"', ""]
@@ -859,16 +787,14 @@ def cmd_portrait(args: argparse.Namespace) -> int:
         # regenerate the metasprite/patch data region from the layered source manifest.
         # With a `prefix:` in the manifest, emit structured sprites.asm (labelled blocks)
         # instead of sprites.bin so code can reference the blocks by label.
-        palobj = next(data for name, data in comps if name == "palette_obj")
-        palbg = next(x for n, x in comps if n == "palette_bg")
         tiles2 = next((data for name, data in comps if name == "tiles2"), None)
         import yaml
         man = yaml.safe_load((d / args.sprites).read_text())
         if man.get("prefix"):
-            sprites_asm = gen_sprite_region_asm(d / args.sprites, comps[0][1], palbg, palobj, tiles2)
+            sprites_asm = gen_sprite_region_asm(d / args.sprites, comps[0][1], tiles2)
         else:
             comps.append(("sprites", gen_sprite_region(d / args.sprites, comps[0][1],
-                                                        palbg, palobj, tiles2)))
+                                                        tiles2)))
     if getattr(args, "palettes2_png", None):
         # a second palette set (e.g. an alternate scene) carried by its own indexed PNG:
         # BG palettes lead its colour table, OBJ palettes follow (same as the sheet).

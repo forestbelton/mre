@@ -29,4 +29,3 @@ blocks:
 - role: selketo_eye
   kind: meta
   png: selketo_eye.png
-  pal: 5

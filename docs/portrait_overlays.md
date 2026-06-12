@@ -45,8 +45,13 @@ block — that is the only place the roles are documented.
 
 Committed under `assets/portrait/<name>/sprites/`:
 
-- one **PNG per block** — a patch is a `cols*8 × rows*8` RGB image; a metasprite is an
-  RGBA image (transparent = OBJ colour 0) of its bounding box.
+- one **indexed PNG per block** (since the 2026-06-12 reindex; see
+  docs/asset_source_model.md): pixel = `display_palette*4 + 2bpp value`, the
+  portrait's real palette colours in the PNG table (BG palettes for a patch, OBJ
+  for a metasprite). The per-cell/per-record **palette is explicit in the image**
+  — nothing is inferred from colours any more. Metasprite PNGs carry a tRNS
+  chunk making the `value==0` indices transparent, so they view like the old
+  RGBA cels; a patch is the full `cols*8 × rows*8` BG rectangle.
 - **`sprites.yaml`** — the manifest:
   ```yaml
   base: '0x5a3e'          # MUST equal the asm SECTION address (patch pointers are absolute)
@@ -60,7 +65,6 @@ Committed under `assets/portrait/<name>/sprites/`:
       # optional, only when needed:
       # oy: -4            # metasprite placement origin (default 0)
       # ox: 8
-      # pal: 5            # forced OBJ palette for an image-irreducible sprite
   ```
 
 `tools/pngasset.py` regenerates the whole region byte-exact from these
@@ -79,17 +83,16 @@ metadata the image genuinely can't carry:
 - `kind`, `role`, block order — structural.
 - `oy`/`ox` — a metasprite's placement origin (the min Yoff/Xoff). All-zero for every
   portrait so far, so omitted.
-- `pal` — a palette that several palettes reproduce identically (a monochrome sprite or
-  a near-blank patch). Rare: an OBJ `pal` was needed once (kalum's all-red Selketo eye:
-  red lives in OBJ pal 0 and 5) and a BG `pal` once (bodka's near-blank `eyes_frame2`,
-  reproduced by BG pals 0/1/2). The extractor emits it (for `meta` or `patch`) only when
-  >1 palette reproduces every colour.
+- `idx` / `bank0` — the residue of genuinely arbitrary original-tool choices
+  (pixel-twin tile reuse, per-cell VRAM-bank assignment); see §4.
 
-Everything else — tile indices (including `$8800`-signed BG bytes, duplicate tiles,
-blank-padding tiles, freshly-allocated animation runs) and per-cell palettes — is
-recovered structurally. The hard-won lesson is that this is **possible** but needs the
-right structural model, because the original tool's tile allocation is not a clean
-function of the pixels.
+Palettes used to be a fourth metadata class (`pal`/`pal_cells` hints for cells
+several palettes reproduced identically — 28 pins at peak). The 2026-06-12
+switch to indexed cel PNGs removed the whole class: the palette is read from
+`pixel // 4`, never inferred. Tile indices (`$8800`-signed BG bytes, duplicate
+tiles, blank-padding tiles, freshly-allocated animation runs) are still
+recovered structurally — the original tool's tile allocation is not a clean
+function of the pixels, so the structural model below remains load-bearing.
 
 ## 3. Migration procedure (per portrait)
 
@@ -119,6 +122,12 @@ function of the pixels.
 8. **Confirm names with the user**, rename, re-extract, re-verify, commit.
 
 ## 4. What we learned — the structural heuristics
+
+> **2026-06-12 update:** everything below about *palettes* (consensus,
+> row-uniform fill, `pal`/`pal_cells` hints, colour-collapse guards) is
+> historical — indexed cel PNGs carry the palette explicitly and that code is
+> deleted. The *tile* heuristics (positional bands, +2 runs, blank reuse,
+> `idx`/`bank0`) are still the live model in `gen_patch`/`gen_meta`.
 
 The original art tool packed tiles in a way that is *not* a clean function of the
 image, so several cases are "image-irreducible" (two byte sequences render
@@ -228,14 +237,16 @@ invisible (`pal`).
 ## 5. How to edit the tools
 
 ### `tools/pngasset.py`
-- **`gen_sprite_region(manifest_path, tiles, palbg, palobj)`** — the regenerator. Sets
-  up `PBG`/`POBJ` (palette colours), `TPX` (tile→indices), `bgidx` (signed BG byte
-  lookup), `objidx` (8×16 OBJ lookup), and `blank_obj` (blank tile set). Walks the
-  manifest, calling the two nested generators and accumulating `addr` from `base`.
-  - **`gen_patch(img, addr, bank)`** — §4 BG logic. Returns the patch block bytes
+- **`gen_sprite_region(manifest_path, tiles, tiles2=None)`** — the regenerator
+  (palette bins no longer needed: palettes are explicit in the indexed cels).
+  Sets up `TPX` (tile→indices), `bgidx` (signed BG byte lookup), `objidx`
+  (8×16 OBJ lookup), and `blank_obj` (blank tile set). Walks the manifest,
+  calling the two nested generators and accumulating `addr` from `base`.
+  - **`gen_patch(img, addr, bank, idx_over, bank0)`** — §4 BG tile logic;
+    palette = `pixel // 4` per cell. Returns the patch block bytes
     (header with computed `idx_ptr`/`attr_ptr` + idx map + attr map).
-  - **`gen_meta(img, oy, ox, bank, pal_hint)`** — §4 OBJ logic. Returns
-    `[count]` + records.
+  - **`gen_meta(img, oy, ox, bank, idx_over, bank0)`** — §4 OBJ tile logic;
+    palette = `pixel // 4` per record. Returns `[count]` + records.
   - When a new portrait fails byte-exact, **diff per block** (size-walk the ROM region
     and `sprites.bin` in parallel, dump differing records/idx) to see whether it's a
     tile or palette issue, then extend the relevant generator. Keep the existing four

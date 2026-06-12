@@ -15,33 +15,18 @@ blocks:
     45: 128
     54: 128
     67: 92
-  pal_cells:
-    8: 0
-    13: 2
-    17: 0
-    23: 2
-    26: 0
-    45: 0
-    54: 0
-    66: 5
-    67: 5
 - role: left_tassels0
   kind: meta
   png: left_tassels0.png
 - role: right_tassels0
   kind: meta
   png: right_tassels0.png
-  pal: 2
 - role: mistral_face0
   kind: meta
   png: mistral_face0.png
-  pal_cells:
-    4: 0
-    8: 0
 - role: hat0
   kind: meta
   png: hat0.png
-  pal: 3
 - role: body_frame1
   kind: patch
   png: body_frame1.png
@@ -101,23 +86,12 @@ blocks:
     45: 128
     54: 128
     67: 92
-  pal_cells:
-    8: 0
-    13: 2
-    17: 0
-    23: 2
-    26: 0
-    45: 0
-    54: 0
-    66: 5
-    67: 5
 - role: left_tassels1
   kind: meta
   png: left_tassels1.png
 - role: right_tassels1
   kind: meta
   png: right_tassels1.png
-  pal: 2
 - role: mistral_face1
   kind: meta
   png: mistral_face1.png
@@ -126,13 +100,9 @@ blocks:
     7: 100
     9: 102
     10: 104
-  pal_cells:
-    4: 0
-    8: 0
 - role: hat1
   kind: meta
   png: hat1.png
-  pal: 3
 - role: body_frame2
   kind: patch
   png: body_frame2.png
@@ -142,24 +112,12 @@ blocks:
     35: 29
     39: 246
     67: 92
-  pal_cells:
-    8: 0
-    17: 0
-    23: 2
-    26: 0
-    33: 2
-    45: 0
-    51: 1
-    54: 0
-    66: 5
-    67: 5
 - role: left_tassels2
   kind: meta
   png: left_tassels2.png
 - role: right_tassels2
   kind: meta
   png: right_tassels2.png
-  pal: 2
 - role: mistral_face2
   kind: meta
   png: mistral_face2.png
@@ -168,18 +126,12 @@ blocks:
     7: 118
     9: 120
     10: 122
-  pal_cells:
-    4: 0
-    8: 0
 - role: hat2
   kind: meta
   png: hat2.png
-  pal: 3
 - role: collar
   kind: meta
   png: collar.png
-  pal: 0
 - role: ferious_eye
   kind: meta
   png: ferious_eye.png
-  pal: 5
