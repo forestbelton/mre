@@ -33,6 +33,9 @@ INCLUDE "sound_ids.inc"
 ; CoxNoteScript) in sequence, with portrait/scene setup between each.
 SECTION "Cox script functions", ROMX
 
+DEF WINDOW_ON EQU LCDC_ON | LCDC_WIN_9C00 | LCDC_WIN_ON | LCDC_BG_9800 | LCDC_OBJ_16 | LCDC_OBJ_ON | LCDC_PRIO_ON
+DEF WINDOW_OFF EQU LCDC_ON | LCDC_WIN_9C00 | LCDC_BG_9800 | LCDC_OBJ_16 | LCDC_OBJ_ON | LCDC_PRIO_ON
+
 Func_13_4000:
 	push af
 	ld a, SOUND_BGM_39
@@ -41,28 +44,28 @@ Func_13_4000:
 	call Func_13_4061
 	ld a, $01
 	ld [$d61a], a
-	ld a, $e7
+	ld a, WINDOW_ON
 	ldh [rLCDC], a
 	ld hl, CoxScript
 	call ScriptDispatcherEnterAfterCall
-	ld a, $c7
+	ld a, WINDOW_OFF
 	ldh [rLCDC], a
 	call Func_13_40b7
-	ld a, $e7
+	ld a, WINDOW_ON
 	ldh [rLCDC], a
 	ld hl, CoxReminisceScript
 	call ScriptDispatcherEnterAfterCall
-	ld a, $c7
+	ld a, WINDOW_OFF
 	ldh [rLCDC], a
 	call Func_13_4108
-	ld a, $e7
+	ld a, WINDOW_ON
 	ldh [rLCDC], a
 	ld hl, CoxGoSeeFriendsScript
 	call ScriptDispatcherEnterAfterCall
-	ld a, $c7
+	ld a, WINDOW_OFF
 	ldh [rLCDC], a
 	call Func_13_4143
-	ld a, $e7
+	ld a, WINDOW_ON
 	ldh [rLCDC], a
 	ld hl, CoxNoteScript
 	call ScriptDispatcherEnterAfterCall
@@ -76,6 +79,7 @@ Func_13_4000:
 	call Func_13_41e5
 	call Func_13_4222
 	ret
+
 Func_13_4061:
 	call Func_00_07a7
 	ld a, $01
@@ -110,6 +114,7 @@ Func_13_4061:
 	ld hl, $5a85
 	call LoadObjPalettes
 	ret
+
 Func_13_40b7:
 	ld hl, $62a3
 	ld de, $9900
@@ -149,6 +154,7 @@ Func_13_40f3:
 	ld d, $5a
 	call Func_13_4442
 	ret
+
 Func_13_4108:
 	ld hl, $62a3
 	ld de, $9900
@@ -177,6 +183,7 @@ Func_13_4133:
 	dec d
 	jr nz, Func_13_4133
 	ret
+
 Func_13_4143:
 	ld hl, $62a3
 	ld de, $9900
@@ -345,7 +352,7 @@ Cox_RenderPortrait_AlfSpeaking:
 
 Cox_RenderPortrait_CoxSpeaking:
 	ld hl, $6257
-	ld de, $9900
+	ld de, TILEMAP0_X0_Y8
 	call CopyBgMap
 	ld a, $13
 	ld [wDrawBank], a
@@ -356,7 +363,7 @@ Cox_RenderPortrait_CoxSpeaking:
 
 Cox_RenderPortrait_Reminiscing:
 	ld hl, $6257
-	ld de, $9900
+	ld de, TILEMAP0_X0_Y8
 	call CopyBgMap
 	ld a, $13
 	ld [wDrawBank], a
@@ -367,7 +374,7 @@ Cox_RenderPortrait_Reminiscing:
 
 Cox_RenderPortrait_GoSeeFriends:
 	ld hl, $6257
-	ld de, $9900
+	ld de, TILEMAP0_X0_Y8
 	call CopyBgMap
 	ld a, $13
 	ld [wDrawBank], a
@@ -378,7 +385,7 @@ Cox_RenderPortrait_GoSeeFriends:
 
 Cox_RenderPortrait_Note:
 	ld hl, $6257
-	ld de, $9900
+	ld de, TILEMAP0_X0_Y8
 	call CopyBgMap
 	ld a, $13
 	ld [wDrawBank], a
@@ -622,7 +629,7 @@ Func_13_4442:
 SECTION "Cox script", ROMX
 
 CoxScript:
-    SCRIPT_OPEN_TEXTBOX .Pos=$9c22, .Width=$10, .Height=$04
+    SCRIPT_OPEN_TEXTBOX .Pos=TILEMAP1_X2_Y1, .Width=$10, .Height=$04
     SCRIPT_RENDERER Cox_RenderPortrait_AlfSpeaking
     db "Wow, you were\r"
     db "cool back then."
