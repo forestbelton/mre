@@ -225,3 +225,14 @@ room_screen:
   png: screen/room_screen/tiles.png
   tiles: 384
   palettes: 32
+
+# Cox flashback (bank $13, src/text/scripts/cox.asm): the 256-tile sheet -- 16x16
+# OBJ character frames (Cox, Alf, the monster) on top, the SOLOMON-monitor/room
+# BG tiles below, all loaded to VRAM bank 1 -- with its 8 BG + 8 OBJ palettes
+# embedded. The CopyBgMap tilemaps, metasprite frames and staff-roll text stay
+# structured in cox.asm.
+cox_flashback:
+  mode: scene
+  png: cox/tiles.png
+  tiles: 128
+  palettes: 16

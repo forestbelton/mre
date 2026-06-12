@@ -3,7 +3,9 @@
 ; Tiles at $46cb (and an alt set at $56cb) -> VRAM $8800, BG tilemap $674b
 ; -> $9960, palettes $66cb -> wBgPalettes; metasprites drawn with
 ; wDrawBank=$19. Loaded by home LoadTextUiAlt/_3971 and by room/gameplay
-; + room/engine. Best-guess: a town-building interior; not pinned in-game.
+; + room/engine. Confirmed in-game use: the Cox flashback loads $46cb as the
+; bank-0 BG tileset for Cox's house interior (CoxHouseMap in
+; src/text/scripts/cox.asm draws it; font + furniture/wall tiles).
 ; Carved out of analyzed.asm (byte-exact; section names + labels unchanged).
 ; Consumer verified by tracing the bank-select loads in carved code.
 

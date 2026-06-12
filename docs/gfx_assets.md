@@ -81,8 +81,11 @@ drives) through to `build/`. Only the tile art + palette are editable; the frame
 stays as data — the composed BG frames don't reverse cleanly (~72% of cells are
 image-irreducible: multi-palette near-black art + flips + duplicate tiles, no positional
 allocation model to lean on — see the golem derisk, scratch/scene_derive_test.py).
-All 26 assets now live in this file — the logo (composite), the 7 two-bank colour
-screens, the 10 portraits, and the 8 summon scenes (scene).
+All 28 assets now live in this file — the logo (composite), the 7 two-bank colour
+screens, the 10 portraits, the 8 summon scenes (scene), the room screen (scene),
+and the Cox flashback (scene: the bank-`$13` 256-tile sheet + 16 palettes; its
+CopyBgMap tilemaps, metasprite frames and staff-roll text are structured in
+src/text/scripts/cox.asm).
 
 ## Migrated: the town screen (sheet mode — two-bank + colour exemplar)
 

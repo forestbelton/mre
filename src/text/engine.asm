@@ -450,8 +450,8 @@ DrawTextWindow:
 	ret
 .altWindow:
 	push hl
-	ld hl, $6161
-	ld a, $13
+	ld hl, CoxTextWindowMap
+	ld a, BANK(CoxTextWindowMap)
 	ld de, $9c00
 	call BankMapCopyA
 	pop hl

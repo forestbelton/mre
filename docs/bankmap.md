@@ -8,7 +8,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 
 ```
 ROM0: 15700 bytes used / 684 free
-ROMX: 749020 bytes used / 283172 free in 63 banks
+ROMX: 750398 bytes used / 281794 free in 63 banks
 WRAM0: 1762 bytes used / 2334 free
 WRAMX: 47 bytes used / 4049 free in 1 bank
 HRAM: 75 bytes used / 52 free
@@ -37,7 +37,7 @@ HRAM: 75 bytes used / 52 free
 | $10 | ROMX | 14001 | 2383 | 1 | 1 | bg_loader.asm |
 | $11 | ROMX | 15259 | 1125 | 2 | 2 | floor_monster_sprites.asm |
 | $12 | ROMX | 10035 | 6349 | 18 | 5 | editor.asm, room_unused01.asm, hare.asm, gali.asm, golem.asm, suezo.asm, tiger.asm, mocchi.asm, selketo.asm, ferious.asm, dragon.asm, zan.asm, punisher.asm, room_unused02.asm |
-| $13 | ROMX | 7722 | 8662 | 4 | 2 | cox.asm |
+| $13 | ROMX | 9100 | 7284 | 2 | 0 | cox.asm |
 | $14 | ROMX | 9895 | 6489 | 2 | 2 | monster_regen.asm |
 | $15 | ROMX | 13554 | 2830 | 2 | 0 | editor_screens.asm |
 | $16 | ROMX | 13832 | 2552 | 1 | 1 | tileset_loader.asm |
@@ -644,14 +644,12 @@ HRAM: 75 bytes used / 52 free
 | $645f-$66a3 | 581 | mocchi.asm | RoomMocchi |
 | $66a4-$6735 | 146 | editor.asm | analyzed_04a6a4 |
 
-### $13 — ROMX (4 sections, 2 analyzed)
+### $13 — ROMX (2 sections, 0 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
 | $4000-$4448 | 1097 | cox.asm | Cox script functions |
-| $4449-$4de4 | 2460 | cox.asm | Cox script |
-| $5247-$5914 | 1742 | cox.asm | analyzed_04d247 |
-| $5a15-$638b | 2423 | cox.asm | analyzed_04da15 |
+| $4449-$638b | 8003 | cox.asm | Cox script |
 
 ### $14 — ROMX (2 sections, 2 analyzed)
 

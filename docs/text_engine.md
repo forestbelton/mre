@@ -432,8 +432,8 @@ Currently uncovered in `map.json`. All addresses are flat ROM offsets.
 | `$4c6d5-$4c73c` | 104 | Nox reminiscing ("Whew! I forgot...") |
 | `$4c73d-$4c7c2` | 134 | Nox "I'll go see old friends" |
 | `$4c7c3-$4c7fe` | 60 | Nox "Wait, I forgot." |
-| `$4c7ff-$4c883` | 133 | **Letter from Cox** — single block with only `$0D` line breaks, no `$04` waits. Reads like a static written note rather than spoken dialogue. |
-| `$4c884-$4c8bd` | ~58 | Tile-encoded glyph table (`H;I*I;I1I;I` etc.) — not text |
+| `$4c7ff-$4c883` | 133 | **Letter from Cox** (`LetterFromCox` in src/text/scripts/cox.asm) — typed character-by-character onto the SOLOMON monitor screen by `Cox_ShowLetterOnMonitor`, with a blinking cursor; `$04` pauses then clears the page. Not script-engine dialogue. |
+| `$4c884-$4c8bd` | ~58 | Staff-roll line pointer list (`CoxStaffRollLines`) — one `dw` per 8-pixel scroll step, `$0000` terminator |
 | `$4c8be-$4c93b` | ~126 | Staff credits — see below |
 
 #### Staff credits structure
@@ -533,8 +533,8 @@ and identify concrete routines we can disassemble later.
 
 1. ~~**How does Tower/Item content "GOTO 28" (back to Ask menu)?**~~ **Resolved by Naji's full disassembly** (`src/naji.asm`): the *Ask submenu's* Tower and Item handlers (`$769B` and `$7809`) end with a plain `$06` GOTO back to `$7579` (`NajiAskMenu`). The complex `$09 ... $07 $94 $40 $1F $07 $B7 $6B $18 $FF` tail I'd been chasing belongs to `NajiTowerLong` at `$75BC` — a *different* handler reachable only from main-menu dispatch entry 2 (the unreachable one). So `$FF` really is plain end-of-script, and Tower/Item content reaches the Ask menu via ordinary script-level GOTO.
 2. **How are scripts dispatched?** Some upstream table or instruction sequence picks "use script at `$64392`" — finding that table would unlock automatic mapping from game state → script.
-3. **What's the `$A5` separator in staff credits?** Probably an attribute byte (text color, palette). Need to compare with how it renders.
-4. **Is Cox's letter at `$4c7ff` really a static text block?** It has no `$04` waits — but it does have `$0D` line breaks. May render as one big scrollable text box, or it's loaded into VRAM as static tiles.
+3. ~~**What's the `$A5` separator in staff credits?**~~ **Resolved:** `$A5` is just a glyph — the katakana middle dot (・) in the font, separating initial from surname ("H・MOTOKI"). Printed through `PrintCharacterAtCursor` like any other character.
+4. ~~**Is Cox's letter at `$4c7ff` really a static text block?**~~ **Resolved by the cox.asm carve:** it is not drawn as a text box at all. `Cox_ShowLetterOnMonitor` types it character-by-character onto the SOLOMON computer-monitor tilemap (`CoxMonitorMap`) with a blinking cursor; `$04` pauses ~13 ticks then clears the monitor page, `$FF` ends.
 5. **`$05`'s exact use.** The handler is decoded but the field isn't bytecode-flush yet — we haven't seen it in any extracted script. Could be a windowed-text or alternate text-frame opcode used by NPCs we haven't traced.
 
 ### Resolved by this disassembly pass

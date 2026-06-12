@@ -510,7 +510,7 @@ Func_01_470d:
 	call Func_00_119a
 	or a
 	jr nz, Func_01_473a
-	FAR_CALL Func_13_4000
+	FAR_CALL Cox_PlayFlashback
 	FAR_CALL SetTrioNpcState
 	ld a, $0e
 	call Func_00_1164
