@@ -103,7 +103,7 @@ Func_01_439e:
 	ld a, [$c28a]
 	ldh [rSCX], a
 	FAR_CALL Func_05_48fc
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	xor a
 	ldh [hJoyHeld], a
 	ldh [hJoyPressed], a
@@ -326,7 +326,7 @@ Func_01_459a:
 	ld a, [wRoomType]
 	cp $05
 	jr nz, Func_01_45ad
-	call Func_00_1219
+	call InitProgressFlags
 	ret
 Func_01_45ad:
 	ld a, [wRoomType]
@@ -462,7 +462,7 @@ Func_01_46a0:
 	ld [$c2c2], a
 	ld a, $06
 	ld [wRoomType], a
-	call Func_00_1219
+	call InitProgressFlags
 	ld a, SCENE_ROOM_START
 	ld [wGameScene], a
 	ret
@@ -528,14 +528,14 @@ Func_01_473a:
 
 Func_01_4748:
 	FAR_CALL Func_05_4800
-	call Func_00_1219
+	call InitProgressFlags
 	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
 	ret
 Func_01_4759:
 	call Func_01_5d77
 	FAR_CALL Func_05_4800
-	call Func_00_1219
+	call InitProgressFlags
 	ld a, SCENE_NEXT_ROOM
 	ld [wGameScene], a
 	ret
@@ -545,7 +545,7 @@ Func_01_476d:
 	or a
 	jp nz, Func_01_46d5
 	call Func_01_48af
-	call Func_00_1219
+	call InitProgressFlags
 	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
@@ -1125,7 +1125,7 @@ Func_01_4b3b:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	or a
 	ret z
@@ -1250,7 +1250,7 @@ Func_01_4c29:
 	ld c, $02
 	ld hl, $5139
 	xor a
-	call Func_00_094a
+	call LoadObjPaletteBlockBanked
 	ret
 Func_01_4c3b:
 	ld a, e
@@ -1261,13 +1261,13 @@ Func_01_4c3b:
 	ld c, $02
 	ld hl, $5131
 	xor a
-	call Func_00_094a
+	call LoadObjPaletteBlockBanked
 	ret
 Func_01_4c4d:
 	ld c, $02
 	ld hl, $50f1
 	xor a
-	call Func_00_094a
+	call LoadObjPaletteBlockBanked
 	ret
 Func_01_4c57:
 	ld a, [$c55b]
@@ -1780,7 +1780,7 @@ Func_01_5549:
 	push bc
 	push hl
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 2, a
 	jr z, Func_01_559c
 
@@ -1814,7 +1814,7 @@ Func_01_55ab:
 	jr z, Func_01_55bc
 	jr Func_01_5607
 Func_01_55bc:
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 6, a
 	jr nz, Func_01_55d1
 	push hl
@@ -3119,7 +3119,7 @@ Func_01_5eed:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_5f58
@@ -3130,7 +3130,7 @@ Func_01_5eed:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3143,7 +3143,7 @@ Func_01_5eed:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_5f52
@@ -3154,7 +3154,7 @@ Func_01_5eed:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64d7
@@ -3194,7 +3194,7 @@ Func_01_5f68:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_5fd3
@@ -3205,7 +3205,7 @@ Func_01_5f68:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3218,7 +3218,7 @@ Func_01_5f68:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_5fcd
@@ -3229,7 +3229,7 @@ Func_01_5f68:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64f2
@@ -3269,7 +3269,7 @@ Func_01_5fe3:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_604e
@@ -3280,7 +3280,7 @@ Func_01_5fe3:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3293,7 +3293,7 @@ Func_01_5fe3:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_6048
@@ -3304,7 +3304,7 @@ Func_01_5fe3:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64f2
@@ -3344,7 +3344,7 @@ Func_01_605e:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_60c9
@@ -3355,7 +3355,7 @@ Func_01_605e:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3368,7 +3368,7 @@ Func_01_605e:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_60c3
@@ -3379,7 +3379,7 @@ Func_01_605e:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64d7
@@ -3419,7 +3419,7 @@ Func_01_60d9:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_6144
@@ -3430,7 +3430,7 @@ Func_01_60d9:
 	and $0f
 	ld c, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3443,7 +3443,7 @@ Func_01_60d9:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_613e
@@ -3454,7 +3454,7 @@ Func_01_60d9:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64bc
@@ -3494,7 +3494,7 @@ Func_01_6154:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_61bf
@@ -3505,7 +3505,7 @@ Func_01_6154:
 	and $0f
 	ld c, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3518,7 +3518,7 @@ Func_01_6154:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_61b9
@@ -3529,7 +3529,7 @@ Func_01_6154:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64a1
@@ -3569,7 +3569,7 @@ Func_01_61cf:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_623a
@@ -3580,7 +3580,7 @@ Func_01_61cf:
 	and $0f
 	ld c, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3593,7 +3593,7 @@ Func_01_61cf:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_6234
@@ -3604,7 +3604,7 @@ Func_01_61cf:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64a1
@@ -3644,7 +3644,7 @@ Func_01_624a:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jp nz, Func_01_62b5
@@ -3655,7 +3655,7 @@ Func_01_624a:
 	and $0f
 	ld c, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret nz
@@ -3668,7 +3668,7 @@ Func_01_624a:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_62af
@@ -3679,7 +3679,7 @@ Func_01_624a:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret nz
 	call Func_01_64bc
@@ -3737,7 +3737,7 @@ Func_01_62f1:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64f2
@@ -3761,7 +3761,7 @@ Func_01_631c:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64d7
@@ -3785,7 +3785,7 @@ Func_01_6347:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64d7
@@ -3809,7 +3809,7 @@ Func_01_6372:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64f2
@@ -3834,7 +3834,7 @@ Func_01_639d:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64a1
@@ -3858,7 +3858,7 @@ Func_01_63c8:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64bc
@@ -3882,7 +3882,7 @@ Func_01_63f3:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64bc
@@ -3906,7 +3906,7 @@ Func_01_641e:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	ret z
 	call Func_01_64a1
@@ -4060,7 +4060,7 @@ Func_01_650d:
 Func_01_6529:
 	push bc
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 1, a
 	jr z, Func_01_6567
 	ld a, b
@@ -4086,7 +4086,7 @@ Func_01_6544:
 	ldh a, [hHitbox2Y]
 	add a, b
 	ldh [hHitbox2Y], a
-	call Func_00_0fb0
+	call TestAabbOverlap
 	or a
 	jr z, Func_01_6567
 	call Func_01_6570
@@ -4335,7 +4335,7 @@ Func_01_677d:
 	jr nz, Func_01_67b5
 Func_01_678e:
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 0, a
 	jr z, Func_01_67b5
 	ld c, $de
@@ -4349,7 +4349,7 @@ Func_01_678e:
 	ldh a, [hHitbox2Y]
 	add a, b
 	ldh [hHitbox2Y], a
-	call Func_00_0fb0
+	call TestAabbOverlap
 	or a
 	jr z, Func_01_67b5
 	push hl
@@ -4373,7 +4373,7 @@ Func_01_67be:
 	cp $02
 	jp z, Func_01_6862
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 4, a
 	jr nz, Func_01_67e8
 	ld a, [hl]
@@ -4523,7 +4523,7 @@ Func_01_68ca:
 Func_01_68cf:
 	push bc
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 4, a
 	jr z, Func_01_68ec
 	push hl
@@ -4581,7 +4581,7 @@ Func_01_68f5:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	or a
 	jr z, Func_01_6949
@@ -4612,7 +4612,7 @@ Func_01_6949:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	or a
 	jr z, Func_01_697f
@@ -4643,7 +4643,7 @@ Func_01_697f:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	or a
 	jr z, Func_01_69b5
@@ -4678,7 +4678,7 @@ Func_01_69b5:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	or a
 	jr z, Func_01_69f0
@@ -4807,7 +4807,7 @@ Func_01_6a85:
 	ldh a, [hHitbox2Y]
 	add a, b
 	ldh [hHitbox2Y], a
-	call Func_00_0fb0
+	call TestAabbOverlap
 	pop hl
 	pop bc
 	or a
@@ -4873,7 +4873,7 @@ Func_01_6adb:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_103d
+	call GetFloorGridCell
 	pop bc
 	and $f0
 	cp $60
@@ -4893,7 +4893,7 @@ Func_01_6adb:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_103d
+	call GetFloorGridCell
 	pop bc
 	and $f0
 	cp $60
@@ -4915,7 +4915,7 @@ Func_01_6adb:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_103d
+	call GetFloorGridCell
 	pop bc
 	and $f0
 	cp $60
@@ -4935,7 +4935,7 @@ Func_01_6adb:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_103d
+	call GetFloorGridCell
 	pop bc
 	and $f0
 	cp $60
@@ -5155,7 +5155,7 @@ Func_01_6ca6:
 	cp $03
 	jr z, Func_01_6cb9
 	ld a, [hl]
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 0, a
 	jr z, Func_01_6cd3
 Func_01_6cb9:
@@ -5170,7 +5170,7 @@ Func_01_6cb9:
 	ldh a, [hHitbox2Y]
 	add a, b
 	ldh [hHitbox2Y], a
-	call Func_00_0fb0
+	call TestAabbOverlap
 	or a
 	jr nz, Func_01_6ce0
 Func_01_6cd3:
@@ -5757,7 +5757,7 @@ Func_01_70e3:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret z
@@ -5804,7 +5804,7 @@ Func_01_7129:
 	and $0f
 	ld b, a
 	push bc
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret z
@@ -5847,7 +5847,7 @@ Func_01_716f:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_71ac
@@ -5861,7 +5861,7 @@ Func_01_716f:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_71c1
@@ -5899,7 +5899,7 @@ Func_01_71c1:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_71f9
@@ -5915,7 +5915,7 @@ Func_01_71c1:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret z
@@ -5963,7 +5963,7 @@ Func_01_7210:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_7251
@@ -5977,7 +5977,7 @@ Func_01_7210:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret z
@@ -6017,7 +6017,7 @@ Func_01_7265:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_72a1
@@ -6031,7 +6031,7 @@ Func_01_7265:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	ret z
@@ -6071,7 +6071,7 @@ Func_01_72b5:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_72ee
@@ -6082,7 +6082,7 @@ Func_01_72b5:
 	swap a
 	and $0f
 	ld c, a
-	call Func_00_101b
+	call GetCollisionCell
 	or a
 	jr z, Func_01_72f1
 Func_01_72ee:
@@ -6113,7 +6113,7 @@ Func_01_72f3:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_736e
@@ -6129,7 +6129,7 @@ Func_01_72f3:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_736e
@@ -6149,7 +6149,7 @@ Func_01_72f3:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr nz, Func_01_736e
@@ -6168,7 +6168,7 @@ Func_01_72f3:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	jr z, Func_01_7371
@@ -6200,7 +6200,7 @@ Func_01_7373:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	cp $20
@@ -6219,7 +6219,7 @@ Func_01_7373:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	cp $20
@@ -6242,7 +6242,7 @@ Func_01_7373:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	cp $20
@@ -6264,7 +6264,7 @@ Func_01_7373:
 	swap a
 	and $0f
 	ld b, a
-	call Func_00_101b
+	call GetCollisionCell
 	pop bc
 	or a
 	cp $20

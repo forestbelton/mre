@@ -100,7 +100,7 @@ LoadFloorMonsterSprite:
 	ld a, [wMenuCursor]
 	add a, $03
 	call LoadObjPalette
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ret
 
 ; Dungeon-scene path: upload one monster's sprite tiles. B = MONSTER species

@@ -251,12 +251,12 @@ SpecialScene_LoadTilemap:
 	jr z, Func_17_4190
 	ld a, $06
 	ld b, $01
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 Func_17_4190:
 	ld a, $05
 	ld b, $02
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 
 Data_17_4198:

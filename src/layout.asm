@@ -640,11 +640,11 @@ Func_01_4124:
 	ret
 
 ; AdjustEntitySpawnPos ($412d) -- offset the entity's position fields (+$0c/+$0d)
-; by a fixed amount; items (Func_00_1290 bit 6 set) use a different Y nudge.
+; by a fixed amount; items (ClassifyEntityType bit 6 set) use a different Y nudge.
 AdjustEntitySpawnPos:
 	push hl
 	ld a, [hl]
-	call Func_00_1290      ; classify the entity type -> a
+	call ClassifyEntityType      ; classify the entity type -> a
 	bit 6, a
 	jr nz, .openItem
 	ld de, $000c

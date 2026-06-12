@@ -157,8 +157,8 @@ SECTION "wram_menu", WRAM0[$C561]
 ; editor's room menus, run by the wUiState loop. A menu definition is picked by
 ; wMenuId, which indexes parallel tables for the item count (wMenuItemCount) and
 ; the item-value list (wMenuItemPtr). Three cursor handlers move the cursors on
-; hJoyRepeat: Func_00_1be5 (linear list -> wMenuCursor/wMenuCursorRow),
-; Func_00_28fb (2D grid -> wGridRow/wGridCol), and Func_00_1e72 (floor-edit grid
+; hJoyRepeat: MoveMenuListCursor (linear list -> wMenuCursor/wMenuCursorRow),
+; Func_00_28fb (2D grid -> wGridRow/wGridCol), and MoveFloorEditCursor (floor-edit grid
 ; -> wEditCursorX/Y). The bytes just below ($c55d-$c560) and $c569 are more
 ; menu/editor state that isn't confidently decoded yet, so they stay raw.
 wMenuId::           ds 1    ; $C561: active menu definition; indexes the item-count table

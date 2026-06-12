@@ -77,7 +77,7 @@ ShowRegeneratedMonster:
 	rst AddAToHL
 	ld a, $07
 	ld b, $01
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	xor a
 	ld [wUiTimer], a
 Func_14_40c5:

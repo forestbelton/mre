@@ -201,9 +201,9 @@ Func_15_410f:
 	call CopyBgMap
 	call Func_15_41b8
 	call Func_15_4241
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	call Func_15_4147
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld a, [$c55e]
 	ld c, a
 	FAR_CALL Func_12_43fe
@@ -268,13 +268,13 @@ Func_15_4185:
 	call HideUnusedOamSprites
 	ld a, $00
 	ld bc, $4008
-	call Func_00_20f0
+	call SetSpritePosition
 	ld a, $01
 	ld bc, $4040
-	call Func_00_20f0
+	call SetSpritePosition
 	ld a, $02
 	ld bc, $4078
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 Func_15_41b8:
 	ld a, $15
@@ -284,13 +284,13 @@ Func_15_41b8:
 	call HideUnusedOamSprites
 	ld a, $00
 	ld bc, $2840
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 Func_15_41cf:
 	ld hl, $655e
 	ld a, $02
 	ld b, $04
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ld a, [$c55d]
 	ld b, a
 	cp $04
@@ -303,13 +303,13 @@ Func_15_41cf:
 	ld a, b
 	add a, $03
 	ld b, $01
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 Func_15_41f3:
 	ld hl, $74ce
 	ld a, $02
 	ld b, $01
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 Func_15_41fe:
 	call Func_00_083c

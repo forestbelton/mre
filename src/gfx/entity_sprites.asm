@@ -35,7 +35,7 @@ LoadEntityPalettes:
 	ld a, $00
 	ld b, $08
 	ld hl, EntityPalettes + 8
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	ret
 
 ; Per-frame entity refresh: re-spawn every live entity's sprite. The single record

@@ -79,7 +79,7 @@ LoadDungeonFloorPalette:
 	ld l, a
 	ld a, $04
 	ld b, $04
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	ret
 
 ; Four pointer tables indexed by (wActiveFloor-1)*2 -- one entry per dungeon-floor

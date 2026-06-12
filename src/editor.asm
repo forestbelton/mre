@@ -510,7 +510,7 @@ ConfirmPlayFloor:
 	call LoadFloorByMode
 	FAR_CALL Func_10_4041
 	FAR_CALL LoadAllFloorMonsterSprites
-	call Func_00_2df6
+	call InitFloorEditorState
 	xor a
 	ret
 
@@ -523,7 +523,7 @@ ConfirmLoadFloor:
 ConfirmSaveFloor:
 	ld a, $04
 	ld [wRoomType], a
-	call Func_00_1298
+	call LoadCurrentFloorRecordToBuffer
 	call Func_00_2fa2
 	jr z, .launch
 	ld hl, $5230
@@ -738,7 +738,7 @@ Func_12_44fe:
 	call Func_00_33fb
 	ret
 Func_12_4519:
-	call Func_00_2d88
+	call FindMonsterAtCursor
 	jr z, Func_12_452d
 
 Data_12_451e:
@@ -825,8 +825,8 @@ Func_12_4597:
 	bit 7, a
 	jr z, Func_12_45bd
 	cp $c0
-	call z, Func_00_2efb
-	call Func_00_2e62
+	call z, ClearCollisionCell
+	call RemoveCursorCellFromList
 	jp Func_12_4686
 
 Func_12_45bd:
@@ -835,7 +835,7 @@ Func_12_45bd:
 Func_12_45c3:
 	ldh a, [$ffac]
 	cp $c0
-	call z, Func_00_2efb
+	call z, ClearCollisionCell
 	ldh a, [$ffac]
 	cp c
 	jr nz, Func_12_45e3
@@ -845,7 +845,7 @@ Data_12_45cf:
 	ld [de], a
 	ldh a, [$ffab]
 	ld [$c569], a
-	call Func_00_2e62
+	call RemoveCursorCellFromList
 	push af
 	ld a, SOUND_SFX_03
 	call PlaySound
@@ -938,8 +938,8 @@ Func_12_465e:
 	bit 7, a
 	jr z, Func_12_4686
 	cp $c0
-	call z, Func_00_2efb
-	call Func_00_2e62
+	call z, ClearCollisionCell
+	call RemoveCursorCellFromList
 	jr Func_12_4686
 
 Func_12_467a:
@@ -979,7 +979,7 @@ Func_12_46d0:
 	add a, $08
 	ld c, a
 	ld a, $0f
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 
 Data_12_46e8:
@@ -1002,7 +1002,7 @@ Func_12_4798:
 	ld a, $98
 	ld [$c7e0], a
 	call Func_12_4941
-	call Func_00_2e84
+	call ClearEditCellList
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
@@ -1065,7 +1065,7 @@ Func_12_4804:
 	ld [$c7e0], a
 Func_12_480e:
 	call Func_12_4941
-	call Func_00_2e84
+	call ClearEditCellList
 	ld bc, $0100
 	ld hl, wFloorCollision
 	ld a, $11
@@ -1154,7 +1154,7 @@ Func_12_488e:
 	ld b, a
 	ld a, $00
 	push hl
-	call Func_00_20f0
+	call SetSpritePosition
 	pop hl
 	ld a, $1b
 	rst AddAToHL
@@ -1162,7 +1162,7 @@ Func_12_488e:
 Func_12_48aa:
 	ld a, [hl]
 	push af
-	call Func_00_1290
+	call ClassifyEntityType
 	bit 6, a
 	jr nz, Func_12_48c5
 	ld a, $0c
@@ -1195,7 +1195,7 @@ Func_12_48d3:
 	inc a
 	ld [$d0e8], a
 	push hl
-	call Func_00_20f0
+	call SetSpritePosition
 	pop hl
 	pop af
 	push hl
@@ -1225,7 +1225,7 @@ Func_12_48fb:
 	add a, c
 	ld c, a
 	ld a, [$d0e8]
-	call Func_00_210d
+	call SetSpriteTileAttr
 	pop de
 	pop hl
 	ld a, $1b
@@ -1432,7 +1432,7 @@ Func_12_4a40:
 	jr nz, Func_12_4a40
 	ld a, c
 	rst AddAToHL
-	call Func_00_1f91
+	call SetBgMapTileAndAttr
 Func_12_4a4b:
 	ret
 
@@ -1462,7 +1462,7 @@ Data_12_4a75:
 ; ($4a73 table) + checksum ($4a67 table), and store its height marker in
 ; $c7f6+floor. Called from home.asm when committing a floor edit.
 SaveFloorToSram:
-	call Func_00_09f9
+	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld hl, $4a73
@@ -1481,8 +1481,8 @@ SaveFloorToSram:
 	ld h, [hl]
 	ld l, a
 	ld bc, $024e
-	call Func_00_12ee
-	call Func_00_09ff
+	call WriteXorChecksum
+	call DisableSram
 	ld a, [wActiveFloor]
 	ld hl, $c7f6
 	rst AddAToHL
@@ -1496,7 +1496,7 @@ SaveFloorToSram:
 	ld [hl], $01
 	ret
 Func_12_4ab8:
-	call Func_00_09f9
+	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
@@ -1524,8 +1524,8 @@ Func_12_4ab8:
 	ld h, [hl]
 	ld l, a
 	ld bc, $024e
-	call Func_00_12ee
-	call Func_00_09ff
+	call WriteXorChecksum
+	call DisableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
@@ -1552,7 +1552,7 @@ Func_12_4ab8:
 ; back to the live slot ($4a6d table) and rewrite its checksum -- the inverse of
 ; BackupFloorRoomMarkers.
 RestoreFloorRoomMarkers:
-	call Func_00_09f9
+	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
@@ -1577,15 +1577,15 @@ RestoreFloorRoomMarkers:
 	ld h, [hl]
 	ld l, a
 	ld bc, $024e
-	call Func_00_12ee
-	call Func_00_09ff
+	call WriteXorChecksum
+	call DisableSram
 	ret
 
 ; Back up the active floor's 6-byte room markers from the live slot ($4a6d table)
 ; into the undo slot ($12db table); RestoreFloorRoomMarkers copies them back.
 ; Called from home.asm before applying floor edits. (Was mis-disassembled as data.)
 BackupFloorRoomMarkers:
-	call Func_00_09f9
+	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
@@ -1602,14 +1602,14 @@ BackupFloorRoomMarkers:
 	ld l, a
 	ld c, $06
 	call CopyDEtoHL
-	call Func_00_09ff
+	call DisableSram
 	ret
 
 ; =============================================================================
 ; SRAM save/load. The save record lives at SRAM $a6ed: a 3-byte "V03" signature
-; followed by $0118 bytes of game state, with an XOR checksum (Func_00_12ee write
-; / Func_00_12e1 verify). SRAM is enabled/disabled around each access by the home
-; helpers Func_00_09f9 / Func_00_09ff. Per-floor editor data uses parallel pointer
+; followed by $0118 bytes of game state, with an XOR checksum (WriteXorChecksum write
+; / VerifyXorChecksum verify). SRAM is enabled/disabled around each access by the home
+; helpers EnableSram / DisableSram. Per-floor editor data uses parallel pointer
 ; tables ($4a61/$4a67/$4a6d/$4a73, plus the $12db undo slot).
 ; =============================================================================
 
@@ -1619,7 +1619,7 @@ SramSaveSignature:
 ; Write the in-RAM game state (wSaveSignature, $0118 bytes) to SRAM with a fresh
 ; "V03" header + checksum. Called by the save NPCs (toamuna/bodka scripts).
 SaveGameToSram:
-	call Func_00_09f9
+	call EnableSram
 	ld de, SramSaveSignature
 	ld hl, wSaveSignature
 	ld c, $03
@@ -1630,18 +1630,18 @@ SaveGameToSram:
 	call CopyDEtoHLLong
 	ld hl, $a6ed
 	ld bc, $0118
-	call Func_00_12ee
-	call Func_00_09ff
+	call WriteXorChecksum
+	call DisableSram
 	ret
 ; If the SRAM save record's checksum is valid, copy it into wSaveSignature and
 ; return 1; otherwise return 0. Called on boot / at the ranch (toamuna, screens).
 LoadGameFromSram:
-	call Func_00_09f9
+	call EnableSram
 	ld hl, $a6ed
 	ld bc, $0118
-	call Func_00_12e1
+	call VerifyXorChecksum
 	jr z, .loaded
-	call Func_00_09ff          ; bad checksum: disable SRAM, return 0
+	call DisableSram          ; bad checksum: disable SRAM, return 0
 	xor a
 	ret
 .loaded:
@@ -1649,12 +1649,12 @@ LoadGameFromSram:
 	ld hl, wSaveSignature
 	ld bc, $0118
 	call CopyDEtoHLLong
-	call Func_00_09ff
+	call DisableSram
 	ld a, $01
 	ret
 ; Return 1 if a valid save exists (SRAM "V03" signature matches), else 0.
 HasSavedGame:
-	call Func_00_09f9
+	call EnableSram
 	ld de, SramSaveSignature
 	ld hl, $a6ed
 	ld a, [de]
@@ -1670,11 +1670,11 @@ HasSavedGame:
 	ld a, [de]
 	cp [hl]
 	jr nz, .noSave
-	call Func_00_09ff
+	call DisableSram
 	ld a, $01
 	ret
 .noSave:
-	call Func_00_09ff
+	call DisableSram
 	xor a
 	ret
 ; Compare the 3-byte "V03" signature against [hl] (no SRAM enable). Returns 1 on
@@ -1702,12 +1702,12 @@ CompareSaveSignature:
 ; If the save record is valid, load the 5-byte high score ($a6f0) into wHiScore
 ; and return 1, else return 0.
 LoadHiScoreFromSram:
-	call Func_00_09f9
+	call EnableSram
 	ld hl, $a6ed
 	ld bc, $0118
-	call Func_00_12e1
+	call VerifyXorChecksum
 	jr z, .valid
-	call Func_00_09ff          ; bad checksum: disable SRAM, return 0
+	call DisableSram          ; bad checksum: disable SRAM, return 0
 	xor a
 	ret
 .valid:
@@ -1715,14 +1715,14 @@ LoadHiScoreFromSram:
 	ld hl, wHiScore
 	ld c, $05
 	call CopyDEtoHL
-	call Func_00_09ff
+	call DisableSram
 	ld a, $01
 	ret
 ; Load all saved per-room floor edits from SRAM: for each room slot, verify its
 ; "V03" signature + checksum and unpack the valid ones back into the editor's
 ; floor tables. Called from scene.asm and link.asm.
 LoadFloorEditsFromSram:
-	call Func_00_09f9
+	call EnableSram
 	xor a
 	ld [$d0e7], a
 Func_12_4c1a:
@@ -1744,7 +1744,7 @@ Func_12_4c1a:
 	ld h, [hl]
 	ld l, a
 	ld bc, $024e
-	call Func_00_12e1
+	call VerifyXorChecksum
 	jr z, Func_12_4c83
 Func_12_4c3e:
 	ld a, [$d0e7]
@@ -1784,7 +1784,7 @@ Func_12_4c3e:
 	ld h, [hl]
 	ld l, a
 	ld bc, $024e
-	call Func_00_12ee
+	call WriteXorChecksum
 Func_12_4c83:
 	ld a, [$d0e7]
 	add a, a
@@ -1829,7 +1829,7 @@ Func_12_4cb9:
 	ld [$d0e7], a
 	cp $03
 	jp nz, Func_12_4c1a
-	call Func_00_09ff
+	call DisableSram
 	ret
 
 

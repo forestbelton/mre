@@ -85,12 +85,12 @@ Func_30_4077:
 	ld b, $08
 	ld c, $20
 	ld hl, $7000
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	xor a
 	ld b, $08
 	ld c, $20
 	ld hl, $7040
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	call Func_30_436c
 Func_30_40ab:
 	call WaitForNextFrame
@@ -173,8 +173,8 @@ Func_30_4129:
 	ld [wFadeLevel], a
 	jp Func_30_40ab
 Func_30_4152:
-	call Func_00_0400
-	call Func_00_0786
+	call DisableLcdStatInterrupt
+	call WaitForPaletteFadeCgb
 	call Func_00_07a7
 	ld a, [wScreenInput]
 	ld [wGameSceneArg], a
@@ -539,12 +539,12 @@ Func_30_4387:
 	ld a, $02
 	ld b, $01
 	ld c, $20
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	pop hl
 	xor a
 	ld b, $01
 	ld c, $20
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ret
 DrawTowerEntranceScreen:
 	xor a
@@ -580,12 +580,12 @@ DrawTowerEntranceScreen:
 	ld b, $08
 	ld c, $22
 	ld hl, $7000
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	xor a
 	ld b, $08
 	ld c, $22
 	ld hl, $7040
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 Func_30_4403:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -627,7 +627,7 @@ Func_30_444a:
 	ld [wFadeLevel], a
 	jp Func_30_4403
 Func_30_445a:
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	call Func_00_07c5
 	ret
 Func_30_4461:
@@ -730,12 +730,12 @@ Func_30_4524:
 	ld b, $08
 	ld c, $23
 	ld hl, $7000
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	xor a
 	ld b, $08
 	ld c, $23
 	ld hl, $7040
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -818,7 +818,7 @@ Func_30_45a1:
 	ld [wFadeLevel], a
 	jp Func_30_4540
 Func_30_45e2:
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ret
 	ld a, [wScreenTimer]
 	cp $78
@@ -1221,14 +1221,14 @@ Func_30_4931:
 	xor a
 	ld b, $08
 	ld c, $25
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	pop hl
 	ld a, $40
 	rst AddAToHL
 	xor a
 	ld b, $08
 	ld c, $25
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 Func_30_4946:
 	call WaitForNextFrame
 	ld a, [wFadeLevel]
@@ -1310,7 +1310,7 @@ Func_30_49e5:
 	ldh a, [rLCDC]
 	res 5, a
 	ldh [rLCDC], a
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld a, [wScreenInput]
 	ret
 
@@ -1831,12 +1831,12 @@ DrawRoomClearScreen:
 	ld b, $08
 	ld c, $21
 	ld hl, $7000
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	xor a
 	ld b, $08
 	ld c, $21
 	ld hl, $7040
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -1878,7 +1878,7 @@ Func_30_5121:
 	jp Func_30_50d7
 Func_30_512e:
 	call Func_00_07c5
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5142
@@ -2130,12 +2130,12 @@ DrawTowerOpenScreen:
 	ld b, $08
 	ld c, $26
 	ld hl, $7000
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	xor a
 	ld b, $08
 	ld c, $26
 	ld hl, $7040
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -2216,7 +2216,7 @@ Func_30_53a0:
 	ld [wFadeLevel], a
 	jp Func_30_5324
 Func_30_53b7:
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	call Func_00_07c5
 	ret
 Func_30_53be:
@@ -2368,7 +2368,7 @@ Func_30_5564:
 	dec c
 	jr nz, Func_30_5564
 	call Func_00_07a7
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ret
 Func_30_5571:
 	ldh a, [hJoyRepeat]
@@ -2625,7 +2625,7 @@ Func_30_57ef:
 	jr Func_30_57d4
 Func_30_5809:
 	call Func_00_07a7
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	call Func_00_04c4
 	call Func_00_0e24
 	ret
@@ -2649,10 +2649,10 @@ Func_30_5816:
 	call Func_00_0bdd
 	ld hl, $9800
 	ld bc, $0400
-	call Func_00_1002
+	call ClearBgMapAndAttrs
 	ld hl, $9c00
 	ld bc, $0400
-	call Func_00_1002
+	call ClearBgMapAndAttrs
 	ld a, $07
 	ldh [rWX], a
 	xor a
@@ -2840,7 +2840,7 @@ Func_30_59d7:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $0600
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $09
 	ld [wScreenTimer], a
 	xor a
@@ -2906,12 +2906,12 @@ Func_30_5a57:
 	ld hl, $4600
 	ld de, $8000
 	ld bc, $0e00
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $00
 	ld b, $02
 	ld c, $2a
 	ld hl, $5400
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ld a, $09
 	ld [wScreenTimer], a
 	xor a
@@ -2991,12 +2991,12 @@ Func_30_5afa:
 	ld hl, $5410
 	ld de, $8000
 	ld bc, $0800
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $00
 	ld b, $02
 	ld c, $2a
 	ld hl, $5c10
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ld a, $09
 	ld [wScreenTimer], a
 	xor a
@@ -3089,19 +3089,19 @@ Func_30_5bc2:
 	ld hl, $5c20
 	ld de, $8000
 	ld bc, $1000
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $2a
 	ld hl, $6c20
 	ld de, $8000
 	ld bc, $0800
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $00
 	ld b, $02
 	ld c, $2a
 	ld hl, $7420
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ld a, $09
 	ld [wScreenTimer], a
 	xor a
@@ -3213,12 +3213,12 @@ Func_30_5cb9:
 	ld hl, $4000
 	ld de, $8000
 	ld bc, $0800
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $00
 	ld b, $02
 	ld c, $2b
 	ld hl, $4800
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ld a, $09
 	ld [wScreenTimer], a
 Func_30_5cf1:
@@ -3307,12 +3307,12 @@ Func_30_5d71:
 	ld hl, $4810
 	ld de, $8000
 	ld bc, $1000
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $00
 	ld b, $06
 	ld c, $2b
 	ld hl, $6010
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	ld a, $09
 	ld [wScreenTimer], a
 	xor a
@@ -3510,14 +3510,14 @@ Func_30_5eec:
 	ld hl, $6040
 	ld de, $8800
 	ld bc, $0800
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $01
 	ldh [rVBK], a
 	ld a, $2b
 	ld hl, $6840
 	ld de, $9000
 	ld bc, $0800
-	call Func_00_36a3
+	call BankHBlankCopy
 	ld a, $21
 	ld [wScreenAnim], a
 	xor a
@@ -3644,7 +3644,7 @@ Func_30_6007:
 	jr nz, Func_30_6022
 	ld hl, $9c20
 	ld bc, $0040
-	call Func_00_1002
+	call ClearBgMapAndAttrs
 	jr Func_30_602a
 Func_30_6022:
 	ld de, $9c22

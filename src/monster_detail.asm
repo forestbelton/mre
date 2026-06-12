@@ -549,23 +549,23 @@ Func_0f_450d:
 	ld hl, $0897
 	ld a, $01
 	ld b, $06
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 Func_0f_4518:
 	ld hl, $51cc
 	ld a, $01
 	ld b, $06
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ld hl, $5224
 	ld a, $04
 	ld b, $03
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	ret
 Func_0f_452d:
 	ld hl, $524c
 	ld a, $01
 	ld b, $03
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	call Func_0f_4bb7
 	ld hl, $52b4
 	ld a, $06
@@ -577,7 +577,7 @@ Func_0f_4543:
 	call Func_0f_450d
 	FAR_CALL Func_05_48a5
 	FAR_CALL Func_05_48fc
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld a, $01
 	ld [$c2ac], a
 	ret
@@ -665,7 +665,7 @@ Func_0f_4604:
 	ld a, [wSilverKeys]
 	ld d, a
 	ld e, $0a
-	call Func_00_3774
+	call Divide8
 	ld b, h
 	call WaitForHBlank
 	ld a, l
@@ -902,7 +902,7 @@ Func_0f_47a2:
 	ld a, [wActiveFloor]
 	ld d, a
 	ld e, $0a
-	call Func_00_3774
+	call Divide8
 	push hl
 	ld a, l
 	add a, a
@@ -1116,17 +1116,17 @@ Func_0f_494b:
 	ld b, h
 	ld c, l
 	ld de, $0064
-	call Func_00_3715
+	call Multiply16
 	ld b, h
 	ld c, l
 	ld de, $018b
-	call Func_00_3788
+	call Divide16
 	call Func_0f_49b3
 	or a
 	ret nz
 	ld d, c
 	ld e, $64
-	call Func_00_3774
+	call Divide8
 	xor a
 	ldh [rVBK], a
 	ld de, $9d0c
@@ -1137,7 +1137,7 @@ Func_0f_494b:
 	push de
 	ld d, h
 	ld e, $0a
-	call Func_00_3774
+	call Divide8
 	pop de
 	call WaitForHBlank
 	ld a, l
@@ -1151,14 +1151,14 @@ Func_0f_494b:
 	ld a, [$c2a4]
 	ld c, a
 	ld de, $0064
-	call Func_00_3715
+	call Multiply16
 	ld b, h
 	ld c, l
 	ld de, $018b
-	call Func_00_3788
+	call Divide16
 	ld d, c
 	ld e, $0a
-	call Func_00_3774
+	call Divide8
 	ld de, $9d10
 	call WaitForHBlank
 	ld a, l
@@ -1324,7 +1324,7 @@ Func_0f_4b4f:
 	ld hl, $4ce8
 	ld a, $06
 	ld b, $01
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 ; LoadMonsterPortrait: for wDisplayMonster, set the wMonster*Ptr pointers from the
 ; $0f:$4C4B record and upload its 128 portrait tiles ($3c table $0f:$4C3D) to VRAM
@@ -1389,13 +1389,13 @@ Func_0f_4bb7:
 	add hl, bc
 	ld a, $04
 	ld b, $03
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	pop hl
 	ld bc, $0048
 	add hl, bc
 	ld a, $01
 	ld b, $07
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	ret
 
 Data_0f_4bde:

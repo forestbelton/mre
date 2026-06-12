@@ -129,7 +129,7 @@ Func_13_40d1:
 	call WaitForNextFrame
 	ld a, $02
 	inc b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_4378
 	dec d
 	jr nz, Func_13_40d1
@@ -138,7 +138,7 @@ Func_13_40e2:
 	call WaitForNextFrame
 	ld a, $02
 	dec c
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_4399
 	dec d
 	jr nz, Func_13_40e2
@@ -147,7 +147,7 @@ Func_13_40f3:
 	call WaitForNextFrame
 	ld a, $02
 	inc b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_4378
 	dec d
 	jr nz, Func_13_40f3
@@ -169,7 +169,7 @@ Func_13_4122:
 	call WaitForNextFrame
 	ld a, $00
 	inc b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43de
 	dec d
 	jr nz, Func_13_4122
@@ -178,7 +178,7 @@ Func_13_4133:
 	call WaitForNextFrame
 	ld a, $00
 	dec c
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43cc
 	dec d
 	jr nz, Func_13_4133
@@ -198,7 +198,7 @@ Func_13_415d:
 	call WaitForNextFrame
 	ld a, $00
 	dec b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43f0
 	dec d
 	jr nz, Func_13_415d
@@ -207,26 +207,26 @@ Func_13_416e:
 	call WaitForNextFrame
 	ld a, $00
 	dec c
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43cc
 	dec d
 	jr nz, Func_13_416e
 	push bc
 	ld a, $00
 	ld bc, $0608
-	call Func_00_2117
+	call SetSpritePairTileAttr
 	ld d, $1e
 	call Func_13_4442
 	ld a, $04
 	ld bc, $f0f0
-	call Func_00_20fa
+	call SetSpritePairPosition
 	pop bc
 	ld d, $08
 Func_13_4196:
 	call WaitForNextFrame
 	ld a, $00
 	inc c
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43ba
 	dec d
 	jr nz, Func_13_4196
@@ -235,7 +235,7 @@ Func_13_41a7:
 	call WaitForNextFrame
 	ld a, $00
 	inc b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43de
 	dec d
 	jr nz, Func_13_41a7
@@ -250,7 +250,7 @@ Func_13_41c4:
 	call WaitForNextFrame
 	ld a, $00
 	dec b
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43f0
 	dec d
 	jr nz, Func_13_41c4
@@ -259,7 +259,7 @@ Func_13_41d5:
 	call WaitForNextFrame
 	ld a, $00
 	inc c
-	call Func_00_20fa
+	call SetSpritePairPosition
 	call Func_13_43ba
 	dec d
 	jr nz, Func_13_41d5
@@ -267,7 +267,7 @@ Func_13_41d5:
 Func_13_41e5:
 	ld a, $00
 	ld bc, $f0f0
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ld hl, $5e8b
 	ld de, $9800
 	call CopyBgMap
@@ -398,7 +398,7 @@ Func_13_42f6:
 	call DrawMetasprite
 	ld a, $00
 	ld bc, $3088
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_4308:
@@ -407,7 +407,7 @@ Func_13_4308:
 	call DrawMetasprite
 	ld a, $00
 	ld bc, $3088
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_431a:
@@ -416,7 +416,7 @@ Func_13_431a:
 	call DrawMetasprite
 	ld a, $00
 	ld bc, $5050
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_432c:
@@ -425,7 +425,7 @@ Func_13_432c:
 	call DrawMetasprite
 	ld a, $00
 	ld bc, $4058
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_433e:
@@ -434,7 +434,7 @@ Func_13_433e:
 	call DrawMetasprite
 	ld a, $02
 	ld bc, $3078
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_4350:
@@ -443,7 +443,7 @@ Func_13_4350:
 	call DrawMetasprite
 	ld a, $02
 	ld bc, $f0f0
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Func_13_4362:
@@ -452,7 +452,7 @@ Func_13_4362:
 	call DrawMetasprite
 	ld a, $04
 	ld bc, $3048
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 
 Data_13_4374:
@@ -617,8 +617,8 @@ Func_13_4434:
 	ld hl, $442c
 	ld a, $07
 	ld b, $01
-	call Func_00_0716
-	call Func_00_0786
+	call LoadBgPalettesToSlot
+	call WaitForPaletteFadeCgb
 	ret
 Func_13_4442:
 	call WaitForNextFrame

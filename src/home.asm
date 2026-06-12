@@ -83,14 +83,14 @@ SECTION "Header", ROM0[$0100]
 
 GameInit:
 	ld [wConsoleType], a
-Func_00_0153:
+InitGameSystems:
 	di
 	ld sp, $de00
 	call SetIsCgb
 	xor a
 	ld [$c285], a
 	call InitOamCopy
-	call Func_00_018f
+	call InitInterruptVectors
 	call ResetSoundEngine
 	call HideAllSprites
 	ld a, $c7
@@ -113,10 +113,10 @@ Func_00_0153:
 	jr nz, .wait
 	call Func_00_35c8
 .update:
-	call Func_00_0f41
+	call InitAndRunIntroScene
 	jr .update
 
-Func_00_018f:
+InitInterruptVectors:
 	xor a
 	ldh [rIF], a
 	ldh [rIE], a
@@ -188,16 +188,16 @@ SetIsCgb:
 .cgb:
 	ld a, $01
 	ld [wIsCgb], a
-	call Func_00_0a04
-	jp Func_00_04cc
+	call SetDoubleSpeed
+	jp InitPaletteState
 
-Func_00_01f9:
+CheckSoftReset:
 	ldh a, [hJoyHeld]
 	cp $0f
 	ret nz
 	call LoadWhitePalettes
 	call WaitForNextFrame
-	call Func_00_018f
+	call InitInterruptVectors
 	call ResetSoundEngine
 	call HideAllSprites
 	push af
@@ -230,7 +230,7 @@ Func_00_01f9:
 	ldh [rLCDC], a
 	ld sp, $de00
 	ld a, [wConsoleType]
-	jp Func_00_0153
+	jp InitGameSystems
 
 ReadJoypad:
 	ld c, $00
@@ -276,21 +276,21 @@ ReadJoypad:
 	ldh [hJoyRepeat], a
 	ld a, $05
 	ld [hl], a
-	call Func_00_01f9
+	call CheckSoftReset
 	ret
 Func_00_0294:
 	xor a
 	ldh [hJoyRepeat], a
-	call Func_00_01f9
+	call CheckSoftReset
 	ret
 Func_00_029b:
 	ldh [hJoyRepeat], a
 	ld a, $1e
 	ld [hl], a
-	call Func_00_01f9
+	call CheckSoftReset
 	ret
 
-Func_00_02a4:
+VBlankHandlerDmg:
 	push af
 	push bc
 	push de
@@ -306,7 +306,7 @@ Func_00_02a4:
 	pop af
 	ret
 
-Func_00_02b9:
+VBlankHandlerCgb:
 	push af
 	push bc
 	push de
@@ -498,7 +498,7 @@ FillRam:
 	jr nz, FillRam
 	ret
 
-Func_00_03c4:
+GetRandomByte:
 	push bc
 	push de
 	push hl
@@ -542,7 +542,7 @@ Func_00_03e3:
 	ret
 	reti
 
-Func_00_0400:
+DisableLcdStatInterrupt:
 	di
 	ldh a, [rIE]
 	res 1, a
@@ -553,7 +553,7 @@ Func_00_0400:
 	ld [$c292], a
 	ei
 	ret
-Func_00_0413:
+SetLcdStatInterrupt:
 	ld c, a
 	di
 	ldh a, [rIE]
@@ -648,7 +648,7 @@ Func_00_04c4:
 	ld a, $c7
 	ldh [rLCDC], a
 	ret
-Func_00_04cc:
+InitPaletteState:
 	xor a
 	ld [$c282], a
 	ld [$c281], a
@@ -656,7 +656,7 @@ Func_00_04cc:
 	ldh [hBgPaletteDirty], a
 	ldh [hObjPaletteDirty], a
 	ret
-Func_00_04d9:
+ArePalettesClean:
 	ldh a, [hBgPaletteDirty]
 	cp $ff
 	ret nz
@@ -1078,7 +1078,7 @@ Func_00_06f6:
 	or h
 	ld h, a
 	ret
-Func_00_0716:
+LoadBgPalettesToSlot:
 	ld c, a
 	rst CheckCgb
 	ret z
@@ -1101,7 +1101,7 @@ Func_00_0716:
 	ldh [hBgPaletteDirty], a
 	ei
 	ret
-Func_00_0732:
+LoadObjPalettesToSlot:
 	ld c, a
 	rst CheckCgb
 	ret z
@@ -1145,24 +1145,24 @@ Func_00_076f:
 	ei
 	ret
 
-Func_00_0786:
+WaitForPaletteFadeCgb:
 	rst CheckCgb
 	ret z
-Func_00_0788:
+WaitForPaletteFade:
 	call WaitForNextFrame
-	call Func_00_04d9
-	jr nz, Func_00_0788
+	call ArePalettesClean
+	jr nz, WaitForPaletteFade
 	call WaitForNextFrame
 	ret
 Func_00_0794:
 	rst CheckCgb
 	ret z
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld hl, $c201
 	call Func_00_05ae
 	ld hl, $c241
 	call Func_00_0602
-	jr Func_00_0786
+	jr WaitForPaletteFadeCgb
 Func_00_07a7:
 	rst CheckCgb
 	ret z
@@ -1170,12 +1170,12 @@ Func_00_07a7:
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld hl, $0857
 	call Func_00_05ae
 	ld hl, $0857
 	call Func_00_0602
-	jr Func_00_0786
+	jr WaitForPaletteFadeCgb
 Func_00_07c5:
 	rst CheckCgb
 	ret z
@@ -1183,12 +1183,12 @@ Func_00_07c5:
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld hl, $0897
 	call Func_00_05ae
 	ld hl, $0897
 	call Func_00_0602
-	jp Func_00_0786
+	jp WaitForPaletteFadeCgb
 Func_00_07e4:
 	rst CheckCgb
 	ret z
@@ -1196,12 +1196,12 @@ Func_00_07e4:
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld hl, $0857
 	call Func_00_05ca
 	ld hl, $0857
 	call Func_00_061e
-	jp Func_00_0786
+	jp WaitForPaletteFadeCgb
 
 Func_00_0803:
 	rst CheckCgb
@@ -1210,12 +1210,12 @@ Func_00_0803:
 	ld hl, $c201
 	ld c, $80
 	call CopyDEtoHL
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ld hl, $0897
 	call Func_00_05ca
 	ld hl, $0897
 	call Func_00_061e
-	jp Func_00_0786
+	jp WaitForPaletteFadeCgb
 
 ; Blank the display to white. On CGB, loads the all-white palette at $0857
 ; (4x $7fff) into every BG and OBJ palette slot; on DMG, zeroes rBGP/rOBP0/rOBP1
@@ -1228,7 +1228,7 @@ LoadWhitePalettes:
 	call LoadBgPalettes
 	ld hl, $0857
 	call LoadObjPalettes
-	jp Func_00_0786
+	jp WaitForPaletteFadeCgb
 
 Func_00_0834:
 	xor a
@@ -1244,7 +1244,7 @@ Func_00_083c:
 	call LoadBgPalettes
 	ld hl, $0897
 	call LoadObjPalettes
-	jp Func_00_0786
+	jp WaitForPaletteFadeCgb
 
 Func_00_084e:
 	ld a, $ff
@@ -1337,7 +1337,7 @@ Func_00_0903:
 	ld [$2fff], a
 	ret
 
-Func_00_094a:
+LoadObjPaletteBlockBanked:
 	ld [wBankCallTmp], a
 	ld a, c
 	ld [$c29e], a
@@ -1388,7 +1388,7 @@ Func_00_0979:
 	ld [$2fff], a
 	ret
 
-Func_00_09b1:
+LoadBgPalettesToSlotBanked:
 	ld [wBankCallTmp], a
 	ld a, b
 	ld [$c29d], a
@@ -1401,11 +1401,11 @@ Func_00_09b1:
 	ld a, [$c29d]
 	ld b, a
 	ld a, [wBankCallTmp]
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_09d5:
+LoadObjPalettesToSlotBanked:
 	ld [wBankCallTmp], a
 	ld a, b
 	ld [$c29d], a
@@ -1418,19 +1418,19 @@ Func_00_09d5:
 	ld a, [$c29d]
 	ld b, a
 	ld a, [wBankCallTmp]
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_09f9:
+EnableSram:
 	ld a, $0a
 	ld [Data_00_1fff], a
 	ret
-Func_00_09ff:
+DisableSram:
 	xor a
 	ld [Data_00_1fff], a
 	ret
-Func_00_0a04:
+SetDoubleSpeed:
 	rst CheckCgb
 	ret z
 	ld hl, $ff4d
@@ -1860,7 +1860,7 @@ Func_00_0d4d:
 Func_00_0d6e:
 	ld hl, $0dc6
 	ld a, $08
-	call Func_00_0413
+	call SetLcdStatInterrupt
 Func_00_0d76:
 	ld a, $01
 	ld [$c2ad], a
@@ -1880,7 +1880,7 @@ Func_00_0d7f:
 	res 1, [hl]
 	ld hl, $0ddd
 	ld a, $08
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	ld a, $02
 	ld [$c2ad], a
 	pop hl
@@ -1898,7 +1898,7 @@ Func_00_0da3:
 	set 1, [hl]
 	ld hl, $0d4d
 	xor a
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	ld a, $03
 	ld [$c2ad], a
 	pop hl
@@ -1914,7 +1914,7 @@ Func_00_0da3:
 	set 1, [hl]
 	ld hl, $0d4d
 	xor a
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -1928,7 +1928,7 @@ Func_00_0da3:
 	set 1, [hl]
 	ld hl, $0df5
 	ld a, $30
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -1942,7 +1942,7 @@ Func_00_0da3:
 	res 1, [hl]
 	ld hl, $0e0d
 	ld a, $68
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -1956,7 +1956,7 @@ Func_00_0da3:
 	set 1, [hl]
 	ld hl, $0d4d
 	xor a
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -1994,7 +1994,7 @@ Func_00_0e4e:
 	set 1, [hl]
 	ld hl, $0e5f
 	ld a, $77
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2008,7 +2008,7 @@ Func_00_0e4e:
 	res 1, [hl]
 	ld hl, $0e33
 	ld a, $17
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2042,7 +2042,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0eac
 	ld a, $2f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2056,7 +2056,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0ec5
 	ld a, $3f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2070,7 +2070,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0ede
 	ld a, $47
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2084,7 +2084,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0ef7
 	ld a, $4f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2098,7 +2098,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0f10
 	ld a, $5f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2112,7 +2112,7 @@ Func_00_0e96:
 	set 1, [hl]
 	ld hl, $0f29
 	ld a, $77
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -2126,12 +2126,12 @@ Func_00_0e96:
 	res 1, [hl]
 	ld hl, $0e7b
 	ld a, $17
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
 	ret
-Func_00_0f41:
+InitAndRunIntroScene:
 	xor a
 	ld [wGameScene], a
 	ld [$c2a8], a
@@ -2181,7 +2181,7 @@ Data_00_0fa1:
 	farptr Func_00_3508, 61
 	farptr Func_00_3508, 81
 
-Func_00_0fb0:
+TestAabbOverlap:
 	push bc
 	ldh a, [hHitbox2X]
 	ld c, a
@@ -2245,7 +2245,7 @@ Func_00_0ff2:
 	pop bc
 	ld a, $01
 	ret
-Func_00_1002:
+ClearBgMapAndAttrs:
 	xor a
 	ldh [rVBK], a
 Data_00_1005:
@@ -2262,7 +2262,7 @@ Data_00_1005:
 	xor a
 	ldh [rVBK], a
 	ret
-Func_00_101b:
+GetCollisionCell:
 	ld a, b
 	swap a
 Data_00_101e:
@@ -2275,7 +2275,7 @@ Data_00_101e:
 	add hl, bc
 	ld a, [hl]
 	ret
-Func_00_102b:
+GetCollisionCellSaveHL:
 	push hl
 	ld a, b
 	swap a
@@ -2290,7 +2290,7 @@ Func_00_102b:
 	pop hl
 Data_00_103c:
 	ret
-Func_00_103d:
+GetFloorGridCell:
 	push hl
 	ld a, b
 	swap a
@@ -2362,7 +2362,7 @@ Func_00_106f:
 	ld b, [hl]
 	pop hl
 	ret
-Func_00_108f:
+CopyTilesToBothVramBanks:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -2384,7 +2384,7 @@ Func_00_108f:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_10b5:
+LoadBgAndObjPalettesBanked:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -2640,7 +2640,7 @@ Data_00_1209:
 Data_00_1211:
 	db $fe, $fd, $fb, $f7, $ef, $df, $bf, $7f
 
-Func_00_1219:
+InitProgressFlags:
 	xor a
 	set 0, a
 	ld [wProgressFlags], a
@@ -2709,14 +2709,14 @@ Data_00_1280:
 
 SECTION "analyzed_001290", ROM0[$1290]
 
-Func_00_1290:
+ClassifyEntityType:
 	push hl
 	ld hl, $1220
 	rst AddAToHL
 	ld a, [hl]
 	pop hl
 	ret
-Func_00_1298:
+LoadCurrentFloorRecordToBuffer:
 	ld a, [wActiveFloor]
 	ld d, a
 	ld a, [wRoomType]
@@ -2748,11 +2748,11 @@ LoadFloorRecordToBuffer:
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
-	call Func_00_09f9
+	call EnableSram
 	ld bc, $0245
 	ld hl, wFloorSnapshot
 	call CopyDEtoHLLong
-	call Func_00_09ff
+	call DisableSram
 	pop af
 	ld [$2fff], a
 	ld a, [$c55d]
@@ -2762,7 +2762,7 @@ LoadFloorRecordToBuffer:
 Data_00_12db:
 	db $e1, $c7, $e8, $c7, $ef, $c7
 
-Func_00_12e1:
+VerifyXorChecksum:
 	ld d, $00
 Func_00_12e3:
 	ld a, [hl+]
@@ -2775,7 +2775,7 @@ Func_00_12e3:
 	ld a, [hl]
 	cp d
 	ret
-Func_00_12ee:
+WriteXorChecksum:
 	ld d, $00
 Func_00_12f0:
 	ld a, [hl+]
@@ -3466,7 +3466,7 @@ Func_00_1919:
 	ret nz
 	ld a, $04
 	ld [wRoomType], a
-	call Func_00_1298
+	call LoadCurrentFloorRecordToBuffer
 	call Func_00_2fa2
 	ret z
 	ld hl, $5230
@@ -3512,7 +3512,7 @@ Func_00_19af:
 	or a
 	jr nz, Func_00_19a3
 Func_00_19ba:
-	call Func_00_2325
+	call OpenEditorActionMenu
 	ld a, [wMenuId]
 	cp $00
 	jr z, Func_00_19d6
@@ -3592,7 +3592,7 @@ Func_00_1a6c:
 	ld bc, $0000
 	call DrawMetasprite
 	call HideUnusedOamSprites
-	call Func_00_20da
+	call SetEditCursorSprite
 	call Func_00_206a
 	ld a, [wMenuId]
 	cp $03
@@ -3662,10 +3662,10 @@ Func_00_1b2e:
 	ld a, [wUiState]
 	cp $01
 	jr nz, Func_00_1b40
-	call Func_00_1be5
+	call MoveMenuListCursor
 	jr Func_00_1b43
 Func_00_1b40:
-	call Func_00_1e72
+	call MoveFloorEditCursor
 Func_00_1b43:
 	call Func_00_3460
 	call Func_00_2dbc
@@ -3685,11 +3685,11 @@ Func_00_1b5d:
 	ld a, [wUiState]
 	cp $01
 	jr nz, Func_00_1b6f
-	call Func_00_1c9d
+	call HandleFloorMonsterEdit
 	jr Func_00_1b72
 
 Func_00_1b6f:
-	call Func_00_1e72
+	call MoveFloorEditCursor
 
 Func_00_1b72:
 	call Func_00_3460
@@ -3706,7 +3706,7 @@ Func_00_1b87:
 	ld [wUiState], a
 	call WaitForNextFrame
 	call ReadJoypad
-	call Func_00_1be5
+	call MoveMenuListCursor
 	ld a, [wUiState]
 	cp $02
 	jr nz, Func_00_1bc7
@@ -3745,7 +3745,7 @@ Func_00_1be1:
 	ld a, b
 	ld a, d
 
-Func_00_1be5:
+MoveMenuListCursor:
 	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [wMenuItemCount]
@@ -3846,12 +3846,12 @@ Func_00_1c7e:
 	ld d, [hl]
 	ld a, $03
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $04
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_206a
 	ret
-Func_00_1c9d:
+HandleFloorMonsterEdit:
 	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [wMenuItemCount]
@@ -3884,7 +3884,7 @@ Func_00_1cc8:
 	ld [wMenuCursorRow], a
 
 Func_00_1cd3:
-	call Func_00_25a4
+	call NormalizeMonsterTableFlags
 	call Func_00_30b3
 	jp Func_00_1de5
 Func_00_1cdc:
@@ -3917,7 +3917,7 @@ Func_00_1d03:
 	ld [wMenuCursorRow], a
 
 Func_00_1d0e:
-	call Func_00_25a4
+	call NormalizeMonsterTableFlags
 	call Func_00_30b3
 	jp Func_00_1de5
 Func_00_1d17:
@@ -4024,7 +4024,7 @@ Data_00_1dbc:
 	pop af
 	ld a, $02
 	ld [wUiState], a
-	call Func_00_25a4
+	call NormalizeMonsterTableFlags
 	call Func_00_30cf
 	jr Func_00_1de5	; WARN: jr target $1de5 outside decoded range $1dbc-$1dcf — wrong --addr? (jr needs the real base address)
 
@@ -4038,7 +4038,7 @@ Func_00_1dd0:
 	pop af
 	ld a, $00
 	ld [wUiState], a
-	call Func_00_25a4
+	call NormalizeMonsterTableFlags
 Func_00_1de5:
 	call Func_00_2020
 	ld a, [wUiTimer]
@@ -4051,9 +4051,9 @@ Func_00_1de5:
 	ld d, [hl]
 	ld a, $03
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $04
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_206a
 	ld a, [wMenuCursor]
 	cp $00
@@ -4061,9 +4061,9 @@ Func_00_1de5:
 	ld d, $00
 	ld a, $05
 	ld c, $00
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $06
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_1e1c:
 	ld a, [$d0e7]
@@ -4072,9 +4072,9 @@ Func_00_1e1c:
 	ld d, [hl]
 	ld a, $05
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $06
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_2081
 	ret
 Func_00_1e34:
@@ -4123,7 +4123,7 @@ Func_00_1e58:
 	ret z
 	ld a, [hl]
 	ret
-Func_00_1e72:
+MoveFloorEditCursor:
 	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [wFloorHeight]
@@ -4236,7 +4236,7 @@ Func_00_1f07:
 
 Func_00_1f1e:
 	FAR_CALL Data_12_4695
-	call Func_00_25a4
+	call NormalizeMonsterTableFlags
 	jr Func_00_1f34
 
 Func_00_1f2b:
@@ -4248,14 +4248,14 @@ Data_00_1f31:
 	call Func_00_2446
 
 Func_00_1f34:
-	call Func_00_20da
+	call SetEditCursorSprite
 	ld a, [wUiTimer]
 	and $04
 	jr nz, Func_00_1f47
 	ld d, $00
 	ld a, $00
 	ld c, $00
-	call Func_00_20d1
+	call SetOamByte
 Func_00_1f47:
 	ret
 Func_00_1f48:
@@ -4311,10 +4311,10 @@ Func_00_1f85:
 	jr nz, Func_00_1f85
 	ld a, c
 	rst AddAToHL
-	call Func_00_1f91
+	call SetBgMapTileAndAttr
 Func_00_1f90:
 	ret
-Func_00_1f91:
+SetBgMapTileAndAttr:
 	xor a
 	ldh [rVBK], a
 	inc de
@@ -4418,7 +4418,7 @@ Data_00_2006:
 	ld a, c
 	add a, $10
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	pop bc
 	pop hl
 
@@ -4496,14 +4496,14 @@ Func_00_206a:
 	ld a, [wMenuCursorRow]
 	ld b, a
 	ld c, $18
-	call Func_00_3700
+	call Multiply8
 	add a, $18
 	ld b, a
 	ld [$d0e8], a
 	ld c, $90
 Func_00_207b:
 	ld a, $01
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ret
 Func_00_2081:
 	ld a, [$d0e8]
@@ -4511,9 +4511,9 @@ Func_00_2081:
 	ld d, a
 	ld a, $05
 	ld c, $00
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $06
-	call Func_00_20d1
+	call SetOamByte
 	ret
 
 Data_00_2094:
@@ -4525,7 +4525,7 @@ Data_00_2094:
 	ld d, a
 	ld a, b
 	ld c, $03
-	call Func_00_20d1
+	call SetOamByte
 	ld a, e
 	ld hl, wFloorMonsterSpecies
 	rst AddAToHL
@@ -4535,7 +4535,7 @@ Data_00_2094:
 	ld d, a
 	ld a, b
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	ld a, [wEditCursorY]
 	add a, a
 	add a, a
@@ -4544,7 +4544,7 @@ Data_00_2094:
 	ld d, a
 	ld a, b
 	ld c, $00
-	call Func_00_20d1
+	call SetOamByte
 	ld a, [wEditCursorX]
 	add a, a
 	add a, a
@@ -4553,10 +4553,10 @@ Data_00_2094:
 	ld d, a
 	ld a, b
 	ld c, $01
-	call Func_00_20d1
+	call SetOamByte
 	ret
 
-Func_00_20d1:
+SetOamByte:
 	ld hl, $c000
 	add a, a
 	add a, a
@@ -4564,7 +4564,7 @@ Func_00_20d1:
 	rst AddAToHL
 	ld [hl], d
 	ret
-Func_00_20da:
+SetEditCursorSprite:
 	ld hl, $c000
 	ld a, [wEditCursorY]
 	add a, a
@@ -4579,7 +4579,7 @@ Func_00_20da:
 	add a, $08
 	ld [hl], a
 	ret
-Func_00_20f0:
+SetSpritePosition:
 	ld hl, $c000
 	add a, a
 	add a, a
@@ -4588,7 +4588,7 @@ Func_00_20f0:
 	ld [hl+], a
 	ld [hl], c
 	ret
-Func_00_20fa:
+SetSpritePairPosition:
 	ld hl, $c000
 	add a, a
 	add a, a
@@ -4605,7 +4605,7 @@ Func_00_20fa:
 	add a, $08
 	ld [hl+], a
 	ret
-Func_00_210d:
+SetSpriteTileAttr:
 	ld hl, $c002
 	add a, a
 	add a, a
@@ -4614,7 +4614,7 @@ Func_00_210d:
 	ld [hl+], a
 	ld [hl], c
 	ret
-Func_00_2117:
+SetSpritePairTileAttr:
 	ld hl, $c000
 	add a, a
 	add a, a
@@ -4635,7 +4635,7 @@ Func_00_2117:
 Func_00_212c:
 	ld a, $04
 	ld [wRoomType], a
-	call Func_00_1298
+	call LoadCurrentFloorRecordToBuffer
 	ld a, [wFloorSnapshot]
 	cp $ff
 	jr z, Func_00_2140
@@ -4667,7 +4667,7 @@ Func_00_2140:
 	ld [wActiveFloor], a
 	ld a, $03
 	ld [wRoomType], a
-	call Func_00_1298
+	call LoadCurrentFloorRecordToBuffer
 	ret
 Func_00_217d:
 	xor a
@@ -4896,7 +4896,7 @@ Func_00_2319:
 Func_00_231a:
 	FAR_CALL Func_12_4441
 	jp Func_00_2253
-Func_00_2325:
+OpenEditorActionMenu:
 	xor a
 	ld [wMenuCursor], a
 	ld [wMenuCursorRow], a
@@ -4960,7 +4960,7 @@ Func_00_2391:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	call Func_00_23c3
+	call DispatchEditorMenuAction
 	ret nz
 	jr Func_00_23be
 Func_00_23a2:
@@ -4973,7 +4973,7 @@ Data_00_23a6:
 	ld a, SOUND_SFX_Cancel
 	call PlaySound
 	pop af
-	call Func_00_23c3
+	call DispatchEditorMenuAction
 	ret nz
 	jr Func_00_23be	; WARN: jr target $23be outside decoded range $23a6-$23b4 — wrong --addr? (jr needs the real base address)
 
@@ -4983,7 +4983,7 @@ Func_00_23b5:
 Func_00_23be:
 	call Func_00_3460
 	jr Func_00_2351
-Func_00_23c3:
+DispatchEditorMenuAction:
 	ld [wMenuId], a
 	cp $04
 	jr z, Func_00_23d8
@@ -5040,16 +5040,16 @@ Func_00_2446:
 	ld a, [wMenuId]
 	cp $03
 	jr z, Func_00_2455
-	call Func_00_245d
+	call ToggleFloorCellFlag
 	ret nz
 	call $24a2
 	ret
 Func_00_2455:
 	call $24a2
 	ret nz
-	call Func_00_245d
+	call ToggleFloorCellFlag
 	ret
-Func_00_245d:
+ToggleFloorCellFlag:
 	ld a, [wEditCursorY]
 	ld b, a
 	ld a, [wEditCursorX]
@@ -5107,7 +5107,7 @@ Data_00_2495:
 	db $08, $21, $80, $50, $cd, $50, $34, $af, $c9, $7a, $ea, $cb, $c7, $79, $ea, $cc
 	db $c7, $3e, $01, $c9, $23, $3e, $0a, $c7, $0c, $3e, $04, $b9, $20, $b9, $c9
 
-Func_00_25a4:
+NormalizeMonsterTableFlags:
 	ld c, $09
 	ld hl, wFloorMonsterTable
 Func_00_25a9:
@@ -5176,7 +5176,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $48
 	ld a, [$c7ce]
 	ld [$c7d4], a
@@ -5185,7 +5185,7 @@ Func_00_25e5:
 	add a, $44
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 	ld a, $02
 	ld [wMenuItemCount], a
@@ -5210,7 +5210,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $48
 	ld a, [$c7ce]
 	sub $02
@@ -5220,7 +5220,7 @@ Func_00_25e5:
 	add a, $44
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 	ld a, $03
 	ld [wMenuItemCount], a
@@ -5239,7 +5239,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $38
 	ld a, [$c7ce]
 	ld [$c7d4], a
@@ -5248,7 +5248,7 @@ Func_00_25e5:
 	add a, $44
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $58
 	ld a, [$c7cd]
 	and $f0
@@ -5258,7 +5258,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $05
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 	ld a, $02
 	ld [wMenuItemCount], a
@@ -5279,7 +5279,7 @@ Func_00_25e5:
 	add a, $34
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $50
 	ld a, [$c7cd]
 	and $f0
@@ -5289,7 +5289,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 	ld a, $02
 	ld [wMenuItemCount], a
@@ -5308,7 +5308,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $48
 	ld a, [$c7ce]
 	ld [$c7d4], a
@@ -5319,7 +5319,7 @@ Func_00_25e5:
 	add a, $34
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 	ld a, $02
 	ld [wMenuItemCount], a
@@ -5338,7 +5338,7 @@ Func_00_25e5:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld a, [$c7ce]
 	ld [$c7d4], a
 	bit 2, a
@@ -5356,7 +5356,7 @@ Func_00_2795:
 	add a, $34
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 Func_00_27a5:
 	ld a, $02
@@ -5401,7 +5401,7 @@ Func_00_27e1:
 	ld [wGridCol], a
 Func_00_27f9:
 	ld a, [hl+]
-	call Func_00_2880
+	call DrawMonsterIconSprite
 	inc d
 	dec e
 	jr nz, Func_00_27f9
@@ -5433,10 +5433,10 @@ Func_00_281f:
 	call Func_00_289d
 	ld bc, $f0f0
 	ld a, $00
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ld bc, $1890
 	ld a, $0f
-	call Func_00_20fa
+	call SetSpritePairPosition
 	ld b, $28
 	ld a, [$c7cf]
 	ld [$c7d3], a
@@ -5444,7 +5444,7 @@ Func_00_281f:
 	add a, $38
 	ld c, a
 	ld a, $03
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $38
 	ld a, [$c7ce]
 	ld [$c7d4], a
@@ -5453,7 +5453,7 @@ Func_00_281f:
 	add a, $34
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ld b, $58
 	ld a, [$c7cd]
 	ld [$c7d5], a
@@ -5461,9 +5461,9 @@ Func_00_281f:
 	add a, $38
 	ld c, a
 	ld a, $05
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
-Func_00_2880:
+DrawMonsterIconSprite:
 	cp $ff
 	jr z, Func_00_288f
 	ld c, a
@@ -5482,7 +5482,7 @@ Func_00_2893:
 	add a, a
 	add a, $03
 	push hl
-	call Func_00_2117
+	call SetSpritePairTileAttr
 	pop hl
 	ret
 Func_00_289d:
@@ -5500,7 +5500,7 @@ Func_00_289d:
 	add a, $0c
 	ld c, a
 	xor a
-	call Func_00_2117
+	call SetSpritePairTileAttr
 	ret
 Func_00_28c0:
 	call WaitForNextFrame
@@ -5528,7 +5528,7 @@ Func_00_28d5:
 	ld b, a
 	ld c, $00
 	ld a, $0f
-	call Func_00_2117
+	call SetSpritePairTileAttr
 Func_00_28f3:
 	ld a, [wUiState]
 	cp $00
@@ -5552,7 +5552,7 @@ Func_00_28fb:
 	ld a, $00
 Func_00_2916:
 	ld [wGridRow], a
-	call Func_00_2c54
+	call SetGridColumnsForRow
 	call Func_00_3121
 	jp Func_00_29d7
 Func_00_2922:
@@ -5570,7 +5570,7 @@ Func_00_2922:
 	dec a
 Func_00_2939:
 	ld [wGridRow], a
-	call Func_00_2c54
+	call SetGridColumnsForRow
 	call Func_00_3121
 	jp Func_00_29d7
 Func_00_2945:
@@ -5660,7 +5660,7 @@ Func_00_29d7:
 	ld d, [hl]
 	ld a, $02
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_2bf1
 	pop af
 	ld hl, $1bd9
@@ -5669,7 +5669,7 @@ Func_00_29d7:
 	ld a, [wGridRow]
 	add a, $03
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_2cf9
 	call Func_00_2c85
 	ret
@@ -5689,7 +5689,7 @@ Func_00_2a13:
 	jr nz, Func_00_2a1d
 	ld a, $00
 Func_00_2a1d:
-	call Func_00_2af6
+	call CheckGridCellSelectable
 	jr nz, Func_00_2a13
 	jp Func_00_2ab6
 Func_00_2a25:
@@ -5706,7 +5706,7 @@ Func_00_2a30:
 	jr c, Func_00_2a3a
 	ld a, $03
 Func_00_2a3a:
-	call Func_00_2af6
+	call CheckGridCellSelectable
 	jr nz, Func_00_2a30
 	jr Func_00_2ab6
 Func_00_2a41:
@@ -5725,7 +5725,7 @@ Func_00_2a41:
 	xor a
 Func_00_2a58:
 	ld [wGridRow], a
-	call Func_00_2b4d
+	call LoadSpawnerColumnForRow
 	jr Func_00_2ab6
 Func_00_2a60:
 	bit 5, b
@@ -5742,7 +5742,7 @@ Func_00_2a60:
 	dec a
 Func_00_2a77:
 	ld [wGridRow], a
-	call Func_00_2b4d
+	call LoadSpawnerColumnForRow
 	jr Func_00_2ab6
 Func_00_2a7f:
 	bit 0, b
@@ -5754,7 +5754,7 @@ Func_00_2a7f:
 	xor a
 	ld [wGridRow], a
 	call Func_00_281f
-	call Func_00_2c54
+	call SetGridColumnsForRow
 	ld a, $01
 	ld [wUiState], a
 	call Func_00_2bb8
@@ -5784,16 +5784,16 @@ Func_00_2ab6:
 	ld d, [hl]
 	ld a, $00
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	pop af
 	ld hl, $1bd9
 	rst AddAToHL
 	ld d, [hl]
 	ld a, $01
 	ld c, $02
-	call Func_00_20d1
+	call SetOamByte
 	ld a, $02
-	call Func_00_20d1
+	call SetOamByte
 	call Func_00_2b1b
 	ld a, [wGridRow]
 	ld d, a
@@ -5802,11 +5802,11 @@ Func_00_2ab6:
 	jr nz, Func_00_2aec
 	ld a, $ff
 Func_00_2aec:
-	call Func_00_2880
-	call Func_00_2b6b
-	call Func_00_2b89
+	call DrawMonsterIconSprite
+	call StoreSpawnerColumnForRow
+	call CountSpawnerEntries
 	ret
-Func_00_2af6:
+CheckGridCellSelectable:
 	ld [wGridCol], a
 	cp $03
 	jr nz, Func_00_2b0d
@@ -5848,7 +5848,7 @@ Func_00_2b2a:
 	add a, $28
 	ld c, a
 	ld a, $00
-	call Func_00_20f0
+	call SetSpritePosition
 	ld a, b
 	sub $08
 	ld b, a
@@ -5856,14 +5856,14 @@ Func_00_2b2a:
 	add a, $0c
 	ld c, a
 	ld a, $01
-	call Func_00_20f0
+	call SetSpritePosition
 	ld a, b
 	add a, $10
 	ld b, a
 	ld a, $02
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
-Func_00_2b4d:
+LoadSpawnerColumnForRow:
 	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
@@ -5883,7 +5883,7 @@ Func_00_2b4d:
 Func_00_2b67:
 	ld [wGridCol], a
 	ret
-Func_00_2b6b:
+StoreSpawnerColumnForRow:
 	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
@@ -5903,7 +5903,7 @@ Func_00_2b6b:
 Func_00_2b87:
 	ld [hl], a
 	ret
-Func_00_2b89:
+CountSpawnerEntries:
 	ld hl, wFloorSpawnerTable
 	ld a, [$c7cc]
 	add a, a
@@ -5993,7 +5993,7 @@ Func_00_2bf1:
 	add a, $38
 	ld d, a
 	ld a, $02
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_2c11:
 	ld a, [wGridRow]
@@ -6010,7 +6010,7 @@ Func_00_2c24:
 	ld d, $60
 Func_00_2c26:
 	ld a, $02
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_2c2c:
 	ld a, [wGridRow]
@@ -6022,7 +6022,7 @@ Func_00_2c37:
 	ld d, $54
 Func_00_2c39:
 	ld a, $02
-	call Func_00_20d1
+	call SetOamByte
 	ret
 	dec b
 	ld [bc], a
@@ -6043,7 +6043,7 @@ Func_00_2c39:
 	ld [$0500], sp
 	inc bc
 	dec b
-Func_00_2c54:
+SetGridColumnsForRow:
 	ld hl, $2c3f
 	ld a, [$c7d2]
 	ld c, a
@@ -6179,7 +6179,7 @@ Func_00_2d1d:
 	ld c, $01
 	ld a, [wGridRow]
 	add a, $03
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_2d30:
 	ld a, [wGridCol]
@@ -6190,7 +6190,7 @@ Func_00_2d30:
 	ld c, $01
 	ld a, [wGridRow]
 	add a, $03
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_2d44:
 	ld a, [wGridCol]
@@ -6203,7 +6203,7 @@ Func_00_2d44:
 	ld c, $01
 	ld a, [wGridRow]
 	add a, $03
-	call Func_00_20d1
+	call SetOamByte
 	ret
 Func_00_2d5a:
 	ld a, [wGridCol]
@@ -6222,7 +6222,7 @@ Func_00_2d67:
 	add a, $34
 	ld c, a
 	ld a, $04
-	call Func_00_20f0
+	call SetSpritePosition
 	ret
 Func_00_2d77:
 	ld a, [wGridCol]
@@ -6232,10 +6232,10 @@ Func_00_2d77:
 	ld d, a
 	ld c, $01
 	ld a, $04
-	call Func_00_20d1
+	call SetOamByte
 	ret
 
-Func_00_2d88:
+FindMonsterAtCursor:
 	ld hl, wFloorMonsterTable
 	ld a, [wEditCursorX]
 	ld d, a
@@ -6312,7 +6312,7 @@ Func_00_2def:
 	dec d
 	jr nz, Func_00_2dc1
 	ret
-Func_00_2df6:
+InitFloorEditorState:
 	xor a
 	ld [wMenuId], a
 	ld [$c585], a
@@ -6378,7 +6378,7 @@ Func_00_2e56:
 	ld [$c56f], a
 	ret
 
-Func_00_2e62:
+RemoveCursorCellFromList:
 	ld a, [wEditCursorY]
 	ld b, a
 	ld a, [wEditCursorX]
@@ -6406,7 +6406,7 @@ Func_00_2e78:
 	dec a
 	ld [$c56f], a
 	ret
-Func_00_2e84:
+ClearEditCellList:
 	ld hl, $c571
 	ld b, $14
 Func_00_2e89:
@@ -6437,7 +6437,7 @@ Func_00_2ea8:
 	cp $40
 	jr nz, Func_00_2eb7
 
-Func_00_2eae:
+ClearSpawnCell:
 	ld a, $ff
 	ld [wSpawnCellX], a
 	ld [wSpawnCellY], a
@@ -6491,7 +6491,7 @@ Func_00_2ebb:
 Func_00_2efa:
 	ret
 
-Func_00_2efb:
+ClearCollisionCell:
 	ld a, $ff
 	ld [$c530], a
 	ld [$c531], a
@@ -6512,7 +6512,7 @@ Data_00_2f0f:
 	ld l, a
 	ld a, $11
 	ld c, a
-	call Func_00_3700
+	call Multiply8
 	add a, l
 	ld de, wFloorGrid
 	rst AddAToDE
@@ -6572,7 +6572,7 @@ Func_00_2f65:
 	ld l, a
 	ld a, $11
 	ld c, a
-	call Func_00_3700
+	call Multiply8
 	add a, l
 	ld de, wFloorCollision
 	rst AddAToDE
@@ -6605,7 +6605,7 @@ Func_00_2fa2:
 Func_00_2fad:
 	ld b, a
 	ld c, [hl]
-	call Func_00_3700
+	call Multiply8
 	ld c, a
 	ld hl, $c58e
 	rst AddAToHL
@@ -7208,7 +7208,7 @@ Func_00_3374:
 	dec e
 	jr nz, Func_00_3372
 	ret
-Func_00_3386:
+RenderTextToVram:
 	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, $17
@@ -7289,7 +7289,7 @@ Func_00_33fb:
 	ld [$c7d7], a
 	ld a, $01
 	ld [$c7dd], a
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 Func_00_340c:
 	ld a, $78
@@ -7304,7 +7304,7 @@ Func_00_340c:
 	ld [$c7d9], a
 	ld a, $02
 	ld [$c7dd], a
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 
 Func_00_342a:
@@ -7324,7 +7324,7 @@ Func_00_342a:
 	ld [$c7db], a
 	ld a, $03
 	ld [$c7dd], a
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 
 Func_00_3450:
@@ -7334,7 +7334,7 @@ Func_00_3450:
 	ld a, SOUND_SFX_02
 	call PlaySound
 	pop af
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 Func_00_3460:
 	ld a, [$c7de]
@@ -7365,7 +7365,7 @@ Func_00_347e:
 	ld l, a
 	ld a, $78
 	ld [$c7de], a
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 
 Func_00_3492:
@@ -7375,7 +7375,7 @@ Func_00_3492:
 	ld l, a
 	ld a, [$c7d7]
 	ld h, a
-	call Func_00_3386
+	call RenderTextToVram
 	ret
 	ld a, $0d
 	call Func_00_119a
@@ -7397,7 +7397,7 @@ Func_00_34bc:
 	ld a, [wGameSceneArg]
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
-	FAR_CALL Func_00_1219
+	FAR_CALL InitProgressFlags
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_Town
@@ -7601,7 +7601,7 @@ Func_00_3635:
 	dec de
 	ret
 
-Func_00_3646:
+HBlankCopy:
 	rst CheckCgb
 	jr nz, .gbc
 .dmg:
@@ -7642,27 +7642,27 @@ Func_00_3646:
 .done:
 	ret
 
-Func_00_3692:
+HBlankCopyPaged:
 	ld a, c
 	and c
 	jr z, Func_00_369c
-	call Func_00_3646
+	call HBlankCopy
 	ld a, b
 	and b
 	ret z
 Func_00_369c:
-	call Func_00_3646
+	call HBlankCopy
 	dec b
 	jr nz, Func_00_369c
 	ret
 
-Func_00_36a3:
+BankHBlankCopy:
 	ld [wBankCallTmp], a
 	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, [wBankCallTmp]
 	ld [$2fff], a
-	call Func_00_3692
+	call HBlankCopyPaged
 	pop af
 	ld [$2fff], a
 	ret
@@ -7695,7 +7695,7 @@ Func_00_36d7:
 	set 1, [hl]
 	ld hl, $36e8
 	ld a, $6f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
@@ -7709,12 +7709,12 @@ Func_00_36d7:
 	res 1, [hl]
 	ld hl, $36bc
 	ld a, $1f
-	call Func_00_0413
+	call SetLcdStatInterrupt
 	pop hl
 	pop bc
 	pop af
 	ret
-Func_00_3700:
+Multiply8:
 	push de
 	ld d, $00
 Func_00_3703:
@@ -7734,7 +7734,7 @@ Func_00_3712:
 	pop de
 	ret
 
-Func_00_3715:
+Multiply16:
 	ld hl, $0000
 Func_00_3718:
 	srl d
@@ -7816,7 +7816,7 @@ Func_00_3769:
 	rr e
 	add hl, hl
 	jr Func_00_375d
-Func_00_3774:
+Divide8:
 	push bc
 	ld b, $08
 	ld l, d
@@ -7835,7 +7835,7 @@ Func_00_3783:
 	pop bc
 	ret
 
-Func_00_3788:
+Divide16:
 	push hl
 	xor a
 	ld [$c2a3], a
@@ -7881,7 +7881,7 @@ Func_00_37cc:
 	dec d
 Func_00_37d4:
 	call Func_00_37e8
-	jp Func_00_3715
+	jp Multiply16
 	ld d, $00
 	ld e, b
 	sla b
@@ -7889,7 +7889,7 @@ Func_00_37d4:
 	dec d
 Func_00_37e2:
 	call Func_00_380f
-	jp Func_00_3715
+	jp Multiply16
 Func_00_37e8:
 	cp $40
 	jr z, Func_00_3805
@@ -8235,7 +8235,7 @@ LoadTextUiTiles:
 	ld [$d61a], a
 	ret
 
-Func_00_39ad:
+ClearBossState:
 	ld a, $00
 	ld [$d60e], a
 	ld [wBossState], a
@@ -8336,7 +8336,7 @@ Data_00_3db6:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $2c, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Func_00_3e10:
+DrawBlinkCursor:
 	ld a, [wDrawBank]
 	push af
 	ld a, $19
@@ -8396,7 +8396,7 @@ Func_00_3e63:
 Data_00_3e68:
 	db $64, $0a
 
-Func_00_3e6a:
+DelayShort:
 	push af
 	ld a, $ff
 Func_00_3e6d:
@@ -8406,10 +8406,10 @@ Func_00_3e6d:
 	jr nz, Func_00_3e6d
 	pop af
 	ret
-Func_00_3e74:
-	call Func_00_3e6a
-	call Func_00_3e6a
-	call Func_00_3e6a
+DelayLong:
+	call DelayShort
+	call DelayShort
+	call DelayShort
 	ret
 
 Func_00_3e7e:
@@ -8428,7 +8428,7 @@ Func_00_3e7e:
 Func_00_3e93:
 	ld a, [wSerialSend]
 	ldh [rSB], a
-	call Func_00_3e74
+	call DelayLong
 	ld a, $80
 	ldh [rSC], a
 	pop af

@@ -59,5 +59,5 @@ DrawTecmoLogo:
 	jp .fadeLoop
 .done:
 	call Func_00_07a7           ; fade out
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ret

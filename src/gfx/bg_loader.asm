@@ -57,7 +57,7 @@ Func_10_403a:
 	ret
 
 ; Copy $800 bytes from $50b7 to VRAM bank 0 $8000, then load 4 palettes from
-; $66f7 (via Func_00_0732) and refresh. From editor/home.
+; $66f7 (via LoadObjPalettesToSlot) and refresh. From editor/home.
 Func_10_4041:
 	xor a
 	ld [rVBK], a
@@ -68,8 +68,8 @@ Func_10_4041:
 	ld hl, $66f7
 	ld a, $00
 	ld b, $04
-	call Func_00_0732
-	call Func_00_0786
+	call LoadObjPalettesToSlot
+	call WaitForPaletteFadeCgb
 	ret
 ; Copy $500 bytes from $53b7 to VRAM bank 0 $8300. From monster_detail.
 Func_10_405f:
@@ -94,7 +94,7 @@ Func_10_4081:
 	ld hl, $66f7
 	ld a, $00
 	ld b, $04
-	call Func_00_0732
+	call LoadObjPalettesToSlot
 	ret
 
 ; BG-palette pointer per floor palette id ([$c4cb], the floor record's [5] field).
@@ -114,7 +114,7 @@ LoadFloorBgPalette:
 	ld l, a                    ; hl = FloorBgPalettePtrs[id]
 	ld a, $00
 	ld b, $07
-	call Func_00_0716
+	call LoadBgPalettesToSlot
 	ret
 
 Data_10_40b7:

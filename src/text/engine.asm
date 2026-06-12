@@ -102,7 +102,7 @@ ScriptWaitInputCore:
 	ld bc, $8c9a
 
 .poll:
-	call Func_00_3e10
+	call DrawBlinkCursor
 	call HideUnusedOamSprites
 	ldh a, [hJoyPressed]
 	bit 0, a

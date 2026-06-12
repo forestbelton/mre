@@ -277,7 +277,7 @@ Func_04_418f:
 
 Func_04_4191:
 	push bc
-	call Func_00_102b
+	call GetCollisionCellSaveHL
 	pop bc
 	cp $22
 	ret nz

@@ -32,10 +32,10 @@ SceneInit:
 	call Func_00_0bdd
 	ld hl, $9800
 	ld bc, $0400
-	call Func_00_1002
+	call ClearBgMapAndAttrs
 	ld hl, $9c00
 	ld bc, $0400
-	call Func_00_1002
+	call ClearBgMapAndAttrs
 	call SceneSetupTracks
 	call SceneLoadTiles
 	call SceneLoadPalettes
@@ -582,7 +582,7 @@ Func_05_43f7:
 	push hl
 	ld b, $00
 	ld a, d
-	call Func_00_09b1
+	call LoadBgPalettesToSlotBanked
 	pop hl
 	ld de, $0008
 	add hl, de
@@ -615,7 +615,7 @@ Func_05_4428:
 	push hl
 	ld b, $00
 	ld a, d
-	call Func_00_09d5
+	call LoadObjPalettesToSlotBanked
 	pop hl
 	ld de, $0008
 	add hl, de
@@ -756,7 +756,7 @@ SceneFinish:
 	ld a, [$cf6e]
 	ldh [hSpriteOriginX], a
 	call Func_05_48fc
-	call Func_00_0786
+	call WaitForPaletteFadeCgb
 	ret
 SceneVramFillBank0:
 	ld l, a
@@ -834,7 +834,7 @@ SceneLoadTiles:
 	ld de, $8000
 	ld bc, $1800
 	pop af
-	call Func_00_108f
+	call CopyTilesToBothVramBanks
 	ret
 SceneLoadPalettes:
 	ld a, [wSceneState]
@@ -850,7 +850,7 @@ SceneLoadPalettes:
 	ld h, [hl]
 	ld l, a
 	pop af
-	call Func_00_10b5
+	call LoadBgAndObjPalettesBanked
 	ret
 
 ; --- Per-scene tables, indexed by wSceneState (the dispatch). Set up by
@@ -858,7 +858,7 @@ SceneLoadPalettes:
 ScenePaletteSrc:     ; $45da: BG+OBJ palette block ptr (SceneLoadPalettes -> LoadBgPalettes/LoadObjPalettes)
 	dw TigerPalettes, MocchiPalettes, HarePalettes, GaliPalettes
 	dw GolemPalettes, SuezoPalettes, PhenixPalettes, Scene7Palettes
-SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; SceneLoadTiles/Func_00_108f loads $1800 to bank0 then the next $1800 to bank1
+SceneBgTilesetSrc:      ; $45ea: BG tile source -> VRAM $8000; SceneLoadTiles/CopyTilesToBothVramBanks loads $1800 to bank0 then the next $1800 to bank1
 	dw TigerTiles, MocchiTiles, HareTiles, GaliTiles
 	dw GolemTiles, SuezoTiles, PhenixTiles, Scene7Tiles
 SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
@@ -877,7 +877,7 @@ SceneSprScriptTable:    ; $462a: VM2 (sprite track) script roots
 	dw Scene4_VM2, Scene5_VM2, Scene6_VM2, Scene7_VM2
 
 Func_05_463a:
-	FAR_CALL Func_00_39ad
+	FAR_CALL ClearBossState
 	call Func_05_4690
 	call Func_05_4699
 	ld a, $01
@@ -1109,7 +1109,7 @@ SetupTowerClimb:
 	ld [wRoomType], a
 	ld a, $01
 	ld [wActiveFloor], a
-	call Func_00_1219
+	call InitProgressFlags
 	ret
 SetupTowerClimbResume:
 	xor a
@@ -1138,7 +1138,7 @@ SetupNewRun:
 	call ResetRunState
 	ld a, $01
 	ld [$c2ab], a
-	call Func_00_1219
+	call InitProgressFlags
 	ret
 ; Reset the action-game run state: A -> $c2aa, then 3 lives, bomb capacity 3,
 ; $50 crystals, and clear score/bomb/battle-card state.

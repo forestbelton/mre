@@ -135,7 +135,7 @@ Func_31_40c4:
 	ld [hl+], a
 	ld a, $3e
 	ld [hl], a
-	call Func_00_3e74
+	call DelayLong
 	ld a, $f3
 	ldh [rSB], a
 	ld a, $81
@@ -215,7 +215,7 @@ Func_31_4167:
 	ld [hl+], a
 	ld a, $3e
 	ld [hl], a
-	call Func_00_3e74
+	call DelayLong
 	ld a, $f1
 	ldh [rSB], a
 	ld a, $81
@@ -226,7 +226,7 @@ Func_31_4167:
 	jp z, Func_31_4189
 	jp Func_31_40e6
 Func_31_4189:
-	call Func_00_3e74
+	call DelayLong
 	ld hl, $c297
 	ld a, $e3
 	ld [hl+], a
@@ -235,13 +235,13 @@ Func_31_4189:
 	ld a, [$d5f9]
 	ldh [rSB], a
 	call Func_31_4434
-	call Func_00_3e74
+	call DelayLong
 	ld a, [wSerialRecv]
 	ld [$d5c5], a
 	ld a, [$d5fa]
 	ldh [rSB], a
 	call Func_31_4434
-	call Func_00_3e74
+	call DelayLong
 	ld a, [wSerialRecv]
 	ld [$d5c6], a
 	call Func_31_4010
@@ -336,7 +336,7 @@ Func_31_4267:
 	ld [hl+], a
 	ld a, $3e
 	ld [hl], a
-	call Func_00_3e74
+	call DelayLong
 	ld a, $f1
 	ldh [rSB], a
 	ld a, $81
@@ -367,9 +367,9 @@ Func_31_429b:
 	ldh [rSC], a
 	ret
 Func_31_42a4:
-	call Func_00_3e74
-	call Func_00_3e74
-	call Func_00_3e74
+	call DelayLong
+	call DelayLong
+	call DelayLong
 	ld hl, $c297
 	ld a, $e3
 	ld [hl+], a
@@ -441,7 +441,7 @@ Func_31_4325:
 	ld a, $fa
 	ldh [rSB], a
 Func_31_4329:
-	call Func_00_3e74
+	call DelayLong
 	call Func_31_4434
 	ld a, [wSerialRecv]
 	cp $fa
@@ -597,7 +597,7 @@ Func_31_4427:
 Func_31_4434:
 	ld a, $81
 	ldh [rSC], a
-	call Func_00_3e74
+	call DelayLong
 	ret
 Func_31_443c:
 	ld a, [hl+]
@@ -630,7 +630,7 @@ Func_31_4449:
 Func_31_446e:
 	ld hl, $d113
 	ld bc, $024e
-	call Func_00_12e1
+	call VerifyXorChecksum
 	ret nz
 	ld a, $0a
 	ld [Data_00_1fff], a
@@ -1094,7 +1094,7 @@ Func_31_47aa:
 	ld c, $03
 	ld hl, $d5eb
 Func_31_47bf:
-	call Func_00_03c4
+	call GetRandomByte
 	ld [hl+], a
 	ld [hl+], a
 	dec c
@@ -1104,7 +1104,7 @@ Func_31_47bf:
 	ld c, $08
 	ld hl, $d5c9
 Func_31_47ce:
-	call Func_00_03c4
+	call GetRandomByte
 	and $1f
 	sub $0f
 	ld [hl+], a
@@ -1113,7 +1113,7 @@ Func_31_47ce:
 	ld [hl+], a
 	ld a, b
 	ld [hl+], a
-	call Func_00_03c4
+	call GetRandomByte
 	and $03
 	add a, $04
 	ld [hl+], a
