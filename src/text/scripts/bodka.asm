@@ -184,21 +184,21 @@ Tradehouse_BuildSceneNoInit:
 	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
-	ld a, BANK(Data_33_4000)
-	ld hl, Data_33_4000
+	ld a, BANK(TradehouseStudioTiles)
+	ld hl, TradehouseStudioTiles
 	ld de, $8000
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadBgMap
 	call Tradehouse_AnimateNoteScene
 	call HideUnusedOamSprites
-	ld a, BANK(Data_33_7000)
-	ld hl, Data_33_7000
+	ld a, BANK(TradehousePalettesBg)
+	ld hl, TradehousePalettesBg
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, BANK(Data_33_7040)
-	ld hl, Data_33_7040
+	ld a, BANK(TradehousePalettesObj)
+	ld hl, TradehousePalettesObj
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -209,8 +209,8 @@ Tradehouse_BuildSceneNoInit:
 	ret
 
 Tradehouse_LoadBgMap:
-	ld hl, Data_33_7080
-	ld a, BANK(Data_33_7080)
+	ld hl, TradehouseStudioMap
+	ld a, BANK(TradehouseStudioMap)
 	ld de, TILEMAP0
 	call BankMapCopyA
 	ret
@@ -222,19 +222,19 @@ Tradehouse_BuildNoteScene:
 	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
-	ld a, $33
-	ld hl, $5800
+	ld a, BANK(TradehouseNoteTiles)
+	ld hl, TradehouseNoteTiles
 	ld de, TILEDATA0
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadNoteBgMap
-	ld a, BANK(Data_33_7000)
-	ld hl, Data_33_7000
+	ld a, BANK(TradehousePalettesBg)
+	ld hl, TradehousePalettesBg
 	ld de, wBgPalettes
 	ld bc, $0030
 	call BankCopy
-	ld a, BANK(Data_33_7040)
-	ld hl, Data_33_7040
+	ld a, BANK(TradehousePalettesObj)
+	ld hl, TradehousePalettesObj
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
@@ -245,8 +245,8 @@ Tradehouse_BuildNoteScene:
 	ret
 
 Tradehouse_LoadNoteBgMap:
-	ld hl, $723e
-	ld a, $33
+	ld hl, TradehouseNoteMap
+	ld a, BANK(TradehouseNoteMap)
 	ld de, TILEMAP0
 	call BankMapCopyA
 	ret

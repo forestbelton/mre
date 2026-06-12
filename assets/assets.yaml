@@ -254,3 +254,18 @@ cox_flashback:
   png: cox/tiles.png
   tiles: 128
   palettes: 16
+
+# Tradehouse / Bodka note scene (bank $33, src/gfx/screen/tradehouse.asm): two
+# portrait-converter screens (standard layout, maps derived from the sheets),
+# each a 384-tile set loaded to VRAM bank 1; shared 6 BG + 6 OBJ palettes.
+tradehouse_studio:
+  mode: portrait
+  png: screen/tradehouse_studio/tradehouse_studio.png
+  layout: standard
+  palettes_bg: 6
+  palettes_obj: 6
+
+tradehouse_note:
+  mode: portrait
+  png: screen/tradehouse_note/tradehouse_note.png
+  layout: standard
