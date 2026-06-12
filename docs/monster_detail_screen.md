@@ -31,11 +31,15 @@ see docs/palettes.md.)
 
 **Asset form (2026-06-12, docs/asset_source_model.md):** each tile set is the
 colorized indexed sheet `assets/monster_portrait/monster_<name>/` (BG cells in
-their attr palettes, OBJ tiles in OBJ pal 1-2). The 7×7 `bgmap`s are the
-portrait converter's positional constant (family G, layout `monster7x7`), so
-tilemap + attrmap are **derived from the sheet** at build time; the
-`meta1`/`meta2` lists are labelled `MonsterPortraitMeta_*` records in
-src/monster_detail.asm and `MonsterPortraitMetaRecords` is fully symbolic.
+their attr palettes, OBJ tiles in OBJ pal 1-2). The 7×7 `bgmap` arrangements
+are `assets/monster_portrait/monster_portraits.tmx` — one Tiled layer pair per
+monster over its own tileset (open it in Tiled and toggle layers to see each
+assembled portrait BG); the maps in src/monster_detail.asm compile from it.
+(They happen to be the portrait converter's positional constant — family-G
+provenance — but the arrangement is committed as a viewable source file rather
+than a constant in tool code.) The `meta1`/`meta2` lists are labelled
+`MonsterPortraitMeta_*` records and `MonsterPortraitMetaRecords` is fully
+symbolic.
 
 ## Name + ability-text regions (BG, bank `$32`)
 
@@ -91,14 +95,12 @@ CGB palette mechanism this revealed (`$c101`/`$c141` WRAM shadow buffers).
 
 ## TODO
 
-- **Done — `$3c` tile sets carved:** the seven portrait tile sheets are now
-  `assets/monster_portrait/{tiger,mocchi,hare,gali,golem,suezo,phoenix}.2bpp`
-  (128 tiles / `$800` each), INCBINed by `src/gfx/monster_portraits.asm` as
-  `MonsterPortraitTiles_<Name>`, which `MonsterPortraitTileTable` now points at
-  by label. (Originally `$00`-padded `db` blobs split mid-sheet in analyzed.asm.)
-- Decide a fuller editable representation (BG `bgmap` + metasprites +
-  the bank-`$0f` palette block per monster) when the sprite/metasprite system is
-  brought under the asset pipeline — and lift the `.2bpp` sheets to PNG.
+- **Done — `$3c` tile sets carved, then lifted to the asset model:** the seven
+  sheets are colorized indexed PNGs (`assets/monster_portrait/monster_<name>/`),
+  the 7×7 `bgmap` arrangements are `monster_portraits.tmx`, and the metasprite
+  lists are labelled records — see "Asset form" above. The bank-`$0f` palette
+  blocks (`$7191+$80·id`) are still raw data in monster_detail.asm; carving
+  them per-asset (like the NPC-portrait palettes) is the remaining piece.
 - The id↔name mapping above is from color visual ID; cross-checking
   `wMonsterDiscStones` (Phoenix is index 6, `wMonsterDiscStones+6`) confirms the
   count and Phoenix.

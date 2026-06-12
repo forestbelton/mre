@@ -357,6 +357,55 @@ def tmx_frames_to_maps(tmx_path):
     return out
 
 
+def tmx_layer_to_map(tmx_path, layer_name, base_tile=128):
+    """Compile ONE named layer (+ its <layer>_pal twin) of a Tiled map into
+    (tilemap, attrmap) bytes. The map may hold several sheet tilesets (e.g. one
+    per monster, each layer drawn over its own); a gid resolves against
+    whichever tileset's range contains it, and the tile byte is the
+    $8800-signed VRAM tile number base_tile + (gid - firstgid). The 8-swatch
+    "palettes" tileset carries the per-cell CGB palette; Tiled flip flags map
+    to attr bits 5/6. (Used by the monster portraits --
+    assets/monster_portrait/monster_portraits.tmx.)"""
+    import xml.etree.ElementTree as ET
+
+    HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
+    root = ET.parse(tmx_path).getroot()
+    sheets = []                       # (firstgid, tilecount)
+    pal_first = None
+    for ts in root.findall("tileset"):
+        n = int(ts.get("tilecount", 0))
+        first = int(ts.get("firstgid"))
+        if n == 8:
+            pal_first = first
+        else:
+            sheets.append((first, n))
+    layers = {}
+    for ly in root.findall("layer"):
+        data = ly.find("data")
+        layers[ly.get("name")] = [int(t) for t in
+                                  data.text.replace("\n", ",").split(",") if t.strip()]
+    if layer_name not in layers or f"{layer_name}_pal" not in layers:
+        raise SystemExit(f"{tmx_path}: need layers {layer_name!r} + '{layer_name}_pal'")
+    gids, pals = layers[layer_name], layers[f"{layer_name}_pal"]
+    tmap, amap = bytearray(), bytearray()
+    for cell, (g, pg) in enumerate(zip(gids, pals)):
+        xf, yf = bool(g & HFLIP), bool(g & VFLIP)
+        raw = g & GIDMASK
+        for first, n in sheets:
+            if first <= raw < first + n:
+                vt = base_tile + (raw - first)
+                break
+        else:
+            raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} is empty/"
+                             "not a sheet tile")
+        if not 128 <= vt < 384:
+            raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> VRAM tile "
+                             f"{vt} (not addressable in $8800 BG mode)")
+        tmap.append(vt & 0xFF)
+        amap.append((pg - pal_first) | (xf << 5) | (yf << 6))
+    return bytes(tmap), bytes(amap)
+
+
 def cmd_maplib(args: argparse.Namespace) -> int:
     """A screen-library bank: one indexed sheet PNG (--tiles total, --banks 1 for
     alternate sets / 2 for stacked VRAM banks, --base = VRAM tile number of sheet
@@ -483,10 +532,6 @@ PORTRAIT_LAYOUTS = {
         0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x61, 0x64, 0x67, 0x6a, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c,
         0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x62, 0x65, 0x68, 0x6b, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d,
     ]),
-    # the 7x7 monster detail-screen background (VRAM bank 0, $8800)
-    "monster7x7": {"rows": 7, "cols": 7, "attr_or": 0x00,
-                   "map": bytes((0x80 + 8 * c + r) & 0xFF
-                                for r in range(7) for c in range(7))},
 }
 
 
@@ -869,7 +914,12 @@ def cmd_portrait(args: argparse.Namespace) -> int:
             comps.append(("palette_bg", pack(0, args.palettes_bg)))
         if args.palettes_obj:                                     # OBJ palettes follow them
             comps.append(("palette_obj", pack(args.palettes_bg * 4, args.palettes_obj)))
-    if getattr(args, "layout", None):
+    if getattr(args, "map", None):
+        # the arrangement is a Tiled source file (one layer pair per screen,
+        # possibly one tileset per sheet) -- see docs/asset_source_model.md.
+        tmap, amap = tmx_layer_to_map(d / args.map, args.map_layer)
+        comps += [("tilemap", tmap), ("attrmap", amap)]
+    elif getattr(args, "layout", None):
         # derive the maps from the layout constant + the indexed sheet (and the
         # composed reference for blank-collapse layouts) instead of committing
         # tilemap.bin/attrmap.bin. See docs/asset_source_model.md (family G).
@@ -997,6 +1047,11 @@ def main() -> int:
     pt.add_argument("--reference", default=None,
                     help="composed 11x20 indexed reference PNG (next to --png), "
                          "for --blank-byte layouts")
+    pt.add_argument("--map", default=None,
+                    help="Tiled .tmx (relative to --png) carrying the arrangement; "
+                         "compiled with --map-layer instead of a layout/bins")
+    pt.add_argument("--map-layer", default=None,
+                    help="layer name in --map (its _pal twin carries palettes)")
     pt.add_argument("--map-overrides", default="",
                     help="'cell:byte;cell:byte' tilemap pins for blank-cell/"
                          "blank-slot ties the rule can't decide")

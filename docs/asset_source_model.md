@@ -193,15 +193,28 @@ the component kinds above. `buildassets.py` stays the single build entry.
      descriptors of its own found yet — needs inventory first.
    - **monster portraits DONE (2026-06-12)** — another family-G find: all
      seven 7x7 detail-screen BG maps are the converter's positional constant
-     (`monster7x7` in `PORTRAIT_LAYOUTS`: byte = $80+8·col+row, attr bank
-     bit 0). The raw `assets/monster_portrait/*.2bpp` became colorized
-     indexed sheets (`monster_<name>/`, palettes from the per-monster block
-     `$0f:$7191+$80·id`; BG cells in their attr palettes, OBJ tiles in OBJ
-     pal 1-2, unreferenced slots grayscale); maps derived; the meta1/meta2
-     OBJ lists are labelled `MonsterPortraitMeta_*` records and the
-     `MonsterPortraitMetaRecords` table is fully symbolic.
-     `derive_portrait_maps` is now layout-parameterized (dims, `attr_or`,
-     small-sheet `$8800` slot addressing).
+     (byte = $80+8·col+row, attr bank bit 0). The raw
+     `assets/monster_portrait/*.2bpp` became colorized indexed sheets
+     (`monster_<name>/`, palettes from the per-monster block
+     `$0f:$7191+$80·id`); the meta1/meta2 OBJ lists are labelled
+     `MonsterPortraitMeta_*` records and the table is fully symbolic.
+     The arrangements are committed as **`monster_portraits.tmx`** — one
+     layer pair per monster over its own tileset (`tmx_layer_to_map`,
+     `map:`/`map_layer:` in assets.yaml) — NOT as an in-tool layout
+     constant, per the provenance-vs-source-form principle below.
+
+### Provenance vs source form (decided 2026-06-12)
+
+Family-G provenance (the bytes were machine-generated) does not by itself
+decide the committed source form. Where the generated arrangement is visible
+in an already-committed image (the NPC portraits: the sheet IS the picture,
+sliced into bands, and its per-tile palettes ARE the attrmap), deriving from
+the sheet is honest and adds no hidden state. But where derivation would bury
+the arrangement as a constant in tool code with no viewable file (the monster
+7x7s), prefer committing the arrangement as a Tiled map even though it is
+constant — a redundant-but-visible source file beats an invisible algorithm.
+Open question: whether the NPC-portrait layouts (`standard`/`pashute` in
+`PORTRAIT_LAYOUTS`) should also gain a TMX view for the same reason.
 5. **Scene frames + metasprites** — descriptors → map source; metasprites →
    asm records.
    **DONE 2026-06-12**: all 8 scenes' `metasprites.bin` are labelled
