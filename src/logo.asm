@@ -4,7 +4,7 @@
 ; (src/gfx/logo.asm). It is pure rendering: no state-machine logic. The intro
 ; dispatcher reaches it via the bank-0 handler IntroScene_TecmoLogo ($3580),
 ; which banks in $30, `call`s here, and advances the intro state -- see
-; RunIntroScene / IntroSceneTable. It calls shared home-bank routines
+; RunGameScene / GameSceneTable. It calls shared home-bank routines
 ; (BankVramCopy, BankMapCopyB, LoadPalettesBanked) defined in home.asm, and references the logo's
 ; tile/palette/map data (TecmoLogo*) carved into src/gfx/logo.asm.
 

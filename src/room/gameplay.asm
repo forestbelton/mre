@@ -484,7 +484,7 @@ Data_01_46e0:
 
 Func_01_46e6:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr z, Func_01_4748
 	ld a, [wActiveFloor]
@@ -507,13 +507,13 @@ Func_01_470d:
 	ld a, $03
 	ld [wC2D7], a
 	ld a, $0e
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_01_473a
 	FAR_CALL Cox_PlayFlashback
 	FAR_CALL SetTrioNpcState
 	ld a, $0e
-	call Func_00_1164
+	call SetStoryFlag
 	ld a, $03
 	ld [wGameSceneArg], a
 	ld a, SCENE_TOWN
@@ -541,7 +541,7 @@ Func_01_4759:
 	ret
 Func_01_476d:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jp nz, Func_01_46d5
 	call Func_01_48af
@@ -616,45 +616,45 @@ Func_01_47f0:
 	cp $05
 	jr nz, Func_01_47ed
 	ld a, $10
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_47fd:
 	ld a, $11
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4803:
 	ld a, $12
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4809:
 	ld a, $13
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_480f:
 	ld a, $14
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4815:
 	ld a, $15
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 
 Func_01_481b:
 	ld a, $16
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4821:
 	ld a, $17
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4827:
 	ld a, $18
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 
 Func_01_482d:
 	ld a, $19
-	call Func_00_119a
+	call TestStoryFlag
 	ret
 Func_01_4833:
 	ld a, [wRoomType]
@@ -690,43 +690,43 @@ Func_01_486d:
 	cp $05
 	ret nz
 	ld a, $10
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4879:
 	ld a, $11
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_487f:
 	ld a, $12
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4885:
 	ld a, $13
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_488b:
 	ld a, $14
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4891:
 	ld a, $15
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_4897:
 	ld a, $16
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_489d:
 	ld a, $17
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_48a3:
 	ld a, $18
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 	ld a, $19
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_48af:
@@ -806,7 +806,7 @@ Func_01_492c:
 	ld [wRoomType], a
 	ret
 Func_01_4937:
-	ld hl, $cfe9
+	ld hl, wStoryFlags
 	ld a, [wActiveFloor]
 	cp $0a
 	jr z, Func_01_4952
@@ -828,23 +828,23 @@ SECTION "analyzed_004952", ROMX[$4952], BANK[$01]
 
 Func_01_4952:
 	ld a, $01
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4958:
 	ld a, $03
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_495e:
 	ld a, $05
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4964:
 	ld a, $07
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_496a:
 	ld a, $09
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 Func_01_4970:
 	ld a, [wRoomType]
@@ -2052,7 +2052,7 @@ Func_01_57d0:
 	push hl
 	ld a, [$cf8e]
 	and $07
-	ld hl, $1209
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	ld a, [$cf8e]
@@ -2075,7 +2075,7 @@ Func_01_57f3:
 	push hl
 	ld a, [$cf8e]
 	and $07
-	ld hl, $1209
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	ld a, [$cf8e]
@@ -2776,21 +2776,21 @@ Func_01_5c9b:
 	ret
 Func_01_5c9d:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_01_5c9b
 	ld a, $01
 	ret
 Func_01_5ca8:
 	ld a, $0c
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_01_5c9b
 	ld a, $02
 	ret
 Func_01_5cb3:
 	ld a, $0d
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_01_5c9b
 	ld a, $02
@@ -2817,7 +2817,7 @@ Func_01_5cbe:
 
 Func_01_5ce2:
 	ld a, $00
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	xor a
@@ -2826,12 +2826,12 @@ Func_01_5ce2:
 	ld [wBossState], a
 	FAR_CALL StartTowerBossEncounter
 	ld a, $00
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5cff:
 	ld a, $02
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	ld a, $01
@@ -2840,12 +2840,12 @@ Func_01_5cff:
 	ld [wBossState], a
 	FAR_CALL StartTowerBossEncounter
 	ld a, $02
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5d1d:
 	ld a, $04
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	ld a, $02
@@ -2854,12 +2854,12 @@ Func_01_5d1d:
 	ld [wBossState], a
 	FAR_CALL StartTowerBossEncounter
 	ld a, $04
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5d3b:
 	ld a, $06
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	ld a, $03
@@ -2868,12 +2868,12 @@ Func_01_5d3b:
 	ld [wBossState], a
 	FAR_CALL StartTowerBossEncounter
 	ld a, $06
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5d59:
 	ld a, $08
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	ld a, $04
@@ -2882,7 +2882,7 @@ Func_01_5d59:
 	ld [wBossState], a
 	FAR_CALL StartTowerBossEncounter
 	ld a, $08
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5d77:
@@ -2896,22 +2896,22 @@ Func_01_5d77:
 
 Func_01_5d84:
 	ld a, $0c
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	FAR_CALL Pashute_StartTownScript
 	ld a, $0c
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Func_01_5d99:
 	ld a, $0d
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret nz
 	FAR_CALL Verde_StartDialogue
 	ld a, $0d
-	call Func_00_1164
+	call SetStoryFlag
 	ret
 
 Player_SummonMonster:

@@ -9,9 +9,12 @@ enum SCENE
     case INTRO
     skip
     case TOWN
-    REPT 5
-        skip ; story/cutscene
-    endr
+    ; the five town-location scenes (TOWN confirm sets 5+location)
+    case NAJI       ; the tower spot
+    case BODKA
+    case PASHUTE
+    case TOAMUNA
+    case VERDE
     REPT 6
         skip ; unused
     ENDR

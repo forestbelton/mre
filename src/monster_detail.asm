@@ -611,7 +611,7 @@ Func_0f_4588:
 	ret
 Func_0f_45ab:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_0f_45bd
 	ld hl, MonsterDetailBg2
@@ -627,7 +627,7 @@ Func_0f_45c7:
 	xor a
 	ldh [rVBK], a
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_0f_45eb
 	call WaitForHBlank
@@ -657,7 +657,7 @@ Func_0f_45eb:
 	ret
 Func_0f_4604:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	ret z
 	xor a
@@ -757,7 +757,7 @@ Func_0f_4690:
 	ld h, d
 	ld l, e
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_0f_46b4
 	ld de, $9c87
@@ -1073,7 +1073,7 @@ Func_0f_48f1:
 	ld h, [hl]
 	ld l, a
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr nz, Func_0f_4915
 	ldh a, [rSCY]
@@ -1210,7 +1210,7 @@ Func_0f_49dc:
 	ld d, [hl]
 	ld a, b
 	and $07
-	ld hl, $1209
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld a, [hl]
 	pop hl

@@ -916,7 +916,7 @@ Func_05_463a:
 	ret
 Func_05_4690:
 	xor a
-	ld hl, $cfe9
+	ld hl, wStoryFlags
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl+], a

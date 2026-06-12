@@ -533,7 +533,7 @@ ConfirmSaveFloor:
 	ld a, $05
 	ld [wRoomType], a
 	FAR_CALL SetupNewRun
-	FAR_CALL Func_00_3508
+	FAR_CALL EnterRoomStartScene
 	FAR_CALL Func_01_439e
 	call ResetScrollState
 	call LoadFloorByMode

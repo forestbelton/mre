@@ -209,7 +209,7 @@ TownConfirmSelection:
 	call FadePalettesToWhite
 	ld a, [wScreenInput]
 	ld [wGameSceneArg], a
-	add a, $05
+	add a, SCENE_NAJI
 	ld [wGameScene], a
 	ret
 
@@ -1035,10 +1035,10 @@ RoomStartPlaqueUserRoom:
 	; Code, was misfiled as data -- LIVE: falls through from the `jr z`
 	; above when the slot's status flag ($c7f6+slot) is nonzero. Flag 1 ->
 	; alternate status patch ($23:$7b4c); other values -> alternate unless
-	; [$c2ec] == $11 (then the normal patch).
+	; the user floor is full-width (wFloorWidth == 17).
 	cp $01
 	jr z, Func_30_474d
-	ld a, [$c2ec]
+	ld a, [wFloorWidth]
 	cp $11
 	jr z, Func_30_4752
 Func_30_474d:

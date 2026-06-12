@@ -113,7 +113,7 @@ InitGameSystems:
 	jr nz, .wait
 	call Func_00_35c8
 .update:
-	call InitAndRunIntroScene
+	call InitAndRunGameLoop
 	jr .update
 
 InitInterruptVectors:
@@ -2140,7 +2140,10 @@ Func_00_0e96:
 	pop bc
 	pop af
 	ret
-InitAndRunIntroScene:
+; The game's top-level loop: dispatch wGameScene through GameSceneTable
+; (farptr per scene), forever. Each handler runs one blocking screen/script
+; flow and sets the next wGameScene before returning here.
+InitAndRunGameLoop:
 	xor a
 	ld [wGameScene], a
 	ld [$c2a8], a
@@ -2148,14 +2151,14 @@ InitAndRunIntroScene:
 	ld [wGameScene], a
 	call ResetScrollState
 	FAR_CALL Func_05_463a
-RunIntroScene:
-	ld hl, $0f6e
+RunGameScene:
+	ld hl, GameSceneLoopBack
 	push hl
 	ld a, [wGameScene]
 	ld l, a
 	add a, a
 	add a, l
-	ld hl, $0f71
+	ld hl, GameSceneTable
 	rst AddAToHL
 	ld a, [hl+]
 	ld [$2fff], a
@@ -2163,32 +2166,33 @@ RunIntroScene:
 	ld h, [hl]
 	ld l, a
 	jp hl
-	jr RunIntroScene
+GameSceneLoopBack:
+	jr RunGameScene
 	ret
 
-IntroSceneTable:
-	farptr IntroScene_LoadTitle
-	farptr IntroScene_TecmoLogo
-	farptr IntroScene_Cutscene
-
-SECTION "analyzed_000f7d", ROM0[$0f7d]
-
-Data_00_0f7d:
-	farptr Func_00_3492, 17
-	farptr Naji_RunEncounter, 18
-	farptr Bodka_StartDialogue
-	farptr Pashute_StartTownScript
-	farptr Toamuna_StartScript
-	farptr Verde_StartDialogue
-
-SECTION "analyzed_000fa1", ROM0[$0fa1]
-
-Data_00_0fa1:
-	farptr Func_00_3508, 30
-	farptr Func_00_3508
-	farptr Func_01_439e
-	farptr Func_00_3508, 61
-	farptr Func_00_3508, 81
+; One farptr per SCENE_* value (scene.inc); zero rows are the unused ids.
+GameSceneTable:
+	farptr IntroScene_LoadTitle          ; 0 TITLE
+	farptr IntroScene_TecmoLogo          ; 1 LOGO
+	farptr IntroScene_Cutscene           ; 2 INTRO
+	db $00, $00, $00                     ; 3 (unused)
+	farptr EnterTownScene                ; 4 TOWN
+	farptr Naji_StartTownScript          ; 5 NAJI (the tower spot)
+	farptr Bodka_StartDialogue           ; 6 BODKA
+	farptr Pashute_StartTownScript       ; 7 PASHUTE
+	farptr Toamuna_StartScript           ; 8 TOAMUNA
+	farptr Verde_StartDialogue           ; 9 VERDE
+	db $00, $00, $00                     ; 10 (unused)
+	db $00, $00, $00                     ; 11 (unused)
+	db $00, $00, $00                     ; 12 (unused)
+	db $00, $00, $00                     ; 13 (unused)
+	db $00, $00, $00                     ; 14 (unused)
+	db $00, $00, $00                     ; 15 (unused)
+	farptr EnterNextRoomScene            ; 16 NEXT_ROOM
+	farptr EnterRoomStartScene           ; 17 ROOM_START
+	farptr Func_01_439e                  ; 18 ROOM (gameplay proper, bank $01)
+	farptr EnterRoomClearScene           ; 19 ROOM_CLEAR
+	farptr EnterTowerScene               ; 20 TOWER
 
 TestAabbOverlap:
 	push bc
@@ -2527,19 +2531,21 @@ Func_00_1150:
 	pop de
 	ret
 
-Func_00_1164:
+; Set story/progress flag #A (bit A&7 of wStoryFlags[A>>3]). These flags live
+; in the battery-saved block; e.g. flags $0c/$0d gate the town growth stages.
+SetStoryFlag:
 	push bc
 	push hl
 	push af
 	and $07
-	ld hl, $1209
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	pop af
 	sra a
 	sra a
 	sra a
-	ld hl, $cfe9
+	ld hl, wStoryFlags
 	rst AddAToHL
 	ld a, [hl]
 	or b
@@ -2548,19 +2554,20 @@ Func_00_1164:
 	pop bc
 	ret
 
-Func_00_117f:
+; Clear story flag #A.
+ClearStoryFlag:
 	push bc
 	push hl
 	push af
 	and $07
-	ld hl, $1211
+	ld hl, InvBitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	pop af
 	sra a
 	sra a
 	sra a
-	ld hl, $cfe9
+	ld hl, wStoryFlags
 	rst AddAToHL
 	ld a, [hl]
 	and b
@@ -2569,19 +2576,20 @@ Func_00_117f:
 	pop bc
 	ret
 
-Func_00_119a:
+; Test story flag #A: returns NZ (the isolated bit) if set.
+TestStoryFlag:
 	push bc
 	push hl
 	push af
 	and $07
-	ld hl, $1209
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	pop af
 	sra a
 	sra a
 	sra a
-	ld hl, $cfe9
+	ld hl, wStoryFlags
 	rst AddAToHL
 	ld a, [hl]
 	and b
@@ -2647,10 +2655,10 @@ Func_00_1203:
 	res 6, a
 	ret
 
-Data_00_1209:
+BitMaskTable:
 	db $01, $02, $04, $08, $10, $20, $40, $80
 
-Data_00_1211:
+InvBitMaskTable:
 	db $fe, $fd, $fb, $f7, $ef, $df, $bf, $7f
 
 InitProgressFlags:
@@ -3500,7 +3508,7 @@ EnterSelectedRoom:
 	ld [wRoomType], a
 	call LoadFloorByMode
 	FAR_CALL SetupNewRun
-	FAR_CALL Func_00_3508
+	FAR_CALL EnterRoomStartScene
 	FAR_CALL Func_01_439e
 	call ResetScrollState
 	ret
@@ -3558,7 +3566,7 @@ Func_00_1a06:
 	jr Func_00_19ba
 Func_00_1a1e:
 	FAR_CALL SetupNewRun
-	FAR_CALL Func_00_3508
+	FAR_CALL EnterRoomStartScene
 	FAR_CALL Func_01_439e
 	call ResetScrollState
 	call LoadFloorByMode
@@ -7390,15 +7398,20 @@ Func_00_3492:
 	ld h, a
 	call RenderTextToVram
 	ret
+
+; Scene 4 (TOWN): town stage = 2/1/0 by story flags $0d/$0c, cursor seeded
+; from wGameSceneArg, then the bank-$30 town screen (which sets the next
+; scene from the chosen location).
+EnterTownScene:
 	ld a, $0d
-	call Func_00_119a
+	call TestStoryFlag
 	and a
 	jr z, Func_00_34af
 	ld a, $02
 	jr Func_00_34bc
 Func_00_34af:
 	ld a, $0c
-	call Func_00_119a
+	call TestStoryFlag
 	and a
 	jr z, Func_00_34bb
 	ld a, $01
@@ -7406,7 +7419,7 @@ Func_00_34af:
 Func_00_34bb:
 	xor a
 Func_00_34bc:
-	ld [$d0fb], a
+	ld [wTownStage], a
 	ld a, [wGameSceneArg]
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
@@ -7442,7 +7455,8 @@ Func_00_3502:
 	ld [wGameScene], a
 	ret
 
-Func_00_3508:
+; Scene 17 (ROOM_START); falls through to SCENE_ROOM unless a user room.
+EnterRoomStartScene:
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_Silence
@@ -7457,6 +7471,8 @@ Func_00_3508:
 	ld a, SCENE_ROOM
 	ld [wGameScene], a
 	ret
+; Scene 16 (NEXT_ROOM): the between-floors flight screen.
+EnterNextRoomScene:
 	call ResetScrollState
 	push af
 	ld a, SOUND_BGM_RoomTransition
@@ -7472,12 +7488,17 @@ Func_00_3508:
 	call PlaySoundTracked
 	pop af
 	ret
+; Scene 19 (ROOM_CLEAR): the results/tally screen.
+EnterRoomClearScene:
 	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
 	call DrawRoomClearScreen
 	FAR_CALL Func_05_46ba
 	ret
+; Scene 20 (TOWER): tower-open cutscene (first time only, per wC2D7), then
+; Naji's between-floors encounter and back to town.
+EnterTowerScene:
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked

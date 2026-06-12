@@ -7,7 +7,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 ## Usage
 
 ```
-ROM0: 15700 bytes used / 684 free
+ROM0: 15721 bytes used / 663 free
 ROMX: 750410 bytes used / 281782 free in 63 banks
 WRAM0: 1762 bytes used / 2334 free
 WRAMX: 60 bytes used / 4036 free in 1 bank
@@ -18,7 +18,7 @@ HRAM: 75 bytes used / 52 free
 
 | bank | region | used | free | sections | analyzed | source file(s) |
 |---|---|--:|--:|--:|--:|---|
-| $00 | ROM0 | 15663 | 721 | 107 | 93 | home.asm, engine.asm, layout.asm, sound.asm |
+| $00 | ROM0 | 15684 | 700 | 105 | 91 | home.asm, engine.asm, layout.asm, sound.asm |
 | $01 | ROMX | 15290 | 1094 | 29 | 25 | gameplay.asm, layout.asm, item.asm |
 | $02 | ROMX | 9024 | 7360 | 1 | 1 | entity_sprites.asm |
 | $03 | ROMX | 16362 | 22 | 11 | 0 | engine.asm, monster.asm, boss.asm, player.asm, fx.asm, environment.asm |
@@ -83,7 +83,7 @@ HRAM: 75 bytes used / 52 free
 
 ## Sections by bank
 
-### $00 — ROM0 (107 sections, 93 analyzed)
+### $00 — ROM0 (105 sections, 91 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
@@ -99,9 +99,7 @@ HRAM: 75 bytes used / 52 free
 | $0060-$0062 | 3 | home.asm | RST_60 |
 | $0100-$0a2f | 2352 | home.asm | Header |
 | $0a30-$0b4d | 286 | sound.asm | Sound API |
-| $0b4e-$0f79 | 1068 | home.asm | analyzed_000b4e |
-| $0f7d-$0f8e | 18 | home.asm | analyzed_000f7d |
-| $0fa1-$1234 | 660 | home.asm | analyzed_000fa1 |
+| $0b4e-$1234 | 1767 | home.asm | analyzed_000b4e |
 | $1236-$1241 | 12 | home.asm | analyzed_001236 |
 | $1243-$1245 | 3 | home.asm | analyzed_001243 |
 | $1247-$124a | 4 | home.asm | analyzed_001247 |

@@ -1002,10 +1002,10 @@ RemoveKeyPass:
 	ret
 
 ; RemoveSilverKeyGate ($56c5) -- gate the silver-key strip on progress flag $09
-; (Func_00_119a) and Func_01_47bc; falls through to RemoveSilverKeyPass to strip.
+; (TestStoryFlag) and Func_01_47bc; falls through to RemoveSilverKeyPass to strip.
 RemoveSilverKeyGate:
 	ld a, $09
-	call Func_00_119a
+	call TestStoryFlag
 	or a
 	jr z, RemoveSilverKeyPass
 	call Func_01_47bc
@@ -1277,7 +1277,7 @@ TrackItemCollection:
 	ld d, a
 	ld a, d
 	and $07
-	ld hl, $1209           ; bit-mask table
+	ld hl, BitMaskTable
 	rst AddAToHL
 	ld b, [hl]
 	ld a, d

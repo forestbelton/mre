@@ -73,7 +73,7 @@ wSpawnPtr::         ds 2    ; $C2A1: spawn context pointer, big-endian hi/lo (->
 SECTION "wram_game_scene", WRAM0[$C2A7]
 ; Top-level game-flow state. wGameScene is the current scene/mode index; ~25
 ; transition sites across the banks just `ld [wGameScene], a` to switch scene,
-; and one dispatcher (RunIntroScene, near $00:$0f44) reads it, multiplies by 3,
+; and one dispatcher (RunGameScene, near $00:$0f44) reads it, multiplies by 3,
 ; and far-jumps through the {bank,lo,hi} scene table at $00:$0f71. wGameSceneArg
 ; rides along as an entry parameter for the scene being switched to (e.g. the
 ; town screen reads it as its initial menu selection -> wScreenInput/wScreenPhase).
@@ -265,7 +265,10 @@ wMonsterUses::      ds 7    ; $CFE1: per-monster (0-6) summon uses remaining, st
                             ;   as BCD (0-99). Pashute's shrine adds 5 via `add a,$05`
                             ;   + `daa` (Func_18_4074); read through wActiveMonster
                             ;   (Func_18_403C). Tiger=$CFE1 … Suezo=$CFE6, Phenix=$CFE7.
-                    ds 7    ; $CFE8-$CFEE
+                    ds 1    ; $CFE8
+wStoryFlags::       ds 6    ; $CFE9: story/progress flag bitfield (saved), accessed by
+                            ;   flag index via Set/Clear/TestStoryFlag -- bit (n&7) of
+                            ;   byte n>>3. Flags $0c/$0d = town growth stages.
 wSilverKeys::       ds 1    ; $CFEF: silver keys held (unlock tower doors). Identified
                             ;   by value-match (the sole "10" in the block); code
                             ;   xref still TBD.

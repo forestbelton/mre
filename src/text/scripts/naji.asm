@@ -340,6 +340,8 @@ Naji_RunEncounter:
 	FAR_CALL Script_FadeOutPortrait
 	ret
 
+; Scene 5 (NAJI) -- the town's tower spot: Naji's doorway menu script.
+Naji_StartTownScript:
 	call Naji_BuildPortraitScene
 	ld hl, NajiScript
 	call ScriptDispatcherEnterAfterCall
