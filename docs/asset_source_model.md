@@ -139,6 +139,18 @@ the component kinds above. `buildassets.py` stays the single build entry.
    reference (no inference left: palette explicit, tilemap positional);
    per-portrait composed `portrait.png` replaces `tilemap.bin`/`attrmap.bin`.
    Covers the two-bank ones (mistral/nada) with the bank-region model.
+   **DONE 2026-06-12, better than planned**: the maps derive from the layout
+   constant + the indexed SHEET alone — no composed reference needed at all
+   for 8 of 9 (positional allocation is bijective, so the sheet's per-tile
+   palette IS the attrmap; the tilemap is the `standard`/`pashute` constant in
+   `PORTRAIT_LAYOUTS`). Mistral additionally collapses blank cells to `$80`
+   where their slots were reused, so it carries a composed `reference.png` +
+   2 `map_overrides` pins (blank-cell/blank-slot ties that render identically
+   either way). 17 files deleted (8×2 bins + pashute's RGB reference); the
+   old RGB-inference `derive_portrait_maps` is gone. Residue: the nada pair
+   keeps its bins — its maps use a different allocator (bbox-positional with
+   blank-collapse, authored against the intro sheet across two banks); model
+   it later or accept the bins.
 3. **Map source format for family A** — pick the format (decision below),
    write the compiler + a decode bootstrap, convert the 6 screens + intro(?);
    re-express the already-structured asm screens (editor/$2b/cox/room_screen)

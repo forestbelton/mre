@@ -304,146 +304,81 @@ def cmd_scene(args: argparse.Namespace) -> int:
     return 0
 
 
-def parse_overrides(s: str):
-    """'r,c,p;r,c,p' -> [(row,col,palette), ...] (image-irreducible palette ties)."""
-    out = []
-    for tok in (s or "").split(";"):
-        tok = tok.strip()
-        if tok:
-            r, c, p = tok.split(",")
-            out.append((int(r), int(c), int(p)))
-    return out
+# --- portrait BG maps: reconstructed allocator output ------------------------
+# The portrait converter allocated the 11x20 base picture positionally, with NO
+# dedup: top band (rows 0-7) column-major 8-deep from $80 (byte = $80+8*col+row,
+# wrapping into $00-$1f for cols 16-19), bottom band (rows 8-10) packed into the
+# leftover 8-byte groups from $20. Two packings exist (most portraits vs
+# pashute); both are content-independent constants, byte-identical across every
+# portrait that uses them. See docs/asset_source_model.md (family G).
+def _portrait_layout(bottom):
+    top = [(0x80 + 8 * c + r) & 0xFF for r in range(8) for c in range(20)]
+    return bytes(top) + bytes(bottom)
 
 
-def derive_portrait_maps(ref_path, tiles, palbg, rows, cols, bank, pal_overrides):
-    """Re-derive (tilemap, attrmap) for a single-VRAM-bank, no-flip portrait from
-    its rendered reference PNG + the tile sheet + BG palettes -- byte-exact, so the
-    opaque tilemap.bin/attrmap.bin no longer need to be committed.
+PORTRAIT_LAYOUTS = {
+    "standard": _portrait_layout([
+        0x20, 0x28, 0x30, 0x38, 0x40, 0x48, 0x50, 0x58, 0x23, 0x2b, 0x33, 0x3b, 0x43, 0x4b, 0x53, 0x5b, 0x26, 0x2e, 0x36, 0x3e,
+        0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c, 0x27, 0x2f, 0x37, 0x3f,
+        0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d, 0x46, 0x47, 0x4e, 0x4f,
+    ]),
+    "pashute": _portrait_layout([
+        0x20, 0x28, 0x30, 0x38, 0x40, 0x48, 0x50, 0x58, 0x60, 0x63, 0x66, 0x69, 0x23, 0x2b, 0x33, 0x3b, 0x43, 0x4b, 0x53, 0x5b,
+        0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x61, 0x64, 0x67, 0x6a, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c,
+        0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x62, 0x65, 0x68, 0x6b, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d,
+    ]),
+}
 
-    tilemap: the original tool linearised the cells into the sheet column-major
-    within horizontal bands, addressed $8800-signed (tilemap byte b -> tiles[b] for
-    b>=128, tiles[b+256] otherwise). So the tilemap is positional; we infer the
-    layout model from the unambiguous cells -- band split (where contiguity breaks),
-    a learned top-band linear base(c)=(A+B*c)%256, and bottom-band column runs pinned
-    by the bijection (each sheet tile used once) + the +8 column stride.
-    attrmap: bank bit | per-cell BG palette. The palette is region-based, recovered
-    by matching the now-known exact tile's colours and spreading by neighbour
-    consensus; the few image-irreducible ties come from pal_overrides."""
-    from PIL import Image
-    from collections import Counter
 
-    NT, NPAL = len(tiles) // 16, len(palbg) // 8
-    rpx = Image.open(ref_path).convert("RGB").load()
+def derive_portrait_maps(sheet_png, layout, blank_byte=None, ref_png=None,
+                         map_overrides=None):
+    """Derive (tilemap, attrmap) for a positional (family-G) portrait.
 
-    def palcol(p):
-        cs = []
-        for ci in range(4):
-            o = p * 8 + ci * 2
-            w = palbg[o] | (palbg[o + 1] << 8)
-            cs.append(rgb555_to_888(w))
-        return cs
+    tilemap = the named layout constant. attrmap = 8 | palette, where each
+    cell's palette is the display palette of its slot's tile in the INDEXED
+    sheet PNG (positional allocation is bijective, so per-tile == per-cell).
 
-    PAL = [palcol(p) for p in range(NPAL)]
-    TILEPAT = [tile_to_indices(tiles[i * 16:i * 16 + 16]) for i in range(NT)]
+    blank_byte: some portraits (mistral -> $80) don't keep every cell's tile at
+    its positional slot -- blank cells were collapsed to the shared blank tile
+    and their slots reused for other art. The rule that reproduces the ROM:
+    a cell keeps its positional byte iff the sheet still holds the cell's exact
+    pixels at that slot; otherwise it gets `blank_byte`. The cell's pixels (and
+    its palette) come from `ref_png`, the composed 11x20 reference (indexed,
+    pixel = palette*4 + value)."""
+    w, h, px, _ = read_indexed_png(Path(sheet_png))
+    layout_bytes = PORTRAIT_LAYOUTS[layout]
 
-    def block(cell):
-        r0, c0 = (cell // cols) * 8, (cell % cols) * 8
-        return [rpx[c0 + x, r0 + y] for y in range(8) for x in range(8)]
+    def slot_vals(byte):
+        t = byte if byte >= 128 else byte + 256       # $8800-signed, bank-1 sheet
+        bx, by = (t % 16) * 8, (t // 16) * 8
+        return [px[(by + y) * w + bx + x] % 4 for y in range(8) for x in range(8)]
 
-    BLOCK = [block(i) for i in range(rows * cols)]
+    def slot_pal(byte):
+        t = byte if byte >= 128 else byte + 256
+        bx, by = (t % 16) * 8, (t // 16) * 8
+        return px[by * w + bx] // 4                   # tiles are palette-uniform
 
-    # --- tilemap: candidate sheet-bytes per cell (signed addressing) ---
-    rgbidx: dict = {}
-    for ti in range(128, NT):
-        b = ti & 0xFF
-        for p in range(NPAL):
-            rgbidx.setdefault(tuple(PAL[p][v] for v in TILEPAT[ti]), set()).add(b)
-    CAND = [rgbidx.get(tuple(BLOCK[i]), set()) for i in range(rows * cols)]
+    if blank_byte is None:
+        amap = bytes(8 | slot_pal(layout_bytes[cell]) for cell in range(220))
+        return layout_bytes, amap
 
-    def band_base(c, lo, hi):
-        sets = [{(v - (r - lo)) % 256 for v in CAND[r * cols + c]} for r in range(lo, hi)]
-        return set.intersection(*sets) if all(sets) else set()
-
-    breaks: Counter = Counter()
-    for c in range(cols):
-        for r in range(1, rows):
-            a, b = CAND[(r - 1) * cols + c], CAND[r * cols + c]
-            if len(a) == 1 and len(b) == 1 and next(iter(b)) != (next(iter(a)) + 1) % 256:
-                breaks[r] += 1
-    K = breaks.most_common(1)[0][0] if breaks else rows
-    known = {c: next(iter(band_base(c, 0, K))) for c in range(cols) if len(band_base(c, 0, K)) == 1}
-    csk = sorted(known)
-    B = ((known[csk[1]] - known[csk[0]]) * pow(csk[1] - csk[0], -1, 256)) % 256
-    A = (known[csk[0]] - B * csk[0]) % 256
-    topbase = [(A + B * c) % 256 for c in range(cols)]
-    used = {(topbase[c] + r) % 256 for c in range(cols) for r in range(K)}
-    botbase: dict = {c: None for c in range(cols)}
-
-    def fits(c, base):
-        return all((base + (r - K)) % 256 not in used for r in range(K, rows))
-
-    def claim(c, base):
-        botbase[c] = base
-        used.update((base + (r - K)) % 256 for r in range(K, rows))
-
-    for _ in range(cols):                                   # pass 1: unique runs
-        prog = False
-        for c in sorted((c for c in range(cols) if botbase[c] is None),
-                        key=lambda c: len([b for b in band_base(c, K, rows) if fits(c, b)])):
-            opts = [b for b in band_base(c, K, rows) if fits(c, b)]
-            if len(opts) == 1:
-                claim(c, opts[0]); prog = True
-        if not prog:
-            break
-    for _ in range(cols):                                   # pass 2: +8 column stride
-        prog = False
-        for c in range(cols):
-            if botbase[c] is not None:
-                continue
-            opts = [b for b in band_base(c, K, rows) if fits(c, b)]
-            pref = None
-            if c > 0 and botbase[c - 1] is not None and (botbase[c - 1] + 8) % 256 in opts:
-                pref = (botbase[c - 1] + 8) % 256
-            elif c < cols - 1 and botbase[c + 1] is not None and (botbase[c + 1] - 8) % 256 in opts:
-                pref = (botbase[c + 1] - 8) % 256
-            elif len(opts) == 1:
-                pref = opts[0]
-            if pref is not None:
-                claim(c, pref); prog = True
-        if not prog:
-            break
-    tmap = bytearray(rows * cols)
-    for c in range(cols):
-        for r in range(rows):
-            tmap[r * cols + c] = (topbase[c] + r) % 256 if r < K else (botbase[c] + (r - K)) % 256
-
-    # --- attrmap: bank bit | per-cell BG palette ---
-    P: list = [None] * (rows * cols)
-    pcand: list = [None] * (rows * cols)
-    for cell in range(rows * cols):
-        b = tmap[cell]
-        pat = TILEPAT[b if b >= 128 else b + 256]
-        pcand[cell] = [p for p in range(NPAL) if all(PAL[p][pat[i]] == BLOCK[cell][i] for i in range(64))]
-        if len(pcand[cell]) == 1:
-            P[cell] = pcand[cell][0]
-    for _ in range(rows + cols):                            # spread by 8-neighbour consensus
-        for cell in range(rows * cols):
-            if P[cell] is not None:
-                continue
-            r0, c0 = cell // cols, cell % cols
-            nb = [P[(r0+dr)*cols + (c0+dc)]
-                  for dr in (-1, 0, 1) for dc in (-1, 0, 1)
-                  if (dr or dc) and 0 <= r0+dr < rows and 0 <= c0+dc < cols
-                  and P[(r0+dr)*cols + (c0+dc)] in pcand[cell]]
-            if nb:
-                P[cell] = Counter(nb).most_common(1)[0][0]
-    for cell in range(rows * cols):
-        if P[cell] is None:
-            P[cell] = pcand[cell][0] if pcand[cell] else 0
-    for (r, c, p) in pal_overrides:
-        P[r * cols + c] = p
-    amap = bytes((bank << 3) | P[cell] for cell in range(rows * cols))
-    return bytes(tmap), amap
+    rw, rh, rpx, _ = read_indexed_png(Path(ref_png))
+    assert (rw, rh) == (160, 88), "portrait reference must be 20x11 cells"
+    tmap = bytearray()
+    amap = bytearray()
+    for cell in range(220):
+        r, c = cell // 20, cell % 20
+        block = [rpx[(r * 8 + y) * rw + c * 8 + x] for y in range(8) for x in range(8)]
+        vals = [q % 4 for q in block]
+        keep = slot_vals(layout_bytes[cell]) == vals
+        tmap.append(layout_bytes[cell] if keep else blank_byte)
+        amap.append(8 | (block[0] // 4))              # palette explicit in the reference
+    # measured override residue: a blank cell whose positional slot is ALSO blank
+    # renders identically either way, and the original tool chose inconsistently
+    # (mistral: 2 cells point at $80 despite a blank slot). Pinned per cell.
+    for cell, byte in (map_overrides or {}).items():
+        tmap[int(cell)] = byte
+    return bytes(tmap), bytes(amap)
 
 
 def gen_sprite_region(manifest_path, tiles, tiles2=None):
@@ -769,13 +704,17 @@ def cmd_portrait(args: argparse.Namespace) -> int:
             comps.append(("palette_bg", pack(0, args.palettes_bg)))
         if args.palettes_obj:                                     # OBJ palettes follow them
             comps.append(("palette_obj", pack(args.palettes_bg * 4, args.palettes_obj)))
-    if getattr(args, "reference", None):
-        # derive the maps from the rendered reference image (BG layer) instead of
-        # committing tilemap.bin/attrmap.bin. Needs the bank-1 tiles + BG palettes.
-        palbg = next(data for name, data in comps if name == "palette_bg")
+    if getattr(args, "layout", None):
+        # derive the maps from the layout constant + the indexed sheet (and the
+        # composed reference for blank-collapse layouts) instead of committing
+        # tilemap.bin/attrmap.bin. See docs/asset_source_model.md (family G).
+        bb = int(args.blank_byte, 0) if getattr(args, "blank_byte", None) else None
+        mo = {int(k, 0): int(v, 0)
+              for k, v in (tok.split(":") for tok in
+                           (getattr(args, "map_overrides", "") or "").split(";") if tok)}
         tmap, amap = derive_portrait_maps(
-            d / args.reference, comps[0][1], palbg, args.rows, args.cols,
-            args.bank, parse_overrides(args.pal_overrides))
+            png, args.layout, bb,
+            d / args.reference if getattr(args, "reference", None) else None, mo)
         comps += [("tilemap", tmap), ("attrmap", amap)]
     else:
         comps += [
@@ -864,14 +803,18 @@ def main() -> int:
     pt.add_argument("--palettes-bg", type=int, default=0,
                     help="BG palettes in the PNG table (0 = grayscale, no palette.bin)")
     pt.add_argument("--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones")
+    pt.add_argument("--layout", default=None, choices=sorted(PORTRAIT_LAYOUTS),
+                    help="derive tilemap/attrmap from this allocator layout + the "
+                         "indexed sheet, instead of committing the map bins")
+    pt.add_argument("--blank-byte", default=None,
+                    help="layouts that collapse blank cells to a shared blank tile "
+                         "(e.g. 0x80); needs --reference for which cells are blank")
     pt.add_argument("--reference", default=None,
-                    help="rendered reference PNG (next to --png); derive the maps from it "
-                         "instead of committing tilemap.bin/attrmap.bin")
-    pt.add_argument("--rows", type=int, default=0, help="map rows (with --reference)")
-    pt.add_argument("--cols", type=int, default=0, help="map cols (with --reference)")
-    pt.add_argument("--bank", type=int, default=1, help="VRAM bank for attr bit 3 (single-bank)")
-    pt.add_argument("--pal-overrides", default="",
-                    help="image-irreducible palette ties: 'r,c,p;r,c,p'")
+                    help="composed 11x20 indexed reference PNG (next to --png), "
+                         "for --blank-byte layouts")
+    pt.add_argument("--map-overrides", default="",
+                    help="'cell:byte;cell:byte' tilemap pins for blank-cell/"
+                         "blank-slot ties the rule can't decide")
     pt.add_argument("--sprites", default=None,
                     help="metasprite/patch manifest (next to --png); regenerates the "
                          "OBJ/BG overlay data region into sprites.bin")

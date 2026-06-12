@@ -52,10 +52,12 @@ title:
   mode: screen
   png: screen/title/title.png
 
-# Character portraits (src/gfx/portrait/*.asm; grayscale, palettes not yet located).
+# Character portraits (src/gfx/portrait/*.asm). Maps are derived from the layout
+# constant + the indexed sheet (layout:); only the nada pair still commits map bins.
 kalum:
   mode: portrait
   png: portrait/kalum/kalum.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5b18): eyes blink-animation frames + shoulder/collar + Selketo eye.
@@ -64,6 +66,7 @@ kalum:
 toamuna:
   mode: portrait
   png: portrait/toamuna/toamuna.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5ae7): two static expressions (default + alt), each a
@@ -73,6 +76,7 @@ toamuna:
 rafaga:
   mode: portrait
   png: portrait/rafaga/rafaga.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7557-$75ec): two-frame eyes/blink animation + three static
@@ -82,6 +86,7 @@ rafaga:
 tempest:
   mode: portrait
   png: portrait/tempest/tempest.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7625-$76da): two-frame eyes/blink animation + three static
@@ -91,6 +96,7 @@ tempest:
 naji:
   mode: portrait
   png: portrait/naji/naji.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7526-$762b): talking eyes-animation + smile expression, vest,
@@ -100,14 +106,9 @@ naji:
 pashute:
   mode: portrait
   png: portrait/pashute/pashute.png
+  layout: pashute          # its own bottom-band packing; maps derived, no bins
   palettes_bg: 6
   palettes_obj: 6
-  # Maps derived from the rendered BG reference image (no committed tilemap/attrmap,
-  # no palette overrides -- 8-neighbour consensus resolves every cell).
-  reference: reference.png
-  rows: 11
-  cols: 20
-  bank: 1
   # Metasprite/patch overlay region ($5a3e-$5bdc): eyes blink-animation frames,
   # shoulders, collar, sad/shocked faces -- layered source (one PNG/block + sprites.yaml).
   sprites: sprites/sprites.yaml
@@ -115,16 +116,17 @@ pashute:
 bodka:
   mode: portrait
   png: portrait/bodka/bodka.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5b59): 3-frame talking-eye animation + chest + smile
-  # expression -- the layered source (one PNG/block + sprites.yaml). eyes_frame2's BG
-  # palette is image-irreducible, pinned by `pal:` in the manifest.
+  # expression -- the layered source (one PNG/block + sprites.yaml).
   sprites: sprites/sprites.yaml
 
 verde:
   mode: portrait
   png: portrait/verde/verde.png
+  layout: standard
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($769b-$788e): 3-frame talking-eye animation + 2 static metasprites
@@ -137,14 +139,22 @@ verde:
 mistral:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles (the girl
   mode: portrait             # in the red hood; the bg silhouette is her monster Ferious)
   png: portrait/mistral/mistral.png
+  # standard layout, but blank cells collapse to the shared blank tile $80 and
+  # their slots were reused for overlay art; reference.png (composed, indexed)
+  # says which cells keep their slot. Two blank-cell/blank-slot ties render
+  # identically either way -- the original tool's arbitrary picks, pinned.
+  layout: standard
+  blank_byte: '0x80'
+  reference: reference.png
+  map_overrides: {123: 0x80, 143: 0x80}
   tiles0: 128
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($623e-$6536): Mistral's 3-frame body/face animation -- a big two-bank
   # body patch + face/hat/tassels metasprites per frame -- plus her collar and the
   # ferious_eye glow on the bg monster silhouette (Ferious is BG tilemap, not overlay).
-  # frame1's body patch mixes tile banks (bank0 map); multi-palette patches/runs pin
-  # image-irreducible cells via idx/pal_cells.
+  # frame1's body patch mixes tile banks (bank0 map); a few pixel-twin tiles pin
+  # via idx.
   sprites: sprites/sprites.yaml
 
 nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
@@ -157,7 +167,7 @@ nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   # animation (snap_body two-bank 5x9 patch + snap_hand metasprite each, intro-only) plus
   # her talking-mouth/face frames, the angry/rage expression, and the monster_eye glow.
   # Some metasprite records draw from the bank-0 sheet (per-record bank0 map, like the
-  # patches); the busy two-bank snap_body patches pin image-irreducible cells via idx/pal_cells.
+  # patches); the busy two-bank snap_body patches pin pixel-twin tiles via idx.
   sprites: sprites/sprites.yaml
 
 # nada_scene2 reuses nada_intro's $1c:$7000 palette (and bank-0 sheet); its PNG is
