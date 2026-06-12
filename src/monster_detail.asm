@@ -2059,7 +2059,7 @@ MonsterPortraitBg_Phoenix:  ; 7x7 BG behind the Phoenix portrait
 	INCBIN "assets/monster_phoenix/attrmap.bin"
 ; Portrait metasprite lists (DrawMetasprite: count, {dy,dx,tile,attr}; 8x16
 ; OBJs from the $3c monster sheet, OBJ pals 1/2). Static + grid-aligned, so
-; they compile from the <m>_obj layers of monster_portraits.tmx -- the layers
+; they compile from the obj/obj2 layers of assets/summon/<m>.tmx -- the layers
 ; that complete the portraits over the BG (meta1 above meta2: lower OAM index
 ; wins on GB).
 MonsterPortraitMeta_Tiger:

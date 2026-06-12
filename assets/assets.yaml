@@ -291,63 +291,69 @@ textui:
   maps: [textui.tmx]
 
 # Friendly-monster detail-screen portraits (bank $3c tiles + bank $0f maps,
-# src/gfx/monster_portraits.asm + src/monster_detail.asm): seven 128-tile
-# sheets -> VRAM $8800. The 7x7 BG-behind-the-portrait arrangements are the
-# shared monster_portraits.tmx (one layer pair per monster over its own
-# tileset -- open in Tiled and toggle layers; family-G provenance, but the
-# arrangement is a source file, not a tool constant).
-
+# src/gfx/monster_portraits.asm + src/monster_detail.asm). Flat per-monster
+# sources: assets/summon/<m>.png (128-tile indexed sheet -> VRAM $8800) +
+# <m>.tmx -- open one in Tiled and see that monster complete (layer "map" =
+# the 7x7 BG, "obj"/"obj2" = the static OBJ overlays, all compiled back to
+# the ROM maps/record lists). `out:` keeps the per-monster build dirs.
 monster_tiger:
   mode: portrait
-  png: monster_portrait/monster_tiger/monster_tiger.png
+  png: summon/tiger.png
+  out: monster_tiger
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: tiger
-  obj_layers: [tiger_obj]
+  map: tiger.tmx
+  map_layer: map
+  obj_layers: [obj]
 
 monster_mocchi:
   mode: portrait
-  png: monster_portrait/monster_mocchi/monster_mocchi.png
+  png: summon/mocchi.png
+  out: monster_mocchi
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: mocchi
-  obj_layers: [mocchi_obj, mocchi_obj2]
+  map: mocchi.tmx
+  map_layer: map
+  obj_layers: [obj, obj2]
 
 monster_hare:
   mode: portrait
-  png: monster_portrait/monster_hare/monster_hare.png
+  png: summon/hare.png
+  out: monster_hare
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: hare
-  obj_layers: [hare_obj]
+  map: hare.tmx
+  map_layer: map
+  obj_layers: [obj]
 
 monster_gali:
   mode: portrait
-  png: monster_portrait/monster_gali/monster_gali.png
+  png: summon/gali.png
+  out: monster_gali
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: gali
-  obj_layers: [gali_obj, gali_obj2]
+  map: gali.tmx
+  map_layer: map
+  obj_layers: [obj, obj2]
 
 monster_golem:
   mode: portrait
-  png: monster_portrait/monster_golem/monster_golem.png
+  png: summon/golem.png
+  out: monster_golem
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: golem
-  obj_layers: [golem_obj]
+  map: golem.tmx
+  map_layer: map
+  obj_layers: [obj]
 
 monster_suezo:
   mode: portrait
-  png: monster_portrait/monster_suezo/monster_suezo.png
+  png: summon/suezo.png
+  out: monster_suezo
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: suezo
-  obj_layers: [suezo_obj]
+  map: suezo.tmx
+  map_layer: map
+  obj_layers: [obj]
 
 monster_phoenix:
   mode: portrait
-  png: monster_portrait/monster_phoenix/monster_phoenix.png
+  png: summon/phoenix.png
+  out: monster_phoenix
   tiles1: 128
-  map: ../monster_portraits.tmx
-  map_layer: phoenix
+  map: phoenix.tmx
+  map_layer: map

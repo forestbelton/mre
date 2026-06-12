@@ -29,20 +29,18 @@ list. (The palettes were later located: the per-monster `$80`-byte block at
 `$0f:$7191 + $80*id` fills BG palettes 4-6 and OBJ palettes 1-2 —
 see docs/palettes.md.)
 
-**Asset form (2026-06-12, docs/asset_source_model.md):** each tile set is the
-colorized indexed sheet `assets/monster_portrait/monster_<name>/` (BG cells in
-their attr palettes, OBJ tiles in OBJ pal 1-2). The 7×7 `bgmap` arrangements
-are `assets/monster_portrait/monster_portraits.tmx` — one Tiled layer pair per
-monster over its own tileset, **plus `<m>_obj`/`<m>_obj2` layers carrying the
-meta1/meta2 OBJ overlays** (static and grid-aligned, so they are faithfully
-map-representable; the sheets' OBJ colour-0 is tRNS-transparent, so toggling a
-monster's layers in Tiled shows the complete composited portrait). The maps
-AND the metasprite record lists in src/monster_detail.asm compile from it.
-(They happen to be the portrait converter's positional constant — family-G
-provenance — but the arrangement is committed as a viewable source file rather
-than a constant in tool code.) The `meta1`/`meta2` lists are labelled
-`MonsterPortraitMeta_*` records and `MonsterPortraitMetaRecords` is fully
-symbolic.
+**Asset form (2026-06-12, docs/asset_source_model.md):** flat per-monster
+sources `assets/summon/<name>.png` + `<name>.tmx`. The PNG is the colorized
+indexed 128-tile sheet (BG cells in their attr palettes, OBJ tiles in OBJ pal
+1-2, colour-0 tRNS-transparent); the TMX holds layer `map` (the 7×7 `bgmap`)
+plus `obj`/`obj2` (the static, grid-aligned meta1/meta2 overlays) — open one
+in Tiled and the complete composited portrait is visible immediately. Maps AND
+metasprite record lists in src/monster_detail.asm compile from it. (The 7×7
+arrangement happens to be the portrait converter's positional constant —
+family-G provenance — duplicated per file by user preference: a viewable,
+self-contained source beats both an invisible tool constant and a
+layer-switching shared file.) `MonsterPortraitMetaRecords` is fully symbolic
+over the labelled `MonsterPortraitMeta_*` INCBINs.
 
 ## Name + ability-text regions (BG, bank `$32`)
 

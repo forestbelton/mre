@@ -29,7 +29,10 @@ def run(*args: str) -> None:
 
 def build_png_asset(name: str, spec: dict) -> None:
     png = ROOT / "assets" / spec["png"]
-    out = out_dir(spec["png"])
+    # `out:` overrides the derived dir -- needed when several assets share one
+    # flat source dir (assets/summon/<m>.png all emit distinct components)
+    out = (ROOT / "build" / "assets" / spec["out"]) if "out" in spec \
+        else out_dir(spec["png"])
     mode = spec["mode"]
     pngasset = str(ROOT / "tools" / "pngasset.py")
     if mode == "composite":

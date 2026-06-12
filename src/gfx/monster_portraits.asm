@@ -7,11 +7,11 @@
 ; (OBJ tile $80+ / BG $8800 addressing). The portrait is then drawn as a
 ; metasprite over a BG body -- see docs/monster_detail_screen.md.
 ;
-; Editable source: assets/monster_portrait/ -- one indexed sheet PNG per
-; monster (each tile shown in its detail-screen palette) plus
-; monster_portraits.tmx, the 7x7 BG arrangements as a Tiled map (one layer
-; pair per monster over its own tileset; the maps in monster_detail.asm
-; compile from it). See docs/asset_source_model.md.
+; Editable source: assets/summon/<name>.png (indexed sheet, each tile in its
+; detail-screen palette) + <name>.tmx (the 7x7 BG arrangement and the static
+; OBJ overlays as Tiled layers -- open it to see the complete portrait; the
+; maps and metasprite lists in monster_detail.asm compile from it).
+; See docs/asset_source_model.md.
 
 SECTION "Monster portrait tiles", ROMX[$4000], BANK[$3c]
 
