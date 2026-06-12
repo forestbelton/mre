@@ -1,11 +1,18 @@
 # Graphics assets — PNG-driven pipeline & asset survey
 
+> **Partially superseded (2026-06-12) by
+> [asset_source_model.md](asset_source_model.md)** — the unified source model
+> and its migration status live there. Since then: overlay cels are indexed
+> PNGs (palettes explicit, no `pal` pins), portrait maps are **derived** (no
+> committed bins; `layout:` constants), and the screens' arrangements are
+> **Tiled `.tmx`** files (no committed bins). Sections below describing
+> committed `tilemap.bin`/`attrmap.bin` or RGB reference inference are
+> historical for those families.
+
 Goal (see docs/philosophy.md): a screen's editable source should be an image, and
 the build regenerates the ROM bytes from it byte-exact. This doc covers the tool,
 the first migration (the TECMO logo), and a survey of every currently-captured
-asset so we know what to abstract over. **Not yet decided / deferred:** a unified
-YAML-driven generator (one metadata file + one script) — more assets still need
-to be located before committing to a schema.
+asset so we know what to abstract over.
 
 ## Tool: `tools/pngasset.py`
 
@@ -13,8 +20,9 @@ Regenerates a screen's components from a source PNG.
 
 - `encode --png … --sheet-rows N --pad-before BYTE N --out-dir D` → `tiles.bin`,
   `palette.bin`, `tilemap.bin`, `attrmap.bin` (composite mode; the logo).
-- `screen --png <sheet.png> --out-dir D` → `tiles_bank0.bin`, `tiles_bank1.bin`,
-  `palette.bin`, and passes `tilemap.bin`/`attrmap.bin` (next to the PNG) through.
+- `screen --png <sheet.png> --map <name.tmx> --out-dir D` → `tiles_bank0.bin`,
+  `tiles_bank1.bin`, `palette.bin`, `tilemap.bin`/`attrmap.bin` compiled from the
+  Tiled `.tmx` arrangement (see docs/asset_source_model.md).
   **Sheet mode** for the two-VRAM-bank colour screens: ONE indexed PNG holds both
   banks stacked (top half → VRAM bank 0, bottom → bank 1) and all 16 CGB palettes
   (8 BG + 8 OBJ) in its palette table; each tile is shown in its real palette

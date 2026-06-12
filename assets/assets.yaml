@@ -10,7 +10,8 @@
 #   mode: composite  -- one self-contained image; the tool derives tiles + tilemap
 #                       (every tile is visible). Opts: sheet_rows, pad_before, colors.
 #   mode: screen     -- two-VRAM-bank colour screen; one combined tile-sheet PNG
-#                       (both banks stacked + 16 palettes embedded). Opt: tiles.
+#                       (both banks stacked + 16 palettes embedded) + a Tiled .tmx
+#                       arrangement (map:). Opts: tiles, map.
 #   mode: portrait   -- grayscale character portrait; one tile-sheet PNG (bank-1
 #                       tiles first, then any bank-0 tiles). Opts: tiles1, tiles0.
 #   mode: scene      -- summon-animation tiles; one combined two-bank tile-sheet PNG
