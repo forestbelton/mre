@@ -1024,7 +1024,7 @@ RoomStartPlaqueUserRoom:
 	ld l, a
 	ld bc, $0507
 	ld a, $08
-	call Func_00_1fa4
+	call DrawAsciiText
 	ld a, [wScreenAnim]
 	ld hl, $c7f6
 	rst AddAToHL

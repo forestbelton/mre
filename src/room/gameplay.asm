@@ -1378,9 +1378,9 @@ Func_01_4cfe:
 	ld [$cf78], a
 	ret
 Func_01_4d0d:
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	ld c, a
-	ld a, [$c531]
+	ld a, [wExitCellY]
 	ld b, a
 	ld a, $c0
 	call Func_01_4d95
@@ -2366,7 +2366,7 @@ Func_01_59ce:
 	ld [$c2dd], a
 	ret
 Func_01_5a06:
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	cp $ff
 	jr nz, Func_01_5a16
 	ld a, [wSpawnCellX]

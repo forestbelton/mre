@@ -2780,7 +2780,7 @@ LoadFloorRecordToBuffer:
 	ld [wActiveFloor], a
 	ret
 
-Data_00_12db:
+RoomNameBufPtrs:
 	db $e1, $c7, $e8, $c7, $ef, $c7
 
 VerifyXorChecksum:
@@ -3480,7 +3480,7 @@ OpenRoomSelectMenu:
 	ld [$cfbe], a
 	FAR_CALL Func_15_41fe
 	FAR_CALL Func_15_4134
-	FAR_CALL Func_15_4015
+	FAR_CALL DrawRoomSelectScreen
 Func_00_1919:
 	FAR_CALL FloorSelectInputLoop
 	or a
@@ -3491,7 +3491,7 @@ Func_00_1919:
 	call Func_00_2fa2
 	ret z
 	ld hl, $5230
-	call Func_00_3450
+	call ShowEditorError
 	jr Func_00_1919
 
 SetupExchangeRoomSelect:
@@ -3499,7 +3499,7 @@ SetupExchangeRoomSelect:
 	ld [$c55d], a
 	FAR_CALL Func_15_41fe
 	FAR_CALL Func_15_4134
-	FAR_CALL Func_15_4015
+	FAR_CALL DrawRoomSelectScreen
 	FAR_CALL FloorSelectInputLoop
 	or a
 	ret
@@ -3584,7 +3584,7 @@ Func_00_1a66:
 	ld [wGameScene], a
 	ret
 Func_00_1a6c:
-	FAR_CALL Func_12_4798
+	FAR_CALL InitEditorGridBackground
 	ld a, [wMenuId]
 	ld hl, $1873
 	rst AddAToHL
@@ -3637,7 +3637,7 @@ Func_00_1ada:
 	ld [wEditCursorY], a
 	ld a, [$c2ea]
 	ld [wEditCursorX], a
-	FAR_CALL Func_12_46d0
+	FAR_CALL PositionEditCursorSprite
 	ld hl, wFloorMonsterTable
 	ld c, $00
 Func_00_1afc:
@@ -3654,7 +3654,7 @@ Data_00_1b01:
 	ld e, a
 	push bc
 	push hl
-	call Data_00_2094
+	call PlaceMonsterSpriteAtCursor
 	pop hl
 	pop bc
 	jr Func_00_1b19
@@ -3688,7 +3688,7 @@ Func_00_1b2e:
 Func_00_1b40:
 	call MoveFloorEditCursor
 Func_00_1b43:
-	call Func_00_3460
+	call UpdateEditorTicker
 	call Func_00_2dbc
 	ld a, [wUiTimer]
 	inc a
@@ -3713,7 +3713,7 @@ Func_00_1b6f:
 	call MoveFloorEditCursor
 
 Func_00_1b72:
-	call Func_00_3460
+	call UpdateEditorTicker
 	call Func_00_2dbc
 	ld a, [wUiTimer]
 	inc a
@@ -4122,7 +4122,7 @@ Func_00_1e40:
 
 Func_00_1e4f:
 	ld hl, $51e8
-	call Func_00_3450
+	call ShowEditorError
 	xor a
 	pop hl
 	ret
@@ -4252,11 +4252,11 @@ Func_00_1f07:
 	ld a, [wMenuId]
 	cp $03
 	jr z, Func_00_1f1e
-	FAR_CALL Func_12_4519
+	FAR_CALL EditFloorCell
 	jr Func_00_1f34
 
 Func_00_1f1e:
-	FAR_CALL Data_12_4695
+	FAR_CALL EditMonsterPlacement
 	call NormalizeMonsterTableFlags
 	jr Func_00_1f34
 
@@ -4350,7 +4350,7 @@ SetBgMapTileAndAttr:
 	ld a, [de]
 	ld [hl], a
 	ret
-Func_00_1fa4:
+DrawAsciiText:
 	push af
 	ld de, $9800
 	ld a, b
@@ -4537,7 +4537,7 @@ Func_00_2081:
 	call SetOamByte
 	ret
 
-Data_00_2094:
+PlaceMonsterSpriteAtCursor:
 	ld a, c
 	add a, $10
 	ld b, a
@@ -4678,7 +4678,7 @@ Func_00_2140:
 	ld [$2fff], a
 	FAR_CALL Func_15_4147
 	ld hl, $4978
-	call Func_00_33fb
+	call SetEditorMessage1
 	xor a
 	ld [$c55f], a
 	call Func_00_3049
@@ -4800,7 +4800,7 @@ Func_00_2223:
 	ld a, $01
 	ld [$c560], a
 	ld b, a
-	FAR_CALL Func_12_4441
+	FAR_CALL MovePieceSelectHighlight
 Func_00_2253:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -4915,7 +4915,7 @@ Func_00_2313:
 Func_00_2319:
 	ld b, a
 Func_00_231a:
-	FAR_CALL Func_12_4441
+	FAR_CALL MovePieceSelectHighlight
 	jp Func_00_2253
 OpenEditorActionMenu:
 	xor a
@@ -4929,7 +4929,7 @@ OpenEditorActionMenu:
 	call CopyBgMap
 	ld a, [wMenuId]
 	ld b, a
-	FAR_CALL Func_12_44d6
+	FAR_CALL SwitchEditorTab
 	FAR_CALL Func_15_4241
 Func_00_2351:
 	call WaitForNextFrame
@@ -5000,9 +5000,9 @@ Data_00_23a6:
 
 Func_00_23b5:
 	ld b, a
-	FAR_CALL Func_12_44cf
+	FAR_CALL SwitchEditorTabWithSound
 Func_00_23be:
-	call Func_00_3460
+	call UpdateEditorTicker
 	jr Func_00_2351
 DispatchEditorMenuAction:
 	ld [wMenuId], a
@@ -5020,7 +5020,7 @@ Func_00_23d8:
 	call Func_00_2fa2
 	jr z, Func_00_2443
 	ld hl, $5230
-	call Func_00_3450
+	call ShowEditorError
 	xor a
 	ret
 Func_00_23e8:
@@ -5039,12 +5039,12 @@ Func_00_2401:
 	call CopyBgMap
 	ld a, [wMenuId]
 	ld b, a
-	FAR_CALL Func_12_44d6
+	FAR_CALL SwitchEditorTab
 	xor a
 	ret
 Func_00_2420:
 	ld hl, $4bb8
-	call Func_00_33fb
+	call SetEditorMessage1
 	FAR_CALL Func_15_41b8
 	call Func_00_217d
 	cp $02
@@ -5394,7 +5394,7 @@ Func_00_27a5:
 	call DrawMetasprite
 	call HideUnusedOamSprites
 	ld hl, $4fa8
-	call Func_00_33fb
+	call SetEditorMessage1
 	ld a, [$c56e]
 	ld e, a
 	ld a, $09
@@ -6343,8 +6343,8 @@ InitFloorEditorState:
 	ld a, $ff
 	ld [wSpawnCellX], a
 	ld [wSpawnCellY], a
-	ld [$c530], a
-	ld [$c531], a
+	ld [wExitCellX], a
+	ld [wExitCellY], a
 	ld b, $00
 	ld c, $09
 	ld hl, wFloorMonsterTable
@@ -6514,8 +6514,8 @@ Func_00_2efa:
 
 ClearCollisionCell:
 	ld a, $ff
-	ld [$c530], a
-	ld [$c531], a
+	ld [wExitCellX], a
+	ld [wExitCellY], a
 	ret
 
 Func_00_2f04:
@@ -6581,15 +6581,15 @@ Func_00_2f64:
 	ret
 
 Func_00_2f65:
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	cp $ff
 	jr z, Func_00_2f95
 	push de
 	push hl
-	ld a, [$c531]
+	ld a, [wExitCellY]
 	ld b, a
 	ld h, a
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	ld l, a
 	ld a, $11
 	ld c, a
@@ -6612,9 +6612,9 @@ Func_00_2f65:
 	pop de
 Func_00_2f95:
 	ld a, [wEditCursorX]
-	ld [$c530], a
+	ld [wExitCellX], a
 	ld a, [wEditCursorY]
-	ld [$c531], a
+	ld [wExitCellY], a
 	ret
 Func_00_2fa2:
 	ld hl, $c58c
@@ -6791,7 +6791,7 @@ Func_00_30a5:
 	dec c
 	jr nz, Func_00_30a5
 Func_00_30ab:
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
 Func_00_30af:
 	call Func_00_30b3
@@ -6813,7 +6813,7 @@ Func_00_30c5:
 	dec c
 	jr nz, Func_00_30c5
 Func_00_30cb:
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
 Func_00_30cf:
 	ld a, [wMenuId]
@@ -6823,21 +6823,21 @@ Func_00_30cf:
 	jr nz, Func_00_30e3
 	ld hl, $4c00
 	ld de, $4d20
-	call Func_00_340c
+	call SetEditorMessage2
 	ret
 Func_00_30e3:
 	cp $02
 	jr nz, Func_00_30f1
 	ld hl, $4d68
 	ld de, $4cd8
-	call Func_00_340c
+	call SetEditorMessage2
 	ret
 
 Func_00_30f1:
 	ld hl, $4c00
 	ld de, $4c48
 	ld bc, $4c90
-	call Func_00_342a
+	call SetEditorMessage3
 	ret
 	nop
 	ld bc, $0000
@@ -6880,7 +6880,7 @@ Func_00_3121:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
 
 Func_00_313d:
@@ -6908,7 +6908,7 @@ Func_00_315b:
 Func_00_315e:
 	ld a, [$c55d]
 	add a, a
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -6956,7 +6956,7 @@ Func_00_31a0:
 	jr Func_00_315e
 Func_00_31a4:
 	ld hl, $4930
-	call Func_00_33fb
+	call SetEditorMessage1
 	call Func_00_217d
 	or a
 	jr nz, Func_00_31ba
@@ -7112,7 +7112,7 @@ Func_00_32b6:
 	cp $03
 	jr nc, Func_00_3305
 	add a, a
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -7188,9 +7188,9 @@ Func_00_3318:
 
 Func_00_3340:
 	ld a, $ff
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	xor a
-	ld [$c7dc], a
+	ld [wEditorMsgIndex], a
 	xor a
 	ldh [rVBK], a
 	ld d, $b4
@@ -7303,81 +7303,81 @@ Func_00_33dd:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_33fb:
+SetEditorMessage1:
 	ld a, l
-	ld [$c7d6], a
+	ld [wEditorMsgPtrs], a
 	ld a, h
-	ld [$c7d7], a
+	ld [wEditorMsgPtrs+1], a
 	ld a, $01
-	ld [$c7dd], a
+	ld [wEditorMsgCount], a
 	call RenderTextToVram
 	ret
-Func_00_340c:
+SetEditorMessage2:
 	ld a, $78
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	ld a, l
-	ld [$c7d6], a
+	ld [wEditorMsgPtrs], a
 	ld a, h
-	ld [$c7d7], a
+	ld [wEditorMsgPtrs+1], a
 	ld a, e
-	ld [$c7d8], a
+	ld [wEditorMsgPtrs+2], a
 	ld a, d
-	ld [$c7d9], a
+	ld [wEditorMsgPtrs+3], a
 	ld a, $02
-	ld [$c7dd], a
+	ld [wEditorMsgCount], a
 	call RenderTextToVram
 	ret
 
-Func_00_342a:
+SetEditorMessage3:
 	ld a, $78
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	ld a, l
-	ld [$c7d6], a
+	ld [wEditorMsgPtrs], a
 	ld a, h
-	ld [$c7d7], a
+	ld [wEditorMsgPtrs+1], a
 	ld a, e
-	ld [$c7d8], a
+	ld [wEditorMsgPtrs+2], a
 	ld a, d
-	ld [$c7d9], a
+	ld [wEditorMsgPtrs+3], a
 	ld a, c
-	ld [$c7da], a
+	ld [wEditorMsgPtrs+4], a
 	ld a, b
-	ld [$c7db], a
+	ld [wEditorMsgPtrs+5], a
 	ld a, $03
-	ld [$c7dd], a
+	ld [wEditorMsgCount], a
 	call RenderTextToVram
 	ret
 
-Func_00_3450:
+ShowEditorError:
 	ld a, $78
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	push af
 	ld a, SOUND_SFX_02
 	call PlaySound
 	pop af
 	call RenderTextToVram
 	ret
-Func_00_3460:
-	ld a, [$c7de]
+UpdateEditorTicker:
+	ld a, [wEditorMsgTimer]
 	or a
-	jr z, Func_00_346e
+	jr z, AdvanceEditorTicker
 	cp $ff
 	ret z
 	dec a
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	ret
-Func_00_346e:
-	ld a, [$c7dd]
+AdvanceEditorTicker:
+	ld a, [wEditorMsgCount]
 	cp $01
-	jr z, Func_00_3492
+	jr z, ShowEditorMessageSticky
 	ld c, a
-	ld a, [$c7dc]
+	ld a, [wEditorMsgIndex]
 	inc a
 	cp c
 	jr nz, Func_00_347e
 	xor a
 Func_00_347e:
-	ld [$c7dc], a
+	ld [wEditorMsgIndex], a
 	add a, a
 	ld hl, $c7d6
 	rst AddAToHL
@@ -7385,16 +7385,16 @@ Func_00_347e:
 	ld h, [hl]
 	ld l, a
 	ld a, $78
-	ld [$c7de], a
+	ld [wEditorMsgTimer], a
 	call RenderTextToVram
 	ret
 
-Func_00_3492:
+ShowEditorMessageSticky:
 	ld a, $ff
-	ld [$c7de], a
-	ld a, [$c7d6]
+	ld [wEditorMsgTimer], a
+	ld a, [wEditorMsgPtrs]
 	ld l, a
-	ld a, [$c7d7]
+	ld a, [wEditorMsgPtrs+1]
 	ld h, a
 	call RenderTextToVram
 	ret

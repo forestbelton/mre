@@ -2310,9 +2310,9 @@ PlayerHit_BeginStun:
 	ld [$cf70], a
 	jr Func_03_4f44
 Func_03_4f38:
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	ld [$cf6f], a
-	ld a, [$c531]
+	ld a, [wExitCellY]
 	ld [$cf70], a
 Func_03_4f44:
 	ld a, [$cf6f]
@@ -3116,13 +3116,13 @@ SpawnFloorFlameOrFX:
 	FAR_CALL Func_01_4d0d
 	ret
 Func_03_5518:
-	ld a, [$c530]
+	ld a, [wExitCellX]
 	swap a
 	and $f0
 	sub $08
 	add a, $08
 	ld e, a
-	ld a, [$c531]
+	ld a, [wExitCellY]
 	swap a
 	and $f0
 	sub $08
@@ -3137,7 +3137,7 @@ Func_03_5518:
 	add a, $08
 	swap a
 	and $0f
-	ld [$c530], a
+	ld [wExitCellX], a
 	swap a
 	and $f0
 	sub $08
@@ -3148,7 +3148,7 @@ Func_03_5518:
 	add a, $08
 	swap a
 	and $0f
-	ld [$c531], a
+	ld [wExitCellY], a
 	swap a
 	and $f0
 	sub $08
@@ -3164,7 +3164,7 @@ Func_03_5518:
 	add a, $08
 	swap a
 	and $0f
-	ld [$c530], a
+	ld [wExitCellX], a
 	swap a
 	and $f0
 	sub $08
@@ -3174,7 +3174,7 @@ Func_03_5518:
 	add a, $08
 	swap a
 	and $0f
-	ld [$c531], a
+	ld [wExitCellY], a
 	swap a
 	and $f0
 	sub $08

@@ -36,8 +36,8 @@ FloorPostLoadCleanup:
 	FAR_CALL Func_05_49c8
 	FAR_CALL Func_05_499d
 	ld a, $ff              ; clear a pair of entity slots ($FF = empty)
-	ld [$c530], a
-	ld [$c531], a
+	ld [wExitCellX], a
+	ld [wExitCellY], a
 	ld [wSpawnCellX], a
 	ld [wSpawnCellY], a
 	; falls through

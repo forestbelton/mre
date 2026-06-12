@@ -30,9 +30,9 @@ ProcessFloorCellMarkers:
 	jr .return
 .storeMonster:
 	ld a, b
-	ld [$c531], a
+	ld [wExitCellY], a
 	ld a, c
-	ld [$c530], a
+	ld [wExitCellX], a
 .return:
 	ld a, e
 	cp $00
@@ -312,7 +312,7 @@ RedrawFloorWithSpawns:
 ; column bit), plays cursor blips, and on A confirms while B picks option 4
 ; (exit). Confirming stores wActiveFloor and returns 1 (>= 4) or 0. From home.asm.
 OpenFloorSelectScreen:
-	FAR_CALL Func_15_4015
+	FAR_CALL DrawRoomSelectScreen
 	call FloorSelectInputLoop
 	ret
 FloorSelectInputLoop:
@@ -409,7 +409,7 @@ FloorSelectInputLoop:
 ; action. Called from home.asm.
 OpenPieceSelectMenu:
 	xor a
-	ld [$c55e], a
+	ld [wPieceCategory], a
 ReenterPieceSelect:
 	FAR_CALL Func_15_410f
 PieceSelectInputLoop:
@@ -417,7 +417,7 @@ PieceSelectInputLoop:
 	call ReadJoypad
 	ldh a, [hJoyPressed]
 	ld b, a
-	ld a, [$c55e]
+	ld a, [wPieceCategory]
 	call Func_00_32ae
 	bit 4, b
 	jr z, .toggleColAlt
@@ -483,10 +483,10 @@ PieceSelectInputLoop:
 	jr .dispatch            ; B = dispatch option 4 (exit)
 .apply:
 	ld c, a
-	call Func_12_43fe
+	call SwitchPieceCategory
 	jp PieceSelectInputLoop
 .cancel:
-	call Func_00_3460
+	call UpdateEditorTicker
 	jp PieceSelectInputLoop
 .dispatch:
 	cp $00
@@ -518,7 +518,7 @@ ConfirmLoadFloor:
 	call Func_00_217d
 	or a
 	jp nz, ReenterPieceSelect
-	FAR_CALL Func_12_4ab8
+	FAR_CALL ResetFloorSramSlot
 	jp ReenterPieceSelect
 ConfirmSaveFloor:
 	ld a, $04
@@ -527,7 +527,7 @@ ConfirmSaveFloor:
 	call Func_00_2fa2
 	jr z, .launch
 	ld hl, $5230
-	call Func_00_3450
+	call ShowEditorError
 	jp PieceSelectInputLoop
 .launch:
 	ld a, $05
@@ -554,38 +554,19 @@ ExitPieceSelect:
 	ld a, $01
 	ret
 
-Data_12_43e6:
-	db $e1, $98
+; Piece-category tabs (wPieceCategory 0-5): BG-attr address of each tab's
+; label (highlighted via Func_00_31c4/31d5) and its bank-$17 help text
+; (shown in the message line on switch).
+PieceCategoryAttrDests:
+	dw $98e1, $98eb, $9921, $992b, $9965, $9965
+PieceCategoryHelpTexts:
+	dw $47c8, $4810, $4858, $48a0, $48e8, $48e8
 
-Data_12_43e8:
-	db $eb, $98
-
-Data_12_43ea:
-	db $21, $99, $2b, $99
-
-Data_12_43ee:
-	db $65, $99
-
-Data_12_43f0:
-	db $65, $99, $c8, $47
-
-Data_12_43f4:
-	db $10, $48
-
-Data_12_43f6:
-	db $58, $48, $a0, $48
-
-Data_12_43fa:
-	db $e8, $48
-
-Data_12_43fc:
-	db $e8, $48
-
-Func_12_43fe:
+SwitchPieceCategory:
 	ld e, c
 	ld a, $01
 	ldh [rVBK], a
-	ld a, [$c55e]
+	ld a, [wPieceCategory]
 	cp $04
 	jr nc, Func_12_440e
 	ld b, $08
@@ -596,7 +577,7 @@ Func_12_440e:
 
 Func_12_4410:
 	add a, a
-	ld hl, $43e6
+	ld hl, PieceCategoryAttrDests
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -611,23 +592,23 @@ Func_12_4424:
 	ld b, $0a
 Func_12_4426:
 	add a, a
-	ld hl, $43e6
+	ld hl, PieceCategoryAttrDests
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	call Func_00_31d5
 	ld a, e
-	ld [$c55e], a
+	ld [wPieceCategory], a
 	add a, a
-	ld hl, $43f2
+	ld hl, PieceCategoryHelpTexts
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
-Func_12_4441:
+MovePieceSelectHighlight:
 	push bc
 	FAR_CALL Func_15_4147
 	ld a, $01
@@ -684,16 +665,19 @@ Func_12_44a8:
 	call Func_00_31fa
 	ret
 
-Data_12_44af:
-	db $41, $98, $4b, $98, $a1, $98, $ab, $98, $01, $99, $0b, $99, $65, $99, $65, $99
-	db $c0, $49, $08, $4a, $50, $4a, $98, $4a, $e0, $4a, $28, $4b, $70, $4b, $70, $4b
+; Top-level editor tabs (wMenuId 0-7): BG-attr address of each tab's label
+; and its bank-$17 help text.
+EditorTabAttrDests:
+	dw $9841, $984b, $98a1, $98ab, $9901, $990b, $9965, $9965
+EditorTabHelpTexts:
+	dw $49c0, $4a08, $4a50, $4a98, $4ae0, $4b28, $4b70, $4b70
 
-Func_12_44cf:
+SwitchEditorTabWithSound:
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
-Func_12_44d6:
+SwitchEditorTab:
 	ld e, b
 	ld a, $01
 	ldh [rVBK], a
@@ -706,7 +690,7 @@ Func_12_44e6:
 	ld b, $0a
 Func_12_44e8:
 	add a, a
-	ld hl, $44af
+	ld hl, EditorTabAttrDests
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -721,7 +705,7 @@ Func_12_44fc:
 	ld b, $0a
 Func_12_44fe:
 	add a, a
-	ld hl, $44af
+	ld hl, EditorTabAttrDests
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -730,35 +714,46 @@ Func_12_44fe:
 	ld a, e
 	ld [wMenuId], a
 	add a, a
-	ld hl, $44bf
+	ld hl, EditorTabHelpTexts
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
-Func_12_4519:
+; A-press handler for the piece-placement menus (wMenuId != 3, dispatched
+; from the home edit loop at $00:$1f14): place/erase/modify the piece under
+; the edit cursor per the selected menu item (wMenuItemValue).
+EditFloorCell:
 	call FindMonsterAtCursor
 	jr z, Func_12_452d
 
-Data_12_451e:
-	db $fa, $68, $c5, $fe, $21, $28, $1c, $fe, $22, $28, $18, $fe, $42, $28, $14
+	; Code, was misfiled as data -- LIVE: a monster occupies the cursor
+	; cell; placing piece $21/$22/$42 on it is refused.
+	ld a, [wMenuItemValue]
+	cp $21
+	jr z, Func_12_4541
+	cp $22
+	jr z, Func_12_4541
+	cp $42
+	jr z, Func_12_4541
 
 Func_12_452d:
 	ld a, [wEditCursorY]
 	ld b, a
 	ld a, [wEditCursorX]
 	ld c, a
-	ld a, [$c2eb]
+	ld a, [wFloorPlayerY]
 	cp b
 	jr nz, Func_12_4548
 
 Func_12_453b:
-	ld a, [$c2ea]
+	ld a, [wFloorPlayerX]
 	cp c
 	jr nz, Func_12_4548
-	ld hl, $4ff0
-	call $3450
+Func_12_4541:
+	ld hl, $4ff0 ; bank-$17 text: cannot edit this cell
+	call ShowEditorError
 	ret
 
 Func_12_4548:
@@ -792,8 +787,8 @@ Func_12_455f:
 	ld a, SOUND_SFX_03
 	call PlaySound
 	pop af
-	call $2ea8
-	jp $4686
+	call Func_00_2ea8
+	jp Func_12_4686
 
 Func_12_4584:
 	ld a, c
@@ -803,7 +798,7 @@ Func_12_4584:
 	cp $04
 	jr nz, Func_12_4597
 	ld hl, $50c8
-	call Func_00_3450
+	call ShowEditorError
 	ret
 
 Func_12_4597:
@@ -861,7 +856,7 @@ Func_12_45e3:
 	ld a, $01
 	ld [$c585], a
 	ld hl, $5110
-	call Func_00_3450
+	call ShowEditorError
 	ret
 Func_12_45fa:
 	ld a, c
@@ -959,13 +954,42 @@ Func_12_4686:
 	call Func_00_1f71
 	ret
 
-Data_12_4695:
-	db $fa, $62, $c5, $fe, $00, $20, $4c, $cd, $88, $2d, $28, $07, $21, $a0, $51, $cd
-	db $50, $34, $c9, $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $cd, $48, $18, $fe, $00
-	db $20, $ea, $f0, $ac, $fe, $00, $20, $e4, $f5, $3e, $01, $cd, $85, $0a, $f1, $fa
-	db $65, $c5, $ea, $eb, $c2, $fa, $64, $c5, $ea, $ea, $c2
+; Code, was misfiled as data. A-press handler for the monster-placement menu
+; (wMenuId 3; FAR_CALLed from the home edit loop at $00:$1f1e). Menu item 0 =
+; move the player spawn to the cursor; other items = place/remove that
+; monster (PlaceOrRemoveMonster).
+EditMonsterPlacement:
+	ld a, [wMenuCursor]
+	cp $00
+	jr nz, PlaceOrRemoveMonster
+	call FindMonsterAtCursor
+	jr z, Func_12_46a8
+Func_12_46a1:
+	ld hl, $51a0 ; bank-$17 text: "Cannot place a ..."
+	call ShowEditorError
+	ret
+Func_12_46a8:
+	ld a, [wEditCursorY]
+	ld b, a
+	ld a, [wEditCursorX]
+	ld c, a
+	call ReadFloorCell
+	cp $00
+	jr nz, Func_12_46a1
+	ldh a, [$ffac]
+	cp $00
+	jr nz, Func_12_46a1
+	push af
+	ld a, $01
+	call PlaySound
+	pop af
+	ld a, [wEditCursorY]
+	ld [wFloorPlayerY], a
+	ld a, [wEditCursorX]
+	ld [wFloorPlayerX], a
+	; fall through: park the edit-cursor sprite on the new spawn
 
-Func_12_46d0:
+PositionEditCursorSprite:
 	ld a, [wEditCursorY]
 	add a, a
 	add a, a
@@ -982,26 +1006,131 @@ Func_12_46d0:
 	call SetSpritePosition
 	ret
 
-Data_12_46e8:
-	db $fa, $65, $c5, $47, $fa, $64, $c5, $4f, $fa, $eb, $c2, $b8, $20, $0d, $fa, $ea
-	db $c2, $b9, $20, $07, $21, $58, $51, $cd, $50, $34, $c9, $fa, $62, $c5, $3d, $5f
-	db $cd, $48, $18, $fe, $00, $20, $06, $f0, $ac, $fe, $42, $20, $07, $21, $58, $51
-	db $cd, $50, $34, $c9, $cd, $88, $2d, $28, $0c, $fa, $cb, $c7, $bb, $28, $31, $2b
-	db $2b, $2b, $2b, $18, $52, $fa, $6e, $c5, $fe, $09, $20, $07, $21, $80, $50, $cd
-	db $50, $34, $c9, $21, $d1, $c4, $0e, $00, $7e, $fe, $ff, $28, $33, $23, $23, $23
-	db $23, $23, $0c, $3e, $09, $b9, $20, $f0, $f5, $3e, $02, $cd, $85, $0a, $f1, $c9
-	db $fa, $6e, $c5, $3d, $ea, $6e, $c5, $3e, $ff, $32, $32, $32, $32, $77, $16, $f0
-	db $79, $c6, $10, $0e, $00, $cd, $d1, $20, $f5, $3e, $03, $cd, $85, $0a, $f1, $c9
-	db $fa, $6e, $c5, $3c, $ea, $6e, $c5, $fa, $64, $c5, $22, $fa, $65, $c5, $22, $3e
-	db $22, $22, $af, $22, $73, $cd, $94, $20, $f5, $3e, $01, $cd, $85, $0a, $f1, $c9
+; Code, was misfiled as data. Place monster #(wMenuCursor-1) at the cursor
+; cell, or remove it if that same monster already sits there. Placements go
+; in wFloorMonsterTable (9 slots x 5 bytes: x, y, $22, 0, monster), counted
+; in wPlacedMonsterCount; the sprite is managed via PlaceMonsterSpriteAtCursor.
+PlaceOrRemoveMonster:
+	ld a, [wEditCursorY]
+	ld b, a
+	ld a, [wEditCursorX]
+	ld c, a
+	ld a, [wFloorPlayerY]
+	cp b
+	jr nz, Func_12_4703
+	ld a, [wFloorPlayerX]
+	cp c
+	jr nz, Func_12_4703
+	; cursor is on the player spawn: refuse
+Func_12_46fc:
+	ld hl, $5158 ; bank-$17 text: "Cannot place a ..."
+	call ShowEditorError
+	ret
+Func_12_4703:
+	ld a, [wMenuCursor]
+	dec a
+	ld e, a
+	call ReadFloorCell
+	cp $00
+	jr nz, Func_12_4715
+	ldh a, [$ffac]
+	cp $42
+	jr nz, Func_12_471c
+Func_12_4715:
+	ld hl, $5158 ; bank-$17 text: "Cannot place a ..."
+	call ShowEditorError
+	ret
+Func_12_471c:
+	call FindMonsterAtCursor
+	jr z, Func_12_472d
+	; a monster is here: same one -> remove it, different -> replace in-place
+	ld a, [wFoundMonsterId]
+	cp e
+	jr z, Func_12_4758
+	dec hl
+	dec hl
+	dec hl
+	dec hl
+	jr Func_12_477f
+Func_12_472d:
+	ld a, [wPlacedMonsterCount]
+	cp $09
+	jr nz, Func_12_473b
+	ld hl, $5080 ; bank-$17 text: "Can't place any ..."
+	call ShowEditorError
+	ret
+Func_12_473b:
+	; find a free ($ff) slot in the 9-entry table
+	ld hl, wFloorMonsterTable
+	ld c, $00
+Func_12_4740:
+	ld a, [hl]
+	cp $ff
+	jr z, Func_12_4778
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc c
+	ld a, $09
+	cp c
+	jr nz, Func_12_4740
+	push af
+	ld a, $02
+	call PlaySound
+	pop af
+	ret
+Func_12_4758:
+	; remove: free the slot ($ff x5), hide its OAM sprite (y = $f0)
+	ld a, [wPlacedMonsterCount]
+	dec a
+	ld [wPlacedMonsterCount], a
+	ld a, $ff
+	ld [hl-], a
+	ld [hl-], a
+	ld [hl-], a
+	ld [hl-], a
+	ld [hl], a
+	ld d, $f0
+	ld a, c
+	add a, $10
+	ld c, $00
+	call SetOamByte
+	push af
+	ld a, $03
+	call PlaySound
+	pop af
+	ret
+Func_12_4778:
+	ld a, [wPlacedMonsterCount]
+	inc a
+	ld [wPlacedMonsterCount], a
+Func_12_477f:
+	; write the 5-byte entry: x, y, $22, $00, monster id
+	ld a, [wEditCursorX]
+	ld [hl+], a
+	ld a, [wEditCursorY]
+	ld [hl+], a
+	ld a, $22
+	ld [hl+], a
+	xor a
+	ld [hl+], a
+	ld [hl], e
+	call PlaceMonsterSpriteAtCursor
+	push af
+	ld a, $01
+	call PlaySound
+	pop af
+	ret
 
-Func_12_4798:
-	call Func_12_49c1
+InitEditorGridBackground:
+	call ClearEditorGridMap
 	ld a, $00
-	ld [$c7df], a
+	ld [wEditorBgBase], a
 	ld a, $98
-	ld [$c7e0], a
-	call Func_12_4941
+	ld [wEditorBgBase+1], a
+	call DrawGridBorders
 	call ClearEditCellList
 	ld bc, $0100
 	ld hl, wFloorCollision
@@ -1034,7 +1163,7 @@ Func_12_47c5:
 Func_12_47d6:
 	push bc
 	push hl
-	call Func_12_490d
+	call ClassifyFloorCell
 	call Func_00_1f71
 	pop hl
 	pop bc
@@ -1043,8 +1172,8 @@ Func_12_47d6:
 	jr Func_12_47b4
 Func_12_47e4:
 	ret
-Func_12_47e5:
-	call Func_12_49df
+DrawFloorPreviewMap:
+	call ClearFloorPreviewArea
 	ld a, [wRoomType]
 	cp $02
 	ret z
@@ -1054,17 +1183,17 @@ Func_12_47e5:
 	cp $11
 	jr z, Func_12_4804
 	ld a, $44
-	ld [$c7df], a
+	ld [wEditorBgBase], a
 	ld a, $9c
-	ld [$c7e0], a
+	ld [wEditorBgBase+1], a
 	jr Func_12_480e
 Func_12_4804:
 	ld a, $01
-	ld [$c7df], a
+	ld [wEditorBgBase], a
 	ld a, $9c
-	ld [$c7e0], a
+	ld [wEditorBgBase+1], a
 Func_12_480e:
-	call Func_12_4941
+	call DrawGridBorders
 	call ClearEditCellList
 	ld bc, $0100
 	ld hl, wFloorCollision
@@ -1097,8 +1226,8 @@ Func_12_482e:
 Func_12_483f:
 	push bc
 	push hl
-	call Func_12_490d
-	call Func_12_4a17
+	call ClassifyFloorCell
+	call DrawFloorCellGlyph
 	pop hl
 	pop bc
 	inc c
@@ -1106,7 +1235,7 @@ Func_12_483f:
 	jr Func_12_481d
 Func_12_484d:
 	ret
-Func_12_484e:
+DrawFloorPreviewSprites:
 	ld hl, $18ce
 	ld bc, $0000
 	call DrawMetasprite
@@ -1118,7 +1247,7 @@ Func_12_484e:
 Func_12_4863:
 	ld de, $1010
 Func_12_4866:
-	ld hl, $c7f9
+	ld hl, wPlayer
 	xor a
 	ld [$d0e7], a
 	ld [$d0e8], a
@@ -1204,8 +1333,9 @@ Func_12_48d3:
 	cp $10
 	jr c, Func_12_48ea
 
-Data_12_48e8:
-	db $d6, $02
+	; Code, was misfiled as data -- LIVE: entity codes $40+ fall through
+	; here and shift down by 2 before the species lookup.
+	sub $02
 
 Func_12_48ea:
 	ld d, a
@@ -1231,7 +1361,7 @@ Func_12_48fb:
 	ld a, $1b
 	rst AddAToHL
 	jp Func_12_4870
-Func_12_490d:
+ClassifyFloorCell:
 	ld e, [hl]
 	ld a, $ee
 	rst AddAToHL
@@ -1257,19 +1387,19 @@ Func_12_4921:
 	jr Func_12_493b
 Func_12_4933:
 	ld a, b
-	ld [$c531], a
+	ld [wExitCellY], a
 	ld a, c
-	ld [$c530], a
+	ld [wExitCellX], a
 Func_12_493b:
 	ld a, e
 	cp $00
 	ret nz
 	ld a, d
 	ret
-Func_12_4941:
-	ld a, [$c7df]
+DrawGridBorders:
+	ld a, [wEditorBgBase]
 	ld l, a
-	ld a, [$c7e0]
+	ld a, [wEditorBgBase+1]
 	ld h, a
 	inc hl
 	push hl
@@ -1349,7 +1479,7 @@ Func_12_49ad:
 	dec e
 	jr nz, Func_12_49ad
 	ret
-Func_12_49c1:
+ClearEditorGridMap:
 	xor a
 	ldh [rVBK], a
 	ld hl, $9800
@@ -1363,7 +1493,7 @@ Func_12_49c1:
 	ld d, $0e
 	call FillVram
 	ret
-Func_12_49df:
+ClearFloorPreviewArea:
 	xor a
 	ldh [rVBK], a
 	ld c, $0d
@@ -1397,7 +1527,7 @@ Func_12_4a03:
 	dec c
 	jr nz, Func_12_4a03
 	ret
-Func_12_4a17:
+DrawFloorCellGlyph:
 	bit 7, a
 	jr z, Func_12_4a22
 	bit 6, a
@@ -1421,9 +1551,9 @@ Func_12_4a2b:
 	rst AddAToDE
 	jr Func_12_4a2b
 Func_12_4a38:
-	ld a, [$c7df]
+	ld a, [wEditorBgBase]
 	ld l, a
-	ld a, [$c7e0]
+	ld a, [wEditorBgBase+1]
 	ld h, a
 Func_12_4a40:
 	ld a, $20
@@ -1436,27 +1566,33 @@ Func_12_4a40:
 Func_12_4a4b:
 	ret
 
-Data_12_4a4c:
-	db $52, $4f, $4f, $4d, $31, $00
+; Default room names (ASCII, drawn by DrawAsciiText). The trailing byte of
+; each 7-byte name slot is a linker pad $00 (sections split around it).
+RoomDefaultName1:
+	db "ROOM1", 0
 
 SECTION "analyzed_048a53", ROMX[$4a53], BANK[$12]
 
-Data_12_4a53:
-	db $52, $4f, $4f, $4d, $32, $00
+RoomDefaultName2:
+	db "ROOM2", 0
 
 SECTION "analyzed_048a5a", ROMX[$4a5a], BANK[$12]
 
-Data_12_4a5a:
-	db $52, $4f, $4f, $4d, $33, $00
+RoomDefaultName3:
+	db "ROOM3", 0
 
 SECTION "analyzed_048a61", ROMX[$4a61], BANK[$12]
 
-Data_12_4a61:
-	db $4c, $4a, $53, $4a, $5a, $4a, $00, $a0, $4f, $a2, $9e, $a4, $03, $a0, $52, $a2
-	db $a1, $a4, $09, $a0
-
-Data_12_4a75:
-	db $58, $a2, $a7, $a4
+; Per-editor-room (0-2) parallel pointer tables. Each room's SRAM slot is
+; [checksum byte][6-byte name][$245-byte floor record] at $a000/$a24f/$a49e.
+RoomDefaultNamePtrs:
+	dw RoomDefaultName1, RoomDefaultName2, RoomDefaultName3
+FloorSramChecksumPtrs:
+	dw $a000, $a24f, $a49e
+FloorSramNamePtrs:
+	dw $a003, $a252, $a4a1
+FloorSramRecordPtrs:
+	dw $a009, $a258, $a4a7
 
 ; Write the active floor's edited record (wFloorSnapshot) into its SRAM slot
 ; ($4a73 table) + checksum ($4a67 table), and store its height marker in
@@ -1465,7 +1601,7 @@ SaveFloorToSram:
 	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
-	ld hl, $4a73
+	ld hl, FloorSramRecordPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1475,7 +1611,7 @@ SaveFloorToSram:
 	call CopyDEtoHLLong
 	ld a, [wActiveFloor]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1484,7 +1620,7 @@ SaveFloorToSram:
 	call WriteXorChecksum
 	call DisableSram
 	ld a, [wActiveFloor]
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld a, [wFloorHeight]
 	cp $0e
@@ -1495,18 +1631,18 @@ SaveFloorToSram:
 .notFullHeight:
 	ld [hl], $01
 	ret
-Func_12_4ab8:
+ResetFloorSramSlot:
 	call EnableSram
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
-	ld hl, $4a61
+	ld hl, RoomDefaultNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $4a6d
+	ld hl, FloorSramNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1518,7 +1654,7 @@ Func_12_4ab8:
 	call FillRam
 	ld a, [wActiveFloor]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1529,13 +1665,13 @@ Func_12_4ab8:
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
-	ld hl, $4a61
+	ld hl, RoomDefaultNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1543,7 +1679,7 @@ Func_12_4ab8:
 	ld c, $06
 	call CopyDEtoHL
 	ld a, [wActiveFloor]
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld [hl], $02
 	ret
@@ -1556,13 +1692,13 @@ RestoreFloorRoomMarkers:
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $4a6d
+	ld hl, FloorSramNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1571,7 +1707,7 @@ RestoreFloorRoomMarkers:
 	call CopyDEtoHL
 	ld a, [wActiveFloor]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1589,13 +1725,13 @@ BackupFloorRoomMarkers:
 	ld a, [wActiveFloor]
 	add a, a
 	ld b, a
-	ld hl, $4a6d
+	ld hl, FloorSramNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1728,7 +1864,7 @@ LoadFloorEditsFromSram:
 Func_12_4c1a:
 	ld a, [$d0e7]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1738,7 +1874,7 @@ Func_12_4c1a:
 	jr z, Func_12_4c3e
 	ld a, [$d0e7]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1749,7 +1885,7 @@ Func_12_4c1a:
 Func_12_4c3e:
 	ld a, [$d0e7]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1760,13 +1896,13 @@ Func_12_4c3e:
 	ld a, [$d0e7]
 	add a, a
 	ld b, a
-	ld hl, $4a61
+	ld hl, RoomDefaultNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $4a6d
+	ld hl, FloorSramNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1778,7 +1914,7 @@ Func_12_4c3e:
 	call FillRam
 	ld a, [$d0e7]
 	add a, a
-	ld hl, $4a67
+	ld hl, FloorSramChecksumPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1789,13 +1925,13 @@ Func_12_4c83:
 	ld a, [$d0e7]
 	add a, a
 	ld b, a
-	ld hl, $4a6d
+	ld hl, FloorSramNamePtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld d, [hl]
 	ld e, a
 	ld a, b
-	ld hl, $12db
+	ld hl, RoomNameBufPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -1804,7 +1940,7 @@ Func_12_4c83:
 	call CopyDEtoHL
 	ld [hl], $00
 	ld a, [$d0e7]
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld a, $06
 	rst AddAToDE

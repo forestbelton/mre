@@ -9,7 +9,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 ```
 ROM0: 15721 bytes used / 663 free
 ROMX: 750410 bytes used / 281782 free in 63 banks
-WRAM0: 1762 bytes used / 2334 free
+WRAM0: 1813 bytes used / 2283 free
 WRAMX: 60 bytes used / 4036 free in 1 bank
 HRAM: 75 bytes used / 52 free
 ```
@@ -77,7 +77,7 @@ HRAM: 75 bytes used / 52 free
 | $3d | ROMX | 14844 | 1540 | 3 | 3 | dungeon_floor.asm |
 | $3e | ROMX | 16383 | 1 | 13 | 0 | bgm_3a.asm, bank1.asm, bgm_38.asm, bgm_2f.asm, bgm_30.asm, bgm_35.asm, bgm_39.asm, bgm_32.asm, bgm_33.asm, bgm_34.asm, bgm_37.asm, bgm_36.asm, bgm_31.asm |
 | $3f | ROMX | 16383 | 1 | 48 | 0 | bgm_2e.asm, bank0.asm, bgm_2b.asm, bgm_29.asm, bgm_2d.asm, bgm_2c.asm, bgm_2a.asm, sfx_11.asm, sfx_12.asm, sfx_17.asm, sfx_1b.asm, sfx_0a.asm, sfx_0c.asm, sfx_15.asm, sfx_26.asm, sfx_1a.asm, sfx_09.asm, sfx_08.asm, sfx_16.asm, sfx_1c.asm, sfx_14.asm, sfx_18.asm, sfx_06.asm, sfx_07.asm, sfx_19.asm, sfx_24.asm, sfx_25.asm, sfx_05.asm, sfx_13.asm, sfx_20.asm, sfx_23.asm, sfx_21.asm, sfx_1e.asm, sfx_22.asm, sfx_01.asm, sfx_0d.asm, sfx_0e.asm, sfx_02.asm, sfx_1f.asm, sfx_0b.asm, sfx_04.asm, sfx_03.asm, sfx_10.asm, sfx_0f.asm, bgm_28.asm, sfx_00.asm, sfx_1d.asm, sfx_27.asm |
-| WRAM0#0 | WRAM0 | 1757 | — | 16 | 0 | wram.asm |
+| WRAM0#0 | WRAM0 | 1809 | — | 18 | 0 | wram.asm |
 | WRAMX#1 | WRAMX | 57 | — | 7 | 0 | wram.asm |
 | HRAM#0 | HRAM | 74 | — | 5 | 0 | hram.asm |
 
@@ -1140,7 +1140,7 @@ HRAM: 75 bytes used / 52 free
 | $6a2f-$6eb5 | 1159 | bgm_2d.asm | BGM - $2d |
 | $6eb6-$7ffe | 4425 | bgm_2e.asm | BGM - $2e |
 
-### WRAM0#0 — WRAM0 (16 sections, 0 analyzed)
+### WRAM0#0 — WRAM0 (18 sections, 0 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
@@ -1152,9 +1152,11 @@ HRAM: 75 bytes used / 52 free
 | $c2c1-$c2d6 | 22 | wram.asm | wram_item_state |
 | $c2d7-$c2e9 | 19 | wram.asm | wram_story_flags |
 | $c2ea-$c52d | 580 | wram.asm | wram_floor_grid |
-| $c52e-$c52f | 2 | wram.asm | wram_spawn_cell |
-| $c561-$c56d | 13 | wram.asm | wram_menu |
+| $c52e-$c531 | 4 | wram.asm | wram_spawn_cell |
+| $c55c-$c55e | 3 | wram.asm | wram_special_scene |
+| $c561-$c56e | 14 | wram.asm | wram_menu |
 | $c586-$c7ca | 581 | wram.asm | wram_floor_snapshot |
+| $c7cb-$c7f8 | 46 | wram.asm | wram_editor_state |
 | $c7f9-$c809 | 17 | wram.asm | wram_player |
 | $cf34-$cf39 | 6 | wram.asm | wram_monster_portrait |
 | $cf40-$cf7e | 63 | wram.asm | wram_scene |

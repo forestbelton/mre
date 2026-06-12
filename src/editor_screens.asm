@@ -16,45 +16,43 @@ INCLUDE "sound_ids.inc"
 
 SECTION "Editor screen functions", ROMX[$4000], BANK[$15]
 
-Data_15_4000:
-	db $06, $40
+; Room size words, indexed by wRoomSizeState (0 BIG / 1 SMALL / 2 fresh).
+EditorSizeWordPtrs:
+	dw EditorBigText
+	dw EditorSmallText
+	dw EditorSizeText
+EditorBigText:
+	db "BIG", 0
+EditorSmallText:
+	db "SMALL", 0
+EditorSizeText:
+	db "SIZE", 0
 
-Data_15_4002:
-	db $0a, $40
-
-Data_15_4004:
-	db $10, $40, $42, $49, $47, $00
-
-Data_15_400a:
-	db $53, $4d, $41, $4c, $4c, $00
-
-Data_15_4010:
-	db $53, $49, $5a, $45, $00
-
-Func_15_4015:
+; Room-select screen: backdrop + the three room names + their size words.
+DrawRoomSelectScreen:
 	ld hl, $6674
 	ld de, $9800
 	call CopyBgMap
-	ld hl, $c7e1
+	ld hl, wRoomName1
 	ld bc, $0500
 	ld a, $0e
-	call Func_00_1fa4
-	ld hl, $c7e8
+	call DrawAsciiText
+	ld hl, wRoomName2
 	ld bc, $0507
 	ld a, $0e
-	call Func_00_1fa4
-	ld hl, $c7ef
+	call DrawAsciiText
+	ld hl, wRoomName3
 	ld bc, $050e
 	ld a, $0e
-	call Func_00_1fa4
+	call DrawAsciiText
 	ld d, $00
 Func_15_4041:
 	ld a, d
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld a, [hl]
 	add a, a
-	ld hl, $4000
+	ld hl, EditorSizeWordPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
@@ -75,7 +73,7 @@ Func_15_4062:
 	ld b, $07
 	push de
 	ld a, $0e
-	call Func_00_1fa4
+	call DrawAsciiText
 	pop de
 	inc d
 	ld a, $03
@@ -104,7 +102,7 @@ Func_15_408a:
 	ld c, a
 	cp $03
 	jr nc, Func_15_40ac
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld a, [hl]
 	ld b, a
@@ -115,7 +113,7 @@ Func_15_408a:
 	ld h, [hl]
 	ld l, a
 	push bc
-	call Func_00_33fb
+	call SetEditorMessage1
 	pop bc
 	ld a, b
 	cp $02
@@ -129,7 +127,7 @@ Func_15_40ac:
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
-	call Func_00_33fb
+	call SetEditorMessage1
 	ret
 Func_15_40bb:
 	ld a, c
@@ -206,7 +204,7 @@ Func_15_410f:
 	call WaitForPaletteFadeCgb
 	ld a, [$c55e]
 	ld c, a
-	FAR_CALL Func_12_43fe
+	FAR_CALL SwitchPieceCategory
 	ret
 Func_15_4134:
 	ld hl, EditorStatusBar
@@ -240,20 +238,20 @@ Func_15_4147:
 	ld l, a
 	ld bc, $0207
 	ld a, $0e
-	call Func_00_1fa4
+	call DrawAsciiText
 	ld a, [$c55d]
-	ld hl, $c7f6
+	ld hl, wRoomSizeState
 	rst AddAToHL
 	ld a, [hl]
 	add a, a
-	ld hl, $4000
+	ld hl, EditorSizeWordPtrs
 	rst AddAToHL
 	ld a, [hl+]
 	ld h, [hl]
 	ld l, a
 	ld bc, $0407
 	ld a, $0e
-	call Func_00_1fa4
+	call DrawAsciiText
 	call Func_15_41cf
 	ret
 Func_15_4185:

@@ -144,12 +144,17 @@ wFloorSpawnerTable::   ds 48  ; $C4FE: per-floor spawner table (record arr3; 4 x
 SECTION "wram_spawn_cell", WRAM0[$C52E]
 wSpawnCellX::       ds 1    ; $C52E: pickup/effect spawn target cell X
 wSpawnCellY::       ds 1    ; $C52F: pickup/effect spawn target cell Y
+wExitCellX::        ds 1    ; $C530: floor-exit cell X (bosses drop the exit here;
+wExitCellY::        ds 1    ; $C531:   ... and Y. Set by ParseFloorRecord/editor scan)
 
 
 SECTION "wram_special_scene", WRAM0[$C55C]
 wSpecialScene::     ds 1    ; $C55C: special-scene index for the current floor
                             ;   ($ff = none); picks the mural/font page in room/
                             ;   special_scene.asm (LoadRoomMural, bank $38)
+                    ds 1    ; $C55D: room-select result/slot (not confidently decoded)
+wPieceCategory::    ds 1    ; $C55E: editor piece-menu category tab (0-5), switched by
+                            ;   SwitchPieceCategory
 
 
 SECTION "wram_menu", WRAM0[$C561]
@@ -174,6 +179,8 @@ wMenuItemValue::    ds 1    ; $C568: value of the item under the cursor ($fd = b
 wMenuItemCount::    ds 1    ; $C56A: number of selectable items (the cursor wrap bound)
 wMenuItemPtr::      ds 2    ; $C56B/$C56C: pointer to the active menu's item-value list (from $1877)
 wGridColCount::     ds 1    ; $C56D: number of columns in the current grid row (bounds wGridCol)
+wPlacedMonsterCount:: ds 1  ; $C56E: monsters placed on the floor by the editor (cap 9,
+                            ;   slots in wFloorMonsterTable)
 
 
 SECTION "wram_floor_snapshot", WRAM0[$C586]
@@ -187,6 +194,30 @@ SECTION "wram_floor_snapshot", WRAM0[$C586]
 ; the WRAM grids expanded by ParseFloorRecord. See docs/floor_data.md.
 wFloorSnapshot::    ds $245
 
+
+SECTION "wram_editor_state", WRAM0[$C7CB]
+; Level-editor working state (banks $12/$15 + the home edit loop).
+wFoundMonsterId::   ds 1    ; $C7CB: monster id of the placement under the cursor
+wFoundMonsterSlot:: ds 1    ; $C7CC: its slot index in wFloorMonsterTable
+                    ds 2    ; $C7CD-$C7CE: that entry's +2/+3 parameter bytes (copied by
+                            ;   FindMonsterAtCursor; edited by the property dialogs)
+                    ds 7    ; $C7CF-$C7D5: property-dialog scratch (nibbles of the params)
+; Editor status-message line: up to 3 message pointers (bank-$17 text, drawn by
+; RenderTextToVram) cycled every $78 frames by Update/AdvanceEditorTicker;
+; timer $ff = sticky (no cycling).
+wEditorMsgPtrs::    ds 6    ; $C7D6: message pointer list (3 x dw)
+wEditorMsgIndex::   ds 1    ; $C7DC: which message is showing
+wEditorMsgCount::   ds 1    ; $C7DD: how many pointers are live (1-3)
+wEditorMsgTimer::   ds 1    ; $C7DE: frames until the next message ($ff = frozen)
+wEditorBgBase::     ds 2    ; $C7DF: BG map base the grid/preview drawers write to
+                            ;   ($9800 grid / $9c01 / $9c44 preview), little-endian
+; The three editor rooms' names + size state (drawn on the room-select screen
+; and the room-start plaque). Names are 6-byte ASCII + 1 pad; size state:
+; 0 = "BIG" (full 14-row floor), 1 = "SMALL", 2 = fresh/reset ("SIZE").
+wRoomName1::        ds 7    ; $C7E1
+wRoomName2::        ds 7    ; $C7E8
+wRoomName3::        ds 7    ; $C7EF
+wRoomSizeState::    ds 3    ; $C7F6: per-room size/state marker
 
 SECTION "wram_player", WRAM0[$C7F9]
 ; The player avatar is entity slot 0 of the entity array (base $C7F9), so its

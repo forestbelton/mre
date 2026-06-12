@@ -1273,7 +1273,7 @@ Func_0f_4ac6:
 	jr z, Func_0f_4ad9
 	cp $02
 	jr z, Func_0f_4ad9
-	FAR_CALL Func_12_484e
+	FAR_CALL DrawFloorPreviewSprites
 Func_0f_4ad9:
 	ldh a, [hJoyPressed]
 	bit 1, a
@@ -1294,7 +1294,7 @@ Func_0f_4aef:
 	call Func_0f_4b4f
 	ret
 Func_0f_4b02:
-	FAR_CALL Func_12_47e5
+	FAR_CALL DrawFloorPreviewMap
 	ld hl, $5138
 	ld de, $9de3
 	call CopyBgMap
