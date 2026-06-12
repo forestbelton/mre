@@ -155,6 +155,13 @@ the component kinds above. `buildassets.py` stays the single build entry.
    write the compiler + a decode bootstrap, convert the 6 screens + intro(?);
    re-express the already-structured asm screens (editor/$2b/cox/room_screen)
    in it only if it pays.
+   **DONE 2026-06-12** for the screen family: each screen's arrangement is a
+   Tiled `.tmx` next to its sheet PNG (layer "map" over the sheet tileset with
+   Tiled flip flags; layer "palette" over the shared 8-swatch
+   `assets/screen/palettes.png`). `tmx_to_maps` in pngasset compiles it
+   (`map:` key in assets.yaml); all 7 (6 screens + intro_book) round-trip
+   byte-exact and their 14 map bins are deleted. intro_book classified into
+   family A by inspection (xflips present → authored).
 4. **New carves land in the new model** — screen_2a, screen_2b, screen_19,
    tradehouse, next_room, the $0c editor library: sheet PNG + authored maps,
    no new bins. (screen_25 = room_screen is already half-migrated.)

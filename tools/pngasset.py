@@ -240,15 +240,71 @@ def sheet_png_to_tiles(path: Path, count: int, sheet_w: int = 16) -> list[bytes]
     return tiles
 
 
+def tmx_to_maps(tmx_path, tiles_per_bank=384):
+    """Compile a Tiled .tmx into (tilemap, attrmap) bytes — the hand-authored
+    (family-A) map source, see docs/asset_source_model.md.
+
+    Expected shape (what scratch-era make_tmx.py bootstrapped from the ROM):
+      - a sheet tileset (tilecount = 2*tiles_per_bank: VRAM bank 0 stacked over
+        bank 1, 16 tiles/row) and an 8-swatch "palettes" tileset.
+      - layer "map": the BG arrangement. GID -> stacked sheet index; bank = attr
+        bit 3 from index >= tiles_per_bank; tile byte is $8800-signed. Tiled's
+        flip flags (GID bits 31/30) -> attr bits 5/6.
+      - layer "palette": per-cell CGB palette via the swatch tileset."""
+    import xml.etree.ElementTree as ET
+
+    HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
+    root = ET.parse(tmx_path).getroot()
+    sheet_first = pal_first = None
+    for ts in root.findall("tileset"):
+        n = int(ts.get("tilecount", 0))
+        if n == 2 * tiles_per_bank:
+            sheet_first = int(ts.get("firstgid"))
+        elif n == 8:
+            pal_first = int(ts.get("firstgid"))
+    if sheet_first is None or pal_first is None:
+        raise SystemExit(f"{tmx_path}: need a {2*tiles_per_bank}-tile sheet tileset "
+                         "and an 8-swatch palette tileset")
+    layers = {}
+    for ly in root.findall("layer"):
+        data = ly.find("data")
+        if data.get("encoding") != "csv":
+            raise SystemExit(f"{tmx_path}: layer {ly.get('name')!r} must be CSV-encoded")
+        layers[ly.get("name")] = [int(t) for t in data.text.replace("\n", ",").split(",")
+                                  if t.strip()]
+    if "map" not in layers or "palette" not in layers:
+        raise SystemExit(f"{tmx_path}: need layers 'map' and 'palette'")
+    gids, pals = layers["map"], layers["palette"]
+    if len(gids) != len(pals):
+        raise SystemExit(f"{tmx_path}: map/palette layer size mismatch")
+    tmap, amap = bytearray(), bytearray()
+    for cell, (g, pg) in enumerate(zip(gids, pals)):
+        xf, yf = bool(g & HFLIP), bool(g & VFLIP)
+        idx = (g & GIDMASK) - sheet_first
+        if idx < 0:
+            raise SystemExit(f"{tmx_path}: cell {cell} is empty/not a sheet tile")
+        bank, sidx = divmod(idx, tiles_per_bank)
+        if sidx < 128:
+            raise SystemExit(f"{tmx_path}: cell {cell} uses sheet tile {sidx} "
+                             "(< 128: not addressable in $8800 BG mode)")
+        tmap.append(sidx & 0xFF if sidx >= 256 else sidx)
+        pal = pg - pal_first
+        if not 0 <= pal <= 7:
+            raise SystemExit(f"{tmx_path}: cell {cell} palette layer isn't a swatch")
+        amap.append(pal | (bank << 3) | (xf << 5) | (yf << 6))
+    return bytes(tmap), bytes(amap)
+
+
 def cmd_screen(args: argparse.Namespace) -> int:
     """Two-VRAM-bank colour screen from ONE indexed tile-sheet PNG. The sheet holds
     both banks stacked (top `--tiles` tiles -> VRAM bank 0, bottom -> bank 1) and the
     16 CGB palettes (8 BG + 8 OBJ) in its PNG palette table; each tile is shown in
     its real palette (pixel = palette*4 + 2bpp value). Splits it into
-    tiles_bank0/1.bin + palette.bin and passes the committed tilemap/attrmap (next to
-    the PNG) through. The screens' full tile data can't come from a screenshot -- 402
-    of town's 768 tiles are off-screen animation/scroll frames -- so the editable
-    source is this sheet plus the committed maps (the arrangement). See docs/gfx_assets.md."""
+    tiles_bank0/1.bin + palette.bin; the arrangement comes from the Tiled .tmx
+    (--map, the hand-authored source — open it in Tiled with the sheet as tileset).
+    The screens' full tile data can't come from a screenshot -- 402 of town's 768
+    tiles are off-screen animation/scroll frames -- so the editable source is this
+    sheet plus the map. See docs/gfx_assets.md, docs/asset_source_model.md."""
     png = Path(args.png)
     d = png.parent
     tiles = sheet_png_to_tiles(png, args.tiles * 2)            # both banks, stacked
@@ -257,14 +313,19 @@ def cmd_screen(args: argparse.Namespace) -> int:
     for i in range(args.palettes * 4):                        # 16 palettes * 4 colors
         word = rgb888_to_555(*colors[i])
         pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
+    if getattr(args, "map", None):
+        tmap, amap = tmx_to_maps(d / args.map, args.tiles)
+    else:
+        tmap = (d / "tilemap.bin").read_bytes()               # legacy committed maps
+        amap = (d / "attrmap.bin").read_bytes()
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     comps = [
         ("tiles_bank0", b"".join(tiles[: args.tiles])),
         ("tiles_bank1", b"".join(tiles[args.tiles:])),
         ("palette", bytes(pal)),
-        ("tilemap", (d / "tilemap.bin").read_bytes()),        # committed maps,
-        ("attrmap", (d / "attrmap.bin").read_bytes()),        # passed through to build/
+        ("tilemap", tmap),
+        ("attrmap", amap),
     ]
     for name, data in comps:
         (out / f"{name}.bin").write_bytes(data)
@@ -777,6 +838,9 @@ def main() -> int:
     sc.add_argument("--out-dir", required=True)
     sc.add_argument("--tiles", type=int, default=384, help="tiles per bank")
     sc.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
+    sc.add_argument("--map", default=None,
+                    help="Tiled .tmx (next to --png) carrying the arrangement; "
+                         "compiled to tilemap/attrmap instead of reading the bins")
     sc.set_defaults(fn=cmd_screen)
 
     scn = sub.add_parser(

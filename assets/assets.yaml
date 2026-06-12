@@ -26,31 +26,38 @@ logo:
 intro_book:                # 10x20 (top half of the screen)
   mode: screen
   png: intro/intro.png
+  map: intro.tmx
 
 # Full-screen backgrounds (src/gfx/screen/*.asm).
 town:
   mode: screen
   png: screen/town/town.png
+  map: town.tmx
 
 tower:
   mode: screen
   png: screen/tower/tower.png
+  map: tower.tmx
 
 tower_open:
   mode: screen
   png: screen/tower_open/tower_open.png
+  map: tower_open.tmx
 
 room_start:
   mode: screen
   png: screen/room_start/room_start.png
+  map: room_start.tmx
 
 room_clear:
   mode: screen
   png: screen/room_done/room_done.png
+  map: room_done.tmx
 
 title:
   mode: screen
   png: screen/title/title.png
+  map: title.tmx
 
 # Character portraits (src/gfx/portrait/*.asm). Maps are derived from the layout
 # constant + the indexed sheet (layout:); only the nada pair still commits map bins.
