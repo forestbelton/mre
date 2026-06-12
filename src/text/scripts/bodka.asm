@@ -64,7 +64,7 @@ Bodka_BuildStudioScene:
 	ret
 
 Bodka_BuildTowerScene:
-	FAR_CALL Func_1f_4d66
+	FAR_CALL LoadBlackPalettes
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
@@ -159,17 +159,13 @@ Bodka_RenderPortrait:
 	ret
 
 Bodka_RenderPortraitAlt:
-	ld a, $3c
+	ld a, LOW(Bodka_RenderPortraitAlt)
 	ld [wRendererAddr], a
-	ld a, $5f
+	ld a, HIGH(Bodka_RenderPortraitAlt)
 	ld [$d61f], a
-	ld a, $18
+	ld a, BANK(Bodka_RenderPortraitAlt)
 	ld [wRendererBank], a
-	ld a, $1e
-	ld [wDrawBank], a
-	ld hl, Bodka_chest
-	ld bc, $482b
-	call DrawMetasprite
+    DRAW_METASPRITE Bodka_chest, $48, $2b
 	ld hl, Bodka_eyes_smile
 	ld a, $1e
 	ld de, $98a6

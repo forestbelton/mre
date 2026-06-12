@@ -23,18 +23,22 @@ INCLUDE "text.inc"
 
 SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]
 
-Func_1f_4d66:
+; Blank the display to black: fill all 6 BG and 6 OBJ palettes with $0000
+; (RGB555 black), clear the dirty flags, and wait a frame for the flush. The
+; black counterpart to LoadWhitePalettes; used at scene transitions.
+LoadBlackPalettes:
 	ld hl, wBgPalettes
 	ld de, $0000
-	call Func_1f_4d82
+	call FillPaletteBlock
 	ld hl, wObjPalettes
 	ld de, $0000
-	call Func_1f_4d82
+	call FillPaletteBlock
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
 	jp WaitForNextFrame
-Func_1f_4d82:
+; Fill 6 palettes ($30 bytes = $18 words) at hl with the RGB555 color in de.
+FillPaletteBlock:
 	ld c, $18
 .loop:
 	ld [hl], e
@@ -90,7 +94,7 @@ Nada_ShowScene:
 	call ShowPortraitTransition
 	ret
 Nada_ShowSnapReaction:
-	call Func_1f_4d66
+	call LoadBlackPalettes
 	call HideAllSprites
 	call LoadTextUi
 	ld a, $00
@@ -129,7 +133,7 @@ Nada_ShowSnapReaction:
 	call WaitForNextFrame
 	ret
 Nada_ShowRageScene:
-	call Func_1f_4d66
+	call LoadBlackPalettes
 	call HideAllSprites
 	call LoadTextUi
 	ld a, $00
