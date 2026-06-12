@@ -37,7 +37,7 @@ Data_28_7356:                              ; CopyBgMap 2x8 patch -> $9986 (DrawT
 .attr:
 	db $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07, $07
 
-Data_28_737c:                              ; CopyBgMap 2x8 patch -> $9966 (Func_30_5571)
+Data_28_737c:                              ; CopyBgMap 2x8 patch -> $9966 (TitleStateWaitStart)
 	db 2, 8
 	dw .attr
 	dw .idx
@@ -46,7 +46,7 @@ Data_28_737c:                              ; CopyBgMap 2x8 patch -> $9966 (Func_
 .attr:
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 
-Data_28_73a2:                              ; CopyBgMap 2x9 patch -> $99a6 (Func_30_5571)
+Data_28_73a2:                              ; CopyBgMap 2x9 patch -> $99a6 (TitleStateWaitStart)
 	db 2, 9
 	dw .attr
 	dw .idx

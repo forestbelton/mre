@@ -223,6 +223,14 @@ ld [$c29c],a; ld hl,<descriptor>; call $3942`.
 ~54 libraries / ~65 KB / ~400 screens across banks **`$0c`** (the editor's set,
 ~23), `$05`, `$15`, `$0a`, `$2b`, plus `$0f`/`$23`.
 
+**Bank `$30` relabeled (2026-06-12).** The screen-flow driver bank is no longer
+`Func_30_*` soup: every flow, helper and data table in `src/screens.asm` is
+named (town select, tower entrance/open, room start, next-room flight, room
+clear tally, title, intro book, DMG-only notice), ~10 blocks of code misfiled
+as `db` data (some live, in fall-through paths) were disassembled, and the
+home-bank helpers got names (`BankMapCopyIndexed`, `DrawMetaspriteIndexed`,
+`BankMapCopyInline`, `WriteBcdDigitTile`, palette fades).
+
 **`analyzed.asm` retired (2026-06-09).** The old catch-all is fully drained:
 every screen/sprite data bank now lives in a named subsystem file (mostly under
 `src/gfx/screen/`), each carved byte-exact with a header documenting its traced
@@ -245,10 +253,11 @@ maps, not PNG — no tileset/palette trace yet). `scratch/structure_editor_scree
 **Bank `$2b` done (structured ASM, 2026-06-08, commit `20e9ed0`).** 26 descriptors
 (run `$72a2-$7daa`: 11× 2×17 + 15× 4×16) restructured into `Screen2b_00-25`
 (`scratch/structure_bank2b_screens.py`). Verified real (sane idx maps, uniform
-`$08` attr), drawn by the bank-$30 flow `Func_30_5cb9` via the raw-address table
-at `$30:$5fcb`. Names are **structural only** — the depicted content isn't pinned
-(the bank-$30 driver is still `Func_30_*`); IDing it would let them be renamed.
-Same treatment fits `$0a`/`$23` next.
+`$08` attr). **Content pinned (2026-06-12, bank-$30 relabel):** they are the
+intro storybook's caption text — each cutscene page draws one 2x17 top line +
+one 4x16 text block into the window, paired by `IntroCaptionPtrs` and drawn by
+`IntroDrawCaption` (screens.asm; the former `Func_30_5cb9`/`$30:$5fcb`).
+Same structural treatment fits `$0a`/`$23` next.
 
 **Bank `$0f` done (structured ASM, 2026-06-08, commits `f620ad1`+next).** Bank
 `$0f` is the already-carved `src/monster_detail.asm` (not in analyzed.asm). The 7

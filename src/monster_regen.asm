@@ -34,7 +34,7 @@ ShowRegeneratedMonster:
 	ld a, SOUND_BGM_DiscRegen
 	call PlaySoundTracked
 	pop af
-	call Func_00_07c5
+	call FadePalettesToBlack
 	xor a
 	ldh [rVBK], a
 	ld bc, $1800
@@ -149,7 +149,7 @@ Func_14_413c:
 	ld [wUiTimer], a
 	cp $f0
 	jr nz, Func_14_413c
-	call Func_00_07a7
+	call FadePalettesToWhite
 	ld d, $3c
 Func_14_4158:
 	call WaitForNextFrame
@@ -165,7 +165,7 @@ Func_14_4158:
 	ld de, $9800
 	call CopyBgMap
 	call SetMonsterOamTiles
-	call Func_00_0794
+	call FadeInPalettes
 	call WaitForRegenConfirm
 PlayPashuteBgm:
 	push af

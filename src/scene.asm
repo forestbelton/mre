@@ -20,7 +20,7 @@ SceneInit:
 	ld [$cf61], a
 	ld [$cf52], a
 	ld [$cf64], a
-	call Func_00_083c
+	call BlackoutPalettes
 	ldh a, [hSpriteOriginY]
 	ld [$cf6d], a
 	ldh a, [hSpriteOriginX]
@@ -737,7 +737,7 @@ SceneSetupTracks:
 	ret
 SceneFinish:
 	call Func_00_0bdd
-	call Func_00_083c
+	call BlackoutPalettes
 	call Func_00_16ad
 	FAR_CALL DrawFloorPieces
 	FAR_CALL Func_01_75ad
@@ -865,7 +865,7 @@ SceneBgTilesetBank:     ; $45fa: bank for the BG tile load
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
 ScenePaletteBank:    ; $4602: bank of the palette block (also the metasprite-tile bank, Func_05_43db)
 	db $08, $09, $07, $0b, $06, $0a, $0d, $0e
-SceneDescBank:       ; $460a: per-scene bank the CopyBgMap descriptor is read from (SceneDrawBgMap -> b -> Func_00_10dc)
+SceneDescBank:       ; $460a: per-scene bank the CopyBgMap descriptor is read from (SceneDrawBgMap -> b -> BankMapCopyInline)
 	db $05, $09, $07, $0c, $06, $0a, $0c, $0e
 SceneDrawBank:          ; $4612: per-scene metasprite bank -> wDrawBank (Func_05_44b4)
 	db $08, $09, $07, $0b, $06, $0a, $0c, $0e

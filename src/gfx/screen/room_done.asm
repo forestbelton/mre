@@ -37,56 +37,56 @@ Data_21_7356:
 Data_21_73aa:
 	db $8c, $73
 
-Func_21_73ac:
+RoomClearDrawScore:
 	call WaitForHBlank
 	ld hl, wScore
 	ld de, $98cd
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ret
-Func_21_73e4:
+RoomClearDrawTimer:
 	call WaitForHBlank
 	ld hl, wFloorTimer
 	ld de, $992c
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ret
-Func_21_7409:
+RoomClearDrawZeroDigit:
 	call WaitForHBlank
 	ld de, $9927
 	ld a, $00
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ret
 
 ; ($22:$7000 BG/OBJ palettes carved into the screen asset as TowerEntrancePalettes.)

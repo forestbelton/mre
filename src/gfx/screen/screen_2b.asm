@@ -1,9 +1,11 @@
 ; Bank-$2b screen library (tileset + 26 BG-tilemap descriptors).
 ;
 ; Data_2b_4000 is the 2bpp tileset; Screen2b_00..25 are the structured
-; CopyBgMap descriptors (11x 2x17 strips + 15x 4x16 boxes) drawn by the
-; bank-$30 flow Func_30_5cb9 via the pointer table at $30:$5fcb. Names are
-; structural only -- the depicted content is not yet pinned in-game.
+; CopyBgMap descriptors (11x 2x17 strips + 15x 4x16 boxes): the intro
+; storybook's caption text. Each cutscene page shows one 2x17 top line in the
+; window at $9c22 (pages 1/6/11/13 have none) and one 4x16 text block at
+; $9c83, paired up by IntroCaptionPtrs / drawn by IntroDrawCaption in
+; screens.asm (bank $30).
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
 
 SECTION "analyzed_0ac000", ROMX[$4000], BANK[$2b]

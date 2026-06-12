@@ -1,4 +1,23 @@
-; Full-screen draw routines: Town/Title/Intro/Tower screens (gfx/screen/* holds their data)
+; Bank $30 -- the full-screen presentation flows, one blocking draw+input loop
+; per screen, entered from the wGameScene dispatcher in home.asm:
+;
+;   DrawTownScreen          town map; d-pad picks a location (tower/Bodka/
+;                           Pashute/Toamuna/Verde), confirm -> scene 5+N
+;   DrawTowerEntranceScreen tower door opens, player enters
+;   DrawRoomStartScreen     vault door + "FLOOR N" plaque (variants for
+;                           basement, wRoomType-6 and user/editor rooms)
+;   DrawNextRoomScreen      between-floors flight along a (y,x) path, with
+;                           the 10-floor progress ladder
+;   DrawRoomClearScreen     results: time-bonus tally into wScore (BCD),
+;                           NEXT/TOWN menu
+;   DrawTowerOpenScreen     tower-opening cutscene
+;   LoadTitleScreen         title: hi-score, START/CONTINUE menu, SRAM load
+;   DrawIntroBookScreen     15-page intro storybook (art from banks $29-$2b,
+;                           captions = the bank-$2b Screen2b_* descriptors)
+;   DmgOnlyScreen           "for Game Boy Color" notice on non-CGB hardware
+;
+; Each loop drives the shared wScreen* scratchpad (wram.asm $D0F3) and ends by
+; setting wGameScene. Screen art lives in the per-screen banks (gfx/screen/*).
 ; Carved out of analyzed.asm (byte-exact: section names + placement unchanged).
 
 INCLUDE "hardware.inc"
@@ -8,21 +27,27 @@ INCLUDE "sound_ids.inc"
 
 SECTION "analyzed_0c0000", ROMX[$4000], BANK[$30]
 
-Func_30_4000:
-	ld d, b
-	ld c, h
-	ld b, c
-	ld e, c
-	nop
-	ld b, l
-	ld b, h
-	ld c, c
-	ld d, h
-	nop
+; "PLAY"/"EDIT" ASCII -- was misdisassembled as code. Unreferenced (no pointer
+; to $30:$4000 anywhere in the ROM); leftover draft of the title menu, which
+; instead draws pre-rendered tile patches (Data_28_737c).
+UnusedPlayEditText:
+	db "PLAY", 0, "EDIT", 0
 
-Data_30_400a:
-	db $d9, $41, $dd, $41, $06, $42, $2f, $42, $54, $42, $00, $98, $42, $99, $ac, $98
-	db $4c, $99, $a3, $98
+; Town location-select, indexed by wScreenInput (0-4). Confirming location N
+; starts scene SCENE_TOWN+1+N (see TownConfirmSelection + the scene farptr
+; table at $00:$0f7d): 0 = the tower (Naji's gate encounter), 1 = Bodka,
+; 2 = Pashute, 3 = Toamuna, 4 = Verde.
+; Per-location cursor handlers, dispatched via `jp hl` each frame.
+TownLocCursorHandlers:
+	dw TownCursorTower
+	dw TownCursorBodka
+	dw TownCursorPashute
+	dw TownCursorToamuna
+	dw TownCursorVerde
+; BG dest each location's name plate is drawn to (descriptors from the bank-$20
+; table at $20:$78f3, drawn by the TownDrawLocationNames loop).
+TownLocNameDests:
+	dw $9800, $9942, $98ac, $994c, $98a3
 
 DrawTownScreen:
 	xor a
@@ -46,16 +71,17 @@ DrawTownScreen:
 	ld bc, TownTilesBank1End - TownTilesBank1
 	call BankVramCopy
 	ld c, $00
-	ld a, [$d0fb]
+	ld a, [wTownStage]
 	ld b, $02
 	add a, b
 	ld b, a
-Func_30_405a:
+; draw the name plate of every unlocked location (count = wTownStage + 3)
+TownDrawLocationNames:
 	ld a, b
 	cp c
-	jp c, Func_30_4077
+	jp c, TownFinishSetup
 	push bc
-	ld hl, $4014
+	ld hl, TownLocNameDests
 	ld a, c
 	add a, a
 	rst AddAToHL
@@ -65,18 +91,18 @@ Func_30_405a:
 	ld hl, $78f3
 	ld b, $20
 	ld a, c
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	pop bc
 	inc c
-	jp Func_30_405a
-Func_30_4077:
+	jp TownDrawLocationNames
+TownFinishSetup:
 	ld a, BANK(Data_20_7356)
 	ld [wDrawBank], a
 	ld hl, Data_20_7356
 	ld b, $10
 	ld c, $08
 	call DrawMetasprite
-	call Func_30_42d5
+	call TownGlowOverlayInit
 	call HideUnusedOamSprites
 	ldh a, [rLCDC]
 	set 1, a
@@ -91,8 +117,10 @@ Func_30_4077:
 	ld c, $20
 	ld hl, $7040
 	call LoadObjPalettesToSlotBanked
-	call Func_30_436c
-Func_30_40ab:
+	call TownGlowInit
+; d-pad moves the cursor between locations (direction code 0-3 -> nav map);
+; A confirms (location 0 immediately, others once the cursor has settled).
+TownInputLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
@@ -100,25 +128,25 @@ Func_30_40ab:
 	bit 7, b
 	jr z, Func_30_40c0
 	ld a, $03
-	call Func_30_41a9
+	call TownMoveCursor
 	jp Func_30_4104
 Func_30_40c0:
 	bit 6, b
 	jr z, Func_30_40cc
 	ld a, $02
-	call Func_30_41a9
+	call TownMoveCursor
 	jp Func_30_4104
 Func_30_40cc:
 	bit 5, b
 	jr z, Func_30_40d8
 	ld a, $01
-	call Func_30_41a9
+	call TownMoveCursor
 	jp Func_30_4104
 Func_30_40d8:
 	bit 4, b
 	jr z, Func_30_40e4
 	ld a, $00
-	call Func_30_41a9
+	call TownMoveCursor
 	jp Func_30_4104
 Func_30_40e4:
 	bit 0, b
@@ -134,8 +162,8 @@ Func_30_40f7:
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	call Func_30_42c2
-	jp Func_30_4152
+	call HideWindowLayer
+	jp TownConfirmSelection
 Func_30_4104:
 	ld a, [wScreenInput]
 	cp $00
@@ -145,19 +173,19 @@ Func_30_4104:
 	jr nc, Func_30_411b
 	ld a, [$c287]
 	and $01
-	jp nz, Func_30_4129
+	jp nz, TownDrawFrame
 Func_30_411b:
-	ld hl, $4129
+	ld hl, TownDrawFrame
 	push hl
 	ld a, [wScreenInput]
 	add a, a
-	ld hl, $400a
+	ld hl, TownLocCursorHandlers
 	rst AddAToHL
 	rst DerefHL
 	jp hl
-Func_30_4129:
-	call Func_30_42ef
-	call Func_30_4336
+TownDrawFrame:
+	call TownGlowOverlayStep
+	call TownGlowPaletteStep
 	ld a, [wScreenFrame]
 	inc a
 	ld [wScreenFrame], a
@@ -171,116 +199,53 @@ Func_30_4129:
 	ld a, [wFadeLevel]
 	inc a
 	ld [wFadeLevel], a
-	jp Func_30_40ab
-Func_30_4152:
+	jp TownInputLoop
+; fade out and hand the selection to the scene dispatcher: scene =
+; SCENE_TOWN+1+location (5-9 = Naji/Bodka/Pashute/Toamuna/Verde scripts),
+; wGameSceneArg = location (restored as the cursor position on return).
+TownConfirmSelection:
 	call DisableLcdStatInterrupt
 	call WaitForPaletteFadeCgb
-	call Func_00_07a7
+	call FadePalettesToWhite
 	ld a, [wScreenInput]
 	ld [wGameSceneArg], a
 	add a, $05
 	ld [wGameScene], a
 	ret
 
-Data_30_4167:
-	db $01, $03
+; Town cursor-movement maps, one per growth stage (wTownStage 0-2): 5 rows
+; (current location) x 4 columns (d-pad direction 0=Right 1=Left 2=Up 3=Down,
+; see TownInputLoop) = the location the cursor moves to, $ff = no move.
+; Locked locations' rows are all $ff in the earlier stages.
+TownNavStage0:
+	db $01, $03, $01, $03 ; 0 tower
+	db $ff, $00, $ff, $00 ; 1 Bodka
+	db $ff, $ff, $ff, $ff ; 2 Pashute (locked)
+	db $00, $ff, $00, $ff ; 3 Toamuna
+	db $ff, $ff, $ff, $ff ; 4 Verde (locked)
+TownNavStage1:
+	db $01, $03, $01, $03 ; 0 tower
+	db $ff, $00, $ff, $02 ; 1 Bodka
+	db $ff, $00, $ff, $ff ; 2 Pashute
+	db $00, $ff, $00, $ff ; 3 Toamuna
+	db $ff, $ff, $ff, $ff ; 4 Verde (locked)
+TownNavStage2:
+	db $01, $03, $01, $03 ; 0 tower
+	db $ff, $00, $ff, $02 ; 1 Bodka
+	db $ff, $00, $01, $ff ; 2 Pashute
+	db $00, $ff, $04, $ff ; 3 Toamuna
+	db $00, $ff, $ff, $03 ; 4 Verde
+TownNavTables:
+	dw TownNavStage0
+	dw TownNavStage1
+	dw TownNavStage2
 
-Data_30_4169:
-	db $01, $03
-
-Data_30_416b:
-	db $ff, $00
-
-Data_30_416d:
-	db $ff, $00, $ff, $ff, $ff, $ff
-
-Data_30_4173:
-	db $00, $ff
-
-Data_30_4175:
-	db $00, $ff, $ff, $ff, $ff, $ff
-
-Data_30_417b:
-	db $01, $03
-
-Data_30_417d:
-	db $01, $03
-
-Data_30_417f:
-	db $ff, $00
-
-SECTION "analyzed_0c0181", ROMX[$4181], BANK[$30]
-
-Data_30_4181:
-	db $ff
-
-SECTION "analyzed_0c0182", ROMX[$4182], BANK[$30]
-
-Data_30_4182:
-	db $02
-
-SECTION "analyzed_0c0183", ROMX[$4183], BANK[$30]
-
-Data_30_4183:
-	db $ff
-
-SECTION "analyzed_0c0184", ROMX[$4184], BANK[$30]
-
-Data_30_4184:
-	db $00
-
-SECTION "analyzed_0c0185", ROMX[$4185], BANK[$30]
-
-Data_30_4185:
-	db $ff, $ff
-
-SECTION "analyzed_0c0187", ROMX[$4187], BANK[$30]
-
-Data_30_4187:
-	db $00
-
-SECTION "analyzed_0c0188", ROMX[$4188], BANK[$30]
-
-Data_30_4188:
-	db $ff, $00, $ff, $ff, $ff, $ff, $ff
-
-Data_30_418f:
-	db $01, $03, $01, $03, $ff, $00
-
-SECTION "analyzed_0c0195", ROMX[$4195], BANK[$30]
-
-Data_30_4195:
-	db $ff
-
-SECTION "analyzed_0c0196", ROMX[$4196], BANK[$30]
-
-Data_30_4196:
-	db $02, $ff, $00, $01, $ff, $00, $ff, $04
-
-SECTION "analyzed_0c019e", ROMX[$419e], BANK[$30]
-
-Data_30_419e:
-	db $ff
-
-SECTION "analyzed_0c019f", ROMX[$419f], BANK[$30]
-
-Data_30_419f:
-	db $00
-
-SECTION "analyzed_0c01a0", ROMX[$41a0], BANK[$30]
-
-Data_30_41a0:
-	db $ff
-
-SECTION "analyzed_0c01a1", ROMX[$41a1], BANK[$30]
-
-Data_30_41a1:
-	db $ff, $03, $67, $41, $7b, $41, $8f, $41
-
-Func_30_41a9:
+; A = d-pad direction (0-3); move the town cursor per the stage's nav map,
+; or play the "blocked" buzz if the map says $ff.
+TownMoveCursor:
 	ld d, a
-	ld hl, $41a3
-	ld a, [$d0fb]
+	ld hl, TownNavTables
+	ld a, [wTownStage]
 	add a, a
 	rst AddAToHL
 	rst DerefHL
@@ -309,8 +274,17 @@ Func_30_41c9:
 	ld [wFadeLevel], a
 Func_30_41d8:
 	ret
-	call Func_30_42c2
+
+; Location 0 (the tower): no name window, no cursor sprite -- the tower
+; highlight pulse (TownGlow*) marks the selection instead.
+TownCursorTower:
+	call HideWindowLayer
 	ret
+
+; Locations 1-4: settle-in for $10 frames (wFadeLevel), then hold. Cursor
+; metasprite = bank-$20 table $78fd, frame = per-location base + blink phase
+; (settled frame = base + 4); name plate into the window while settling.
+TownCursorBodka:
 	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_41ef
@@ -320,17 +294,19 @@ Func_30_41d8:
 	add a, $0f
 	jr Func_30_41fe
 Func_30_41ef:
-	call Func_30_42a6
+	call TownShowNameWindow
 	ld a, $03
-	call Func_30_42c9
+	call TownDrawNamePlate
 	ld b, $02
-	call Func_30_427d
+	call TownCursorBlinkFrame
 	add a, $0f
 Func_30_41fe:
 	ld e, $6e
 	ld d, $2c
-	call Func_30_428f
+	call TownDrawCursorSprite
 	ret
+
+TownCursorPashute:
 	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_4218
@@ -340,17 +316,19 @@ Func_30_41fe:
 	add a, $05
 	jr Func_30_4227
 Func_30_4218:
-	call Func_30_42a6
+	call TownShowNameWindow
 	ld a, $01
-	call Func_30_42c9
+	call TownDrawNamePlate
 	ld b, $02
-	call Func_30_427d
+	call TownCursorBlinkFrame
 	add a, $05
 Func_30_4227:
 	ld e, $72
 	ld d, $60
-	call Func_30_428f
+	call TownDrawCursorSprite
 	ret
+
+TownCursorToamuna:
 	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_423f
@@ -359,16 +337,18 @@ Func_30_4227:
 	ld a, $04
 	jr Func_30_424c
 Func_30_423f:
-	call Func_30_42a6
+	call TownShowNameWindow
 	ld a, $00
-	call Func_30_42c9
+	call TownDrawNamePlate
 	ld b, $02
-	call Func_30_427d
+	call TownCursorBlinkFrame
 Func_30_424c:
 	ld e, $1c
 	ld d, $60
-	call Func_30_428f
+	call TownDrawCursorSprite
 	ret
+
+TownCursorVerde:
 	ld a, [wFadeLevel]
 	cp $10
 	jr c, Func_30_4266
@@ -378,18 +358,18 @@ Func_30_424c:
 	add a, $0a
 	jr Func_30_4275
 Func_30_4266:
-	call Func_30_42a6
+	call TownShowNameWindow
 	ld a, $02
-	call Func_30_42c9
+	call TownDrawNamePlate
 	ld b, $02
-	call Func_30_427d
+	call TownCursorBlinkFrame
 	add a, $0a
 Func_30_4275:
 	ld e, $22
 	ld d, $2c
-	call Func_30_428f
+	call TownDrawCursorSprite
 	ret
-Func_30_427d:
+TownCursorBlinkFrame:
 	ld a, [wFadeLevel]
 	ld d, a
 	ld c, $00
@@ -402,21 +382,33 @@ Func_30_4283:
 	ld a, d
 	and $07
 	ret
-Func_30_428f:
+TownDrawCursorSprite:
 	ld hl, $78fd
 	ld b, $20
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	ret
 
-Data_30_4298:
-	db $f5, $78, $ea, $00, $c1, $f1, $c7, $df, $43, $4a, $cd, $09, $0c, $c9
+; Code, was misfiled as data. Unreferenced (no pointer to $30:$4298 in the
+; ROM): a draw-indexed-metasprite helper like DrawMetaspriteIndexed but without the
+; bank switch and with swapped coord registers. Dead.
+UnusedDrawMetaspriteIndexed:
+	push af
+	ld a, b
+	ld [wDrawBank], a
+	pop af
+	rst AddAToHL
+	rst DerefHL
+	ld b, e
+	ld c, d
+	call DrawMetasprite
+	ret
 
-Func_30_42a6:
+TownShowNameWindow:
 	ld hl, Data_20_792f
 	ld de, TILEMAP1
 	ld b, BANK(Data_20_792f)
 	ld a, $04
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ldh a, [rLCDC]
 	set 5, a
 	ldh [rLCDC], a
@@ -426,20 +418,22 @@ Func_30_42a6:
 	ldh [rWY], a
 	ret
 
-Func_30_42c2:
+HideWindowLayer:
 	ldh a, [rLCDC]
 	and $df
 	ldh [rLCDC], a
 	ret
 
-Func_30_42c9:
+TownDrawNamePlate:
 	ld hl, Data_20_792f
 	ld de, $9c23
 	ld b, BANK(Data_20_792f)
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
 
-Func_30_42d5:
+; Tower-selected highlight, secondary layer (a bank-$20 overlay drawn by
+; Func_20_796d, frame = wScreenAnim2): snap fully on/off at screen setup.
+TownGlowOverlayInit:
 	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_42e9
@@ -453,7 +447,9 @@ Func_30_42e9:
 	ld [wScreenAnim2], a
 	ret
 
-Func_30_42ef:
+; Per-frame: ramp wScreenAnim2 up to 3 while the cursor is on the tower
+; (every 4th frame), snap to 0 otherwise, then redraw the overlay.
+TownGlowOverlayStep:
 	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_430c
@@ -474,17 +470,30 @@ Func_30_430c:
 	and a
 	ret z
 
-Data_30_4315:
-	db $fa, $f6, $d0, $e6, $03, $20, $09, $fa, $f8, $d0, $3d, $ea, $f8, $d0, $18, $00
+; Code, was misfiled as data. Dead: the `ret z` above always takes (it tests
+; the zero just stored). Would have stepped wScreenAnim2 back down one notch
+; every 4th frame instead of snapping it to 0.
+UnusedTownGlowRampDown:
+	ld a, [wScreenFrame]
+	and $03
+	jr nz, Func_30_4325
+	ld a, [wScreenAnim2]
+	dec a
+	ld [wScreenAnim2], a
+	jr Func_30_4325
 
 Func_30_4325:
 	FAR_CALL Func_20_796d
 	ret
 
-Data_30_432e:
-	db $eb, $75, $f3, $75, $fb, $75, $03, $76
+; Tower-glow palette ramp: 4 palette blocks in bank $20 (off -> full glow),
+; indexed by wScreenAnim. Loaded into BG slot 2 + OBJ slot 0.
+TownGlowPalettes:
+	dw $75eb, $75f3, $75fb, $7603
 
-Func_30_4336:
+; Per-frame: ramp wScreenAnim toward 3 while the cursor is on the tower (every
+; 2nd frame), back toward 0 otherwise, reloading the glow palette each step.
+TownGlowPaletteStep:
 	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_4355
@@ -497,7 +506,7 @@ Func_30_4336:
 	ld a, [wScreenAnim]
 	inc a
 	ld [wScreenAnim], a
-	call Func_30_4387
+	call TownGlowLoadPalette
 	jr Func_30_436b
 Func_30_4355:
 	ld a, [wScreenAnim]
@@ -509,11 +518,11 @@ Func_30_4355:
 	ld a, [wScreenAnim]
 	dec a
 	ld [wScreenAnim], a
-	call Func_30_4387
+	call TownGlowLoadPalette
 Func_30_436b:
 	ret
 
-Func_30_436c:
+TownGlowInit:
 	ld a, [wScreenInput]
 	and a
 	jr nz, Func_30_437c
@@ -526,13 +535,13 @@ Func_30_437c:
 	ld [wScreenAnim], a
 	ld [wScreenAnim2], a
 Func_30_4383:
-	call Func_30_4387
+	call TownGlowLoadPalette
 	ret
 
-Func_30_4387:
+TownGlowLoadPalette:
 	ld a, [wScreenAnim]
 	add a, a
-	ld hl, $432e
+	ld hl, TownGlowPalettes
 	rst AddAToHL
 	rst DerefHL
 	push hl
@@ -570,8 +579,8 @@ DrawTowerEntranceScreen:
 	ld de, $9800
 	call BankMapCopyB
 	ld a, $03
-	call Func_30_4487
-	call Func_30_4494
+	call TowerDoorDrawSprite
+	call TowerEntranceDrawStatic
 	call HideUnusedOamSprites
 	ldh a, [rLCDC]
 	set 1, a
@@ -586,22 +595,24 @@ DrawTowerEntranceScreen:
 	ld c, $22
 	ld hl, $7040
 	call LoadObjPalettesToSlotBanked
-Func_30_4403:
+; A starts the door-opening sequence (wScreenInput 0 -> 1); the door then
+; animates open over wFadeLevel frames and the screen fades out at $48.
+TowerEntranceLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$c55d]
+	ld a, [$c55d] ; dead read (leftover; immediately overwritten)
 	bit 0, b
 	jr z, Func_30_442e
 	ld a, [wScreenInput]
 	cp $01
-	jp z, Func_30_4403
+	jp z, TowerEntranceLoop
 	push af
 	ld a, SOUND_SFX_11
 	call PlaySound
 	pop af
-	call Func_30_42c2
+	call HideWindowLayer
 	xor a
 	ld [wFadeLevel], a
 	ld a, $01
@@ -611,26 +622,28 @@ Func_30_442e:
 	cp $00
 	jr nz, Func_30_443d
 	ld a, $03
-	call Func_30_4487
+	call TowerDoorDrawSprite
 	jp Func_30_444a
 Func_30_443d:
 	ld a, [wFadeLevel]
 	cp $48
-	jr nc, Func_30_445a
-	call Func_30_4461
-	call Func_30_4484
+	jr nc, TowerEntranceExit
+	call TowerDoorStep
+	call TowerDoorDrawSpriteByPhase
 Func_30_444a:
-	call Func_30_4494
+	call TowerEntranceDrawStatic
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
 	inc a
 	ld [wFadeLevel], a
-	jp Func_30_4403
-Func_30_445a:
+	jp TowerEntranceLoop
+TowerEntranceExit:
 	call WaitForPaletteFadeCgb
-	call Func_00_07c5
+	call FadePalettesToBlack
 	ret
-Func_30_4461:
+; advance the door-opening phase (0-2) every $20 frames and redraw the door
+; BG patch (descriptor #phase from the bank-$22 table at $22:$75cd -> $9945)
+TowerDoorStep:
 	ld a, [wFadeLevel]
 	and $1f
 	cp $1f
@@ -645,18 +658,19 @@ Func_30_4475:
 	ld hl, $75cd
 	ld b, $22
 	ld de, $9945
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
-Func_30_4484:
+; door overlay metasprite #A (table $22:$75d3), frame 3 = closed
+TowerDoorDrawSpriteByPhase:
 	ld a, [wScreenPhase]
-Func_30_4487:
+TowerDoorDrawSprite:
 	ld b, $22
 	ld hl, $75d3
 	ld d, $69
 	ld e, $30
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	ret
-Func_30_4494:
+TowerEntranceDrawStatic:
 	ld a, $22
 	ld [wDrawBank], a
 	ld hl, $7356
@@ -665,18 +679,21 @@ Func_30_4494:
 	call DrawMetasprite
 	ret
 
-Data_30_44a4:
-	db $e6, $45, $2d, $46, $8d, $46
+; room-start screen state machine, indexed by wScreenPhase
+RoomStartPhaseHandlers:
+	dw RoomStartPhaseWait
+	dw RoomStartPhaseFloorInfo
+	dw RoomStartPhaseFadeOut
 
 DrawRoomStartScreen:
-	call Func_00_083c
+	call BlackoutPalettes
 	xor a
 	ld [wFadeLevel], a
 	xor a
 	ld [wScreenInput], a
 	ld [wScreenPhase], a
 	ld [wScreenTimer], a
-	ld a, [$c55d]
+	ld a, [$c55d] ; editor room slot (0-2); only used by the wRoomType-5 path
 	ld [wScreenAnim], a
 	call HideAllSprites
 	xor a
@@ -700,12 +717,14 @@ DrawRoomStartScreen:
 	ld a, [wRoomType]
 	cp $05
 	jr nz, Func_30_4506
+	; wRoomType 5 (user/editor room): alternate plaque instead of a floor number
 	ld b, $23
 	ld hl, $73b2
 	ld de, $9886
 	call BankMapCopyB
 	jr Func_30_4524
 Func_30_4506:
+	; wActiveFloor -> packed BCD (tens<<4 | ones) for the digit draws
 	ld a, [wActiveFloor]
 	ld b, a
 	ld c, $00
@@ -723,8 +742,8 @@ Func_30_4514:
 	swap a
 	and $f0
 	or b
-	ld [$d100], a
-	call Func_30_476c
+	ld [wFloorBcd], a
+	call RoomStartDrawFloorNumber
 Func_30_4524:
 	xor a
 	ld b, $08
@@ -739,39 +758,43 @@ Func_30_4524:
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
-Func_30_4540:
+RoomStartLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$c55d]
+	ld a, [$c55d] ; dead read (leftover; immediately overwritten)
 	bit 0, b
 	jr nz, Func_30_4554
 	bit 1, b
-	jr z, Func_30_456a
+	jr z, RoomStartRunPhase
 Func_30_4554:
+	; A/B skips ahead (latch wScreenInput = 1)
 	ld a, [wScreenInput]
 	cp $01
-	jp z, Func_30_456a
+	jp z, RoomStartRunPhase
 	ld a, $01
 	ld [wScreenInput], a
 	push af
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
-	jr Func_30_456a
-Func_30_456a:
-	ld hl, $4578
+	jr RoomStartRunPhase
+RoomStartRunPhase:
+	ld hl, RoomStartDrawFrame
 	push hl
 	ld a, [wScreenPhase]
 	add a, a
-	ld hl, $44a4
+	ld hl, RoomStartPhaseHandlers
 	rst AddAToHL
 	rst DerefHL
 	jp hl
+; common per-frame tail: torch flames (BG patch cycle + two mirrored flame
+; metasprites), until phase 3 ends the screen
+RoomStartDrawFrame:
 	ld a, [wScreenPhase]
 	cp $03
-	jr nc, Func_30_45e2
+	jr nc, RoomStartExit
 	ld a, [wFadeLevel]
 	srl a
 	srl a
@@ -781,7 +804,7 @@ Func_30_456a:
 	ld hl, $7b6a
 	ld de, $9800
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld b, $04
 	ld a, [wScreenPhase]
 	cp $00
@@ -793,7 +816,7 @@ Func_30_45a1:
 	ld hl, $7b6a
 	ld de, $9810
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld a, [wFadeLevel]
 	srl a
 	srl a
@@ -803,7 +826,7 @@ Func_30_45a1:
 	ld hl, $7b82
 	ld d, $20
 	ld e, $10
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	pop af
 	add a, $03
 	and $03
@@ -811,15 +834,17 @@ Func_30_45a1:
 	ld hl, $7b82
 	ld d, $20
 	ld e, $89
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
 	inc a
 	ld [wFadeLevel], a
-	jp Func_30_4540
-Func_30_45e2:
+	jp RoomStartLoop
+RoomStartExit:
 	call WaitForPaletteFadeCgb
 	ret
+; phase 0: characters stand at the vault door for $78 frames (or until A/B)
+RoomStartPhaseWait:
 	ld a, [wScreenTimer]
 	cp $78
 	jr nc, Func_30_461f
@@ -854,6 +879,8 @@ Func_30_461f:
 Func_30_4629:
 	ld [wScreenTimer], a
 	ret
+; phase 1: floor-info plaque ("FLOOR N" / room name / lives), $f0 frames
+RoomStartPhaseFloorInfo:
 	ld a, [wScreenTimer]
 	cp $f0
 	jr c, Func_30_463d
@@ -877,15 +904,15 @@ Func_30_465a:
 	ld a, [wRoomType]
 	cp $06
 	jr nz, Func_30_4666
-	call Func_30_46f1
+	call RoomStartPlaqueType6
 	jr Func_30_4672
 Func_30_4666:
 	cp $05
 	jr nz, Func_30_466f
-	call Func_30_4712
+	call RoomStartPlaqueUserRoom
 	jr Func_30_4672
 Func_30_466f:
-	call Func_30_46a4
+	call RoomStartPlaqueFloor
 Func_30_4672:
 	ld a, [wScreenTimer]
 	inc a
@@ -897,15 +924,17 @@ Func_30_4672:
 	ld [wScreenPhase], a
 	xor a
 	ld [wScreenTimer], a
-	call Func_00_07c5
+	call FadePalettesToBlack
 Func_30_468c:
 	ret
+; phase 2: player walk cycle while the palettes fade out; phase 3 at $48
+RoomStartPhaseFadeOut:
 	ld a, [wFadeLevel]
 	cp $48
 	jr nc, Func_30_469d
 	ld b, $50
 	ld c, $48
-	call Func_30_4855
+	call DrawWalkCycleSprite
 	jr Func_30_46a3
 Func_30_469d:
 	ld a, $03
@@ -913,7 +942,8 @@ Func_30_469d:
 	xor a
 Func_30_46a3:
 	ret
-Func_30_46a4:
+; normal rooms: "FLOOR N" plaque + floor digits + lives count (BCD)
+RoomStartPlaqueFloor:
 	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_46db
@@ -921,32 +951,40 @@ Func_30_46a4:
 	ld de, $9845
 	ld b, $23
 	call BankMapCopyB
-	call Func_30_47d0
+	call RoomStartDrawPlaqueDigits
 	ld a, [wLives]
 	and $0f
 	ld hl, $7ba4
 	ld de, $98cc
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld a, [wLives]
 	swap a
 	and $0f
 	ld hl, $7ba4
 	ld de, $98cb
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 Func_30_46db:
 	ld b, $50
 	ld c, $48
-	call Func_30_4855
+	call DrawWalkCycleSprite
 	jr Func_30_46f0
 
-Data_30_46e4:
-	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
+; Code, was misfiled as data. Dead (the `jr` above always skips it): would
+; have jumped straight to phase 2 + fade-out. The same orphaned 12 bytes
+; follow each of the three plaque variants.
+UnusedRoomStartSkipToFadeOutA:
+	ld a, $02
+	ld [wScreenPhase], a
+	xor a
+	ld [wScreenTimer], a
+	call FadePalettesToBlack
 
 Func_30_46f0:
 	ret
-Func_30_46f1:
+; wRoomType 6: alternate plaque (no floor number)
+RoomStartPlaqueType6:
 	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_4703
@@ -957,12 +995,19 @@ Func_30_46f1:
 Func_30_4703:
 	jr Func_30_4711
 
-Data_30_4705:
-	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
+; dead, see UnusedRoomStartSkipToFadeOutA
+UnusedRoomStartSkipToFadeOutB:
+	ld a, $02
+	ld [wScreenPhase], a
+	xor a
+	ld [wScreenTimer], a
+	call FadePalettesToBlack
 
 Func_30_4711:
 	ret
-Func_30_4712:
+; wRoomType 5 (user/editor room): plaque + the room's name (text buffer
+; $c7e1/$c7e8/$c7ef picked by slot $c55d, table $00:$12db) + status patch
+RoomStartPlaqueUserRoom:
 	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_475d
@@ -987,39 +1032,58 @@ Func_30_4712:
 	or a
 	jr z, Func_30_4752
 
-Data_30_4742:
-	db $fe, $01, $28, $07, $fa, $ec, $c2, $fe, $11, $28, $05, $21, $4c, $7b, $18, $03
+	; Code, was misfiled as data -- LIVE: falls through from the `jr z`
+	; above when the slot's status flag ($c7f6+slot) is nonzero. Flag 1 ->
+	; alternate status patch ($23:$7b4c); other values -> alternate unless
+	; [$c2ec] == $11 (then the normal patch).
+	cp $01
+	jr z, Func_30_474d
+	ld a, [$c2ec]
+	cp $11
+	jr z, Func_30_4752
+Func_30_474d:
+	ld hl, $7b4c
+	jr Func_30_4755
 
 Func_30_4752:
 	ld hl, $7b2e
+Func_30_4755:
 	ld de, $98e7
 	ld b, $23
 	call BankMapCopyB
 Func_30_475d:
 	jr Func_30_476b
 
-Data_30_475f:
-	db $3e, $02, $ea, $f4, $d0, $af, $ea, $f5, $d0, $cd, $c5, $07
+; dead, see UnusedRoomStartSkipToFadeOutA
+UnusedRoomStartSkipToFadeOutC:
+	ld a, $02
+	ld [wScreenPhase], a
+	xor a
+	ld [wScreenTimer], a
+	call FadePalettesToBlack
 
 Func_30_476b:
 	ret
-Func_30_476c:
+; Floor number on the vault door ($9889/$988a): two digits from the bank-$23
+; digit-descriptor table at $23:$7b90, or "B"+digit ($23:$7a8e) on basement
+; floors (wRoomType 1; floor 10 uses dedicated patches).
+RoomStartDrawFloorNumber:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4796
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	swap a
 	and $0f
 	ld hl, $7b90
 	ld de, $9889
 	ld b, $23
-	call Func_00_35d4
-	ld a, [$d100]
+	call BankMapCopyIndexed
+	ld a, [wFloorBcd]
 	and $0f
 	ld hl, $7b90
 	ld de, $988a
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
 Func_30_4796:
 	ld a, [wActiveFloor]
@@ -1038,7 +1102,7 @@ Func_30_47b5:
 	ld hl, $7b90
 	ld de, $988a
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld hl, $7a8e
 	ld de, $9889
 	ld b, $23
@@ -1046,29 +1110,32 @@ Func_30_47b5:
 Func_30_47cb:
 	ret
 
-Data_30_47cc:
+; CGB attributes (palette 0, VRAM bank 1) for the plaque digit cells
+RoomStartDigitAttrs:
 	db $08, $08, $08, $08
 
-Func_30_47d0:
+; same two digits / "B"+digit again, on the floor-info plaque ($986c/$986d),
+; plus their CGB attributes
+RoomStartDrawPlaqueDigits:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4800
 	ld c, $02
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	swap a
 	and $0f
 	ld hl, $7b90
 	ld de, $986c
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld c, $02
 	push bc
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	and $0f
 	ld hl, $7b90
 	ld de, $986d
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	jr Func_30_4838
 Func_30_4800:
 	ld c, $02
@@ -1089,7 +1156,7 @@ Func_30_4822:
 	ld hl, $7b90
 	ld de, $986d
 	ld b, $23
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ld hl, $7a8e
 	ld de, $986c
 	ld b, $23
@@ -1097,33 +1164,39 @@ Func_30_4822:
 Func_30_4838:
 	pop bc
 	ld de, $986c
-	call Func_30_4840
+	call RoomStartSetDigitAttrs
 	ret
-Func_30_4840:
+RoomStartSetDigitAttrs:
 	ld a, $01
 	ldh [rVBK], a
-	ld hl, $47cc
+	ld hl, RoomStartDigitAttrs
 	ld b, $02
-	call Func_30_486d
+	call CopyAttrRows
 	ret
 
-Data_30_484d:
-	db $6e, $51, $80, $51, $92, $51, $a4, $51
+; Player walk-cycle metasprite frames (bank $02 entity sprites); stepped by
+; DrawWalkCycleSprite from wFadeLevel.
+WalkCycleSpriteFrames:
+	dw $516e, $5180, $5192, $51a4
 
-Func_30_4855:
+; 4-frame player walk cycle at (b,c) -- used as the room-start/room-clear
+; "walking in" sprite and as the room-clear menu cursor.
+DrawWalkCycleSprite:
 	ld a, [wFadeLevel]
 	and $0f
 	srl a
 	srl a
 	add a, a
-	ld hl, $484d
+	ld hl, WalkCycleSpriteFrames
 	rst AddAToHL
 	rst DerefHL
 	ld a, $02
 	ld [wDrawBank], a
 	call DrawMetasprite
 	ret
-Func_30_486d:
+; copy b rows of 2 attr/tile bytes from hl to the BG map at de (next row each
+; iteration); used with rVBK already set
+CopyAttrRows:
 	push bc
 	ld b, $00
 	push de
@@ -1133,12 +1206,12 @@ Func_30_486d:
 	rst AddAToDE
 	pop bc
 	dec b
-	jr nz, Func_30_486d
+	jr nz, CopyAttrRows
 	ret
 DrawNextRoomScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0ff], a
+	ld [wFadeLevelHi], a
 	ld [wScreenInput], a
 	ld [wScreenAnim2], a
 	ld a, $40
@@ -1179,10 +1252,10 @@ Func_30_48c9:
 	swap a
 	and $f0
 	or b
-	ld [$d100], a
-	call Func_30_49fd
-	call Func_30_4a3f
-	call Func_30_4f10
+	ld [wFloorBcd], a
+	call NextRoomDrawHeaderLabel
+	call NextRoomDrawWindowFloor
+	call NextRoomComputeStopFlags
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
@@ -1200,7 +1273,7 @@ Func_30_48c9:
 	ld hl, $7100
 	ld de, $9909
 	call BankMapCopyB
-	call Func_30_5023
+	call NextRoomDrawStatic
 	ld hl, $7000
 	jr Func_30_4931
 Func_30_4911:
@@ -1229,12 +1302,12 @@ Func_30_4931:
 	ld b, $08
 	ld c, $25
 	call LoadObjPalettesToSlotBanked
-Func_30_4946:
+NextRoomLoop:
 	call WaitForNextFrame
 	ld a, [wFadeLevel]
 	cp $2c
 	jr nz, Func_30_4957
-	ld a, [$d0ff]
+	ld a, [wFadeLevelHi]
 	cp $01
 	jr z, Func_30_4973
 Func_30_4957:
@@ -1254,10 +1327,10 @@ Func_30_4957:
 Func_30_4973:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0ff], a
+	ld [wFadeLevelHi], a
 	ld a, $01
 	ld [wScreenInput], a
-	call Func_00_07c5
+	call FadePalettesToBlack
 Func_30_4982:
 	ld a, [wScreenInput]
 	cp $01
@@ -1267,11 +1340,11 @@ Func_30_4982:
 	jr nc, Func_30_4994
 	jp Func_30_4997
 Func_30_4994:
-	jp Func_30_49e5
+	jp NextRoomExit
 Func_30_4997:
-	call Func_30_4e9e
-	call Func_30_4de3
-	call Func_30_4f88
+	call NextRoomDrawProgressMarker
+	call NextRoomDrawPlayer
+	call NextRoomDrawStopIcons
 	ld a, [wRoomType]
 	cp $00
 	jr z, Func_30_49bc
@@ -1283,12 +1356,12 @@ Func_30_4997:
 	ld hl, $65d1
 	ld d, $18
 	ld e, $58
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 Func_30_49bc:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_49c6
-	call Func_30_5023
+	call NextRoomDrawStatic
 Func_30_49c6:
 	call HideUnusedOamSprites
 	ld a, [wScreenAnim2]
@@ -1298,15 +1371,15 @@ Func_30_49c6:
 Func_30_49d1:
 	ld a, [wFadeLevel]
 	ld c, a
-	ld a, [$d0ff]
+	ld a, [wFadeLevelHi]
 	ld b, a
 	inc bc
 	ld a, b
-	ld [$d0ff], a
+	ld [wFadeLevelHi], a
 	ld a, c
 	ld [wFadeLevel], a
-	jp Func_30_4946
-Func_30_49e5:
+	jp NextRoomLoop
+NextRoomExit:
 	ldh a, [rLCDC]
 	res 5, a
 	ldh [rLCDC], a
@@ -1316,20 +1389,25 @@ Func_30_49e5:
 
 SECTION "analyzed_0c09f4", ROMX[$49f4], BANK[$30]
 
-Data_30_49f4:
+; Basement floors -> header-label index (0-2). Indexed by wActiveFloor from
+; label-2 ($49f2): the first two entries land on linker pad bytes in the
+; section gap before this one (floor 0 doesn't occur; floor 1 reads pad $00).
+NextRoomBasementLabelIdx:
 	db $00, $00, $00, $01, $01, $01, $02, $02, $02
 
-Func_30_49fd:
+; Header banner at $9900: descriptor #(tens digit, adjusted) from the bank-$24
+; table at $24:$65bf, or the basement banner set at $24:$65cb.
+NextRoomDrawHeaderLabel:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4a2b
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	swap a
 	and $0f
 	ld b, a
 	cp $00
 	jr z, Func_30_4a1a
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	and $0f
 	cp $01
 	jr nc, Func_30_4a1a
@@ -1340,62 +1418,64 @@ Func_30_4a1a:
 	ld b, $24
 	ld hl, $65bf
 	ld de, $9900
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	jr Func_30_4a3e
 Func_30_4a2b:
 	ld a, [wActiveFloor]
-	ld hl, $49f2
+	ld hl, NextRoomBasementLabelIdx - 2
 	rst AddAToHL
 	ld a, [hl]
 	ld b, $24
 	ld hl, $65cb
 	ld de, $9900
-	call Func_00_35d4
+	call BankMapCopyIndexed
 Func_30_4a3e:
 	ret
-Func_30_4a3f:
+NextRoomDrawWindowFloor:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4a59
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	swap a
 	and $0f
-	call Func_30_4a75
-	ld a, [$d100]
+	call NextRoomDrawWindowDigitHi
+	ld a, [wFloorBcd]
 	and $0f
-	call Func_30_4a81
+	call NextRoomDrawWindowDigitLo
 	ret
 Func_30_4a59:
 	ld a, [wActiveFloor]
 	cp $0a
 	jr nz, Func_30_4a6c
 	ld a, $0b
-	call Func_30_4a75
+	call NextRoomDrawWindowDigitHi
 	ld a, $0c
-	call Func_30_4a81
+	call NextRoomDrawWindowDigitLo
 	jr Func_30_4a74
 Func_30_4a6c:
-	call Func_30_4a81
+	call NextRoomDrawWindowDigitLo
 	ld a, $0a
-	call Func_30_4a75
+	call NextRoomDrawWindowDigitHi
 Func_30_4a74:
 	ret
 
-Func_30_4a75:
+NextRoomDrawWindowDigitHi:
 	ld b, $24
 	ld hl, $65d9
 	ld de, $9c67
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
 
-Func_30_4a81:
+NextRoomDrawWindowDigitLo:
 	ld b, $24
 	ld hl, $65d9
 	ld de, $9c68
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
 
-Data_30_4a8d:
+; Per-frame (y,x) flight path of the player sprite across the next-room
+; screen, indexed by wScreenAnim2*2 (NextRoomDrawPlayerAtPathPos).
+NextRoomPathMain: ; 209 pairs (normal floors)
 	db $88, $70, $88, $70, $87, $6f, $87, $6f, $86, $6e, $86, $6e, $85, $6d, $85, $6d
 	db $84, $6c, $84, $6c, $83, $6b, $83, $6b, $82, $6a, $81, $69, $81, $69, $80, $68
 	db $80, $68, $7f, $67, $7f, $67, $7e, $66, $7e, $66, $7d, $65, $7d, $65, $7c, $64
@@ -1422,37 +1502,44 @@ Data_30_4a8d:
 	db $9c, $1e, $9c, $1e, $9d, $1d, $9d, $1d, $9e, $1c, $9e, $1b, $9f, $1b, $9f, $1a
 	db $a0, $1a, $a0, $19, $a1, $19, $a1, $18, $a2, $17, $a2, $17, $a3, $16, $a3, $16
 	db $a4, $15, $a4, $15, $a5, $14, $a5, $13, $a6, $13, $a6, $12, $a7, $12, $a7, $11
-	db $a8, $10, $a8, $10, $a8, $10, $a7, $11, $a7, $11, $a6, $12, $a6, $12, $a5, $13
-	db $a5, $13, $a4, $14, $a4, $14, $a3, $15, $a3, $15, $a2, $16, $a1, $17, $a1, $17
-	db $a0, $18, $a0, $18, $9f, $19, $9f, $19, $9e, $1a, $9e, $1a, $9d, $1b, $9d, $1b
-	db $9c, $1c, $9b, $1d, $9b, $1d, $9a, $1e, $9a, $1e, $99, $1f, $99, $1f, $98, $20
-	db $98, $20, $97, $21, $97, $21, $96, $22, $95, $23, $95, $23, $94, $24, $94, $24
-	db $93, $25, $93, $25, $92, $26, $92, $26, $91, $27, $91, $27, $90, $28, $8f, $29
-	db $8f, $29, $8e, $2a, $8e, $2a, $8d, $2b, $8d, $2b, $8c, $2c, $8c, $2c, $8b, $2d
-	db $8b, $2d, $8a, $2e, $8a, $2e, $89, $2f, $88, $30, $88, $30, $87, $31, $87, $31
-	db $86, $32, $86, $32, $85, $33, $85, $33, $84, $34, $84, $34, $83, $35, $82, $36
-	db $82, $36, $81, $37, $81, $37, $80, $38, $80, $38, $7f, $39, $7f, $39, $7e, $3a
-	db $7e, $3a, $7d, $3b, $7c, $3c, $7c, $3c, $7b, $3d, $7b, $3d, $7a, $3e, $7a, $3e
-	db $79, $3f, $79, $3f, $78, $40, $78, $40, $77, $41, $76, $42, $76, $42, $75, $43
-	db $75, $43, $74, $44, $74, $44, $73, $45, $73, $45, $72, $46, $72, $46, $71, $47
-	db $70, $48, $70, $48, $6f, $48, $6e, $48, $6d, $48, $6c, $48, $6b, $48, $6a, $48
-	db $68, $48, $67, $48, $66, $48, $65, $48, $64, $48, $63, $48, $62, $48, $60, $48
-	db $5f, $48, $5e, $48, $5d, $48, $5c, $48, $5b, $48, $5a, $48, $58, $48, $58, $48
-	db $58, $48, $59, $49, $59, $49, $5a, $4a, $5a, $4a, $5b, $4b, $5c, $4b, $5c, $4c
-	db $5d, $4c, $5d, $4d, $5e, $4e, $5f, $4e, $5f, $4f, $60, $4f, $60, $50, $61, $50
-	db $62, $51, $62, $51, $63, $52, $63, $53, $64, $53, $64, $54, $65, $54, $66, $55
-	db $66, $55, $67, $56, $67, $56, $68, $57, $69, $58, $69, $58, $6a, $59, $6a, $59
-	db $6b, $5a, $6c, $5a, $6c, $5b, $6d, $5b, $6d, $5c, $6e, $5d, $6f, $5d, $6f, $5e
-	db $70, $5e, $70, $5f, $71, $5f, $71, $60, $72, $60, $73, $61, $73, $62, $74, $62
-	db $74, $63, $75, $63, $76, $64, $76, $64, $77, $65, $77, $65, $78, $66, $79, $67
-	db $79, $67, $7a, $68, $7a, $68, $7b, $69, $7c, $69, $7c, $6a, $7d, $6a, $7d, $6b
-	db $7e, $6c, $7e, $6c, $7f, $6d, $80, $6d, $80, $6e, $81, $6e, $81, $6f, $82, $6f
-	db $83, $70, $83, $71, $84, $71, $84, $72, $85, $72, $86, $73, $86, $73, $87, $74
-	db $87, $74, $88, $75, $89, $76, $65, $51, $77, $51, $89, $51, $9b, $51, $6e, $51
-	db $80, $51, $92, $51, $a4, $51
+	db $a8, $10
+NextRoomPathBasement: ; 210 pairs (basement floors, wRoomType 1)
+	db $a8, $10, $a8, $10, $a7, $11, $a7, $11, $a6, $12, $a6, $12, $a5, $13, $a5, $13
+	db $a4, $14, $a4, $14, $a3, $15, $a3, $15, $a2, $16, $a1, $17, $a1, $17, $a0, $18
+	db $a0, $18, $9f, $19, $9f, $19, $9e, $1a, $9e, $1a, $9d, $1b, $9d, $1b, $9c, $1c
+	db $9b, $1d, $9b, $1d, $9a, $1e, $9a, $1e, $99, $1f, $99, $1f, $98, $20, $98, $20
+	db $97, $21, $97, $21, $96, $22, $95, $23, $95, $23, $94, $24, $94, $24, $93, $25
+	db $93, $25, $92, $26, $92, $26, $91, $27, $91, $27, $90, $28, $8f, $29, $8f, $29
+	db $8e, $2a, $8e, $2a, $8d, $2b, $8d, $2b, $8c, $2c, $8c, $2c, $8b, $2d, $8b, $2d
+	db $8a, $2e, $8a, $2e, $89, $2f, $88, $30, $88, $30, $87, $31, $87, $31, $86, $32
+	db $86, $32, $85, $33, $85, $33, $84, $34, $84, $34, $83, $35, $82, $36, $82, $36
+	db $81, $37, $81, $37, $80, $38, $80, $38, $7f, $39, $7f, $39, $7e, $3a, $7e, $3a
+	db $7d, $3b, $7c, $3c, $7c, $3c, $7b, $3d, $7b, $3d, $7a, $3e, $7a, $3e, $79, $3f
+	db $79, $3f, $78, $40, $78, $40, $77, $41, $76, $42, $76, $42, $75, $43, $75, $43
+	db $74, $44, $74, $44, $73, $45, $73, $45, $72, $46, $72, $46, $71, $47, $70, $48
+	db $70, $48, $6f, $48, $6e, $48, $6d, $48, $6c, $48, $6b, $48, $6a, $48, $68, $48
+	db $67, $48, $66, $48, $65, $48, $64, $48, $63, $48, $62, $48, $60, $48, $5f, $48
+	db $5e, $48, $5d, $48, $5c, $48, $5b, $48, $5a, $48, $58, $48, $58, $48, $58, $48
+	db $59, $49, $59, $49, $5a, $4a, $5a, $4a, $5b, $4b, $5c, $4b, $5c, $4c, $5d, $4c
+	db $5d, $4d, $5e, $4e, $5f, $4e, $5f, $4f, $60, $4f, $60, $50, $61, $50, $62, $51
+	db $62, $51, $63, $52, $63, $53, $64, $53, $64, $54, $65, $54, $66, $55, $66, $55
+	db $67, $56, $67, $56, $68, $57, $69, $58, $69, $58, $6a, $59, $6a, $59, $6b, $5a
+	db $6c, $5a, $6c, $5b, $6d, $5b, $6d, $5c, $6e, $5d, $6f, $5d, $6f, $5e, $70, $5e
+	db $70, $5f, $71, $5f, $71, $60, $72, $60, $73, $61, $73, $62, $74, $62, $74, $63
+	db $75, $63, $76, $64, $76, $64, $77, $65, $77, $65, $78, $66, $79, $67, $79, $67
+	db $7a, $68, $7a, $68, $7b, $69, $7c, $69, $7c, $6a, $7d, $6a, $7d, $6b, $7e, $6c
+	db $7e, $6c, $7f, $6d, $80, $6d, $80, $6e, $81, $6e, $81, $6f, $82, $6f, $83, $70
+	db $83, $71, $84, $71, $84, $72, $85, $72, $86, $73, $86, $73, $87, $74, $87, $74
+	db $88, $75, $89, $76
+; Player metasprite frames (bank $02): 4 late-phase frames, then the
+; 4-frame walk cycle (same pointers as WalkCycleSpriteFrames) used while
+; wScreenAnim2 is below the threshold (+8 byte offset in the draw code).
+NextRoomPlayerFrames:
+	dw $5165, $5177, $5189, $519b
+	dw $516e, $5180, $5192, $51a4
 
-Func_30_4de3:
-	ld a, [$d0ff]
+NextRoomDrawPlayer:
+	ld a, [wFadeLevelHi]
 	cp $00
 	jp nz, Func_30_4df3
 	ld a, [wFadeLevel]
@@ -1464,7 +1551,7 @@ Func_30_4df3:
 	jp nc, Func_30_4e46
 	ld a, $24
 	ld [wDrawBank], a
-	ld hl, $5920
+	ld hl, $5920 ; static companion sprite ($24)
 	ld b, $68
 	ld c, $78
 	call DrawMetasprite
@@ -1473,7 +1560,7 @@ Func_30_4df3:
 	srl a
 	srl a
 	add a, a
-	ld hl, $4dd3
+	ld hl, NextRoomPlayerFrames
 	rst AddAToHL
 	ld a, [wRoomType]
 	cp $01
@@ -1481,28 +1568,28 @@ Func_30_4df3:
 	ld a, [wScreenAnim2]
 	cp $5a
 	jr nc, Func_30_4e29
-	ld a, $08
+	ld a, $08 ; early in the path: walk-cycle frame set
 	rst AddAToHL
 Func_30_4e29:
-	ld de, $4a8d
+	ld de, NextRoomPathMain
 	jr Func_30_4e3b
 Func_30_4e2e:
 	ld a, [wScreenAnim2]
 	cp $7e
 	jr nc, Func_30_4e38
-	ld a, $08
+	ld a, $08 ; early in the path: walk-cycle frame set
 	rst AddAToHL
 Func_30_4e38:
-	ld de, $4c2f
+	ld de, NextRoomPathBasement
 Func_30_4e3b:
 	rst DerefHL
-	call Func_30_4e47
+	call NextRoomDrawPlayerAtPathPos
 	ld a, [wScreenAnim2]
 	inc a
 	ld [wScreenAnim2], a
 Func_30_4e46:
 	ret
-Func_30_4e47:
+NextRoomDrawPlayerAtPathPos:
 	push hl
 	ld a, [wScreenAnim2]
 	ld b, $00
@@ -1525,48 +1612,47 @@ Func_30_4e47:
 	call DrawMetasprite
 	ret
 
-Func_30_4e66:
-	db $01
-	sbc a, e
+; Data, was chopped up / partly mislabeled as code. BG dests for the floor
+; numbers up the progress ladder (15 rungs, bottom to top; drawn by the
+; NextRoomComputeStopFlags else-branch from the digit table at $24:$65f3).
+NextRoomLadderDigitDests:
+	dw $9b01, $9ae2, $9ac2, $9aa2, $9a82
+	dw $9a41, $9a22, $9a02, $99e2, $99c2
+	dw $9982, $9962, $9942, $9922, $9902
 
-Data_30_4e68:
-	db $e2, $9a, $c2, $9a, $a2, $9a, $82, $9a
+; (x,y) sprite positions of the progress marker per ones-digit 0-10 (10 =
+; "x0" top rung); was mislabeled as code.
+NextRoomMarkerPos:
+	db $10, $90
+	db $18, $88
+	db $18, $80
+	db $18, $78
+	db $18, $70
+	db $10, $60
+	db $18, $58
+	db $18, $50
+	db $18, $48
+	db $18, $40
+	db $10, $30
+; Y positions of the basement stop icons (one per prize tier)
+NextRoomBasementIconYs:
+	db $20, $40, $60, $80
 
-Data_30_4e70:
-	db $41, $9a
-
-Data_30_4e72:
-	db $22, $9a, $02, $9a, $e2, $99, $c2, $99
-
-Data_30_4e7a:
-	db $82, $99
-
-Data_30_4e7c:
-	db $62, $99, $42, $99, $22, $99, $02, $99
-
-Func_30_4e84:
-	db $10
-	sub b
-
-Data_30_4e86:
-	db $18, $88, $18, $80, $18, $78, $18, $70, $10, $60, $18, $58, $18, $50, $18, $48
-	db $18, $40, $10, $30, $20, $40, $60, $80
-
-Func_30_4e9e:
+NextRoomDrawProgressMarker:
 	ld a, [wFadeLevel]
 	bit 4, a
 	jp z, Func_30_4f0f
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4ee5
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	and $0f
 	ld c, a
 	cp $05
 	jr z, Func_30_4ec6
 	cp $00
 	jr nz, Func_30_4ecb
-	ld a, [$d100]
+	ld a, [wFloorBcd]
 	swap a
 	and $0f
 	jr z, Func_30_4ecb
@@ -1582,7 +1668,7 @@ Func_30_4ece:
 	ld [wDrawBank], a
 	ld a, c
 	add a, a
-	ld hl, $4e84
+	ld hl, NextRoomMarkerPos
 	rst AddAToHL
 	ld a, [hl+]
 	ld c, a
@@ -1605,7 +1691,7 @@ Func_30_4ef2:
 Func_30_4ef8:
 	sub c
 	jp c, Func_30_4f0f
-	ld hl, $4e9a
+	ld hl, NextRoomBasementIconYs
 	rst AddAToHL
 	ld a, [hl]
 	ld b, a
@@ -1616,7 +1702,7 @@ Func_30_4ef8:
 	call DrawMetasprite
 Func_30_4f0f:
 	ret
-Func_30_4f10:
+NextRoomComputeStopFlags:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4f87
@@ -1672,7 +1758,7 @@ Func_30_4f5e:
 	jp Func_30_4f82
 Func_30_4f6e:
 	add a, a
-	ld hl, $4e66
+	ld hl, NextRoomLadderDigitDests
 	rst AddAToHL
 	rst DerefHL
 	ld a, l
@@ -1682,14 +1768,14 @@ Func_30_4f6e:
 	ld b, $24
 	ld hl, $65f3
 	ld a, $00
-	call Func_00_35d4
+	call BankMapCopyIndexed
 Func_30_4f82:
 	pop bc
 	inc c
 	jp Func_30_4f38
 Func_30_4f87:
 	ret
-Func_30_4f88:
+NextRoomDrawStopIcons:
 	ld a, [wRoomType]
 	cp $01
 	jr z, Func_30_4fe3
@@ -1754,7 +1840,7 @@ Func_30_5000:
 	cp b
 	jr c, Func_30_5022
 	push bc
-	ld hl, $4e9a
+	ld hl, NextRoomBasementIconYs
 	ld a, b
 	rst AddAToHL
 	ld a, [hl]
@@ -1769,7 +1855,7 @@ Func_30_5000:
 	jr Func_30_5000
 Func_30_5022:
 	ret
-Func_30_5023:
+NextRoomDrawStatic:
 	ld a, $24
 	ld [wDrawBank], a
 	ld hl, $592d
@@ -1778,8 +1864,12 @@ Func_30_5023:
 	call DrawMetasprite
 	ret
 
-Data_30_5033:
-	db $5e, $51, $7c, $51, $43, $52, $b1, $52
+; room-clear screen state machine, indexed by wScreenPhase
+RoomClearPhaseHandlers:
+	dw RoomClearPhaseDelay
+	dw RoomClearPhaseTally
+	dw RoomClearPhaseMenu
+	dw RoomClearPhaseDone
 
 DrawRoomClearScreen:
 	xor a
@@ -1788,25 +1878,25 @@ DrawRoomClearScreen:
 	ld [wScreenPhase], a
 	ld [wScreenTimer], a
 	ld a, [wFloorTimer]
-	ld [$d101], a
+	ld [wTallyTimer], a
 	ld a, [wFloorTimer+1]
-	ld [$d102], a
+	ld [wTallyTimer+1], a
 	ld a, [wFloorTimer+2]
-	ld [$d103], a
+	ld [wTallyTimer+2], a
 	ld a, [wScore]
-	ld [$d104], a
-	ld a, [$c2c7]
-	ld [$d105], a
-	ld a, [$c2c8]
-	ld [$d106], a
-	ld a, [$c2c9]
-	ld [$d107], a
-	ld a, [$c2ca]
-	ld [$d108], a
+	ld [wTallyScore], a
+	ld a, [wScore+1]
+	ld [wTallyScore+1], a
+	ld a, [wScore+2]
+	ld [wTallyScore+2], a
+	ld a, [wScore+3]
+	ld [wTallyScore+3], a
+	ld a, [wScore+4]
+	ld [wTallyScore+4], a
 	ld a, $48
-	ld [$d0f9], a
+	ld [wScreenCursorX], a
 	ld a, $88
-	ld [$d0fa], a
+	ld [wScreenCursorY], a
 	call HideAllSprites
 	xor a
 	ldh [rVBK], a
@@ -1826,7 +1916,7 @@ DrawRoomClearScreen:
 	ld hl, $7080
 	ld de, $9800
 	call BankMapCopyB
-	FAR_CALL Func_21_7409
+	FAR_CALL RoomClearDrawZeroDigit
 	xor a
 	ld b, $08
 	ld c, $21
@@ -1840,61 +1930,67 @@ DrawRoomClearScreen:
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
-Func_30_50d7:
+RoomClearLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
 	ld b, a
-	ld a, [$c55d]
-	ld hl, $50f1
+	ld a, [$c55d] ; dead read (leftover; immediately overwritten)
+	ld hl, RoomClearDrawFrame
 	push hl
 	ld a, [wScreenPhase]
 	add a, a
-	ld hl, $5033
+	ld hl, RoomClearPhaseHandlers
 	rst AddAToHL
 	rst DerefHL
 	jp hl
+; common per-frame tail: bank-$21 screen animation + the walk-cycle sprite as
+; the NEXT/TOWN menu cursor (from phase 2, unless wScreenFrame is preset
+; nonzero = no menu)
+RoomClearDrawFrame:
 	ld a, [wScreenPhase]
 	cp $04
-	jr nc, Func_30_512e
-	FAR_CALL Func_21_73e4
-	FAR_CALL Func_21_73ac
+	jr nc, RoomClearExit
+	FAR_CALL RoomClearDrawTimer
+	FAR_CALL RoomClearDrawScore
 	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5121
 	ld a, [wScreenPhase]
 	cp $02
 	jr c, Func_30_5121
-	ld a, [$d0fa]
+	ld a, [wScreenCursorY]
 	ld b, a
-	ld a, [$d0f9]
+	ld a, [wScreenCursorX]
 	ld c, a
-	call Func_30_4855
+	call DrawWalkCycleSprite
 Func_30_5121:
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
 	inc a
 	ld [wFadeLevel], a
-	jp Func_30_50d7
-Func_30_512e:
-	call Func_00_07c5
+	jp RoomClearLoop
+RoomClearExit:
+	call FadePalettesToBlack
 	call WaitForPaletteFadeCgb
 	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5142
 	ld a, [wScreenInput]
 	cp $00
-	jr nz, Func_30_514b
+	jr nz, RoomClearGoToTown
 Func_30_5142:
 	FAR_CALL Func_01_4654
 	ret
-Func_30_514b:
+RoomClearGoToTown:
 	ld a, $04
 	ld [wC2D7], a
 	FAR_CALL Naji_RunEncounter
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ret
+; phase 0: $3c-frame pause, then the tally jingle
+RoomClearPhaseDelay:
 	ld a, [wScreenTimer]
 	cp $3c
 	jr nc, Func_30_516b
@@ -1912,6 +2008,10 @@ Func_30_516b:
 Func_30_5178:
 	ld [wScreenTimer], a
 	ret
+; phase 1: time bonus -- live wScore counts up by 11 BCD per frame while
+; wFloorTimer counts down by 11; A/B (b & 3) skips to the final values
+; (computed into the wTally* copies), which are then committed
+RoomClearPhaseTally:
 	ld a, b
 	and $03
 	jr nz, Func_30_51c2
@@ -1939,8 +2039,16 @@ Func_30_5178:
 	or a
 	jr z, Func_30_51ab
 
-Data_30_51a0:
-	db $21, $c6, $c2, $3e, $99, $22, $22, $22, $22, $af, $77
+	; Code, was misfiled as data -- LIVE: falls through when the 5th score
+	; byte went nonzero; clamps wScore to its 8-digit max 99999999.
+	ld hl, wScore
+	ld a, $99
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	xor a
+	ld [hl], a
 
 Func_30_51ab:
 	ld hl, wFloorTimer
@@ -1958,14 +2066,16 @@ Func_30_51ab:
 	ld [hl], a
 	and $f0
 	jp z, Func_30_5242
+; instant finish: zero the timer, add the whole remaining wTallyTimer into
+; wTallyScore (BCD) and commit it as wScore
 Func_30_51c2:
 	ld hl, wFloorTimer
 	xor a
 	ld [hl+], a
 	ld [hl+], a
 	ld [hl], a
-	ld hl, $d104
-	ld de, $d101
+	ld hl, wTallyScore
+	ld de, wTallyTimer
 	ld a, [de]
 	ld b, a
 	ld a, [hl]
@@ -1994,26 +2104,35 @@ Func_30_51c2:
 	adc a, $00
 	daa
 	ld [hl], a
-	ld a, [$d104]
+	ld a, [wTallyScore]
 	ld [wScore], a
-	ld a, [$d105]
-	ld [$c2c7], a
-	ld a, [$d106]
-	ld [$c2c8], a
-	ld a, [$d107]
-	ld [$c2c9], a
-	ld a, [$d108]
-	ld [$c2ca], a
+	ld a, [wTallyScore+1]
+	ld [wScore+1], a
+	ld a, [wTallyScore+2]
+	ld [wScore+2], a
+	ld a, [wTallyScore+3]
+	ld [wScore+3], a
+	ld a, [wTallyScore+4]
+	ld [wScore+4], a
 	or a
 	jr z, Func_30_5219
 
-Data_30_520e:
-	db $21, $c6, $c2, $3e, $99, $22, $22, $22, $22, $af, $77
+	; Code, was misfiled as data -- LIVE: same 99999999 clamp as above, for
+	; the instant-finish path.
+	ld hl, wScore
+	ld a, $99
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	ld [hl+], a
+	xor a
+	ld [hl], a
 
 Func_30_5219:
 	ld a, [wScreenFrame]
 	cp $00
 	jr nz, Func_30_5236
+	; show the NEXT/TOWN menu patches ($21:$7356 -> $9964, $738c -> $99a9)
 	ld b, $21
 	ld hl, $7356
 	ld de, $9964
@@ -2031,6 +2150,9 @@ Func_30_5236:
 	ld [wScreenPhase], a
 Func_30_5242:
 	ret
+; phase 2: NEXT/TOWN menu -- up/down moves the walk-sprite cursor between
+; rows $88/$98, A confirms (wScreenInput = 0 next floor / 1 town)
+RoomClearPhaseMenu:
 	ld a, [wScreenTimer]
 	cp $01
 	jr nz, Func_30_5251
@@ -2059,7 +2181,7 @@ Func_30_5259:
 	call PlaySound
 	pop af
 	ld a, $98
-	ld [$d0fa], a
+	ld [wScreenCursorY], a
 	jr Func_30_52b0
 Func_30_527e:
 	bit 6, b
@@ -2072,7 +2194,7 @@ Func_30_527e:
 	call PlaySound
 	pop af
 	ld a, $88
-	ld [$d0fa], a
+	ld [wScreenCursorY], a
 	ld a, $00
 	ld [wScreenInput], a
 	jr Func_30_52b0
@@ -2089,6 +2211,8 @@ Func_30_529c:
 	ld [wScreenPhase], a
 Func_30_52b0:
 	ret
+; phase 3: $1e-frame grace, then phase 4 ends the screen
+RoomClearPhaseDone:
 	ld a, [wScreenTimer]
 	cp $1e
 	jp c, Func_30_52bf
@@ -2124,7 +2248,7 @@ DrawTowerOpenScreen:
 	ld hl, $7080
 	ld de, $9800
 	call BankMapCopyB
-	call Func_30_5408
+	call TowerOpenDrawStatic
 	call HideUnusedOamSprites
 	xor a
 	ld b, $08
@@ -2139,7 +2263,7 @@ DrawTowerOpenScreen:
 	ldh a, [rLCDC]
 	set 1, a
 	ldh [rLCDC], a
-Func_30_5324:
+TowerOpenLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
@@ -2164,13 +2288,13 @@ Func_30_5341:
 Func_30_5351:
 	ld a, [wFadeLevel]
 	cp $ff
-	jr nc, Func_30_53b7
+	jr nc, TowerOpenExit
 	ld a, [wScreenPhase]
 	cp $02
 	jr c, Func_30_5368
 	ld a, [wScreenInput]
 	cp $00
-	jr nz, Func_30_53b7
+	jr nz, TowerOpenExit
 	jr Func_30_5393
 Func_30_5368:
 	ld a, [wScreenInput]
@@ -2199,14 +2323,14 @@ Func_30_5384:
 Func_30_5390:
 	ld [wScreenPhase], a
 Func_30_5393:
-	call Func_30_53be
-	call Func_30_53cd
+	call TowerOpenDrawDoorPatch
+	call TowerOpenDrawDoorSprite
 	ld a, [wScreenTimer]
 	inc a
 	ld [wScreenTimer], a
 Func_30_53a0:
-	call Func_30_53dd
-	call Func_30_5408
+	call TowerOpenDrawRays
+	call TowerOpenDrawStatic
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
 	ld b, a
@@ -2214,27 +2338,27 @@ Func_30_53a0:
 	inc b
 	or b
 	ld [wFadeLevel], a
-	jp Func_30_5324
-Func_30_53b7:
+	jp TowerOpenLoop
+TowerOpenExit:
 	call WaitForPaletteFadeCgb
-	call Func_00_07c5
+	call FadePalettesToBlack
 	ret
-Func_30_53be:
+TowerOpenDrawDoorPatch:
 	ld a, [wScreenPhase]
 	ld b, $26
 	ld hl, $768c
 	ld de, $98c5
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
-Func_30_53cd:
+TowerOpenDrawDoorSprite:
 	ld a, [wScreenPhase]
 	ld b, $26
 	ld hl, $7694
 	ld d, $48
 	ld e, $30
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	ret
-Func_30_53dd:
+TowerOpenDrawRays:
 	ld a, [wFadeLevel]
 	ld b, a
 	ld c, $00
@@ -2250,14 +2374,14 @@ Func_30_53e3:
 	ld b, $26
 	ld hl, $769a
 	ld de, $98f1
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	pop af
 	ld b, $26
 	ld hl, $76aa
 	ld de, $98e0
-	call Func_00_35d4
+	call BankMapCopyIndexed
 	ret
-Func_30_5408:
+TowerOpenDrawStatic:
 	ld a, $26
 	ld [wDrawBank], a
 	ld hl, $7356
@@ -2268,41 +2392,45 @@ Func_30_5408:
 
 SECTION "analyzed_0c147f", ROMX[$547f], BANK[$30]
 
-Func_30_547f:
+; On a non-color Game Boy: draw the bank-$27 "this game is for Game Boy Color"
+; notice and hang forever. CheckCgb returns NZ on CGB, so the `ret nz` skips
+; the screen on color hardware. Called from the boot path ($00:$35c8).
+DmgOnlyScreen:
 	rst CheckCgb
 	ret nz
-	call $02e6
+	call WaitForNextFrame
 	ld a, $80
-	ldh [$ff40], a
+	ldh [rLCDC], a
 	xor a
-	ldh [$ff4f], a
+	ldh [rVBK], a
 	ld a, $27
 	ld hl, $5ade
 	ld de, $8800
 	ld bc, $1000
-	call $392d
+	call BankVramCopy
 	ld b, $27
 	ld hl, $6ade
 	ld de, $9800
-	call $35e9
-	call $02d1
+	call BankMapCopyB
+	call WaitForHBlank
 	ld a, $1b
-	ldh [$ff47], a
-	call $02e6
+	ldh [rBGP], a
+	call WaitForNextFrame
 	ld a, $81
-	ldh [$ff40], a
-	call $02e6
-	jp $54b2
+	ldh [rLCDC], a
+.hang:
+	call WaitForNextFrame
+	jp .hang
 
 LoadTitleScreen:
 	xor a
 	ld [wFadeLevel], a
-	ld [$d0ff], a
+	ld [wFadeLevelHi], a
 	ld [wScreenInput], a
 	ld [wScreenTimer], a
 	ld [wScreenFrame], a
 	ld [wScreenAnim], a
-	FAR_CALL Func_05_4843
+	FAR_CALL Func_05_4843 ; save-presence check; 1 = SRAM save exists
 	ld [wScreenPhase], a
 	cp $01
 	jr nz, DrawTitleScreen
@@ -2332,34 +2460,36 @@ DrawTitleScreen:
 	ld hl, Data_28_7356
 	ld de, $9986
 	call BankMapCopyB
-	call Func_30_5698
-	call Func_30_565c
+	call TitleDrawHiScore
+	call TitleDrawStatic
 	call LoadWhitePalettes
 	ld b, BANK(TitlePalettes)
 	ld de, TitlePalettes
 	call LoadPalettesBanked
-	call Func_00_0794
-Func_30_552f:
+	call FadeInPalettes
+; title state machine, on wScreenInput: 0 = waiting for a button, 1 = menu,
+; 2 = confirmed, 3 = "no save data" notice
+TitleLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ld a, [wScreenInput]
 	cp $00
-	jr z, Func_30_5571
+	jr z, TitleStateWaitStart
 	cp $01
-	jr z, Func_30_559d
+	jr z, TitleStateMenu
 	cp $02
-	jr z, Func_30_55a6
-	jp $55ca
-Func_30_5547:
-	call Func_30_565c
+	jr z, TitleStateConfirm
+	jp TitleStateNoData
+TitleNextFrame:
+	call TitleDrawStatic
 	ld a, [wFadeLevel]
 	add a, $01
 	ld [wFadeLevel], a
-	ld a, [$d0ff]
+	ld a, [wFadeLevelHi]
 	adc a, $00
-	ld [$d0ff], a
-	jp Func_30_552f
-Func_30_555d:
+	ld [wFadeLevelHi], a
+	jp TitleLoop
+TitleStartGame:
 	ld a, SCENE_TOWN
 	ld [wGameScene], a
 	ld c, $5a
@@ -2367,18 +2497,20 @@ Func_30_5564:
 	call WaitForNextFrame
 	dec c
 	jr nz, Func_30_5564
-	call Func_00_07a7
+	call FadePalettesToWhite
 	call WaitForPaletteFadeCgb
 	ret
-Func_30_5571:
+; any button: replace the hi-score row with the menu (START patch, plus the
+; CONTINUE patch when a save exists / wScreenPhase != 0)
+TitleStateWaitStart:
 	ldh a, [hJoyRepeat]
 	cp $00
-	jr z, Func_30_5547
+	jr z, TitleNextFrame
 	ld b, BANK(Data_28_737c)
 	ld hl, Data_28_737c
 	ld de, $9966
 	call BankMapCopyB
-	call Func_30_56d3
+	call TitleClearHiScoreRow
 	ld a, [wScreenPhase]
 	and a
 	jr z, Func_30_5596
@@ -2389,27 +2521,57 @@ Func_30_5571:
 Func_30_5596:
 	ld a, $01
 	ld [wScreenInput], a
-	jr Func_30_5547
-Func_30_559d:
-	call Func_30_55fa
-	call Func_30_566c
-	jp Func_30_5547
-Func_30_55a6:
+	jr TitleNextFrame
+TitleStateMenu:
+	call TitleMenuInput
+	call TitleDrawCursor
+	jp TitleNextFrame
+; cursor row 0 (START) -> new game; row 1 -> load the save, falling through
+; to the "no data" notice if the load fails
+TitleStateConfirm:
 	ld a, [wScreenTimer]
 	and a
-	jr z, Func_30_555d
+	jr z, TitleStartGame
 	FAR_CALL LoadGameFromSram
 	and a
-	jr nz, Func_30_555d
+	jr nz, TitleStartGame
 
-Data_30_55b7:
-	db $06, $28, $21, $cc, $73, $11, $a1, $99, $cd, $e9, $35, $3e, $03, $ea, $f3, $d0
-	db $c3, $47, $55, $f0, $8d, $fe, $00, $ca, $47, $55, $cd, $f8, $56, $06, $28, $21
-	db $7c, $73, $11, $66, $99, $cd, $e9, $35, $3e, $01, $ea, $f3, $d0, $af, $ea, $fe
-	db $d0, $ea, $ff, $d0, $ea, $f4, $d0, $ea, $f5, $d0, $ea, $f6, $d0, $ea, $f7, $d0
-	db $ca, $47, $55
+	; Code, was misfiled as data -- LIVE: SRAM load failed; draw the
+	; "no data" patch ($28:$73cc) over the menu and enter state 3.
+	ld b, $28
+	ld hl, $73cc
+	ld de, $99a1
+	call BankMapCopyB
+	ld a, $03
+	ld [wScreenInput], a
+	jp TitleNextFrame
 
-Func_30_55fa:
+	; Code, was misfiled as data -- LIVE (state 3, reached via the
+	; TitleLoop dispatch): wait for any button, then erase the notice,
+	; redraw the menu, and reset to state 1.
+TitleStateNoData:
+	ldh a, [hJoyRepeat]
+	cp $00
+	jp z, TitleNextFrame
+	call TitleClearMenuArea
+	ld b, $28
+	ld hl, Data_28_737c
+	ld de, $9966
+	call BankMapCopyB
+	ld a, $01
+	ld [wScreenInput], a
+	xor a
+	ld [wFadeLevel], a
+	ld [wFadeLevelHi], a
+	ld [wScreenPhase], a
+	ld [wScreenTimer], a
+	ld [wScreenFrame], a
+	ld [wScreenAnim], a
+	jp z, TitleNextFrame
+
+; menu input: up/down moves the cursor (wScreenTimer 0 = START / 1 =
+; CONTINUE), A confirms -> state 2; recomputes the cursor sprite position
+TitleMenuInput:
 	ldh a, [hJoyRepeat]
 	ld b, a
 	ld a, [wScreenPhase]
@@ -2419,39 +2581,39 @@ Func_30_55fa:
 	jr z, Func_30_561d
 	ld a, [wScreenTimer]
 	cp $01
-	jr z, Func_30_5646
+	jr z, TitleSetCursorPos
 	ld a, $01
 	ld [wScreenTimer], a
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
-	jr Func_30_5646
+	jr TitleSetCursorPos
 Func_30_561d:
 	bit 6, b
 	jr z, Func_30_5636
 	ld a, [wScreenTimer]
 	cp $00
-	jr z, Func_30_5646
+	jr z, TitleSetCursorPos
 	push af
 	ld a, SOUND_SFX_Cursor
 	call PlaySound
 	pop af
 	ld a, $00
 	ld [wScreenTimer], a
-	jr Func_30_5646
+	jr TitleSetCursorPos
 Func_30_5636:
 	bit 0, b
-	jr z, Func_30_5646
+	jr z, TitleSetCursorPos
 	push af
 	ld a, SOUND_SFX_Confirm
 	call PlaySound
 	pop af
 	ld a, $02
 	ld [wScreenInput], a
-Func_30_5646:
+TitleSetCursorPos:
 	ld a, $28
-	ld [$d0f9], a
+	ld [wScreenCursorX], a
 	ld a, [wScreenTimer]
 	cp $00
 	jr nz, Func_30_5656
@@ -2460,9 +2622,9 @@ Func_30_5646:
 Func_30_5656:
 	ld a, $78
 Func_30_5658:
-	ld [$d0fa], a
+	ld [wScreenCursorY], a
 	ret
-Func_30_565c:
+TitleDrawStatic:
 	ld a, $28
 	ld [wDrawBank], a
 	ld b, $10
@@ -2470,15 +2632,15 @@ Func_30_565c:
 	ld hl, $74c6
 	call DrawMetasprite
 	ret
-Func_30_566c:
+TitleDrawCursor:
 	ld b, $28
 	ld hl, $753f
-	ld a, [$d0fa]
+	ld a, [wScreenCursorY]
 	ld d, a
-	ld a, [$d0f9]
+	ld a, [wScreenCursorX]
 	ld e, a
 	ld a, [wScreenAnim]
-	call Func_00_35f9
+	call DrawMetaspriteIndexed
 	ld a, [wFadeLevel]
 	and $07
 	cp $04
@@ -2494,58 +2656,93 @@ Func_30_5694:
 	ld [wScreenAnim], a
 Func_30_5697:
 	ret
-Func_30_5698:
+TitleDrawHiScore:
 	call WaitForHBlank
 	ld hl, wHiScore
 	ld de, $99ad
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl+]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	call WaitForHBlank
 	ld a, [hl]
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ld a, [hl]
 	swap a
-	call Func_00_3635
+	call WriteBcdDigitTile
 	ret
-Func_30_56d3:
+; blank the 8 hi-score digit cells (backwards from $99ad)
+TitleClearHiScoreRow:
 	call WaitForHBlank
 	ld de, $99ad
-	call Func_30_5751
-	call Func_30_5751
-	call Func_30_5751
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
 	call WaitForHBlank
-	call Func_30_5751
-	call Func_30_5751
-	call Func_30_5751
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
 	call WaitForHBlank
-	call Func_30_5751
-	call Func_30_5751
+	call TitleClearCell
+	call TitleClearCell
 	ret
 
-Data_30_56f8:
-	db $11, $b2, $99, $0e, $03, $c5, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd
-	db $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd, $51, $57, $cd, $d1
-	db $02, $cd, $51, $57, $cd, $51, $57, $cd, $51, $57, $cd, $d1, $02, $cd, $51, $57
-	db $cd, $51, $57, $cd, $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd
-	db $51, $57, $cd, $d1, $02, $cd, $51, $57, $cd, $51, $57, $cd, $51, $57, $c1, $21
-	db $32, $00, $19, $54, $5d, $0d, $20, $ad, $c9
+; Code, was misfiled as data. Erase the 3-row menu/notice area: 18 cells per
+; row backwards from $99b2, stepping de to the next row's end. Called by the
+; "no data" notice handler (TitleStateNoData).
+TitleClearMenuArea:
+	ld de, $99b2
+	ld c, $03
+.row:
+	push bc
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	call WaitForHBlank
+	call TitleClearCell
+	call TitleClearCell
+	call TitleClearCell
+	pop bc
+	ld hl, $0032
+	add hl, de
+	ld d, h
+	ld e, l
+	dec c
+	jr nz, .row
+	ret
 
-Func_30_5751:
+; blank one BG cell at de (tile $f8, attr 0) and step backwards
+TitleClearCell:
 	ld a, $f8
 	ld [de], a
 	ld a, $01
@@ -2557,9 +2754,12 @@ Func_30_5751:
 	dec de
 	ret
 
-Data_30_5760:
-	db $ed, $58, $54, $59, $c4, $59, $58, $5a, $b0, $5a, $05, $5b, $66, $5b, $ca, $5b
-	db $6b, $5c, $c8, $5c, $24, $5d, $5e, $5d, $cf, $5d, $54, $5e, $d9, $5e
+; Intro storybook page handlers, indexed by wScreenInput (advances 0-14;
+; $0f or any button ends the cutscene).
+IntroPageHandlers:
+	dw IntroPage00, IntroPage01, IntroPage02, IntroPage03, IntroPage04
+	dw IntroPage05, IntroPage06, IntroPage07, IntroPage08, IntroPage09
+	dw IntroPage10, IntroPage11, IntroPage12, IntroPage13, IntroPage14
 
 DrawIntroBookScreen:
 	xor a
@@ -2568,7 +2768,7 @@ DrawIntroBookScreen:
 	ld [wScreenPhase], a
 	ld [wScreenTimer], a
 	ld [wScreenFrame], a
-	call Func_30_5816
+	call IntroResetState
 	xor a
 	ldh [rVBK], a
 	ld a, $29
@@ -2591,45 +2791,46 @@ DrawIntroBookScreen:
 	ld b, $29
 	ld de, $7000
 	call LoadPalettesBanked
-	call Func_00_0794
+	call FadeInPalettes
 	push af
 	ld a, SOUND_BGM_Intro
 	call PlaySoundTracked
 	pop af
-Func_30_57d4:
+IntroLoop:
 	call WaitForNextFrame
 	call ReadJoypad
 	ldh a, [hJoyRepeat]
 	and a
-	jr nz, Func_30_5809
+	jr nz, IntroExit
 	ld a, [wScreenInput]
 	cp $0f
-	jr nc, Func_30_5809
+	jr nc, IntroExit
 	ld a, [wScreenPhase]
 	and a
 	jr nz, Func_30_57ef
-	call Func_30_6007
+	call IntroDrawCaption
 Func_30_57ef:
 	ld a, [wScreenInput]
-	ld hl, $57fd
+	ld hl, IntroDrawTail
 	push hl
 	add a, a
-	ld hl, $5760
+	ld hl, IntroPageHandlers
 	rst AddAToHL
 	rst DerefHL
 	jp hl
+IntroDrawTail:
 	call HideUnusedOamSprites
 	ld a, [wFadeLevel]
 	inc a
 	ld [wFadeLevel], a
-	jr Func_30_57d4
-Func_30_5809:
-	call Func_00_07a7
+	jr IntroLoop
+IntroExit:
+	call FadePalettesToWhite
 	call WaitForPaletteFadeCgb
 	call Func_00_04c4
 	call Func_00_0e24
 	ret
-Func_30_5816:
+IntroResetState:
 	xor a
 	ld [$cf3f], a
 	ld [$cf5b], a
@@ -2664,49 +2865,33 @@ Func_30_5816:
 	call Func_00_36b8
 	ret
 
-Data_30_5868:
-	db $29, $29
+; Intro-cutscene art tables, indexed by sprite id 0-$24 (was chopped into
+; arbitrary Data_30_* pieces): source bank per entry, then the pointer. Ids
+; 0-$20 are metasprites (IntroDrawSprite); $21-$24 are BG-map descriptors for
+; the final pages (IntroDrawBgFrame via BankMapCopyInline).
+IntroSpriteBanks:
+	db $29, $29, $29, $29, $29, $29, $29, $29
+	db $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
+	db $2a, $2a, $2a
+	db $2b, $2b, $2b, $2b, $2b, $2b
+	db $29, $29, $29, $29
+IntroSpritePtrs:
+	dw $7a04, $7a7d, $7a8e, $7a9b, $7aa4, $7ab5, $7ac2, $7acb
+	dw $7430, $7449, $747a, $74ab, $754c, $7595, $75b6, $75d7
+	dw $75f8, $7619, $763a, $76ab, $771c, $778d, $77fe, $786f
+	dw $78e0, $7951, $79c2
+	dw $7040, $70c1, $7126, $718f, $71ec, $7245
+	dw $7216, $73ac, $7542, $76d8
 
-Data_30_586a:
-	db $29, $29
-
-Data_30_586c:
-	db $29, $29, $29, $29, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2a
-	db $2a, $2a, $2a, $2a, $2a, $2a, $2a, $2b, $2b, $2b, $2b, $2b, $2b
-
-SECTION "analyzed_0c1889", ROMX[$5889], BANK[$30]
-
-Data_30_5889:
-	db $29
-
-SECTION "analyzed_0c188a", ROMX[$588a], BANK[$30]
-
-Data_30_588a:
-	db $29, $29, $29, $04, $7a, $7d, $7a
-
-Data_30_5891:
-	db $8e, $7a, $9b, $7a
-
-Data_30_5895:
-	db $a4, $7a, $b5, $7a, $c2, $7a, $cb, $7a, $30, $74, $49, $74, $7a, $74, $ab, $74
-	db $4c, $75, $95, $75, $b6, $75, $d7, $75, $f8, $75, $19, $76, $3a, $76, $ab, $76
-	db $1c, $77, $8d, $77, $fe, $77, $6f, $78, $e0, $78, $51, $79, $c2, $79, $40, $70
-	db $c1, $70, $26, $71, $8f, $71, $ec, $71, $45, $72
-
-Data_30_58cf:
-	db $16, $72
-
-Data_30_58d1:
-	db $ac, $73, $42, $75, $d8, $76
-
-Func_30_58d7:
+; draw intro art #A at (d,e) -- bank/pointer from the tables above
+IntroDrawSprite:
 	push af
-	ld hl, $5868
+	ld hl, IntroSpriteBanks
 	rst AddAToHL
 	ld a, [hl]
 	ld [wDrawBank], a
 	pop af
-	ld hl, $588d
+	ld hl, IntroSpritePtrs
 	add a, a
 	rst AddAToHL
 	rst DerefHL
@@ -2714,6 +2899,8 @@ Func_30_58d7:
 	ld c, e
 	call DrawMetasprite
 	ret
+
+IntroPage00:
 	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5900
@@ -2731,7 +2918,7 @@ Func_30_5904:
 	inc a
 	ld [wScreenPhase], a
 	ret
-Func_30_590c:
+IntroFlyingSpriteStep:
 	ld a, [wFadeLevel]
 	and $03
 	cp $03
@@ -2757,14 +2944,17 @@ Func_30_5921:
 	inc b
 Func_30_592f:
 	ld a, b
-	call Func_30_58d7
+	call IntroDrawSprite
 	ret
 
-Data_30_5934:
+; Unreferenced (no pointer to $5934 in the bank): looks like leftover
+; (x, sprite-id) keyframe pairs for an intro animation that ended up
+; hard-coded in the page handlers instead.
+UnusedIntroKeyframes:
 	db $68, $01, $20, $02, $20, $03, $28, $04, $20, $04, $18, $04, $18, $05, $18, $06
 	db $68, $04, $60, $04, $58, $04, $50, $04, $48, $04, $40, $04, $38, $04, $30, $04
 
-Func_30_5954:
+IntroPage01:
 	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5967
@@ -2792,7 +2982,7 @@ Func_30_597e:
 Func_30_5984:
 	cp $28
 	jr nc, Func_30_598d
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_599d
 Func_30_598d:
 	cp $e6
@@ -2802,7 +2992,7 @@ Func_30_598d:
 	jr Func_30_599d
 Func_30_5998:
 	jr c, Func_30_599d
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_599d:
 	ld a, [wScreenFrame]
 	and a
@@ -2810,18 +3000,19 @@ Func_30_599d:
 	ld d, $00
 	ld e, $00
 	ld a, $00
-	call Func_30_58d7
-	ld hl, $d0f7
+	call IntroDrawSprite
+	ld hl, wScreenAnim ; reused as a sprite X coord here
 	ld b, $01
-	call Func_30_590c
-	ld hl, $d0f8
+	call IntroFlyingSpriteStep
+	ld hl, wScreenAnim2 ; reused as a sprite X coord here
 	ld b, $04
-	call Func_30_590c
+	call IntroFlyingSpriteStep
 Func_30_59bc:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage02:
 	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_59d7
@@ -2857,7 +3048,7 @@ Func_30_5a01:
 Func_30_5a07:
 	cp $28
 	jr nc, Func_30_5a10
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5a20
 Func_30_5a10:
 	cp $e6
@@ -2867,21 +3058,21 @@ Func_30_5a10:
 	jr Func_30_5a20
 Func_30_5a1b:
 	jr c, Func_30_5a20
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5a20:
 	ld a, [wScreenFrame]
 	and a
 	jr z, Func_30_5a3f
-	ld hl, $d0f7
+	ld hl, wScreenAnim ; reused as a sprite X coord here
 	ld b, $01
-	call Func_30_590c
+	call IntroFlyingSpriteStep
 	ld d, $00
 	ld e, $00
 	ld a, $07
-	call Func_30_58d7
-	ld hl, $d0f8
+	call IntroDrawSprite
+	ld hl, wScreenAnim2 ; reused as a sprite X coord here
 	ld b, $04
-	call Func_30_590c
+	call IntroFlyingSpriteStep
 Func_30_5a3f:
 	ld a, [wScreenPhase]
 	inc a
@@ -2894,9 +3085,10 @@ Func_30_5a47:
 	ld d, $00
 	ld e, $00
 	ld a, [wScreenAnim]
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5a57:
 	ret
+IntroPage03:
 	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5a8a
@@ -2925,7 +3117,7 @@ Func_30_5a8a:
 Func_30_5a90:
 	cp $64
 	jr nc, Func_30_5a97
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 Func_30_5a97:
 	call Func_30_5a47
 	ld a, [wScreenPhase]
@@ -2939,6 +3131,7 @@ Func_30_5a97:
 	xor a
 	ld [wScreenPhase], a
 	ret
+IntroPage04:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5ac3
@@ -2975,13 +3168,14 @@ Func_30_5af0:
 	ld a, $09
 	ld [wScreenTimer], a
 Func_30_5af7:
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5afa:
 	call Func_30_5a47
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage05:
 	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5b32
@@ -3008,7 +3202,7 @@ Func_30_5b32:
 Func_30_5b38:
 	cp $28
 	jr nc, Func_30_5b41
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5b41
 Func_30_5b41:
 	ld a, [wScreenFrame]
@@ -3017,7 +3211,7 @@ Func_30_5b41:
 	ld d, $00
 	ld e, $00
 	ld a, $0c
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5b50:
 	ld a, [wScreenPhase]
 	inc a
@@ -3030,6 +3224,7 @@ Func_30_5b50:
 	xor a
 	ld [wScreenPhase], a
 	ret
+IntroPage06:
 	ld a, [wScreenPhase]
 	cp $f0
 	jr c, Func_30_5b79
@@ -3062,7 +3257,7 @@ Func_30_5b8c:
 	ld [wScreenAnim], a
 	jr Func_30_5ba9
 Func_30_5ba6:
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5ba9:
 	ld a, [wScreenFrame]
 	and a
@@ -3070,16 +3265,17 @@ Func_30_5ba9:
 	ld d, $00
 	ld e, $00
 	ld a, $0c
-	call Func_30_58d7
+	call IntroDrawSprite
 	ld d, $00
 	ld e, $00
 	ld a, [wScreenAnim]
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5bc2:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage07:
 	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5c14
@@ -3118,7 +3314,7 @@ Func_30_5c14:
 Func_30_5c1a:
 	cp $28
 	jr nc, Func_30_5c23
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5c3e
 Func_30_5c23:
 	ld a, [wScreenAnim2]
@@ -3141,7 +3337,7 @@ Func_30_5c3e:
 	ld d, $00
 	ld e, $00
 	ld a, [wScreenAnim]
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5c4e:
 	ld a, [wScreenAnim2]
 	inc a
@@ -3157,6 +3353,7 @@ Func_30_5c4e:
 	xor a
 	ld [wScreenPhase], a
 	ret
+IntroPage08:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5c7e
@@ -3187,7 +3384,7 @@ Func_30_5c8c:
 	ld [wScreenAnim], a
 	jr Func_30_5ca9
 Func_30_5ca6:
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5ca9:
 	ld a, [wScreenFrame]
 	and a
@@ -3195,7 +3392,7 @@ Func_30_5ca9:
 	ld d, $00
 	ld e, $00
 	ld a, [wScreenAnim]
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5cb9:
 	ld a, [wScreenAnim2]
 	inc a
@@ -3204,6 +3401,7 @@ Func_30_5cb9:
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage09:
 	ld a, [wScreenPhase]
 	cp $00
 	jr nz, Func_30_5cf1
@@ -3228,7 +3426,7 @@ Func_30_5cf1:
 Func_30_5cf7:
 	cp $14
 	jr nc, Func_30_5cfe
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 Func_30_5cfe:
 	ld a, [wScreenFrame]
 	and a
@@ -3236,7 +3434,7 @@ Func_30_5cfe:
 	ld d, $00
 	ld e, $00
 	ld a, $1b
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5d0d:
 	ld a, [wScreenPhase]
 	inc a
@@ -3252,12 +3450,14 @@ Func_30_5d0d:
 
 SECTION "analyzed_0c1d23", ROMX[$5d23], BANK[$30]
 
-Data_30_5d23:
-	db $c9
+; Code, was misfiled as data: an orphaned `ret` between page handlers --
+; nothing jumps to it (IntroPage09 returns just before it).
+UnusedIntroRet:
+	ret
 
 SECTION "analyzed_0c1d24", ROMX[$5d24], BANK[$30]
 
-Func_30_5d24:
+IntroPage10:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5d37
@@ -3275,7 +3475,7 @@ Func_30_5d37:
 Func_30_5d40:
 	cp $aa
 	jr c, Func_30_5d47
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5d47:
 	ld a, [wScreenFrame]
 	and a
@@ -3283,12 +3483,13 @@ Func_30_5d47:
 	ld d, $00
 	ld e, $00
 	ld a, $1b
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5d56:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage11:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5d71
@@ -3322,7 +3523,7 @@ Func_30_5d9b:
 	jr c, Func_30_5db8
 	cp $46
 	jr nc, Func_30_5da8
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5db8
 Func_30_5da8:
 	cp $aa
@@ -3332,7 +3533,7 @@ Func_30_5da8:
 	jr Func_30_5db8
 Func_30_5db3:
 	jr c, Func_30_5db8
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5db8:
 	ld a, [wScreenFrame]
 	and a
@@ -3340,12 +3541,13 @@ Func_30_5db8:
 	ld d, $00
 	ld e, $00
 	ld a, $1c
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5dc7:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage12:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5de2
@@ -3367,7 +3569,7 @@ Func_30_5de2:
 Func_30_5df3:
 	cp $0a
 	jr nc, Func_30_5dfc
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5e0c
 Func_30_5dfc:
 	cp $50
@@ -3377,7 +3579,7 @@ Func_30_5dfc:
 	jr Func_30_5e0c
 Func_30_5e07:
 	jr c, Func_30_5e0c
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5e0c:
 	ld a, [wScreenFrame]
 	and a
@@ -3385,7 +3587,7 @@ Func_30_5e0c:
 	ld d, $00
 	ld e, $00
 	ld a, $1d
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5e1b:
 	jr Func_30_5e4c
 Func_30_5e1d:
@@ -3395,7 +3597,7 @@ Func_30_5e1d:
 Func_30_5e24:
 	cp $64
 	jr nc, Func_30_5e2d
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5e3d
 Func_30_5e2d:
 	cp $aa
@@ -3405,7 +3607,7 @@ Func_30_5e2d:
 	jr Func_30_5e3d
 Func_30_5e38:
 	jr c, Func_30_5e3d
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5e3d:
 	ld a, [wScreenFrame]
 	and a
@@ -3413,12 +3615,13 @@ Func_30_5e3d:
 	ld d, $00
 	ld e, $00
 	ld a, $1e
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5e4c:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage13:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5e67
@@ -3440,7 +3643,7 @@ Func_30_5e67:
 Func_30_5e78:
 	cp $0a
 	jr nc, Func_30_5e81
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5e91
 Func_30_5e81:
 	cp $50
@@ -3450,7 +3653,7 @@ Func_30_5e81:
 	jr Func_30_5e91
 Func_30_5e8c:
 	jr c, Func_30_5e91
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5e91:
 	ld a, [wScreenFrame]
 	and a
@@ -3458,7 +3661,7 @@ Func_30_5e91:
 	ld d, $00
 	ld e, $00
 	ld a, $1f
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5ea0:
 	jr Func_30_5ed1
 Func_30_5ea2:
@@ -3468,7 +3671,7 @@ Func_30_5ea2:
 Func_30_5ea9:
 	cp $64
 	jr nc, Func_30_5eb2
-	call Func_30_5f78
+	call IntroSpriteFlickerIn
 	jr Func_30_5ec2
 Func_30_5eb2:
 	cp $aa
@@ -3478,7 +3681,7 @@ Func_30_5eb2:
 	jr Func_30_5ec2
 Func_30_5ebd:
 	jr c, Func_30_5ec2
-	call Func_30_5fa2
+	call IntroSpriteFlickerOut
 Func_30_5ec2:
 	ld a, [wScreenFrame]
 	and a
@@ -3486,12 +3689,13 @@ Func_30_5ec2:
 	ld d, $00
 	ld e, $00
 	ld a, $20
-	call Func_30_58d7
+	call IntroDrawSprite
 Func_30_5ed1:
 	ld a, [wScreenPhase]
 	inc a
 	ld [wScreenPhase], a
 	ret
+IntroPage14:
 	ld a, [wScreenPhase]
 	cp $b4
 	jr c, Func_30_5eec
@@ -3533,7 +3737,7 @@ Func_30_5f1c:
 	jr nc, Func_30_5f35
 	inc a
 	ld [wScreenAnim], a
-	call Func_30_5f4b
+	call IntroDrawBgFrame
 Func_30_5f35:
 	ld a, [wScreenPhase]
 	cp $1e
@@ -3546,7 +3750,7 @@ Func_30_5f43:
 	inc a
 	ld [wScreenPhase], a
 	ret
-Func_30_5f4b:
+IntroDrawBgFrame:
 	push af
 	ld hl, $5868
 	rst AddAToHL
@@ -3565,16 +3769,16 @@ Func_30_5f4b:
 Func_30_5f64:
 	ld de, $9a80
 Func_30_5f67:
-	call Func_00_10dc
-	call Func_30_5f6e
+	call BankMapCopyInline
+	call IntroFlipBgBuffer
 	ret
-Func_30_5f6e:
+IntroFlipBgBuffer:
 	ld a, [$cf3f]
 	cpl
 	and $01
 	ld [$cf3f], a
 	ret
-Func_30_5f78:
+IntroSpriteFlickerIn:
 	ld a, [wScreenTimer]
 	and a
 	jr nz, Func_30_5f84
@@ -3599,7 +3803,7 @@ Func_30_5f9a:
 	dec a
 	ld [wScreenTimer], a
 	ret
-Func_30_5fa2:
+IntroSpriteFlickerOut:
 	ld a, [wScreenTimer]
 	and a
 	jr nz, Func_30_5fad
@@ -3625,17 +3829,31 @@ Func_30_5fc3:
 	ld [wScreenTimer], a
 	ret
 
-Data_30_5fcb:
-	db $a2, $72, $d0, $75, $ff, $ff, $56, $76, $ec, $72, $dc, $76, $36, $73, $62, $77
-	db $80, $73, $e8, $77, $ca, $73, $6e, $78, $ff, $ff, $f4, $78, $14, $74, $7a, $79
-	db $5e, $74, $00, $7a, $a8, $74, $86, $7a, $f2, $74, $0c, $7b, $ff, $ff, $92, $7b
-	db $3c, $75, $18, $7c, $ff, $ff, $9e, $7c, $86, $75, $24, $7d
+; Per-page caption text: two bank-$2b screen descriptors (top 2x17 line ->
+; window $9c22, bottom 4x16 block -> $9c83); $ffff = blank the top line.
+; This is what the Screen2b_* "structural only" screens are: the intro text.
+IntroCaptionPtrs:
+	dw Screen2b_00, Screen2b_11
+	dw $ffff,       Screen2b_12
+	dw Screen2b_01, Screen2b_13
+	dw Screen2b_02, Screen2b_14
+	dw Screen2b_03, Screen2b_15
+	dw Screen2b_04, Screen2b_16
+	dw $ffff,       Screen2b_17
+	dw Screen2b_05, Screen2b_18
+	dw Screen2b_06, Screen2b_19
+	dw Screen2b_07, Screen2b_20
+	dw Screen2b_08, Screen2b_21
+	dw $ffff,       Screen2b_22
+	dw Screen2b_09, Screen2b_23
+	dw $ffff,       Screen2b_24
+	dw Screen2b_10, Screen2b_25
 
-Func_30_6007:
+IntroDrawCaption:
 	ld a, [wScreenInput]
 	add a, a
 	add a, a
-	ld hl, $5fcb
+	ld hl, IntroCaptionPtrs
 	rst AddAToHL
 	push hl
 	rst DerefHL
@@ -3649,7 +3867,7 @@ Func_30_6007:
 Func_30_6022:
 	ld de, $9c22
 	ld b, $2b
-	call Func_00_10dc
+	call BankMapCopyInline
 Func_30_602a:
 	pop hl
 	ld a, $02
@@ -3657,5 +3875,5 @@ Func_30_602a:
 	rst DerefHL
 	ld de, $9c83
 	ld b, $2b
-	call Func_00_10dc
+	call BankMapCopyInline
 	ret

@@ -2151,7 +2151,7 @@ ShowMonsterDetailScreen:
 	push af
 	ld a, [wActiveMonster]
 	ld [wDisplayMonster], a
-	call Func_00_083c
+	call BlackoutPalettes
 	call HideAllSprites
 	ld a, $00
 	ld [rVBK], a

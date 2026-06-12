@@ -84,7 +84,7 @@ Func_01_439e:
 	FAR_CALL Func_05_46f0
 	call Func_01_5cbe
 	call Func_01_49cb
-	call Func_00_083c
+	call BlackoutPalettes
 	FAR_CALL Func_05_4884
 	call LoadFloorByMode
 	FAR_CALL SpecialScene_SelectIndex

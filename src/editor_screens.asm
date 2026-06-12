@@ -312,7 +312,7 @@ Func_15_41f3:
 	call LoadBgPalettesToSlot
 	ret
 Func_15_41fe:
-	call Func_00_083c
+	call BlackoutPalettes
 	xor a
 	ld [rVBK], a
 	ld bc, $1000

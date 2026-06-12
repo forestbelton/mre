@@ -90,7 +90,7 @@ Cox_PlayFlashback:
 	ret
 
 Cox_LoadFlashbackScene:
-	call Func_00_07a7
+	call FadePalettesToWhite
 	ld a, $01
 	ldh [rVBK], a
 	ld hl, CoxFlashbackTiles
@@ -299,14 +299,14 @@ Cox_ShowLetterOnMonitor:
 	ld a, [wUiState]
 	or a
 	jr nz, .typeLoop
-	call Func_00_07c5
+	call FadePalettesToBlack
 	ret
 Cox_PlayStaffRoll:
 	call Cox_ClearBgTilemap
 	call ResetScrollState
 	xor a
 	ld [$cfbc], a
-	call Func_00_0794
+	call FadeInPalettes
 	ld de, $0258
 .scrollLoop:
 	call WaitForNextFrame
@@ -327,7 +327,7 @@ Cox_PlayStaffRoll:
 	call Cox_WaitDFrames
 	ld d, $78
 	call Cox_WaitDFrames
-	call Func_00_07c5
+	call FadePalettesToBlack
 	push af
 	ld a, SOUND_BGM_Silence
 	call PlaySoundTracked

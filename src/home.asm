@@ -1154,7 +1154,9 @@ WaitForPaletteFade:
 	jr nz, WaitForPaletteFade
 	call WaitForNextFrame
 	ret
-Func_00_0794:
+; Fade the screen back in: ramp the hardware palettes from their current
+; (usually all-white) state to the saved palettes at $c201/$c241. CGB only.
+FadeInPalettes:
 	rst CheckCgb
 	ret z
 	call WaitForPaletteFadeCgb
@@ -1163,7 +1165,9 @@ Func_00_0794:
 	ld hl, $c241
 	call Func_00_0602
 	jr WaitForPaletteFadeCgb
-Func_00_07a7:
+; Fade the screen out to white: save the current palettes to $c201 (so
+; FadeInPalettes can restore them), then ramp everything to $0857 (all $7fff).
+FadePalettesToWhite:
 	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
@@ -1176,7 +1180,9 @@ Func_00_07a7:
 	ld hl, $0857
 	call Func_00_0602
 	jr WaitForPaletteFadeCgb
-Func_00_07c5:
+; Fade the screen out to black: save the current palettes to $c201, then ramp
+; everything to $0897 (all $0000).
+FadePalettesToBlack:
 	rst CheckCgb
 	ret z
 	ld de, wBgPalettes
@@ -1237,7 +1243,10 @@ Func_00_0834:
 	ldh [rBGP], a
 	ret
 
-Func_00_083c:
+; Blank the display to black instantly (no ramp): loads the all-black palette
+; at $0897 into every BG/OBJ slot; on DMG, $ff to the palette registers. The
+; counterpart of LoadWhitePalettes.
+BlackoutPalettes:
 	rst CheckCgb
 	jr z, Func_00_084e
 	ld hl, $0897
@@ -2403,7 +2412,11 @@ LoadBgAndObjPalettesBanked:
 	pop af
 	ld [$2fff], a
 	ret
-Func_00_10dc:
+; CopyBgMap variant for descriptors whose maps follow the 6-byte header
+; inline: hl = descriptor in bank b ([rows][cols][attr ptr][idx ptr], both
+; pointers == hl+6), de = destination override. Copies the idx map to VRAM
+; bank 0 then the attr map to bank 1, HBlank-safe.
+BankMapCopyInline:
 	ld a, [CUR_BANK_TAG]
 	push af
 	ld a, b
@@ -7010,7 +7023,7 @@ Func_00_31fa:
 	ret
 
 Func_00_320e:
-	call Func_00_083c
+	call BlackoutPalettes
 	FAR_CALL LoadTileset
 	FAR_CALL Func_10_4018
 	FAR_CALL Func_10_4070
@@ -7525,10 +7538,12 @@ Func_00_35c8:
 	call ResetScrollState
 	ld a, $30
 	ld [$2fff], a
-	call Func_30_547f
+	call DmgOnlyScreen
 	ret
 
-Func_00_35d4:
+; Draw BG-map patch #A: hl = dw descriptor table in bank b, de = BG dest;
+; dereferences entry A and CopyBgMap's it.
+BankMapCopyIndexed:
 	ld c, a
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -7553,7 +7568,8 @@ BankMapCopyB:
 	ld [$2fff], a
 	ret
 
-Func_00_35f9:
+; Draw metasprite #A: hl = dw metasprite table in bank b, (d,e) = (y,x).
+DrawMetaspriteIndexed:
 	ld c, a
 	ld a, [CUR_BANK_TAG]
 	push af
@@ -7588,7 +7604,9 @@ LoadPalettesBanked:
 	call CopyDEtoHL
 	pop af
 	ld [$2fff], a
-Func_00_3635:
+; Write one BCD digit as a BG cell at de (tile $9a+digit, attr $08) and step
+; de backwards -- callers emit multi-digit numbers low digit first.
+WriteBcdDigitTile:
 	and $0f
 	add a, $9a
 	ld [de], a

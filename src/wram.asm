@@ -324,10 +324,25 @@ wScreenFrame::      ds 1    ; $D0F6: free-running frame counter; low bit gates t
 wScreenAnim::       ds 1    ; $D0F7: primary pose/animation frame (0-3), init from $c55d; stepped
                             ;   toward 3 (or back to 0) per wScreenInput, gated by wScreenFrame&1
 wScreenAnim2::      ds 1    ; $D0F8: secondary element's pose/animation frame (0-3), moved with wScreenAnim
+wScreenCursorX::    ds 1    ; $D0F9: menu cursor sprite X (title: $28 const; room-clear: $48)
+wScreenCursorY::    ds 1    ; $D0FA: menu cursor sprite Y (title: $68 PLAY/$78 CONTINUE;
+                            ;   room-clear: $88 NEXT/$98 TOWN)
+wTownStage::        ds 1    ; $D0FB: town growth stage 0-2 (from progress flags $0c/$0d,
+                            ;   set on town entry $00:$349e); unlocks 3/4/5 selectable
+                            ;   locations and picks the cursor-movement map (TownNavTables)
 
 
 SECTION "wram_fade_state", WRAMX[$D0FE], BANK[1]
-wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade)
+wFadeLevel::        ds 1    ; $D0FE: Logo fade level (0 = no fade). The full-screen flows in
+                            ;   bank $30 reuse it as their frame/fade counter
+wFadeLevelHi::      ds 1    ; $D0FF: high byte -- title + next-room screens count frames in
+                            ;   the 16-bit pair wFadeLevel/wFadeLevelHi
+wFloorBcd::         ds 1    ; $D100: wActiveFloor as packed BCD (tens<<4 | ones), computed by
+                            ;   the room-start/next-room screens for digit drawing
+wTallyTimer::       ds 3    ; $D101: room-clear tally -- working copy of wFloorTimer (3-byte
+                            ;   BCD), counted down into wTallyScore as the time bonus
+wTallyScore::       ds 5    ; $D104: room-clear tally -- working copy of wScore (5-byte BCD),
+                            ;   written back when the count-up finishes
 
 
 SECTION "wram_serial", WRAMX[$D10A], BANK[1]

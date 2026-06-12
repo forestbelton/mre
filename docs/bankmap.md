@@ -10,7 +10,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 ROM0: 15700 bytes used / 684 free
 ROMX: 750410 bytes used / 281782 free in 63 banks
 WRAM0: 1762 bytes used / 2334 free
-WRAMX: 47 bytes used / 4049 free in 1 bank
+WRAMX: 60 bytes used / 4036 free in 1 bank
 HRAM: 75 bytes used / 52 free
 ```
 
@@ -65,7 +65,7 @@ HRAM: 75 bytes used / 52 free
 | $2d | ROMX | 15687 | 697 | 27 | 0 | room01.asm, room02.asm, room03.asm, room04.asm, room05.asm, room06.asm, room07.asm, room08.asm, room09.asm, room10.asm, room11.asm, room12.asm, room13.asm, room14.asm, room15.asm, room16.asm, room17.asm, room18.asm, room19.asm, room20.asm, room21.asm, room22.asm, room23.asm, room24.asm, room25.asm, room26.asm, room27.asm |
 | $2e | ROMX | 15687 | 697 | 27 | 0 | room28.asm, room29.asm, room30.asm, room31.asm, room32.asm, room33.asm, room34.asm, room35.asm, room36.asm, room37.asm, room38.asm, room39.asm, room40.asm, room41.asm, room42.asm, room43.asm, room44.asm, room45.asm, room46.asm, room47.asm, room48.asm, room49.asm, room50.asm, room51.asm, room52.asm, room53.asm, room54.asm |
 | $2f | ROMX | 9296 | 7088 | 16 | 0 | room55.asm, room56.asm, room57.asm, room58.asm, room59.asm, room60.asm, roomB01.asm, roomB02.asm, roomB03.asm, roomB04.asm, roomB05.asm, roomB06.asm, roomB07.asm, roomB08.asm, roomB09.asm, roomB10.asm |
-| $30 | ROMX | 8235 | 8149 | 10 | 9 | screens.asm, logo.asm |
+| $30 | ROMX | 8245 | 8139 | 5 | 4 | screens.asm, logo.asm |
 | $31 | ROMX | 2046 | 14338 | 1 | 1 | link.asm |
 | $32 | ROMX | 6995 | 9389 | 78 | 78 | monster_detail.asm |
 | $33 | ROMX | 13349 | 3035 | 2 | 2 | tradehouse.asm |
@@ -78,7 +78,7 @@ HRAM: 75 bytes used / 52 free
 | $3e | ROMX | 16383 | 1 | 13 | 0 | bgm_3a.asm, bank1.asm, bgm_38.asm, bgm_2f.asm, bgm_30.asm, bgm_35.asm, bgm_39.asm, bgm_32.asm, bgm_33.asm, bgm_34.asm, bgm_37.asm, bgm_36.asm, bgm_31.asm |
 | $3f | ROMX | 16383 | 1 | 48 | 0 | bgm_2e.asm, bank0.asm, bgm_2b.asm, bgm_29.asm, bgm_2d.asm, bgm_2c.asm, bgm_2a.asm, sfx_11.asm, sfx_12.asm, sfx_17.asm, sfx_1b.asm, sfx_0a.asm, sfx_0c.asm, sfx_15.asm, sfx_26.asm, sfx_1a.asm, sfx_09.asm, sfx_08.asm, sfx_16.asm, sfx_1c.asm, sfx_14.asm, sfx_18.asm, sfx_06.asm, sfx_07.asm, sfx_19.asm, sfx_24.asm, sfx_25.asm, sfx_05.asm, sfx_13.asm, sfx_20.asm, sfx_23.asm, sfx_21.asm, sfx_1e.asm, sfx_22.asm, sfx_01.asm, sfx_0d.asm, sfx_0e.asm, sfx_02.asm, sfx_1f.asm, sfx_0b.asm, sfx_04.asm, sfx_03.asm, sfx_10.asm, sfx_0f.asm, bgm_28.asm, sfx_00.asm, sfx_1d.asm, sfx_27.asm |
 | WRAM0#0 | WRAM0 | 1757 | — | 16 | 0 | wram.asm |
-| WRAMX#1 | WRAMX | 43 | — | 6 | 0 | wram.asm |
+| WRAMX#1 | WRAMX | 57 | — | 7 | 0 | wram.asm |
 | HRAM#0 | HRAM | 74 | — | 5 | 0 | hram.asm |
 
 ## Sections by bank
@@ -922,19 +922,14 @@ HRAM: 75 bytes used / 52 free
 | $5fc6-$620a | 581 | roomB09.asm | RoomB09 |
 | $620b-$644f | 581 | roomB10.asm | RoomB10 |
 
-### $30 — ROMX (10 sections, 9 analyzed)
+### $30 — ROMX (5 sections, 4 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$4180 | 385 | screens.asm | analyzed_0c0000 |
-| $4185-$4186 | 2 | screens.asm | analyzed_0c0185 |
-| $4188-$4194 | 13 | screens.asm | analyzed_0c0188 |
-| $4196-$419d | 8 | screens.asm | analyzed_0c0196 |
-| $41a1-$49f1 | 2129 | screens.asm | analyzed_0c01a1 |
+| $4000-$49f1 | 2546 | screens.asm | analyzed_0c0000 |
 | $49f4-$5417 | 2596 | screens.asm | analyzed_0c09f4 |
 | $5418-$547e | 103 | logo.asm | DrawTecmoLogo |
-| $547f-$5888 | 1034 | screens.asm | analyzed_0c147f |
-| $588a-$5d22 | 1177 | screens.asm | analyzed_0c188a |
+| $547f-$5d22 | 2212 | screens.asm | analyzed_0c147f |
 | $5d24-$6037 | 788 | screens.asm | analyzed_0c1d24 |
 
 ### $31 — ROMX (1 sections, 1 analyzed)
@@ -1168,13 +1163,14 @@ HRAM: 75 bytes used / 52 free
 | $cfbb-$cfef | 53 | wram.asm | wram_monsters |
 | $cff0-$cff7 | 8 | wram.asm | wram_floor_state |
 
-### WRAMX#1 — WRAMX (6 sections, 0 analyzed)
+### WRAMX#1 — WRAMX (7 sections, 0 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
 | $d0dc-$d0e4 | 9 | wram.asm | wram_npc_state |
 | $d0e9-$d0ea | 2 | wram.asm | wram_ui_loop |
-| $d0f3-$d0f8 | 6 | wram.asm | wram_screen_state |
+| $d0f3-$d0fb | 9 | wram.asm | wram_screen_state |
+| $d0fe-$d108 | 11 | wram.asm | wram_fade_state |
 | $d10a-$d10f | 6 | wram.asm | wram_serial |
 | $d5fb-$d5ff | 5 | wram.asm | wram_menu_results |
 | $d614-$d622 | 15 | wram.asm | wram_text_engine |

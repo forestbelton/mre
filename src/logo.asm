@@ -43,7 +43,7 @@ DrawTecmoLogo:
 	ld b, TECMO_LOGO_GFX_BANK
 	ld de, TecmoLogoPalette     ; TecmoLogoPalette -> BG/OBJ palette buffers
 	call LoadPalettesBanked
-	call Func_00_0794           ; show screen + apply palettes
+	call FadeInPalettes           ; show screen + apply palettes
 .fadeLoop:
 	call WaitForNextFrame
 	call ReadJoypad
@@ -58,6 +58,6 @@ DrawTecmoLogo:
 	ld [wFadeLevel], a          ; advance fade level (per-frame palette dim)
 	jp .fadeLoop
 .done:
-	call Func_00_07a7           ; fade out
+	call FadePalettesToWhite           ; fade out
 	call WaitForPaletteFadeCgb
 	ret
