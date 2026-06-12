@@ -162,8 +162,8 @@ Nada_ShowRageScene:
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
-	call Func_1f_41da
-	call Func_1f_41e6
+	call LoadPortraitBackdropBg
+	call LoadPortraitBackdropObj
 	xor a
 	ld [hBgPaletteDirty], a
 	ld [hObjPaletteDirty], a
@@ -171,7 +171,7 @@ Nada_ShowRageScene:
 	ret
 Nada_ShowMonsterPortrait:
 	call Nada_LoadMonsterTiles
-	call Func_1f_41e6
+	call LoadPortraitBackdropObj
 	jp ScriptWaitForBgSwap
 
 Nada_ShowMonsterPortrait2:

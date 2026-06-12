@@ -114,8 +114,8 @@ Mistral_StartEncounter:
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
-	call Func_1f_41da
-	call Func_1f_41e6
+	call LoadPortraitBackdropBg
+	call LoadPortraitBackdropObj
 	push af
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
@@ -125,7 +125,7 @@ Mistral_StartEncounter:
 	jp ScriptDispatcherEnterAfterCall
 Mistral_ShowMonsterPortrait:
 	call Mistral_LoadMonsterTiles
-	call Func_1f_41e6
+	call LoadPortraitBackdropObj
 	jp ScriptWaitForBgSwap
 Mistral_ShowMonsterPortrait2:
 	call Mistral_LoadMonsterTiles

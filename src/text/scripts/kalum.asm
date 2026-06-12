@@ -41,8 +41,8 @@ Kalum_StartEncounter:
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
-	call Func_1f_41da
-	call Func_1f_41e6
+	call LoadPortraitBackdropBg
+	call LoadPortraitBackdropObj
 	push af
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
@@ -51,23 +51,28 @@ Kalum_StartEncounter:
 	ld hl, KalumScript
 	jp ScriptDispatcherEnterAfterCall
 
-Func_1f_41da:
+; Load the fixed dark palette at the base of this bank ($1f:$4000 = $1844 x4)
+; into BG palette 0 -- whose color 0 is the screen backdrop -- giving the
+; encounter portrait its dim backdrop. (Bank $1f is mapped at every call site.)
+LoadPortraitBackdropBg:
 	ld de, $4000
 	ld hl, wBgPalettes
 	ld c, $08
 	call CopyDEtoHL
 	ret
 
-Func_1f_41e6:
+; Same fixed dark palette into OBJ palette 5 (wObjPalettes + 5*8). Re-applied by
+; the *ShowMonsterPortrait routines after the monster's own tiles are loaded.
+LoadPortraitBackdropObj:
 	ld de, $4000
-	ld hl, $c169
+	ld hl, wObjPalettes + $28
 	ld c, $08
 	call CopyDEtoHL
 	ret
 
 Kalum_ShowMonsterPortrait:
 	call Kalum_LoadMonsterTiles
-	call Func_1f_41e6
+	call LoadPortraitBackdropObj
 	jp ScriptWaitForBgSwap
 
 Kalum_ShowMonsterPortrait2:

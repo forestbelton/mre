@@ -114,8 +114,8 @@ Rafaga_StartEncounter:
 	ld de, wObjPalettes
 	ld bc, $0030
 	call BankCopy
-	call Func_1f_41da
-	call Func_1f_41e6
+	call LoadPortraitBackdropBg
+	call LoadPortraitBackdropObj
 	push af
 	ld a, SOUND_BGM_RivalEncounter
 	call PlaySoundTracked
@@ -125,7 +125,7 @@ Rafaga_StartEncounter:
 	jp ScriptDispatcherEnterAfterCall
 Rafaga_ShowMonsterPortrait:
 	call Rafaga_LoadMonsterTiles
-	call Func_1f_41e6
+	call LoadPortraitBackdropObj
 	jp ScriptWaitForBgSwap
 Rafaga_ShowMonsterPortrait2:
 	call Rafaga_LoadMonsterTiles
