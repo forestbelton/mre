@@ -231,8 +231,17 @@ the sheet is honest and adds no hidden state. But where derivation would bury
 the arrangement as a constant in tool code with no viewable file (the monster
 7x7s), prefer committing the arrangement as a Tiled map even though it is
 constant — a redundant-but-visible source file beats an invisible algorithm.
-Open question: whether the NPC-portrait layouts (`standard`/`pashute` in
-`PORTRAIT_LAYOUTS`) should also gain a TMX view for the same reason.
+**Resolved 2026-06-12 (the dumb-tool sweep):** the NPC-portrait and
+tradehouse arrangements are committed per-asset TMX files too
+(`portrait/npc/<n>/<n>.tmx`, `map_bank1: 384` carries the bank-1 split;
+nada_scene2's TMX borrows nada_intro's sheet as a second tileset for its
+shared bank-0 cells). `PORTRAIT_LAYOUTS`, `derive_portrait_maps`, mistral's
+blank-collapse rule + `reference.png` + its 2 `map_overrides` pins are all
+DELETED from pngasset — and nada's last 4 committed map bins died with them
+(its un-modelled allocator no longer matters: the map is source).
+**assets/ now contains zero .bin files.** Derivation survives nowhere in the
+map pipeline; what remains algorithmic is only the overlay-cel tile
+allocation (gen_patch/gen_meta) with its 18 idx + 13 bank0 pins.
 5. **Scene frames + metasprites** — descriptors → map source; metasprites →
    asm records.
    **DONE 2026-06-12**: all 8 scenes' `metasprites.bin` are labelled

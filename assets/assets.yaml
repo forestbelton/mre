@@ -62,12 +62,15 @@ title:
   png: screen/title/title.png
   map: title.tmx
 
-# Character portraits (src/gfx/portrait/*.asm). Maps are derived from the layout
-# constant + the indexed sheet (layout:); only the nada pair still commits map bins.
+# Character portraits (src/gfx/portrait/npc/*.asm). The arrangement is the
+# committed <name>.tmx next to each sheet (open it in Tiled); no derived
+# layouts, no map bins.
 kalum:
   mode: portrait
   png: portrait/npc/kalum/kalum.png
-  layout: standard
+  map: kalum.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5b18): eyes blink-animation frames + shoulder/collar + Selketo eye.
@@ -76,7 +79,9 @@ kalum:
 toamuna:
   mode: portrait
   png: portrait/npc/toamuna/toamuna.png
-  layout: standard
+  map: toamuna.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5ae7): two static expressions (default + alt), each a
@@ -86,7 +91,9 @@ toamuna:
 rafaga:
   mode: portrait
   png: portrait/npc/rafaga/rafaga.png
-  layout: standard
+  map: rafaga.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7557-$75ec): two-frame eyes/blink animation + three static
@@ -96,7 +103,9 @@ rafaga:
 tempest:
   mode: portrait
   png: portrait/npc/tempest/tempest.png
-  layout: standard
+  map: tempest.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7625-$76da): two-frame eyes/blink animation + three static
@@ -106,7 +115,9 @@ tempest:
 naji:
   mode: portrait
   png: portrait/npc/naji/naji.png
-  layout: standard
+  map: naji.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($7526-$762b): talking eyes-animation + smile expression, vest,
@@ -116,7 +127,9 @@ naji:
 pashute:
   mode: portrait
   png: portrait/npc/pashute/pashute.png
-  layout: pashute          # its own bottom-band packing; maps derived, no bins
+  map: pashute.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Metasprite/patch overlay region ($5a3e-$5bdc): eyes blink-animation frames,
@@ -126,7 +139,9 @@ pashute:
 bodka:
   mode: portrait
   png: portrait/npc/bodka/bodka.png
-  layout: standard
+  map: bodka.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($5a3e-$5b59): 3-frame talking-eye animation + chest + smile
@@ -136,7 +151,9 @@ bodka:
 verde:
   mode: portrait
   png: portrait/npc/verde/verde.png
-  layout: standard
+  map: verde.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
   # Overlay region ($769b-$788e): 3-frame talking-eye animation + 2 static metasprites
@@ -149,14 +166,9 @@ verde:
 mistral:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles (the girl
   mode: portrait             # in the red hood; the bg silhouette is her monster Ferious)
   png: portrait/npc/mistral/mistral.png
-  # standard layout, but blank cells collapse to the shared blank tile $80 and
-  # their slots were reused for overlay art; reference.png (composed, indexed)
-  # says which cells keep their slot. Two blank-cell/blank-slot ties render
-  # identically either way -- the original tool's arbitrary picks, pinned.
-  layout: standard
-  blank_byte: '0x80'
-  reference: reference.png
-  map_overrides: {123: 0x80, 143: 0x80}
+  map: mistral.tmx
+  map_layer: map
+  map_bank1: 384
   tiles0: 128
   palettes_bg: 6
   palettes_obj: 6
@@ -170,6 +182,9 @@ mistral:                     # two-bank: 384 bank-1 tiles + 128 bank-0 tiles (th
 nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
   mode: portrait
   png: portrait/npc/nada_intro/nada_intro.png
+  map: nada_intro.tmx
+  map_layer: map
+  map_bank1: 384
   tiles0: 384
   palettes_bg: 6
   palettes_obj: 6
@@ -185,6 +200,9 @@ nada_intro:                  # two-bank: 384 bank-1 + 384 bank-0 tiles
 nada_scene2:                 # single owned sheet; shares nada_intro's bank-0 tiles
   mode: portrait
   png: portrait/npc/nada_scene2/nada_scene2.png
+  map: nada_scene2.tmx
+  map_layer: map
+  map_bank1: 384
 
 # --- Summon-animation scenes (bank-$05 scene VM). Editable two-bank tile sheet + palette
 # from one indexed PNG; the BG animation frames are Tiled maps (frames.tmx, a layer
@@ -266,19 +284,23 @@ cox_flashback:
   palettes: 16
 
 # Tradehouse / Bodka note scene (bank $33, src/gfx/screen/tradehouse.asm): two
-# portrait-converter screens (standard layout, maps derived from the sheets),
-# each a 384-tile set loaded to VRAM bank 1; shared 6 BG + 6 OBJ palettes.
+# portrait-style screens, each a 384-tile set -> VRAM bank 1 with its committed
+# <name>.tmx arrangement; shared 6 BG + 6 OBJ palettes.
 tradehouse_studio:
   mode: portrait
   png: screen/tradehouse_studio/tradehouse_studio.png
-  layout: standard
+  map: tradehouse_studio.tmx
+  map_layer: map
+  map_bank1: 384
   palettes_bg: 6
   palettes_obj: 6
 
 tradehouse_note:
   mode: portrait
   png: screen/tradehouse_note/tradehouse_note.png
-  layout: standard
+  map: tradehouse_note.tmx
+  map_layer: map
+  map_bank1: 384
 
 # Text-window UI (bank $19, src/gfx/screen/textui.asm): the dialogue box-frame
 # tiles (main + alt set, alternates -> VRAM bank 0 $8800) + 16 palettes + the

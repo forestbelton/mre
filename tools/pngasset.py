@@ -262,20 +262,23 @@ def tmx_frames_to_maps(tmx_path):
     return out
 
 
-def tmx_layer_to_map(tmx_path, layer_name, base_tile=128):
+def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
     """Compile ONE named layer (+ its <layer>_pal twin) of a Tiled map into
-    (tilemap, attrmap) bytes. The map may hold several sheet tilesets (e.g. one
-    per monster, each layer drawn over its own); a gid resolves against
-    whichever tileset's range contains it, and the tile byte is the
-    $8800-signed VRAM tile number base_tile + (gid - firstgid). The 8-swatch
-    "palettes" tileset carries the per-cell CGB palette; Tiled flip flags map
-    to attr bits 5/6. (Used by the monster portraits --
-    assets/monster_portrait/monster_portraits.tmx.)"""
+    (tilemap, attrmap) bytes.
+
+    Tileset 0 is the asset's own sheet. With bank1_tiles=0 (the monster
+    portraits) every cell is VRAM bank 0 and byte = base_tile + idx,
+    $8800-signed. With bank1_tiles=N (the NPC portraits: N = the sheet's
+    bank-1 tile count), idx < N -> VRAM bank 1, byte = $8800-signed idx;
+    idx >= N -> bank 0, byte = idx - N (the tiles2 index). Any additional
+    sheet tileset is a SHARED bank-0 sheet (nada_scene2 borrows nada_intro's
+    tiles0): byte = idx - (tilecount - 384). The 8-swatch "palettes" tileset
+    carries per-cell CGB palettes; Tiled flip flags map to attr bits 5/6."""
     import xml.etree.ElementTree as ET
 
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
-    sheets = []                       # (firstgid, tilecount)
+    sheets = []
     pal_first = None
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
@@ -296,18 +299,37 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128):
     for cell, (g, pg) in enumerate(zip(gids, pals)):
         xf, yf = bool(g & HFLIP), bool(g & VFLIP)
         raw = g & GIDMASK
-        for first, n in sheets:
+        for ordinal, (first, n) in enumerate(sheets):
             if first <= raw < first + n:
-                vt = base_tile + (raw - first)
+                idx = raw - first
                 break
         else:
             raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} is empty/"
                              "not a sheet tile")
-        if not 128 <= vt < 384:
-            raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> VRAM tile "
-                             f"{vt} (not addressable in $8800 BG mode)")
-        tmap.append(vt & 0xFF)
-        amap.append((pg - pal_first) | (xf << 5) | (yf << 6))
+        if ordinal > 0:                            # shared bank-0 sheet
+            bank, byte = 0, idx - (n - 384)
+            if not 0 <= byte < 256:
+                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} out of the "
+                                 "shared sheet's bank-0 half")
+        elif idx < bank1_tiles:                    # own sheet, VRAM bank 1
+            if not 128 <= idx < 384:
+                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> bank-1 "
+                                 f"tile {idx} (not addressable in $8800 BG mode)")
+            bank, byte = 1, idx & 0xFF
+        elif bank1_tiles:                          # own sheet, tiles2 half
+            bank, byte = 0, idx - bank1_tiles
+            if byte >= 256:
+                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} bank-0 "
+                                 "tile index > 255")
+        else:                                      # single bank-0 sheet (monsters)
+            vt = base_tile + idx
+            if not 128 <= vt < 384:
+                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> VRAM "
+                                 f"tile {vt} (not addressable in $8800 BG mode)")
+            bank, byte = 0, vt & 0xFF
+        tmap.append(byte)
+        pal = pg - pal_first
+        amap.append(pal | (bank << 3) | (xf << 5) | (yf << 6))
     return bytes(tmap), bytes(amap)
 
 
@@ -468,89 +490,6 @@ def cmd_scene(args: argparse.Namespace) -> int:
         (out / name).write_bytes(data)
         print(f"  {name}: {len(data)} bytes")
     return 0
-
-
-# --- portrait BG maps: reconstructed allocator output ------------------------
-# The portrait converter allocated the 11x20 base picture positionally, with NO
-# dedup: top band (rows 0-7) column-major 8-deep from $80 (byte = $80+8*col+row,
-# wrapping into $00-$1f for cols 16-19), bottom band (rows 8-10) packed into the
-# leftover 8-byte groups from $20. Two packings exist (most portraits vs
-# pashute); both are content-independent constants, byte-identical across every
-# portrait that uses them. See docs/asset_source_model.md (family G).
-def _portrait_layout(bottom):
-    top = [(0x80 + 8 * c + r) & 0xFF for r in range(8) for c in range(20)]
-    return {"rows": 11, "cols": 20, "attr_or": 0x08,
-            "map": bytes(top) + bytes(bottom)}
-
-
-PORTRAIT_LAYOUTS = {
-    "standard": _portrait_layout([
-        0x20, 0x28, 0x30, 0x38, 0x40, 0x48, 0x50, 0x58, 0x23, 0x2b, 0x33, 0x3b, 0x43, 0x4b, 0x53, 0x5b, 0x26, 0x2e, 0x36, 0x3e,
-        0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c, 0x27, 0x2f, 0x37, 0x3f,
-        0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d, 0x46, 0x47, 0x4e, 0x4f,
-    ]),
-    "pashute": _portrait_layout([
-        0x20, 0x28, 0x30, 0x38, 0x40, 0x48, 0x50, 0x58, 0x60, 0x63, 0x66, 0x69, 0x23, 0x2b, 0x33, 0x3b, 0x43, 0x4b, 0x53, 0x5b,
-        0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x61, 0x64, 0x67, 0x6a, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c,
-        0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x62, 0x65, 0x68, 0x6b, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d,
-    ]),
-}
-
-
-def derive_portrait_maps(sheet_png, layout, blank_byte=None, ref_png=None,
-                         map_overrides=None):
-    """Derive (tilemap, attrmap) for a positional (family-G) portrait/screen.
-
-    tilemap = the named layout constant (PORTRAIT_LAYOUTS). attrmap = attr_or |
-    palette, where each cell's palette is the display palette of its slot's
-    tile in the INDEXED sheet PNG (positional allocation is bijective).
-
-    blank_byte: some portraits (mistral -> $80) don't keep every cell's tile at
-    its positional slot -- blank cells were collapsed to the shared blank tile
-    and their slots reused for other art. The rule that reproduces the ROM:
-    a cell keeps its positional byte iff the sheet still holds the cell's exact
-    pixels at that slot; otherwise it gets `blank_byte`. The cell's pixels (and
-    palette) come from `ref_png`, the composed reference (indexed, pixel =
-    palette*4 + value). map_overrides pins blank-cell/blank-slot ties."""
-    w, h, px, _ = read_indexed_png(Path(sheet_png))
-    L = PORTRAIT_LAYOUTS[layout]
-    rows, cols, attr_or, layout_bytes = L["rows"], L["cols"], L["attr_or"], L["map"]
-    ncell = rows * cols
-    nt = (w // 8) * (h // 8)
-
-    def slot(byte):
-        t = byte if byte >= 128 else byte + 256       # $8800-signed VRAM tile no.
-        if nt <= 256:                                  # small sheet loaded at $8800
-            t -= 128
-        return t
-
-    def slot_vals(byte):
-        t = slot(byte)
-        bx, by = (t % 16) * 8, (t // 16) * 8
-        return [px[(by + y) * w + bx + x] % 4 for y in range(8) for x in range(8)]
-
-    def slot_pal(byte):
-        t = slot(byte)
-        return px[(t // 16) * 8 * w + (t % 16) * 8] // 4   # tiles are palette-uniform
-
-    if blank_byte is None:
-        amap = bytes(attr_or | slot_pal(layout_bytes[cell]) for cell in range(ncell))
-        return layout_bytes, amap
-
-    rw, rh, rpx, _ = read_indexed_png(Path(ref_png))
-    assert (rw, rh) == (cols * 8, rows * 8), "reference dims must match the layout"
-    tmap = bytearray()
-    amap = bytearray()
-    for cell in range(ncell):
-        r, c = cell // cols, cell % cols
-        block = [rpx[(r * 8 + y) * rw + c * 8 + x] for y in range(8) for x in range(8)]
-        vals = [q % 4 for q in block]
-        keep = slot_vals(layout_bytes[cell]) == vals
-        tmap.append(layout_bytes[cell] if keep else blank_byte)
-        amap.append(attr_or | (block[0] // 4))
-    for cell, byte in (map_overrides or {}).items():
-        tmap[int(cell)] = byte
-    return bytes(tmap), bytes(amap)
 
 
 def gen_sprite_region(manifest_path, tiles, tiles2=None):
@@ -879,24 +818,13 @@ def cmd_portrait(args: argparse.Namespace) -> int:
     if getattr(args, "map", None):
         # the arrangement is a Tiled source file (one layer pair per screen,
         # possibly one tileset per sheet) -- see docs/asset_source_model.md.
-        tmap, amap = tmx_layer_to_map(d / args.map, args.map_layer)
+        tmap, amap = tmx_layer_to_map(d / args.map, args.map_layer,
+                                      bank1_tiles=args.map_bank1)
         comps += [("tilemap", tmap), ("attrmap", amap)]
         for k, ly in enumerate(x for x in (getattr(args, "obj_layers", "") or "")
                                .split(",") if x):
             comps.append((f"obj{k + 1 if k else ''}",
                           tmx_layer_to_objlist(d / args.map, ly)))
-    elif getattr(args, "layout", None):
-        # derive the maps from the layout constant + the indexed sheet (and the
-        # composed reference for blank-collapse layouts) instead of committing
-        # tilemap.bin/attrmap.bin. See docs/asset_source_model.md (family G).
-        bb = int(args.blank_byte, 0) if getattr(args, "blank_byte", None) else None
-        mo = {int(k, 0): int(v, 0)
-              for k, v in (tok.split(":") for tok in
-                           (getattr(args, "map_overrides", "") or "").split(";") if tok)}
-        tmap, amap = derive_portrait_maps(
-            png, args.layout, bb,
-            d / args.reference if getattr(args, "reference", None) else None, mo)
-        comps += [("tilemap", tmap), ("attrmap", amap)]
     else:
         comps += [
             ("tilemap", (d / "tilemap.bin").read_bytes()),
@@ -1004,26 +932,17 @@ def main() -> int:
     pt.add_argument("--palettes-bg", type=int, default=0,
                     help="BG palettes in the PNG table (0 = grayscale, no palette.bin)")
     pt.add_argument("--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones")
-    pt.add_argument("--layout", default=None, choices=sorted(PORTRAIT_LAYOUTS),
-                    help="derive tilemap/attrmap from this allocator layout + the "
-                         "indexed sheet, instead of committing the map bins")
-    pt.add_argument("--blank-byte", default=None,
-                    help="layouts that collapse blank cells to a shared blank tile "
-                         "(e.g. 0x80); needs --reference for which cells are blank")
-    pt.add_argument("--reference", default=None,
-                    help="composed 11x20 indexed reference PNG (next to --png), "
-                         "for --blank-byte layouts")
     pt.add_argument("--map", default=None,
                     help="Tiled .tmx (relative to --png) carrying the arrangement; "
                          "compiled with --map-layer instead of a layout/bins")
     pt.add_argument("--map-layer", default=None,
                     help="layer name in --map (its _pal twin carries palettes)")
+    pt.add_argument("--map-bank1", type=int, default=0,
+                    help="bank-1 tile count of the sheet (NPC portraits: 384; "
+                         "0 = single bank-0 sheet)")
     pt.add_argument("--obj-layers", default="",
                     help="comma-separated static OBJ overlay layers in --map, "
                          "compiled to obj.bin/obj2.bin record lists")
-    pt.add_argument("--map-overrides", default="",
-                    help="'cell:byte;cell:byte' tilemap pins for blank-cell/"
-                         "blank-slot ties the rule can't decide")
     pt.add_argument("--sprites", default=None,
                     help="metasprite/patch manifest (next to --png); regenerates the "
                          "OBJ/BG overlay data region into sprites.bin")

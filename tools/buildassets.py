@@ -71,14 +71,8 @@ def build_png_asset(name: str, spec: dict) -> None:
             cmd += ["--map", str(spec["map"]), "--map-layer", str(spec["map_layer"])]
             if "obj_layers" in spec:                  # static OBJ overlays in the map
                 cmd += ["--obj-layers", ",".join(spec["obj_layers"])]
-        if "layout" in spec:                          # derive maps from the allocator layout
-            cmd += ["--layout", str(spec["layout"])]
-            if "blank_byte" in spec:                  # blank-collapse layouts (mistral)
-                cmd += ["--blank-byte", str(spec["blank_byte"]),
-                        "--reference", str(spec["reference"])]
-            if "map_overrides" in spec:               # blank-cell/blank-slot ties
-                cmd += ["--map-overrides",
-                        ";".join(f"{k}:{v}" for k, v in spec["map_overrides"].items())]
+            if "map_bank1" in spec:                   # NPC portraits: bank-1 tile count
+                cmd += ["--map-bank1", str(spec["map_bank1"])]
         if "sprites" in spec:                          # regenerate the OBJ/BG overlay region
             cmd += ["--sprites", str(spec["sprites"])]
         if "palettes2" in spec:                        # a second BG+OBJ palette set (alt scene)
