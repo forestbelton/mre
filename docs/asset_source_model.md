@@ -1,6 +1,8 @@
-# Asset source model — unifying the graphics pipeline (PROPOSAL)
+# Asset source model — unifying the graphics pipeline
 
-Status: **proposal, 2026-06-11** — not yet implemented. This is the design for
+Status: **largely implemented, 2026-06-12** (phases 1-3 + 4a/4b + 5 done; per-phase
+status inline below; remaining: next_room/screen_2a/2b/$0c carves, the nada
+allocator, the portrait-sheet endgame). Originally the design for
 bringing every graphics asset under one umbrella, replacing the committed
 `tilemap.bin`/`attrmap.bin` pairs and the per-portrait `sprites.yaml` pin
 special-cases with source forms that are (a) derivable by algorithm wherever the
