@@ -12,27 +12,22 @@ INCLUDE "util.inc"
 SECTION "Bodka graphics", ROMX
 
 ASSET BodkaPortraitTiles, "assets/bodka/tiles.bin" ; 384 tiles -> VRAM bank 1 $8000
-
-BodkaPortraitPaletteBg:
-	INCBIN "assets/bodka/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
+ASSET BodkaPortraitPaletteBg, "assets/bodka/palette_bg.bin"   ; 6 BG palettes (RGB555 LE)
 
 DS $10
 
-BodkaPortraitPaletteObj:
-	INCBIN "assets/bodka/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
+ASSET BodkaPortraitPaletteObj, "assets/bodka/palette_obj.bin"  ; 6 OBJ palettes (RGB555 LE)
 
 DS $10
 
-BodkaPortraitMapDesc:
-	db 11, 20                                    ; rows, cols
-	dw BodkaPortraitAttrMap                       ; CGB attribute map pointer
-	dw BodkaPortraitIndexMap                      ; tile index map pointer
+MAP_ASSET BodkaPortraitMapDesc, \
+	.Width=20, \
+	.Height=11, \
+	.Attrs=BodkaPortraitAttrMap, \
+	.Indexes=BodkaPortraitIndexMap,
 
-BodkaPortraitIndexMap:
-	INCBIN "assets/bodka/tilemap.bin"  ; 20x11 tile indices
-
-BodkaPortraitAttrMap:
-	INCBIN "assets/bodka/attrmap.bin"  ; 20x11 CGB BG attributes
+ASSET BodkaPortraitIndexMap, "assets/bodka/tilemap.bin"
+ASSET BodkaPortraitAttrMap, "assets/bodka/attrmap.bin"
 
 	; Overlay region ($5a3e-$5b59): 3-frame talking-eye animation
 	; (eyes_frame0/face_frame0 .. frame2) drawn over VRAM $98a6, the 16-sprite chest,
@@ -42,18 +37,23 @@ BodkaPortraitAttrMap:
 	INCLUDE "assets/bodka/sprites.asm"
 
 	; $5b59: studio-scene BG palettes (6 x RGB555 LE), loaded by Bodka_BuildStudioScene.
+Data_1e_5b59:
 	db $44, $18, $69, $20, $d6, $1d, $ed, $2c, $44, $18, $69, $20, $14, $3a, $ed, $2c
 	db $44, $18, $69, $20, $5a, $6b, $ed, $2c, $44, $18, $44, $18, $44, $18, $44, $18
 	db $44, $18, $44, $18, $44, $18, $44, $18, $44, $18, $44, $18, $44, $18, $44, $18
+Data_1e_5b59End:
 
 Data_1e_5b89:
 	db $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03, $e0, $03
 
+	; $5b99: tower-scene OBJ palettes. Only the 6 loaded ($30) sit before the End
+	; label; the trailing $10 is the 2 spare CGB slots (not copied).
 Data_1e_5b99:
 	db $e0, $03, $df, $3a, $6d, $45, $e5, $34, $00, $7c, $73, $52, $6d, $45, $e5, $34
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
 	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-	db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
+Data_1e_5b99End:
+	DS $10
 
 Data_1e_5bd9:
 	db $02, $02, $e3, $5b, $df, $5b, $68, $70, $69, $71, $0b, $08, $08, $08

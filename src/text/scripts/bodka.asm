@@ -37,7 +37,7 @@ Bodka_BuildStudioScene:
 	ld [rVBK], a
 	ld a, BANK(BodkaPortraitTiles)
 	ld hl, BodkaPortraitTiles
-	ld de, $8000
+	ld de, TILEDATA0
 	ld bc, BodkaPortraitTilesEnd - BodkaPortraitTiles
 	call BankVramCopy
 	call Bodka_LoadStudioBgMap
@@ -46,12 +46,12 @@ Bodka_BuildStudioScene:
 	ld a, BANK(BodkaPortraitPaletteBg)
 	ld hl, BodkaPortraitPaletteBg
 	ld de, wBgPalettes
-	ld bc, $0030
+	ld bc, BodkaPortraitPaletteBgEnd - BodkaPortraitPaletteBg
 	call BankCopy
 	ld a, BANK(BodkaPortraitPaletteObj)
 	ld hl, BodkaPortraitPaletteObj
 	ld de, wObjPalettes
-	ld bc, $0030
+	ld bc, BodkaPortraitPaletteObjEnd - BodkaPortraitPaletteObj
 	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
@@ -73,25 +73,25 @@ Bodka_BuildTowerScene:
 	ld [rVBK], a
 	ld a, BANK(BodkaPortraitTiles)
 	ld hl, BodkaPortraitTiles
-	ld de, $8000
+	ld de, TILEDATA0
 	ld bc, BodkaPortraitTilesEnd - BodkaPortraitTiles
 	call BankVramCopy
 	call Bodka_LoadStudioBgMap
 	ld hl, Data_1e_5bd9
 	ld a, BANK(Data_1e_5bd9)
-	ld de, $9845
+	ld de, TILEMAP0_X5_Y2
 	call BankMapCopyA
 	call Bodka_RenderPortrait
 	call HideUnusedOamSprites
-	ld a, $1e
-	ld hl, $5b59
+	ld a, BANK(Data_1e_5b59)
+	ld hl, Data_1e_5b59
 	ld de, wBgPalettes
-	ld bc, $0030
+	ld bc, Data_1e_5b59End - Data_1e_5b59
 	call BankCopy
 	ld a, BANK(Data_1e_5b99)
 	ld hl, Data_1e_5b99
 	ld de, wObjPalettes
-	ld bc, $0030
+	ld bc, Data_1e_5b99End - Data_1e_5b99
 	call BankCopy
 	xor a
 	ld [hBgPaletteDirty], a
@@ -107,11 +107,11 @@ Bodka_LoadStudioBgMap:
 	ret
 
 Bodka_RenderPortrait:
-	ld a, $c8
+	ld a, LOW(Bodka_RenderPortrait)
 	ld [wRendererAddr], a
-	ld a, $5e
-	ld [$d61f], a
-	ld a, $18
+	ld a, HIGH(Bodka_RenderPortrait)
+	ld [wRendererAddr+1], a
+	ld a, BANK(Bodka_RenderPortrait)
 	ld [wRendererBank], a
 	ld a, $1e
 	ld [wDrawBank], a
@@ -228,7 +228,7 @@ Tradehouse_BuildNoteScene:
 	ld [rVBK], a
 	ld a, $33
 	ld hl, $5800
-	ld de, $8000
+	ld de, TILEDATA0
 	ld bc, $1800
 	call BankVramCopy
 	call Tradehouse_LoadNoteBgMap
@@ -251,7 +251,7 @@ Tradehouse_BuildNoteScene:
 Tradehouse_LoadNoteBgMap:
 	ld hl, $723e
 	ld a, $33
-	ld de, $9800
+	ld de, TILEMAP0
 	call BankMapCopyA
 	ret
 
@@ -259,7 +259,7 @@ Tradehouse_AnimateNoteScene:
 	ld a, $1f
 	ld [wRendererAddr], a
 	ld a, $60
-	ld [$d61f], a
+	ld [wRendererAddr+1], a
 	ld a, $18
 	ld [wRendererBank], a
 	ld a, $33
