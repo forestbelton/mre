@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="8" tileheight="8" infinite="0" nextlayerid="15" nextobjectid="1">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="8" tileheight="8" infinite="0" nextlayerid="31" nextobjectid="1">
  <tileset firstgid="1" name="monster_tiger" tilewidth="8" tileheight="8" tilecount="128" columns="16">
   <image source="monster_tiger/monster_tiger.png" width="128" height="64"/>
  </tileset>
@@ -46,7 +46,29 @@
 897,901,901,897,901,901,901
   </data>
  </layer>
- <layer id="3" name="mocchi" width="7" height="7" visible="0">
+ <layer id="3" name="tiger_obj" width="7" height="7">
+  <data encoding="csv">
+0,0,0,73,79,0,0,
+57,61,67,74,80,0,0,
+58,62,68,75,0,0,0,
+59,63,69,76,0,0,0,
+60,64,70,77,0,0,0,
+0,65,71,78,81,83,85,
+0,66,72,0,82,84,86
+  </data>
+ </layer>
+ <layer id="4" name="tiger_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,898,898,0,0,
+898,898,898,898,898,0,0,
+898,898,898,898,0,0,0,
+898,898,898,898,0,0,0,
+898,898,898,898,0,0,0,
+0,898,898,898,898,898,898,
+0,898,898,0,898,898,898
+  </data>
+ </layer>
+ <layer id="5" name="mocchi" width="7" height="7" visible="0">
   <data encoding="csv">
 129,137,145,153,161,169,177,
 130,138,146,154,162,170,178,
@@ -57,7 +79,7 @@
 135,143,151,159,167,175,183
   </data>
  </layer>
- <layer id="4" name="mocchi_pal" width="7" height="7" visible="0">
+ <layer id="6" name="mocchi_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 901,901,901,901,902,902,902,
 901,901,901,901,902,902,901,
@@ -68,7 +90,51 @@
 901,901,901,901,901,901,901
   </data>
  </layer>
- <layer id="5" name="hare" width="7" height="7" visible="0">
+ <layer id="7" name="mocchi_obj2" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,185,0,0,0,
+0,0,0,186,0,191,193,
+0,0,0,187,189,192,194,
+0,0,0,188,190,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="8" name="mocchi_obj2_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,898,0,0,0,
+0,0,0,898,0,898,898,
+0,0,0,898,898,898,898,
+0,0,0,898,898,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="9" name="mocchi_obj" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,195,197,199,201,203,
+0,0,196,198,200,202,204,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="10" name="mocchi_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,899,899,899,899,899,
+0,0,899,899,899,899,899,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="11" name="hare" width="7" height="7" visible="0">
   <data encoding="csv">
 257,265,273,281,289,297,305,
 258,266,274,282,290,298,306,
@@ -79,7 +145,7 @@
 263,271,279,287,295,303,311
   </data>
  </layer>
- <layer id="6" name="hare_pal" width="7" height="7" visible="0">
+ <layer id="12" name="hare_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 901,901,901,901,901,901,901,
 901,901,901,901,901,901,901,
@@ -90,7 +156,29 @@
 901,901,901,901,901,901,901
   </data>
  </layer>
- <layer id="7" name="gali" width="7" height="7" visible="0">
+ <layer id="13" name="hare_obj" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,313,321,329,337,345,353,
+0,314,322,330,338,346,354,
+0,315,323,331,339,347,355,
+0,316,324,332,340,348,356
+  </data>
+ </layer>
+ <layer id="14" name="hare_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,898,898,898,898,898,898,
+0,898,898,898,898,898,898,
+0,898,898,898,898,898,898,
+0,898,898,898,898,898,898
+  </data>
+ </layer>
+ <layer id="15" name="gali" width="7" height="7" visible="0">
   <data encoding="csv">
 385,393,401,409,417,425,433,
 386,394,402,410,418,426,434,
@@ -101,7 +189,7 @@
 391,399,407,415,423,431,439
   </data>
  </layer>
- <layer id="8" name="gali_pal" width="7" height="7" visible="0">
+ <layer id="16" name="gali_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 897,897,897,901,901,901,897,
 897,897,901,901,901,901,901,
@@ -112,7 +200,51 @@
 897,901,901,901,901,901,901
   </data>
  </layer>
- <layer id="9" name="golem" width="7" height="7" visible="0">
+ <layer id="17" name="gali_obj2" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,457,465,
+0,0,0,0,0,458,466,
+0,0,0,0,0,459,467,
+0,0,443,0,0,460,468,
+0,0,444,0,451,461,469,
+441,449,445,447,452,462,470,
+442,450,446,448,0,0,0
+  </data>
+ </layer>
+ <layer id="18" name="gali_obj2_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,898,898,
+0,0,0,0,0,898,898,
+0,0,0,0,0,898,898,
+0,0,898,0,0,898,898,
+0,0,898,0,898,898,898,
+898,898,898,898,898,898,898,
+898,898,898,898,0,0,0
+  </data>
+ </layer>
+ <layer id="19" name="gali_obj" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,483,485,487,489,
+0,0,475,484,486,488,490,
+0,0,476,0,0,0,0,
+0,0,477,0,0,0,0,
+0,0,478,0,0,0,0,
+473,481,479,0,0,0,0,
+474,482,480,0,0,0,0
+  </data>
+ </layer>
+ <layer id="20" name="gali_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,899,899,899,899,
+0,0,899,899,899,899,899,
+0,0,899,0,0,0,0,
+0,0,899,0,0,0,0,
+0,0,899,0,0,0,0,
+899,899,899,0,0,0,0,
+899,899,899,0,0,0,0
+  </data>
+ </layer>
+ <layer id="21" name="golem" width="7" height="7" visible="0">
   <data encoding="csv">
 513,521,529,537,545,553,561,
 514,522,530,538,546,554,562,
@@ -123,7 +255,7 @@
 519,527,535,543,551,559,567
   </data>
  </layer>
- <layer id="10" name="golem_pal" width="7" height="7" visible="0">
+ <layer id="22" name="golem_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 897,901,901,901,901,897,897,
 897,901,901,901,901,901,897,
@@ -134,7 +266,29 @@
 901,901,901,901,901,901,901
   </data>
  </layer>
- <layer id="11" name="suezo" width="7" height="7" visible="0">
+ <layer id="23" name="golem_obj" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,573,579,581,583,0,0,
+0,574,580,582,584,585,0,
+569,0,0,0,0,586,587,
+570,575,0,0,0,0,588,
+0,576,0,0,0,0,0,
+571,577,0,0,0,0,0,
+572,578,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="24" name="golem_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,898,898,898,898,0,0,
+0,898,898,898,898,898,0,
+898,0,0,0,0,898,898,
+898,898,0,0,0,0,898,
+0,898,0,0,0,0,0,
+898,898,0,0,0,0,0,
+898,898,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="25" name="suezo" width="7" height="7" visible="0">
   <data encoding="csv">
 641,649,657,665,673,681,689,
 642,650,658,666,674,682,690,
@@ -145,7 +299,7 @@
 647,655,663,671,679,687,695
   </data>
  </layer>
- <layer id="12" name="suezo_pal" width="7" height="7" visible="0">
+ <layer id="26" name="suezo_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 901,901,901,901,901,901,901,
 901,901,901,901,901,901,901,
@@ -156,7 +310,29 @@
 901,901,901,901,901,901,901
   </data>
  </layer>
- <layer id="13" name="phoenix" width="7" height="7" visible="0">
+ <layer id="27" name="suezo_obj" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,697,705,713,721,729,
+0,0,698,706,714,722,730,
+0,0,699,707,715,723,731,
+0,0,700,708,716,724,732,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="28" name="suezo_obj_pal" width="7" height="7" visible="0">
+  <data encoding="csv">
+0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,
+0,0,898,898,898,898,898,
+0,0,898,898,898,898,898,
+0,0,898,898,898,898,898,
+0,0,898,898,898,898,898,
+0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="29" name="phoenix" width="7" height="7" visible="0">
   <data encoding="csv">
 769,777,785,793,801,809,817,
 770,778,786,794,802,810,818,
@@ -167,7 +343,7 @@
 775,783,791,799,807,815,823
   </data>
  </layer>
- <layer id="14" name="phoenix_pal" width="7" height="7" visible="0">
+ <layer id="30" name="phoenix_pal" width="7" height="7" visible="0">
   <data encoding="csv">
 901,901,901,901,901,901,901,
 901,901,901,901,901,901,901,

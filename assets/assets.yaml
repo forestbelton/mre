@@ -303,6 +303,7 @@ monster_tiger:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: tiger
+  obj_layers: [tiger_obj]
 
 monster_mocchi:
   mode: portrait
@@ -310,6 +311,7 @@ monster_mocchi:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: mocchi
+  obj_layers: [mocchi_obj, mocchi_obj2]
 
 monster_hare:
   mode: portrait
@@ -317,6 +319,7 @@ monster_hare:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: hare
+  obj_layers: [hare_obj]
 
 monster_gali:
   mode: portrait
@@ -324,6 +327,7 @@ monster_gali:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: gali
+  obj_layers: [gali_obj, gali_obj2]
 
 monster_golem:
   mode: portrait
@@ -331,6 +335,7 @@ monster_golem:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: golem
+  obj_layers: [golem_obj]
 
 monster_suezo:
   mode: portrait
@@ -338,6 +343,7 @@ monster_suezo:
   tiles1: 128
   map: ../monster_portraits.tmx
   map_layer: suezo
+  obj_layers: [suezo_obj]
 
 monster_phoenix:
   mode: portrait

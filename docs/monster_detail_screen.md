@@ -33,8 +33,11 @@ see docs/palettes.md.)
 colorized indexed sheet `assets/monster_portrait/monster_<name>/` (BG cells in
 their attr palettes, OBJ tiles in OBJ pal 1-2). The 7×7 `bgmap` arrangements
 are `assets/monster_portrait/monster_portraits.tmx` — one Tiled layer pair per
-monster over its own tileset (open it in Tiled and toggle layers to see each
-assembled portrait BG); the maps in src/monster_detail.asm compile from it.
+monster over its own tileset, **plus `<m>_obj`/`<m>_obj2` layers carrying the
+meta1/meta2 OBJ overlays** (static and grid-aligned, so they are faithfully
+map-representable; the sheets' OBJ colour-0 is tRNS-transparent, so toggling a
+monster's layers in Tiled shows the complete composited portrait). The maps
+AND the metasprite record lists in src/monster_detail.asm compile from it.
 (They happen to be the portrait converter's positional constant — family-G
 provenance — but the arrangement is committed as a viewable source file rather
 than a constant in tool code.) The `meta1`/`meta2` lists are labelled

@@ -406,6 +406,63 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128):
     return bytes(tmap), bytes(amap)
 
 
+def tmx_layer_to_objlist(tmx_path, layer_name):
+    """Compile a sparse OBJ overlay layer (+ its _pal twin) into a
+    DrawMetasprite record list: [count] + count x [dy, dx, tile, attr].
+
+    Only for STATIC, grid-aligned overlays (the monster portraits): each 8x16
+    OBJ occupies two vertically-adjacent cells (top tile even, bottom = +1);
+    records are emitted in row-major order of their top cells, which is the
+    order the original lists use. Flips/banks unsupported (none exist here)."""
+    import xml.etree.ElementTree as ET
+
+    GIDMASK = 0x0FFFFFFF
+    root = ET.parse(tmx_path).getroot()
+    sheets = []
+    pal_first = None
+    for ts in root.findall("tileset"):
+        n = int(ts.get("tilecount", 0))
+        first = int(ts.get("firstgid"))
+        if n == 8:
+            pal_first = first
+        else:
+            sheets.append((first, n))
+    layers = {}
+    W = H = 0
+    for ly in root.findall("layer"):
+        data = ly.find("data")
+        layers[ly.get("name")] = [int(t) for t in
+                                  data.text.replace("\n", ",").split(",") if t.strip()]
+        W, H = int(ly.get("width")), int(ly.get("height"))
+    gids = layers[layer_name]
+    pals = layers[f"{layer_name}_pal"]
+    used = set()
+    recs = []
+    for i, g in enumerate(gids):
+        if not g or i in used:
+            continue
+        if g & ~GIDMASK:
+            raise SystemExit(f"{tmx_path}:{layer_name}: flips unsupported on OBJ layers")
+        r, c = i // W, i % W
+        below = i + W
+        gb = gids[below] if below < len(gids) else 0
+        for first, n in sheets:
+            if first <= g < first + n:
+                t = 0x80 + (g - first)
+                break
+        else:
+            raise SystemExit(f"{tmx_path}:{layer_name}: cell ({r},{c}) not a sheet tile")
+        if t % 2 or gb != g + 1:
+            raise SystemExit(f"{tmx_path}:{layer_name}: cell ({r},{c}) is not the top "
+                             "of an 8x16 OBJ (even tile + its odd twin below)")
+        used.update((i, below))
+        recs.append((r * 8, c * 8, t, pals[i] - pal_first))
+    out = bytearray([len(recs)])
+    for dy, dx, t, p in recs:
+        out += bytes((dy, dx, t, p))
+    return bytes(out)
+
+
 def cmd_maplib(args: argparse.Namespace) -> int:
     """A screen-library bank: one indexed sheet PNG (--tiles total, --banks 1 for
     alternate sets / 2 for stacked VRAM banks, --base = VRAM tile number of sheet
@@ -919,6 +976,10 @@ def cmd_portrait(args: argparse.Namespace) -> int:
         # possibly one tileset per sheet) -- see docs/asset_source_model.md.
         tmap, amap = tmx_layer_to_map(d / args.map, args.map_layer)
         comps += [("tilemap", tmap), ("attrmap", amap)]
+        for k, ly in enumerate(x for x in (getattr(args, "obj_layers", "") or "")
+                               .split(",") if x):
+            comps.append((f"obj{k + 1 if k else ''}",
+                          tmx_layer_to_objlist(d / args.map, ly)))
     elif getattr(args, "layout", None):
         # derive the maps from the layout constant + the indexed sheet (and the
         # composed reference for blank-collapse layouts) instead of committing
@@ -1052,6 +1113,9 @@ def main() -> int:
                          "compiled with --map-layer instead of a layout/bins")
     pt.add_argument("--map-layer", default=None,
                     help="layer name in --map (its _pal twin carries palettes)")
+    pt.add_argument("--obj-layers", default="",
+                    help="comma-separated static OBJ overlay layers in --map, "
+                         "compiled to obj.bin/obj2.bin record lists")
     pt.add_argument("--map-overrides", default="",
                     help="'cell:byte;cell:byte' tilemap pins for blank-cell/"
                          "blank-slot ties the rule can't decide")

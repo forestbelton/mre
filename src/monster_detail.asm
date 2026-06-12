@@ -2057,24 +2057,27 @@ MonsterPortraitBg_Phoenix:  ; 7x7 BG behind the Phoenix portrait
 	INCBIN "assets/monster_phoenix/tilemap.bin"
 .attr:
 	INCBIN "assets/monster_phoenix/attrmap.bin"
-; Portrait metasprite lists (DrawMetasprite: count, {dy,dx,tile,attr};
-; 8x16 OBJs from the $3c monster sheet at VRAM $8800, OBJ pals 1/2).
+; Portrait metasprite lists (DrawMetasprite: count, {dy,dx,tile,attr}; 8x16
+; OBJs from the $3c monster sheet, OBJ pals 1/2). Static + grid-aligned, so
+; they compile from the <m>_obj layers of monster_portraits.tmx -- the layers
+; that complete the portraits over the BG (meta1 above meta2: lower OAM index
+; wins on GB).
 MonsterPortraitMeta_Tiger:
-	db 15, 0, 24, $c8, $01, 0, 32, $ce, $01, 8, 0, $b8, $01, 8, 8, $bc, $01, 8, 16, $c2, $01, 16, 24, $ca, $01, 24, 0, $ba, $01, 24, 8, $be, $01, 24, 16, $c4, $01, 32, 24, $cc, $01, 40, 8, $c0, $01, 40, 16, $c6, $01, 40, 32, $d0, $01, 40, 40, $d2, $01, 40, 48, $d4, $01
+	INCBIN "assets/monster_tiger/obj.bin"
 MonsterPortraitMeta_MocchiLayer2:
-	db 5, 0, 24, $b8, $01, 8, 40, $be, $01, 8, 48, $c0, $01, 16, 24, $ba, $01, 16, 32, $bc, $01
+	INCBIN "assets/monster_mocchi/obj2.bin"
 MonsterPortraitMeta_Mocchi:
-	db 5, 24, 16, $c2, $02, 24, 24, $c4, $02, 24, 32, $c6, $02, 24, 40, $c8, $02, 24, 48, $ca, $02
+	INCBIN "assets/monster_mocchi/obj.bin"
 MonsterPortraitMeta_Hare:
-	db 12, 24, 8, $b8, $01, 24, 16, $c0, $01, 24, 24, $c8, $01, 24, 32, $d0, $01, 24, 40, $d8, $01, 24, 48, $e0, $01, 40, 8, $ba, $01, 40, 16, $c2, $01, 40, 24, $ca, $01, 40, 32, $d2, $01, 40, 40, $da, $01, 40, 48, $e2, $01
+	INCBIN "assets/monster_hare/obj.bin"
 MonsterPortraitMeta_GaliLayer2:
-	db 12, 0, 40, $c8, $01, 0, 48, $d0, $01, 16, 40, $ca, $01, 16, 48, $d2, $01, 24, 16, $ba, $01, 32, 32, $c2, $01, 32, 40, $cc, $01, 32, 48, $d4, $01, 40, 0, $b8, $01, 40, 8, $c0, $01, 40, 16, $bc, $01, 40, 24, $be, $01
+	INCBIN "assets/monster_gali/obj2.bin"
 MonsterPortraitMeta_Gali:
-	db 9, 0, 24, $e2, $02, 0, 32, $e4, $02, 0, 40, $e6, $02, 0, 48, $e8, $02, 8, 16, $da, $02, 24, 16, $dc, $02, 40, 0, $d8, $02, 40, 8, $e0, $02, 40, 16, $de, $02
+	INCBIN "assets/monster_gali/obj.bin"
 MonsterPortraitMeta_Golem:
-	db 10, 0, 8, $bc, $01, 0, 16, $c2, $01, 0, 24, $c4, $01, 0, 32, $c6, $01, 8, 40, $c8, $01, 16, 0, $b8, $01, 16, 48, $ca, $01, 24, 8, $be, $01, 40, 0, $ba, $01, 40, 8, $c0, $01
+	INCBIN "assets/monster_golem/obj.bin"
 MonsterPortraitMeta_Suezo:
-	db 10, 16, 16, $b8, $01, 16, 24, $c0, $01, 16, 32, $c8, $01, 16, 40, $d0, $01, 16, 48, $d8, $01, 32, 16, $ba, $01, 32, 24, $c2, $01, 32, 32, $ca, $01, 32, 40, $d2, $01, 32, 48, $da, $01
+	INCBIN "assets/monster_suezo/obj.bin"
 
 SECTION "analyzed_0c8000", ROMX[$4000], BANK[$32]
 

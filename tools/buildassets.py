@@ -74,6 +74,8 @@ def build_png_asset(name: str, spec: dict) -> None:
             cmd += ["--palettes-obj", str(spec["palettes_obj"])]
         if "map" in spec:                             # Tiled arrangement source
             cmd += ["--map", str(spec["map"]), "--map-layer", str(spec["map_layer"])]
+            if "obj_layers" in spec:                  # static OBJ overlays in the map
+                cmd += ["--obj-layers", ",".join(spec["obj_layers"])]
         if "layout" in spec:                          # derive maps from the allocator layout
             cmd += ["--layout", str(spec["layout"])]
             if "blank_byte" in spec:                  # blank-collapse layouts (mistral)

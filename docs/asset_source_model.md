@@ -201,7 +201,14 @@ the component kinds above. `buildassets.py` stays the single build entry.
      The arrangements are committed as **`monster_portraits.tmx`** — one
      layer pair per monster over its own tileset (`tmx_layer_to_map`,
      `map:`/`map_layer:` in assets.yaml) — NOT as an in-tool layout
-     constant, per the provenance-vs-source-form principle below.
+     constant, per the provenance-vs-source-form principle below. The
+     meta1/meta2 OBJ overlays are folded in as `<m>_obj`/`<m>_obj2` layers
+     (`tmx_layer_to_objlist`, `obj_layers:`): they are static and
+     grid-aligned (offsets all multiples of 8, row-major record order,
+     no flips — verified), so a tile layer represents them faithfully and
+     Tiled shows the complete composited portrait. This refines the
+     records-vs-maps rule: runtime-positioned/animated metasprites stay
+     asm records; static compositional ones may be map layers.
 
 ### Provenance vs source form (decided 2026-06-12)
 
