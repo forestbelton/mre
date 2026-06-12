@@ -6,10 +6,10 @@
 SECTION "Suezo summon", ROMX
 
 SuezoPalettes:
-	INCBIN "assets/suezo/palette.bin"
+	INCBIN "assets/summon/suezo/palette.bin"
 SuezoTiles:
-	INCBIN "assets/suezo/tiles_bank0.2bpp"
-	INCBIN "assets/suezo/tiles_bank1.2bpp"
+	INCBIN "assets/summon/suezo/tiles_bank0.2bpp"
+	INCBIN "assets/summon/suezo/tiles_bank1.2bpp"
 ; Suezo metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 SuezoSprite00:
@@ -46,214 +46,214 @@ SuezoFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame00_idx.bin"
+	INCBIN "assets/summon/suezo/frame00_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame00_attr.bin"
+	INCBIN "assets/summon/suezo/frame00_attr.bin"
 SuezoFrame01:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame01_idx.bin"
+	INCBIN "assets/summon/suezo/frame01_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame01_attr.bin"
+	INCBIN "assets/summon/suezo/frame01_attr.bin"
 SuezoFrame02:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame02_idx.bin"
+	INCBIN "assets/summon/suezo/frame02_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame02_attr.bin"
+	INCBIN "assets/summon/suezo/frame02_attr.bin"
 SuezoFrame03:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame03_idx.bin"
+	INCBIN "assets/summon/suezo/frame03_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame03_attr.bin"
+	INCBIN "assets/summon/suezo/frame03_attr.bin"
 SuezoFrame04:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame04_idx.bin"
+	INCBIN "assets/summon/suezo/frame04_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame04_attr.bin"
+	INCBIN "assets/summon/suezo/frame04_attr.bin"
 SuezoFrame05:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame05_idx.bin"
+	INCBIN "assets/summon/suezo/frame05_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame05_attr.bin"
+	INCBIN "assets/summon/suezo/frame05_attr.bin"
 SuezoFrame06:
 	db 6, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame06_idx.bin"
+	INCBIN "assets/summon/suezo/frame06_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame06_attr.bin"
+	INCBIN "assets/summon/suezo/frame06_attr.bin"
 SuezoFrame07:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame07_idx.bin"
+	INCBIN "assets/summon/suezo/frame07_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame07_attr.bin"
+	INCBIN "assets/summon/suezo/frame07_attr.bin"
 SuezoFrame08:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame08_idx.bin"
+	INCBIN "assets/summon/suezo/frame08_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame08_attr.bin"
+	INCBIN "assets/summon/suezo/frame08_attr.bin"
 SuezoFrame09:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame09_idx.bin"
+	INCBIN "assets/summon/suezo/frame09_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame09_attr.bin"
+	INCBIN "assets/summon/suezo/frame09_attr.bin"
 SuezoFrame10:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame10_idx.bin"
+	INCBIN "assets/summon/suezo/frame10_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame10_attr.bin"
+	INCBIN "assets/summon/suezo/frame10_attr.bin"
 SuezoFrame11:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame11_idx.bin"
+	INCBIN "assets/summon/suezo/frame11_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame11_attr.bin"
+	INCBIN "assets/summon/suezo/frame11_attr.bin"
 SuezoFrame12:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame12_idx.bin"
+	INCBIN "assets/summon/suezo/frame12_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame12_attr.bin"
+	INCBIN "assets/summon/suezo/frame12_attr.bin"
 SuezoFrame13:
 	db 10, 5
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame13_idx.bin"
+	INCBIN "assets/summon/suezo/frame13_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame13_attr.bin"
+	INCBIN "assets/summon/suezo/frame13_attr.bin"
 SuezoFrame14:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame14_idx.bin"
+	INCBIN "assets/summon/suezo/frame14_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame14_attr.bin"
+	INCBIN "assets/summon/suezo/frame14_attr.bin"
 SuezoFrame15:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame15_idx.bin"
+	INCBIN "assets/summon/suezo/frame15_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame15_attr.bin"
+	INCBIN "assets/summon/suezo/frame15_attr.bin"
 SuezoFrame16:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame16_idx.bin"
+	INCBIN "assets/summon/suezo/frame16_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame16_attr.bin"
+	INCBIN "assets/summon/suezo/frame16_attr.bin"
 SuezoFrame17:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame17_idx.bin"
+	INCBIN "assets/summon/suezo/frame17_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame17_attr.bin"
+	INCBIN "assets/summon/suezo/frame17_attr.bin"
 SuezoFrame18:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame18_idx.bin"
+	INCBIN "assets/summon/suezo/frame18_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame18_attr.bin"
+	INCBIN "assets/summon/suezo/frame18_attr.bin"
 SuezoFrame19:
 	db 4, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame19_idx.bin"
+	INCBIN "assets/summon/suezo/frame19_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame19_attr.bin"
+	INCBIN "assets/summon/suezo/frame19_attr.bin"
 SuezoFrame20:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame20_idx.bin"
+	INCBIN "assets/summon/suezo/frame20_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame20_attr.bin"
+	INCBIN "assets/summon/suezo/frame20_attr.bin"
 SuezoFrame21:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame21_idx.bin"
+	INCBIN "assets/summon/suezo/frame21_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame21_attr.bin"
+	INCBIN "assets/summon/suezo/frame21_attr.bin"
 SuezoFrame22:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame22_idx.bin"
+	INCBIN "assets/summon/suezo/frame22_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame22_attr.bin"
+	INCBIN "assets/summon/suezo/frame22_attr.bin"
 SuezoFrame23:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame23_idx.bin"
+	INCBIN "assets/summon/suezo/frame23_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame23_attr.bin"
+	INCBIN "assets/summon/suezo/frame23_attr.bin"
 SuezoFrame24:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame24_idx.bin"
+	INCBIN "assets/summon/suezo/frame24_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame24_attr.bin"
+	INCBIN "assets/summon/suezo/frame24_attr.bin"
 SuezoFrame25:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame25_idx.bin"
+	INCBIN "assets/summon/suezo/frame25_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame25_attr.bin"
+	INCBIN "assets/summon/suezo/frame25_attr.bin"
 SuezoFrame26:
 	db 8, 4
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/suezo/frame26_idx.bin"
+	INCBIN "assets/summon/suezo/frame26_idx.bin"
 .attr:
-	INCBIN "assets/suezo/frame26_attr.bin"
+	INCBIN "assets/summon/suezo/frame26_attr.bin"

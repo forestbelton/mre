@@ -11,11 +11,11 @@ INCLUDE "metasprite.inc"
 
 SECTION "Town screen graphics", ROMX
 
-ASSET TownTilesBank0, "assets/town/tiles_bank0.bin" ; 384 tiles -> VRAM bank 0 $8000
-ASSET TownTilesBank1, "assets/town/tiles_bank1.bin" ; 384 tiles -> VRAM bank 1 $8000
+ASSET TownTilesBank0, "assets/screen/town/tiles_bank0.bin" ; 384 tiles -> VRAM bank 0 $8000
+ASSET TownTilesBank1, "assets/screen/town/tiles_bank1.bin" ; 384 tiles -> VRAM bank 1 $8000
 
 TownPalettes:
-	INCBIN "assets/town/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+	INCBIN "assets/screen/town/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
 TownMapDesc:
 	db 18, 20                                      ; rows, cols
@@ -23,10 +23,10 @@ TownMapDesc:
 	dw TownIdxMap                                  ; tile-index-map pointer
 
 TownIdxMap:
-	INCBIN "assets/town/tilemap.bin"        ; 20x18 tile indices
+	INCBIN "assets/screen/town/tilemap.bin"        ; 20x18 tile indices
 
 TownAttrMap:
-	INCBIN "assets/town/attrmap.bin"        ; 20x18 CGB BG attributes
+	INCBIN "assets/screen/town/attrmap.bin"        ; 20x18 CGB BG attributes
 
 SECTION "analyzed_083356", ROMX[$7356], BANK[$20]
 

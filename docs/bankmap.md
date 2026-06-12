@@ -73,7 +73,7 @@ HRAM: 75 bytes used / 52 free
 | $35 | ROMX | 9526 | 6858 | 2 | 1 | mistral.asm |
 | $38 | ROMX | 11289 | 5095 | 1 | 1 | room_murals.asm |
 | $3b | ROMX | 5939 | 10445 | 1 | 1 | monster_detail.asm |
-| $3c | ROMX | 14336 | 2048 | 1 | 0 | monster_portraits.asm |
+| $3c | ROMX | 14336 | 2048 | 1 | 0 | monster.asm |
 | $3d | ROMX | 14844 | 1540 | 3 | 3 | dungeon_floor.asm |
 | $3e | ROMX | 16383 | 1 | 13 | 0 | bgm_3a.asm, bank1.asm, bgm_38.asm, bgm_2f.asm, bgm_30.asm, bgm_35.asm, bgm_39.asm, bgm_32.asm, bgm_33.asm, bgm_34.asm, bgm_37.asm, bgm_36.asm, bgm_31.asm |
 | $3f | ROMX | 16383 | 1 | 48 | 0 | bgm_2e.asm, bank0.asm, bgm_2b.asm, bgm_29.asm, bgm_2d.asm, bgm_2c.asm, bgm_2a.asm, sfx_11.asm, sfx_12.asm, sfx_17.asm, sfx_1b.asm, sfx_0a.asm, sfx_0c.asm, sfx_15.asm, sfx_26.asm, sfx_1a.asm, sfx_09.asm, sfx_08.asm, sfx_16.asm, sfx_1c.asm, sfx_14.asm, sfx_18.asm, sfx_06.asm, sfx_07.asm, sfx_19.asm, sfx_24.asm, sfx_25.asm, sfx_05.asm, sfx_13.asm, sfx_20.asm, sfx_23.asm, sfx_21.asm, sfx_1e.asm, sfx_22.asm, sfx_01.asm, sfx_0d.asm, sfx_0e.asm, sfx_02.asm, sfx_1f.asm, sfx_0b.asm, sfx_04.asm, sfx_03.asm, sfx_10.asm, sfx_0f.asm, bgm_28.asm, sfx_00.asm, sfx_1d.asm, sfx_27.asm |
@@ -1066,7 +1066,7 @@ HRAM: 75 bytes used / 52 free
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$77ff | 14336 | monster_portraits.asm | Monster portrait tiles |
+| $4000-$77ff | 14336 | monster.asm | Monster portrait tiles |
 
 ### $3d — ROMX (3 sections, 3 analyzed)
 

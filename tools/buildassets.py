@@ -18,9 +18,13 @@ PY = sys.executable
 
 
 def out_dir(png_rel: str) -> Path:
-    """build/assets/<dir of the PNG, or its stem if it sits at assets/ root>."""
+    """build/assets/<mirror of the asset's path>: the PNG's parent dir when the
+    file is named after it (assets/portrait/npc/bodka/bodka.png ->
+    portrait/npc/bodka), else parent/stem (assets/summon/gali.png ->
+    summon/gali). No per-entry overrides."""
     p = Path(png_rel)
-    return ROOT / "build" / "assets" / (p.parent.name or p.stem)
+    return ROOT / "build" / "assets" / \
+        (p.parent if p.parent.name == p.stem else p.parent / p.stem)
 
 
 def run(*args: str) -> None:
@@ -29,22 +33,10 @@ def run(*args: str) -> None:
 
 def build_png_asset(name: str, spec: dict) -> None:
     png = ROOT / "assets" / spec["png"]
-    # `out:` overrides the derived dir -- needed when several assets share one
-    # flat source dir (assets/summon/<m>.png all emit distinct components)
-    out = (ROOT / "build" / "assets" / spec["out"]) if "out" in spec \
-        else out_dir(spec["png"])
+    out = out_dir(spec["png"])
     mode = spec["mode"]
     pngasset = str(ROOT / "tools" / "pngasset.py")
-    if mode == "composite":
-        cmd = [pngasset, "encode", "--png", str(png), "--out-dir", str(out)]
-        if "sheet_rows" in spec:
-            cmd += ["--sheet-rows", str(spec["sheet_rows"])]
-        if "pad_before" in spec:
-            byte, n = spec["pad_before"]
-            cmd += ["--pad-before", str(byte), str(n)]
-        if "colors" in spec:
-            cmd += ["--colors", str(spec["colors"])]
-    elif mode == "screen":
+    if mode == "screen":
         cmd = [pngasset, "screen", "--png", str(png), "--out-dir", str(out)]
         if "tiles" in spec:
             cmd += ["--tiles", str(spec["tiles"])]

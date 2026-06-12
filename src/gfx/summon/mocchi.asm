@@ -6,10 +6,10 @@
 SECTION "Mocchi summon", ROMX
 
 MocchiPalettes:
-	INCBIN "assets/mocchi/palette.bin"
+	INCBIN "assets/summon/mocchi/palette.bin"
 MocchiTiles:
-	INCBIN "assets/mocchi/tiles_bank0.2bpp"
-	INCBIN "assets/mocchi/tiles_bank1.2bpp"
+	INCBIN "assets/summon/mocchi/tiles_bank0.2bpp"
+	INCBIN "assets/summon/mocchi/tiles_bank1.2bpp"
 ; Mocchi metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 MocchiSprite00:
@@ -44,6 +44,6 @@ MocchiFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/mocchi/frame00_idx.bin"
+	INCBIN "assets/summon/mocchi/frame00_idx.bin"
 .attr:
-	INCBIN "assets/mocchi/frame00_attr.bin"
+	INCBIN "assets/summon/mocchi/frame00_attr.bin"

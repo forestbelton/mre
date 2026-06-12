@@ -6,10 +6,10 @@
 SECTION "Gali summon", ROMX
 
 GaliPalettes:
-	INCBIN "assets/gali/palette.bin"
+	INCBIN "assets/summon/gali/palette.bin"
 GaliTiles:
-	INCBIN "assets/gali/tiles_bank0.2bpp"
-	INCBIN "assets/gali/tiles_bank1.2bpp"
+	INCBIN "assets/summon/gali/tiles_bank0.2bpp"
+	INCBIN "assets/summon/gali/tiles_bank1.2bpp"
 ; Gali metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 GaliSprite00:

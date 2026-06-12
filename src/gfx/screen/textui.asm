@@ -18,21 +18,21 @@ Data_19_46ca:
 SECTION "analyzed_0646cb", ROMX[$46cb], BANK[$19]
 
 TextUiTiles:                     ; main set -> VRAM bank 0 $8800 (LoadTextUi)
-	INCBIN "assets/textui/tiles.bin", 0, 4096
+	INCBIN "assets/screen/textui/tiles.bin", 0, 4096
 TextUiTilesAlt:                  ; alt set (LoadTextUiAlt; bodka/naji scenes)
-	INCBIN "assets/textui/tiles.bin", 4096, 4096
+	INCBIN "assets/screen/textui/tiles.bin", 4096, 4096
 
 TextUiPalettes:                  ; $66cb: 8 BG + 8 OBJ -> wBgPalettes/wObjPalettes
-	INCBIN "assets/textui/palette.bin"
+	INCBIN "assets/screen/textui/palette.bin"
 
 TextUiBoxMap:                    ; CopyBgMap 7x20 -> $9960: the text-box frame
 	db 7, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/textui/textui_idx.bin"
+	INCBIN "assets/screen/textui/textui_idx.bin"
 .attr:
-	INCBIN "assets/textui/textui_attr.bin"
+	INCBIN "assets/screen/textui/textui_attr.bin"
 
 ; Text-box OBJ overlays (DrawMetasprite: count, {dy,dx,tile,attr}; 8x16 OBJs
 ; from the loaded UI set -- continue-arrow / cursor pieces).

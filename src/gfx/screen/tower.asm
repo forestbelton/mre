@@ -5,13 +5,13 @@
 
 SECTION "TowerEntranceTiles bank0", ROMX[$4000], BANK[$22]
 TowerEntranceTilesBank0:
-	INCBIN "assets/tower/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
+	INCBIN "assets/screen/tower/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
 TowerEntranceTilesBank1:
-	INCBIN "assets/tower/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/screen/tower/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
 TowerEntrancePalettes:
-	INCBIN "assets/tower/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+	INCBIN "assets/screen/tower/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
 TowerEntranceMapDesc:
 	db 18, 20
@@ -19,10 +19,10 @@ TowerEntranceMapDesc:
 	dw TowerEntranceIdxMap
 
 TowerEntranceIdxMap:
-	INCBIN "assets/tower/tilemap.bin"
+	INCBIN "assets/screen/tower/tilemap.bin"
 
 TowerEntranceAttrMap:
-	INCBIN "assets/tower/attrmap.bin"
+	INCBIN "assets/screen/tower/attrmap.bin"
 
 SECTION "analyzed_08b356", ROMX[$7356], BANK[$22]
 

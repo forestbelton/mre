@@ -6,11 +6,11 @@ INCLUDE "util.inc"
 
 SECTION "TitleTiles bank0", ROMX[$4000], BANK[$28]
 
-ASSET TitleTilesBank0, "assets/title/tiles_bank0.bin"  ; 384 tiles -> VRAM bank 0 $8000
-ASSET TitleTilesBank1, "assets/title/tiles_bank1.bin"  ; 384 tiles -> VRAM bank 1 $8000
+ASSET TitleTilesBank0, "assets/screen/title/tiles_bank0.bin"  ; 384 tiles -> VRAM bank 0 $8000
+ASSET TitleTilesBank1, "assets/screen/title/tiles_bank1.bin"  ; 384 tiles -> VRAM bank 1 $8000
 
 TitlePalettes:
-	INCBIN "assets/title/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+	INCBIN "assets/screen/title/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
 TitleMapDesc:
 	db 18, 20
@@ -18,10 +18,10 @@ TitleMapDesc:
 	dw TitleIdxMap
 
 TitleIdxMap:
-	INCBIN "assets/title/tilemap.bin"
+	INCBIN "assets/screen/title/tilemap.bin"
 
 TitleAttrMap:
-	INCBIN "assets/title/attrmap.bin"
+	INCBIN "assets/screen/title/attrmap.bin"
 
 SECTION "analyzed_0a3356", ROMX[$7356], BANK[$28]
 

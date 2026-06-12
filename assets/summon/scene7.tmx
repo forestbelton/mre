@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="8" tileheight="8" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="768" columns="16">
+  <image source="scene7.png" width="128" height="384"/>
+ </tileset>
+ <tileset firstgid="769" name="palettes" tilewidth="8" tileheight="8" tilecount="8" columns="8">
+  <image source="../screen/palettes.png" width="64" height="8"/>
+ </tileset>
+ <layer id="1" name="frame00" width="8" height="8">
+  <data encoding="csv">
+229,237,245,253,0,0,0,0,
+230,238,246,254,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="2" name="frame00_pal" width="8" height="8">
+  <data encoding="csv">
+770,770,770,770,0,0,0,0,
+770,770,770,770,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0
+  </data>
+ </layer>
+ <layer id="3" name="frame01" width="8" height="8">
+  <data encoding="csv">
+257,265,273,281,289,297,305,313,
+258,266,274,282,290,298,306,314,
+259,267,275,283,291,299,307,315,
+260,268,276,284,292,300,308,316,
+261,269,277,285,293,301,309,317,
+262,270,278,286,294,302,310,318,
+263,271,279,287,295,303,311,319,
+264,272,280,288,296,304,312,320
+  </data>
+ </layer>
+ <layer id="4" name="frame01_pal" width="8" height="8">
+  <data encoding="csv">
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771,
+771,771,771,771,771,771,771,771
+  </data>
+ </layer>
+</map>

@@ -1,5 +1,14 @@
 # Asset source model — unifying the graphics pipeline
 
+**Tree layout (2026-06-12, user-specified):** `assets/` = `cox/`,
+`portrait/npc/<n>/`, `portrait/monster/<m>/` (detail-screen monster portraits),
+`screen/<n>/`, `summon/<s>.{png,tmx}` (the summon-animation scenes),
+`intro.{png,tmx}`, `logo.{png,tmx}` — and `src/gfx` mirrors it. Build dirs are
+purely path-derived (no `out:` overrides). pngasset is a **dumb compiler**:
+the logo's composite bbox heuristic is deleted — logo.png is the sheet and
+logo.tmx the committed arrangement (the $1000 blank lead-in is `ds $1000` in
+logo.asm).
+
 Status: **largely implemented, 2026-06-12** (phases 1-3 + 4a/4b + 5 done; per-phase
 status inline below; remaining: next_room/screen_2a/2b/$0c carves, the nada
 allocator, the portrait-sheet endgame). Originally the design for

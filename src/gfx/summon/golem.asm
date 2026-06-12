@@ -6,10 +6,10 @@
 SECTION "Golem summon", ROMX
 
 GolemPalettes:
-	INCBIN "assets/golem/palette.bin"
+	INCBIN "assets/summon/golem/palette.bin"
 GolemTiles:
-	INCBIN "assets/golem/tiles_bank0.2bpp"
-	INCBIN "assets/golem/tiles_bank1.2bpp"
+	INCBIN "assets/summon/golem/tiles_bank0.2bpp"
+	INCBIN "assets/summon/golem/tiles_bank1.2bpp"
 ; Golem metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 GolemSprite00:
@@ -26,54 +26,54 @@ GolemFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame00_idx.bin"
+	INCBIN "assets/summon/golem/frame00_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame00_attr.bin"
+	INCBIN "assets/summon/golem/frame00_attr.bin"
 GolemFrame01:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame01_idx.bin"
+	INCBIN "assets/summon/golem/frame01_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame01_attr.bin"
+	INCBIN "assets/summon/golem/frame01_attr.bin"
 GolemFrame02:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame02_idx.bin"
+	INCBIN "assets/summon/golem/frame02_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame02_attr.bin"
+	INCBIN "assets/summon/golem/frame02_attr.bin"
 GolemFrame03:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame03_idx.bin"
+	INCBIN "assets/summon/golem/frame03_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame03_attr.bin"
+	INCBIN "assets/summon/golem/frame03_attr.bin"
 GolemFrame04:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame04_idx.bin"
+	INCBIN "assets/summon/golem/frame04_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame04_attr.bin"
+	INCBIN "assets/summon/golem/frame04_attr.bin"
 GolemFrame05:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame05_idx.bin"
+	INCBIN "assets/summon/golem/frame05_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame05_attr.bin"
+	INCBIN "assets/summon/golem/frame05_attr.bin"
 GolemFrame06:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/golem/frame06_idx.bin"
+	INCBIN "assets/summon/golem/frame06_idx.bin"
 .attr:
-	INCBIN "assets/golem/frame06_attr.bin"
+	INCBIN "assets/summon/golem/frame06_attr.bin"

@@ -6,10 +6,10 @@
 SECTION "Hare summon", ROMX
 
 HarePalettes:
-	INCBIN "assets/hare/palette.bin"
+	INCBIN "assets/summon/hare/palette.bin"
 HareTiles:
-	INCBIN "assets/hare/tiles_bank0.2bpp"
-	INCBIN "assets/hare/tiles_bank1.2bpp"
+	INCBIN "assets/summon/hare/tiles_bank0.2bpp"
+	INCBIN "assets/summon/hare/tiles_bank1.2bpp"
 ; Hare metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 HareSprite00:
@@ -36,6 +36,6 @@ HareFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/hare/frame00_idx.bin"
+	INCBIN "assets/summon/hare/frame00_idx.bin"
 .attr:
-	INCBIN "assets/hare/frame00_attr.bin"
+	INCBIN "assets/summon/hare/frame00_attr.bin"

@@ -2006,78 +2006,78 @@ MonsterPortraitBg_Tiger:  ; 7x7 BG behind the Tiger portrait
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_tiger/tilemap.bin"
+	INCBIN "assets/portrait/monster/tiger/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_tiger/attrmap.bin"
+	INCBIN "assets/portrait/monster/tiger/attrmap.bin"
 MonsterPortraitBg_Mocchi:  ; 7x7 BG behind the Mocchi portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_mocchi/tilemap.bin"
+	INCBIN "assets/portrait/monster/mocchi/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_mocchi/attrmap.bin"
+	INCBIN "assets/portrait/monster/mocchi/attrmap.bin"
 MonsterPortraitBg_Hare:  ; 7x7 BG behind the Hare portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_hare/tilemap.bin"
+	INCBIN "assets/portrait/monster/hare/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_hare/attrmap.bin"
+	INCBIN "assets/portrait/monster/hare/attrmap.bin"
 MonsterPortraitBg_Gali:  ; 7x7 BG behind the Gali portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_gali/tilemap.bin"
+	INCBIN "assets/portrait/monster/gali/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_gali/attrmap.bin"
+	INCBIN "assets/portrait/monster/gali/attrmap.bin"
 MonsterPortraitBg_Golem:  ; 7x7 BG behind the Golem portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_golem/tilemap.bin"
+	INCBIN "assets/portrait/monster/golem/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_golem/attrmap.bin"
+	INCBIN "assets/portrait/monster/golem/attrmap.bin"
 MonsterPortraitBg_Suezo:  ; 7x7 BG behind the Suezo portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_suezo/tilemap.bin"
+	INCBIN "assets/portrait/monster/suezo/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_suezo/attrmap.bin"
+	INCBIN "assets/portrait/monster/suezo/attrmap.bin"
 MonsterPortraitBg_Phoenix:  ; 7x7 BG behind the Phoenix portrait
 	db 7, 7
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/monster_phoenix/tilemap.bin"
+	INCBIN "assets/portrait/monster/phoenix/tilemap.bin"
 .attr:
-	INCBIN "assets/monster_phoenix/attrmap.bin"
+	INCBIN "assets/portrait/monster/phoenix/attrmap.bin"
 ; Portrait metasprite lists (DrawMetasprite: count, {dy,dx,tile,attr}; 8x16
 ; OBJs from the $3c monster sheet, OBJ pals 1/2). Static + grid-aligned, so
 ; they compile from the obj/obj2 layers of assets/summon/<m>.tmx -- the layers
 ; that complete the portraits over the BG (meta1 above meta2: lower OAM index
 ; wins on GB).
 MonsterPortraitMeta_Tiger:
-	INCBIN "assets/monster_tiger/obj.bin"
+	INCBIN "assets/portrait/monster/tiger/obj.bin"
 MonsterPortraitMeta_MocchiLayer2:
-	INCBIN "assets/monster_mocchi/obj2.bin"
+	INCBIN "assets/portrait/monster/mocchi/obj2.bin"
 MonsterPortraitMeta_Mocchi:
-	INCBIN "assets/monster_mocchi/obj.bin"
+	INCBIN "assets/portrait/monster/mocchi/obj.bin"
 MonsterPortraitMeta_Hare:
-	INCBIN "assets/monster_hare/obj.bin"
+	INCBIN "assets/portrait/monster/hare/obj.bin"
 MonsterPortraitMeta_GaliLayer2:
-	INCBIN "assets/monster_gali/obj2.bin"
+	INCBIN "assets/portrait/monster/gali/obj2.bin"
 MonsterPortraitMeta_Gali:
-	INCBIN "assets/monster_gali/obj.bin"
+	INCBIN "assets/portrait/monster/gali/obj.bin"
 MonsterPortraitMeta_Golem:
-	INCBIN "assets/monster_golem/obj.bin"
+	INCBIN "assets/portrait/monster/golem/obj.bin"
 MonsterPortraitMeta_Suezo:
-	INCBIN "assets/monster_suezo/obj.bin"
+	INCBIN "assets/portrait/monster/suezo/obj.bin"
 
 SECTION "analyzed_0c8000", ROMX[$4000], BANK[$32]
 

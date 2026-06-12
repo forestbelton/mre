@@ -6,7 +6,7 @@
 SECTION "scene_phenix", ROMX[$4000], BANK[$0d]
 
 PhenixPalettes:
-	INCBIN "assets/phenix/palette.bin"
+	INCBIN "assets/summon/phenix/palette.bin"
 PhenixTiles:
-	INCBIN "assets/phenix/tiles_bank0.2bpp"
-	INCBIN "assets/phenix/tiles_bank1.2bpp"
+	INCBIN "assets/summon/phenix/tiles_bank0.2bpp"
+	INCBIN "assets/summon/phenix/tiles_bank1.2bpp"

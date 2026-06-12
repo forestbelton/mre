@@ -5,13 +5,13 @@
 
 SECTION "RoomClearTiles bank0", ROMX[$4000], BANK[$21]
 RoomClearTilesBank0:
-	INCBIN "assets/room_done/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
+	INCBIN "assets/screen/room_done/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
 RoomClearTilesBank1:
-	INCBIN "assets/room_done/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/screen/room_done/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
 RoomClearPalettes:
-	INCBIN "assets/room_done/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+	INCBIN "assets/screen/room_done/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
 RoomClearMapDesc:
 	db 18, 20
@@ -19,10 +19,10 @@ RoomClearMapDesc:
 	dw RoomClearIdxMap
 
 RoomClearIdxMap:
-	INCBIN "assets/room_done/tilemap.bin"
+	INCBIN "assets/screen/room_done/tilemap.bin"
 
 RoomClearAttrMap:
-	INCBIN "assets/room_done/attrmap.bin"
+	INCBIN "assets/screen/room_done/attrmap.bin"
 
 SECTION "analyzed_087356", ROMX[$7356], BANK[$21]
 

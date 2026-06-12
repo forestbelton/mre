@@ -11,105 +11,105 @@ GaliFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame00_idx.bin"
+	INCBIN "assets/summon/gali/frame00_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame00_attr.bin"
+	INCBIN "assets/summon/gali/frame00_attr.bin"
 GaliFrame01:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame01_idx.bin"
+	INCBIN "assets/summon/gali/frame01_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame01_attr.bin"
+	INCBIN "assets/summon/gali/frame01_attr.bin"
 GaliFrame02:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame02_idx.bin"
+	INCBIN "assets/summon/gali/frame02_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame02_attr.bin"
+	INCBIN "assets/summon/gali/frame02_attr.bin"
 GaliFrame03:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame03_idx.bin"
+	INCBIN "assets/summon/gali/frame03_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame03_attr.bin"
+	INCBIN "assets/summon/gali/frame03_attr.bin"
 GaliFrame04:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame04_idx.bin"
+	INCBIN "assets/summon/gali/frame04_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame04_attr.bin"
+	INCBIN "assets/summon/gali/frame04_attr.bin"
 GaliFrame05:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame05_idx.bin"
+	INCBIN "assets/summon/gali/frame05_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame05_attr.bin"
+	INCBIN "assets/summon/gali/frame05_attr.bin"
 GaliFrame06:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame06_idx.bin"
+	INCBIN "assets/summon/gali/frame06_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame06_attr.bin"
+	INCBIN "assets/summon/gali/frame06_attr.bin"
 GaliFrame07:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame07_idx.bin"
+	INCBIN "assets/summon/gali/frame07_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame07_attr.bin"
+	INCBIN "assets/summon/gali/frame07_attr.bin"
 GaliFrame08:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame08_idx.bin"
+	INCBIN "assets/summon/gali/frame08_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame08_attr.bin"
+	INCBIN "assets/summon/gali/frame08_attr.bin"
 GaliFrame09:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame09_idx.bin"
+	INCBIN "assets/summon/gali/frame09_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame09_attr.bin"
+	INCBIN "assets/summon/gali/frame09_attr.bin"
 GaliFrame10:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame10_idx.bin"
+	INCBIN "assets/summon/gali/frame10_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame10_attr.bin"
+	INCBIN "assets/summon/gali/frame10_attr.bin"
 GaliFrame11:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame11_idx.bin"
+	INCBIN "assets/summon/gali/frame11_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame11_attr.bin"
+	INCBIN "assets/summon/gali/frame11_attr.bin"
 GaliFrame12:
 	db 12, 32
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/gali/frame12_idx.bin"
+	INCBIN "assets/summon/gali/frame12_idx.bin"
 .attr:
-	INCBIN "assets/gali/frame12_attr.bin"
+	INCBIN "assets/summon/gali/frame12_attr.bin"
 ; Phenix BG animation frames (CopyBgMap descriptors), drawn by the
 ; scene VM (SCENE_BG_DRAW) by label; maps compiled from
 ; assets/scene/phenix/frames.tmx (one Tiled layer pair per frame).
@@ -118,81 +118,81 @@ PhenixFrame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame00_idx.bin"
+	INCBIN "assets/summon/phenix/frame00_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame00_attr.bin"
+	INCBIN "assets/summon/phenix/frame00_attr.bin"
 PhenixFrame01:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame01_idx.bin"
+	INCBIN "assets/summon/phenix/frame01_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame01_attr.bin"
+	INCBIN "assets/summon/phenix/frame01_attr.bin"
 PhenixFrame02:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame02_idx.bin"
+	INCBIN "assets/summon/phenix/frame02_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame02_attr.bin"
+	INCBIN "assets/summon/phenix/frame02_attr.bin"
 PhenixFrame03:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame03_idx.bin"
+	INCBIN "assets/summon/phenix/frame03_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame03_attr.bin"
+	INCBIN "assets/summon/phenix/frame03_attr.bin"
 PhenixFrame04:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame04_idx.bin"
+	INCBIN "assets/summon/phenix/frame04_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame04_attr.bin"
+	INCBIN "assets/summon/phenix/frame04_attr.bin"
 PhenixFrame05:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame05_idx.bin"
+	INCBIN "assets/summon/phenix/frame05_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame05_attr.bin"
+	INCBIN "assets/summon/phenix/frame05_attr.bin"
 PhenixFrame06:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame06_idx.bin"
+	INCBIN "assets/summon/phenix/frame06_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame06_attr.bin"
+	INCBIN "assets/summon/phenix/frame06_attr.bin"
 PhenixFrame07:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame07_idx.bin"
+	INCBIN "assets/summon/phenix/frame07_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame07_attr.bin"
+	INCBIN "assets/summon/phenix/frame07_attr.bin"
 PhenixFrame08:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame08_idx.bin"
+	INCBIN "assets/summon/phenix/frame08_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame08_attr.bin"
+	INCBIN "assets/summon/phenix/frame08_attr.bin"
 PhenixFrame09:
 	db 12, 20
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/phenix/frame09_idx.bin"
+	INCBIN "assets/summon/phenix/frame09_idx.bin"
 .attr:
-	INCBIN "assets/phenix/frame09_attr.bin"
+	INCBIN "assets/summon/phenix/frame09_attr.bin"
 ; Phenix metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 PhenixSprite00:

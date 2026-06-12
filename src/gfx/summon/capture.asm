@@ -11,10 +11,10 @@
 SECTION "scene_scene7", ROMX[$4000], BANK[$0e]
 
 Scene7Tiles:
-	INCBIN "assets/scene7/tiles_bank0.2bpp"
-	INCBIN "assets/scene7/tiles_bank1.2bpp"
+	INCBIN "assets/summon/scene7/tiles_bank0.2bpp"
+	INCBIN "assets/summon/scene7/tiles_bank1.2bpp"
 Scene7Palettes:
-	INCBIN "assets/scene7/palette.bin"
+	INCBIN "assets/summon/scene7/palette.bin"
 ; Scene7 BG animation frames (CopyBgMap descriptors), drawn by the
 ; scene VM (SCENE_BG_DRAW) by label; maps compiled from
 ; assets/scene/scene7/frames.tmx (one Tiled layer pair per frame).
@@ -23,17 +23,17 @@ Scene7Frame00:
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/scene7/frame00_idx.bin"
+	INCBIN "assets/summon/scene7/frame00_idx.bin"
 .attr:
-	INCBIN "assets/scene7/frame00_attr.bin"
+	INCBIN "assets/summon/scene7/frame00_attr.bin"
 Scene7Frame01:
 	db 8, 8
 	dw .attr
 	dw .idx
 .idx:
-	INCBIN "assets/scene7/frame01_idx.bin"
+	INCBIN "assets/summon/scene7/frame01_idx.bin"
 .attr:
-	INCBIN "assets/scene7/frame01_attr.bin"
+	INCBIN "assets/summon/scene7/frame01_attr.bin"
 ; Scene7 metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 Scene7Sprite00:

@@ -5,13 +5,13 @@
 
 SECTION "TowerOpenTiles bank0", ROMX[$4000], BANK[$26]
 TowerOpenTilesBank0:
-	INCBIN "assets/tower_open/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
+	INCBIN "assets/screen/tower_open/tiles_bank0.bin"   ; 384 tiles -> VRAM bank 0 $8000
 
 TowerOpenTilesBank1:
-	INCBIN "assets/tower_open/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
+	INCBIN "assets/screen/tower_open/tiles_bank1.bin"   ; 384 tiles -> VRAM bank 1 $8000
 
 TowerOpenPalettes:
-	INCBIN "assets/tower_open/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
+	INCBIN "assets/screen/tower_open/palette.bin"       ; 8 BG + 8 OBJ palettes (RGB555 LE)
 
 TowerOpenMapDesc:
 	db 18, 20
@@ -19,10 +19,10 @@ TowerOpenMapDesc:
 	dw TowerOpenIdxMap
 
 TowerOpenIdxMap:
-	INCBIN "assets/tower_open/tilemap.bin"
+	INCBIN "assets/screen/tower_open/tilemap.bin"
 
 TowerOpenAttrMap:
-	INCBIN "assets/tower_open/attrmap.bin"
+	INCBIN "assets/screen/tower_open/attrmap.bin"
 
 SECTION "analyzed_09b356", ROMX[$7356], BANK[$26]
 

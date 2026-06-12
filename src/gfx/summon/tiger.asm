@@ -6,10 +6,10 @@
 SECTION "Tiger summon", ROMX
 
 TigerPalettes:
-	INCBIN "assets/tiger/palette.bin"
+	INCBIN "assets/summon/tiger/palette.bin"
 TigerTiles:
-	INCBIN "assets/tiger/tiles_bank0.2bpp"
-	INCBIN "assets/tiger/tiles_bank1.2bpp"
+	INCBIN "assets/summon/tiger/tiles_bank0.2bpp"
+	INCBIN "assets/summon/tiger/tiles_bank1.2bpp"
 ; Tiger metasprite defs (DrawMetasprite: count, {dy,dx,tile,attr});
 ; referenced by the scene-VM SHOW lists (SCENE_SPRITE_LIST) by label.
 TigerSprite00:

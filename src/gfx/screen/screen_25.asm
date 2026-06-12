@@ -18,15 +18,15 @@
 SECTION "Room screen graphics", ROMX[$4000], BANK[$25]
 
 Data_25_4000:
-	INCBIN "assets/room_screen/tiles_bank0.2bpp"   ; tileset A (room types != 1)
+	INCBIN "assets/screen/room_screen/tiles_bank0.2bpp"   ; tileset A (room types != 1)
 Data_25_4000End:
 
 Data_25_5800:
-	INCBIN "assets/room_screen/tiles_bank1.2bpp"   ; tileset B (room type 1)
+	INCBIN "assets/screen/room_screen/tiles_bank1.2bpp"   ; tileset B (room type 1)
 Data_25_5800End:                                    ; = $7000
 
 RoomScreenPalettes:                                 ; $7000: set A (8 BG + 8 OBJ),
-	INCBIN "assets/room_screen/palette.bin"         ; then set B at $7080 (256 bytes)
+	INCBIN "assets/screen/room_screen/palette.bin"         ; then set B at $7080 (256 bytes)
 
 RoomScreenTilemap:                              ; CopyBgMap 11x11 -> $9909 (room types != 1)
 	db 11, 11

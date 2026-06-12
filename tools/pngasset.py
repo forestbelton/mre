@@ -1,41 +1,12 @@
 #!/usr/bin/env python3
-"""pngasset — generate a screen's ROM components from a single source PNG.
+"""pngasset -- compile graphics assets' ROM components from their sources.
 
-The goal (see docs/philosophy.md): an image's editable source is *one PNG*, and
-the build regenerates the ROM bytes (tile data, palette, tilemap, attribute map)
-from it. Nothing else is committed.
-
-The committed source is the PNG plus (for screens/portraits) the non-derivable
-`tilemap.bin` / `attrmap.bin`; everything else (tile data, palette) is rebuilt.
-Assets live under `assets/` in a tree mirroring `src/gfx/` (logo/, intro/,
-screen/<name>/, portrait/<name>/).
-
-Reproducing the *exact* original tileset order + tilemap from a flat image needs
-a layout heuristic (the game didn't dedupe in a canonical way). The heuristic
-here, which reproduces the TECMO logo byte-exact:
-
-  * The "blank" tile is the all-color-0 tile. Find the bounding box of the cells
-    that aren't blank -- that's the image content.
-  * Build the tile sheet COLUMN-MAJOR over that bbox: for each content column,
-    emit its tiles top-to-bottom, then pad the column to `--sheet-rows` tiles with
-    blank tiles. (TECMO: a 16-wide content block padded to 8 rows -> 128 tiles.)
-    Tile index = content_col*sheet_rows + content_row. No deduplication: every
-    content cell keeps its own index, matching the ROM.
-  * The tilemap is positional: a content cell -> its column-major sheet index;
-    every background cell -> the first blank tile (index = bbox height).
-  * `--pad-before BYTE N` prepends N bytes (e.g. a $1000 block of blank VRAM
-    tiles that sits before the real sheet).
-
-As more screens come under this tool the heuristic will need options (row-major
-order, multiple palettes, real attribute maps, 8800 vs direct addressing, two
-VRAM banks). For now it does exactly what the logo needs; `verify` proves the
-round-trip is byte-exact.
-
-Commands:
-    pngasset.py encode --png assets/logo/logo.png --sheet-rows 8 \
-        --pad-before 0x00 4096 --out-dir build/assets/logo
-    pngasset.py decode --tiles t.bin --tilemap m.bin --palette p.pal \
-        --cols 20 --rows 18 --out assets/logo/logo.png      # bootstrap the PNG
+A dumb compiler (see docs/asset_source_model.md): indexed PNGs carry pixels and
+palettes (pixel = display_palette*4 + 2bpp value), Tiled .tmx files carry
+arrangements (tilemaps/attrmaps, scene animation frames, static OBJ overlays),
+and the portrait overlay cels compile from per-block PNGs + sprites.yaml.
+Driven per-asset by tools/buildassets.py from assets/assets.yaml; everything
+round-trips byte-exact (make verify).
 """
 
 from __future__ import annotations
@@ -140,73 +111,7 @@ def cells_from_png(png: Path):
     return cols, rows, cells, colors
 
 
-def build_sheet_and_map(
-    cols: int, rows: int, cells: list[bytes], sheet_rows: int | None
-):
-    """Column-major sheet over the non-blank bbox (padded to sheet_rows), plus a
-    positional tilemap (background -> the first blank tile). Returns (tiles_bytes,
-    tilemap_bytes)."""
-    blank = bytes(TILE_BYTES)
-    nb = [(i // cols, i % cols) for i, t in enumerate(cells) if t != blank]
-    if not nb:
-        raise SystemExit("image is entirely blank")
-    r0 = min(r for r, _ in nb)
-    r1 = max(r for r, _ in nb)
-    c0 = min(c for _, c in nb)
-    c1 = max(c for _, c in nb)
-    bh = r1 - r0 + 1
-    if sheet_rows is None:
-        sheet_rows = bh
-    if sheet_rows < bh:
-        raise SystemExit(f"--sheet-rows {sheet_rows} < content height {bh}")
-    sheet: list[bytes] = []
-    for c in range(c0, c1 + 1):
-        for r in range(r0, r1 + 1):
-            sheet.append(cells[r * cols + c])
-        sheet += [blank] * (sheet_rows - bh)
-    bg_index = bh  # col 0's first pad tile is the first blank in the sheet
-    if sheet_rows == bh and any(
-        cells[r * cols + c] == blank
-        for r in range(r0, r1 + 1)
-        for c in range(c0, c1 + 1)
-    ):
-        raise SystemExit(
-            "background cells exist but no blank sheet tile (raise --sheet-rows)"
-        )
-    tmap = bytearray(rows * cols)
-    for r in range(rows):
-        for c in range(cols):
-            if r0 <= r <= r1 and c0 <= c <= c1:
-                tmap[r * cols + c] = (c - c0) * sheet_rows + (r - r0)
-            else:
-                tmap[r * cols + c] = bg_index
-    return b"".join(sheet), bytes(tmap)
-
-
 # --- commands --------------------------------------------------------------
-def cmd_encode(args: argparse.Namespace) -> int:
-    cols, rows, cells, colors = cells_from_png(Path(args.png))
-    tiles, tmap = build_sheet_and_map(cols, rows, cells, args.sheet_rows)
-    if args.pad_before:
-        byte, n = args.pad_before
-        tiles = bytes([byte]) * n + tiles
-    pal = bytearray()
-    for word in (rgb888_to_555(*colors[i]) for i in range(args.colors)):
-        pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
-    attr = bytes(rows * cols)
-    out = Path(args.out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    for name, data in (
-        ("tiles", tiles),
-        ("palette", pal),
-        ("tilemap", tmap),
-        ("attrmap", attr),
-    ):
-        (out / f"{name}.bin").write_bytes(data)
-        print(f"  {name}.bin: {len(data)} bytes")
-    return 0
-
-
 def cmd_decode(args: argparse.Namespace) -> int:
     tiles = Path(args.tiles).read_bytes()
     tmap = Path(args.tilemap).read_bytes()
@@ -1128,24 +1033,6 @@ def main() -> int:
                          "palette_bg2.bin / palette_obj2.bin")
     pt.set_defaults(fn=cmd_portrait)
 
-    e = sub.add_parser("encode", help="PNG -> tiles/palette/tilemap/attrmap .bin")
-    e.add_argument("--png", required=True)
-    e.add_argument("--out-dir", required=True)
-    e.add_argument(
-        "--sheet-rows",
-        type=int,
-        default=None,
-        help="pad each content column to this many tiles (default: content height)",
-    )
-    e.add_argument("--colors", type=int, default=4, help="palette entries to emit")
-    e.add_argument(
-        "--pad-before",
-        nargs=2,
-        metavar=("BYTE", "N"),
-        default=None,
-        help="prepend N bytes of BYTE to tiles.bin (e.g. 0x00 4096)",
-    )
-    e.set_defaults(fn=cmd_encode)
 
     d = sub.add_parser(
         "decode", help="component .bin/.pal -> composite PNG (bootstrap)"

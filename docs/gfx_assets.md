@@ -47,13 +47,18 @@ The asset tree is laid out to parallel the asm tree, so `assets/screen/town/`
 sits next to `src/gfx/screen/town.asm`:
 
 ```
-assets/logo/logo.png              src/gfx/logo.asm
-assets/intro/intro.png            src/gfx/intro.asm
-assets/screen/<name>/<name>.png   src/gfx/screen/<name>.asm   (town, tower,
-                                    tower_open, room_start, room_done, title)
-assets/portrait/<name>/<name>.png src/gfx/portrait/<name>.asm (kalum, …; nada.asm
-                                    drives nada_intro/ + nada_scene2/)
+assets/logo.{png,tmx}                       src/gfx/logo.asm
+assets/intro.{png,tmx}                      src/gfx/intro.asm
+assets/cox/cox.png                          src/text/scripts/cox.asm
+assets/screen/<name>/                       src/gfx/screen/<name>.asm
+assets/portrait/npc/<name>/                 src/gfx/portrait/npc/<name>.asm
+assets/portrait/monster/<m>/<m>.{png,tmx}   src/gfx/portrait/monster.asm
+assets/summon/<scene>.{png,tmx}             src/gfx/summon/<scene>.asm
 ```
+
+Build dirs mirror this tree (`build/assets/<same path>`); the rule is purely
+path-derived (the PNG's parent dir, or parent/stem for flat files) — no
+per-entry overrides.
 
 Each leaf dir holds the editable `<name>.png` plus the committed `tilemap.bin` /
 `attrmap.bin` (the arrangement). The build writes ROM components to
