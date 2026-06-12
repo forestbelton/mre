@@ -60,6 +60,8 @@ def build_png_asset(name: str, spec: dict) -> None:
             cmd += ["--tiles", str(spec["tiles"])]
         if "palettes" in spec:
             cmd += ["--palettes", str(spec["palettes"])]
+        if "frames" in spec:                          # Tiled animation-frame maps
+            cmd += ["--frames", str(spec["frames"])]
     elif mode == "portrait":
         cmd = [pngasset, "portrait", "--png", str(png), "--out-dir", str(out)]
         if "tiles1" in spec:

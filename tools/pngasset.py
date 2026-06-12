@@ -306,6 +306,57 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
     return bytes(tmap), bytes(amap)
 
 
+def tmx_frames_to_maps(tmx_path):
+    """Compile a scene's frames.tmx -- one Tiled layer pair (frameNN +
+    frameNN_pal) per CopyBgMap animation frame -- into an ordered list of
+    (name, rows, cols, idx_bytes, attr_bytes). Each frame occupies the
+    top-left rows x cols rectangle of its layer (the rest empty); the sheet
+    tileset GIDs encode bank*384 + VRAM tile number (128-383, $8800-signed)."""
+    import xml.etree.ElementTree as ET
+
+    HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
+    root = ET.parse(tmx_path).getroot()
+    sheet_first = pal_first = None
+    for ts in root.findall("tileset"):
+        n = int(ts.get("tilecount", 0))
+        if n == 8:
+            pal_first = int(ts.get("firstgid"))
+        elif sheet_first is None:
+            sheet_first = int(ts.get("firstgid"))
+    layers = {}
+    order = []
+    for ly in root.findall("layer"):
+        data = ly.find("data")
+        vals = [int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()]
+        layers[ly.get("name")] = (int(ly.get("width")), vals)
+        if not ly.get("name").endswith("_pal"):
+            order.append(ly.get("name"))
+    out = []
+    for name in order:
+        W, gids = layers[name]
+        _, pals = layers[name + "_pal"]
+        filled = [i for i, g in enumerate(gids) if g]
+        rows = max(i // W for i in filled) + 1
+        cols = max(i % W for i in filled) + 1
+        idx, attr = bytearray(), bytearray()
+        for r in range(rows):
+            for c in range(cols):
+                g, pg = gids[r * W + c], pals[r * W + c]
+                if not g:
+                    raise SystemExit(f"{tmx_path}:{name}: hole at ({r},{c}) -- "
+                                     "frames must fill their top-left rectangle")
+                xf, yf = bool(g & HFLIP), bool(g & VFLIP)
+                i = (g & GIDMASK) - sheet_first
+                bank, vt = divmod(i, 384)
+                if not 128 <= vt < 384:
+                    raise SystemExit(f"{tmx_path}:{name}: cell ({r},{c}) -> VRAM "
+                                     f"tile {vt} (not addressable in $8800 mode)")
+                idx.append(vt & 0xFF)
+                attr.append((pg - pal_first) | (bank << 3) | (xf << 5) | (yf << 6))
+        out.append((name, rows, cols, bytes(idx), bytes(attr)))
+    return out
+
+
 def cmd_maplib(args: argparse.Namespace) -> int:
     """A screen-library bank: one indexed sheet PNG (--tiles total, --banks 1 for
     alternate sets / 2 for stacked VRAM banks, --base = VRAM tile number of sheet
@@ -399,9 +450,9 @@ def cmd_scene(args: argparse.Namespace) -> int:
         ("tiles_bank1.2bpp", b"".join(tiles[args.tiles:])),
         ("palette.bin", bytes(pal)),
     ]
-    for fn in ("descriptors.bin", "metasprites.bin"):         # passthrough committed data
-        if (d / fn).exists():
-            comps.append((fn, (d / fn).read_bytes()))
+    if getattr(args, "frames", None):
+        for name, rows, cols, idx, attr in tmx_frames_to_maps(d / args.frames):
+            comps += [(f"{name}_idx.bin", idx), (f"{name}_attr.bin", attr)]
     for name, data in comps:
         (out / name).write_bytes(data)
         print(f"  {name}: {len(data)} bytes")
@@ -910,6 +961,9 @@ def main() -> int:
     scn.add_argument("--out-dir", required=True)
     scn.add_argument("--tiles", type=int, default=384, help="tiles per bank")
     scn.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
+    scn.add_argument("--frames", default=None,
+                    help="Tiled .tmx (next to --png) of CopyBgMap animation frames, "
+                         "one layer pair per frame -> frameNN_idx/attr.bin")
     scn.set_defaults(fn=cmd_scene)
 
     pt = sub.add_parser(

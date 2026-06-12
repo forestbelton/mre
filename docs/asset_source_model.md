@@ -191,6 +191,14 @@ the component kinds above. `buildassets.py` stays the single build entry.
      descriptors of its own found yet — needs inventory first.
 5. **Scene frames + metasprites** — descriptors → map source; metasprites →
    asm records.
+   **DONE 2026-06-12**: all 8 scenes' `metasprites.bin` are labelled
+   `<Mon>SpriteNN` records (SCENE_SPRITE_LIST takes labels now, byte-identical
+   macro change; 65 call sites), and the 7 `descriptors.bin` are structured
+   `<Mon>FrameNN` descriptors compiled from `frames.tmx` — one Tiled layer
+   pair per animation frame (toggle layer visibility to flip through). All
+   SCENE_BG_DRAW descptr args reference frames by label (raw-address args
+   resolved via the sym file). 15 bins deleted. Tiger's frames live in
+   bank-$05 data (not a bin) — still raw `$addr` args, a later relabel.
 6. **Endgame derisk (optional)** — generate portrait sheets from
    picture+cels (drop the sheet PNGs for family G); revisit
    `scratch/canon_bottom.py`'s bottom-band findings.

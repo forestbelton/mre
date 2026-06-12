@@ -15,15 +15,13 @@
     IF !DEF(SCENE_SCRIPT_INC)
 DEF SCENE_SCRIPT_INC EQU 1
 
-; SCENE_SPRITE_LIST region, off0, off1, ... : a metasprite-show list -- 2-byte def
-; pointers (each = `region + offset`) terminated by $0000, as read by Func_05_44c7.
-; The defs live inside the region's INCBIN'd metasprites.bin; this indexes into it
-; by offset so the <Mon>Sprites label is load-bearing without splitting the .bin.
+; SCENE_SPRITE_LIST def0, def1, ... : a metasprite-show list -- 2-byte def
+; pointers terminated by $0000, as read by Func_05_44c7. Each arg is a
+; <Mon>SpriteNN record label (the defs are labelled records in the summon files).
 MACRO SCENE_SPRITE_LIST
-    REDEF _SPRLIST EQUS "\1"
-    REPT _NARG - 1
+    REPT _NARG
+        dw (\1)
         SHIFT
-        dw _SPRLIST + (\1)
     ENDR
     dw $0000
 ENDM
