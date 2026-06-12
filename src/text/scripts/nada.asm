@@ -50,9 +50,9 @@ Func_1f_4d8c:
 	ld hl, NadaScript
 	jp ScriptDispatcherEnterAfterCall
 Nada_ShowScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $00
 	ld [rVBK], a
 	ld a, $1c
@@ -92,7 +92,7 @@ Nada_ShowScene:
 Nada_ShowSnapReaction:
 	call Func_1f_4d66
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $00
 	ld [rVBK], a
 	ld a, $1c
@@ -131,7 +131,7 @@ Nada_ShowSnapReaction:
 Nada_ShowRageScene:
 	call Func_1f_4d66
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $00
 	ld [rVBK], a
 	ld a, $1c

@@ -46,9 +46,9 @@ Func_18_533c:
 	call ScriptDispatcherEnterAfterCall
 	jp LeaveTownBuilding
 Verde_BuildPortraitScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1b
@@ -79,9 +79,9 @@ Verde_BuildPortraitScene:
 	pop af
 	ret
 Verde_BuildIntroScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1b

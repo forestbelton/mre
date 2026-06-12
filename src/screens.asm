@@ -2334,7 +2334,7 @@ DrawTitleScreen:
 	call BankMapCopyB
 	call Func_30_5698
 	call Func_30_565c
-	call Func_00_0822
+	call LoadWhitePalettes
 	ld b, BANK(TitlePalettes)
 	ld de, TitlePalettes
 	call LoadPalettesBanked
@@ -2587,7 +2587,7 @@ DrawIntroBookScreen:
 	ld hl, $7080
 	ld de, $9880
 	call BankMapCopyB
-	call Func_00_0822
+	call LoadWhitePalettes
 	ld b, $29
 	ld de, $7000
 	call LoadPalettesBanked
@@ -2641,7 +2641,7 @@ Func_30_5816:
 	ld [$cf61], a
 	ld [$cf52], a
 	ld [$cf64], a
-	call Func_00_0822
+	call LoadWhitePalettes
 	ld a, $10
 	ldh [hSpriteOriginY], a
 	ld a, $08

@@ -15,9 +15,9 @@ INCLUDE "sound_ids.inc"
 SECTION "analyzed_07c17b", ROMX[$417b], BANK[$1f]
 
 Kalum_StartEncounter:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1d

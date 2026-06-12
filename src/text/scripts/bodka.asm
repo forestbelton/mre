@@ -28,11 +28,11 @@ Func_18_5dfa:
 	jp LeaveTownBuilding
 
 Bodka_BuildStudioScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	ld a, LCDC_ON | LCDC_WIN_9C00 | LCDC_OBJ_16 | LCDC_OBJ_ON | LCDC_PRIO_ON
 	ld [rLCDC], a
 	call HideAllSprites
-	call Func_00_3965
+	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
 	ld a, BANK(BodkaPortraitTiles)
@@ -68,7 +68,7 @@ Bodka_BuildTowerScene:
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
-	call Func_00_3965
+	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
 	ld a, BANK(BodkaPortraitTiles)
@@ -180,12 +180,12 @@ Bodka_RenderPortraitAlt:
 	ret
 
 Tradehouse_BuildScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 Tradehouse_BuildSceneNoInit:
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
-	call Func_00_3965
+	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
 	ld a, BANK(Data_33_4000)
@@ -223,7 +223,7 @@ Tradehouse_BuildNoteScene:
 	ld a, $c7
 	ld [rLCDC], a
 	call HideAllSprites
-	call Func_00_3965
+	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
 	ld a, $33

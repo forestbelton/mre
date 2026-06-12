@@ -130,9 +130,9 @@ Pashute_StartTownScript:
 	jp LeaveTownBuilding
 
 Pashute_LoadShrineScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1b
@@ -163,9 +163,9 @@ Pashute_LoadShrineScene:
 	pop af
 	ret
 Pashute_LoadIntroScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1b

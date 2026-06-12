@@ -360,9 +360,9 @@ Naji_StartTowerFromBottom:
 	ret
 
 Naji_BuildPortraitScene:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3965
+	call LoadTextUiAlt
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1a

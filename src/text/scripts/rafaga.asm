@@ -88,9 +88,9 @@ RafagaScript:
 SECTION "analyzed_07c749", ROMX[$4749], BANK[$1f]
 
 Rafaga_StartEncounter:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, $1d

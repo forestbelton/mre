@@ -22,9 +22,11 @@ Toamuna_CheckSaveExists:
 	FAR_CALL HasSavedGame
 	ld [wYNResult], a
 	ret
-	call Func_00_0822
+
+Toamuna_StartScript:
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $01
 	ld [rVBK], a
 	ld a, BANK(ToamunaPortraitTiles)

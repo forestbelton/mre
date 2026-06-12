@@ -81,9 +81,9 @@ MistralScript:
 SECTION "analyzed_07c416", ROMX[$4416], BANK[$1f]
 
 Mistral_StartEncounter:
-	call Func_00_0822
+	call LoadWhitePalettes
 	call HideAllSprites
-	call Func_00_3971
+	call LoadTextUi
 	ld a, $00
 	ld [rVBK], a
 	ld a, $35

@@ -195,7 +195,7 @@ Func_00_01f9:
 	ldh a, [hJoyHeld]
 	cp $0f
 	ret nz
-	call Func_00_0822
+	call LoadWhitePalettes
 	call WaitForNextFrame
 	call Func_00_018f
 	call ResetSoundEngine
@@ -1217,7 +1217,11 @@ Func_00_0803:
 	call Func_00_061e
 	jp Func_00_0786
 
-Func_00_0822:
+; Blank the display to white. On CGB, loads the all-white palette at $0857
+; (4x $7fff) into every BG and OBJ palette slot; on DMG, zeroes rBGP/rOBP0/rOBP1
+; (all-white). Used at the start of a screen/portrait transition so the screen is
+; blank while the new content loads, before it is faded in (ShowPortraitTransition).
+LoadWhitePalettes:
 	rst CheckCgb
 	jr z, Func_00_0834
 	ld hl, $0857
@@ -2165,7 +2169,7 @@ Data_00_0f7d:
 	farptr Func_18_6b71, 18
 	farptr Func_18_5dfa
 	farptr Pashute_StartTownScript
-	farptr Toamuna_CheckSaveExists, 12
+	farptr Toamuna_StartScript
 	farptr Func_18_533c
 
 SECTION "analyzed_000fa1", ROM0[$0fa1]
@@ -8192,18 +8196,25 @@ LeaveTownBuilding:
 	ld [wGameScene], a
 	ret
 
-Func_00_3965:
+; Load the text-window UI that sits under a portrait/dialogue scene. The portrait
+; occupies the top 11 rows; this fills the bottom rows (tilemap -> $9960) with the
+; box-frame layout and loads the shared font/box tile set + 16 BG palettes, then
+; resets the renderer state. Tiles/tilemap/palettes live in bank $19 (see
+; src/gfx/screen/screen_19.asm). LoadTextUiAlt is the same but uses the alt tile
+; set at $56cb (used by bodka/naji); both fall through to LoadTextUiTiles, which
+; takes the tile source in a:hl.
+LoadTextUiAlt:
 	ld a, $00
 	ldh [rVBK], a
 	ld a, $19
 	ld hl, $56cb
-	jp Func_00_397a
-Func_00_3971:
+	jp LoadTextUiTiles
+LoadTextUi:
 	ld a, $00
 	ldh [rVBK], a
 	ld a, $19
 	ld hl, $46cb
-Func_00_397a:
+LoadTextUiTiles:
 	ld de, $8800
 	ld bc, $1000
 	call BankVramCopy
