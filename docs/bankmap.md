@@ -8,7 +8,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 
 ```
 ROM0: 15700 bytes used / 684 free
-ROMX: 750398 bytes used / 281794 free in 63 banks
+ROMX: 750410 bytes used / 281782 free in 63 banks
 WRAM0: 1762 bytes used / 2334 free
 WRAMX: 47 bytes used / 4049 free in 1 bank
 HRAM: 75 bytes used / 52 free
@@ -43,7 +43,7 @@ HRAM: 75 bytes used / 52 free
 | $16 | ROMX | 13832 | 2552 | 1 | 1 | tileset_loader.asm |
 | $17 | ROMX | 13695 | 2689 | 4 | 3 | editor_descriptions.asm, special_scene.asm |
 | $18 | ROMX | 14697 | 1687 | 8 | 0 | pashute.asm, naji.asm, bodka.asm, verde.asm |
-| $19 | ROMX | 10391 | 5993 | 3 | 1 | screen_19.asm, toamuna.asm |
+| $19 | ROMX | 10391 | 5993 | 3 | 1 | textui.asm, toamuna.asm |
 | $1a | ROMX | 13868 | 2516 | 2 | 0 | naji.asm, toamuna.asm |
 | $1b | ROMX | 14574 | 1810 | 4 | 1 | verde.asm, pashute.asm |
 | $1c | ROMX | 14166 | 2218 | 1 | 0 | nada.asm |
@@ -68,7 +68,7 @@ HRAM: 75 bytes used / 52 free
 | $30 | ROMX | 8235 | 8149 | 10 | 9 | screens.asm, logo.asm |
 | $31 | ROMX | 2046 | 14338 | 1 | 1 | link.asm |
 | $32 | ROMX | 6995 | 9389 | 78 | 78 | monster_detail.asm |
-| $33 | ROMX | 13337 | 3047 | 2 | 2 | tradehouse.asm |
+| $33 | ROMX | 13349 | 3035 | 2 | 2 | tradehouse.asm |
 | $34 | ROMX | 11324 | 5060 | 5 | 5 | link.asm |
 | $35 | ROMX | 9526 | 6858 | 2 | 1 | mistral.asm |
 | $38 | ROMX | 11289 | 5095 | 1 | 1 | room_murals.asm |
@@ -699,7 +699,7 @@ HRAM: 75 bytes used / 52 free
 |---|--:|---|---|
 | $4000-$40dc | 221 | toamuna.asm | Toamuna script functions |
 | $40dd-$46c9 | 1517 | toamuna.asm | Toamuna script |
-| $46cb-$6897 | 8653 | screen_19.asm | analyzed_0646cb |
+| $46cb-$6897 | 8653 | textui.asm | analyzed_0646cb |
 
 ### $1a — ROMX (2 sections, 0 analyzed)
 
@@ -1031,7 +1031,7 @@ HRAM: 75 bytes used / 52 free
 | range | size | file | section |
 |---|--:|---|---|
 | $4000-$706f | 12400 | tradehouse.asm | analyzed_0cc000 |
-| $7080-$7428 | 937 | tradehouse.asm | analyzed_0cf080 |
+| $7080-$7434 | 949 | tradehouse.asm | analyzed_0cf080 |
 
 ### $34 — ROMX (5 sections, 5 analyzed)
 

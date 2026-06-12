@@ -25,9 +25,17 @@ by `[$cfd9]`:
   - `bgmap` is a small `CopyBgMap` region drawn to `$9d41` (`Func_0f_4bec`).
 
 So a portrait = 128 bank-`$3c` tiles arranged by its `meta1` (+`meta2`) sprite
-list. Rendering them grayscale (scratch/monster_meta.py) shows recognizable
-shapes (monster 5 = Suezo's eye); true colors need the CGB palette (palette 1,
-lib-dispatched, not yet located).
+list. (The palettes were later located: the per-monster `$80`-byte block at
+`$0f:$7191 + $80*id` fills BG palettes 4-6 and OBJ palettes 1-2 —
+see docs/palettes.md.)
+
+**Asset form (2026-06-12, docs/asset_source_model.md):** each tile set is the
+colorized indexed sheet `assets/monster_portrait/monster_<name>/` (BG cells in
+their attr palettes, OBJ tiles in OBJ pal 1-2). The 7×7 `bgmap`s are the
+portrait converter's positional constant (family G, layout `monster7x7`), so
+tilemap + attrmap are **derived from the sheet** at build time; the
+`meta1`/`meta2` lists are labelled `MonsterPortraitMeta_*` records in
+src/monster_detail.asm and `MonsterPortraitMetaRecords` is fully symbolic.
 
 ## Name + ability-text regions (BG, bank `$32`)
 

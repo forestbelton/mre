@@ -468,7 +468,8 @@ def cmd_scene(args: argparse.Namespace) -> int:
 # portrait that uses them. See docs/asset_source_model.md (family G).
 def _portrait_layout(bottom):
     top = [(0x80 + 8 * c + r) & 0xFF for r in range(8) for c in range(20)]
-    return bytes(top) + bytes(bottom)
+    return {"rows": 11, "cols": 20, "attr_or": 0x08,
+            "map": bytes(top) + bytes(bottom)}
 
 
 PORTRAIT_LAYOUTS = {
@@ -482,55 +483,64 @@ PORTRAIT_LAYOUTS = {
         0x21, 0x29, 0x31, 0x39, 0x41, 0x49, 0x51, 0x59, 0x61, 0x64, 0x67, 0x6a, 0x24, 0x2c, 0x34, 0x3c, 0x44, 0x4c, 0x54, 0x5c,
         0x22, 0x2a, 0x32, 0x3a, 0x42, 0x4a, 0x52, 0x5a, 0x62, 0x65, 0x68, 0x6b, 0x25, 0x2d, 0x35, 0x3d, 0x45, 0x4d, 0x55, 0x5d,
     ]),
+    # the 7x7 monster detail-screen background (VRAM bank 0, $8800)
+    "monster7x7": {"rows": 7, "cols": 7, "attr_or": 0x00,
+                   "map": bytes((0x80 + 8 * c + r) & 0xFF
+                                for r in range(7) for c in range(7))},
 }
 
 
 def derive_portrait_maps(sheet_png, layout, blank_byte=None, ref_png=None,
                          map_overrides=None):
-    """Derive (tilemap, attrmap) for a positional (family-G) portrait.
+    """Derive (tilemap, attrmap) for a positional (family-G) portrait/screen.
 
-    tilemap = the named layout constant. attrmap = 8 | palette, where each
-    cell's palette is the display palette of its slot's tile in the INDEXED
-    sheet PNG (positional allocation is bijective, so per-tile == per-cell).
+    tilemap = the named layout constant (PORTRAIT_LAYOUTS). attrmap = attr_or |
+    palette, where each cell's palette is the display palette of its slot's
+    tile in the INDEXED sheet PNG (positional allocation is bijective).
 
     blank_byte: some portraits (mistral -> $80) don't keep every cell's tile at
     its positional slot -- blank cells were collapsed to the shared blank tile
     and their slots reused for other art. The rule that reproduces the ROM:
     a cell keeps its positional byte iff the sheet still holds the cell's exact
     pixels at that slot; otherwise it gets `blank_byte`. The cell's pixels (and
-    its palette) come from `ref_png`, the composed 11x20 reference (indexed,
-    pixel = palette*4 + value)."""
+    palette) come from `ref_png`, the composed reference (indexed, pixel =
+    palette*4 + value). map_overrides pins blank-cell/blank-slot ties."""
     w, h, px, _ = read_indexed_png(Path(sheet_png))
-    layout_bytes = PORTRAIT_LAYOUTS[layout]
+    L = PORTRAIT_LAYOUTS[layout]
+    rows, cols, attr_or, layout_bytes = L["rows"], L["cols"], L["attr_or"], L["map"]
+    ncell = rows * cols
+    nt = (w // 8) * (h // 8)
+
+    def slot(byte):
+        t = byte if byte >= 128 else byte + 256       # $8800-signed VRAM tile no.
+        if nt <= 256:                                  # small sheet loaded at $8800
+            t -= 128
+        return t
 
     def slot_vals(byte):
-        t = byte if byte >= 128 else byte + 256       # $8800-signed, bank-1 sheet
+        t = slot(byte)
         bx, by = (t % 16) * 8, (t // 16) * 8
         return [px[(by + y) * w + bx + x] % 4 for y in range(8) for x in range(8)]
 
     def slot_pal(byte):
-        t = byte if byte >= 128 else byte + 256
-        bx, by = (t % 16) * 8, (t // 16) * 8
-        return px[by * w + bx] // 4                   # tiles are palette-uniform
+        t = slot(byte)
+        return px[(t // 16) * 8 * w + (t % 16) * 8] // 4   # tiles are palette-uniform
 
     if blank_byte is None:
-        amap = bytes(8 | slot_pal(layout_bytes[cell]) for cell in range(220))
+        amap = bytes(attr_or | slot_pal(layout_bytes[cell]) for cell in range(ncell))
         return layout_bytes, amap
 
     rw, rh, rpx, _ = read_indexed_png(Path(ref_png))
-    assert (rw, rh) == (160, 88), "portrait reference must be 20x11 cells"
+    assert (rw, rh) == (cols * 8, rows * 8), "reference dims must match the layout"
     tmap = bytearray()
     amap = bytearray()
-    for cell in range(220):
-        r, c = cell // 20, cell % 20
+    for cell in range(ncell):
+        r, c = cell // cols, cell % cols
         block = [rpx[(r * 8 + y) * rw + c * 8 + x] for y in range(8) for x in range(8)]
         vals = [q % 4 for q in block]
         keep = slot_vals(layout_bytes[cell]) == vals
         tmap.append(layout_bytes[cell] if keep else blank_byte)
-        amap.append(8 | (block[0] // 4))              # palette explicit in the reference
-    # measured override residue: a blank cell whose positional slot is ALSO blank
-    # renders identically either way, and the original tool chose inconsistently
-    # (mistral: 2 cells point at $80 despite a blank slot). Pinned per cell.
+        amap.append(attr_or | (block[0] // 4))
     for cell, byte in (map_overrides or {}).items():
         tmap[int(cell)] = byte
     return bytes(tmap), bytes(amap)

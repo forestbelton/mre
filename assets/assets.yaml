@@ -289,3 +289,50 @@ textui:
   base: 128
   palettes: 16
   maps: [textui.tmx]
+
+# Friendly-monster detail-screen portraits (bank $3c tiles + bank $0f maps,
+# src/gfx/monster_portraits.asm + src/monster_detail.asm): seven 128-tile
+# sheets -> VRAM $8800; the 7x7 BG-behind-the-portrait maps are the
+# converter's positional constant (family G) -- derived, like the portraits.
+
+monster_tiger:
+  mode: portrait
+  png: monster_portrait/monster_tiger/monster_tiger.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_mocchi:
+  mode: portrait
+  png: monster_portrait/monster_mocchi/monster_mocchi.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_hare:
+  mode: portrait
+  png: monster_portrait/monster_hare/monster_hare.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_gali:
+  mode: portrait
+  png: monster_portrait/monster_gali/monster_gali.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_golem:
+  mode: portrait
+  png: monster_portrait/monster_golem/monster_golem.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_suezo:
+  mode: portrait
+  png: monster_portrait/monster_suezo/monster_suezo.png
+  tiles1: 128
+  layout: monster7x7
+
+monster_phoenix:
+  mode: portrait
+  png: monster_portrait/monster_phoenix/monster_phoenix.png
+  tiles1: 128
+  layout: monster7x7

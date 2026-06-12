@@ -1465,12 +1465,12 @@ MonsterPortraitMetaTable:
 
 MonsterPortraitMetaRecords:
 	; [meta1, meta2, bgmap] little-endian bank-$0f pointers (0 = none)
-	dw $77e9, $0000, MonsterPortraitBg_Tiger ; 0 Tiger
-	dw $783b, $7826, MonsterPortraitBg_Mocchi ; 1 Mocchi
-	dw $7850, $0000, MonsterPortraitBg_Hare ; 2 Hare
-	dw $78b2, $7881, MonsterPortraitBg_Gali ; 3 Gali
-	dw $78d7, $0000, MonsterPortraitBg_Golem ; 4 Golem
-	dw $7900, $0000, MonsterPortraitBg_Suezo ; 5 Suezo
+	dw MonsterPortraitMeta_Tiger, $0000, MonsterPortraitBg_Tiger ; 0 Tiger
+	dw MonsterPortraitMeta_Mocchi, MonsterPortraitMeta_MocchiLayer2, MonsterPortraitBg_Mocchi ; 1 Mocchi
+	dw MonsterPortraitMeta_Hare, $0000, MonsterPortraitBg_Hare ; 2 Hare
+	dw MonsterPortraitMeta_Gali, MonsterPortraitMeta_GaliLayer2, MonsterPortraitBg_Gali ; 3 Gali
+	dw MonsterPortraitMeta_Golem, $0000, MonsterPortraitBg_Golem ; 4 Golem
+	dw MonsterPortraitMeta_Suezo, $0000, MonsterPortraitBg_Suezo ; 5 Suezo
 	dw $0000, $0000, MonsterPortraitBg_Phoenix ; 6 Phoenix
 
 Data_0f_4c83:
@@ -2003,122 +2003,78 @@ Data_0f_74d9:
 	db $00, $00, $00, $00, $00, $00, $00, $00
 MonsterPortraitBg_Tiger:  ; 7x7 BG behind the Tiger portrait
 	db 7, 7
-	dw MonsterPortraitBg_Tiger_Attr
-	dw MonsterPortraitBg_Tiger_Idx
-MonsterPortraitBg_Tiger_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Tiger_Attr:
-	db $00, $00, $00, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $00, $04, $04, $04, $04, $04, $00, $04, $04, $04
-	db $04, $04, $04, $00, $04, $04, $04, $04, $04, $04, $00, $04, $04, $00, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_tiger/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_tiger/attrmap.bin"
 MonsterPortraitBg_Mocchi:  ; 7x7 BG behind the Mocchi portrait
 	db 7, 7
-	dw MonsterPortraitBg_Mocchi_Attr
-	dw MonsterPortraitBg_Mocchi_Idx
-MonsterPortraitBg_Mocchi_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Mocchi_Attr:
-	db $04, $04, $04, $04, $05, $05, $05, $04, $04, $04, $04, $05, $05, $04, $04, $04
-	db $04, $04, $05, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_mocchi/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_mocchi/attrmap.bin"
 MonsterPortraitBg_Hare:  ; 7x7 BG behind the Hare portrait
 	db 7, 7
-	dw MonsterPortraitBg_Hare_Attr
-	dw MonsterPortraitBg_Hare_Idx
-MonsterPortraitBg_Hare_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Hare_Attr:
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_hare/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_hare/attrmap.bin"
 MonsterPortraitBg_Gali:  ; 7x7 BG behind the Gali portrait
 	db 7, 7
-	dw MonsterPortraitBg_Gali_Attr
-	dw MonsterPortraitBg_Gali_Idx
-MonsterPortraitBg_Gali_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Gali_Attr:
-	db $00, $00, $00, $04, $04, $04, $00, $00, $00, $04, $04, $04, $04, $04, $00, $00
-	db $04, $04, $04, $04, $04, $00, $00, $04, $04, $04, $04, $04, $00, $00, $04, $04
-	db $04, $04, $04, $00, $04, $04, $04, $04, $04, $04, $00, $04, $04, $04, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_gali/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_gali/attrmap.bin"
 MonsterPortraitBg_Golem:  ; 7x7 BG behind the Golem portrait
 	db 7, 7
-	dw MonsterPortraitBg_Golem_Attr
-	dw MonsterPortraitBg_Golem_Idx
-MonsterPortraitBg_Golem_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Golem_Attr:
-	db $00, $04, $04, $04, $04, $00, $00, $00, $04, $04, $04, $04, $04, $00, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $00, $04, $04, $04
-	db $04, $04, $04, $00, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_golem/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_golem/attrmap.bin"
 MonsterPortraitBg_Suezo:  ; 7x7 BG behind the Suezo portrait
 	db 7, 7
-	dw MonsterPortraitBg_Suezo_Attr
-	dw MonsterPortraitBg_Suezo_Idx
-MonsterPortraitBg_Suezo_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Suezo_Attr:
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_suezo/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_suezo/attrmap.bin"
 MonsterPortraitBg_Phoenix:  ; 7x7 BG behind the Phoenix portrait
 	db 7, 7
-	dw MonsterPortraitBg_Phoenix_Attr
-	dw MonsterPortraitBg_Phoenix_Idx
-MonsterPortraitBg_Phoenix_Idx:
-	db $80, $88, $90, $98, $a0, $a8, $b0, $81, $89, $91, $99, $a1, $a9, $b1, $82, $8a
-	db $92, $9a, $a2, $aa, $b2, $83, $8b, $93, $9b, $a3, $ab, $b3, $84, $8c, $94, $9c
-	db $a4, $ac, $b4, $85, $8d, $95, $9d, $a5, $ad, $b5, $86, $8e, $96, $9e, $a6, $ae
-	db $b6
-MonsterPortraitBg_Phoenix_Attr:
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04, $04
-	db $04
-	db $0f, $00, $18, $c8, $01, $00, $20, $ce, $01, $08, $00, $b8, $01, $08, $08, $bc
-	db $01, $08, $10, $c2, $01, $10, $18, $ca, $01, $18, $00, $ba, $01, $18, $08, $be
-	db $01, $18, $10, $c4, $01, $20, $18, $cc, $01, $28, $08, $c0, $01, $28, $10, $c6
-	db $01, $28, $20, $d0, $01, $28, $28, $d2, $01, $28, $30, $d4, $01, $05, $00, $18
-	db $b8, $01, $08, $28, $be, $01, $08, $30, $c0, $01, $10, $18, $ba, $01, $10, $20
-	db $bc, $01, $05, $18, $10, $c2, $02, $18, $18, $c4, $02, $18, $20, $c6, $02, $18
-	db $28, $c8, $02, $18, $30, $ca, $02, $0c, $18, $08, $b8, $01, $18, $10, $c0, $01
-	db $18, $18, $c8, $01, $18, $20, $d0, $01, $18, $28, $d8, $01, $18, $30, $e0, $01
-	db $28, $08, $ba, $01, $28, $10, $c2, $01, $28, $18, $ca, $01, $28, $20, $d2, $01
-	db $28, $28, $da, $01, $28, $30, $e2, $01, $0c, $00, $28, $c8, $01, $00, $30, $d0
-	db $01, $10, $28, $ca, $01, $10, $30, $d2, $01, $18, $10, $ba, $01, $20, $20, $c2
-	db $01, $20, $28, $cc, $01, $20, $30, $d4, $01, $28, $00, $b8, $01, $28, $08, $c0
-	db $01, $28, $10, $bc, $01, $28, $18, $be, $01, $09, $00, $18, $e2, $02, $00, $20
-	db $e4, $02, $00, $28, $e6, $02, $00, $30, $e8, $02, $08, $10, $da, $02, $18, $10
-	db $dc, $02, $28, $00, $d8, $02, $28, $08, $e0, $02, $28, $10, $de, $02, $0a, $00
-	db $08, $bc, $01, $00, $10, $c2, $01, $00, $18, $c4, $01, $00, $20, $c6, $01, $08
-	db $28, $c8, $01, $10, $00, $b8, $01, $10, $30, $ca, $01, $18, $08, $be, $01, $28
-	db $00, $ba, $01, $28, $08, $c0, $01, $0a, $10, $10, $b8, $01, $10, $18, $c0, $01
-	db $10, $20, $c8, $01, $10, $28, $d0, $01, $10, $30, $d8, $01, $20, $10, $ba, $01
-	db $20, $18, $c2, $01, $20, $20, $ca, $01, $20, $28, $d2, $01, $20, $30, $da, $01
+	dw .attr
+	dw .idx
+.idx:
+	INCBIN "assets/monster_phoenix/tilemap.bin"
+.attr:
+	INCBIN "assets/monster_phoenix/attrmap.bin"
+; Portrait metasprite lists (DrawMetasprite: count, {dy,dx,tile,attr};
+; 8x16 OBJs from the $3c monster sheet at VRAM $8800, OBJ pals 1/2).
+MonsterPortraitMeta_Tiger:
+	db 15, 0, 24, $c8, $01, 0, 32, $ce, $01, 8, 0, $b8, $01, 8, 8, $bc, $01, 8, 16, $c2, $01, 16, 24, $ca, $01, 24, 0, $ba, $01, 24, 8, $be, $01, 24, 16, $c4, $01, 32, 24, $cc, $01, 40, 8, $c0, $01, 40, 16, $c6, $01, 40, 32, $d0, $01, 40, 40, $d2, $01, 40, 48, $d4, $01
+MonsterPortraitMeta_MocchiLayer2:
+	db 5, 0, 24, $b8, $01, 8, 40, $be, $01, 8, 48, $c0, $01, 16, 24, $ba, $01, 16, 32, $bc, $01
+MonsterPortraitMeta_Mocchi:
+	db 5, 24, 16, $c2, $02, 24, 24, $c4, $02, 24, 32, $c6, $02, 24, 40, $c8, $02, 24, 48, $ca, $02
+MonsterPortraitMeta_Hare:
+	db 12, 24, 8, $b8, $01, 24, 16, $c0, $01, 24, 24, $c8, $01, 24, 32, $d0, $01, 24, 40, $d8, $01, 24, 48, $e0, $01, 40, 8, $ba, $01, 40, 16, $c2, $01, 40, 24, $ca, $01, 40, 32, $d2, $01, 40, 40, $da, $01, 40, 48, $e2, $01
+MonsterPortraitMeta_GaliLayer2:
+	db 12, 0, 40, $c8, $01, 0, 48, $d0, $01, 16, 40, $ca, $01, 16, 48, $d2, $01, 24, 16, $ba, $01, 32, 32, $c2, $01, 32, 40, $cc, $01, 32, 48, $d4, $01, 40, 0, $b8, $01, 40, 8, $c0, $01, 40, 16, $bc, $01, 40, 24, $be, $01
+MonsterPortraitMeta_Gali:
+	db 9, 0, 24, $e2, $02, 0, 32, $e4, $02, 0, 40, $e6, $02, 0, 48, $e8, $02, 8, 16, $da, $02, 24, 16, $dc, $02, 40, 0, $d8, $02, 40, 8, $e0, $02, 40, 16, $de, $02
+MonsterPortraitMeta_Golem:
+	db 10, 0, 8, $bc, $01, 0, 16, $c2, $01, 0, 24, $c4, $01, 0, 32, $c6, $01, 8, 40, $c8, $01, 16, 0, $b8, $01, 16, 48, $ca, $01, 24, 8, $be, $01, 40, 0, $ba, $01, 40, 8, $c0, $01
+MonsterPortraitMeta_Suezo:
+	db 10, 16, 16, $b8, $01, 16, 24, $c0, $01, 16, 32, $c8, $01, 16, 40, $d0, $01, 16, 48, $d8, $01, 32, 16, $ba, $01, 32, 24, $c2, $01, 32, 32, $ca, $01, 32, 40, $d2, $01, 32, 48, $da, $01
 
 SECTION "analyzed_0c8000", ROMX[$4000], BANK[$32]
 

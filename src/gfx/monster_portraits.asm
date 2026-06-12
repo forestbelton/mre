@@ -7,23 +7,24 @@
 ; (OBJ tile $80+ / BG $8800 addressing). The portrait is then drawn as a
 ; metasprite over a BG body -- see docs/monster_detail_screen.md.
 ;
-; Carved from analyzed.asm. The original static-pass sections were split
-; mid-sheet with $00-padded gaps (blank tiles); re-cut here on the real
-; $800 monster boundaries as editable 2bpp sheets.
+; Editable source: assets/monster_portrait/monster_<name>/<...>.png --
+; indexed sheets (each tile shown in its detail-screen palette); the 7x7
+; BG maps in monster_detail.asm are DERIVED from them (layout monster7x7,
+; docs/asset_source_model.md family G).
 
 SECTION "Monster portrait tiles", ROMX[$4000], BANK[$3c]
 
 MonsterPortraitTiles_Tiger:
-	INCBIN "assets/monster_portrait/tiger.2bpp"
+	INCBIN "assets/monster_tiger/tiles.bin"
 MonsterPortraitTiles_Mocchi:
-	INCBIN "assets/monster_portrait/mocchi.2bpp"
+	INCBIN "assets/monster_mocchi/tiles.bin"
 MonsterPortraitTiles_Hare:
-	INCBIN "assets/monster_portrait/hare.2bpp"
+	INCBIN "assets/monster_hare/tiles.bin"
 MonsterPortraitTiles_Gali:
-	INCBIN "assets/monster_portrait/gali.2bpp"
+	INCBIN "assets/monster_gali/tiles.bin"
 MonsterPortraitTiles_Golem:
-	INCBIN "assets/monster_portrait/golem.2bpp"
+	INCBIN "assets/monster_golem/tiles.bin"
 MonsterPortraitTiles_Suezo:
-	INCBIN "assets/monster_portrait/suezo.2bpp"
+	INCBIN "assets/monster_suezo/tiles.bin"
 MonsterPortraitTiles_Phoenix:
-	INCBIN "assets/monster_portrait/phoenix.2bpp"
+	INCBIN "assets/monster_phoenix/tiles.bin"

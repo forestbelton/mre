@@ -191,6 +191,17 @@ the component kinds above. `buildassets.py` stays the single build entry.
      $0800 of OBJ tiles); trace the BG tileset before a maplib conversion.
    - **screen_2a deferred**: multi-tileset grab-bag + in-room sprites; no
      descriptors of its own found yet — needs inventory first.
+   - **monster portraits DONE (2026-06-12)** — another family-G find: all
+     seven 7x7 detail-screen BG maps are the converter's positional constant
+     (`monster7x7` in `PORTRAIT_LAYOUTS`: byte = $80+8·col+row, attr bank
+     bit 0). The raw `assets/monster_portrait/*.2bpp` became colorized
+     indexed sheets (`monster_<name>/`, palettes from the per-monster block
+     `$0f:$7191+$80·id`; BG cells in their attr palettes, OBJ tiles in OBJ
+     pal 1-2, unreferenced slots grayscale); maps derived; the meta1/meta2
+     OBJ lists are labelled `MonsterPortraitMeta_*` records and the
+     `MonsterPortraitMetaRecords` table is fully symbolic.
+     `derive_portrait_maps` is now layout-parameterized (dims, `attr_or`,
+     small-sheet `$8800` slot addressing).
 5. **Scene frames + metasprites** — descriptors → map source; metasprites →
    asm records.
    **DONE 2026-06-12**: all 8 scenes' `metasprites.bin` are labelled
