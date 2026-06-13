@@ -47,7 +47,7 @@ by the loader + the sheet pixels (scratch/montage_unmapped.py):
 | `Data_17_6918` | `$17` `Func_17_4135` (page = `[$c55c]`) | a **text font page** (clean `ABC…abc…0-9` alphabet) | high |
 | `Data_15_624e` | `$15` `Func_15_41fe` → `$8800` (256t) | a full illustration / cutscene image | med |
 | `Data_0f_63ce`, `Data_0f_684e` | `$0f` `LoadDiscStoneDisplay` → `$9380` | **disc-stone progress display** (Pashute's shrine; indexed by `wDiscStoneFragments`, drawn via `DiscStoneDisplayMeta`) | high |
-| `Data_38_501a/5c1a/641a` | `$38` `Func_38_4000` → `$9400` (page `[$c55c]-5`) | room-background **mural/decoration** tiles (poke out behind floor walls); paged alongside the font | med |
+| `RoomMuralTiles` (`$38:$401a`) | `$38` `LoadRoomMural` → `$9400` (page `wSpecialScene-5`) | room-background **mural/decoration** tiles (poke out behind floor walls); now the grayscale asset `assets/room/mural.png` (`sprite` mode → `tiles.bin`) | high |
 | `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_4000` (3 tables `$406f`/`$4079`/`$4083` indexed by `wActiveFloor`) | **per-floor decoration tiles** — each tower floor's custom graphics (loader left unnamed) | med |
 | `Data_1b_645d` | `$1b` | portrait-related (Verde/Pashute bank) | low |
 | `Data_27_5ade` | `$27` (in `src/gfx/logo.asm`) | graphics right after the TECMO logo (intro) | med |
@@ -104,7 +104,8 @@ analyzer-fragmented `Data_11_*` blob.
 ## TODO
 
 - The bank `$3d`/`$0f` sprite sets: identify which characters/effects they are.
-- Confirm bank `$38` is the floor murals (its tilemap arrangement wasn't recovered).
+- Recover the floor murals' tilemap arrangement (bank `$38`; the tiles are now the
+  `mural` asset but the per-floor CopyBgMap arrangement that places them wasn't carved).
 - `Data_34_48a8`: locate its loader. `Data_16_407f`: name `Func_16_4016` once its
   exact role (intro story vs notice vs credits) is pinned down.
 - Merge the analyzer mis-splits (`Data_32_5613/5dd3` into `Data_32_4613`,

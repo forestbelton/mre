@@ -406,3 +406,10 @@ floor_monster_hare:       {mode: sprite, png: room/monster/hare.png,       tiles
 floor_monster_gali:       {mode: sprite, png: room/monster/gali.png,       tiles: 48, palettes: 1}
 floor_monster_golem:      {mode: sprite, png: room/monster/golem.png,      tiles: 48, palettes: 1}
 floor_monster_suezo:      {mode: sprite, png: room/monster/suezo.png,      tiles: 48, palettes: 1}
+
+# Room-background murals (bank $38, src/gfx/room_murals.asm): the decoration tiles
+# that show behind floor walls, paged $400 at a time into VRAM $9400 by LoadRoomMural.
+# One grayscale sheet (the murals are recoloured per-floor from FloorBgPalettePtrs,
+# so no single palette). The ROM blob ends mid-tile (11263 bytes); the sheet rounds
+# up to 704 tiles and the asm INCBINs only the leading 11263 (",0,11263").
+mural:                    {mode: sprite, png: room/mural.png, tiles: 704}

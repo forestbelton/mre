@@ -8,7 +8,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 
 ```
 ROM0: 15721 bytes used / 663 free
-ROMX: 751019 bytes used / 281173 free in 63 banks
+ROMX: 751020 bytes used / 281172 free in 63 banks
 WRAM0: 1813 bytes used / 2283 free
 WRAMX: 60 bytes used / 4036 free in 1 bank
 HRAM: 75 bytes used / 52 free
@@ -71,7 +71,7 @@ HRAM: 75 bytes used / 52 free
 | $33 | ROMX | 13349 | 3035 | 2 | 2 | tradehouse.asm |
 | $34 | ROMX | 11324 | 5060 | 5 | 5 | link.asm |
 | $35 | ROMX | 9526 | 6858 | 2 | 1 | mistral.asm |
-| $38 | ROMX | 11289 | 5095 | 1 | 1 | room_murals.asm |
+| $38 | ROMX | 11290 | 5094 | 1 | 1 | room_murals.asm |
 | $3b | ROMX | 5939 | 10445 | 1 | 1 | monster_detail.asm |
 | $3c | ROMX | 14336 | 2048 | 1 | 0 | monster.asm |
 | $3d | ROMX | 14844 | 1540 | 3 | 3 | dungeon_floor.asm |
@@ -1046,7 +1046,7 @@ HRAM: 75 bytes used / 52 free
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$6c18 | 11289 | room_murals.asm | analyzed_0e0000 |
+| $4000-$6c19 | 11290 | room_murals.asm | analyzed_0e0000 |
 
 ### $3b — ROMX (1 sections, 1 analyzed)
 
