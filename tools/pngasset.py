@@ -13,9 +13,34 @@ from __future__ import annotations
 
 import argparse
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 TILE_BYTES = 0x10
+
+
+# --- Tiled .tmx XML access (narrowing ElementTree's Optionals) -------------
+def _child(el: ET.Element, tag: str) -> ET.Element:
+    """`el.find(tag)`, aborting if the child element is absent."""
+    child = el.find(tag)
+    if child is None:
+        raise SystemExit(f"malformed .tmx: <{el.tag}> has no <{tag}>")
+    return child
+
+
+def _attr(el: ET.Element, name: str, default: str | None = None) -> str:
+    """`el.get(name)` as a str, aborting if absent and no default is given."""
+    v = el.get(name, default)
+    if v is None:
+        raise SystemExit(f"malformed .tmx: <{el.tag}> lacks attribute {name!r}")
+    return v
+
+
+def _text(el: ET.Element) -> str:
+    """`el.text`, aborting if the element carries no text."""
+    if el.text is None:
+        raise SystemExit(f"malformed .tmx: <{el.tag}> has no text")
+    return el.text
 
 
 # --- 2bpp tile codec -------------------------------------------------------
@@ -144,7 +169,9 @@ def sheet_png_to_tiles(path: Path, count: int, sheet_w: int = 16) -> list[bytes]
     return tiles
 
 
-def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
+def tmx_to_maps(
+    tmx_path: str | Path, tiles_per_bank: int = 384, banks: int = 2, base_tile: int = 0
+):
     """Compile a Tiled .tmx into (tilemap, attrmap) bytes — the hand-authored
     (family-A) map source, see docs/asset_source_model.md.
 
@@ -157,15 +184,13 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
     (per-cell CGB palette), optional "priority" (any swatch = attr bit 7).
     base_tile = the VRAM tile number of sheet index 0 (0 for $8000-loaded
     sheets, 128 for $8800); map bytes are $8800-signed."""
-    import xml.etree.ElementTree as ET
-
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheet_first = pal_first = vram1_first = None
     nsheet = banks * tiles_per_bank
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
-        first = int(ts.get("firstgid"))
+        first = int(ts.get("firstgid", 0))
         if n == nsheet and sheet_first is None:
             sheet_first = first
         elif n == 8:
@@ -179,13 +204,13 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
         )
     layers = {}
     for ly in root.findall("layer"):
-        data = ly.find("data")
-        if data.get("encoding") != "csv":
+        data = _child(ly, "data")
+        if data.get("encoding", "") != "csv":
             raise SystemExit(
                 f"{tmx_path}: layer {ly.get('name')!r} must be CSV-encoded"
             )
         layers[ly.get("name")] = [
-            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+            int(t) for t in _text(data).replace("\n", ",").split(",") if t.strip()
         ]
     if "map" not in layers or "palette" not in layers:
         raise SystemExit(f"{tmx_path}: need layers 'map' and 'palette'")
@@ -217,14 +242,12 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
     return bytes(tmap), bytes(amap)
 
 
-def tmx_frames_to_maps(tmx_path):
+def tmx_frames_to_maps(tmx_path: str | Path):
     """Compile a scene's frames.tmx -- one Tiled layer pair (frameNN +
     frameNN_pal) per CopyBgMap animation frame -- into an ordered list of
     (name, rows, cols, idx_bytes, attr_bytes). Each frame occupies the
     top-left rows x cols rectangle of its layer (the rest empty); the sheet
     tileset GIDs encode bank*384 + VRAM tile number (128-383, $8800-signed)."""
-    import xml.etree.ElementTree as ET
-
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheet_first = pal_first = None
@@ -232,24 +255,25 @@ def tmx_frames_to_maps(tmx_path):
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
         if n == 8:
-            pal_first = int(ts.get("firstgid"))
+            pal_first = int(_attr(ts, "firstgid"))
             continue
         props = {
-            p.get("name"): int(p.get("value"))
+            _attr(p, "name"): int(_attr(p, "value"))
             for p in ts.findall("properties/property")
         }
         if props:
-            tsprops.append((int(ts.get("firstgid")), n, props["bank"], props["base"]))
+            tsprops.append((int(_attr(ts, "firstgid")), n, props["bank"], props["base"]))
         elif sheet_first is None:
-            sheet_first = int(ts.get("firstgid"))
+            sheet_first = int(_attr(ts, "firstgid"))
     layers = {}
     order = []
     for ly in root.findall("layer"):
-        data = ly.find("data")
-        vals = [int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()]
-        layers[ly.get("name")] = (int(ly.get("width")), vals)
-        if not ly.get("name").endswith("_pal"):
-            order.append(ly.get("name"))
+        data = _child(ly, "data")
+        vals = [int(t) for t in _text(data).replace("\n", ",").split(",") if t.strip()]
+        name = _attr(ly, "name")
+        layers[name] = (int(_attr(ly, "width")), vals)
+        if not name.endswith("_pal"):
+            order.append(name)
     out = []
     for name in order:
         W, gids = layers[name]
@@ -286,7 +310,7 @@ def tmx_frames_to_maps(tmx_path):
     return out
 
 
-def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
+def tmx_layer_to_map(tmx_path: str | Path, layer_name, base_tile=128, bank1_tiles=0):
     """Compile ONE named layer (+ its <layer>_pal twin) of a Tiled map into
     (tilemap, attrmap) bytes.
 
@@ -298,24 +322,22 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
     sheet tileset is a SHARED bank-0 sheet (nada_scene2 borrows nada_intro's
     tiles0): byte = idx - (tilecount - 384). The 8-swatch "palettes" tileset
     carries per-cell CGB palettes; Tiled flip flags map to attr bits 5/6."""
-    import xml.etree.ElementTree as ET
-
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheets = []
     pal_first = None
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
-        first = int(ts.get("firstgid"))
+        first = int(_attr(ts, "firstgid"))
         if n == 8:
             pal_first = first
         else:
             sheets.append((first, n))
     layers = {}
     for ly in root.findall("layer"):
-        data = ly.find("data")
+        data = _child(ly, "data")
         layers[ly.get("name")] = [
-            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+            int(t) for t in _text(data).replace("\n", ",").split(",") if t.strip()
         ]
     if layer_name not in layers or f"{layer_name}_pal" not in layers:
         raise SystemExit(f"{tmx_path}: need layers {layer_name!r} + '{layer_name}_pal'")
@@ -366,7 +388,7 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
     return bytes(tmap), bytes(amap)
 
 
-def tmx_layer_to_objlist(tmx_path, layer_name):
+def tmx_layer_to_objlist(tmx_path: str | Path, layer_name):
     """Compile a sparse OBJ overlay layer (+ its _pal twin) into a
     DrawMetasprite record list: [count] + count x [dy, dx, tile, attr].
 
@@ -374,15 +396,13 @@ def tmx_layer_to_objlist(tmx_path, layer_name):
     OBJ occupies two vertically-adjacent cells (top tile even, bottom = +1);
     records are emitted in row-major order of their top cells, which is the
     order the original lists use. Flips/banks unsupported (none exist here)."""
-    import xml.etree.ElementTree as ET
-
     GIDMASK = 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheets = []
     pal_first = None
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
-        first = int(ts.get("firstgid"))
+        first = int(_attr(ts, "firstgid"))
         if n == 8:
             pal_first = first
         else:
@@ -390,11 +410,11 @@ def tmx_layer_to_objlist(tmx_path, layer_name):
     layers = {}
     W = H = 0
     for ly in root.findall("layer"):
-        data = ly.find("data")
+        data = _child(ly, "data")
         layers[ly.get("name")] = [
-            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+            int(t) for t in _text(data).replace("\n", ",").split(",") if t.strip()
         ]
-        W, H = int(ly.get("width")), int(ly.get("height"))
+        W, H = int(_attr(ly, "width")), int(_attr(ly, "height"))
     gids = layers[layer_name]
     pals = layers[f"{layer_name}_pal"]
     used = set()
@@ -586,7 +606,11 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
     # two-bank portraits: a patch cell with attr bit 3 = 0 reads the bank-0 sheet
     # (tiles2, loaded at VRAM $9000), addressed byte b (<128) -> tiles2[b].
     NT2 = len(tiles2) // 16 if tiles2 else 0
-    TPX2 = [tile_to_indices(tiles2[i * 16 : i * 16 + 16]) for i in range(NT2)]
+    TPX2 = (
+        [tile_to_indices(tiles2[i * 16 : i * 16 + 16]) for i in range(NT2)]
+        if tiles2
+        else []
+    )
     bgidx0: dict = {}
     for ti in range(NT2):
         bgidx0.setdefault(tuple(TPX2[ti]), []).append(ti)
@@ -651,9 +675,9 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         bcand = [cand(i) for i in range(len(grid))]
         pin = [bs[0] if len(bs) == 1 else None for bs in bcand]
         bcnt = Counter(
-            (pin[i] - 8 * c - r) % 256
+            (p - 8 * c - r) % 256
             for i, (r, c) in enumerate(grid)
-            if pin[i] is not None and cbank[i]
+            if (p := pin[i]) is not None and cbank[i]
         )
         base = bcnt.most_common(1)[0][0] if bcnt else None
         order0 = [

@@ -11,11 +11,41 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
+from typing import TypedDict
 
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
+
+
+class _SpecBase(TypedDict):
+    png: str
+    mode: str
+
+
+class Spec(_SpecBase, total=False):
+    # Mode-specific options (see assets/assets.yaml). All optional; each build
+    # branch reads only the ones its mode uses.
+    tiles: int
+    map: str
+    banks: int
+    base: int
+    palettes: int
+    maps: list[str]
+    tiles1: int
+    tiles0: int
+    palettes_bg: int
+    palettes_obj: int
+    map_layer: str
+    map_bank1: int
+    obj_layers: list[str]
+    sprites: str
+    palettes2: str
+    frames: str
+
+
+SpecMap = dict[str, Spec]
 
 
 def out_dir(png_rel: str) -> Path:
@@ -36,7 +66,7 @@ def run(*args: str) -> None:
     subprocess.run([PY, *args], check=True, cwd=ROOT)
 
 
-def build_png_asset(name: str, spec: dict) -> None:
+def build_png_asset(name: str, spec: Spec) -> None:
     png = ROOT / "assets" / spec["png"]
     out = out_dir(spec["png"])
     mode = spec["mode"]
@@ -48,15 +78,10 @@ def build_png_asset(name: str, spec: dict) -> None:
         if "map" in spec:  # Tiled .tmx arrangement source
             cmd += ["--map", str(spec["map"])]
     elif mode == "maplib":
-        cmd = [
-            pngasset,
-            "maplib",
-            "--png",
-            str(png),
-            "--out-dir",
-            str(out),
-            "--tiles",
-            str(spec["tiles"]),
+        cmd = [pngasset, "maplib", "--png", str(png), "--out-dir", str(out)]
+        if "tiles" in spec:
+            cmd += ["--tiles", str(spec["tiles"])]
+        cmd += [
             "--banks",
             str(spec.get("banks", 1)),
             "--base",
@@ -67,18 +92,10 @@ def build_png_asset(name: str, spec: dict) -> None:
             ",".join(spec.get("maps", [])),
         ]
     elif mode == "sprite":
-        cmd = [
-            pngasset,
-            "sprite",
-            "--png",
-            str(png),
-            "--out-dir",
-            str(out),
-            "--tiles",
-            str(spec["tiles"]),
-            "--palettes",
-            str(spec.get("palettes", 0)),
-        ]
+        cmd = [pngasset, "sprite", "--png", str(png), "--out-dir", str(out)]
+        if "tiles" in spec:
+            cmd += ["--tiles", str(spec["tiles"])]
+        cmd += ["--palettes", str(spec.get("palettes", 0))]
     elif mode == "scene":
         cmd = [pngasset, "scene", "--png", str(png), "--out-dir", str(out)]
         if "tiles" in spec:
@@ -98,7 +115,9 @@ def build_png_asset(name: str, spec: dict) -> None:
         if "palettes_obj" in spec:
             cmd += ["--palettes-obj", str(spec["palettes_obj"])]
         if "map" in spec:  # Tiled arrangement source
-            cmd += ["--map", str(spec["map"]), "--map-layer", str(spec["map_layer"])]
+            cmd += ["--map", str(spec["map"])]
+            if "map_layer" in spec:
+                cmd += ["--map-layer", str(spec["map_layer"])]
             if "obj_layers" in spec:  # static OBJ overlays in the map
                 cmd += ["--obj-layers", ",".join(spec["obj_layers"])]
             if "map_bank1" in spec:  # NPC portraits: bank-1 tile count
@@ -114,7 +133,7 @@ def build_png_asset(name: str, spec: dict) -> None:
 
 
 def main() -> int:
-    spec = yaml.safe_load((ROOT / "assets" / "assets.yaml").read_text()) or {}
+    spec: SpecMap = yaml.safe_load((ROOT / "assets" / "assets.yaml").read_text()) or {}
     for name, a in spec.items():
         build_png_asset(name, a)
     return 0
