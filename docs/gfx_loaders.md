@@ -47,7 +47,6 @@ by the loader + the sheet pixels (scratch/montage_unmapped.py):
 | `Data_17_6918` | `$17` `Func_17_4135` (page = `[$c55c]`) | a **text font page** (clean `ABC…abc…0-9` alphabet) | high |
 | `Data_15_624e` | `$15` `Func_15_41fe` → `$8800` (256t) | a full illustration / cutscene image | med |
 | `Data_0f_63ce`, `Data_0f_684e` | `$0f` `LoadDiscStoneDisplay` → `$9380` | **disc-stone progress display** (Pashute's shrine; indexed by `wDiscStoneFragments`, drawn via `DiscStoneDisplayMeta`) | high |
-| `Data_11_4d5c/5c5c/6b5c/745c` | `$11` | continuation of `FloorMonsterSprites` (see roster) | high |
 | `Data_38_501a/5c1a/641a` | `$38` `Func_38_4000` → `$9400` (page `[$c55c]-5`) | room-background **mural/decoration** tiles (poke out behind floor walls); paged alongside the font | med |
 | `Data_3d_5bcd`, `Data_3d_67ed` | `$3d` `Func_3d_4000` (3 tables `$406f`/`$4079`/`$4083` indexed by `wActiveFloor`) | **per-floor decoration tiles** — each tower floor's custom graphics (loader left unnamed) | med |
 | `Data_1b_645d` | `$1b` | portrait-related (Verde/Pashute bank) | low |
@@ -95,7 +94,12 @@ which matches `include/monster.inc` exactly, **#13 = the enum's `skip` (unused)*
 | 3 | Dino | 8 | Puncho | 13 | *(unused)* | 18 | Golem |
 | 4 | Plant | 9 | Psylora | 14 | Tiger | 19 | Suezo |
 
-(The blob is fragmented across the `Data_11_*` sheets by the analyzer.)
+Each species is now an editable indexed PNG, `assets/room/monster/<name>.png` (a
+48-tile / `$300`-byte sheet, 16 tiles/row, with its 4-colour OBJ palette baked into
+the colour table). `tools/pngasset.py` `sprite` mode (driven by `assets/assets.yaml`,
+`floor_monster_*`) splits each into `tiles.bin` + `palette.bin`, which
+`floor_monster_sprites.asm` INCBINs back in species order — replacing the old
+analyzer-fragmented `Data_11_*` blob.
 
 ## TODO
 

@@ -8,7 +8,7 @@ Per-bank index of sections + their source file. `analyzed_HEX` sections are addr
 
 ```
 ROM0: 15721 bytes used / 663 free
-ROMX: 750410 bytes used / 281782 free in 63 banks
+ROMX: 751019 bytes used / 281173 free in 63 banks
 WRAM0: 1813 bytes used / 2283 free
 WRAMX: 60 bytes used / 4036 free in 1 bank
 HRAM: 75 bytes used / 52 free
@@ -35,7 +35,7 @@ HRAM: 75 bytes used / 52 free
 | $0e | ROMX | 13329 | 3055 | 1 | 0 | capture.asm |
 | $0f | ROMX | 14559 | 1825 | 4 | 4 | monster_detail.asm |
 | $10 | ROMX | 14001 | 2383 | 1 | 1 | bg_loader.asm |
-| $11 | ROMX | 15259 | 1125 | 2 | 2 | floor_monster_sprites.asm |
+| $11 | ROMX | 15868 | 516 | 1 | 1 | floor_monster_sprites.asm |
 | $12 | ROMX | 10035 | 6349 | 18 | 5 | editor.asm, room_unused01.asm, hare.asm, gali.asm, golem.asm, suezo.asm, tiger.asm, mocchi.asm, selketo.asm, ferious.asm, dragon.asm, zan.asm, punisher.asm, room_unused02.asm |
 | $13 | ROMX | 9100 | 7284 | 2 | 0 | cox.asm |
 | $14 | ROMX | 9895 | 6489 | 2 | 2 | monster_regen.asm |
@@ -612,12 +612,11 @@ HRAM: 75 bytes used / 52 free
 |---|--:|---|---|
 | $4000-$76b0 | 14001 | bg_loader.asm | analyzed_040000 |
 
-### $11 — ROMX (2 sections, 2 analyzed)
+### $11 — ROMX (1 sections, 1 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$68fa | 10491 | floor_monster_sprites.asm | analyzed_044000 |
-| $6b5c-$7dfb | 4768 | floor_monster_sprites.asm | analyzed_046b5c |
+| $4000-$7dfb | 15868 | floor_monster_sprites.asm | analyzed_044000 |
 
 ### $12 — ROMX (18 sections, 5 analyzed)
 

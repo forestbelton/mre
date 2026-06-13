@@ -35,6 +35,10 @@ Regenerates a screen's components from a source PNG.
   `tilemap.bin`/`attrmap.bin` passed through. The character-portrait sheet holds
   the bank-1 tiles first, then any bank-0 tiles; the 6 BG + 6 OBJ palettes lead
   the PNG table and each tile shows in its colour (`tile value = pixel % 4`).
+- `sprite --png <sheet.png> --tiles N --palettes K --out-dir D` → `tiles.bin`
+  (the `--tiles` tiles, 16/row) + `palette.bin` (`--palettes` 4-colour OBJ palettes
+  packed RGB555 from the PNG table). A flat OBJ sprite-set with **no tilemap** — the
+  tiles upload straight to OBJ VRAM (the floor-monster sprites, `assets/room/monster/`).
 - `decode --tiles --tilemap --palette(.pal) --cols --rows --out p.png` →
   composite PNG (bootstraps the source from existing component bins).
 

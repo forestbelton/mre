@@ -472,6 +472,31 @@ def cmd_screen(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_sprite(args: argparse.Namespace) -> int:
+    """Flat OBJ sprite-set from ONE indexed tile-sheet PNG (--tiles tiles laid out
+    16 per row; pixel = palette*4 + 2bpp value). Splits into tiles.bin + (when
+    --palettes > 0) palette.bin holding that many 4-colour OBJ palettes packed
+    RGB555 from the PNG's colour table. No tilemap -- the tiles are uploaded
+    straight to OBJ VRAM by the loader (e.g. the floor-monster sprites). See
+    docs/gfx_assets.md."""
+    png = Path(args.png)
+    tiles = sheet_png_to_tiles(png, args.tiles)
+    comps = [("tiles.bin", b"".join(tiles))]
+    if args.palettes:
+        _w, _h, _px, colors = read_indexed_png(png)
+        pal = bytearray()
+        for i in range(args.palettes * 4):
+            word = rgb888_to_555(*colors[i])
+            pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
+        comps.append(("palette.bin", bytes(pal)))
+    out = Path(args.out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    for name, data in comps:
+        (out / name).write_bytes(data)
+        print(f"  {name}: {len(data)} bytes")
+    return 0
+
+
 def cmd_scene(args: argparse.Namespace) -> int:
     """Summon-animation scene tiles from ONE indexed tile-sheet PNG -- the same stacked
     two-bank sheet as `screen` (top `--tiles` -> VRAM bank 0, bottom -> bank 1; the PNG
@@ -916,6 +941,16 @@ def main() -> int:
     ml.add_argument("--palettes", type=int, default=0, help="CGB palettes in the PNG table")
     ml.add_argument("--maps", default="", help="comma-separated .tmx files next to --png")
     ml.set_defaults(fn=cmd_maplib)
+
+    sp = sub.add_parser(
+        "sprite", help="flat OBJ sprite-set: one tile-sheet PNG -> tiles.bin (+palette.bin)"
+    )
+    sp.add_argument("--png", required=True, help="indexed sheet (16 tiles/row)")
+    sp.add_argument("--out-dir", required=True)
+    sp.add_argument("--tiles", type=int, required=True, help="total sheet tiles")
+    sp.add_argument("--palettes", type=int, default=0,
+                    help="4-colour OBJ palettes in the PNG table (0 = no palette.bin)")
+    sp.set_defaults(fn=cmd_sprite)
 
     scn = sub.add_parser(
         "scene", help="summon-animation tiles: one tile-sheet PNG -> tiles/palette .bin "

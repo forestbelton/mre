@@ -49,6 +49,10 @@ def build_png_asset(name: str, spec: dict) -> None:
                "--base", str(spec.get("base", 0)),
                "--palettes", str(spec.get("palettes", 0)),
                "--maps", ",".join(spec.get("maps", []))]
+    elif mode == "sprite":
+        cmd = [pngasset, "sprite", "--png", str(png), "--out-dir", str(out),
+               "--tiles", str(spec["tiles"]),
+               "--palettes", str(spec.get("palettes", 0))]
     elif mode == "scene":
         cmd = [pngasset, "scene", "--png", str(png), "--out-dir", str(out)]
         if "tiles" in spec:

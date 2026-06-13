@@ -17,6 +17,9 @@
 #   mode: scene      -- summon-animation tiles; one combined two-bank tile-sheet PNG
 #                       (palettes embedded) + a Tiled frames.tmx of CopyBgMap animation
 #                       frames (one layer pair each). Opts: tiles, palettes, frames.
+#   mode: sprite     -- flat OBJ sprite-set; one indexed tile-sheet PNG (16 tiles/row,
+#                       palette baked in, no tilemap) -> tiles.bin + palette.bin.
+#                       Opts: tiles, palettes.
 
 logo:                      # TECMO boot logo: sheet + arrangement (the $1000
   mode: maplib             # blank lead-in lives in src/gfx/logo.asm as ds $1000)
@@ -376,3 +379,30 @@ monster_phoenix:
   tiles1: 128
   map: phoenix.tmx
   map_layer: map
+
+# Floor-monster sprites (bank $11, src/gfx/floor_monster_sprites.asm): the four
+# monsters drawn on a dungeon floor. Each of the 20 MONSTER species owns a flat
+# 48-tile ($300-byte) OBJ sprite set + one 4-colour OBJ palette, uploaded straight
+# to VRAM by the loaders (no tilemap). One indexed PNG per species carries both
+# (pixel = 2bpp value; the 4 colours are the species' palette). `sprite` mode ->
+# tiles.bin + palette.bin, INCBIN'd back in species order. #13 is unused.
+floor_monster_tacopi:     {mode: sprite, png: room/monster/tacopi.png,     tiles: 48, palettes: 1}
+floor_monster_jell:       {mode: sprite, png: room/monster/jell.png,       tiles: 48, palettes: 1}
+floor_monster_naga:       {mode: sprite, png: room/monster/naga.png,       tiles: 48, palettes: 1}
+floor_monster_dino:       {mode: sprite, png: room/monster/dino.png,       tiles: 48, palettes: 1}
+floor_monster_plant:      {mode: sprite, png: room/monster/plant.png,      tiles: 48, palettes: 1}
+floor_monster_henger:     {mode: sprite, png: room/monster/henger.png,     tiles: 48, palettes: 1}
+floor_monster_joker:      {mode: sprite, png: room/monster/joker.png,       tiles: 48, palettes: 1}
+floor_monster_ghost:      {mode: sprite, png: room/monster/ghost.png,      tiles: 48, palettes: 1}
+floor_monster_puncho:     {mode: sprite, png: room/monster/puncho.png,     tiles: 48, palettes: 1}
+floor_monster_psylora:    {mode: sprite, png: room/monster/psylora.png,    tiles: 48, palettes: 1}
+floor_monster_ducken:     {mode: sprite, png: room/monster/ducken.png,     tiles: 48, palettes: 1}
+floor_monster_flame_red:  {mode: sprite, png: room/monster/flame_red.png,  tiles: 48, palettes: 1}
+floor_monster_flame_blue: {mode: sprite, png: room/monster/flame_blue.png, tiles: 48, palettes: 1}
+floor_monster_unused:     {mode: sprite, png: room/monster/unused.png,     tiles: 48, palettes: 1}
+floor_monster_tiger:      {mode: sprite, png: room/monster/tiger.png,      tiles: 48, palettes: 1}
+floor_monster_mocchi:     {mode: sprite, png: room/monster/mocchi.png,     tiles: 48, palettes: 1}
+floor_monster_hare:       {mode: sprite, png: room/monster/hare.png,       tiles: 48, palettes: 1}
+floor_monster_gali:       {mode: sprite, png: room/monster/gali.png,       tiles: 48, palettes: 1}
+floor_monster_golem:      {mode: sprite, png: room/monster/golem.png,      tiles: 48, palettes: 1}
+floor_monster_suezo:      {mode: sprite, png: room/monster/suezo.png,      tiles: 48, palettes: 1}
