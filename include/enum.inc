@@ -78,9 +78,15 @@ endm
 ;
 ; `ElemType` chooses how each value is emitted: `byte`/`word`/`long` (-> db/dw/
 ; dl), or the name of any directive or macro that takes one value and emits that
-; entry's bytes -- e.g. `BCD4` for a table of 4-byte BCD values. When omitted
-; (empty) it defaults to the enum's own discriminant type. The named-initializer
-; syntax deliberately mirrors structs.inc's `dstruct`.
+; entry's bytes -- e.g. `BCD4` for a table of 4-byte BCD values, or `INCBIN` for a
+; table whose values are quoted file paths (one INCBIN'd blob per enum value, in
+; value order). When omitted (empty) it defaults to the enum's own discriminant
+; type. The named-initializer syntax deliberately mirrors structs.inc's `dstruct`.
+;
+; Numeric values are parenthesised before emission (so precedence can't bite);
+; string values (a leading `"`, e.g. INCBIN paths) are passed through verbatim.
+; A value may not contain a comma (it would split into separate macro args), so
+; the multi-arg `INCBIN "f", start, len` form isn't expressible here.
 ;
 ;   enum Move
 ;     case Walk
@@ -130,11 +136,20 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 		if !STRCMP(STRSLICE("{_ET_KEY}", 0, 1), ".")   ; drop optional leading '.'
 			redef _ET_KEY equs STRSLICE("{_ET_KEY}", 1)
 		endc
+		; Parenthesise a numeric value so the emitter sees one atom regardless of
+		; operator precedence, but pass a string value through verbatim: a string
+		; is already a single atom, and a parenthesised one is a syntax error for
+		; INCBIN (`INCBIN ("file")`). A leading `"` marks a string value.
+		if !STRCMP(STRSLICE("{_ET_VAL}", 0, 1), "\"")
+			def _ET_WRAP equs "{_ET_VAL}"
+		else
+			def _ET_WRAP equs "({_ET_VAL})"
+		endc
 		if !STRCMP("{_ET_KEY}", "*")                    ; `*=Fill` for skipped slots
 			if def(_ET_FILL)
 				fail "enum_table \1: duplicate `*` fill"
 			endc
-			def _ET_FILL equs "({_ET_VAL})"
+			def _ET_FILL equs "{_ET_WRAP}"
 		else
 			if !def({_ET_ENUM}_{_ET_KEY})
 				fail "enum_table \1: `\1_{_ET_KEY}` is not a case of `\1`"
@@ -143,10 +158,10 @@ macro enum_table ; EnumName, ElemType, .Case=Value...
 			if def(_ET_slot{d:_ET_D})
 				fail "enum_table \1: duplicate value for `\1_{_ET_KEY}`"
 			endc
-			def _ET_slot{d:_ET_D} equs "({_ET_VAL})"
+			def _ET_slot{d:_ET_D} equs "{_ET_WRAP}"
 			purge _ET_D
 		endc
-		purge _ET_ARG, _ET_EQ, _ET_KEY, _ET_VAL
+		purge _ET_ARG, _ET_EQ, _ET_KEY, _ET_VAL, _ET_WRAP
 	endr
 
 	; emit one element per enum value, in order; skipped slots take the `*` fill
