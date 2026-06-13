@@ -2671,12 +2671,8 @@ Data_00_1220:
 	db $00, $00, $40, $40, $40, $40, $40, $40, $40, $00, $60, $60, $40, $40, $60, $60
 	db $40, $40, $40, $40, $40
 
-SECTION "analyzed_001235", ROM0[$1235]
-
 Data_00_1235:
 	db $40
-
-SECTION "analyzed_001236", ROM0[$1236]
 
 Data_00_1236:
 	db $40, $40, $40, $40, $40, $40
@@ -2687,32 +2683,20 @@ Data_00_123c:
 Data_00_123e:
 	db $08, $4b, $89, $89
 
-SECTION "analyzed_001242", ROM0[$1242]
-
 Data_00_1242:
 	db $c8
-
-SECTION "analyzed_001243", ROM0[$1243]
 
 Data_00_1243:
 	db $c8, $89, $c8
 
-SECTION "analyzed_001246", ROM0[$1246]
-
 Data_00_1246:
 	db $d1
-
-SECTION "analyzed_001247", ROM0[$1247]
 
 Data_00_1247:
 	db $d1, $51, $51, $d1
 
-SECTION "analyzed_00124b", ROM0[$124b]
-
 Data_00_124b:
 	db $d1
-
-SECTION "analyzed_00124c", ROM0[$124c]
 
 Data_00_124c:
 	db $51, $51, $51, $51, $8f, $8f, $8f, $8f, $8f, $cf, $cf, $cf, $8f, $cf, $cf, $87

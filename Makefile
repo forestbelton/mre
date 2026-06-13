@@ -62,11 +62,6 @@ LINKSCRIPT := layout.link
 
 .PHONY: verify rom clean completion
 
-# Rough disassembly-progress metrics (see tools/completion.py). Depends on the
-# asset stamp so the graphics dimension has build/assets to measure.
-completion: $(ASSET_STAMP)
-	@$(PYTHON) tools/completion.py
-
 verify: $(OUT)
 	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
 	rom_sum=8f66b5972bf76ed15985815ccdecc459fab9e84221454139b05d1d6654b69e7a; \
@@ -77,6 +72,11 @@ verify: $(OUT)
 			$(OUT) "$$built_sum" "$$rom_sum"; \
 		exit 1; \
 	fi
+
+# Rough disassembly-progress metrics (see tools/completion.py). Depends on the
+# asset stamp so the graphics dimension has build/assets to measure.
+completion: $(ASSET_STAMP)
+	@$(PYTHON) tools/completion.py
 
 rom: $(OUT)
 

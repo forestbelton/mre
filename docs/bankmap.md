@@ -18,7 +18,7 @@ HRAM: 75 bytes used / 52 free
 
 | bank | region | used | free | sections | analyzed | source file(s) |
 |---|---|--:|--:|--:|--:|---|
-| $00 | ROM0 | 15684 | 700 | 105 | 91 | home.asm, engine.asm, layout.asm, sound.asm |
+| $00 | ROM0 | 15688 | 696 | 101 | 87 | home.asm, engine.asm, layout.asm, sound.asm |
 | $01 | ROMX | 15290 | 1094 | 29 | 25 | gameplay.asm, layout.asm, item.asm |
 | $02 | ROMX | 9024 | 7360 | 1 | 1 | entity_sprites.asm |
 | $03 | ROMX | 16362 | 22 | 11 | 0 | engine.asm, monster.asm, boss.asm, player.asm, fx.asm, environment.asm |
@@ -83,7 +83,7 @@ HRAM: 75 bytes used / 52 free
 
 ## Sections by bank
 
-### $00 — ROM0 (105 sections, 91 analyzed)
+### $00 — ROM0 (101 sections, 87 analyzed)
 
 | range | size | file | section |
 |---|--:|---|---|
@@ -99,11 +99,7 @@ HRAM: 75 bytes used / 52 free
 | $0060-$0062 | 3 | home.asm | RST_60 |
 | $0100-$0a2f | 2352 | home.asm | Header |
 | $0a30-$0b4d | 286 | sound.asm | Sound API |
-| $0b4e-$1234 | 1767 | home.asm | analyzed_000b4e |
-| $1236-$1241 | 12 | home.asm | analyzed_001236 |
-| $1243-$1245 | 3 | home.asm | analyzed_001243 |
-| $1247-$124a | 4 | home.asm | analyzed_001247 |
-| $124c-$1265 | 26 | home.asm | analyzed_00124c |
+| $0b4e-$1265 | 1816 | home.asm | analyzed_000b4e |
 | $1270-$1275 | 6 | home.asm | analyzed_001270 |
 | $1280-$1283 | 4 | home.asm | analyzed_001280 |
 | $1290-$13d8 | 329 | home.asm | analyzed_001290 |
