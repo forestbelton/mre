@@ -10,6 +10,7 @@
 ; raw Func_14_* labels -- a dedicated pass could localize them.
 
 INCLUDE "hardware.inc"
+INCLUDE "monster.inc"
 INCLUDE "util.inc"
 INCLUDE "sound_ids.inc"
 
@@ -24,10 +25,26 @@ MonsterRegenBgPalettes:                     ; one 8-byte BG palette per monster 
 	db $02, $00, $de, $77, $55, $4a, $29, $45   ; 4
 	db $02, $00, $de, $7b, $3e, $27, $54, $19   ; 5
 	db $02, $00, $3f, $2f, $ba, $01, $55, $10   ; 6
-MonsterRegenBaseTile:                       ; base OAM tile per monster (read by SetMonsterOamTiles)
-	db $4d, $3d, $3d, $3d, $3d, $3e, $3d
-MonsterRegenSpritePtrs:                     ; metasprite pointer per monster (-> $68xx data)
-	dw $68a4, $68c5, $68f6, $6927, $6958, $6989, $69ba
+
+MonsterRegenBaseTile: ; base OAM tile per monster (read by SetMonsterOamTiles)
+	enum_table SUMMON, db, \
+		.TIGER = $4d, \
+		.MOCCHI = $3d, \
+		.HARE = $3d, \
+		.GALI = $3d, \
+		.GOLEM = $3d, \
+		.SUEZO = $3e, \
+		.PHOENIX = $3d,
+
+MonsterRegenSpritePtrs: ; metasprite pointer per monster (-> $68xx data)
+	enum_table SUMMON, dw, \
+		.TIGER = $68a4, \
+		.MOCCHI = $68c5, \
+		.HARE = $68f6, \
+		.GALI = $6927, \
+		.GOLEM = $6958, \
+		.SUEZO = $6989, \
+		.PHOENIX = $69ba,
 
 ShowRegeneratedMonster:
 	push af
