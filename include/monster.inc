@@ -19,7 +19,7 @@ enum MONSTER
     case FLAME_RED
     case FLAME_BLUE
 
-    skip ; Unused
+    case UNUSED
 
     ; Friendly monsters available on bonus stages
     case TIGER  ; Floor 56

@@ -12,6 +12,7 @@
 ; Sprite tiles + palettes are the assets in the second half of the bank.
 ; Carved out of analyzed.asm (byte-exact; section names unchanged).
 
+INCLUDE "monster.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "sound_ids.inc"
@@ -210,48 +211,50 @@ FloorMonsterMetasprite:
 ; below) is the editable indexed PNG assets/room/monster/<name>.png -- pngasset.py
 ; (mode: sprite) splits each into tiles.bin + palette.bin. See docs/gfx_loaders.md.
 FloorMonsterSprites:
-	INCBIN "assets/room/monster/tacopi/tiles.bin"	; TACOPI
-	INCBIN "assets/room/monster/jell/tiles.bin"	; JELL
-	INCBIN "assets/room/monster/naga/tiles.bin"	; NAGA
-	INCBIN "assets/room/monster/dino/tiles.bin"	; DINO
-	INCBIN "assets/room/monster/plant/tiles.bin"	; PLANT
-	INCBIN "assets/room/monster/henger/tiles.bin"	; HENGER
-	INCBIN "assets/room/monster/joker/tiles.bin"	; JOKER
-	INCBIN "assets/room/monster/ghost/tiles.bin"	; GHOST
-	INCBIN "assets/room/monster/puncho/tiles.bin"	; PUNCHO
-	INCBIN "assets/room/monster/psylora/tiles.bin"	; PSYLORA
-	INCBIN "assets/room/monster/ducken/tiles.bin"	; DUCKEN
-	INCBIN "assets/room/monster/flame_red/tiles.bin"	; FLAME_RED
-	INCBIN "assets/room/monster/flame_blue/tiles.bin"	; FLAME_BLUE
-	INCBIN "assets/room/monster/unused/tiles.bin"	; (unused)
-	INCBIN "assets/room/monster/tiger/tiles.bin"	; TIGER
-	INCBIN "assets/room/monster/mocchi/tiles.bin"	; MOCCHI
-	INCBIN "assets/room/monster/hare/tiles.bin"	; HARE
-	INCBIN "assets/room/monster/gali/tiles.bin"	; GALI
-	INCBIN "assets/room/monster/golem/tiles.bin"	; GOLEM
-	INCBIN "assets/room/monster/suezo/tiles.bin"	; SUEZO
+	enum_table MONSTER, INCBIN, \
+		.TACOPI = "assets/room/monster/tacopi/tiles.bin", \
+        .JELL = "assets/room/monster/jell/tiles.bin", \
+        .NAGA = "assets/room/monster/naga/tiles.bin", \
+        .DINO = "assets/room/monster/dino/tiles.bin", \
+        .PLANT = "assets/room/monster/plant/tiles.bin", \
+        .HENGER = "assets/room/monster/henger/tiles.bin", \
+        .JOKER = "assets/room/monster/joker/tiles.bin", \
+        .GHOST = "assets/room/monster/ghost/tiles.bin", \
+        .PUNCHO = "assets/room/monster/puncho/tiles.bin", \
+        .PSYLORA = "assets/room/monster/psylora/tiles.bin", \
+        .DUCKEN = "assets/room/monster/ducken/tiles.bin", \
+        .FLAME_RED = "assets/room/monster/flame_red/tiles.bin", \
+        .FLAME_BLUE = "assets/room/monster/flame_blue/tiles.bin", \
+		.UNUSED = "assets/room/monster/unused/tiles.bin", \
+        .TIGER = "assets/room/monster/tiger/tiles.bin", \
+        .MOCCHI = "assets/room/monster/mocchi/tiles.bin", \
+        .HARE = "assets/room/monster/hare/tiles.bin", \
+        .GALI = "assets/room/monster/gali/tiles.bin", \
+        .GOLEM = "assets/room/monster/golem/tiles.bin", \
+        .SUEZO = "assets/room/monster/suezo/tiles.bin"
 
 ; One OBJ palette (4 RGB555 colours, 8 bytes) per floor-monster species (20),
 ; indexed by LoadFloorMonsterSprite / SpeciesPalettePtrs (base + MONSTER*8). These
 ; are the colours baked into each species' PNG above (split out to palette.bin).
 FloorMonsterSpritePalettes:
-	INCBIN "assets/room/monster/tacopi/palette.bin"	; TACOPI
-	INCBIN "assets/room/monster/jell/palette.bin"	; JELL
-	INCBIN "assets/room/monster/naga/palette.bin"	; NAGA
-	INCBIN "assets/room/monster/dino/palette.bin"	; DINO
-	INCBIN "assets/room/monster/plant/palette.bin"	; PLANT
-	INCBIN "assets/room/monster/henger/palette.bin"	; HENGER
-	INCBIN "assets/room/monster/joker/palette.bin"	; JOKER
-	INCBIN "assets/room/monster/ghost/palette.bin"	; GHOST
-	INCBIN "assets/room/monster/puncho/palette.bin"	; PUNCHO
-	INCBIN "assets/room/monster/psylora/palette.bin"	; PSYLORA
-	INCBIN "assets/room/monster/ducken/palette.bin"	; DUCKEN
-	INCBIN "assets/room/monster/flame_red/palette.bin"	; FLAME_RED
-	INCBIN "assets/room/monster/flame_blue/palette.bin"	; FLAME_BLUE
-	INCBIN "assets/room/monster/unused/palette.bin"	; (unused)
-	INCBIN "assets/room/monster/tiger/palette.bin"	; TIGER
-	INCBIN "assets/room/monster/mocchi/palette.bin"	; MOCCHI
-	INCBIN "assets/room/monster/hare/palette.bin"	; HARE
-	INCBIN "assets/room/monster/gali/palette.bin"	; GALI
-	INCBIN "assets/room/monster/golem/palette.bin"	; GOLEM
-	INCBIN "assets/room/monster/suezo/palette.bin"	; SUEZO
+	enum_table MONSTER, INCBIN, \
+	    .TACOPI = "assets/room/monster/tacopi/palette.bin", \
+        .JELL = "assets/room/monster/jell/palette.bin", \
+        .NAGA = "assets/room/monster/naga/palette.bin", \
+        .DINO = "assets/room/monster/dino/palette.bin", \
+        .PLANT = "assets/room/monster/plant/palette.bin", \
+        .HENGER = "assets/room/monster/henger/palette.bin", \
+        .JOKER = "assets/room/monster/joker/palette.bin", \
+        .GHOST = "assets/room/monster/ghost/palette.bin", \
+        .PUNCHO = "assets/room/monster/puncho/palette.bin", \
+        .PSYLORA = "assets/room/monster/psylora/palette.bin", \
+        .DUCKEN = "assets/room/monster/ducken/palette.bin", \
+        .FLAME_RED = "assets/room/monster/flame_red/palette.bin", \
+        .FLAME_BLUE = "assets/room/monster/flame_blue/palette.bin", \
+		.UNUSED = "assets/room/monster/unused/palette.bin", \
+        .TIGER = "assets/room/monster/tiger/palette.bin", \
+        .MOCCHI = "assets/room/monster/mocchi/palette.bin", \
+        .HARE = "assets/room/monster/hare/palette.bin", \
+        .GALI = "assets/room/monster/gali/palette.bin", \
+        .GOLEM = "assets/room/monster/golem/palette.bin", \
+        .SUEZO = "assets/room/monster/suezo/palette.bin"
