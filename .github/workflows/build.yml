@@ -16,30 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install build dependencies
+      - name: Install runtime dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential bison libpng-dev pkg-config
+          sudo apt-get install -y --no-install-recommends libpng16-16
 
-      - name: Cache RGBDS
-        id: cache-rgbds
-        uses: actions/cache@v4
-        with:
-          path: ~/.local/rgbds
-          key: rgbds-${{ env.RGBDS_VERSION }}-${{ runner.os }}
-
-      - name: Build and install RGBDS ${{ env.RGBDS_VERSION }}
-        if: steps.cache-rgbds.outputs.cache-hit != 'true'
+      - name: Install RGBDS ${{ env.RGBDS_VERSION }}
         run: |
-          curl -fsSL "https://github.com/gbdev/rgbds/releases/download/v${RGBDS_VERSION}/rgbds-${RGBDS_VERSION}.tar.gz" -o rgbds.tar.gz
-          mkdir -p rgbds-src
-          tar -xzf rgbds.tar.gz -C rgbds-src --strip-components=1
-          make -C rgbds-src -j"$(nproc)"
-          make -C rgbds-src install PREFIX="$HOME/.local/rgbds"
-
-      - name: Add RGBDS to PATH
-        run: echo "$HOME/.local/rgbds/bin" >> "$GITHUB_PATH"
+          curl -fsSL "https://github.com/gbdev/rgbds/releases/download/v${RGBDS_VERSION}/rgbds-linux-x86_64.tar.xz" -o rgbds.tar.xz
+          mkdir -p "$HOME/.local/rgbds"
+          tar -xJf rgbds.tar.xz -C "$HOME/.local/rgbds"
+          echo "$HOME/.local/rgbds" >> "$GITHUB_PATH"
 
       - name: Set up Python
         uses: actions/setup-python@v5
