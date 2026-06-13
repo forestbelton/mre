@@ -60,7 +60,12 @@ ASSET_STAMP := $(BUILD_DIR)/assets.stamp
 # migrated off their source ROMX[$addr] offsets into here (see the file header).
 LINKSCRIPT := layout.link
 
-.PHONY: verify rom clean
+.PHONY: verify rom clean completion
+
+# Rough disassembly-progress metrics (see tools/completion.py). Depends on the
+# asset stamp so the graphics dimension has build/assets to measure.
+completion: $(ASSET_STAMP)
+	@$(PYTHON) tools/completion.py
 
 verify: $(OUT)
 	@built_sum=$$(sha256sum $(OUT) | awk '{print $$1}'); \
