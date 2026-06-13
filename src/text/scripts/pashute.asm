@@ -11,7 +11,7 @@ INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Pashute script functions", ROMX
 

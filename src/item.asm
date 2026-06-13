@@ -10,7 +10,7 @@ INCLUDE "monster.inc"
 INCLUDE "enum.inc"
 INCLUDE "room.inc"
 INCLUDE "util.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Items", ROMX
 

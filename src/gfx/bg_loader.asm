@@ -11,7 +11,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "analyzed_040000", ROMX[$4000], BANK[$10]
 

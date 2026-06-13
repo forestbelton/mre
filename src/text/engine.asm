@@ -3,7 +3,7 @@ INCLUDE "util.inc"
 
 INCLUDE "enum.inc"
 INCLUDE "monster.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "ScriptEngine", ROM0[$39c0]
 

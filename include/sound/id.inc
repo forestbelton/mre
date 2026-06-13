@@ -3,8 +3,8 @@
 ; table; ids whose role isn't pinned keep a SOUND_{SFX,BGM}_<hexid>
 ; placeholder. $00-$27 are SFX (transient path), $28-$3a are BGM (tracked).
 ; The enum is contiguous, so each discriminant equals the id byte.
-IF !DEF(SOUND_IDS_INC)
-DEF SOUND_IDS_INC EQU 1
+IF !DEF(SOUND_ID_INC)
+DEF SOUND_ID_INC EQU 1
 
 INCLUDE "enum.inc"
 

@@ -12,7 +12,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Editor screen functions", ROMX[$4000], BANK[$15]
 

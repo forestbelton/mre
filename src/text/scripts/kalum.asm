@@ -9,7 +9,7 @@
 ; append-only rule on non-auto-managed files preserves your edits.
 
 INCLUDE "hardware.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 INCLUDE "text.inc"
 INCLUDE "util.inc"
 

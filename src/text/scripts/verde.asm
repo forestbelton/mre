@@ -18,7 +18,7 @@
 INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "text.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Verde script functions", ROMX
 

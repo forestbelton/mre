@@ -10,7 +10,7 @@
 
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "NPC dialogue menus", ROMX[$5855], BANK[$1f]
 

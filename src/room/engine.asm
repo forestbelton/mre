@@ -37,7 +37,7 @@
 ; only appends map.json sections not already covered by a SECTION here.
 
 INCLUDE "util.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Room engine", ROMX[$4000], BANK[$03]
 

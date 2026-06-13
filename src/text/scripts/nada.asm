@@ -18,7 +18,7 @@
 
 INCLUDE "game.inc"
 INCLUDE "hardware.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 INCLUDE "text.inc"
 
 SECTION "analyzed_07cd66", ROMX[$4d66], BANK[$1f]

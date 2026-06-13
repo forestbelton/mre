@@ -34,7 +34,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 ; The Cox flashback driver and its scene helpers. Cox_PlayFlashback
 ; (FAR_CALLed from gameplay.asm) plays the four flashback sub-scripts

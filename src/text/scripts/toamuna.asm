@@ -4,7 +4,7 @@ INCLUDE "game.inc"
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "text.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Toamuna script functions", ROMX
 

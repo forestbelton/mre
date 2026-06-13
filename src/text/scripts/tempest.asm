@@ -14,7 +14,7 @@
 INCLUDE "hardware.inc"
 
 INCLUDE "text.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "Tempest script", ROMX
 

@@ -7,7 +7,7 @@
 INCLUDE "hardware.inc"
 INCLUDE "util.inc"
 INCLUDE "scene.inc"
-INCLUDE "sound_ids.inc"
+INCLUDE "sound/id.inc"
 
 SECTION "RST_00", ROM0[$00]
 
