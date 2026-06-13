@@ -1,7 +1,7 @@
 import argparse
 import json
 import re
-from typing import Literal, NotRequired, TypedDict
+from typing import Literal, NotRequired, Sequence, TypeVar, TypedDict
 
 # Every floor record occupies a fixed 581-byte slot (the FloorPtrTable stride),
 # sized for the largest 14x17 floor. Smaller floors leave the tail as unused
@@ -36,15 +36,17 @@ class RoomTile(AbstractRoomObject):
     value: int
 
 
+class HasSlot(TypedDict):
+    slot: NotRequired[int]
+
+
 RoomObject = RoomItem | RoomExit | RoomTile
 
 # Named non-item piece-grid tiles (bit 7 clear); others are emitted as raw hex.
 TILE_NAMES = {0x43: "TILE_OBSTACLE_BAT"}
 
 
-class RoomMonster(TypedDict):
-    slot: NotRequired[int]  # arr2 slot 0-8 (defaults to list order); preserves the
-    # exact byte layout when empties are interspersed
+class RoomMonster(HasSlot):
     x: int
     y: int
     type: int  # packed behaviour: low 3 bits = speed, hi 3 bits (&$70) = AI param
@@ -52,8 +54,7 @@ class RoomMonster(TypedDict):
     index: int  # index into the room's species table (0-3)
 
 
-class RoomSpawner(TypedDict):
-    slot: NotRequired[int]  # arr3 slot 0-3 (defaults to list order)
+class RoomSpawner(HasSlot):
     x: int
     y: int
     p0: int  # spawn-timing params (packed, undecoded)
@@ -95,7 +96,7 @@ class RoomValidationError(Exception):
     pass
 
 
-def check_slots(entries: list, count: int, kind: str) -> None:
+def check_slots(entries: Sequence[S], count: int, kind: str) -> None:
     if len(entries) > count:
         raise RoomValidationError(f"at most {count} {kind}s per room")
     used = [e.get("slot", k) for k, e in enumerate(entries)]
@@ -250,10 +251,13 @@ def build_object_grid(width: int, height: int, objects: list[RoomObject]) -> str
     return "\n".join(f"    db {build_row(y)}" for y in range(height))
 
 
-def place_by_slot(entries: list, count: int) -> list:
+S = TypeVar("S", bound=HasSlot)
+
+
+def place_by_slot(entries: Sequence[S], count: int) -> list[None | S]:
     # Map entries into `count` fixed slots. An entry's slot is its "slot" field,
     # or its list position when none is given (compact, for hand-written rooms).
-    slots: list = [None] * count
+    slots: list[None | S] = [None] * count
     for k, e in enumerate(entries):
         slots[e.get("slot", k)] = e
     return slots
@@ -266,7 +270,7 @@ def build_monster_table(monsters: list[RoomMonster], species: list[str]) -> str:
             lines.append("    EMPTY_MONSTER_SLOT")
             continue
         name = "UNUSED"
-        if m["index"] in species:
+        if m["index"] < len(species):
             name = species[m["index"]]
         lines.append(
             f"    dstruct Monster, , .X={m['x']}, .Y={m['y']}, "
