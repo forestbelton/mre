@@ -128,7 +128,6 @@ def cmd_decode(args: argparse.Namespace) -> int:
             for c in range(8):
                 px[(ty * 8 + r) * w + (tx * 8 + c)] = ind[r * 8 + c]
     write_indexed_png(Path(args.out), w, h, bytes(px), colors)
-    print(f"wrote {args.out}  ({w}x{h}, {len(colors)} colors)")
     return 0
 
 
@@ -174,15 +173,20 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
         elif ts.get("name") == "vram1":
             vram1_first = first
     if sheet_first is None or pal_first is None:
-        raise SystemExit(f"{tmx_path}: need a {nsheet}-tile sheet tileset "
-                         "and an 8-swatch palette tileset")
+        raise SystemExit(
+            f"{tmx_path}: need a {nsheet}-tile sheet tileset "
+            "and an 8-swatch palette tileset"
+        )
     layers = {}
     for ly in root.findall("layer"):
         data = ly.find("data")
         if data.get("encoding") != "csv":
-            raise SystemExit(f"{tmx_path}: layer {ly.get('name')!r} must be CSV-encoded")
-        layers[ly.get("name")] = [int(t) for t in data.text.replace("\n", ",").split(",")
-                                  if t.strip()]
+            raise SystemExit(
+                f"{tmx_path}: layer {ly.get('name')!r} must be CSV-encoded"
+            )
+        layers[ly.get("name")] = [
+            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+        ]
     if "map" not in layers or "palette" not in layers:
         raise SystemExit(f"{tmx_path}: need layers 'map' and 'palette'")
     gids, pals = layers["map"], layers["palette"]
@@ -194,15 +198,17 @@ def tmx_to_maps(tmx_path, tiles_per_bank=384, banks=2, base_tile=0):
         xf, yf = bool(g & HFLIP), bool(g & VFLIP)
         idx = (g & GIDMASK) - sheet_first
         if vram1_first is not None and (g & GIDMASK) >= vram1_first:
-            bank, vt = 1, (g & GIDMASK) - vram1_first   # tile loaded elsewhere
+            bank, vt = 1, (g & GIDMASK) - vram1_first  # tile loaded elsewhere
         elif 0 <= idx < nsheet:
             bank, sidx = divmod(idx, tiles_per_bank)
             vt = base_tile + sidx
         else:
             raise SystemExit(f"{tmx_path}: cell {cell} is empty/not a sheet tile")
         if not 128 <= vt < 384:
-            raise SystemExit(f"{tmx_path}: cell {cell} -> VRAM tile {vt} "
-                             "(not addressable in $8800 BG mode)")
+            raise SystemExit(
+                f"{tmx_path}: cell {cell} -> VRAM tile {vt} "
+                "(not addressable in $8800 BG mode)"
+            )
         tmap.append(vt & 0xFF)
         pal = pg - pal_first
         if not 0 <= pal <= 7:
@@ -222,14 +228,16 @@ def tmx_frames_to_maps(tmx_path):
     HFLIP, VFLIP, GIDMASK = 0x80000000, 0x40000000, 0x0FFFFFFF
     root = ET.parse(tmx_path).getroot()
     sheet_first = pal_first = None
-    tsprops = []          # (firstgid, tilecount, bank, base) for property-tagged tilesets
+    tsprops = []  # (firstgid, tilecount, bank, base) for property-tagged tilesets
     for ts in root.findall("tileset"):
         n = int(ts.get("tilecount", 0))
         if n == 8:
             pal_first = int(ts.get("firstgid"))
             continue
-        props = {p.get("name"): int(p.get("value"))
-                 for p in ts.findall("properties/property")}
+        props = {
+            p.get("name"): int(p.get("value"))
+            for p in ts.findall("properties/property")
+        }
         if props:
             tsprops.append((int(ts.get("firstgid")), n, props["bank"], props["base"]))
         elif sheet_first is None:
@@ -254,20 +262,24 @@ def tmx_frames_to_maps(tmx_path):
             for c in range(cols):
                 g, pg = gids[r * W + c], pals[r * W + c]
                 if not g:
-                    raise SystemExit(f"{tmx_path}:{name}: hole at ({r},{c}) -- "
-                                     "frames must fill their top-left rectangle")
+                    raise SystemExit(
+                        f"{tmx_path}:{name}: hole at ({r},{c}) -- "
+                        "frames must fill their top-left rectangle"
+                    )
                 xf, yf = bool(g & HFLIP), bool(g & VFLIP)
                 raw = g & GIDMASK
                 for first, n, bank, base in tsprops:
-                    if first <= raw < first + n:   # property-tagged tileset
+                    if first <= raw < first + n:  # property-tagged tileset
                         vt = base + (raw - first)
                         break
                 else:
                     i = raw - sheet_first
                     bank, vt = divmod(i, 384)
                 if not 128 <= vt < 384:
-                    raise SystemExit(f"{tmx_path}:{name}: cell ({r},{c}) -> VRAM "
-                                     f"tile {vt} (not addressable in $8800 mode)")
+                    raise SystemExit(
+                        f"{tmx_path}:{name}: cell ({r},{c}) -> VRAM "
+                        f"tile {vt} (not addressable in $8800 mode)"
+                    )
                 idx.append(vt & 0xFF)
                 attr.append((pg - pal_first) | (bank << 3) | (xf << 5) | (yf << 6))
         out.append((name, rows, cols, bytes(idx), bytes(attr)))
@@ -302,8 +314,9 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
     layers = {}
     for ly in root.findall("layer"):
         data = ly.find("data")
-        layers[ly.get("name")] = [int(t) for t in
-                                  data.text.replace("\n", ",").split(",") if t.strip()]
+        layers[ly.get("name")] = [
+            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+        ]
     if layer_name not in layers or f"{layer_name}_pal" not in layers:
         raise SystemExit(f"{tmx_path}: need layers {layer_name!r} + '{layer_name}_pal'")
     gids, pals = layers[layer_name], layers[f"{layer_name}_pal"]
@@ -316,28 +329,36 @@ def tmx_layer_to_map(tmx_path, layer_name, base_tile=128, bank1_tiles=0):
                 idx = raw - first
                 break
         else:
-            raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} is empty/"
-                             "not a sheet tile")
-        if ordinal > 0:                            # shared bank-0 sheet
+            raise SystemExit(
+                f"{tmx_path}:{layer_name}: cell {cell} is empty/" "not a sheet tile"
+            )
+        if ordinal > 0:  # shared bank-0 sheet
             bank, byte = 0, idx - (n - 384)
             if not 0 <= byte < 256:
-                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} out of the "
-                                 "shared sheet's bank-0 half")
-        elif idx < bank1_tiles:                    # own sheet, VRAM bank 1
+                raise SystemExit(
+                    f"{tmx_path}:{layer_name}: cell {cell} out of the "
+                    "shared sheet's bank-0 half"
+                )
+        elif idx < bank1_tiles:  # own sheet, VRAM bank 1
             if not 128 <= idx < 384:
-                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> bank-1 "
-                                 f"tile {idx} (not addressable in $8800 BG mode)")
+                raise SystemExit(
+                    f"{tmx_path}:{layer_name}: cell {cell} -> bank-1 "
+                    f"tile {idx} (not addressable in $8800 BG mode)"
+                )
             bank, byte = 1, idx & 0xFF
-        elif bank1_tiles:                          # own sheet, tiles2 half
+        elif bank1_tiles:  # own sheet, tiles2 half
             bank, byte = 0, idx - bank1_tiles
             if byte >= 256:
-                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} bank-0 "
-                                 "tile index > 255")
-        else:                                      # single bank-0 sheet (monsters)
+                raise SystemExit(
+                    f"{tmx_path}:{layer_name}: cell {cell} bank-0 " "tile index > 255"
+                )
+        else:  # single bank-0 sheet (monsters)
             vt = base_tile + idx
             if not 128 <= vt < 384:
-                raise SystemExit(f"{tmx_path}:{layer_name}: cell {cell} -> VRAM "
-                                 f"tile {vt} (not addressable in $8800 BG mode)")
+                raise SystemExit(
+                    f"{tmx_path}:{layer_name}: cell {cell} -> VRAM "
+                    f"tile {vt} (not addressable in $8800 BG mode)"
+                )
             bank, byte = 0, vt & 0xFF
         tmap.append(byte)
         pal = pg - pal_first
@@ -370,8 +391,9 @@ def tmx_layer_to_objlist(tmx_path, layer_name):
     W = H = 0
     for ly in root.findall("layer"):
         data = ly.find("data")
-        layers[ly.get("name")] = [int(t) for t in
-                                  data.text.replace("\n", ",").split(",") if t.strip()]
+        layers[ly.get("name")] = [
+            int(t) for t in data.text.replace("\n", ",").split(",") if t.strip()
+        ]
         W, H = int(ly.get("width")), int(ly.get("height"))
     gids = layers[layer_name]
     pals = layers[f"{layer_name}_pal"]
@@ -381,7 +403,9 @@ def tmx_layer_to_objlist(tmx_path, layer_name):
         if not g or i in used:
             continue
         if g & ~GIDMASK:
-            raise SystemExit(f"{tmx_path}:{layer_name}: flips unsupported on OBJ layers")
+            raise SystemExit(
+                f"{tmx_path}:{layer_name}: flips unsupported on OBJ layers"
+            )
         r, c = i // W, i % W
         below = i + W
         gb = gids[below] if below < len(gids) else 0
@@ -390,10 +414,14 @@ def tmx_layer_to_objlist(tmx_path, layer_name):
                 t = 0x80 + (g - first)
                 break
         else:
-            raise SystemExit(f"{tmx_path}:{layer_name}: cell ({r},{c}) not a sheet tile")
+            raise SystemExit(
+                f"{tmx_path}:{layer_name}: cell ({r},{c}) not a sheet tile"
+            )
         if t % 2 or gb != g + 1:
-            raise SystemExit(f"{tmx_path}:{layer_name}: cell ({r},{c}) is not the top "
-                             "of an 8x16 OBJ (even tile + its odd twin below)")
+            raise SystemExit(
+                f"{tmx_path}:{layer_name}: cell ({r},{c}) is not the top "
+                "of an 8x16 OBJ (even tile + its odd twin below)"
+            )
         used.update((i, below))
         recs.append((r * 8, c * 8, t, pals[i] - pal_first))
     out = bytearray([len(recs)])
@@ -424,13 +452,13 @@ def cmd_maplib(args: argparse.Namespace) -> int:
         tmx = tmx.strip()
         if not tmx:
             continue
-        tmap, amap = tmx_to_maps(d / tmx, args.tiles // args.banks, args.banks,
-                                 args.base)
+        tmap, amap = tmx_to_maps(
+            d / tmx, args.tiles // args.banks, args.banks, args.base
+        )
         stem = Path(tmx).stem
         comps += [(f"{stem}_idx", tmap), (f"{stem}_attr", amap)]
     for name, data in comps:
         (out / f"{name}.bin").write_bytes(data)
-        print(f"  {name}.bin: {len(data)} bytes")
     return 0
 
 
@@ -446,29 +474,28 @@ def cmd_screen(args: argparse.Namespace) -> int:
     sheet plus the map. See docs/gfx_assets.md, docs/asset_source_model.md."""
     png = Path(args.png)
     d = png.parent
-    tiles = sheet_png_to_tiles(png, args.tiles * 2)            # both banks, stacked
+    tiles = sheet_png_to_tiles(png, args.tiles * 2)  # both banks, stacked
     _w, _h, _px, colors = read_indexed_png(png)
     pal = bytearray()
-    for i in range(args.palettes * 4):                        # 16 palettes * 4 colors
+    for i in range(args.palettes * 4):  # 16 palettes * 4 colors
         word = rgb888_to_555(*colors[i])
         pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
     if getattr(args, "map", None):
         tmap, amap = tmx_to_maps(d / args.map, args.tiles, 2, 0)
     else:
-        tmap = (d / "tilemap.bin").read_bytes()               # legacy committed maps
+        tmap = (d / "tilemap.bin").read_bytes()  # legacy committed maps
         amap = (d / "attrmap.bin").read_bytes()
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     comps = [
         ("tiles_bank0", b"".join(tiles[: args.tiles])),
-        ("tiles_bank1", b"".join(tiles[args.tiles:])),
+        ("tiles_bank1", b"".join(tiles[args.tiles :])),
         ("palette", bytes(pal)),
         ("tilemap", tmap),
         ("attrmap", amap),
     ]
     for name, data in comps:
         (out / f"{name}.bin").write_bytes(data)
-        print(f"  {name}.bin: {len(data)} bytes")
     return 0
 
 
@@ -493,7 +520,6 @@ def cmd_sprite(args: argparse.Namespace) -> int:
     out.mkdir(parents=True, exist_ok=True)
     for name, data in comps:
         (out / name).write_bytes(data)
-        print(f"  {name}: {len(data)} bytes")
     return 0
 
 
@@ -507,17 +533,17 @@ def cmd_scene(args: argparse.Namespace) -> int:
     editable here; the frame layout stays as data. See docs/screen_tilemaps.md."""
     png = Path(args.png)
     d = png.parent
-    tiles = sheet_png_to_tiles(png, args.tiles * 2)            # both banks, stacked
+    tiles = sheet_png_to_tiles(png, args.tiles * 2)  # both banks, stacked
     _w, _h, _px, colors = read_indexed_png(png)
     pal = bytearray()
-    for i in range(args.palettes * 4):                        # N palettes * 4 colors
+    for i in range(args.palettes * 4):  # N palettes * 4 colors
         word = rgb888_to_555(*colors[i])
         pal += bytes((word & 0xFF, (word >> 8) & 0xFF))
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     comps = [
         ("tiles_bank0.2bpp", b"".join(tiles[: args.tiles])),
-        ("tiles_bank1.2bpp", b"".join(tiles[args.tiles:])),
+        ("tiles_bank1.2bpp", b"".join(tiles[args.tiles :])),
         ("palette.bin", bytes(pal)),
     ]
     if getattr(args, "frames", None):
@@ -525,7 +551,6 @@ def cmd_scene(args: argparse.Namespace) -> int:
             comps += [(f"{name}_idx.bin", idx), (f"{name}_attr.bin", attr)]
     for name, data in comps:
         (out / name).write_bytes(data)
-        print(f"  {name}: {len(data)} bytes")
     return 0
 
 
@@ -553,7 +578,7 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
     from PIL import Image
 
     NT = len(tiles) // 16
-    TPX = [tile_to_indices(tiles[i * 16:i * 16 + 16]) for i in range(NT)]
+    TPX = [tile_to_indices(tiles[i * 16 : i * 16 + 16]) for i in range(NT)]
     # BG: signed tilemap-byte lookup (b -> tiles[b] for b>=128 else tiles[b+256])
     bgidx: dict = {}
     for ti in range(128, NT):
@@ -561,7 +586,7 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
     # two-bank portraits: a patch cell with attr bit 3 = 0 reads the bank-0 sheet
     # (tiles2, loaded at VRAM $9000), addressed byte b (<128) -> tiles2[b].
     NT2 = len(tiles2) // 16 if tiles2 else 0
-    TPX2 = [tile_to_indices(tiles2[i * 16:i * 16 + 16]) for i in range(NT2)]
+    TPX2 = [tile_to_indices(tiles2[i * 16 : i * 16 + 16]) for i in range(NT2)]
     bgidx0: dict = {}
     for ti in range(NT2):
         bgidx0.setdefault(tuple(TPX2[ti]), []).append(ti)
@@ -577,23 +602,34 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         objidx2.setdefault(tuple(TPX2[T & 0xFE] + TPX2[(T & 0xFE) + 1]), []).append(T)
     # blank (all-colour-0) OBJ tiles, byte-indexable -- a transparent grid cell must
     # use one of these, and the tool reuses the lowest when padding the grid.
-    blank_obj = sorted(T for T in range(0, min(256, NT - 1), 2)
-                       if not any(TPX[T]) and not any(TPX[T + 1]))
-    blank_obj2 = sorted(T for T in range(0, min(256, NT2 - 1), 2)
-                        if not any(TPX2[T]) and not any(TPX2[T + 1]))
+    blank_obj = sorted(
+        T
+        for T in range(0, min(256, NT - 1), 2)
+        if not any(TPX[T]) and not any(TPX[T + 1])
+    )
+    blank_obj2 = sorted(
+        T
+        for T in range(0, min(256, NT2 - 1), 2)
+        if not any(TPX2[T]) and not any(TPX2[T + 1])
+    )
 
     def cell_pal(blk, what):
         ps = {q // 4 for q in blk}
         if len(ps) != 1:
-            raise SystemExit(f"{what}: cell mixes display palettes {sorted(ps)} "
-                             "(indexed cel pixels must be palette*4 + value)")
+            raise SystemExit(
+                f"{what}: cell mixes display palettes {sorted(ps)} "
+                "(indexed cel pixels must be palette*4 + value)"
+            )
         return ps.pop()
 
     def gen_patch(img, addr, bank, idx_over=None, bank0=None):
         px = img.load()
         cols, rows = img.size[0] // 8, img.size[1] // 8
         grid = [(r, c) for r in range(rows) for c in range(cols)]
-        blks = [[px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)] for (r, c) in grid]
+        blks = [
+            [px[c * 8 + x, r * 8 + y] for y in range(8) for x in range(8)]
+            for (r, c) in grid
+        ]
         vals = [tuple(q % 4 for q in blk) for blk in blks]
         # PALETTE is explicit in the indexed source (pixel // 4), per cell.
         P = [cell_pal(blk, "patch") for blk in blks]
@@ -602,6 +638,7 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         # patches leave bank0 empty -> every cell uses `bank` (the block default).
         bset = set(bank0 or [])
         cbank = [0 if i in bset else bank for i in range(len(grid))]
+
         # TILE (positional): a cell's byte candidates are the sheet bytes (in its bank)
         # whose tile VALUES equal the cell's -- exact, no palette dimension; the byte is
         # then fixed positionally -- bank-1 cells by column-major (byte = base + 8*col
@@ -613,10 +650,18 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
 
         bcand = [cand(i) for i in range(len(grid))]
         pin = [bs[0] if len(bs) == 1 else None for bs in bcand]
-        bcnt = Counter((pin[i] - 8 * c - r) % 256
-                       for i, (r, c) in enumerate(grid) if pin[i] is not None and cbank[i])
+        bcnt = Counter(
+            (pin[i] - 8 * c - r) % 256
+            for i, (r, c) in enumerate(grid)
+            if pin[i] is not None and cbank[i]
+        )
         base = bcnt.most_common(1)[0][0] if bcnt else None
-        order0 = [r * cols + c for c in range(cols) for r in range(rows) if r * cols + c in bset]
+        order0 = [
+            r * cols + c
+            for c in range(cols)
+            for r in range(rows)
+            if r * cols + c in bset
+        ]
         rank0 = {cell: k for k, cell in enumerate(order0)}
         b0cnt = Counter((pin[i] - rank0[i]) % 256 for i in bset if pin[i] is not None)
         base0 = b0cnt.most_common(1)[0][0] if b0cnt else None
@@ -635,8 +680,11 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
             # the positional model doesn't reach this duplicate cell -- it belongs to a
             # freshly-allocated band; prefer a candidate within the byte range its row's
             # same-bank pinned cells span (that band) over the lowest sheet byte.
-            rb = [pin[r * cols + cc] for cc in range(cols)
-                  if pin[r * cols + cc] is not None and cbank[r * cols + cc] == cbank[i]]
+            rb = [
+                pin[r * cols + cc]
+                for cc in range(cols)
+                if pin[r * cols + cc] is not None and cbank[r * cols + cc] == cbank[i]
+            ]
             inrange = [b for b in bs if rb and min(rb) <= b <= max(rb)]
             idx.append(inrange[0] if inrange else (bs[0] if bs else 0))
         # image-irreducible tile: a cell whose pixels match several sheet tiles where the
@@ -647,7 +695,11 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         attr = bytes((cbank[cell] << 3) | P[cell] for cell in range(rows * cols))
         ip = (addr + 6) & 0xFFFF
         ap = (addr + 6 + rows * cols) & 0xFFFF
-        return bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8]) + bytes(idx) + attr
+        return (
+            bytes([rows, cols, ap & 0xFF, ap >> 8, ip & 0xFF, ip >> 8])
+            + bytes(idx)
+            + attr
+        )
 
     def gen_meta(img, oy, ox, bank, idx_over=None, bank0=None):
         px = img.load()
@@ -662,9 +714,9 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         # the metasprite is a complete row-major grid of 8x16 cells; EVERY cell is a
         # record, including ones drawn with a blank (all-transparent) tile -- the
         # original tool padded the grid rather than pruning blank cells.
-        cells = []                                              # (cr, cc, vals, opaque)
-        tcand: list = []         # candidate even tiles per cell: exact VALUE match
-        P: list = []             # record palette, explicit in the indexed source
+        cells = []  # (cr, cc, vals, opaque)
+        tcand: list = []  # candidate even tiles per cell: exact VALUE match
+        P: list = []  # record palette, explicit in the indexed source
         for cr in range(0, H, 16):
             for cc in range(0, W, 8):
                 ci = len(cells)
@@ -674,7 +726,9 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
                 P.append(cell_pal(blk, "meta"))
                 cells.append((cr, cc, v, opaque))
                 ts = set(OBJI(ci).get(v, ())) if opaque else set()
-                tcand.append(sorted(t for t in ts if t < 256))  # OBJ tile index is a byte
+                tcand.append(
+                    sorted(t for t in ts if t < 256)
+                )  # OBJ tile index is a byte
         # TILE: pin the unique-candidate cells. Tiles run +2 in record order along a
         # "base diagonal" (byte = base0 + 2*i, base0 = the common (tile-2*i)); animated
         # frames allocate a fresh CONTIGUOUS run for the changed cells, which can pixel-
@@ -693,27 +747,32 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         # off-diagonal cells (the top row), then fill the rectangle's still-ambiguous
         # cells by row-major rank.
         grows = H // 16
-        offdiag = sorted((i for i in range(len(cells))
-                          if pinned[i] and tile[i] != (base0 + 2 * i) % 256),
-                         key=lambda i: tile[i])
-        groups: list = []                                       # consecutive +2 tile runs
+        offdiag = sorted(
+            (
+                i
+                for i in range(len(cells))
+                if pinned[i] and tile[i] != (base0 + 2 * i) % 256
+            ),
+            key=lambda i: tile[i],
+        )
+        groups: list = []  # consecutive +2 tile runs
         for i in offdiag:
             if groups and tile[i] == (tile[groups[-1][-1]] + 2) % 256:
                 groups[-1].append(i)
             else:
                 groups.append([i])
         for grp in groups:
-            start = min(grp, key=lambda g: tile[g])          # lowest tile = rectangle top-left
+            start = min(grp, key=lambda g: tile[g])  # lowest tile = rectangle top-left
             rtop, c0, run_base = start // cols, start % cols, tile[start]
-            width = 1                                         # extend right while the next cell
-            while c0 + width < cols:                          # admits the next +2 run tile (the
-                i = rtop * cols + (c0 + width)                # top-row cells may be ambiguous, so
-                val = (run_base + 2 * width) % 256            # use candidates, not pinned status)
+            width = 1  # extend right while the next cell
+            while c0 + width < cols:  # admits the next +2 run tile (the
+                i = rtop * cols + (c0 + width)  # top-row cells may be ambiguous, so
+                val = (run_base + 2 * width) % 256  # use candidates, not pinned status)
                 if val in tcand[i] and tile[i] in (None, val):
                     width += 1
                 else:
                     break
-            for rr in range(rtop, grows):                     # fill the rectangle row-major +2
+            for rr in range(rtop, grows):  # fill the rectangle row-major +2
                 progressed = False
                 for k in range(width):
                     i = rr * cols + (c0 + k)
@@ -728,30 +787,38 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         for i, (c, ts) in enumerate(zip(cells, tcand)):
             if tile[i] is not None or not c[3]:
                 continue
-            anchored = [(tile[j] + (2 if j < i else -2)) % 256
-                        for j in (i - 1, i + 1)
-                        if 0 <= j < len(cells) and pinned[j] and tile[j] != (base0 + 2 * j) % 256]
+            anchored = [
+                (tile[j] + (2 if j < i else -2)) % 256
+                for j in (i - 1, i + 1)
+                if 0 <= j < len(cells)
+                and pinned[j]
+                and tile[j] != (base0 + 2 * j) % 256
+            ]
             be = (base0 + 2 * i) % 256
             want = [a for a in anchored if a in ts] + ([be] if be in ts else []) + ts
-            tile[i] = want[0] if want else None   # no sheet tile carries these values
+            tile[i] = want[0] if want else None  # no sheet tile carries these values
             # (a hand-edited cel); left for the `idx` closure pin.
-        for i in range(len(cells) - 1, -1, -1):                 # blank cells: next opaque - 2
+        for i in range(len(cells) - 1, -1, -1):  # blank cells: next opaque - 2
             if tile[i] is None and i + 1 < len(cells) and tile[i + 1] is not None:
                 tile[i] = (tile[i + 1] - 2) & 0xFF
-        for i in range(len(cells)):                             # trailing blanks: prev + 2
+        for i in range(len(cells)):  # trailing blanks: prev + 2
             if tile[i] is None:
                 tile[i] = (tile[i - 1] + 2) & 0xFF if i else 0
         # a transparent cell's tile must itself be blank; where the run lands on an
         # OPAQUE tile the tool instead reused a shared blank tile (the lowest one it had
         # allocated, else the lowest in the sheet).
-        used = [tile[i] for i, c in enumerate(cells)
-                if not c[3] and tile[i] is not None and tile[i] in BLNK(i)]
+        used = [
+            tile[i]
+            for i, c in enumerate(cells)
+            if not c[3] and tile[i] is not None and tile[i] in BLNK(i)
+        ]
         for i, c in enumerate(cells):
             if not c[3] and (tile[i] is None or tile[i] not in BLNK(i)):
                 bl = BLNK(i)
                 same = [t for t in used if t in bl]
-                tile[i] = (Counter(same).most_common(1)[0][0] if same
-                           else (bl[0] if bl else 0))
+                tile[i] = (
+                    Counter(same).most_common(1)[0][0] if same else (bl[0] if bl else 0)
+                )
         # image-irreducible metasprite tile (a fresh run the +2/override model mispredicts,
         # e.g. Mistral's wing run): pinned per-record via the manifest `idx` map.
         for rec, tval in (idx_over or {}).items():
@@ -771,13 +838,21 @@ def gen_sprite_region(manifest_path, tiles, tiles2=None):
         bank = blk.get("bank", 1)
         img = Image.open(d / blk["png"])
         if img.mode != "P":
-            raise SystemExit(f"{blk['png']}: cel PNGs must be indexed "
-                             "(pixel = display_palette*4 + 2bpp value)")
+            raise SystemExit(
+                f"{blk['png']}: cel PNGs must be indexed "
+                "(pixel = display_palette*4 + 2bpp value)"
+            )
         if blk["kind"] == "patch":
             data = gen_patch(img, addr, bank, blk.get("idx"), blk.get("bank0"))
         else:
-            data = gen_meta(img, blk.get("oy", 0), blk.get("ox", 0), bank,
-                            blk.get("idx"), blk.get("bank0"))
+            data = gen_meta(
+                img,
+                blk.get("oy", 0),
+                blk.get("ox", 0),
+                bank,
+                blk.get("idx"),
+                blk.get("bank0"),
+            )
         out += data
         addr += len(data)
     return bytes(out)
@@ -791,15 +866,22 @@ def gen_sprite_region_asm(manifest_path, tiles, tiles2=None):
     is at the manifest's `base` (patch pointers become `dw`-relative -> relocatable).
     Returns asm text; the host file INCLUDEs it inside the overlay's SECTION."""
     import yaml
+
     man = yaml.safe_load(Path(manifest_path).read_text())
     prefix = man["prefix"]
     data = gen_sprite_region(manifest_path, tiles, tiles2)
-    out = ["; Generated by tools/pngasset.py from the layered PNG source -- do not edit.",
-           '; (INCLUDEd into the overlay SECTION; see docs/metasprites.md / portrait_overlays.md.)',
-           'INCLUDE "metasprite.inc"', ""]
+    out = [
+        "; Generated by tools/pngasset.py from the layered PNG source -- do not edit.",
+        "; (INCLUDEd into the overlay SECTION; see docs/metasprites.md / portrait_overlays.md.)",
+        'INCLUDE "metasprite.inc"',
+        "",
+    ]
 
     def dbs(bs):
-        return [f"\tdb " + ", ".join(f"${x:02x}" for x in bs[k:k+16]) for k in range(0, len(bs), 16)]
+        return [
+            f"\tdb " + ", ".join(f"${x:02x}" for x in bs[k : k + 16])
+            for k in range(0, len(bs), 16)
+        ]
 
     p = 0
     for blk in man["blocks"]:
@@ -808,17 +890,25 @@ def gen_sprite_region_asm(manifest_path, tiles, tiles2=None):
             count = data[p]
             out.append(f"\tmetasprite {lab}")
             for i in range(count):
-                r = data[p+1+4*i:p+5+4*i]
-                out.append(f"\t\tobj ${r[0]:02x}, ${r[1]:02x}, ${r[2]:02x}, ${r[3]:02x}")
+                r = data[p + 1 + 4 * i : p + 5 + 4 * i]
+                out.append(
+                    f"\t\tobj ${r[0]:02x}, ${r[1]:02x}, ${r[2]:02x}, ${r[3]:02x}"
+                )
             out.append(f"\tend_metasprite {lab}")
             p += 1 + 4 * count
-        else:                                                    # patch (CopyBgMap descriptor)
-            rows, cols = data[p], data[p+1]
+        else:  # patch (CopyBgMap descriptor)
+            rows, cols = data[p], data[p + 1]
             nn = rows * cols
-            out += [f"{lab}:", f"\tdb {rows}, {cols}", "\tdw .attr", "\tdw .idx", ".idx:"]
-            out += dbs(data[p+6:p+6+nn])
+            out += [
+                f"{lab}:",
+                f"\tdb {rows}, {cols}",
+                "\tdw .attr",
+                "\tdw .idx",
+                ".idx:",
+            ]
+            out += dbs(data[p + 6 : p + 6 + nn])
             out.append(".attr:")
-            out += dbs(data[p+6+nn:p+6+2*nn])
+            out += dbs(data[p + 6 + nn : p + 6 + 2 * nn])
             p += 6 + 2 * nn
         out.append("")
     return "\n".join(out) + "\n"
@@ -835,33 +925,36 @@ def cmd_portrait(args: argparse.Namespace) -> int:
     png = Path(args.png)
     d = png.parent
     tiles = sheet_png_to_tiles(png, args.tiles1 + args.tiles0)
-    comps = [("tiles", b"".join(tiles[: args.tiles1]))]            # bank 1 (main)
+    comps = [("tiles", b"".join(tiles[: args.tiles1]))]  # bank 1 (main)
     if args.tiles0:
-        comps.append(("tiles2", b"".join(tiles[args.tiles1:])))   # bank 0
+        comps.append(("tiles2", b"".join(tiles[args.tiles1 :])))  # bank 0
     if args.palettes_bg or args.palettes_obj:
         _w, _h, _px, colors = read_indexed_png(png)
 
         def pack(first: int, n: int) -> bytes:
             out = bytearray()
-            for i in range(first, first + n * 4):                 # n palettes * 4 colors
+            for i in range(first, first + n * 4):  # n palettes * 4 colors
                 word = rgb888_to_555(*colors[i])
                 out += bytes((word & 0xFF, (word >> 8) & 0xFF))
             return bytes(out)
 
-        if args.palettes_bg:                                      # BG palettes lead the table
+        if args.palettes_bg:  # BG palettes lead the table
             comps.append(("palette_bg", pack(0, args.palettes_bg)))
-        if args.palettes_obj:                                     # OBJ palettes follow them
+        if args.palettes_obj:  # OBJ palettes follow them
             comps.append(("palette_obj", pack(args.palettes_bg * 4, args.palettes_obj)))
     if getattr(args, "map", None):
         # the arrangement is a Tiled source file (one layer pair per screen,
         # possibly one tileset per sheet) -- see docs/asset_source_model.md.
-        tmap, amap = tmx_layer_to_map(d / args.map, args.map_layer,
-                                      bank1_tiles=args.map_bank1)
+        tmap, amap = tmx_layer_to_map(
+            d / args.map, args.map_layer, bank1_tiles=args.map_bank1
+        )
         comps += [("tilemap", tmap), ("attrmap", amap)]
-        for k, ly in enumerate(x for x in (getattr(args, "obj_layers", "") or "")
-                               .split(",") if x):
-            comps.append((f"obj{k + 1 if k else ''}",
-                          tmx_layer_to_objlist(d / args.map, ly)))
+        for k, ly in enumerate(
+            x for x in (getattr(args, "obj_layers", "") or "").split(",") if x
+        ):
+            comps.append(
+                (f"obj{k + 1 if k else ''}", tmx_layer_to_objlist(d / args.map, ly))
+            )
     else:
         comps += [
             ("tilemap", (d / "tilemap.bin").read_bytes()),
@@ -874,12 +967,14 @@ def cmd_portrait(args: argparse.Namespace) -> int:
         # instead of sprites.bin so code can reference the blocks by label.
         tiles2 = next((data for name, data in comps if name == "tiles2"), None)
         import yaml
+
         man = yaml.safe_load((d / args.sprites).read_text())
         if man.get("prefix"):
             sprites_asm = gen_sprite_region_asm(d / args.sprites, comps[0][1], tiles2)
         else:
-            comps.append(("sprites", gen_sprite_region(d / args.sprites, comps[0][1],
-                                                        tiles2)))
+            comps.append(
+                ("sprites", gen_sprite_region(d / args.sprites, comps[0][1], tiles2))
+            )
     if getattr(args, "palettes2_png", None):
         # a second palette set (e.g. an alternate scene) carried by its own indexed PNG:
         # BG palettes lead its colour table, OBJ palettes follow (same as the sheet).
@@ -898,10 +993,8 @@ def cmd_portrait(args: argparse.Namespace) -> int:
     out.mkdir(parents=True, exist_ok=True)
     for name, data in comps:
         (out / f"{name}.bin").write_bytes(data)
-        print(f"  {name}.bin: {len(data)} bytes")
     if sprites_asm is not None:
         (out / "sprites.asm").write_text(sprites_asm)
-        print(f"  sprites.asm: {sprites_asm.count(chr(10))} lines")
     return 0
 
 
@@ -913,19 +1006,26 @@ def main() -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     sc = sub.add_parser(
-        "screen", help="two-bank colour screen: one tile-sheet PNG -> tiles/palette .bin"
+        "screen",
+        help="two-bank colour screen: one tile-sheet PNG -> tiles/palette .bin",
     )
     sc.add_argument(
-        "--png", required=True,
+        "--png",
+        required=True,
         help="combined indexed sheet (both banks stacked, 16 palettes embedded); "
-             "tilemap.bin/attrmap.bin live next to it",
+        "tilemap.bin/attrmap.bin live next to it",
     )
     sc.add_argument("--out-dir", required=True)
     sc.add_argument("--tiles", type=int, default=384, help="tiles per bank")
-    sc.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
-    sc.add_argument("--map", default=None,
-                    help="Tiled .tmx (next to --png) carrying the arrangement; "
-                         "compiled to tilemap/attrmap instead of reading the bins")
+    sc.add_argument(
+        "--palettes", type=int, default=16, help="palettes in the PNG table"
+    )
+    sc.add_argument(
+        "--map",
+        default=None,
+        help="Tiled .tmx (next to --png) carrying the arrangement; "
+        "compiled to tilemap/attrmap instead of reading the bins",
+    )
     sc.set_defaults(fn=cmd_screen)
 
     ml = sub.add_parser(
@@ -934,71 +1034,127 @@ def main() -> int:
     ml.add_argument("--png", required=True, help="indexed sheet (16 tiles/row)")
     ml.add_argument("--out-dir", required=True)
     ml.add_argument("--tiles", type=int, required=True, help="total sheet tiles")
-    ml.add_argument("--banks", type=int, default=1,
-                    help="2 = stacked VRAM banks; 1 = single bank / alternate sets")
-    ml.add_argument("--base", type=int, default=0,
-                    help="VRAM tile number of sheet index 0 (0=$8000, 128=$8800)")
-    ml.add_argument("--palettes", type=int, default=0, help="CGB palettes in the PNG table")
-    ml.add_argument("--maps", default="", help="comma-separated .tmx files next to --png")
+    ml.add_argument(
+        "--banks",
+        type=int,
+        default=1,
+        help="2 = stacked VRAM banks; 1 = single bank / alternate sets",
+    )
+    ml.add_argument(
+        "--base",
+        type=int,
+        default=0,
+        help="VRAM tile number of sheet index 0 (0=$8000, 128=$8800)",
+    )
+    ml.add_argument(
+        "--palettes", type=int, default=0, help="CGB palettes in the PNG table"
+    )
+    ml.add_argument(
+        "--maps", default="", help="comma-separated .tmx files next to --png"
+    )
     ml.set_defaults(fn=cmd_maplib)
 
     sp = sub.add_parser(
-        "sprite", help="flat OBJ sprite-set: one tile-sheet PNG -> tiles.bin (+palette.bin)"
+        "sprite",
+        help="flat OBJ sprite-set: one tile-sheet PNG -> tiles.bin (+palette.bin)",
     )
     sp.add_argument("--png", required=True, help="indexed sheet (16 tiles/row)")
     sp.add_argument("--out-dir", required=True)
     sp.add_argument("--tiles", type=int, required=True, help="total sheet tiles")
-    sp.add_argument("--palettes", type=int, default=0,
-                    help="4-colour OBJ palettes in the PNG table (0 = no palette.bin)")
+    sp.add_argument(
+        "--palettes",
+        type=int,
+        default=0,
+        help="4-colour OBJ palettes in the PNG table (0 = no palette.bin)",
+    )
     sp.set_defaults(fn=cmd_sprite)
 
     scn = sub.add_parser(
-        "scene", help="summon-animation tiles: one tile-sheet PNG -> tiles/palette .bin "
-                      "(+ descriptors/metasprites passthrough)"
+        "scene",
+        help="summon-animation tiles: one tile-sheet PNG -> tiles/palette .bin "
+        "(+ descriptors/metasprites passthrough)",
     )
-    scn.add_argument("--png", required=True,
-                     help="combined indexed sheet (both banks stacked, palettes embedded); "
-                          "descriptors.bin/metasprites.bin live next to it")
+    scn.add_argument(
+        "--png",
+        required=True,
+        help="combined indexed sheet (both banks stacked, palettes embedded); "
+        "descriptors.bin/metasprites.bin live next to it",
+    )
     scn.add_argument("--out-dir", required=True)
     scn.add_argument("--tiles", type=int, default=384, help="tiles per bank")
-    scn.add_argument("--palettes", type=int, default=16, help="palettes in the PNG table")
-    scn.add_argument("--frames", default=None,
-                    help="Tiled .tmx (next to --png) of CopyBgMap animation frames, "
-                         "one layer pair per frame -> frameNN_idx/attr.bin")
+    scn.add_argument(
+        "--palettes", type=int, default=16, help="palettes in the PNG table"
+    )
+    scn.add_argument(
+        "--frames",
+        default=None,
+        help="Tiled .tmx (next to --png) of CopyBgMap animation frames, "
+        "one layer pair per frame -> frameNN_idx/attr.bin",
+    )
     scn.set_defaults(fn=cmd_scene)
 
     pt = sub.add_parser(
-        "portrait", help="grayscale portrait: one tile-sheet PNG -> tiles(.bin)(+tiles2.bin)"
+        "portrait",
+        help="grayscale portrait: one tile-sheet PNG -> tiles(.bin)(+tiles2.bin)",
     )
-    pt.add_argument("--png", required=True,
-                    help="grayscale sheet: bank-1 tiles then (optional) bank-0 tiles; "
-                         "tilemap.bin/attrmap.bin live next to it")
+    pt.add_argument(
+        "--png",
+        required=True,
+        help="grayscale sheet: bank-1 tiles then (optional) bank-0 tiles; "
+        "tilemap.bin/attrmap.bin live next to it",
+    )
     pt.add_argument("--out-dir", required=True)
     pt.add_argument("--tiles1", type=int, default=384, help="bank-1 (main) tile count")
-    pt.add_argument("--tiles0", type=int, default=0, help="bank-0 tile count (0 = single bank)")
-    pt.add_argument("--palettes-bg", type=int, default=0,
-                    help="BG palettes in the PNG table (0 = grayscale, no palette.bin)")
-    pt.add_argument("--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones")
-    pt.add_argument("--map", default=None,
-                    help="Tiled .tmx (relative to --png) carrying the arrangement; "
-                         "compiled with --map-layer instead of a layout/bins")
-    pt.add_argument("--map-layer", default=None,
-                    help="layer name in --map (its _pal twin carries palettes)")
-    pt.add_argument("--map-bank1", type=int, default=0,
-                    help="bank-1 tile count of the sheet (NPC portraits: 384; "
-                         "0 = single bank-0 sheet)")
-    pt.add_argument("--obj-layers", default="",
-                    help="comma-separated static OBJ overlay layers in --map, "
-                         "compiled to obj.bin/obj2.bin record lists")
-    pt.add_argument("--sprites", default=None,
-                    help="metasprite/patch manifest (next to --png); regenerates the "
-                         "OBJ/BG overlay data region into sprites.bin")
-    pt.add_argument("--palettes2-png", default=None,
-                    help="second indexed PNG (next to --png) whose colour table holds a "
-                         "second BG+OBJ palette set (e.g. an alternate scene); split into "
-                         "palette_bg2.bin / palette_obj2.bin")
+    pt.add_argument(
+        "--tiles0", type=int, default=0, help="bank-0 tile count (0 = single bank)"
+    )
+    pt.add_argument(
+        "--palettes-bg",
+        type=int,
+        default=0,
+        help="BG palettes in the PNG table (0 = grayscale, no palette.bin)",
+    )
+    pt.add_argument(
+        "--palettes-obj", type=int, default=0, help="OBJ palettes, after the BG ones"
+    )
+    pt.add_argument(
+        "--map",
+        default=None,
+        help="Tiled .tmx (relative to --png) carrying the arrangement; "
+        "compiled with --map-layer instead of a layout/bins",
+    )
+    pt.add_argument(
+        "--map-layer",
+        default=None,
+        help="layer name in --map (its _pal twin carries palettes)",
+    )
+    pt.add_argument(
+        "--map-bank1",
+        type=int,
+        default=0,
+        help="bank-1 tile count of the sheet (NPC portraits: 384; "
+        "0 = single bank-0 sheet)",
+    )
+    pt.add_argument(
+        "--obj-layers",
+        default="",
+        help="comma-separated static OBJ overlay layers in --map, "
+        "compiled to obj.bin/obj2.bin record lists",
+    )
+    pt.add_argument(
+        "--sprites",
+        default=None,
+        help="metasprite/patch manifest (next to --png); regenerates the "
+        "OBJ/BG overlay data region into sprites.bin",
+    )
+    pt.add_argument(
+        "--palettes2-png",
+        default=None,
+        help="second indexed PNG (next to --png) whose colour table holds a "
+        "second BG+OBJ palette set (e.g. an alternate scene); split into "
+        "palette_bg2.bin / palette_obj2.bin",
+    )
     pt.set_defaults(fn=cmd_portrait)
-
 
     d = sub.add_parser(
         "decode", help="component .bin/.pal -> composite PNG (bootstrap)"

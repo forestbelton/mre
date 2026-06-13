@@ -1,0 +1,99 @@
+{
+    "id": 0,
+    "pad": false,
+    "name": "RoomUnused02",
+    "spawn": {
+        "x": 1,
+        "y": 1
+    },
+    "tileset": 0,
+    "palette": 0,
+    "height": 10,
+    "width": 11,
+    "collision": [
+        "BBBBBBBBBBB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BFFFFFFFFFB",
+        "BBBBBBBBBBB"
+    ],
+    "objects": [],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

@@ -36,7 +36,7 @@ HRAM: 75 bytes used / 52 free
 | $0f | ROMX | 14559 | 1825 | 4 | 4 | monster_detail.asm |
 | $10 | ROMX | 14001 | 2383 | 1 | 1 | bg_loader.asm |
 | $11 | ROMX | 15868 | 516 | 1 | 1 | floor_monster_sprites.asm |
-| $12 | ROMX | 10035 | 6349 | 18 | 5 | editor.asm, room_unused01.asm, hare.asm, gali.asm, golem.asm, suezo.asm, tiger.asm, mocchi.asm, selketo.asm, ferious.asm, dragon.asm, zan.asm, punisher.asm, room_unused02.asm |
+| $12 | ROMX | 10035 | 6349 | 18 | 5 | editor.asm, unused01.asm, hare.asm, gali.asm, golem.asm, suezo.asm, tiger.asm, mocchi.asm, selketo.asm, ferious.asm, dragon.asm, zan.asm, punisher.asm, unused02.asm |
 | $13 | ROMX | 9100 | 7284 | 2 | 0 | cox.asm |
 | $14 | ROMX | 9895 | 6489 | 2 | 2 | monster_regen.asm |
 | $15 | ROMX | 13554 | 2830 | 2 | 0 | screen.asm |
@@ -626,8 +626,8 @@ HRAM: 75 bytes used / 52 free
 | $4a53-$4a58 | 6 | editor.asm | analyzed_048a53 |
 | $4a5a-$4a5f | 6 | editor.asm | analyzed_048a5a |
 | $4a61-$4cca | 618 | editor.asm | analyzed_048a61 |
-| $4ccb-$4e0f | 325 | room_unused02.asm | room_unused02 |
-| $4e10-$5054 | 581 | room_unused01.asm | room_unused01 |
+| $4ccb-$4e0f | 325 | unused02.asm | RoomUnused02 |
+| $4e10-$5054 | 581 | unused01.asm | RoomUnused01 |
 | $5055-$5225 | 465 | selketo.asm | BossSelketo |
 | $5226-$53de | 441 | ferious.asm | BossFerious |
 | $53df-$5593 | 437 | punisher.asm | BossPunisher |

@@ -40,6 +40,9 @@ ROMX $0a
 ROMX $0b
     "Gali summon"
 ROMX $12
+    ORG $4ccb
+    "RoomUnused02"
+    "RoomUnused01"
     ORG $5055
     "BossSelketo"
     "BossFerious"

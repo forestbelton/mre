@@ -1,0 +1,102 @@
+{
+    "id": 0,
+    "name": "RoomUnused01",
+    "spawn": {
+        "x": 1,
+        "y": 1
+    },
+    "tileset": 0,
+    "palette": 0,
+    "height": 14,
+    "width": 17,
+    "collision": [
+        "BBBBBBBBBBBBBBBBB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BFFFFFFFFFFFFFFFB",
+        "BBBBBBBBBBBBBBBBB"
+    ],
+    "objects": [],
+    "species": [
+        "TACOPI",
+        "JELL",
+        "NAGA",
+        "TIGER"
+    ],
+    "monsters": [
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        },
+        {
+            "x": 255,
+            "y": 255,
+            "type": 255,
+            "facing": 255,
+            "index": 255
+        }
+    ],
+    "spawners": [],
+    "trailer": []
+}

@@ -80,12 +80,12 @@ rom: $(OUT)
 # constants are NOT exported, so the constant/macro .inc files stay per-object.
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.asm $(INCLUDES) $(GFX_2BPP) $(ASSET_STAMP) | $(BUILD_DIR)
 	@mkdir -p $(dir $@)
-	@echo "[ ASM] $<"
+	@echo "[  ASM] $<"
 	@$(RGBASM) -E -i $(SRC_DIR)/ -i include/ -i $(BUILD_DIR)/ -o $@ $<
 
 # Generated floor records: JSON -> .asm via tools/build_room.py.
 $(SRC_DIR)/layout/%.asm: $(SRC_DIR)/layout/%.json tools/build_room.py
-	@echo "[ROOM] $<"
+	@echo "[ ROOM] $<"
 	@python3 tools/build_room.py $< -o $@
 
 # Keep the generated room .asm around (they're prerequisites, not throwaway
@@ -93,11 +93,11 @@ $(SRC_DIR)/layout/%.asm: $(SRC_DIR)/layout/%.json tools/build_room.py
 .SECONDARY: $(ROOM_ASM)
 
 $(OUT): $(OBJS) $(LINKSCRIPT) | $(BUILD_DIR)
-	@echo "[LINK] $@"
+	@echo "[ LINK] $@"
 	@$(RGBLINK) -p 0 -l $(LINKSCRIPT) -m $@.map -n $@.sym -o $@ $(OBJS)
-	@echo "[ FIX] $@"
+	@echo "[  FIX] $@"
 	@$(RGBFIX) $(FIXARGS) $@
-	@echo "[ MAP] docs/bankmap.md"
+	@echo "[  MAP] docs/bankmap.md"
 	@$(PYTHON) tools/bankmap.py
 
 # src/gfx/raw: each PNG -> 2bpp tile data, rebuilt only when its PNG changes.
@@ -118,4 +118,4 @@ $(BUILD_DIR):
 	@mkdir -p $@
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR) $(shell find src/layout -type f -name '*.asm')

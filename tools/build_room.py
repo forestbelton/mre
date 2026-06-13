@@ -44,23 +44,23 @@ TILE_NAMES = {0x43: "TILE_OBSTACLE_BAT"}
 
 class RoomMonster(TypedDict):
     slot: NotRequired[int]  # arr2 slot 0-8 (defaults to list order); preserves the
-                            # exact byte layout when empties are interspersed
+    # exact byte layout when empties are interspersed
     x: int
     y: int
-    type: int           # packed behaviour: low 3 bits = speed, hi 3 bits (&$70) = AI param
-    facing: int         # initial facing (0-3 direction, +4 sets a flag)
-    index: int          # index into the room's species table (0-3)
+    type: int  # packed behaviour: low 3 bits = speed, hi 3 bits (&$70) = AI param
+    facing: int  # initial facing (0-3 direction, +4 sets a flag)
+    index: int  # index into the room's species table (0-3)
 
 
 class RoomSpawner(TypedDict):
     slot: NotRequired[int]  # arr3 slot 0-3 (defaults to list order)
     x: int
     y: int
-    p0: int             # spawn-timing params (packed, undecoded)
+    p0: int  # spawn-timing params (packed, undecoded)
     p1: int
     p2: int
     schedule: list[int]  # up to 6 steps; each a species-table index (0-3). Short
-                         # lists are padded with SPAWN_NONE.
+    # lists are padded with SPAWN_NONE.
 
 
 class Room(TypedDict):
@@ -116,7 +116,9 @@ def build_room(room: Room) -> str:
     species = ", ".join(f"MONSTER_{s}" for s in room["species"])
     monster_table = build_monster_table(room["monsters"], room["species"])
     spawner_table = build_spawner_table(room["spawners"])
-    trailer = build_trailer(room["trailer"], trailer_size(room))
+    should_pad = room.get("pad", True)
+    size = trailer_size(room) if should_pad else len(room["trailer"])
+    trailer = build_trailer(room["trailer"], size)
     return f"""
 INCLUDE "room.inc"
 
@@ -159,7 +161,7 @@ SECTION "{room['name']}", ROMX
 
     ; Trailer ({trailer_size(room)} bytes of unused slot slack)
 {trailer}
-    assert @ - {label} == {RECORD_SIZE}
+    {f"assert @ - {label} == {RECORD_SIZE}" if should_pad else ""}
 """.strip() + "\n"
 
 
@@ -263,10 +265,13 @@ def build_monster_table(monsters: list[RoomMonster], species: list[str]) -> str:
         if m is None:
             lines.append("    EMPTY_MONSTER_SLOT")
             continue
+        name = "UNUSED"
+        if m["index"] in species:
+            name = species[m["index"]]
         lines.append(
             f"    dstruct Monster, , .X={m['x']}, .Y={m['y']}, "
             f".Type={to_hex(m['type'])}, .Facing={m['facing']}, .Index={m['index']}"
-            f"   ; {species[m['index']]}"
+            f"   ; {name}"
         )
     return "\n".join(lines)
 
@@ -341,6 +346,8 @@ def validate_room(room: Room):
         raise RoomValidationError("must have exactly 4 species")
     check_slots(room["monsters"], 9, "monster")
     for i, m in enumerate(room["monsters"]):
+        if m["index"] == 0xFF:
+            continue
         if not 0 <= m["index"] < 4:
             raise RoomValidationError(f"monster {i} index must be 0-3")
         if m["type"] & 0x88:
