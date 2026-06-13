@@ -78,8 +78,7 @@ processes the floor's tables), so a boss record is purely **header + grids**.
 
 - `src/layout/boss/{selketo,ferious,punisher,dragon,zan}.json` — one JSON each,
   `"boss": true`, header + grids only (`tools/build_room.py` boss mode emits
-  `ds 93, INERT` for the unused tail and no trailer; `tools/dump_room.py
-  decode_boss_room` is the inverse).
+  `ds 93, INERT` for the unused tail and no trailer).
 - `layout.link` places them as floating sections, contiguous from `ORG $5055`;
   the five stride-sized records pack to exactly `$5906` (Hare's start).
 
