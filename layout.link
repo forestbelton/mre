@@ -19,8 +19,9 @@
 ; here gets auto-placed by rgblink, which silently breaks byte-exactness — always
 ; migrate the float and its placement together.
 ;
-; --- nothing migrated yet: this is the scaffold; all sections are still placed
-;     by their source offsets. ---
+; --- Migration is underway: the sections listed below have been floated here
+;     (their source SECTION directives dropped the [$addr]); everything else is
+;     still placed by its source offset. `make completion` reports the share. ---
 ROM0
     ORG $0a30
     "Sound API"
