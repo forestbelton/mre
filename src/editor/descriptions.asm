@@ -3,7 +3,7 @@
 ; encoding). One 36-char db row per line: the editor help is indented to col 18,
 ; the item/monster descriptions start at col 0. Carved from analyzed.asm, byte-exact.
 
-SECTION "Editor description text", ROMX[$4618], BANK[$17]
+SECTION "Editor descriptions", ROMX
 
 EditorDescriptionText:
 	db "                  This is a large   "

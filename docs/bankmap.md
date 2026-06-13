@@ -39,9 +39,9 @@ HRAM: 75 bytes used / 52 free
 | $12 | ROMX | 10035 | 6349 | 18 | 5 | editor.asm, room_unused01.asm, hare.asm, gali.asm, golem.asm, suezo.asm, tiger.asm, mocchi.asm, selketo.asm, ferious.asm, dragon.asm, zan.asm, punisher.asm, room_unused02.asm |
 | $13 | ROMX | 9100 | 7284 | 2 | 0 | cox.asm |
 | $14 | ROMX | 9895 | 6489 | 2 | 2 | monster_regen.asm |
-| $15 | ROMX | 13554 | 2830 | 2 | 0 | editor_screens.asm |
+| $15 | ROMX | 13554 | 2830 | 2 | 0 | screen.asm |
 | $16 | ROMX | 13832 | 2552 | 1 | 1 | tileset_loader.asm |
-| $17 | ROMX | 13695 | 2689 | 4 | 3 | editor_descriptions.asm, special_scene.asm |
+| $17 | ROMX | 13695 | 2689 | 4 | 3 | descriptions.asm, special_scene.asm |
 | $18 | ROMX | 14697 | 1687 | 8 | 0 | pashute.asm, naji.asm, bodka.asm, verde.asm |
 | $19 | ROMX | 10391 | 5993 | 3 | 1 | textui.asm, toamuna.asm |
 | $1a | ROMX | 13868 | 2516 | 2 | 0 | naji.asm, toamuna.asm |
@@ -659,8 +659,8 @@ HRAM: 75 bytes used / 52 free
 
 | range | size | file | section |
 |---|--:|---|---|
-| $4000-$410d | 270 | editor_screens.asm | Editor screen functions |
-| $410f-$74f2 | 13284 | editor_screens.asm | Editor screens |
+| $4000-$410d | 270 | screen.asm | Editor screen functions |
+| $410f-$74f2 | 13284 | screen.asm | Editor screens |
 
 ### $16 — ROMX (1 sections, 1 analyzed)
 
@@ -674,7 +674,7 @@ HRAM: 75 bytes used / 52 free
 |---|--:|---|---|
 | $4000-$40af | 176 | special_scene.asm | analyzed_05c000 |
 | $40b1-$45e7 | 1335 | special_scene.asm | analyzed_05c0b1 |
-| $4618-$6117 | 6912 | editor_descriptions.asm | Editor description text |
+| $4618-$6117 | 6912 | descriptions.asm | Editor descriptions |
 | $6118-$75af | 5272 | special_scene.asm | analyzed_05e118 |
 
 ### $18 — ROMX (8 sections, 0 analyzed)

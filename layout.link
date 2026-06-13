@@ -55,6 +55,9 @@ ROMX $12
 ROMX $13
     "Cox script functions"
     "Cox script"
+ROMX $17
+    ORG $4618
+    "Editor descriptions"
 ROMX $18
     "Pashute script functions"
     "Pashute script"
